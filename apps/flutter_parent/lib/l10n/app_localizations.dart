@@ -328,6 +328,9 @@ class AppLocalizations {
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
       desc: 'Short message shown on a message attachment when uploading has failed');
 
+  String forWhom(List<String> names) =>
+      Intl.message('for ${names.join(', ')}', desc: 'Describes who is in a course, i.e. for Bill, Ted');
+
   /// View conversation
 
   String get errorLoadingConversation => Intl.message('There was an error loading this conversation',

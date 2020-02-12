@@ -14,9 +14,14 @@
 
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:tuple/tuple.dart';
 
 class ConversationListInteractor {
   Future<List<Conversation>> getConversations({bool forceRefresh: false}) async {
@@ -48,5 +53,23 @@ class ConversationListInteractor {
 
   Future<List<Course>> getCoursesForCompose() async {
     return locator<CourseApi>().getObserveeCourses();
+  }
+
+  Future<List<Enrollment>> getStudentEnrollments() async {
+    return locator<EnrollmentsApi>().getObserveeEnrollments();
+  }
+
+  /// Create a map of { <course_name> : <list_of_students_in_course> } and sort the students alphabetically by their short name
+  Map<Course, List<User>> combineEnrollmentsAndCourses(List<Course> courses, List<Enrollment> enrollments) {
+    return {
+      for (var c in courses)
+        c: enrollments.where((e) => e.courseId == c.id).map((e) => e.observedUser).toList()
+          ..sort((a, b) => a.shortName.compareTo(b.shortName))
+    };
+  }
+
+  List<Tuple2<Course, List<User>>> sortCourses(Map<Course, List<User>> combined) {
+    List<Tuple2<Course, List<User>>> sortedList = combined.keys.map((k) => Tuple2(k, combined[k])).toList();
+    return sortedList.sortBy([(it) => it.item2[0].shortName, (it) => it.item1.name]);
   }
 }

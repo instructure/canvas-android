@@ -154,6 +154,7 @@ abstract class Enrollment implements Built<Enrollment, EnrollmentBuilder> {
     ..userId = ''
     ..courseId = ''
     ..courseSectionId = ''
+    ..enrollmentState = ''
     ..multipleGradingPeriodsEnabled = false
     ..totalsForAllGradingPeriodsOption = false
     ..currentGradingPeriodId = ''

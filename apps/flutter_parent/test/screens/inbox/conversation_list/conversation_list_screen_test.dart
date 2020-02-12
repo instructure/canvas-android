@@ -20,6 +20,8 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
@@ -227,7 +229,7 @@ void main() {
     expect(icon, equals(CanvasIcons.group));
   });
 
-  testWidgetsWithAccessibilityChecks('Tapping add button shows messegable course list', (tester) async {
+  testWidgetsWithAccessibilityChecks('Tapping add button shows messageable course list', (tester) async {
     var interactor = _MockInteractor();
     setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
 
@@ -236,8 +238,11 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
-    var completer = Completer<List<Course>>();
-    when(interactor.getCoursesForCompose()).thenAnswer((_) => completer.future);
+    var courseCompleter = Completer<List<Course>>();
+    var enrollmentCompleter = Completer<List<Enrollment>>();
+
+    when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
+    when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
     await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
     await tester.pump();
@@ -248,7 +253,14 @@ void main() {
       Course((b) => b..name = 'Course 1'),
       Course((b) => b..name = 'Course 2'),
     ];
-    completer.complete(courses);
+
+    var enrollments = [
+      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder()),
+      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Ted').toBuilder()),
+    ];
+
+    courseCompleter.complete(courses);
+    enrollmentCompleter.complete(enrollments);
     await tester.pumpAndSettle();
 
     expect(find.text('Course 1'), findsOneWidget);
@@ -311,15 +323,18 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
-    var completer = Completer<List<Course>>();
-    when(interactor.getCoursesForCompose()).thenAnswer((_) => completer.future);
+    var courseCompleter = Completer<List<Course>>();
+    var enrollmentCompleter = Completer<List<Enrollment>>();
+    when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
+    when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
 
     await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    completer.complete([Course((b) => b..name = 'Course 1')]);
+    courseCompleter.complete([Course((b) => b..name = 'Course 1')]);
+    enrollmentCompleter.complete([Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder())]);
     await tester.pumpAndSettle();
 
     var conversation = Conversation((b) => b
@@ -370,6 +385,62 @@ void main() {
 
     expect(find.text(updatedConversation.lastMessage), findsOneWidget);
     expect(find.byKey(Key('unread-indicator')), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks(
+      'Messageable course list is grouped by first student and alphabetical in that group', (tester) async {
+    Enrollment userAndy = Enrollment((b) => b
+      ..observedUser = User((b) => b
+        ..shortName = 'Andy'
+        ..id = 'Andy').toBuilder());
+    Enrollment userBill = Enrollment((b) => b
+      ..observedUser = User((b) => b
+        ..shortName = 'Bill'
+        ..id = 'Bill').toBuilder());
+    Enrollment userCherice = Enrollment((b) => b
+      ..observedUser = User((b) => b
+        ..shortName = 'Cherice'
+        ..id = 'Cherice').toBuilder());
+
+    Course arithmeticCourse = Course((b) => b
+      ..name = 'Arithmetic'
+      ..enrollments = ListBuilder([userBill, userCherice, userAndy]));
+    Course boxingCourse = Course((b) => b
+      ..name = 'Boxing'
+      ..enrollments = ListBuilder([userCherice, userAndy]));
+    Course choirCourse = Course((b) => b
+      ..name = 'Choir'
+      ..enrollments = ListBuilder([userCherice, userBill]));
+
+    var interactor = _MockInteractor();
+    setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
+
+    when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
+
+    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpAndSettle();
+
+    var courseCompleter = Completer<List<Course>>();
+    var enrollmentCompleter = Completer<List<Enrollment>>();
+
+    when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
+    when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
+
+    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    var courses = [boxingCourse, choirCourse, arithmeticCourse];
+
+    var enrollments = [
+      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder()),
+      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Ted').toBuilder()),
+    ];
+
+    courseCompleter.complete(courses);
+    enrollmentCompleter.complete(enrollments);
+    await tester.pumpAndSettle();
   });
 }
 

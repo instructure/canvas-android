@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
@@ -30,6 +32,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
+import 'package:tuple/tuple.dart';
 
 import 'conversation_list_interactor.dart';
 
@@ -242,12 +245,14 @@ class ConversationListState extends State<ConversationListScreen> {
 
   _createMessage(BuildContext context) {
     var coursesFuture = interactor.getCoursesForCompose();
+    var studentsFuture = interactor.getStudentEnrollments();
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return FutureBuilder(
-          future: coursesFuture,
-          builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
+          future: Future.wait([coursesFuture, studentsFuture])
+              .then((response) => _CoursesAndStudents(response[0], response[1])),
+          builder: (BuildContext context, AsyncSnapshot<_CoursesAndStudents> snapshot) {
             if (snapshot.hasError) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -265,6 +270,9 @@ class ConversationListState extends State<ConversationListScreen> {
                 ),
               );
             } else if (snapshot.hasData) {
+              Map<Course, List<User>> _combined =
+                  interactor.combineEnrollmentsAndCourses(snapshot.data.courses, snapshot.data.enrollments);
+
               return ListView(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 shrinkWrap: true,
@@ -276,14 +284,7 @@ class ConversationListState extends State<ConversationListScreen> {
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
-                  ...snapshot.data.map((it) => ListTile(
-                        title: Text(it.name),
-                        onTap: () async {
-                          Navigator.pop(context); // Dismisses the bottom sheet
-                          var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(it, ''));
-                          if (refresh == true) _refreshIndicatorKey.currentState.show();
-                        },
-                      )),
+                  ..._courseList(_combined),
                 ],
               );
             } else {
@@ -297,4 +298,27 @@ class ConversationListState extends State<ConversationListScreen> {
       },
     );
   }
+
+  List<Widget> _courseList(Map<Course, List<User>> courseUsersMap) {
+    // Courses are grouped according to the first student in the course and sorted alphabetically within that group
+    List<Tuple2<Course, List<User>>> sortedList = interactor.sortCourses(courseUsersMap);
+    return sortedList
+        .map((entry) => ListTile(
+              title: Text(entry.item1.name),
+              subtitle: Text(L10n(context).forWhom(entry.item2.map((u) => u.shortName))),
+              onTap: () async {
+                Navigator.pop(context); // Dismisses the bottom sheet
+                var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(entry.item1, ''));
+                if (refresh == true) _refreshIndicatorKey.currentState.show();
+              },
+            ))
+        .toList();
+  }
+}
+
+// Helper class for combining two futures for use in a FutureBuilder
+class _CoursesAndStudents {
+  _CoursesAndStudents(this.courses, this.enrollments);
+  List<Course> courses;
+  List<Enrollment> enrollments;
 }

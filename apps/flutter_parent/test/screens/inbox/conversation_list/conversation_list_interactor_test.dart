@@ -12,13 +12,19 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/conversation.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../utils/test_app.dart';
 
@@ -162,8 +168,125 @@ void main() {
     ConversationListInteractor().getCoursesForCompose();
     verify(api.getObserveeCourses()).called(1);
   });
+
+  test('getStudentEnrollments calls EnrollmentsApi', () {
+    var api = _MockEnrollmentsApi();
+    setupTestLocator((locator) => locator.registerLazySingleton<EnrollmentsApi>(() => api));
+    ConversationListInteractor().getStudentEnrollments();
+    verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
+  });
+
+  test('combineEnrollmentsAndCourses creates a map of courses with a sorted list of corresponding enorllments', () {
+    String arithmetic = 'Arithmetic';
+    String boxing = 'Boxing';
+    String choir = 'Choir';
+
+    List<Enrollment> andyEnrollments = _createEnrollments('Andy', [boxing, choir]);
+    List<Enrollment> billEnrollments = _createEnrollments('Bill', [choir, arithmetic]);
+    List<Enrollment> chericeEnrollments = _createEnrollments('Cherice', [choir, arithmetic, boxing]);
+
+    var enrollments = [...andyEnrollments, ...billEnrollments, ...chericeEnrollments];
+
+    Course arithmeticCourse = Course((b) => b
+      ..id = arithmetic
+      ..name = arithmetic
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == arithmetic)));
+    Course boxingCourse = Course((b) => b
+      ..id = boxing
+      ..name = boxing
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == boxing)));
+    Course choirCourse = Course((b) => b
+      ..id = choir
+      ..name = choir
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
+
+    Map<Course, List<User>> expectedResult = {
+      choirCourse: [
+        User((b) => b
+          ..shortName = 'Andy'
+          ..id = 'Andy'),
+        User((b) => b
+          ..shortName = 'Bill'
+          ..id = 'Bill'),
+        User((b) => b
+          ..shortName = 'Cherice'
+          ..id = 'Cherice'),
+      ],
+      boxingCourse: [
+        User((b) => b
+          ..shortName = 'Andy'
+          ..id = 'Andy'),
+        User((b) => b
+          ..shortName = 'Cherice'
+          ..id = 'Cherice'),
+      ],
+      arithmeticCourse: [
+        User((b) => b
+          ..shortName = 'Bill'
+          ..id = 'Bill'),
+        User((b) => b
+          ..shortName = 'Cherice'
+          ..id = 'Cherice'),
+      ],
+    };
+
+    Map<Course, List<User>> combined = ConversationListInteractor().combineEnrollmentsAndCourses(
+        [choirCourse, boxingCourse, arithmeticCourse], [...billEnrollments, ...andyEnrollments, ...chericeEnrollments]);
+
+    expect(combined, equals(expectedResult));
+  });
+
+  test('sortCourses sorts courses by the first enrolled student in that course', () {
+    String arithmetic = 'Arithmetic';
+    String boxing = 'Boxing';
+    String choir = 'Choir';
+
+    List<Enrollment> andyEnrollments = _createEnrollments('Andy', [boxing, choir]);
+    List<Enrollment> billEnrollments = _createEnrollments('Bill', [choir, arithmetic]);
+    List<Enrollment> chericeEnrollments = _createEnrollments('Cherice', [choir, arithmetic, boxing]);
+
+    var enrollments = [...andyEnrollments, ...billEnrollments, ...chericeEnrollments];
+
+    Course arithmeticCourse = Course((b) => b
+      ..id = arithmetic
+      ..name = arithmetic
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == arithmetic)));
+    Course boxingCourse = Course((b) => b
+      ..id = boxing
+      ..name = boxing
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == boxing)));
+    Course choirCourse = Course((b) => b
+      ..id = choir
+      ..name = choir
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
+
+    List<Tuple2<Course, List<User>>> expected = [
+      Tuple2(boxingCourse, enrollments.where((e) => e.courseId == 'Boxing').map((e) => e.observedUser).toList()),
+      Tuple2(choirCourse, enrollments.where((e) => e.courseId == 'Choir').map((e) => e.observedUser).toList()),
+      Tuple2(arithmeticCourse, enrollments.where((e) => e.courseId == 'Arithmetic').map((e) => e.observedUser).toList())
+    ];
+
+    Map<Course, List<User>> combined = ConversationListInteractor().combineEnrollmentsAndCourses(
+        [choirCourse, boxingCourse, arithmeticCourse], [...billEnrollments, ...andyEnrollments, ...chericeEnrollments]);
+
+    List<Tuple2<Course, List<User>>> actual = ConversationListInteractor().sortCourses(combined);
+
+    expect(actual, equals(expected));
+  });
+}
+
+List<Enrollment> _createEnrollments(String studentName, List<String> courseIds) {
+  return courseIds
+      .map((id) => Enrollment((b) => b
+        ..observedUser = User((b) => b
+          ..shortName = studentName
+          ..id = studentName).toBuilder()
+        ..courseId = id))
+      .toList();
 }
 
 class _MockInboxApi extends Mock implements InboxApi {}
 
 class _MockCourseApi extends Mock implements CourseApi {}
+
+class _MockEnrollmentsApi extends Mock implements EnrollmentsApi {}
