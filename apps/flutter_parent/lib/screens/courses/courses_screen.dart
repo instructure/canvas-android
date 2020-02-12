@@ -101,22 +101,21 @@ class _CoursesScreenState extends State<CoursesScreen> {
         itemCount: courses.length,
         itemBuilder: (context, idx) {
           var course = courses.toList()[idx];
-          return Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
-            child: ListTile(
-              onTap: () => _courseTapped(context, course),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 8),
-                  Text(course.name ?? '', style: Theme.of(context).textTheme.subhead),
-                  SizedBox(height: 2),
-                  Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption),
-                  SizedBox(height: 4),
-                  _courseGrade(context, course),
-                  SizedBox(height: 8),
-                ],
-              ),
+          final grade = _courseGrade(context, course);
+          return ListTile(
+            onTap: () => _courseTapped(context, course),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(height: 8),
+                Text(course.name ?? '', style: Theme.of(context).textTheme.subhead),
+                SizedBox(height: 2),
+                Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption),
+                if (grade != null) SizedBox(height: 4),
+                if (grade != null) grade,
+                SizedBox(height: 8),
+              ],
             ),
           );
         });
@@ -127,6 +126,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
     var format = NumberFormat.percentPattern();
     format.maximumFractionDigits = 2;
 
+    if (grade.isCourseGradeLocked(
+      forAllGradingPeriods: course?.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true,
+    )) {
+      return null;
+    }
     // If there is no current grade, return 'No grade'
     // Otherwise, we have a grade, so check if we have the actual grade string
     // or a score
