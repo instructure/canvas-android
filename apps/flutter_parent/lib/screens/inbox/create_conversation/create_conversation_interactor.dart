@@ -25,6 +25,7 @@ import '../attachment_utils/attachment_picker.dart';
 
 class CreateConversationInteractor {
   Future<CreateConversationData> loadData(String courseId, String studentId) async {
+    final courseFuture = locator<CourseApi>().getCourse(courseId);
     final recipients = await locator<InboxApi>().getRecipients(courseId);
 
     // The only allowed recipients are teachers and the specific student
@@ -32,9 +33,7 @@ class CreateConversationInteractor {
       return it.id == studentId || it.commonCourses[courseId]?.contains('TeacherEnrollment') == true;
     });
 
-    Course course = await locator<CourseApi>().getCourse(courseId);
-
-    return CreateConversationData(course, recipients);
+    return CreateConversationData(await courseFuture, recipients);
   }
 
   Future<Conversation> createConversation(

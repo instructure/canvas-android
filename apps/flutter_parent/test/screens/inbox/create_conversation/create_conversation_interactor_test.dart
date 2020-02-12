@@ -51,7 +51,7 @@ void main() {
     verify(inboxApi.createConversation(course.id, recipients, subject, body, attachments)).called(1);
   });
 
-  test('getAllRecipients calls InboxApi and CourseApi', () async {
+  test('loadData calls InboxApi and CourseApi', () async {
     when(inboxApi.getRecipients(any)).thenAnswer((_) async => []);
     when(courseApi.getCourse(any)).thenAnswer((_) async => Course());
 
@@ -62,7 +62,7 @@ void main() {
     verify(courseApi.getCourse(course.id));
   });
 
-  test('getAllRecipients returns only teachers and specified student', () async {
+  test('loadData returns only teachers and specified student', () async {
     final course = Course((c) => c..id = 'course_1');
     when(courseApi.getCourse(any)).thenAnswer((_) async => course);
 

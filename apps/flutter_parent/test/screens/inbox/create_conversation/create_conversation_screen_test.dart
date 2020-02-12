@@ -721,6 +721,18 @@ void main() {
     await tester.pumpAndSettle();
   });
 
+  testWidgetsWithAccessibilityChecks('Displays enrollment type in recipient chip', (tester) async {
+    _setupLocator(recipientCount: 2);
+    final course = _mockCourse('0');
+
+    await tester.pumpWidget(_testableWidget(course: course));
+    await tester.pumpAndSettle();
+
+    var chip = find.byType(Chip);
+    expect(chip, findsOneWidget);
+    expect(find.descendant(of: chip, matching: find.text('Teacher')), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('Displays enrollment types', (tester) async {
     var interactor = _MockedInteractor();
     GetIt.instance.reset();

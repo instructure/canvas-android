@@ -60,7 +60,7 @@ class CreateConversationScreen extends StatefulWidget {
   _CreateConversationScreenState createState() => _CreateConversationScreenState(_subjectTemplate);
 }
 
-class _CreateConversationScreenState extends State<CreateConversationScreen> {
+class _CreateConversationScreenState extends State<CreateConversationScreen> with SingleTickerProviderStateMixin {
   _CreateConversationScreenState(this._subjectText);
 
   String _subjectText = '';
@@ -346,39 +346,45 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   }
 
   Widget _recipientsWidget(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          child: Semantics(
-            label: L10n(context).recipients,
-            child: InkWell(
-              onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  key: CreateConversationScreen.recipientsKey,
-                  spacing: 8,
-                  runSpacing: 0,
-                  children: _recipientChips(context),
+    return AnimatedSize(
+      vsync: this,
+      alignment: Alignment.topLeft,
+      curve: Curves.easeInOutBack,
+      duration: Duration(milliseconds: 350),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Semantics(
+              label: L10n(context).recipients,
+              child: InkWell(
+                onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    key: CreateConversationScreen.recipientsKey,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _recipientChips(context),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        IconButton(
-          padding: EdgeInsets.all(16),
-          tooltip: L10n(context).selectRecipients,
-          key: CreateConversationScreen.recipientsAddKey,
-          icon: Icon(
-            CanvasIcons.address_book,
-            size: 20,
-            color: Theme.of(context).hintColor,
-          ),
-          onPressed: _sending ? null : () => _showRecipientPicker(context),
-        )
-      ],
+          IconButton(
+            padding: EdgeInsets.all(16),
+            tooltip: L10n(context).selectRecipients,
+            key: CreateConversationScreen.recipientsAddKey,
+            icon: Icon(
+              CanvasIcons.address_book,
+              size: 20,
+              color: Theme.of(context).hintColor,
+            ),
+            onPressed: _sending ? null : () => _showRecipientPicker(context),
+          )
+        ],
+      ),
     );
   }
 
@@ -396,38 +402,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
         )
       ];
     if (_recipientsExpanded) {
-      return _selectedRecipients
-          .map((user) => Chip(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: UserName(
-                    user.name,
-                    user.pronouns,
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-                avatar: Avatar(user.avatarUrl, name: user.name),
-                backgroundColor: ParentTheme.of(context).nearSurfaceColor,
-              ))
-          .toList();
+      return _selectedRecipients.map((user) => _chip(user)).toList();
     } else {
       return [
-        Chip(
-          label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 180),
-              child: UserName(
-                _selectedRecipients[0].name,
-                _selectedRecipients[0].pronouns,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          avatar: Avatar(_selectedRecipients[0].avatarUrl, name: _selectedRecipients[0].name),
-          backgroundColor: ParentTheme.of(context).nearSurfaceColor,
-        ),
+        _chip(_selectedRecipients[0], ellipsize: true),
         if (_selectedRecipients.length > 1)
           Text(
             L10n(context).plusRecipientCount(_selectedRecipients.length - 1),
@@ -435,6 +413,37 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
           )
       ];
     }
+  }
+
+  Widget _chip(Recipient user, {bool ellipsize: false}) {
+    return Chip(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      //labelPadding: EdgeInsets.zero,
+      label: Padding(
+        padding: const EdgeInsets.only(top: 2, bottom: 1),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ellipsize ? 180 : double.infinity),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              UserName(
+                user.name,
+                user.pronouns,
+                overflow: ellipsize ? TextOverflow.ellipsis : null,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 1),
+              Text(
+                _enrollmentType(context, user),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
+              )
+            ],
+          ),
+        ),
+      ),
+      avatar: Avatar(user.avatarUrl, name: user.name),
+      backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+    );
   }
 
   Widget _subjectWidget(BuildContext context) {
