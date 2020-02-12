@@ -164,7 +164,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     }
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop(BuildContext context) {
     if (_sending) return Future.value(false);
     if (_bodyText.isEmpty && _attachments.isEmpty) return Future.value(true);
     return showDialog(
@@ -191,7 +191,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
-        onWillPop: _onWillPop,
+        onWillPop: () => _onWillPop(context),
         child: ArrowAwareFocusScope(
           node: _focusScopeNode,
           child: Scaffold(

@@ -284,7 +284,7 @@ class DefaultParentTheme extends StatelessWidget {
 
     return Consumer<ParentThemeStateChangeNotifier>(
       builder: (context, state, _) => Theme(
-        child: builder(context),
+        child: Builder(builder: builder),
         data: theme,
       ),
     );

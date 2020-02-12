@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensi
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertThresholdsPercentageDialog extends StatefulWidget {
@@ -72,131 +73,133 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
 
   @override
   Widget build(BuildContext context) {
-    return ArrowAwareFocusScope(
-      node: _focusScopeNode,
-      child: AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        title: Text(widget._alertType.getTitle(context)),
-        content: TextFormField(
-          key: _formKey,
-          autofocus: true,
-          autovalidate: true,
-          keyboardType: TextInputType.number,
-          initialValue: _threshold?.threshold,
-          maxLength: 3,
-          inputFormatters: [
-            // Only accept numbers, no other characters (including '-')
-            BlacklistingTextInputFormatter(RegExp('[^0-9]')),
-          ],
-          onChanged: (input) {
-            errorMsg = null;
-            // Check if we had a network error
-            if (input == null || input.isEmpty) {
-              // Don't validate when there's no input (no error)
+    return DefaultParentTheme(
+      builder: (context) => ArrowAwareFocusScope(
+        node: _focusScopeNode,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Text(widget._alertType.getTitle(context)),
+          content: TextFormField(
+            key: _formKey,
+            autofocus: true,
+            autovalidate: true,
+            keyboardType: TextInputType.number,
+            initialValue: _threshold?.threshold,
+            maxLength: 3,
+            inputFormatters: [
+              // Only accept numbers, no other characters (including '-')
+              BlacklistingTextInputFormatter(RegExp('[^0-9]')),
+            ],
+            onChanged: (input) {
               errorMsg = null;
-            } else {
-              var inputParsed = int.tryParse(input);
-              var maxParsed = maxValue != null ? int.tryParse(maxValue) : 100;
-              var minParsed = minValue != null ? int.tryParse(minValue) : null;
-
-              if (maxParsed == 100 && inputParsed > 100) {
-                errorMsg = L10n(context).mustBeBelow100;
-              } else if (maxParsed != 100 && inputParsed >= maxParsed) {
-                errorMsg = L10n(context).mustBeBelowN(maxParsed);
-              } else if (minParsed != null && inputParsed <= minParsed) {
-                errorMsg = L10n(context).mustBeAboveN(minParsed);
-              }
-            }
-
-            setState(() {
-              if (errorMsg != null) {
-                // We had an error, disable the buttons
-                _disableButtons = true;
+              // Check if we had a network error
+              if (input == null || input.isEmpty) {
+                // Don't validate when there's no input (no error)
+                errorMsg = null;
               } else {
-                _disableButtons = false;
-              }
-            });
-          },
-          validator: (input) {
-            if (_networkError) {
-              errorMsg = L10n(context).genericNetworkError;
-            }
-            return errorMsg;
-          },
-          onSaved: (input) async {
-            // Don't do anything if there are existing validation errors and the user didn't click 'Never'
-            if (!_formKey.currentState.validate() && !_neverClicked) return;
+                var inputParsed = int.tryParse(input);
+                var maxParsed = maxValue != null ? int.tryParse(maxValue) : 100;
+                var minParsed = minValue != null ? int.tryParse(minValue) : null;
 
-            if (_threshold == null && input.isEmpty) {
-              // Threshold is already disabled
-              Navigator.of(context).pop(null);
-            }
-
-            _showNetworkError(false);
-
-            var result = await locator<AlertThresholdsInteractor>()
-                .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
-                    value: input.isNotEmpty && !_neverClicked ? input : '-1')
-                .catchError((_) => null);
-
-            if (result != null) {
-              // Threshold was updated/deleted successfully
-              if (input.isEmpty || _neverClicked) {
-                // Deleted a threshold
-                Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
-              } else {
-                // Updated a threshold
-                Navigator.of(context).pop(result);
-              }
-            } else {
-              // There was a network error
-              _showNetworkError(true);
-            }
-
-            _neverClicked = false;
-          },
-          onFieldSubmitted: (input) async {
-            _formKey.currentState.save();
-          },
-          decoration: InputDecoration(
-            hintText: L10n(context).gradePercentage,
-            hintStyle: TextStyle(color: ParentColors.ash),
-            contentPadding: EdgeInsets.only(bottom: 2),
-          ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-              child: Text(L10n(context).cancel.toUpperCase()),
-              disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
-              onPressed: () {
-                Navigator.of(context).pop(null);
-              }),
-          FlatButton(
-              child: Text(L10n(context).never.toUpperCase()),
-              disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
-              onPressed: () async {
-                if (_threshold == null) {
-                  // Threshold is already disabled
-                  Navigator.of(context).pop(null);
-                  return;
+                if (maxParsed == 100 && inputParsed > 100) {
+                  errorMsg = L10n(context).mustBeBelow100;
+                } else if (maxParsed != 100 && inputParsed >= maxParsed) {
+                  errorMsg = L10n(context).mustBeBelowN(maxParsed);
+                } else if (minParsed != null && inputParsed <= minParsed) {
+                  errorMsg = L10n(context).mustBeAboveN(minParsed);
                 }
-                _threshold = _threshold?.rebuild((b) => b.threshold = '-1');
-                _neverClicked = true;
-                _showNetworkError(false);
-                _formKey.currentState.save();
-              }),
-          FlatButton(
-            key: okButtonKey,
-            child: Text(L10n(context).ok),
-            disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
-            onPressed: _disableButtons
-                ? null
-                : () async {
-                    _showNetworkError(false);
-                    _formKey.currentState.save();
-                  },
+              }
+
+              setState(() {
+                if (errorMsg != null) {
+                  // We had an error, disable the buttons
+                  _disableButtons = true;
+                } else {
+                  _disableButtons = false;
+                }
+              });
+            },
+            validator: (input) {
+              if (_networkError) {
+                errorMsg = L10n(context).genericNetworkError;
+              }
+              return errorMsg;
+            },
+            onSaved: (input) async {
+              // Don't do anything if there are existing validation errors and the user didn't click 'Never'
+              if (!_formKey.currentState.validate() && !_neverClicked) return;
+
+              if (_threshold == null && input.isEmpty) {
+                // Threshold is already disabled
+                Navigator.of(context).pop(null);
+              }
+
+              _showNetworkError(false);
+
+              var result = await locator<AlertThresholdsInteractor>()
+                  .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
+                      value: input.isNotEmpty && !_neverClicked ? input : '-1')
+                  .catchError((_) => null);
+
+              if (result != null) {
+                // Threshold was updated/deleted successfully
+                if (input.isEmpty || _neverClicked) {
+                  // Deleted a threshold
+                  Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
+                } else {
+                  // Updated a threshold
+                  Navigator.of(context).pop(result);
+                }
+              } else {
+                // There was a network error
+                _showNetworkError(true);
+              }
+
+              _neverClicked = false;
+            },
+            onFieldSubmitted: (input) async {
+              _formKey.currentState.save();
+            },
+            decoration: InputDecoration(
+              hintText: L10n(context).gradePercentage,
+              hintStyle: TextStyle(color: ParentColors.ash),
+              contentPadding: EdgeInsets.only(bottom: 2),
+            ),
           ),
-        ],
+          actions: <Widget>[
+            FlatButton(
+                child: Text(L10n(context).cancel.toUpperCase()),
+                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                onPressed: () {
+                  Navigator.of(context).pop(null);
+                }),
+            FlatButton(
+                child: Text(L10n(context).never.toUpperCase()),
+                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                onPressed: () async {
+                  if (_threshold == null) {
+                    // Threshold is already disabled
+                    Navigator.of(context).pop(null);
+                    return;
+                  }
+                  _threshold = _threshold?.rebuild((b) => b.threshold = '-1');
+                  _neverClicked = true;
+                  _showNetworkError(false);
+                  _formKey.currentState.save();
+                }),
+            FlatButton(
+              key: okButtonKey,
+              child: Text(L10n(context).ok),
+              disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+              onPressed: _disableButtons
+                  ? null
+                  : () async {
+                      _showNetworkError(false);
+                      _formKey.currentState.save();
+                    },
+            ),
+          ],
+        ),
       ),
     );
   }
