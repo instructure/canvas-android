@@ -129,17 +129,11 @@ class AppLocalizations {
 
   static const _AppLocalizationsDelegate delegate = _AppLocalizationsDelegate();
 
-  String get alertsLabel {
-    return Intl.message('Alerts', name: 'alertsLabel', desc: 'The label for the Alerts tab');
-  }
+  String get alertsLabel => Intl.message('Alerts', name: 'alertsLabel', desc: 'The label for the Alerts tab');
 
-  String get calendarLabel {
-    return Intl.message('Calendar', name: 'calendarLabel', desc: 'The label for the Calendar tab');
-  }
+  String get calendarLabel => Intl.message('Calendar', name: 'calendarLabel', desc: 'The label for the Calendar tab');
 
-  String get coursesLabel {
-    return Intl.message('Courses', name: 'coursesLabel', desc: 'The label for the Courses tab');
-  }
+  String get coursesLabel => Intl.message('Courses', name: 'coursesLabel', desc: 'The label for the Courses tab');
 
   /// Dashboard
   String get noStudents =>
@@ -164,68 +158,56 @@ class AppLocalizations {
 
   String get switchUsers => Intl.message('Switch Users', desc: 'Label text for the Switch Users nav drawer button');
 
-  String appVersion(String version) => Intl.message('v. $version',
-      name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
-
-  String get logoutConfirmation => Intl.message(
-        'Are you sure you want to log out?',
-        desc: 'Confirmation message displayed when the user tries to log out',
+  String appVersion(String version) => Intl.message(
+        'v. $version',
+        args: [version],
+        desc: 'App version shown in the navigation drawer',
+        name: 'appVersion',
       );
+
+  String get logoutConfirmation => Intl.message('Are you sure you want to log out?',
+      desc: 'Confirmation message displayed when the user tries to log out');
 
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
 
-  String get canvasLogoLabel {
-    return Intl.message('Canvas logo', name: 'canvasLogoLabel', desc: 'The semantics label for the Canvas logo');
-  }
+  String get canvasLogoLabel => Intl.message('Canvas logo', desc: 'The semantics label for the Canvas logo');
 
-  String get findSchool => Intl.message(
-        'Find School',
-        name: 'findSchool',
-        desc: 'Text for the find-my-school button',
-      );
+  String get findSchool => Intl.message('Find School', desc: 'Text for the find-my-school button');
 
   /// Domain search screen
 
-  String get domainSearchInputHint => Intl.message(
-        'Enter school name or district…',
-        name: 'domainSearchInputHint',
-        desc: 'Input hint for the text box on the domain search screen',
-      );
+  String get domainSearchInputHint =>
+      Intl.message('Enter school name or district…', desc: 'Input hint for the text box on the domain search screen');
 
   String noDomainResults(String query) => Intl.message(
         'Unable to find schools matching "$query"',
-        name: 'noDomainResults',
         args: [query],
+        name: 'noDomainResults',
         desc: 'Message shown to users when the domain search query did not return any results',
       );
 
   String get domainSearchHelpLabel => Intl.message(
         'How do I find my school or district?',
-        name: 'domainSearchHelpLabel',
         desc: 'Label for the help button on the domain search screen',
+        name: 'domainSearchHelpLabel',
       );
 
-  String get canvasGuides => Intl.message(
-        'Canvas Guides',
-        name: 'canvasGuides',
-        desc:
-            'Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable',
-      );
+  String get canvasGuides => Intl.message('Canvas Guides',
+      desc:
+          'Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable');
 
-  String get canvasSupport => Intl.message(
-        'Canvas Support',
-        name: 'canvasSupport',
-        desc:
-            'Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable',
-      );
+  String get canvasSupport => Intl.message('Canvas Support',
+      desc:
+          'Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable');
 
   String domainSearchHelpBody(String canvasGuides, String canvasSupport) => Intl.message(
-      """Try searching for the name of the school or district you’re attempting to access, like “Smith Private School” or “Smith County Schools.” You can also enter a Canvas domain directly, like “smith.instructure.com.”\n\nFor more information on finding your institution’s Canvas account, you can visit the $canvasGuides, reach out to $canvasSupport, or contact your school for assistance.""",
-      name: 'domainSearchHelpBody',
-      desc: 'The body text shown in the help dialog on the domain search screen',
-      args: [canvasGuides, canvasSupport]);
+        """Try searching for the name of the school or district you’re attempting to access, like “Smith Private School” or “Smith County Schools.” You can also enter a Canvas domain directly, like “smith.instructure.com.”\n\nFor more information on finding your institution’s Canvas account, you can visit the $canvasGuides, reach out to $canvasSupport, or contact your school for assistance.""",
+        args: [canvasGuides, canvasSupport],
+        desc: 'The body text shown in the help dialog on the domain search screen',
+        name: 'domainSearchHelpBody',
+      );
 
   /// Crash screen
 
@@ -317,10 +299,10 @@ class AppLocalizations {
 
   String plusRecipientCount(int count) => Intl.message(
         '+$count',
-        desc: 'Shows the number of recipients that are selected but not displayed on screen.',
-        name: 'plusRecipientCount',
         args: [count],
+        desc: 'Shows the number of recipients that are selected but not displayed on screen.',
         examples: const {'count': 5},
+        name: 'plusRecipientCount',
       );
 
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
@@ -328,16 +310,16 @@ class AppLocalizations {
 
   String courseForWhom(String studentShortName) => Intl.message(
         'for $studentShortName',
-        desc: 'Describes for whom a course is for (i.e. for Bill)',
         args: [studentShortName],
+        desc: 'Describes for whom a course is for (i.e. for Bill)',
         name: 'courseForWhom',
       );
 
   String messageLinkPostscript(String studentName, String linkUrl) => Intl.message(
         'Regarding: $studentName, $linkUrl',
+        args: [studentName, linkUrl],
         desc:
             'A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).',
-        args: [studentName, linkUrl],
         name: 'messageLinkPostscript',
       );
 
@@ -352,43 +334,35 @@ class AppLocalizations {
 
   String get unknownUser => Intl.message('Unknown User', desc: 'Label used where the user name is not known');
 
-  String get userNameMe => Intl.message(
-        'me',
-        desc:
-            'First-person pronoun (i.e. \'me\') that will be used in message author info, e.g. \'Me to 4 others\' or \'Jon Snow to me\'',
+  String get userNameMe => Intl.message('me',
+      desc:
+          'First-person pronoun (i.e. \'me\') that will be used in message author info, e.g. \'Me to 4 others\' or \'Jon Snow to me\'');
+
+  String authorToRecipient(String authorName, String recipientName) => Intl.message(
+        '$authorName to $recipientName',
+        args: [authorName, recipientName],
+        desc: 'Author info for a single-recipient message; includes both the author name and the recipient name.',
+        name: 'authorToRecipient',
       );
 
-  String authorToRecipient(String authorName, String recipientName) {
-    return Intl.message(
-      '$authorName to $recipientName',
-      args: [authorName, recipientName],
-      name: 'authorToRecipient',
-      desc: 'Author info for a single-recipient message; includes both the author name and the recipient name.',
-    );
-  }
+  String authorToNOthers(String authorName, int howMany) => Intl.plural(
+        howMany,
+        args: [authorName, howMany],
+        desc: 'Author info for a mutli-recipient message; includes the author name and the number of recipients',
+        name: 'authorToNOthers',
+        one: '$authorName to 1 other',
+        other: '$authorName to $howMany others',
+      );
 
-  String authorToNOthers(String authorName, int howMany) {
-    return Intl.plural(
-      howMany,
-      one: '$authorName to 1 other',
-      other: '$authorName to $howMany others',
-      args: [authorName, howMany],
-      name: 'authorToNOthers',
-      desc: 'Author info for a mutli-recipient message; includes the author name and the number of recipients',
-    );
-  }
-
-  String authorToRecipientAndNOthers(String authorName, String recipientName, int howMany) {
-    return Intl.plural(
-      howMany,
-      one: '$authorName to $recipientName & 1 other',
-      other: '$authorName to $recipientName & $howMany others',
-      args: [authorName, recipientName, howMany],
-      name: 'authorToRecipientAndNOthers',
-      desc:
-          'Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients',
-    );
-  }
+  String authorToRecipientAndNOthers(String authorName, String recipientName, int howMany) => Intl.plural(
+        howMany,
+        args: [authorName, recipientName, howMany],
+        desc:
+            'Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients',
+        one: '$authorName to $recipientName & 1 other',
+        other: '$authorName to $recipientName & $howMany others',
+        name: 'authorToRecipientAndNOthers',
+      );
 
   /// Viewing attachments
 
@@ -403,20 +377,14 @@ class AppLocalizations {
 
   String get unsupportedFileMessage => Intl.message('This file is unsupported and can’t be viewed through the app');
 
-  String get errorPlayingMedia => Intl.message(
-        'Unable to play this media file',
-        desc: 'Message shown when audio or video media could not be played',
-      );
+  String get errorPlayingMedia => Intl.message('Unable to play this media file',
+      desc: 'Message shown when audio or video media could not be played');
 
-  String get errorLoadingImage => Intl.message(
-        'Unable to load this image',
-        desc: 'Message shown when an image file could not be loaded or displayed',
-      );
+  String get errorLoadingImage => Intl.message('Unable to load this image',
+      desc: 'Message shown when an image file could not be loaded or displayed');
 
-  String get errorLoadingFile => Intl.message(
-        'There was an error loading this file',
-        desc: 'Message shown when a file could not be loaded or displayed',
-      );
+  String get errorLoadingFile => Intl.message('There was an error loading this file',
+      desc: 'Message shown when a file could not be loaded or displayed');
 
   /// Courses Screen
 
@@ -430,158 +398,114 @@ class AppLocalizations {
         desc: 'Message displayed when the list of student courses could not be loaded',
       );
 
-  String get noGrade => Intl.message(
-        'No Grade',
-        desc: 'Message shown when there is currently no grade available for a course',
-      );
+  String get noGrade =>
+      Intl.message('No Grade', desc: 'Message shown when there is currently no grade available for a course');
 
   /// Course Details Screen
 
   String get filterBy => Intl.message('Filter by', desc: 'Title for list of terms to filter grades by');
 
-  String get courseGradesLabel => Intl.message(
-        'Grades',
-        desc: 'Label for the "Grades" tab in course details',
-      );
+  String get courseGradesLabel => Intl.message('Grades', desc: 'Label for the "Grades" tab in course details');
 
-  String get courseSyllabusLabel => Intl.message(
-        'Syllabus',
-        desc: 'Label for the "Syllabus" tab in course details',
-      );
+  String get courseSyllabusLabel => Intl.message('Syllabus', desc: 'Label for the "Syllabus" tab in course details');
 
-  String get courseFrontPageLabel => Intl.message(
-        'Front Page',
-        desc: 'Label for the "Front Page" tab in course details',
-      );
+  String get courseFrontPageLabel =>
+      Intl.message('Front Page', desc: 'Label for the "Front Page" tab in course details');
 
   String get courseSummaryLabel => Intl.message(
         'Summary',
         desc: 'Label for the "Summary" tab in course details',
       );
 
-  String get courseMessageHint => Intl.message(
-        'Send a message about this course',
-        desc: 'Accessibility hint for the course messaage floating action button',
-      );
+  String get courseMessageHint => Intl.message('Send a message about this course',
+      desc: 'Accessibility hint for the course messaage floating action button');
 
-  String get courseTotalGradeLabel => Intl.message(
-        'Total Grade',
-        desc: 'Label for the total grade in the course',
-      );
+  String get courseTotalGradeLabel => Intl.message('Total Grade', desc: 'Label for the total grade in the course');
 
-  String get assignmentGradedLabel => Intl.message(
-        'Graded',
-        desc: 'Label for assignments that have been graded',
-      );
+  String get assignmentGradedLabel => Intl.message('Graded', desc: 'Label for assignments that have been graded');
 
-  String get assignmentSubmittedLabel => Intl.message(
-        'Submitted',
-        desc: 'Label for assignments that have been submitted',
-      );
+  String get assignmentSubmittedLabel =>
+      Intl.message('Submitted', desc: 'Label for assignments that have been submitted');
 
-  String get assignmentNotSubmittedLabel => Intl.message(
-        'Not Submitted',
-        desc: 'Label for assignments that have not been submitted',
-      );
+  String get assignmentNotSubmittedLabel =>
+      Intl.message('Not Submitted', desc: 'Label for assignments that have not been submitted');
 
-  String get assignmentLateSubmittedLabel => Intl.message(
-        'Late',
-        desc: 'Label for assignments that have been marked late or submitted late',
-      );
+  String get assignmentLateSubmittedLabel =>
+      Intl.message('Late', desc: 'Label for assignments that have been marked late or submitted late');
 
-  String get assignmentMissingSubmittedLabel => Intl.message(
-        'Missing',
-        desc: 'Label for assignments that have been marked missing or are not submitted and past the due date',
-      );
+  String get assignmentMissingSubmittedLabel => Intl.message('Missing',
+      desc: 'Label for assignments that have been marked missing or are not submitted and past the due date');
 
-  String get assignmentNoScore => Intl.message(
-        '-',
-        desc: 'Value representing no score for student submission',
-      );
+  String get assignmentNoScore => Intl.message('-', desc: 'Value representing no score for student submission');
 
-  String get allGradingPeriods => Intl.message(
-        'All Grading Periods',
-        desc: 'Label for selecting all grading periods',
-      );
+  String get allGradingPeriods => Intl.message('All Grading Periods', desc: 'Label for selecting all grading periods');
 
-  String get noAssignmentsTitle => Intl.message(
-        'No Assignments',
-        desc: 'Title for the no assignments message',
-      );
+  String get noAssignmentsTitle => Intl.message('No Assignments', desc: 'Title for the no assignments message');
 
-  String get noAssignmentsMessage => Intl.message(
-        'It looks like assignments haven\'t been created in this space yet.',
-        desc: 'Message for no assignments',
-      );
+  String get noAssignmentsMessage => Intl.message('It looks like assignments haven\'t been created in this space yet.',
+      desc: 'Message for no assignments');
 
-  String get errorLoadingCourseSummary => Intl.message(
-        'There was an error loading the summary details for this course.',
-        desc: 'Message shown when the course summary could not be loaded',
-      );
+  String get errorLoadingCourseSummary =>
+      Intl.message('There was an error loading the summary details for this course.',
+          desc: 'Message shown when the course summary could not be loaded');
 
-  String get noCourseSummaryTitle => Intl.message(
-        'No Summary',
-        desc: 'Title displayed when there are no items in the course summary',
-      );
+  String get noCourseSummaryTitle =>
+      Intl.message('No Summary', desc: 'Title displayed when there are no items in the course summary');
 
-  String get noCourseSummaryMessage => Intl.message(
-        'This course does not have any assignments or calendar events yet.',
-        desc: 'Message displayed when there are no items in the course summary',
-      );
+  String get noCourseSummaryMessage => Intl.message('This course does not have any assignments or calendar events yet.',
+      desc: 'Message displayed when there are no items in the course summary');
 
   String gradeFormatScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
         '${score} / ${pointsPossible}',
+        args: [score, pointsPossible],
         desc: 'Formatted string for a student score out of the points possible',
         name: 'gradeFormatScoreOutOfPointsPossible',
-        args: [score, pointsPossible],
       );
 
   String contentDescriptionScoreOutOfPointsPossible(String score, String pointsPossible) => Intl.message(
         '${score} out of ${pointsPossible} points',
+        args: [score, pointsPossible],
         desc: 'Formatted string for a student score out of the points possible',
         name: 'contentDescriptionScoreOutOfPointsPossible',
-        args: [score, pointsPossible],
       );
 
   String gradesSubjectMessage(String studentName) => Intl.message(
         'Regarding: $studentName, Grades',
+        args: [studentName],
         desc: 'The subject line for a message to a teacher regarding a student\'s grades',
         name: 'gradesSubjectMessage',
-        args: [studentName],
       );
 
   String syllabusSubjectMessage(String studentName) => Intl.message(
         'Regarding: $studentName, Syllabus',
+        args: [studentName],
         desc: 'The subject line for a message to a teacher regarding a course syllabus',
         name: 'syllabusSubjectMessage',
-        args: [studentName],
       );
 
   String frontPageSubjectMessage(String studentName) => Intl.message(
         'Regarding: $studentName, Front Page',
+        args: [studentName],
         desc: 'The subject line for a message to a teacher regarding a course front page',
         name: 'frontPageSubjectMessage',
-        args: [studentName],
       );
 
   String assignmentSubjectMessage(String studentName, String assignmentName) => Intl.message(
         'Regarding: $studentName, Assignment - $assignmentName',
+        args: [studentName, assignmentName],
         desc: 'The subject line for a message to a teacher regarding a student\'s assignment',
         name: 'assignmentSubjectMessage',
-        args: [studentName, assignmentName],
       );
 
   String eventSubjectMessage(String studentName, String eventTitle) => Intl.message(
         'Regarding: $studentName, Event - $eventTitle',
+        args: [studentName, eventTitle],
         desc: 'The subject line for a message to a teacher regarding a calendar event',
         name: 'eventSubjectMessage',
-        args: [studentName, eventTitle],
       );
 
-  String get noPageFound => Intl.message(
-        'There is no page information available.',
-        desc: 'Description for when no page information is available',
-      );
+  String get noPageFound => Intl.message('There is no page information available.',
+      desc: 'Description for when no page information is available');
 
   /// Assignment Details Screen
 
@@ -590,32 +514,30 @@ class AppLocalizations {
 
   String assignmentTotalPoints(String points) => Intl.message(
         '$points pts',
-        name: 'assignmentTotalPoints',
         args: [points],
         desc: 'Label used for the total points the assignment is worth',
+        name: 'assignmentTotalPoints',
       );
 
   String assignmentTotalPointsAccessible(String points) => Intl.message(
         '$points points',
-        name: 'assignmentTotalPointsAccessible',
         args: [points],
         desc: 'Screen reader label used for the total points the assignment is worth',
+        name: 'assignmentTotalPointsAccessible',
       );
 
   String get assignmentDueLabel => Intl.message('Due', desc: 'Label for an assignment due date');
 
-  String get assignmentGradeLabel => Intl.message(
-        'Grade',
-        desc: 'Label for the section that displays an assignment\'s grade',
-      );
+  String get assignmentGradeLabel =>
+      Intl.message('Grade', desc: 'Label for the section that displays an assignment\'s grade');
 
   String get assignmentLockLabel => Intl.message('Locked', desc: 'Label for when an assignment is locked');
 
   String assignmentLockedModule(String moduleName) => Intl.message(
         'This assignment is locked by the module \"$moduleName\".',
-        name: 'assignmentLockedModule',
         args: [moduleName],
         desc: 'The locked description when an assignment is locked by a module',
+        name: 'assignmentLockedModule',
       );
 
   String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
@@ -639,44 +561,32 @@ class AppLocalizations {
   String get assignmentNoDescriptionBody =>
       Intl.message('No description', desc: 'Message used when the assignment has no description');
 
-  String get assignmentMessageHint => Intl.message(
-        'Send a message about this assignment',
-        desc: 'Accessibility hint for the assignment messaage floating action button',
-      );
+  String get assignmentMessageHint => Intl.message('Send a message about this assignment',
+      desc: 'Accessibility hint for the assignment messaage floating action button');
 
   /// Web Login Screen
 
-  String get domainVerificationErrorGeneral => Intl.message(
-        'This app is not authorized for use.',
-        desc: 'The error shown when the app being used is not verified by Canvas',
-      );
+  String get domainVerificationErrorGeneral => Intl.message('This app is not authorized for use.',
+      desc: 'The error shown when the app being used is not verified by Canvas');
 
-  String get domainVerificationErrorDomain => Intl.message(
-        'The server you entered is not authorized for this app.',
-        desc: 'The error shown when the desired login domain is not verified by Canvas',
-      );
+  String get domainVerificationErrorDomain => Intl.message('The server you entered is not authorized for this app.',
+      desc: 'The error shown when the desired login domain is not verified by Canvas');
 
-  String get domainVerificationErrorUserAgent => Intl.message(
-        'The user agent for this app is not authorized.',
-        desc: 'The error shown when the user agent during verification is not verified by Canvas',
-      );
+  String get domainVerificationErrorUserAgent => Intl.message('The user agent for this app is not authorized.',
+      desc: 'The error shown when the user agent during verification is not verified by Canvas');
 
-  String get domainVerificationErrorUnknown => Intl.message(
-        'We were unable to verify the server for use with this app.',
-        desc: 'The generic error shown when we are unable to verify with Canvas',
-      );
+  String get domainVerificationErrorUnknown =>
+      Intl.message('We were unable to verify the server for use with this app.',
+          desc: 'The generic error shown when we are unable to verify with Canvas');
 
   /// Reminders
 
-  String get remindersNotificationChannelName => Intl.message(
-        'Reminders',
-        desc: 'Name of the system notification channel for assignment and event reminders',
-      );
+  String get remindersNotificationChannelName =>
+      Intl.message('Reminders', desc: 'Name of the system notification channel for assignment and event reminders');
 
-  String get remindersNotificationChannelDescription => Intl.message(
-        'Notifications for reminders about assignments and calendar events',
-        desc: 'Description of the system notification channel for assignment and event reminders',
-      );
+  String get remindersNotificationChannelDescription =>
+      Intl.message('Notifications for reminders about assignments and calendar events',
+          desc: 'Description of the system notification channel for assignment and event reminders');
 
   /// Not-A-Parent screen
 
@@ -714,52 +624,44 @@ class AppLocalizations {
 
   /// Alerts Screen
 
-  String get noAlertsTitle => Intl.message(
-        'No Alerts',
-        desc: 'The title for the empty message to show to users when there are no alerts for the student.',
-      );
+  String get noAlertsTitle => Intl.message('No Alerts',
+      desc: 'The title for the empty message to show to users when there are no alerts for the student.');
 
-  String get noAlertsMessage => Intl.message(
-        'There’s nothing to be notified of yet.',
-        desc: 'The empty message to show to users when there are no alerts for the student.',
-      );
+  String get noAlertsMessage => Intl.message('There’s nothing to be notified of yet.',
+      desc: 'The empty message to show to users when there are no alerts for the student.');
 
-  String get courseAnnouncement => Intl.message(
-        'Course Announcement',
-        desc: 'Title for alerts when there is a course announcement',
-      );
+  String get courseAnnouncement =>
+      Intl.message('Course Announcement', desc: 'Title for alerts when there is a course announcement');
 
-  String get institutionAnnouncement => Intl.message(
-        'Institution Announcement',
-        desc: 'Title for alerts when there is an institution announcement',
-      );
+  String get institutionAnnouncement =>
+      Intl.message('Institution Announcement', desc: 'Title for alerts when there is an institution announcement');
 
   String assignmentGradeAboveThreshold(String threshold) => Intl.message(
         'Assignment Grade Above $threshold',
-        name: 'assignmentGradeAboveThreshold',
         args: [threshold],
         desc: 'Title for alerts when an assignment grade is above the threshold value',
+        name: 'assignmentGradeAboveThreshold',
       );
 
   String assignmentGradeBelowThreshold(String threshold) => Intl.message(
         'Assignment Grade Below $threshold',
-        name: 'assignmentGradeBelowThreshold',
         args: [threshold],
         desc: 'Title for alerts when an assignment grade is below the threshold value',
+        name: 'assignmentGradeBelowThreshold',
       );
 
   String courseGradeAboveThreshold(String threshold) => Intl.message(
         'Course Grade Above $threshold',
-        name: 'courseGradeAboveThreshold',
         args: [threshold],
         desc: 'Title for alerts when a course grade is above the threshold value',
+        name: 'courseGradeAboveThreshold',
       );
 
   String courseGradeBelowThreshold(String threshold) => Intl.message(
         'Course Grade Below $threshold',
-        name: 'courseGradeBelowThreshold',
         args: [threshold],
         desc: 'Title for alerts when a course grade is below the threshold value',
+        name: 'courseGradeBelowThreshold',
       );
 
   /// Settings screen
@@ -785,19 +687,19 @@ class AppLocalizations {
   String submissionStatusSuccessSubtitle(String date, String time) {
     return Intl.message(
       'This assignment was submitted on $date at $time and is waiting to be graded',
-      desc: 'Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade',
       args: [date, time],
+      desc: 'Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade',
       name: 'submissionStatusSuccessSubtitle',
     );
   }
 
   String outOfPoints(String points, num howMany) => Intl.plural(
         howMany,
+        args: [points, howMany],
+        desc: 'Description for an assignment grade that has points without a current score',
+        name: 'outOfPoints',
         one: 'Out of 1 point',
         other: 'Out of $points points',
-        desc: 'Description for an assignment grade that has points without a current scoroe',
-        args: [points, howMany],
-        name: 'outOfPoints',
         precision: 2,
       );
 
@@ -805,27 +707,23 @@ class AppLocalizations {
 
   String get gradeComplete => Intl.message('Complete', desc: 'Grading status for an assignment marked as complete');
 
-  String get gradeIncomplete => Intl.message(
-        'Incomplete',
-        desc: 'Grading status for an assignment marked as incomplete',
-      );
+  String get gradeIncomplete =>
+      Intl.message('Incomplete', desc: 'Grading status for an assignment marked as incomplete');
 
-  String get accessibilityMinus => Intl.message(
-        'minus',
-        desc: 'Screen reader-friendly replacement for the "-" character in letter grades like "A-"',
-      );
+  String get accessibilityMinus => Intl.message('minus',
+      desc: 'Screen reader-friendly replacement for the "-" character in letter grades like "A-"');
 
   String latePenalty(String pointsLost) => Intl.message(
         'Late penalty (-$pointsLost)',
-        desc: 'Text displayed when a late penalty has been applied to the assignment',
         args: [pointsLost],
+        desc: 'Text displayed when a late penalty has been applied to the assignment',
         name: 'latePenalty',
       );
 
   String finalGrade(String grade) => Intl.message(
         'Final Grade: $grade',
-        desc: 'Text that displays the final grade of an assignment',
         args: [grade],
+        desc: 'Text that displays the final grade of an assignment',
         name: 'finalGrade',
       );
 
@@ -865,18 +763,18 @@ class AppLocalizations {
 
   String mustBeBelowN(int percentage) => Intl.message(
         'Must be below $percentage',
-        desc: 'Validation error to the user that they must choose a percentage below \'n\'',
         args: [percentage],
-        name: 'mustBeBelowN',
+        desc: 'Validation error to the user that they must choose a percentage below \'n\'',
         examples: const {'percentage': 5},
+        name: 'mustBeBelowN',
       );
 
   String mustBeAboveN(int percentage) => Intl.message(
         'Must be above $percentage',
-        desc: 'Validation error to the user that they must choose a percentage above \'n\'',
         args: [percentage],
-        name: 'mustBeAboveN',
+        desc: 'Validation error to the user that they must choose a percentage above \'n\'',
         examples: const {'percentage': 5},
+        name: 'mustBeAboveN',
       );
 
   /// Enrollment types
@@ -939,9 +837,9 @@ class AppLocalizations {
 
   String eventTime(String startAt, String endAt) => Intl.message(
         '$startAt - $endAt',
-        name: 'eventTime',
         args: [startAt, endAt],
         desc: 'The time the event is happening, example: "2:00 pm - 4:00 pm"',
+        name: 'eventTime',
       );
 
   String get eventRemindMeDescription => Intl.message('Set a date and time to be notified of this event.',
@@ -1097,8 +995,8 @@ class AppLocalizations {
   String dateAtTime(String date, String time) => Intl.message(
         '$date at $time',
         args: [date, time],
-        name: 'dateAtTime',
         desc: 'The string to format dates',
+        name: 'dateAtTime',
       );
 
   String dueDateAtTime(String date, String time) => Intl.message(
@@ -1108,30 +1006,24 @@ class AppLocalizations {
         desc: 'The string to format due dates',
       );
 
-  String get noDueDate => Intl.message(
-        'No Due Date',
-        desc: 'Label for assignments that do not have a due date',
-      );
+  String get noDueDate => Intl.message('No Due Date', desc: 'Label for assignments that do not have a due date');
 
-  String get filter => Intl.message(
-        'Filter',
-        desc: 'Label for buttons to filter what items are visible',
-      );
+  String get filter => Intl.message('Filter', desc: 'Label for buttons to filter what items are visible');
 
   String get unread => Intl.message('unread', desc: 'Label for things that are marked as unread');
 
   String unreadCount(int count) => Intl.message(
         '${count} unread',
         args: [count],
-        name: 'unreadCount',
         desc: 'Formatted string for when there are a number of unread items',
+        name: 'unreadCount',
       );
 
   String badgeNumberPlus(int count) => Intl.message(
         '${count}+',
         args: [count],
-        name: 'badgeNumberPlus',
         desc: 'Formatted string for when too many items are being notified in a badge, generally something like: 99+',
+        name: 'badgeNumberPlus',
       );
 
   String get errorLoadingAnnouncement => Intl.message('There was an error loading this announcement',
