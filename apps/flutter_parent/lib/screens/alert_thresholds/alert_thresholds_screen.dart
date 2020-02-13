@@ -55,7 +55,9 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultParentTheme(
+      useNonPrimaryAppBar: false,
+      builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(L10n(context).alertSettings),
           bottom: ParentTheme.of(context).appBarDivider(),
@@ -74,7 +76,9 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
             }
             return view;
           },
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _body() {

@@ -49,12 +49,14 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(L10n(context).manageStudents),
-        bottom: ParentTheme.of(context).appBarDivider(),
-      ),
-      body: FutureBuilder(
+    return DefaultParentTheme(
+      useNonPrimaryAppBar: false,
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: Text(L10n(context).manageStudents),
+          bottom: ParentTheme.of(context).appBarDivider(),
+        ),
+        body: FutureBuilder(
           initialData: widget._students,
           future: _studentsFuture,
           builder: (context, AsyncSnapshot<List<User>> snapshot) {
@@ -75,8 +77,10 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
               onRefresh: _refresh,
               child: view,
             );
-          }),
-      floatingActionButton: _createFloatingActionButton(context),
+          },
+        ),
+        floatingActionButton: _createFloatingActionButton(context),
+      ),
     );
   }
 
