@@ -308,7 +308,7 @@ class ConversationListState extends State<ConversationListScreen> {
       Course c = t.item2;
       var w = ListTile(
         title: Text(c.name),
-        subtitle: Text(L10n(context).forWhom(u.shortName)),
+        subtitle: Text(L10n(context).courseForWhom(u.shortName)),
         onTap: () async {
           {
             String postscript = L10n(context).messageLinkPostscript(
