@@ -304,23 +304,23 @@ class ConversationListState extends State<ConversationListScreen> {
     List<Widget> widgets = [];
 
     _combined.forEach((t) {
-      User u = t.item1;
-      Course c = t.item2;
+      User user = t.item1;
+      Course course = t.item2;
       var w = ListTile(
-        title: Text(c.name),
-        subtitle: Text(L10n(context).courseForWhom(u.shortName)),
+        title: Text(course.name),
+        subtitle: Text(L10n(context).courseForWhom(user.shortName)),
         onTap: () async {
           String postscript = L10n(context).messageLinkPostscript(
-            u.shortName,
-            '${ApiPrefs.getDomain()}/courses/${c.id}',
+            user.shortName,
+            '${ApiPrefs.getDomain()}/courses/${course.id}',
           );
           Navigator.pop(context); // Dismisses the bottom sheet
           var refresh = await locator<QuickNav>().push(
               context,
               CreateConversationScreen(
-                c.id,
-                u.id,
-                c.name,
+                course.id,
+                user.id,
+                course.name,
                 postscript,
               ));
           if (refresh == true) _refreshIndicatorKey.currentState.show();
