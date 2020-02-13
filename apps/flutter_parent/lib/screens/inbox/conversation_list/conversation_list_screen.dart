@@ -270,9 +270,6 @@ class ConversationListState extends State<ConversationListScreen> {
                 ),
               );
             } else if (snapshot.hasData) {
-              Map<Course, List<User>> _combined =
-                  interactor.combineEnrollmentsAndCourses(snapshot.data.courses, snapshot.data.enrollments);
-
               return ListView(
                 padding: EdgeInsets.symmetric(vertical: 8),
                 shrinkWrap: true,
@@ -284,7 +281,7 @@ class ConversationListState extends State<ConversationListScreen> {
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
-                  ..._courseList(_combined),
+                  ..._courseList(snapshot.data),
                 ],
               );
             } else {
@@ -299,13 +296,16 @@ class ConversationListState extends State<ConversationListScreen> {
     );
   }
 
-  List<Widget> _courseList(Map<Course, List<User>> courseUsersMap) {
+  List<Widget> _courseList(_CoursesAndStudents coursesAndStudents) {
+    Map<Course, List<User>> _combined =
+        interactor.combineEnrollmentsAndCourses(coursesAndStudents.courses, coursesAndStudents.enrollments);
+
     // Courses are grouped according to the first student in the course and sorted alphabetically within that group
-    List<Tuple2<Course, List<User>>> sortedList = interactor.sortCourses(courseUsersMap);
+    List<Tuple2<Course, List<User>>> sortedList = interactor.sortCourses(_combined);
     return sortedList
         .map((entry) => ListTile(
               title: Text(entry.item1.name),
-              subtitle: Text(L10n(context).forWhom(entry.item2.map((u) => u.shortName))),
+              subtitle: Text(L10n(context).forWhom(entry.item2.map((u) => u.shortName).toList())),
               onTap: () async {
                 Navigator.pop(context); // Dismisses the bottom sheet
                 var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(entry.item1, ''));

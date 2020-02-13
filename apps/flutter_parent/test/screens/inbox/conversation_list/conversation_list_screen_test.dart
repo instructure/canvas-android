@@ -249,15 +249,33 @@ void main() {
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    var courses = [
-      Course((b) => b..name = 'Course 1'),
-      Course((b) => b..name = 'Course 2'),
+    var enrollments = [
+      Enrollment((b) => b
+        ..courseId = 'Course 1'
+        ..observedUser = User((b) => b
+          ..shortName = 'Bill'
+          ..id = 'Bill').toBuilder()),
+      Enrollment((b) => b
+        ..courseId = 'Course 2'
+        ..observedUser = User((b) => b
+          ..shortName = 'Ted'
+          ..id = 'Ted').toBuilder()),
     ];
 
-    var enrollments = [
-      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder()),
-      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Ted').toBuilder()),
+    var courses = [
+      Course((b) => b
+        ..id = 'Course 1'
+        ..name = 'Course 1'
+        ..enrollments = ListBuilder([enrollments[0]])),
+      Course((b) => b
+        ..id = 'Course 2'
+        ..name = 'Course 2'
+        ..enrollments = ListBuilder([enrollments[1]])),
     ];
+
+    var _combined = ConversationListInteractor().combineEnrollmentsAndCourses(courses, enrollments);
+    when(interactor.combineEnrollmentsAndCourses(any, any)).thenAnswer((_) => _combined);
+    when(interactor.sortCourses(any)).thenAnswer((_) => ConversationListInteractor().sortCourses(_combined));
 
     courseCompleter.complete(courses);
     enrollmentCompleter.complete(enrollments);
@@ -265,6 +283,9 @@ void main() {
 
     expect(find.text('Course 1'), findsOneWidget);
     expect(find.text('Course 2'), findsOneWidget);
+
+    expect(find.text('for Bill'), findsOneWidget);
+    expect(find.text('for Ted'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows error in messegable course list', (tester) async {
@@ -333,8 +354,21 @@ void main() {
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-    courseCompleter.complete([Course((b) => b..name = 'Course 1')]);
-    enrollmentCompleter.complete([Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder())]);
+    var enrollment = Enrollment((b) => b
+      ..courseId = 'Course 1'
+      ..observedUser = User((b) => b..shortName = 'Bill').toBuilder());
+
+    var course = Course((b) => b
+      ..name = 'Course 1'
+      ..id = 'Course 1'
+      ..enrollments = ListBuilder([enrollment]));
+
+    var _combined = ConversationListInteractor().combineEnrollmentsAndCourses([course], [enrollment]);
+    when(interactor.combineEnrollmentsAndCourses(any, any)).thenAnswer((_) => _combined);
+    when(interactor.sortCourses(any)).thenAnswer((_) => ConversationListInteractor().sortCourses(_combined));
+
+    courseCompleter.complete([course]);
+    enrollmentCompleter.complete([enrollment]);
     await tester.pumpAndSettle();
 
     var conversation = Conversation((b) => b
@@ -385,62 +419,6 @@ void main() {
 
     expect(find.text(updatedConversation.lastMessage), findsOneWidget);
     expect(find.byKey(Key('unread-indicator')), findsNothing);
-  });
-
-  testWidgetsWithAccessibilityChecks(
-      'Messageable course list is grouped by first student and alphabetical in that group', (tester) async {
-    Enrollment userAndy = Enrollment((b) => b
-      ..observedUser = User((b) => b
-        ..shortName = 'Andy'
-        ..id = 'Andy').toBuilder());
-    Enrollment userBill = Enrollment((b) => b
-      ..observedUser = User((b) => b
-        ..shortName = 'Bill'
-        ..id = 'Bill').toBuilder());
-    Enrollment userCherice = Enrollment((b) => b
-      ..observedUser = User((b) => b
-        ..shortName = 'Cherice'
-        ..id = 'Cherice').toBuilder());
-
-    Course arithmeticCourse = Course((b) => b
-      ..name = 'Arithmetic'
-      ..enrollments = ListBuilder([userBill, userCherice, userAndy]));
-    Course boxingCourse = Course((b) => b
-      ..name = 'Boxing'
-      ..enrollments = ListBuilder([userCherice, userAndy]));
-    Course choirCourse = Course((b) => b
-      ..name = 'Choir'
-      ..enrollments = ListBuilder([userCherice, userBill]));
-
-    var interactor = _MockInteractor();
-    setupTestLocator((locator) => locator.registerFactory<ConversationListInteractor>(() => interactor));
-
-    when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
-
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
-    await tester.pumpAndSettle();
-
-    var courseCompleter = Completer<List<Course>>();
-    var enrollmentCompleter = Completer<List<Enrollment>>();
-
-    when(interactor.getCoursesForCompose()).thenAnswer((_) => courseCompleter.future);
-    when(interactor.getStudentEnrollments()).thenAnswer((_) => enrollmentCompleter.future);
-
-    await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
-    await tester.pump();
-
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-    var courses = [boxingCourse, choirCourse, arithmeticCourse];
-
-    var enrollments = [
-      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Bill').toBuilder()),
-      Enrollment((b) => b..observedUser = User((b) => b..shortName = 'Ted').toBuilder()),
-    ];
-
-    courseCompleter.complete(courses);
-    enrollmentCompleter.complete(enrollments);
-    await tester.pumpAndSettle();
   });
 }
 
