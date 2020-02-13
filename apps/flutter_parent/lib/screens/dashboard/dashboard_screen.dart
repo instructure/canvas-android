@@ -22,6 +22,7 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
+import 'package:flutter_parent/screens/help/help_dialog.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -36,10 +37,8 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'dashboard_interactor.dart';
 
@@ -348,10 +347,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    // TODO: Instead, we should navigate to the help screen, once it's built out (MBL-11509)
-    // Temporary help for the beta is to send feedback through the app store.
-    launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
-//    locator<QuickNav>().push(context, HelpScreen());
+    HelpDialog.asDialog(context);
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
@@ -418,11 +414,8 @@ class DashboardState extends State<DashboardScreen> {
         onTap: () => locator<QuickNav>().push(context, SettingsScreen()),
       );
 
-  // TODO: Change the label to 'Help' and remove the trailing icon when we get in the help screen (MBL-11509)
-  // Temporary help is to 'share feedback' through the app store for the beta.
   _navDrawerHelp() => ListTile(
-        title: Text(L10n(context).shareFeedback),
-        trailing: SvgPicture.asset('assets/svg/external-link.svg'),
+        title: Text(L10n(context).help),
         onTap: () => _navigateToHelp(context),
       );
 

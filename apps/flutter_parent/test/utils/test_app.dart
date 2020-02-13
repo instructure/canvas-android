@@ -48,6 +48,23 @@ class TestApp extends StatefulWidget {
 
   @override
   _TestAppState createState() => _TestAppState();
+
+  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext), {bool highContrast = false}) async {
+    await tester.pumpWidget(TestApp(
+      Builder(
+          builder: (context) => RaisedButton(
+                color: Colors.black,
+                child: Text('tap me', style: TextStyle(color: Colors.white)),
+                onPressed: () => tapCallback(context),
+              )),
+      highContrast: highContrast,
+    ));
+    await tester.pumpAndSettle();
+
+    // Tap the button to trigger the onPressed
+    await tester.tap(find.byType(RaisedButton));
+    await tester.pumpAndSettle();
+  }
 }
 
 class _TestAppState extends State<TestApp> {

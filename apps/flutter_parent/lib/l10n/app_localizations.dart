@@ -160,9 +160,6 @@ class AppLocalizations {
 
   String get help => Intl.message('Help', desc: 'Label text for the help nav drawer button');
 
-  String get shareFeedback =>
-      Intl.message('Send us feedback', desc: 'Label text for the nav drawer button to share feedback');
-
   String get logOut => Intl.message('Log Out', desc: 'Label text for the Log Out nav drawer button');
 
   String get switchUsers => Intl.message('Switch Users', desc: 'Label text for the Switch Users nav drawer button');
@@ -945,6 +942,76 @@ class AppLocalizations {
 
   String get eventRemindMeSet =>
       Intl.message('You will be notified about this event on…', desc: 'Description for when an event reminder is set');
+
+  /// Help Dialog
+
+  String get helpSearchCanvasDocsLabel => Intl.message(
+        'Search the Canvas Guides',
+        desc: 'Label for option to search the Canvas Guides',
+      );
+
+  String get helpSearchCanvasDocsDescription => Intl.message(
+        'Find answers to common questions',
+        desc: 'Description for option to search the Canvas Guides',
+      );
+
+  String get helpReportProblemLabel => Intl.message(
+        'Report a Problem',
+        desc: 'Label for option to report a problem',
+      );
+
+  String get helpReportProblemDescription => Intl.message(
+        'If the app misbehaves, let us know',
+        desc: 'Description for option to report a problem',
+      );
+
+  String get helpRequestFeatureLabel => Intl.message(
+        'Request a Feature',
+        desc: 'Label for option to request a feature',
+      );
+
+  String get helpRequestFeatureDescription => Intl.message(
+        'Have an idea to improve the app?',
+        desc: 'Description for option to request a feature',
+      );
+
+  String get helpShareLoveLabel => Intl.message(
+        'Share Your Love for the App',
+        desc: 'Label for option to open the app store',
+      );
+
+  String get helpShareLoveDescription => Intl.message(
+        'Tell us about your favorite parts of the app',
+        desc: 'Description for option to open the app store',
+      );
+
+  String get helpLegalLabel => Intl.message(
+        'Legal',
+        desc: 'Label for legal information option',
+      );
+
+  String get helpLegalDescription => Intl.message(
+        'Privacy policy, terms of use, open source',
+        desc: 'Description for legal information option',
+      );
+
+  String get featureRequestSubject => Intl.message(
+        'Idea for Canvas Parent App [Android]',
+        desc: 'The subject for the email to request a feature',
+      );
+
+  String get featureRequestHeader => Intl.message(
+        'The following information will help us better understand your idea:',
+        desc: 'The header for the users information that is attached to a feature request',
+      );
+
+  String get helpDomain => Intl.message('Domain:', desc: 'The label for the Canvas domain of the logged in user');
+
+  String get helpUserId => Intl.message('User ID:', desc: 'The label for the Canvas user ID of the logged in user');
+
+  String get helpEmail => Intl.message('Email:', desc: 'The label for the eamil of the logged in user');
+
+  String get helpLocale => Intl.message('Locale:', desc: 'The label for the locale of the logged in user');
 
   /// Error Report Dialog
 
