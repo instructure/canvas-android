@@ -59,17 +59,15 @@ class ConversationListInteractor {
     return locator<EnrollmentsApi>().getObserveeEnrollments();
   }
 
-  /// Create a map of { <course_name> : <list_of_students_in_course> } and sort the students alphabetically by their short name
-  Map<Course, List<User>> combineEnrollmentsAndCourses(List<Course> courses, List<Enrollment> enrollments) {
-    return {
-      for (var c in courses)
-        c: enrollments.where((e) => e.courseId == c.id).map((e) => e.observedUser).toList()
-          ..sort((a, b) => a.shortName.compareTo(b.shortName))
-    };
-  }
+  /// Create a List<Tuple2>, where each tuple is (<User> : <Course>), this tuple is then sorted by user name and also sorted by the students courses
+  List<Tuple2<User, Course>> combineEnrollmentsAndCourses(List<Course> courses, List<Enrollment> enrollments) {
+    // Create tuple list
+    List<Tuple2<User, Course>> thing =
+        enrollments.map((e) => Tuple2(e.observedUser, courses.firstWhere((c) => c.id == e.courseId))).toList();
 
-  List<Tuple2<Course, List<User>>> sortCourses(Map<Course, List<User>> combined) {
-    List<Tuple2<Course, List<User>>> sortedList = combined.keys.map((k) => Tuple2(k, combined[k])).toList();
-    return sortedList.sortBy([(it) => it.item2[0].shortName, (it) => it.item1.name]);
+    // Sort users in alphabetical order and sort their courses alphabetically
+    thing.sortBy([(it) => it.item1.shortName, (it) => it.item2.name]);
+
+    return thing;
   }
 }

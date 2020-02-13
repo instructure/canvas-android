@@ -35,27 +35,19 @@ import 'package:transparent_image/transparent_image.dart';
 import 'create_conversation_interactor.dart';
 
 class CreateConversationScreen extends StatefulWidget {
-  CreateConversationScreen(this._course, this._studentId)
-      : _subjectTemplate = _course.name,
-        this._assignmentUrl = null;
-
-  CreateConversationScreen.withSubject(
-    this._course,
+  CreateConversationScreen(
+    this._courseId,
     this._studentId,
     this._subjectTemplate,
-  ) : this._assignmentUrl = null;
+    this._postscript,
+  )   : assert(_courseId != null),
+        assert(_studentId != null),
+        assert(_subjectTemplate != null);
 
-  CreateConversationScreen.fromAssignment(
-    this._course,
-    this._studentId,
-    this._subjectTemplate,
-    this._assignmentUrl,
-  );
-
-  final Course _course;
+  final String _courseId;
   final String _studentId;
   final String _subjectTemplate;
-  final String _assignmentUrl;
+  final String _postscript;
 
   static final sendKey = Key('sendButton');
   static final attachmentKey = Key('attachmentButton');
@@ -68,7 +60,7 @@ class CreateConversationScreen extends StatefulWidget {
   _CreateConversationScreenState createState() => _CreateConversationScreenState(_subjectTemplate);
 }
 
-class _CreateConversationScreenState extends State<CreateConversationScreen> {
+class _CreateConversationScreenState extends State<CreateConversationScreen> with SingleTickerProviderStateMixin {
   _CreateConversationScreenState(this._subjectText);
 
   String _subjectText = '';
@@ -80,6 +72,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   List<Recipient> _allRecipients = [];
   List<Recipient> _selectedRecipients = [];
   List<AttachmentHandler> _attachments = [];
+  Course course;
 
   bool _loading = false;
   bool _error = false;
@@ -129,9 +122,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
       _loading = true;
       _error = false;
     });
-    _interactor.getAllRecipients(widget._course, widget._studentId).then((data) {
-      _allRecipients = data;
-      String courseId = widget._course.id;
+    _interactor.loadData(widget._courseId, widget._studentId).then((data) {
+      course = data.course;
+      _allRecipients = data.recipients;
+      String courseId = widget._courseId;
       _selectedRecipients =
           _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
       setState(() {
@@ -151,10 +145,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     try {
       var recipientIds = _selectedRecipients.map((it) => it.id).toList();
       var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
-      if (widget._assignmentUrl != null) {
-        _bodyText += '\n\n${widget._assignmentUrl}';
+      if (widget._postscript != null) {
+        _bodyText += '\n\n${widget._postscript}';
       }
-      await _interactor.createConversation(widget._course, recipientIds, _subjectText, _bodyText, attachmentIds);
+      await _interactor.createConversation(widget._courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
     } catch (e) {
       setState(() => _sending = false);
@@ -164,7 +158,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
     }
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop(BuildContext context) {
     if (_sending) return Future.value(false);
     if (_bodyText.isEmpty && _attachments.isEmpty) return Future.value(true);
     return showDialog(
@@ -191,7 +185,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
-        onWillPop: _onWillPop,
+        onWillPop: () => _onWillPop(context),
         child: ArrowAwareFocusScope(
           node: _focusScopeNode,
           child: Scaffold(
@@ -212,7 +206,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(L10n(context).newMessageTitle),
-          Text(widget._course.courseCode, style: Theme.of(context).textTheme.caption),
+          Text(course?.courseCode ?? '', style: Theme.of(context).textTheme.caption),
         ],
       ),
       actions: [
@@ -352,39 +346,45 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   }
 
   Widget _recipientsWidget(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          child: Semantics(
-            label: L10n(context).recipients,
-            child: InkWell(
-              onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 4, 4),
-                child: Wrap(
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  key: CreateConversationScreen.recipientsKey,
-                  spacing: 8,
-                  runSpacing: 0,
-                  children: _recipientChips(context),
+    return AnimatedSize(
+      vsync: this,
+      alignment: Alignment.topLeft,
+      curve: Curves.easeInOutBack,
+      duration: Duration(milliseconds: 350),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Semantics(
+              label: L10n(context).recipients,
+              child: InkWell(
+                onTap: () => setState(() => _recipientsExpanded = !_recipientsExpanded),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    key: CreateConversationScreen.recipientsKey,
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: _recipientChips(context),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        IconButton(
-          padding: EdgeInsets.all(16),
-          tooltip: L10n(context).selectRecipients,
-          key: CreateConversationScreen.recipientsAddKey,
-          icon: Icon(
-            CanvasIcons.address_book,
-            size: 20,
-            color: Theme.of(context).hintColor,
-          ),
-          onPressed: _sending ? null : () => _showRecipientPicker(context),
-        )
-      ],
+          IconButton(
+            padding: EdgeInsets.all(16),
+            tooltip: L10n(context).selectRecipients,
+            key: CreateConversationScreen.recipientsAddKey,
+            icon: Icon(
+              CanvasIcons.address_book,
+              size: 20,
+              color: Theme.of(context).hintColor,
+            ),
+            onPressed: _sending ? null : () => _showRecipientPicker(context),
+          )
+        ],
+      ),
     );
   }
 
@@ -402,38 +402,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
         )
       ];
     if (_recipientsExpanded) {
-      return _selectedRecipients
-          .map((user) => Chip(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: UserName(
-                    user.name,
-                    user.pronouns,
-                    style: TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-                avatar: Avatar(user.avatarUrl, name: user.name),
-                backgroundColor: ParentTheme.of(context).nearSurfaceColor,
-              ))
-          .toList();
+      return _selectedRecipients.map((user) => _chip(user)).toList();
     } else {
       return [
-        Chip(
-          label: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 180),
-              child: UserName(
-                _selectedRecipients[0].name,
-                _selectedRecipients[0].pronouns,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
-          avatar: Avatar(_selectedRecipients[0].avatarUrl, name: _selectedRecipients[0].name),
-          backgroundColor: ParentTheme.of(context).nearSurfaceColor,
-        ),
+        _chip(_selectedRecipients[0], ellipsize: true),
         if (_selectedRecipients.length > 1)
           Text(
             L10n(context).plusRecipientCount(_selectedRecipients.length - 1),
@@ -441,6 +413,37 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
           )
       ];
     }
+  }
+
+  Widget _chip(Recipient user, {bool ellipsize: false}) {
+    return Chip(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      //labelPadding: EdgeInsets.zero,
+      label: Padding(
+        padding: const EdgeInsets.only(top: 2, bottom: 1),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: ellipsize ? 180 : double.infinity),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              UserName(
+                user.name,
+                user.pronouns,
+                overflow: ellipsize ? TextOverflow.ellipsis : null,
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
+              SizedBox(height: 1),
+              Text(
+                _enrollmentType(context, user),
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
+              )
+            ],
+          ),
+        ),
+      ),
+      avatar: Avatar(user.avatarUrl, name: user.name),
+      backgroundColor: ParentTheme.of(context).nearSurfaceColor,
+    );
   }
 
   Widget _subjectWidget(BuildContext context) {
@@ -540,7 +543,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> {
   }
 
   String _enrollmentType(BuildContext context, Recipient user) {
-    var type = user.commonCourses[widget._course.id.toString()].first;
+    var type = user.commonCourses[widget._courseId].first;
     switch (type) {
       case 'TeacherEnrollment':
         return L10n(context).enrollmentTypeTeacher;

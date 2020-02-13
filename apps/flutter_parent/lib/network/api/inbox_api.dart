@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/conversation.dart';
-import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
@@ -59,18 +58,18 @@ class InboxApi {
     return conversation;
   }
 
-  Future<List<Recipient>> getRecipients(Course course, {bool forceRefresh: false}) {
+  Future<List<Recipient>> getRecipients(String courseId, {bool forceRefresh: false}) {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var params = {
       'permissions': ['send_messages_all'],
       'messageable_only': true,
-      'context': 'course_${course.id}',
+      'context': 'course_$courseId',
     };
     return fetchList(dio.get('search/recipients', queryParameters: params), depaginateWith: dio);
   }
 
   Future<Conversation> createConversation(
-    Course course,
+    String courseId,
     List<String> recipientIds,
     String subject,
     String body,
@@ -80,7 +79,7 @@ class InboxApi {
     var params = {
       'group_conversation': 'true',
       'recipients': recipientIds,
-      'context_code': 'course_${course.id}',
+      'context_code': 'course_$courseId',
       'subject': subject,
       'body': body,
       'attachment_ids': attachmentIds,

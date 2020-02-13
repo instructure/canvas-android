@@ -200,40 +200,23 @@ void main() {
       ..name = choir
       ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
 
-    Map<Course, List<User>> expectedResult = {
-      choirCourse: [
-        User((b) => b
-          ..shortName = 'Andy'
-          ..id = 'Andy'),
-        User((b) => b
-          ..shortName = 'Bill'
-          ..id = 'Bill'),
-        User((b) => b
-          ..shortName = 'Cherice'
-          ..id = 'Cherice'),
-      ],
-      boxingCourse: [
-        User((b) => b
-          ..shortName = 'Andy'
-          ..id = 'Andy'),
-        User((b) => b
-          ..shortName = 'Cherice'
-          ..id = 'Cherice'),
-      ],
-      arithmeticCourse: [
-        User((b) => b
-          ..shortName = 'Bill'
-          ..id = 'Bill'),
-        User((b) => b
-          ..shortName = 'Cherice'
-          ..id = 'Cherice'),
-      ],
-    };
+    List<Tuple2<User, Course>> expectedResult = [
+      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser, choirCourse),
+      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
+    ];
 
-    Map<Course, List<User>> combined = ConversationListInteractor().combineEnrollmentsAndCourses(
+    List<Tuple2<User, Course>> actual = ConversationListInteractor().combineEnrollmentsAndCourses(
         [choirCourse, boxingCourse, arithmeticCourse], [...billEnrollments, ...andyEnrollments, ...chericeEnrollments]);
 
-    expect(combined, equals(expectedResult));
+    for (var i = 0; i < expectedResult.length; i++) {
+      expect(actual[i].item1, expectedResult[i].item1);
+      expect(actual[i].item2, expectedResult[i].item2);
+    }
   });
 
   test('sortCourses sorts courses by the first enrolled student in that course', () {
@@ -260,16 +243,18 @@ void main() {
       ..name = choir
       ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
 
-    List<Tuple2<Course, List<User>>> expected = [
-      Tuple2(boxingCourse, enrollments.where((e) => e.courseId == 'Boxing').map((e) => e.observedUser).toList()),
-      Tuple2(choirCourse, enrollments.where((e) => e.courseId == 'Choir').map((e) => e.observedUser).toList()),
-      Tuple2(arithmeticCourse, enrollments.where((e) => e.courseId == 'Arithmetic').map((e) => e.observedUser).toList())
+    List<Tuple2<User, Course>> expected = [
+      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser, choirCourse),
+      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
     ];
 
-    Map<Course, List<User>> combined = ConversationListInteractor().combineEnrollmentsAndCourses(
+    List<Tuple2<User, Course>> actual = ConversationListInteractor().combineEnrollmentsAndCourses(
         [choirCourse, boxingCourse, arithmeticCourse], [...billEnrollments, ...andyEnrollments, ...chericeEnrollments]);
-
-    List<Tuple2<Course, List<User>>> actual = ConversationListInteractor().sortCourses(combined);
 
     for (int item = 0; item < actual.length; item++) {
       expect(actual[item].item1, expected[item].item1);

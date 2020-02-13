@@ -16,11 +16,14 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
@@ -28,13 +31,28 @@ class EventDetailsScreen extends StatefulWidget {
   final ScheduleItem event;
   final String eventId;
 
-  EventDetailsScreen.withEvent({Key key, this.event})
-      : assert(event != null),
+  // Course ID and Student name/id are used for messaging. The message FAB will not be shown if any of these are null.
+  final String courseId;
+  final String studentName;
+  final String studentId;
+
+  EventDetailsScreen.withEvent({
+    Key key,
+    this.event,
+    this.courseId,
+    this.studentName,
+    this.studentId,
+  })  : assert(event != null),
         eventId = event.id,
         super(key: key);
 
-  EventDetailsScreen.withId({Key key, this.eventId})
-      : assert(eventId != null),
+  EventDetailsScreen.withId({
+    Key key,
+    this.eventId,
+    this.courseId,
+    this.studentName,
+    this.studentId,
+  })  : assert(eventId != null),
         event = null,
         super(key: key);
 
@@ -68,6 +86,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       builder: (context, AsyncSnapshot<ScheduleItem> snapshot) {
         return Scaffold(
           appBar: AppBar(title: Text(L10n(context).eventDetailsTitle)),
+          floatingActionButton: _fab(snapshot),
           body: RefreshIndicator(
             key: _refreshKey,
             onRefresh: () {
@@ -94,6 +113,30 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     } else {
       return _EventDetails(snapshot.data);
     }
+  }
+
+  Widget _fab(AsyncSnapshot<ScheduleItem> snapshot) {
+    if (!snapshot.hasData || widget.courseId == null || widget.studentId == null || widget.studentName == null) {
+      // The data hasn't loaded, or course/student info is missing (e.g. if we deep linked to this page)
+      return null;
+    }
+
+    return FloatingActionButton(
+      tooltip: L10n(context).assignmentMessageHint,
+      child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
+      onPressed: () {
+        final event = snapshot.data;
+        String subject = L10n(context).eventSubjectMessage(widget.studentName, event.title);
+        String postscript = L10n(context).messageLinkPostscript(widget.studentName, event.htmlUrl);
+        Widget screen = CreateConversationScreen(
+          widget.courseId,
+          widget.studentId,
+          subject,
+          postscript,
+        );
+        locator.get<QuickNav>().push(context, screen);
+      },
+    );
   }
 }
 

@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
@@ -297,22 +298,39 @@ class ConversationListState extends State<ConversationListScreen> {
   }
 
   List<Widget> _courseList(_CoursesAndStudents coursesAndStudents) {
-    Map<Course, List<User>> _combined =
+    List<Tuple2<User, Course>> _combined =
         interactor.combineEnrollmentsAndCourses(coursesAndStudents.courses, coursesAndStudents.enrollments);
 
-    // Courses are grouped according to the first student in the course and sorted alphabetically within that group
-    List<Tuple2<Course, List<User>>> sortedList = interactor.sortCourses(_combined);
-    return sortedList
-        .map((entry) => ListTile(
-              title: Text(entry.item1.name),
-              subtitle: Text(L10n(context).forWhom(entry.item2.map((u) => u.shortName).toList())),
-              onTap: () async {
-                Navigator.pop(context); // Dismisses the bottom sheet
-                var refresh = await locator<QuickNav>().push(context, CreateConversationScreen(entry.item1, ''));
-                if (refresh == true) _refreshIndicatorKey.currentState.show();
-              },
-            ))
-        .toList();
+    List<Widget> widgets = [];
+
+    _combined.forEach((t) {
+      User u = t.item1;
+      Course c = t.item2;
+      var w = ListTile(
+        title: Text(c.name),
+        subtitle: Text(L10n(context).forWhom(u.shortName)),
+        onTap: () async {
+          {
+            String postscript = L10n(context).messageLinkPostscript(
+              u.shortName,
+              '${ApiPrefs.getDomain()}/courses/${c.id}',
+            );
+            Navigator.pop(context); // Dismisses the bottom sheet
+            var refresh = await locator<QuickNav>().push(
+                context,
+                CreateConversationScreen(
+                  c.id,
+                  u.id,
+                  c.name,
+                  postscript,
+                ));
+            if (refresh == true) _refreshIndicatorKey.currentState.show();
+          }
+        },
+      );
+      widgets.add(w);
+    });
+    return widgets;
   }
 }
 

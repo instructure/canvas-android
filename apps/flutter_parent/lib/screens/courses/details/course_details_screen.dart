@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
@@ -129,18 +130,27 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
   void _sendMessage(bool hasSyllabus) {
     String subject;
+    String urlLink = '${ApiPrefs.getDomain()}/courses/${widget._model.courseId}';
     if (CourseDetailsModel.selectedTab == 0) {
       // Grades
       subject = L10n(context).gradesSubjectMessage(widget._model.studentName);
+      urlLink += '/grades';
     } else if (hasSyllabus) {
       // Syllabus
       subject = L10n(context).syllabusSubjectMessage(widget._model.studentName);
+      urlLink += '/assignments/syllabus';
     } else {
       // Front Page
       subject = L10n(context).frontPageSubjectMessage(widget._model.studentName);
     }
 
-    Widget screen = CreateConversationScreen.withSubject(widget._model.course, widget._model.studentId, subject);
+    String postscript = L10n(context).messageLinkPostscript(widget._model.studentName, urlLink);
+    Widget screen = CreateConversationScreen(
+      widget._model.courseId,
+      widget._model.studentId,
+      subject,
+      postscript,
+    );
     locator.get<QuickNav>().push(context, screen);
   }
 }

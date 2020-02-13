@@ -275,7 +275,6 @@ void main() {
 
     var _combined = ConversationListInteractor().combineEnrollmentsAndCourses(courses, enrollments);
     when(interactor.combineEnrollmentsAndCourses(any, any)).thenAnswer((_) => _combined);
-    when(interactor.sortCourses(any)).thenAnswer((_) => ConversationListInteractor().sortCourses(_combined));
 
     courseCompleter.complete(courses);
     enrollmentCompleter.complete(enrollments);
@@ -365,7 +364,6 @@ void main() {
 
     var _combined = ConversationListInteractor().combineEnrollmentsAndCourses([course], [enrollment]);
     when(interactor.combineEnrollmentsAndCourses(any, any)).thenAnswer((_) => _combined);
-    when(interactor.sortCourses(any)).thenAnswer((_) => ConversationListInteractor().sortCourses(_combined));
 
     courseCompleter.complete([course]);
     enrollmentCompleter.complete([enrollment]);
