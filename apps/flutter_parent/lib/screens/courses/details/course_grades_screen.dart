@@ -138,6 +138,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
               child: Icon(
                 isCollapsed ? CanvasIcons.mini_arrow_down : CanvasIcons.mini_arrow_up,
                 color: Theme.of(context).textTheme.overline.color,
+                semanticLabel: isCollapsed ? L10n(context).allyCollapsed : L10n(context).allyExpanded,
               ),
             ),
             children: <Widget>[
@@ -274,7 +275,7 @@ class _AssignmentRow extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
-    return ListTile(
+    return InkWell(
       onTap: () => locator<QuickNav>().push(
         context,
         AssignmentDetailsScreen(
@@ -284,22 +285,42 @@ class _AssignmentRow extends StatelessWidget {
           studentName: studentName,
         ),
       ),
-      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      leading: Container(
-        alignment: Alignment.topLeft,
-        width: 20,
-        child: Icon(CanvasIcons.assignment, size: 20, color: ParentTheme.of(context).studentColor),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(top: 4),
+              width: 20,
+              child: Icon(CanvasIcons.assignment, size: 20, color: ParentTheme.of(context).studentColor),
+            ),
+            SizedBox(width: 32),
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(assignment.name, style: textTheme.subhead),
+                        SizedBox(height: 2),
+                        Text(_formatDate(context, assignment.dueAt), style: textTheme.caption),
+                        if (assignmentStatus != null) SizedBox(height: 4),
+                        if (assignmentStatus != null) assignmentStatus,
+                      ],
+                    ),
+                  ),
+                  SizedBox(width: 16),
+                  _assignmentGrade(context, assignment, studentId),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      title: Text(assignment.name, style: textTheme.subhead),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(_formatDate(context, assignment.dueAt), style: textTheme.caption),
-          if (assignmentStatus != null) SizedBox(height: 4),
-          if (assignmentStatus != null) assignmentStatus,
-        ],
-      ),
-      trailing: _assignmentGrade(context, assignment, studentId),
     );
   }
 
