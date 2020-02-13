@@ -14,9 +14,14 @@
 
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:tuple/tuple.dart';
 
 class ConversationListInteractor {
   Future<List<Conversation>> getConversations({bool forceRefresh: false}) async {
@@ -48,5 +53,25 @@ class ConversationListInteractor {
 
   Future<List<Course>> getCoursesForCompose() async {
     return locator<CourseApi>().getObserveeCourses();
+  }
+
+  Future<List<Enrollment>> getStudentEnrollments() async {
+    return locator<EnrollmentsApi>().getObserveeEnrollments();
+  }
+
+  /// Create a List<Tuple2>, where each tuple is (<User> : <Course>), this tuple is then sorted by user name and also sorted by the students courses
+  List<Tuple2<User, Course>> combineEnrollmentsAndCourses(List<Course> courses, List<Enrollment> enrollments) {
+    // Create tuple list
+    // Remove enrollments where the user is not observing anyone
+    enrollments.retainWhere((e) => e.observedUser != null);
+    List<Tuple2<User, Course>> thing =
+        enrollments.map((e) => Tuple2(e.observedUser, courses.firstWhere((c) => c.id == e.courseId))).toList();
+
+    // Sort users in alphabetical order and sort their courses alphabetically
+    thing.sortBy(
+      [(it) => it.item1?.shortName, (it) => it.item2.name],
+    );
+
+    return thing;
   }
 }

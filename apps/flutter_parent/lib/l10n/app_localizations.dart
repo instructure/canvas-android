@@ -326,6 +326,13 @@ class AppLocalizations {
   String get attachmentFailed => Intl.message('Failed. Tap for options.',
       desc: 'Short message shown on a message attachment when uploading has failed');
 
+  String courseForWhom(String studentShortName) => Intl.message(
+        'for $studentShortName',
+        desc: 'Describes for whom a course is for (i.e. for Bill)',
+        args: [studentShortName],
+        name: 'courseForWhom',
+      );
+
   String messageLinkPostscript(String studentName, String linkUrl) => Intl.message(
         'Regarding: $studentName, $linkUrl',
         desc:

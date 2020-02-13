@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -31,6 +33,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
+import 'package:tuple/tuple.dart';
 
 import 'conversation_list_interactor.dart';
 
@@ -243,12 +246,14 @@ class ConversationListState extends State<ConversationListScreen> {
 
   _createMessage(BuildContext context) {
     var coursesFuture = interactor.getCoursesForCompose();
+    var studentsFuture = interactor.getStudentEnrollments();
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return FutureBuilder(
-          future: coursesFuture,
-          builder: (BuildContext context, AsyncSnapshot<List<Course>> snapshot) {
+          future: Future.wait([coursesFuture, studentsFuture])
+              .then((response) => _CoursesAndStudents(response[0], response[1])),
+          builder: (BuildContext context, AsyncSnapshot<_CoursesAndStudents> snapshot) {
             if (snapshot.hasError) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -277,25 +282,7 @@ class ConversationListState extends State<ConversationListScreen> {
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
-                  ...snapshot.data.map((it) => ListTile(
-                        title: Text(it.name),
-                        onTap: () async {
-                          String postscript = L10n(context).messageLinkPostscript(
-                            '', // TODO: Pass in student short name
-                            '${ApiPrefs.getDomain()}/courses/${it.id}',
-                          );
-                          Navigator.pop(context); // Dismisses the bottom sheet
-                          var refresh = await locator<QuickNav>().push(
-                              context,
-                              CreateConversationScreen(
-                                it.id,
-                                '', // TODO: Pass in student ID
-                                it.name,
-                                postscript,
-                              ));
-                          if (refresh == true) _refreshIndicatorKey.currentState.show();
-                        },
-                      )),
+                  ..._courseList(snapshot.data),
                 ],
               );
             } else {
@@ -309,4 +296,45 @@ class ConversationListState extends State<ConversationListScreen> {
       },
     );
   }
+
+  List<Widget> _courseList(_CoursesAndStudents coursesAndStudents) {
+    List<Tuple2<User, Course>> _combined =
+        interactor.combineEnrollmentsAndCourses(coursesAndStudents.courses, coursesAndStudents.enrollments);
+
+    List<Widget> widgets = [];
+
+    _combined.forEach((t) {
+      User user = t.item1;
+      Course course = t.item2;
+      var w = ListTile(
+        title: Text(course.name),
+        subtitle: Text(L10n(context).courseForWhom(user.shortName)),
+        onTap: () async {
+          String postscript = L10n(context).messageLinkPostscript(
+            user.shortName,
+            '${ApiPrefs.getDomain()}/courses/${course.id}',
+          );
+          Navigator.pop(context); // Dismisses the bottom sheet
+          var refresh = await locator<QuickNav>().push(
+              context,
+              CreateConversationScreen(
+                course.id,
+                user.id,
+                course.name,
+                postscript,
+              ));
+          if (refresh == true) _refreshIndicatorKey.currentState.show();
+        },
+      );
+      widgets.add(w);
+    });
+    return widgets;
+  }
+}
+
+// Helper class for combining two futures for use in a FutureBuilder
+class _CoursesAndStudents {
+  _CoursesAndStudents(this.courses, this.enrollments);
+  List<Course> courses;
+  List<Enrollment> enrollments;
 }
