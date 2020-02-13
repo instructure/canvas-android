@@ -14,7 +14,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
-import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
@@ -305,16 +304,9 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   }
 
   _sendMessage(AssignmentDetails details) {
-    Course course = Course((b) => b
-      ..id = widget.courseId
-      ..courseCode = details.course?.courseCode ?? '');
     String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
-    Widget screen = CreateConversationScreen.fromAssignment(
-      course,
-      widget.studentId,
-      subject,
-      details.assignment.htmlUrl,
-    );
+    String postscript = L10n(context).messageLinkPostscript(widget.studentName, details.assignment.htmlUrl);
+    Widget screen = CreateConversationScreen(widget.courseId, widget.studentId, subject, postscript);
     locator.get<QuickNav>().push(context, screen);
   }
 }
