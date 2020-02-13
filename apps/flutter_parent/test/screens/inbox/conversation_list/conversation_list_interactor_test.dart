@@ -271,7 +271,10 @@ void main() {
 
     List<Tuple2<Course, List<User>>> actual = ConversationListInteractor().sortCourses(combined);
 
-    expect(actual, equals(expected));
+    for (int item = 0; item < actual.length; item++) {
+      expect(actual[item].item1, expected[item].item1);
+      expect(actual[item].item2, expected[item].item2);
+    }
   });
 }
 
