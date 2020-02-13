@@ -989,6 +989,16 @@ class AppLocalizations {
 
   String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
+  String get allyExpanded => Intl.message(
+        'expanded',
+        desc: 'Description for the accessibility reader for list groups that are expanded',
+      );
+
+  String get allyCollapsed => Intl.message(
+        'collapsed',
+        desc: 'Description for the accessibility reader for list groups that are expanded',
+      );
+
   String get unexpectedError => Intl.message('An unexpected error occurred');
 
   String dateAtTime(String date, String time) => Intl.message(
