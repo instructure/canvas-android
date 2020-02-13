@@ -180,7 +180,7 @@ class AppLocalizations {
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
 
   String get canvasLogoLabel {
-    return Intl.message('Canvas logo', name: 'canvaslogoLabel', desc: 'The semantics label for the Canvas logo');
+    return Intl.message('Canvas logo', name: 'canvasLogoLabel', desc: 'The semantics label for the Canvas logo');
   }
 
   String get findSchool => Intl.message(
@@ -321,6 +321,7 @@ class AppLocalizations {
   String plusRecipientCount(int count) => Intl.message(
         '+$count',
         desc: 'Shows the number of recipients that are selected but not displayed on screen.',
+        name: 'plusRecipientCount',
         args: [count],
         examples: const {'count': 5},
       );
@@ -333,6 +334,7 @@ class AppLocalizations {
         desc:
             'A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).',
         args: [studentName, linkUrl],
+        name: 'messageLinkPostscript',
       );
 
   /// View conversation
@@ -356,6 +358,7 @@ class AppLocalizations {
     return Intl.message(
       '$authorName to $recipientName',
       args: [authorName, recipientName],
+      name: 'authorToRecipient',
       desc: 'Author info for a single-recipient message; includes both the author name and the recipient name.',
     );
   }
@@ -366,6 +369,7 @@ class AppLocalizations {
       one: '$authorName to 1 other',
       other: '$authorName to $howMany others',
       args: [authorName, howMany],
+      name: 'authorToNOthers',
       desc: 'Author info for a mutli-recipient message; includes the author name and the number of recipients',
     );
   }
@@ -375,7 +379,8 @@ class AppLocalizations {
       howMany,
       one: '$authorName to $recipientName & 1 other',
       other: '$authorName to $recipientName & $howMany others',
-      args: [authorName, howMany],
+      args: [authorName, recipientName, howMany],
+      name: 'authorToRecipientAndNOthers',
       desc:
           'Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients',
     );
@@ -565,6 +570,7 @@ class AppLocalizations {
   String eventSubjectMessage(String studentName, String eventTitle) => Intl.message(
         'Regarding: $studentName, Event - $eventTitle',
         desc: 'The subject line for a message to a teacher regarding a calendar event',
+        name: 'eventSubjectMessage',
         args: [studentName, eventTitle],
       );
 
@@ -578,12 +584,19 @@ class AppLocalizations {
   String get assignmentDetailsTitle =>
       Intl.message('Assignment Details', desc: 'Title for the page that shows details for an assignment');
 
-  String assignmentTotalPoints(String points) => Intl.message('$points pts',
-      name: 'assignmentTotalPoints', desc: 'Label used for the total points the assignment is worth');
+  String assignmentTotalPoints(String points) => Intl.message(
+        '$points pts',
+        name: 'assignmentTotalPoints',
+        args: [points],
+        desc: 'Label used for the total points the assignment is worth',
+      );
 
-  String assignmentTotalPointsAccessible(String points) => Intl.message('$points points',
-      name: 'assignmentTotalPointsAccessible',
-      desc: 'Screen reader label used for the total points the assignment is worth');
+  String assignmentTotalPointsAccessible(String points) => Intl.message(
+        '$points points',
+        name: 'assignmentTotalPointsAccessible',
+        args: [points],
+        desc: 'Screen reader label used for the total points the assignment is worth',
+      );
 
   String get assignmentDueLabel => Intl.message('Due', desc: 'Label for an assignment due date');
 
@@ -719,28 +732,28 @@ class AppLocalizations {
 
   String assignmentGradeAboveThreshold(String threshold) => Intl.message(
         'Assignment Grade Above $threshold',
-        name: 'assignmentGradeAbove',
+        name: 'assignmentGradeAboveThreshold',
         args: [threshold],
         desc: 'Title for alerts when an assignment grade is above the threshold value',
       );
 
   String assignmentGradeBelowThreshold(String threshold) => Intl.message(
         'Assignment Grade Below $threshold',
-        name: 'assignmentGradeBelow',
+        name: 'assignmentGradeBelowThreshold',
         args: [threshold],
         desc: 'Title for alerts when an assignment grade is below the threshold value',
       );
 
   String courseGradeAboveThreshold(String threshold) => Intl.message(
         'Course Grade Above $threshold',
-        name: 'courseGradeAbove',
+        name: 'courseGradeAboveThreshold',
         args: [threshold],
         desc: 'Title for alerts when a course grade is above the threshold value',
       );
 
   String courseGradeBelowThreshold(String threshold) => Intl.message(
         'Course Grade Below $threshold',
-        name: 'courseGradeBelow',
+        name: 'courseGradeBelowThreshold',
         args: [threshold],
         desc: 'Title for alerts when a course grade is below the threshold value',
       );
@@ -770,6 +783,7 @@ class AppLocalizations {
       'This assignment was submitted on $date at $time and is waiting to be graded',
       desc: 'Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade',
       args: [date, time],
+      name: 'submissionStatusSuccessSubtitle',
     );
   }
 
@@ -777,8 +791,9 @@ class AppLocalizations {
         howMany,
         one: 'Out of 1 point',
         other: 'Out of $points points',
-        desc: '',
-        args: [points],
+        desc: 'Description for an assignment grade that has points without a current scoroe',
+        args: [points, howMany],
+        name: 'outOfPoints',
         precision: 2,
       );
 
@@ -800,12 +815,14 @@ class AppLocalizations {
         'Late penalty (-$pointsLost)',
         desc: 'Text displayed when a late penalty has been applied to the assignment',
         args: [pointsLost],
+        name: 'latePenalty',
       );
 
   String finalGrade(String grade) => Intl.message(
         'Final Grade: $grade',
         desc: 'Text that displays the final grade of an assignment',
         args: [grade],
+        name: 'finalGrade',
       );
 
   /// Alert Thresholds Screen
@@ -846,6 +863,7 @@ class AppLocalizations {
         'Must be below $percentage',
         desc: 'Validation error to the user that they must choose a percentage below \'n\'',
         args: [percentage],
+        name: 'mustBeBelowN',
         examples: const {'percentage': 5},
       );
 
@@ -853,6 +871,7 @@ class AppLocalizations {
         'Must be above $percentage',
         desc: 'Validation error to the user that they must choose a percentage above \'n\'',
         args: [percentage],
+        name: 'mustBeAboveN',
         examples: const {'percentage': 5},
       );
 
@@ -994,12 +1013,14 @@ class AppLocalizations {
   String dateAtTime(String date, String time) => Intl.message(
         '$date at $time',
         args: [date, time],
+        name: 'dateAtTime',
         desc: 'The string to format dates',
       );
 
   String dueDateAtTime(String date, String time) => Intl.message(
         'Due $date at $time',
         args: [date, time],
+        name: 'dueDateAtTime',
         desc: 'The string to format due dates',
       );
 
