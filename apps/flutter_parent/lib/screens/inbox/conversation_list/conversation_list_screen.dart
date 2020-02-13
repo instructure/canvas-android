@@ -310,22 +310,20 @@ class ConversationListState extends State<ConversationListScreen> {
         title: Text(c.name),
         subtitle: Text(L10n(context).courseForWhom(u.shortName)),
         onTap: () async {
-          {
-            String postscript = L10n(context).messageLinkPostscript(
-              u.shortName,
-              '${ApiPrefs.getDomain()}/courses/${c.id}',
-            );
-            Navigator.pop(context); // Dismisses the bottom sheet
-            var refresh = await locator<QuickNav>().push(
-                context,
-                CreateConversationScreen(
-                  c.id,
-                  u.id,
-                  c.name,
-                  postscript,
-                ));
-            if (refresh == true) _refreshIndicatorKey.currentState.show();
-          }
+          String postscript = L10n(context).messageLinkPostscript(
+            u.shortName,
+            '${ApiPrefs.getDomain()}/courses/${c.id}',
+          );
+          Navigator.pop(context); // Dismisses the bottom sheet
+          var refresh = await locator<QuickNav>().push(
+              context,
+              CreateConversationScreen(
+                c.id,
+                u.id,
+                c.name,
+                postscript,
+              ));
+          if (refresh == true) _refreshIndicatorKey.currentState.show();
         },
       );
       widgets.add(w);
