@@ -332,7 +332,7 @@ class AppLocalizations {
         'for $studentShortName',
         desc: 'Describes for whom a course is for (i.e. for Bill)',
         args: [studentShortName],
-        name: 'forWhom',
+        name: 'courseForWhom',
       );
 
   String messageLinkPostscript(String studentName, String linkUrl) => Intl.message(
