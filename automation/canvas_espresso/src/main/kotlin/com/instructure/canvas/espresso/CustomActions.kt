@@ -16,11 +16,14 @@
  */
 package com.instructure.canvas.espresso
 
+import android.os.SystemClock
+import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -28,12 +31,16 @@ import androidx.test.espresso.action.CoordinatesProvider
 import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Tap
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 //
 // This is a repo for generally useful Espresso actions
@@ -71,6 +78,36 @@ fun scrollRecyclerView(recyclerViewId: Int, target: String) {
  */
 fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
     val recyclerViewMatcher = Matchers.allOf(ViewMatchers.withId(recyclerViewId), ViewMatchers.isDisplayed())
+
+    // Determine whether or not a SwipeRefreshLayout is available
+    var swipeRefreshLayoutPresent = false;
+    val swipeRefreshLayoutMatcher = allOf(ViewMatchers.isAssignableFrom(SwipeRefreshLayout::class.java), isDisplayed())
+    try {
+        onView(swipeRefreshLayoutMatcher).check(matches(isDisplayed()));
+        swipeRefreshLayoutPresent = true
+    }
+    catch(e: Exception) {
+    }
+
+    // If a SwipeRefreshLayout is available, then allow a couple of swipe-refreshes if the list/recycler
+    // is not immediately populated.  This is one thing that will allow us to recover from the
+    // "late delayed job" situation.
+    if(swipeRefreshLayoutPresent) {
+        var refreshesLeft = 2
+        while(refreshesLeft > 0)  {
+            try {
+                onView(recyclerViewMatcher).assertDisplayed()
+                break
+            }
+            catch(e: Exception) {
+                refreshesLeft -= 1
+                onView(swipeRefreshLayoutMatcher)
+                        .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
+                SystemClock.sleep(1000) // Allow some time to react to the update.
+            }
+        }
+    }
+
     onView(recyclerViewMatcher)
             .perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(ViewMatchers.hasDescendant(target)))
 
