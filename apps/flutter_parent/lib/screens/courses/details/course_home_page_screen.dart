@@ -33,8 +33,11 @@ class CourseHomePageScreen extends StatefulWidget {
   _CourseHomePageScreenState createState() => _CourseHomePageScreenState();
 }
 
-class _CourseHomePageScreenState extends State<CourseHomePageScreen> {
+class _CourseHomePageScreenState extends State<CourseHomePageScreen> with AutomaticKeepAliveClientMixin {
   Future<Page> _pageFuture;
+
+  @override
+  bool get wantKeepAlive => true;
 
   Future<Page> _refreshPage() {
     setState(() {
@@ -53,6 +56,7 @@ class _CourseHomePageScreenState extends State<CourseHomePageScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     CourseDetailsModel.selectedTab = 1;
     return RefreshIndicator(
       onRefresh: () {
