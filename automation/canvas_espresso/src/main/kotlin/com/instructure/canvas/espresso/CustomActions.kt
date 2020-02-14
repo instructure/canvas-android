@@ -79,20 +79,13 @@ fun scrollRecyclerView(recyclerViewId: Int, target: String) {
 fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
     val recyclerViewMatcher = Matchers.allOf(ViewMatchers.withId(recyclerViewId), ViewMatchers.isDisplayed())
 
-    // Determine whether or not a SwipeRefreshLayout is available
-    var swipeRefreshLayoutPresent = false;
-    val swipeRefreshLayoutMatcher = allOf(ViewMatchers.isAssignableFrom(SwipeRefreshLayout::class.java), isDisplayed())
-    try {
-        onView(swipeRefreshLayoutMatcher).check(matches(isDisplayed()));
-        swipeRefreshLayoutPresent = true
-    }
-    catch(e: Exception) {
-    }
+    // Grab the SwipeRefreshLayout, if one is available
+    val swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
 
     // If a SwipeRefreshLayout is available, then allow a couple of swipe-refreshes if the list/recycler
     // is not immediately populated.  This is one thing that will allow us to recover from the
     // "late delayed job" situation.
-    if(swipeRefreshLayoutPresent) {
+    if(swipeRefreshLayoutMatcher != null) {
         var refreshesLeft = 2
         while(refreshesLeft > 0)  {
             try {
@@ -120,6 +113,20 @@ fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
         swipesRemaining -= 1
     }
 
+}
+
+/**
+ * Returns a matcher for the SwipeRefreshLayout if one is available, otherwise null.
+ */
+private fun getSwipeRefreshLayoutMatcher(): Matcher<View>? {
+    val swipeRefreshLayoutMatcher = allOf(ViewMatchers.isAssignableFrom(SwipeRefreshLayout::class.java), isDisplayed())
+    try {
+        onView(swipeRefreshLayoutMatcher).check(matches(isDisplayed()));
+        return swipeRefreshLayoutMatcher
+    }
+    catch(e: Exception) {
+        return null
+    }
 }
 
 
@@ -203,4 +210,29 @@ fun clickCoordinates(percentX: Float, percentY: Float) : ViewAction {
         InputDevice.SOURCE_MOUSE,
         MotionEvent.BUTTON_PRIMARY
     )
+}
+
+/**
+ * Wait for a specified matcher to appear, trying a couple of pull-to-refreshes before giving up.
+ * This is one way to combat the "late delayed job" problem.
+ */
+fun waitForMatcherWithRefreshes(target: Matcher<View>) {
+    val swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
+
+    if(swipeRefreshLayoutMatcher != null) {
+        var refreshesLeft = 2;
+        while(refreshesLeft > 0) {
+            try {
+                onView(target).assertDisplayed()
+                return
+            }
+            catch(e: Exception) {
+                refreshesLeft -= 1
+                onView(swipeRefreshLayoutMatcher)
+                        .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
+                SystemClock.sleep(1000) // Allow some time to react to the update.
+
+            }
+        }
+    }
 }
