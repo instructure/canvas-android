@@ -164,8 +164,8 @@ class AppLocalizations {
 
   String get switchUsers => Intl.message('Switch Users', desc: 'Label text for the Switch Users nav drawer button');
 
-  String appVersion(String version) => Intl.message('v. $version',
-      name: 'appVersion', args: [version], desc: 'App version shown in the navigation drawer');
+  String appVersion(String version) =>
+      Intl.message('v. $version', args: [version], desc: 'App version shown in the navigation drawer');
 
   String get logoutConfirmation => Intl.message(
         'Are you sure you want to log out?',
