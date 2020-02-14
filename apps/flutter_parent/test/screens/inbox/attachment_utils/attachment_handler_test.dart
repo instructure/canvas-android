@@ -15,16 +15,29 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:built_value/json_object.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
+import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../utils/test_app.dart';
 
 void main() {
+  setUpAll(() async {
+    // Move to a temp dir so we don't write test files to the project dir
+    Directory.current = Directory.systemTemp;
+    await Directory('cache').create();
+  });
+
+  tearDownAll(() async {
+    // Delete cache dir and contents
+    await Directory('cache').delete(recursive: true);
+  });
+
   test('Is constructed in "created" stage with indeterminate progress', () {
     var handler = AttachmentHandler(File(''));
     expect(handler.stage, equals(AttachmentUploadStage.CREATED));
@@ -52,13 +65,26 @@ void main() {
 
   test('Notifies listeners during upload', () async {
     final api = _MockFileUploadApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
+    final pathProvider = _MockPathProvider();
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<FileApi>(() => api);
+      locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
+    });
+
+    when(pathProvider.getTemporaryDirectory()).thenAnswer((_) async => Directory('other'));
+    when(pathProvider.getApplicationSupportDirectory()).thenAnswer((_) async => Directory('other'));
+    when(pathProvider.getExternalStorageDirectory()).thenAnswer((_) async => Directory('other'));
 
     final completer = Completer<Attachment>();
 
     when(api.uploadConversationFile(any, any)).thenAnswer((_) => completer.future);
 
-    var handler = AttachmentHandler(File(''));
+    // Create file
+    var file = File('cache/test-file.txt');
+    file.writeAsStringSync('This is a test!');
+
+    var handler = AttachmentHandler(file);
 
     // Expect updates for:
     //  1 - Change to 'uploading' stage
@@ -154,6 +180,109 @@ void main() {
     var handler = AttachmentHandler(null)..attachment = null;
     expect(handler.displayName, '');
   });
+
+  test('cleans up file if local', () async {
+    final pathProvider = _MockPathProvider();
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
+    });
+
+    when(pathProvider.getTemporaryDirectory()).thenAnswer((_) async => Directory('cache'));
+    when(pathProvider.getApplicationSupportDirectory()).thenAnswer((_) async => Directory('cache'));
+    when(pathProvider.getExternalStorageDirectory()).thenAnswer((_) async => Directory('cache'));
+
+    // Create file
+    var file = File('cache/test-file.txt');
+    file.writeAsStringSync('This is a test!');
+
+    expect(file.existsSync(), isTrue);
+
+    var handler = AttachmentHandler(file);
+    await handler.cleanUpFile();
+
+    expect(file.existsSync(), isFalse);
+  });
+
+  test('does not clean up file if not local', () async {
+    final pathProvider = _MockPathProvider();
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
+    });
+
+    when(pathProvider.getTemporaryDirectory()).thenAnswer((_) async => Directory('other'));
+    when(pathProvider.getApplicationSupportDirectory()).thenAnswer((_) async => Directory('other'));
+    when(pathProvider.getExternalStorageDirectory()).thenAnswer((_) async => Directory('other'));
+
+    // Create file
+    var file = File('cache/test-file.txt');
+    file.writeAsStringSync('This is a test!');
+
+    expect(file.existsSync(), isTrue);
+
+    var handler = AttachmentHandler(file);
+    await handler.cleanUpFile();
+
+    expect(file.existsSync(), isTrue);
+  });
+
+  test('cleanUpFile prints error on failure', interceptPrint((log) async {
+    final pathProvider = _MockPathProvider();
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<PathProviderVeneer>(() => pathProvider);
+    });
+
+    when(pathProvider.getTemporaryDirectory()).thenAnswer((_) => Future.error(Error()));
+
+    var handler = AttachmentHandler(null);
+    await handler.cleanUpFile();
+
+    expect(log.length, greaterThan(0));
+    expect(log.first, 'Unable to clean up attachment source file');
+  }));
+
+  test('deleteAttachment calls API if attachment exists', () async {
+    final api = _MockFileUploadApi();
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
+    when(api.deleteFile(any)).thenAnswer((_) async {});
+
+    var handler = AttachmentHandler(null)..attachment = Attachment((a) => a..jsonId = JsonObject('attachment_123'));
+    await handler.deleteAttachment();
+
+    verify(api.deleteFile('attachment_123'));
+  });
+
+  test('deleteAttachment does not call API if attachment is null', () async {
+    final api = _MockFileUploadApi();
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
+
+    var handler = AttachmentHandler(null);
+    await handler.deleteAttachment();
+
+    verifyNever(api.deleteFile(any));
+  });
+
+  test('deleteAttachment prints error on failure', interceptPrint((log) async {
+    final api = _MockFileUploadApi();
+    setupTestLocator((locator) => locator.registerLazySingleton<FileApi>(() => api));
+    when(api.deleteFile(any)).thenAnswer((_) => Future.error(Error()));
+
+    var handler = AttachmentHandler(null)..attachment = Attachment((a) => a..jsonId = JsonObject('attachment_123'));
+    await handler.deleteAttachment();
+
+    expect(log.length, greaterThan(0));
+    expect(log.first, 'Unable to delete attachment');
+  }));
 }
 
+interceptPrint(testBody(List<String> log)) => () {
+      final List<String> log = [];
+      final spec = ZoneSpecification(print: (self, parent, zone, String msg) => log.add(msg));
+      return Zone.current.fork(specification: spec).run(() => testBody(log));
+    };
+
 class _MockFileUploadApi extends Mock implements FileApi {}
+
+class _MockPathProvider extends Mock implements PathProviderVeneer {}

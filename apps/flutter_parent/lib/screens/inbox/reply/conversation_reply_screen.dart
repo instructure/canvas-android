@@ -111,7 +111,10 @@ class _ConversationReplyScreenState extends State<ConversationReplyScreen> {
                 child: new Text(L10n(context).no),
               ),
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  _attachments.forEach((it) => it.deleteAttachment());
+                  Navigator.of(context).pop(true);
+                },
                 child: new Text(L10n(context).yes),
               ),
             ],
