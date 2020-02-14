@@ -19,19 +19,28 @@ import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class CourseSyllabusScreen extends StatelessWidget {
+class CourseSyllabusScreen extends StatefulWidget {
   final String syllabus;
   CourseSyllabusScreen(this.syllabus);
 
   @override
+  _CourseSyllabusScreenState createState() => _CourseSyllabusScreenState();
+}
+
+class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     CourseDetailsModel.selectedTab = 1;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) => WebView(
         javascriptMode: JavascriptMode.unrestricted,
         gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
         onWebViewCreated: (controller) {
-          controller.loadHtml(syllabus, horizontalPadding: 10);
+          controller.loadHtml(widget.syllabus, horizontalPadding: 10);
         },
       ),
     );

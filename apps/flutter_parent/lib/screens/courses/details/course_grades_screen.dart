@@ -40,10 +40,13 @@ class CourseGradesScreen extends StatefulWidget {
   _CourseGradesScreenState createState() => _CourseGradesScreenState();
 }
 
-class _CourseGradesScreenState extends State<CourseGradesScreen> {
+class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticKeepAliveClientMixin {
   Set<String> _collapsedGroupIds;
   Future<GradeDetails> _detailsFuture;
   static final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -53,6 +56,7 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     CourseDetailsModel.selectedTab = 0;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
