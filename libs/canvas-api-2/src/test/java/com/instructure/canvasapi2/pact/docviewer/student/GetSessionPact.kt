@@ -18,9 +18,10 @@
 package com.instructure.canvasapi2.pact.docviewer.student
 
 import au.com.dius.pact.consumer.MockServer
+import au.com.dius.pact.consumer.PactTestExecutionContext
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
-import au.com.dius.pact.model.RequestResponsePact
+import au.com.dius.pact.core.model.RequestResponsePact
 import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.DocSession
@@ -50,7 +51,7 @@ class GetSessionPact : DocViewerPact() {
                 .toPact()
     }
 
-    override fun runTest(mockServer: MockServer) {
+    override fun runTest(mockServer: MockServer, context: PactTestExecutionContext) {
         runBlocking {
             val session = awaitApi<DocSession> {
                 val adapter = RestBuilder(it)

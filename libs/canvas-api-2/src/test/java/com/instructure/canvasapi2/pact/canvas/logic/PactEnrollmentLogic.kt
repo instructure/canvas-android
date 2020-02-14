@@ -23,7 +23,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 
 // A regex enumerating all possible enrollment types
-private val enrollmentTypes = "StudentEnrollment|TeacherEnrollment|TaEnrollment|DesignerEnrollment|ObserverEnrollment"
+private val enrollmentTypes = "StudentEnrollment|TeacherEnrollment|TaEnrollment|DesignerEnrollment|ObserverEnrollment|student"
 
 /**
  * Information about how to set up Enrollment user fields.
@@ -58,8 +58,8 @@ data class PactEnrollmentFieldConfig(
  */
 fun LambdaDslObject.populateEnrollmentFields(fieldConfig: PactEnrollmentFieldConfig = PactEnrollmentFieldConfig()) : LambdaDslObject {
     this
-            .stringMatcher("type", enrollmentTypes, "StudentEnrollment") // May not be the same as "role", despite API docs
             .stringMatcher("role", enrollmentTypes, "StudentEnrollment")
+            .stringMatcher("type", enrollmentTypes, "StudentEnrollment")
             .stringType("enrollment_state")
             .booleanType("limit_privileges_to_course_section")
 
@@ -75,11 +75,11 @@ fun LambdaDslObject.populateEnrollmentFields(fieldConfig: PactEnrollmentFieldCon
         this
                 .booleanType("multiple_grading_periods_enabled")
                 .booleanType("totals_for_all_grading_periods_option")
-                .numberType("current_period_computed_current_score")
-                .numberType("current_period_computed_final_score")
+                .numberType("current_period_computed_current_score", 100)
+                .numberType("current_period_computed_final_score", 100)
                 .stringType("current_period_computed_current_grade")
                 .stringType("current_period_computed_final_grade")
-                .numberType("current_grading_period_id")
+                .id("current_grading_period_id")
                 .stringType("current_grading_period_title")
     }
 
@@ -109,7 +109,8 @@ fun LambdaDslObject.populateEnrollmentFields(fieldConfig: PactEnrollmentFieldCon
         else {
             this.id("course_id")
         }
-        this.timestamp("last_activity_at", PACT_TIMESTAMP_FORMAT)
+        this.stringMatcher("last_activity_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+        //this.timestamp("last_activity_at", PACT_TIMESTAMP_FORMAT)
         this.`object`("user") {user ->
             user.populateUserFields()
         }

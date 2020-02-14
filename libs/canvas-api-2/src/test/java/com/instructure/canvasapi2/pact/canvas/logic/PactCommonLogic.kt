@@ -18,3 +18,5 @@ package com.instructure.canvasapi2.pact.canvas.logic
 
 // Common values/settings for all Pact specifications
 val PACT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+
+val PACT_TIMESTAMP_REGEX = "\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}.*"
