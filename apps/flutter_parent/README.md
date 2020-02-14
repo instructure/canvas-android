@@ -60,6 +60,8 @@ command from the project root:
 ```
 flutter pub run intl_translation:extract_to_arb --output-dir=lib/l10n/res lib/l10n/app_localizations.dart
 ```
+Note: We also add the --warnings-are-errors flag during CI to ensure that
+strings that are improperly formatted will fail to build during PRs.
 
 Once intl_messages has been created, it can be sent to translators where
 they will create all the other `intl_*.arb` files. To link translations
