@@ -56,6 +56,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   // State variables
   Future<AssignmentDetails> _assignmentFuture;
   Future<Reminder> _reminderFuture;
+  Future<void> _animationFuture;
 
   @override
   void initState() {
@@ -126,6 +127,9 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     }
 
     if (!snapshot.hasData) return LoadingIndicator();
+
+    // Load the content
+    if (_animationFuture == null) _animationFuture = Future.delayed(Duration(milliseconds: 1000));
     final textTheme = Theme.of(context).textTheme;
 
     final l10n = L10n(context);
@@ -210,22 +214,36 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             ),
           ),
           Divider(),
-          if (fullyLocked)
-            // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
-            Padding(
-              padding: const EdgeInsets.only(top: 32),
-              child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
-            ),
-          if (!fullyLocked)
-            ..._rowTile(
-              title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
-                  ? l10n.assignmentInstructionsLabel
-                  : l10n.assignmentDescriptionLabel,
-              child: ConstrainedWebView(
-                content: assignment.description,
-                emptyDescription: l10n.assignmentNoDescriptionBody,
-              ),
-            ),
+          FutureBuilder(
+            future: _animationFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: LoadingIndicator(),
+                );
+
+              if (fullyLocked)
+                // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
+                return Padding(
+                  padding: const EdgeInsets.only(top: 32),
+                  child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
+                );
+              else
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _rowTile(
+                    title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
+                        ? l10n.assignmentInstructionsLabel
+                        : l10n.assignmentDescriptionLabel,
+                    child: ConstrainedWebView(
+                      content: assignment.description,
+                      emptyDescription: l10n.assignmentNoDescriptionBody,
+                    ),
+                  ),
+                );
+            },
+          ),
           // TODO: Add in 'Learn more' feature
 //        Divider(),
 //        ..._rowTile(
