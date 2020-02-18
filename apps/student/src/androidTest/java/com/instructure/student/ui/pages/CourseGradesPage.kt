@@ -126,7 +126,7 @@ class CourseGradesPage : BasePage(R.id.courseGradesPage) {
             try {
                 gradeValue.check(matches(matcher))
                 break; // or else we spin for 10 secs
-            } catch(e: Exception) {
+            } catch(t: Throwable) {
                 if(currentAttempt == maxApiAttempts) {
                     break
                 } else {

@@ -99,7 +99,7 @@ fun StudentTest.seedAssignments(
 
 fun StudentTest.tokenLogin(user: CanvasUserApiModel) {
     activityRule.runOnUiThread {
-        (activityRule.activity as LoginActivity).loginWithToken(
+        (originalActivity as LoginActivity).loginWithToken(
             user.token,
             user.domain,
             User(
@@ -116,7 +116,7 @@ fun StudentTest.tokenLogin(user: CanvasUserApiModel) {
 
 fun StudentTest.tokenLogin(domain: String, token: String, user: User) {
     activityRule.runOnUiThread {
-        (activityRule.activity as LoginActivity).loginWithToken(
+        (originalActivity as LoginActivity).loginWithToken(
             token,
             domain,
             user

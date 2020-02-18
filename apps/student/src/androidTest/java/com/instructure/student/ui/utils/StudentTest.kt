@@ -31,11 +31,21 @@ import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.*
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.junit.Before
 
 abstract class StudentTest : CanvasTest() {
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
+    lateinit var originalActivity : Activity
+
+    // Sometimes activityRule.activity can get nulled out over time, probably as we
+    // navigate away from the original login screen.  Capture the activity here so
+    // that we can reference it safely later.
+    @Before
+    fun recordOriginalActivity() {
+        originalActivity = activityRule.activity
+    }
 
     override val isTesting = BuildConfig.IS_TESTING
 
