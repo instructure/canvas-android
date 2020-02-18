@@ -93,6 +93,11 @@ class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         selectSection(matcher)
     }
 
+    fun selectConferences() {
+        val matcher = withText("Conferences")
+        selectSection(matcher)
+    }
+
     fun selectFiles() {
         val matcher = allOf(withText("Files"), withId(R.id.label))
         selectSection(matcher)

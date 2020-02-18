@@ -6,7 +6,10 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.ui.pages.ConferencesPage
 import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.seedData
+import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
 
 class ConferencesE2ETest: StudentTest() {
@@ -14,11 +17,38 @@ class ConferencesE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    @Stub
+    // Fairly basic test that we can create and view a conference with the app.
+    // I didn't attempt to actually start the conference because that goes through
+    // an external web browser and would be really gross (if not impossible) to
+    // test.
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
+    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, false)
     fun testConferencesE2E() {
 
+        // Seed basic student/teacher/course data
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        // Sign the student in
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        // Navigate to course conferences
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectConferences()
+
+        // Some values to use/track
+        val title = "Awesome Conference!"
+        var description = "Awesome! Spectacular! Mind-blowing!"
+
+        // Create a conference
+        ConferencesPage.createConference(title, description)
+
+        // Verify that your created conference is now displayed.
+        ConferencesPage.assertConferenceTitlePresent(title)
+        ConferencesPage.assertConferenceDescriptionPresent(description)
     }
 }
