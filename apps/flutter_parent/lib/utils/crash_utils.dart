@@ -25,7 +25,11 @@ class CrashUtils {
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
-      if (!kReleaseMode) FlutterError.dumpErrorToConsole(error);
+      if (!kReleaseMode) {
+        FlutterError.dumpErrorToConsole(error);
+      } else {
+        FlutterCrashlytics().log('Widget Crash');
+      }
       return CrashScreen(error);
     };
 
