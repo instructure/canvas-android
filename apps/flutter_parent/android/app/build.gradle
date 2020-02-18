@@ -84,6 +84,9 @@ android {
                 signingConfig signingConfigs.debug
             }
 
+            minifyEnabled true
+            shrinkResources false // Must be false, otherwise resources we need are erroneously stripped out
+            proguardFiles 'proguard-rules.pro'
         }
     }
 }
