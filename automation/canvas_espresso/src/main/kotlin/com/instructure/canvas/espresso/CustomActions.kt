@@ -92,7 +92,7 @@ fun scrollRecyclerView(recyclerViewId: Int, target: Matcher<View>) {
                 onView(recyclerViewMatcher).assertDisplayed()
                 break
             }
-            catch(e: Exception) {
+            catch(t: Throwable) {
                 refreshesLeft -= 1
                 onView(swipeRefreshLayoutMatcher)
                         .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
@@ -226,7 +226,7 @@ fun waitForMatcherWithRefreshes(target: Matcher<View>) {
                 onView(target).assertDisplayed()
                 return
             }
-            catch(e: Exception) {
+            catch(t: Throwable) {
                 refreshesLeft -= 1
                 onView(swipeRefreshLayoutMatcher)
                         .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
