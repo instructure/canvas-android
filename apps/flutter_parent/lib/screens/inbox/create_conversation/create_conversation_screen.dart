@@ -172,7 +172,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                 child: new Text(L10n(context).no),
               ),
               new FlatButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  _attachments.forEach((it) => it.deleteAttachment());
+                  Navigator.of(context).pop(true);
+                },
                 child: new Text(L10n(context).yes),
               ),
             ],
@@ -708,6 +711,7 @@ class AttachmentWidget extends StatelessWidget {
     await Future.delayed(Duration(milliseconds: 150));
     switch (option) {
       case 'delete':
+        handler.deleteAttachment();
         if (onDelete != null) onDelete(handler);
         break;
       case 'retry':

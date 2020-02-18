@@ -86,4 +86,6 @@ class FileApi {
         );
     return File(savePath);
   }
+
+  Future<void> deleteFile(String fileId) => canvasDio().delete('files/$fileId');
 }

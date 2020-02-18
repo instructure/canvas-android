@@ -320,7 +320,7 @@ void main() {
     verify(observer.didPop(any, any)).called(2); // Twice, first for the dialog, then for the screen
   });
 
-  testWidgetsWithAccessibilityChecks('backing out and pressing yes on the dialog closes the screen', (tester) async {
+  testWidgetsWithAccessibilityChecks('backing out and pressing no on the dialog keeps screen open', (tester) async {
     _setupLocator();
     final course = _mockCourse('0');
     final observer = MockNavigatorObserver();
@@ -342,6 +342,35 @@ void main() {
     await tester.tap(matchedWidget);
 
     verify(observer.didPop(any, any)).called(1); // Only once, for the dialog
+  });
+
+  testWidgetsWithAccessibilityChecks('backing out deletes attachments', (tester) async {
+    final course = _mockCourse('0');
+
+    // Set up attachment handler in 'uploading' stage
+    var handler = _MockedAttachmentHandler();
+    when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
+    when(handler.attachment).thenReturn(Attachment((b) => b
+      ..displayName = 'File'
+      ..thumbnailUrl = 'fake url'));
+
+    _setupLocator(attachmentHandler: handler);
+
+    // Create page and add attachment
+    await _pumpTestableWidgetWithBackButton(tester, CreateConversationScreen(course.id, studentId, '', null));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pumpAndSettle();
+
+    // Attempt to go back
+    await tester.pageBack();
+    await tester.pump();
+
+    // Press 'yes' on confirmation dialog
+    await tester.tap(find.text(l10n.yes));
+    await tester.pumpAndSettle();
+
+    verify(handler.deleteAttachment());
   });
 
   testWidgetsWithAccessibilityChecks('clicking the add participants button shows the modal', (tester) async {
@@ -487,6 +516,35 @@ void main() {
     // Ensure attachment widget has been removed
     attachmentWidget = find.byType(AttachmentWidget);
     expect(attachmentWidget, findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('deleting an attachment calls AttachmentHandler.deleteAttachment', (tester) async {
+    // Set up attachment handler in 'uploading' stage
+    var handler = _MockedAttachmentHandler();
+    when(handler.stage).thenReturn(AttachmentUploadStage.FINISHED);
+    when(handler.attachment).thenReturn(Attachment((b) => b
+      ..displayName = 'File'
+      ..thumbnailUrl = 'fake url'));
+
+    _setupLocator(attachmentHandler: handler);
+
+    // Create page and add attachment
+    await tester.pumpWidget(_testableWidget());
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
+    await tester.pump();
+
+    // Assert attachment widget is displayed
+    var attachmentWidget = find.byType(AttachmentWidget);
+    expect(attachmentWidget, findsOneWidget);
+
+    // Tap delete button
+    await tester.tap(attachmentWidget);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(l10n.delete));
+    await tester.pumpAndSettle();
+
+    verify(handler.deleteAttachment());
   });
 
   testWidgetsWithAccessibilityChecks('displays attachment tooltip in upload state', (tester) async {
@@ -934,6 +992,8 @@ class _MockInteractor extends CreateConversationInteractor {
     return Future.delayed(Duration(milliseconds: 200), () => Conversation((b) => b));
   }
 }
+
+class _MockedAttachmentHandler extends Mock implements AttachmentHandler {}
 
 class _MockAttachmentHandler extends AttachmentHandler {
   _MockAttachmentHandler() : super(null);
