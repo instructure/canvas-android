@@ -193,6 +193,7 @@
 
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
+    <string name="fileCurrentlyLocked">This file is currently locked</string>
 
     <!-- Events -->
     <string name="Starts">Starts</string>

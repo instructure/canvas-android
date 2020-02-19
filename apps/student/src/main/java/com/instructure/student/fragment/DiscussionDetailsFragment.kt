@@ -27,6 +27,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.managers.DiscussionManager.deleteDiscussionEntry
@@ -64,8 +65,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
 import java.net.URLDecoder
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 import java.util.regex.Pattern
 
 @PageView(url = "{canvasContext}/discussion_topics/{topicId}")
@@ -190,12 +190,21 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //region Discussion Actions
 
     private fun viewAttachments(remoteFiles: List<RemoteFile>) {
-        val attachments = ArrayList<Attachment>()
-        remoteFiles.forEach { attachments.add(it.mapToAttachment()) }
-        if (attachments.isNotEmpty()) {
-            // You can only attach one file to a discussion
-            openMedia(attachments[0].contentType, attachments[0].url, attachments[0].filename, canvasContext)
+        // Only one file can be attached to a discussion
+        val remoteFile = remoteFiles.firstOrNull() ?: return
+
+        // Show lock message if file is locked
+        if (remoteFile.lockedForUser) {
+            if (remoteFile.lockExplanation.isValid()) {
+                Snackbar.make(view!!, remoteFile.lockExplanation!!, Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(view!!, R.string.fileCurrentlyLocked, Snackbar.LENGTH_SHORT).show()
+            }
         }
+
+        // Show attachment
+        val attachment = remoteFile.mapToAttachment()
+        openMedia(attachment.contentType, attachment.url, attachment.filename, canvasContext)
     }
 
     private fun showReplyView(discussionEntryId: Long) {

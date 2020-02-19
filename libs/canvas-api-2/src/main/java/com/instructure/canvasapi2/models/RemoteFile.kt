@@ -53,7 +53,9 @@ data class RemoteFile(
         @SerializedName("locked_for_user")
         val lockedForUser: Boolean = false,
         @SerializedName("preview_url")
-        val previewUrl: String? = null
+        val previewUrl: String? = null,
+        @SerializedName("lock_explanation")
+        val lockExplanation: String? = null
 ) : CanvasModel<RemoteFile>() {
     override val comparisonDate get() = createdAt.toDate()
     override val comparisonString get() = displayName
