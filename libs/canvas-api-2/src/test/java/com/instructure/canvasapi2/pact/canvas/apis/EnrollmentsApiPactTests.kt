@@ -54,7 +54,7 @@ class EnrollmentsApiPactTests : ApiPactTestBase() {
             }
         }
     }.build()
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getSelfEnrollmentsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)

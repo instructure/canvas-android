@@ -47,7 +47,7 @@ class UsersApiPactTests : ApiPactTestBase() {
         obj.populateUserFields(userFieldConfig)
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getUserWithPermissionsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -92,7 +92,7 @@ class UsersApiPactTests : ApiPactTestBase() {
     val profileResponseBody =  LambdaDsl.newJsonBody() { obj ->
         obj.populateUserFields(profileFieldConfig)
     }.build()
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getProfilePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -139,7 +139,7 @@ class UsersApiPactTests : ApiPactTestBase() {
         }
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getCoursePeoplePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)

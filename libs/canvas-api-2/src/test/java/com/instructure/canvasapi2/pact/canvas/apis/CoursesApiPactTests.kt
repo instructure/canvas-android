@@ -56,7 +56,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         }
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getFavoriteCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -117,7 +117,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         }
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getAllCoursesPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -170,7 +170,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         obj.populateCourseFields(singleCourseFieldInfo)
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getSingleCoursePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -217,7 +217,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         obj.populateCourseFields(courseWithGradeFieldInfo)
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getCourseWithGradePact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
@@ -267,7 +267,7 @@ class CoursesApiPactTests : ApiPactTestBase() {
         }
     }.build()
 
-    @Pact(consumer = "mobile")
+    @Pact(consumer = "android")
     fun getDashboardCardsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
                 .given(MAIN_PROVIDER_STATE)
