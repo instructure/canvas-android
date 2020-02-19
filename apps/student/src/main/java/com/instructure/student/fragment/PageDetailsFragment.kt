@@ -61,6 +61,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
     private var page: Page by ParcelableArg(default = Page(), key = PAGE)
+    private var pageUrl: String? by NullableStringArg(key = PAGE_URL)
 
     // Flag for the webview client to know whether or not we should clear the history
     private var isUpdated = false
@@ -71,13 +72,13 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         val url = StringBuilder(ApiPrefs.fullDomain)
         page.let {
             url.append(canvasContext.toAPIString())
-            if (!it.frontPage) url.append("/pages/$pageName")
+            if (!it.frontPage) url.append("/pages/${pageUrl ?: page.url ?: pageName}")
             getModuleItemId()?.let { url.append("?module_item_id=$it") }
         }
         return url.toString()
     }
 
-    override fun title(): String = page.title ?: getString(R.string.pages)
+    override fun title(): String = pageName ?: page.title ?: getString(R.string.pages)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -163,7 +164,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     private fun fetchPageDetails() {
         fetchDataJob = tryWeave {
-            val pageUrl = page.url ?: pageName ?: throw Exception("Page url/name null!")
+            val pageUrl = pageUrl ?: page.url ?: pageName ?: throw Exception("Page url/name null!")
             val response = awaitApiResponse<Page> { PageManager.getPageDetails(canvasContext, pageUrl, true, it) }
             response.body()?.let {
                 nonNullArgs.putParcelable(PAGE, it)
@@ -326,6 +327,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     companion object {
         const val PAGE_NAME = "pageDetailsName"
         const val PAGE = "pageDetails"
+        const val PAGE_URL = "pageUrl"
 
         @JvmStatic
         fun newInstance(route: Route): PageDetailsFragment? {
@@ -349,6 +351,16 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, pageName: String?): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(PAGE_NAME, pageName) }))
+        }
+
+        @JvmStatic
+        fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?): Route {
+            return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
+                if (pageName != null)
+                    putString(PAGE_NAME, pageName)
+                if (pageUrl != null)
+                    putString(PAGE_URL, pageUrl)
+            }))
         }
 
         @JvmStatic

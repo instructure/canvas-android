@@ -68,8 +68,8 @@ public class ModuleUtility {
         }
 
         //deal with pages
-        if(moduleItem.getType().equals("Page")) {
-            return PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, getPageName(moduleItem)));
+        if (moduleItem.getType().equals("Page")) {
+            return PageDetailsFragment.newInstance(PageDetailsFragment.makeRoute(course, moduleItem.getTitle(), moduleItem.getPageUrl()));
         }
 
         //deal with assignments
