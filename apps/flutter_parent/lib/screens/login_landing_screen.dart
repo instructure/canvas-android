@@ -165,23 +165,26 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   Widget _helpRequestButton(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        ErrorReportDialog.asDialog(context,
-            title: L10n(context).loginHelpTitle,
-            subject: L10n(context).loginHelpSubject,
-            severity: ErrorReportSeverity.BLOCKING,
-            includeEmail: true,
-            hideSeverityPicker: true);
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Align(
-          child: Icon(
-            CanvasIconsSolid.question,
-            color: ParentColors.tiara,
+    return Semantics(
+      label: L10n(context).loginHelpHint,
+      child: GestureDetector(
+        onTap: () {
+          ErrorReportDialog.asDialog(context,
+              title: L10n(context).loginHelpTitle,
+              subject: L10n(context).loginHelpSubject,
+              severity: ErrorReportSeverity.BLOCKING,
+              includeEmail: true,
+              hideSeverityPicker: true);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Align(
+            child: Icon(
+              CanvasIconsSolid.question,
+              color: ParentColors.tiara,
+            ),
+            alignment: Alignment.topRight,
           ),
-          alignment: Alignment.topRight,
         ),
       ),
     );

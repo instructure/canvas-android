@@ -1147,6 +1147,9 @@ class AppLocalizations {
   String get currentlyBuildingThisFeature =>
       Intl.message('We are currently building this feature for your viewing pleasure.');
 
+  String get loginHelpHint => Intl.message('Request Login Help Button',
+      desc: 'Accessibility hint for button that opens help dialog for a login help request');
+
   String get loginHelpTitle => Intl.message('Request Login Help',
       desc: 'Title of help dialog for a login help request');
 

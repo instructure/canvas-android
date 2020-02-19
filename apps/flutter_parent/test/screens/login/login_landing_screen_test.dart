@@ -20,6 +20,8 @@ import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -146,6 +148,16 @@ void main() {
 
     expect(ApiPrefs.getCurrentLogin(), logins[0]);
     verify(nav.pushAndRemoveAll(any, argThat(isA<SplashScreen>())));
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping help button shows help dialog', (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(CanvasIconsSolid.question));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ErrorReportDialog), findsOneWidget);
   });
 }
 
