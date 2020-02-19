@@ -69,26 +69,7 @@ class LoginLandingScreen extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              GestureDetector(
-                onTap: () {
-                  ErrorReportDialog.asDialog(context,
-                      title: L10n(context).loginHelpTitle,
-                      subject: L10n(context).loginHelpSubject,
-                      severity: ErrorReportSeverity.BLOCKING,
-                      includeEmail: true,
-                      hideSeverityPicker: true);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Align(
-                    child: Icon(
-                      CanvasIconsSolid.question,
-                      color: ParentColors.tiara,
-                    ),
-                    alignment: Alignment.topRight,
-                  ),
-                ),
-              ),
+              _helpRequestButton(context),
               Expanded(child: _body(context)),
               SizedBox(height: 56.0),
               _previousLogins(context),
@@ -180,6 +161,29 @@ class LoginLandingScreen extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Widget _helpRequestButton(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        ErrorReportDialog.asDialog(context,
+            title: L10n(context).loginHelpTitle,
+            subject: L10n(context).loginHelpSubject,
+            severity: ErrorReportSeverity.BLOCKING,
+            includeEmail: true,
+            hideSeverityPicker: true);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Align(
+          child: Icon(
+            CanvasIconsSolid.question,
+            color: ParentColors.tiara,
+          ),
+          alignment: Alignment.topRight,
+        ),
+      ),
     );
   }
 
