@@ -25,6 +25,7 @@ import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
+import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
@@ -67,6 +68,7 @@ part 'serializers.g.dart';
   AssignmentGroup,
   AssignmentOverride,
   Attachment,
+  AuthenticatedUrl,
   BasicUser,
   CanvasToken,
   Conversation,

@@ -81,7 +81,7 @@ class DioConfig {
       dio.interceptors.add(_cacheInterceptor());
     }
 
-    bool debug = false;
+    bool debug = true;
 
     // Log interceptor
     dio.interceptors.add(LogInterceptor(
@@ -115,7 +115,7 @@ class DioConfig {
     PageSize pageSize: PageSize.none,
   }) {
     return DioConfig(
-        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : ApiPrefs.getDomain(),
+        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
         baseHeaders: ApiPrefs.getHeaderMap(
           forceDeviceLanguage: forceDeviceLanguage,
           token: overrideToken,
@@ -185,10 +185,11 @@ Dio canvasDio({
   PageSize pageSize: PageSize.none,
 }) {
   return DioConfig.canvas(
-    forceRefresh: forceRefresh,
-    forceDeviceLanguage: forceDeviceLanguage,
-    overrideToken: overrideToken,
-    extraHeaders: extraHeaders,
-    pageSize: pageSize,
-  ).dio;
+          forceRefresh: forceRefresh,
+          forceDeviceLanguage: forceDeviceLanguage,
+          overrideToken: overrideToken,
+          extraHeaders: extraHeaders,
+          pageSize: pageSize,
+          includeApiPath: includeApiPath)
+      .dio;
 }
