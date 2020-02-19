@@ -71,7 +71,7 @@ class LoginLandingScreen extends StatelessWidget {
             children: <Widget>[
               _helpRequestButton(context),
               Expanded(child: _body(context)),
-              SizedBox(height: 56.0),
+              SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
               _previousLogins(context),
             ],
           ),
