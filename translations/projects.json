@@ -2,41 +2,56 @@
   {
     "name": "canvas-api",
     "source_path": "libs/canvas-api-2/src/main/res/values/strings.xml",
-    "resource_dir": "libs/canvas-api-2/src/main/res"
+    "resource_dir": "libs/canvas-api-2/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "login-api",
     "source_path": "libs/login-api-2/src/main/res/values/strings.xml",
-    "resource_dir": "libs/login-api-2/src/main/res"
+    "resource_dir": "libs/login-api-2/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "pandautils",
     "source_path": "libs/pandautils/src/main/res/values/strings.xml",
-    "resource_dir": "libs/pandautils/src/main/res"
+    "resource_dir": "libs/pandautils/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "parent",
     "source_path": "apps/parent/src/main/res/values/strings.xml",
-    "resource_dir": "apps/parent/src/main/res"
+    "resource_dir": "apps/parent/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "rceditor",
     "source_path": "libs/rceditor/src/main/res/values/rce_strings.xml",
-    "resource_dir": "libs/rceditor/src/main/res"
+    "resource_dir": "libs/rceditor/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "teacher",
     "source_path": "apps/teacher/src/main/res/values/strings.xml",
-    "resource_dir": "apps/teacher/src/main/res"
+    "resource_dir": "apps/teacher/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "annotations",
     "source_path": "libs/annotations/src/main/res/values/strings.xml",
-    "resource_dir": "libs/annotations/src/main/res"
+    "resource_dir": "libs/annotations/src/main/res",
+    "extension": "xml"
   },
   {
     "name": "pandares",
     "source_path": "libs/pandares/src/main/res/values/strings.xml",
-    "resource_dir": "libs/pandares/src/main/res"
+    "resource_dir": "libs/pandares/src/main/res",
+    "extension": "xml"
+  },
+  {
+    "name": "flutter-parent",
+    "source_path": "apps/flutter_parent/lib/l10n/res/intl_en.arb",
+    "resource_dir": "apps/flutter_parent/lib/l10n/res",
+    "flutter_dir": "apps/flutter_parent",
+    "extension": "arb"
   }
 ]

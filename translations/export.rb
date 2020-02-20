@@ -31,6 +31,7 @@ projects = JSON.parse json
 projects.each do |project|
   project_name = project.fetch('name')
   source_path = project.fetch('source_path')
+  project_extension = project.fetch('extension')
 
   # Validate source file exists
   unless File.file?(source_path)
@@ -38,9 +39,9 @@ projects.each do |project|
   end
 
   # Copy source to export directory
-  destination = File.join(export_dir, "#{project_name}.xml")
+  destination = File.join(export_dir, "#{project_name}.#{project_extension}")
   FileUtils.cp source_path, destination
-  puts "#{source_path} => #{project_name}.xml"
+  puts "#{source_path} => #{destination}"
 end
 
 puts 'Exporting source strings to S3 bucket'

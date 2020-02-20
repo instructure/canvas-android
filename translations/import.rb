@@ -58,7 +58,7 @@ end
 puts 'Organizing translations'
 Dir.glob("#{import_dir}/*/") do |src_dir|
   next unless File.directory? src_dir
-  Dir.glob("#{src_dir}/*.xml") do |file|
+  Dir.glob("#{src_dir}/*.{xml,arb}") do |file|
     language = File.basename(src_dir).gsub('_', '-')
     if language.include? '-x-'
       # BCP 47 private-use subtag. Convert to new Android format and
@@ -82,11 +82,44 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
       puts "Skipping #{language} translation for untracked project #{project}"
       next
     end
-    destination = File.join(res_dir, "values-#{language}", 'strings.xml')
+
+    # Preserve arb file extensions (flutter also names resources slightly different)
+    if file.end_with?('.arb')
+      language = language.gsub('-', '_')
+      destination = File.join(res_dir, "intl_#{language}.arb")
+    else
+      destination = File.join(res_dir, "values-#{language}", 'strings.xml')
+    end
     puts "#{language}: Importing #{project} strings to #{destination}"
     FileUtils.mkdir_p File.dirname(destination)
     FileUtils.mv file, destination
   end
+end
+
+puts 'S3 import completed'
+
+# Generate flutter link to translated string files
+home_dir = Dir.pwd
+puts 'Linking in flutter translations'
+projects.each do |project|
+    flutter_dir = project.fetch('flutter_dir')
+    project_name = project.fetch('name')
+
+    if flutter_dir.nil?
+        puts "skipping non flutter project: #{project_name}"
+        next
+    end
+
+    # Change directories to the flutter project, so we can run the flutter command
+    project_dir = File.join(flutter_dir)
+    Dir.chdir project_dir
+
+    puts "Generating flutter files for #{project_name}"
+    success = system("flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n/generated --no-use-deferred-loading lib/l10n/app_localizations.dart lib/l10n/res/intl_*.arb")
+    raise 'Failed to generate flutter files' unless success
+
+    # Return to the home directory for the next project and to commit
+    Dir.chdir home_dir
 end
 
 # Create branch, add, and commit
