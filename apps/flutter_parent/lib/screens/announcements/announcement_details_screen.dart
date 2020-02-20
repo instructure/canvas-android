@@ -19,10 +19,9 @@ import 'package:flutter_parent/screens/announcements/announcement_view_state.dar
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import 'announcement_details_interactor.dart';
 
@@ -103,12 +102,8 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         SizedBox(height: 20),
         Divider(),
         Expanded(
-          child: WebView(
-            initialUrl: 'about:blank',
-            onWebViewCreated: (WebViewController webViewController) async {
-              webViewController.loadHtml(announcementViewState.announcementMessage);
-            },
-            javascriptMode: JavascriptMode.unrestricted,
+          child: CanvasWebView(
+            content: announcementViewState.announcementMessage,
           ),
         ),
         _attachmentsWidget(context, announcementViewState.attachment),

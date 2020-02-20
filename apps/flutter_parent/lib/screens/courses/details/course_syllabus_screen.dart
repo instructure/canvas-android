@@ -12,16 +12,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_interactor.dart';
-import 'package:flutter_parent/utils/common_widgets/simple_webview_screen.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/web_view_utils.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class CourseSyllabusScreen extends StatefulWidget {
   final String _syllabus;
@@ -41,19 +35,10 @@ class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with Automa
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
     CourseDetailsModel.selectedTab = 1;
     return Consumer<CourseDetailsModel>(
-      builder: (context, model, _) => WebView(
-        javascriptMode: JavascriptMode.unrestricted,
-        gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
-        onWebViewCreated: (controller) {
-          controller.loadHtml(widget._syllabus, horizontalPadding: 10);
-        },
-        navigationDelegate: (NavigationRequest request) async {
-          // TODO: Wire in routing here when it's ready
-          String url = await locator.get<CourseSyllabusInteractor>().getUrl(request.url);
-
-          locator.get<QuickNav>().push(context, SimpleWebViewScreen(url, widget._courseName));
-          return NavigationDecision.prevent;
-        },
+      builder: (context, model, _) => CanvasWebView(
+        content: widget._syllabus,
+        horizontalPadding: 10,
+        navigationTitle: widget._courseName,
       ),
     );
   }

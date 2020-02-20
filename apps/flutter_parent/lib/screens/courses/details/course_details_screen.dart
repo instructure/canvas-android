@@ -20,7 +20,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_model.dart
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
-import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';

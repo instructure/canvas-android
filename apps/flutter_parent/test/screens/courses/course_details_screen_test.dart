@@ -21,9 +21,10 @@ import 'package:flutter_parent/screens/courses/details/course_details_screen.dar
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
-import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -46,6 +47,7 @@ void main() {
         .registerFactory<CreateConversationInteractor>(() => convoInteractor ?? _MockCreateConversationInteractor());
 
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
   }
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
