@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
 import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_parent/screens/announcements/announcement_details_intera
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
+import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
@@ -72,6 +74,7 @@ void setupLocator() {
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
   locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
+  locator.registerLazySingleton<OAuthApi>(() => OAuthApi());
   locator.registerLazySingleton<PageApi>(() => PageApi());
 
   // DB helpers
@@ -91,6 +94,7 @@ void setupLocator() {
   locator.registerFactory<ConversationReplyInteractor>(() => ConversationReplyInteractor());
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
+  locator.registerFactory<CourseSyllabusInteractor>(() => CourseSyllabusInteractor());
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
   locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());

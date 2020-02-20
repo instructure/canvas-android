@@ -15,13 +15,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/simple_webview_screen.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CourseSyllabusScreen extends StatefulWidget {
-  final String syllabus;
-  CourseSyllabusScreen(this.syllabus);
+  final String _syllabus;
+  final String _courseName;
+  CourseSyllabusScreen(this._syllabus, this._courseName);
 
   @override
   _CourseSyllabusScreenState createState() => _CourseSyllabusScreenState();
@@ -40,7 +45,14 @@ class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with Automa
         javascriptMode: JavascriptMode.unrestricted,
         gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
         onWebViewCreated: (controller) {
-          controller.loadHtml(widget.syllabus, horizontalPadding: 10);
+          controller.loadHtml(widget._syllabus, horizontalPadding: 10);
+        },
+        navigationDelegate: (NavigationRequest request) async {
+          // TODO: Wire in routing here when it's ready
+          String url = await locator.get<CourseSyllabusInteractor>().getUrl(request.url);
+
+          locator.get<QuickNav>().push(context, SimpleWebViewScreen(url, widget._courseName));
+          return NavigationDecision.prevent;
         },
       ),
     );
