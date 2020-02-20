@@ -2,6 +2,8 @@ require 'fileutils'
 require 'json'
 require 'mkmf'
 
+hub_config = File.join(Dir.home, '.config', 'hub')
+
 # Hub CLI and valid config are required for creating Pull Requests
 raise 'Missing Hub CLI' if find_executable('hub').nil?
 unless File.exist?(hub_config) || !ENV['GITHUB_TOKEN'].nil?
