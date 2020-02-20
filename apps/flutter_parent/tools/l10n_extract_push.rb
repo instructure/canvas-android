@@ -2,6 +2,8 @@ require 'fileutils'
 require 'json'
 require 'mkmf'
 
+hub_config = File.join(Dir.home, '.config', 'hub')
+
 # Hub CLI and valid config are required for creating Pull Requests
 raise 'Missing Hub CLI' if find_executable('hub').nil?
 unless File.exist?(hub_config) || !ENV['GITHUB_TOKEN'].nil?
@@ -20,6 +22,9 @@ l10n_output = File.join(l10n_dir, 'res')
 unless File.exist? l10n_input
   raise "Missing #{l10n_input}; please run again from repository root"
 end
+
+# Get dependencies so we can run the command correctly
+system("flutter pub get")
 
 # Extract the strings running the flutter command
 puts 'Running extract_to_arb'
