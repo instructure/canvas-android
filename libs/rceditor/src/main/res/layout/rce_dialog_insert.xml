@@ -20,6 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="16dp"
     android:clipToPadding="false"
@@ -60,5 +61,18 @@
             android:hint="@string/rce_editTextUrlHint" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/rce_errorRed"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        tools:text="error"/>
 
 </LinearLayout>

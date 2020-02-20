@@ -35,6 +35,7 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
+import android.webkit.URLUtil
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -152,8 +153,15 @@ class RCETextEditorView @JvmOverloads constructor(
         }
 
         action_insert_link.setOnClickListener {
-            RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor)
-                .setListener { url, alt -> editor.insertLink(url, alt) }
+            RCEInsertDialog.newInstance(context.getString(R.string.rce_insertLink), themeColor, buttonColor, true)
+                .setListener { url, alt ->
+                    if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
+                        editor.insertLink(url, alt)
+                    } else { 
+                        // For now, we'll default to https always
+                        editor.insertLink("https://$url", alt)
+                    }
+                }
                 .show(fragmentManager ?: return@setOnClickListener, RCEInsertDialog::class.java.simpleName)
         }
 
