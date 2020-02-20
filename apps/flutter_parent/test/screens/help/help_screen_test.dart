@@ -18,8 +18,10 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/help/help_dialog.dart';
+import 'package:flutter_parent/screens/help/help_screen.dart';
+import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -33,7 +35,7 @@ void main() {
   final l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('displays all options', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => HelpDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
 
     expect(find.text(l10n.help), findsOneWidget);
 
@@ -48,16 +50,16 @@ void main() {
 
     expect(find.text(l10n.helpShareLoveLabel), findsOneWidget);
     expect(find.text(l10n.helpShareLoveDescription), findsOneWidget);
-    // TODO: Uncomment once legal has been added
-//    expect(find.text(l10n.helpLegalLabel), findsOneWidget);
-//    expect(find.text(l10n.helpLegalDescription), findsOneWidget);
+
+    expect(find.text(l10n.helpLegalLabel), findsOneWidget);
+    expect(find.text(l10n.helpLegalDescription), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping search launches url', (tester) async {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => HelpDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
 
     await tester.tap(find.text(l10n.helpSearchCanvasDocsLabel));
     await tester.pumpAndSettle();
@@ -79,7 +81,7 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => HelpDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
 
     await tester.tap(find.text(l10n.helpShareLoveLabel));
     await tester.pumpAndSettle();
@@ -101,7 +103,7 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => HelpDialog.asDialog(context), highContrast: true);
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()), highContrast: true);
 
     await tester.tap(find.text(l10n.helpReportProblemLabel));
     await tester.pumpAndSettle();
@@ -149,7 +151,7 @@ void main() {
       return null;
     });
 
-    await TestApp.showWidgetFromTap(tester, (context) => HelpDialog.asDialog(context));
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
 
     await tester.tap(find.text(l10n.helpRequestFeatureLabel));
     await tester.pumpAndSettle();
@@ -157,7 +159,16 @@ void main() {
     await completer.future; // Wait for the completer to finish the test
   });
 
-  // TODO: Test legal once it's added
+  testWidgetsWithAccessibilityChecks('tapping legal shows legal screen', (tester) async {
+    setupTestLocator((locator) => locator.registerSingleton<QuickNav>(QuickNav()));
+
+    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()), highContrast: true);
+
+    await tester.tap(find.text(l10n.helpLegalLabel));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LegalScreen), findsOneWidget);
+  });
 }
 
 class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}

@@ -950,7 +950,7 @@ class AppLocalizations {
   String get eventRemindMeSet =>
       Intl.message('You will be notified about this event on…', desc: 'Description for when an event reminder is set');
 
-  /// Help Dialog
+  /// Help Screen
 
   String get helpSearchCanvasDocsLabel => Intl.message(
         'Search the Canvas Guides',
@@ -1019,6 +1019,19 @@ class AppLocalizations {
   String get helpEmail => Intl.message('Email:', desc: 'The label for the eamil of the logged in user');
 
   String get helpLocale => Intl.message('Locale:', desc: 'The label for the locale of the logged in user');
+
+  /// Legal Screen
+
+  String get privacyPolicy => Intl.message('Privacy Policy', desc: 'Label for the privacy policy');
+
+  String get termsOfUse => Intl.message('Terms of Use', desc: 'Label for the terms of use');
+
+  String get canvasOnGithub => Intl.message(
+        'Canvas on GitHub',
+        desc: 'Label for the button that opens the Canvas project on GitHub\'s website',
+      );
+
+  String get errorLoadingTermsOfUse => Intl.message('There was a problem loading the Terms of Use');
 
   /// Error Report Dialog
 
@@ -1150,9 +1163,9 @@ class AppLocalizations {
   String get loginHelpHint => Intl.message('Request Login Help Button',
       desc: 'Accessibility hint for button that opens help dialog for a login help request');
 
-  String get loginHelpTitle => Intl.message('Request Login Help',
-      desc: 'Title of help dialog for a login help request');
+  String get loginHelpTitle =>
+      Intl.message('Request Login Help', desc: 'Title of help dialog for a login help request');
 
-  String get loginHelpSubject => Intl.message('I\'m having trouble logging in',
-      desc: 'Subject of help dialog for a login help request');
+  String get loginHelpSubject =>
+      Intl.message('I\'m having trouble logging in', desc: 'Subject of help dialog for a login help request');
 }

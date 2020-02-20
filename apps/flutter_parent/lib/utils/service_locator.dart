@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
@@ -64,6 +65,7 @@ GetIt locator = GetIt.instance;
 
 void setupLocator() {
   // APIs
+  locator.registerLazySingleton<AccountsApi>(() => AccountsApi());
   locator.registerLazySingleton<AlertsApi>(() => AlertsApi());
   locator.registerLazySingleton<AnnouncementApi>(() => AnnouncementApi());
   locator.registerLazySingleton<AssignmentApi>(() => AssignmentApi());

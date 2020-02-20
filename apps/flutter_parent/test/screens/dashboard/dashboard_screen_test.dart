@@ -32,7 +32,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
-import 'package:flutter_parent/screens/help/help_dialog.dart';
+import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -354,7 +354,7 @@ void main() {
       await tester.tap(find.text(AppLocalizations().help));
       await tester.pumpAndSettle();
 
-      expect(find.byType(HelpDialog), findsOneWidget);
+      expect(find.byType(HelpScreen), findsOneWidget);
     });
 
     testWidgets(
