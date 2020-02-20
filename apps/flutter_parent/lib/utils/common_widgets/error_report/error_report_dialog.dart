@@ -31,9 +31,10 @@ class ErrorReportDialog extends StatefulWidget {
   final String subject;
   final ErrorReportSeverity severity;
   final FlutterErrorDetails error;
-  final bool includeEmail; // Used when shown during login, so that users can get responses from created service tickets
+  final bool includeEmail; // Used when shown during login, so that users can get responses from created service tickets.
+  final bool hideSeverityPicker;
 
-  const ErrorReportDialog._internal(this.title, this.subject, this.severity, this.includeEmail, this.error, {Key key})
+  const ErrorReportDialog._internal(this.title, this.subject, this.severity, this.includeEmail, this.hideSeverityPicker, this.error, {Key key})
       : super(key: key);
 
   @override
@@ -44,6 +45,7 @@ class ErrorReportDialog extends StatefulWidget {
       String subject,
       ErrorReportSeverity severity,
       bool includeEmail = false,
+      bool hideSeverityPicker = false,
       FlutterErrorDetails error}) {
     return showDialog(
       context: context,
@@ -52,6 +54,7 @@ class ErrorReportDialog extends StatefulWidget {
         subject,
         severity ?? ErrorReportSeverity.COMMENT,
         includeEmail,
+        hideSeverityPicker,
         error,
       ),
     );
@@ -155,8 +158,8 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                 onChanged: (text) => _description = text,
               ),
               SizedBox(height: 16),
-              Text(L10n(context).reportProblemSeverity),
-              Container(
+              if(!widget.hideSeverityPicker) Text(L10n(context).reportProblemSeverity),
+              if(!widget.hideSeverityPicker) Container(
                 color: ParentTheme.of(context).nearSurfaceColor,
                 padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 child: DropdownButton<_SeverityOption>(

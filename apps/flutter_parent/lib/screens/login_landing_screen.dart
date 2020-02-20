@@ -21,7 +21,11 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -62,11 +66,15 @@ class LoginLandingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-        body: Column(
-          children: <Widget>[
-            Expanded(child: _body(context)),
-            _previousLogins(context),
-          ],
+        body: SafeArea(
+          child: Column(
+            children: <Widget>[
+              _helpRequestButton(context),
+              Expanded(child: _body(context)),
+              SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
+              _previousLogins(context),
+            ],
+          ),
         ),
       ),
     );
@@ -153,6 +161,32 @@ class LoginLandingScreen extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  Widget _helpRequestButton(BuildContext context) {
+    return Semantics(
+      label: L10n(context).loginHelpHint,
+      child: GestureDetector(
+        onTap: () {
+          ErrorReportDialog.asDialog(context,
+              title: L10n(context).loginHelpTitle,
+              subject: L10n(context).loginHelpSubject,
+              severity: ErrorReportSeverity.BLOCKING,
+              includeEmail: true,
+              hideSeverityPicker: true);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Align(
+            child: Icon(
+              CanvasIconsSolid.question,
+              color: ParentColors.tiara,
+            ),
+            alignment: Alignment.topRight,
+          ),
+        ),
+      ),
     );
   }
 
