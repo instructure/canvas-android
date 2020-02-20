@@ -115,7 +115,6 @@ object ConferencesPage {
                     evaluation.value as ElementReference}))
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(), containsString(title)))
-                .perform(webClick())
     }
 
     /** Assert that a conference with the specified description is displayed on the screen. */
@@ -125,7 +124,6 @@ object ConferencesPage {
                     evaluation.value as ElementReference}))
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(), containsString(description)))
-                .perform(webClick())
     }
 
 
