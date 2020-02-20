@@ -30,6 +30,7 @@ class PathVars {
     var courseId: Long by map
     var assignmentId: Long by map
     var accountNotificationId: Long by map
+    var pageUrl: String by map
     var pageId: Long by map
     var folderId: Long by map
     var fileId: Long by map
@@ -93,6 +94,19 @@ class LongId(private val pathProperty: KMutableProperty1<PathVars, Long>) : Segm
         val id = segmentName.toLong()
         pathProperty.set(vars, id)
         return id
+    }
+}
+
+
+/**
+ * Represents a variable path segment that can be parsed as a [String] and stored as a [property][pathProperty] in [PathVars]
+ */
+class StringId(private val pathProperty: KMutableProperty1<PathVars, String>) : SegmentQualifier<String>() {
+    override val printName = "{stringId}"
+    override fun matches(segmentName: String) = segmentName.isNotEmpty()
+    override fun appendVars(segmentName: String, vars: PathVars, request: Request): String {
+        pathProperty.set(vars, segmentName)
+        return segmentName
     }
 }
 

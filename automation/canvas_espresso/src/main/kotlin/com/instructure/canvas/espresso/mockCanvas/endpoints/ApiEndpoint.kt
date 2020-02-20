@@ -160,10 +160,10 @@ object GroupsEndpoint : Endpoint (
                 ),
 
                 Segment("pages") to endpoint (// group pages
-                        LongId(PathVars::pageId) to endpoint (
+                        StringId(PathVars::pageUrl) to endpoint (
                                 configure = {
                                     GET {
-                                        val page = data.groupPages[pathVars.groupId]?.find {it.id == pathVars.pageId}
+                                        val page = data.groupPages[pathVars.groupId]?.find {it.url == pathVars.pageUrl}
                                         if(page != null) {
                                             request.successResponse(page)
                                         }
