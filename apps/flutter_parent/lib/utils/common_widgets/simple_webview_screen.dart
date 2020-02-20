@@ -62,8 +62,8 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
   }
 
   Future<bool> _handleBackPress(BuildContext context) async {
-    if (await _controller.canGoBack()) {
-      _controller.goBack();
+    if (await _controller?.canGoBack()) {
+      _controller?.goBack();
       return Future.value(false);
     } else {
       return Future.value(true);

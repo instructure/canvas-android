@@ -81,7 +81,7 @@ class DioConfig {
       dio.interceptors.add(_cacheInterceptor());
     }
 
-    bool debug = true;
+    bool debug = false;
 
     // Log interceptor
     dio.interceptors.add(LogInterceptor(
