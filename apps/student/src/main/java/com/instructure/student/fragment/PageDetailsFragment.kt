@@ -91,14 +91,14 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     override fun onPause() {
         super.onPause()
-        getCanvasWebView()?.onPause()
+        canvasWebView?.onPause()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         fetchDataJob?.cancel()
         loadHtmlJob?.cancel()
-        getCanvasWebView()?.destroy()
+        canvasWebView?.destroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
