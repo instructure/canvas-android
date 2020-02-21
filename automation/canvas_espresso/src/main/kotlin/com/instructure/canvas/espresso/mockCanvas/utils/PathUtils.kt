@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso.mockCanvas.utils
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import okhttp3.Request
+import java.net.URLEncoder
 import kotlin.reflect.KMutableProperty1
 
 /**
@@ -105,7 +106,7 @@ class StringId(private val pathProperty: KMutableProperty1<PathVars, String>) : 
     override val printName = "{stringId}"
     override fun matches(segmentName: String) = segmentName.isNotEmpty()
     override fun appendVars(segmentName: String, vars: PathVars, request: Request): String {
-        pathProperty.set(vars, segmentName)
+        pathProperty.set(vars, URLEncoder.encode(segmentName, "UTF-8"))
         return segmentName
     }
 }

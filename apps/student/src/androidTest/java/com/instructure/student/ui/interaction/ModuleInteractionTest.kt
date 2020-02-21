@@ -19,7 +19,6 @@ import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.mockCanvas.AssignmentGroupType
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
@@ -38,7 +37,6 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
-import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -52,6 +50,7 @@ import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Test
+import java.net.URLEncoder
 
 class ModuleInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
@@ -394,9 +393,11 @@ class ModuleInteractionTest : StudentTest() {
 
         // Create a page and add it as a module item
         page = data.addPageToCourse(
-                courseId = course1.id,
-                pageId = data.newItemId(),
-                published = true
+            courseId = course1.id,
+            pageId = data.newItemId(),
+            published = true,
+            title = "Page In Course",
+            url = URLEncoder.encode("Page In Course", "UTF-8")
         )
         data.addItemToModule(
                 course = course1,
