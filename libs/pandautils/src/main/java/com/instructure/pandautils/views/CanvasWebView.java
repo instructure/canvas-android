@@ -222,7 +222,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     private void init(Context context) {
         mContext = context;
 
-        // Enabled to allow better support for http content, remove
+        // Enabled to allow better support for http content
         this.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
         this.getSettings().setJavaScriptEnabled(true);
