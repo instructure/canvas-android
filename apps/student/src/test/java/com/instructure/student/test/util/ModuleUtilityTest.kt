@@ -78,9 +78,10 @@ class ModuleUtilityTest : TestCase() {
     fun testGetFragment_page() {
         val url = "https://mobile.canvas.net/api/v1/courses/222/pages/hello-world"
         val moduleItem = ModuleItem(
-                id = 4567,
-                type = "Page",
-                url = url
+            id = 4567,
+            type = "Page",
+            url = url,
+            title = "hello-world"
         )
 
         val course = Course()

@@ -97,7 +97,7 @@ object CourseTabsEndpoint : Endpoint(response = {
  * Endpoint that returns the pages for a course
  */
 object CoursePagesEndpoint : Endpoint(
-        LongId(PathVars::pageId) to CoursePageEndpoint,
+        StringId(PathVars::pageUrl) to CoursePageEndpoint,
         response = {
             GET {
                 val pages = data.coursePages[pathVars.courseId]
@@ -115,7 +115,7 @@ object CoursePagesEndpoint : Endpoint(
 object CoursePageEndpoint : Endpoint(response = {
     GET {
         val pages = data.coursePages[pathVars.courseId]
-        val page = pages?.firstOrNull { it -> it.id == pathVars.pageId }
+        val page = pages?.firstOrNull { it -> it.url == pathVars.pageUrl }
         if (page == null) {
             request.unauthorizedResponse()
         } else {
