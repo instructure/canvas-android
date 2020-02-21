@@ -89,10 +89,16 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         getPageDetails()
     }
 
+    override fun onPause() {
+        super.onPause()
+        getCanvasWebView()?.onPause()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         fetchDataJob?.cancel()
         loadHtmlJob?.cancel()
+        getCanvasWebView()?.destroy()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -192,16 +198,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             }
 
             if (CanvasWebView.containsLTI(page.body.orEmpty(), "UTF-8")) {
-                if (page.body.orEmpty().contains("arc_media")) {
-                    // For embedded Studio videos, we just want to load the HTML we get back from the server
-                    loadPageHtml(page.body.orEmpty())
-                } else {
-                    canvasWebView.addJavascriptInterface(JsExternalToolInterface {
-                        val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
-                        RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-                    }, "accessor")
-                    loadHtmlJob = canvasWebView.loadHtmlWithLTIs(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
-                }
+                canvasWebView.addJavascriptInterface(JsExternalToolInterface {
+                    val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+                    RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+                }, "accessor")
+                loadHtmlJob = canvasWebView.loadHtmlWithLTIs(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
             } else {
                 loadHtmlJob = tryWeave {
                     page.body = addAuthForIframeIfNecessary(page.body.orEmpty())
