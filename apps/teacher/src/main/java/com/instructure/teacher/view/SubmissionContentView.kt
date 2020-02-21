@@ -492,7 +492,17 @@ class SubmissionContentView(
         }
 
         when (content) {
-            is PdfContent -> if(content.url.contains("canvadoc")) handlePdfContent(content.url) else showMessageFragment(R.string.pdfError)
+            is PdfContent -> {
+                if(content.url.contains("canvadoc")) {
+                    if(slidingUpPanelLayout?.panelState == SlidingUpPanelLayout.PanelState.ANCHORED) {
+                        // Attempt to reset the sliding panel to collapsed, so we don't render the pdf at anchored size
+                        slidingUpPanelLayout?.panelState = SlidingUpPanelLayout.PanelState.COLLAPSED
+                    }
+                    handlePdfContent(content.url)
+                } else {
+                    showMessageFragment(R.string.pdfError)
+                }
+            }
             is NoSubmissionContent -> when (mAssignee) {
                 is StudentAssignee -> showMessageFragment(R.string.noSubmission, R.string.noSubmissionTeacher)
                 is GroupAssignee -> showMessageFragment(R.string.speedgrader_group_no_submissions)
