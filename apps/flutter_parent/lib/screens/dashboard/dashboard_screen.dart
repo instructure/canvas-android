@@ -22,7 +22,7 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/help/help_dialog.dart';
+import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -347,7 +347,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    HelpDialog.asDialog(context);
+    locator<QuickNav>().push(context, HelpScreen());
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {

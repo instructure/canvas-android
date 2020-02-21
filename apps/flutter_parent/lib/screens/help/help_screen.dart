@@ -16,6 +16,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:intent/action.dart' as android;
 import 'package:intent/extra.dart' as android;
@@ -23,55 +26,53 @@ import 'package:intent/intent.dart' as android;
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HelpDialog extends StatefulWidget {
-  const HelpDialog._internal({Key key}) : super(key: key);
+import 'legal_screen.dart';
 
-  static Future<void> asDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => HelpDialog._internal(),
-    );
-  }
-
+class HelpScreen extends StatefulWidget {
   @override
-  _HelpDialogState createState() => _HelpDialogState();
+  _HelpScreenState createState() => _HelpScreenState();
 }
 
-class _HelpDialogState extends State<HelpDialog> {
+class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = L10n(context);
-    return SimpleDialog(
-      title: Text(l10n.help),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      children: <Widget>[
-        _HelpRow(
-          label: l10n.helpSearchCanvasDocsLabel,
-          description: l10n.helpSearchCanvasDocsDescription,
-          onTap: _showSearch,
+    return DefaultParentTheme(
+      builder: (context) => Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.help),
+          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
-        _HelpRow(
-          label: l10n.helpReportProblemLabel,
-          description: l10n.helpReportProblemDescription,
-          onTap: _showReportProblem,
+        body: ListView(
+          children: <Widget>[
+            ListTile(
+              title: Text(l10n.helpSearchCanvasDocsLabel),
+              subtitle: Text(l10n.helpSearchCanvasDocsDescription),
+              onTap: _showSearch,
+            ),
+            ListTile(
+              title: Text(l10n.helpReportProblemLabel),
+              subtitle: Text(l10n.helpReportProblemDescription),
+              onTap: _showReportProblem,
+            ),
+            ListTile(
+              title: Text(l10n.helpRequestFeatureLabel),
+              subtitle: Text(l10n.helpRequestFeatureDescription),
+              onTap: _showRequestFeature,
+            ),
+            ListTile(
+              title: Text(l10n.helpShareLoveLabel),
+              subtitle: Text(l10n.helpShareLoveDescription),
+              onTap: _showShareLove,
+            ),
+            ListTile(
+              title: Text(l10n.helpLegalLabel),
+              subtitle: Text(l10n.helpLegalDescription),
+              onTap: _showLegal,
+            ),
+          ],
         ),
-        _HelpRow(
-          label: l10n.helpRequestFeatureLabel,
-          description: l10n.helpRequestFeatureDescription,
-          onTap: _showRequestFeature,
-        ),
-        _HelpRow(
-          label: l10n.helpShareLoveLabel,
-          description: l10n.helpShareLoveDescription,
-          onTap: _showShareLove,
-        ),
-        // TODO: Add in legal option once we have the dialog
-//        _HelpRow(
-//          label: l10n.helpLegalLabel,
-//          description: l10n.helpLegalDescription,
-//          onTap: _showLegal,
-//        ),
-      ],
+      ),
     );
   }
 
@@ -138,35 +139,5 @@ class _HelpDialogState extends State<HelpDialog> {
 
   void _showShareLove() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 
-//  void _showLegal() => LegalDialog.asDialog(context)
-}
-
-class _HelpRow extends StatelessWidget {
-  final String label, description;
-  final VoidCallback onTap;
-
-  const _HelpRow({Key key, this.label, this.description, this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
-    return SimpleDialogOption(
-      onPressed: () {
-        Navigator.of(context).pop(true);
-        onTap();
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(label, style: textTheme.subhead),
-            Text(description, style: textTheme.caption),
-          ],
-        ),
-      ),
-    );
-  }
+  void _showLegal() => locator<QuickNav>().push(context, LegalScreen());
 }

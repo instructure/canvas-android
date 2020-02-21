@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/models/terms_of_service.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
@@ -20,5 +21,9 @@ class AccountsApi {
   static Future<List<SchoolDomain>> searchDomains(String query) async {
     var dio = DioConfig.core(cacheMaxAge: Duration(minutes: 5)).dio;
     return fetchList(dio.get('accounts/search', queryParameters: {'search_term': query}));
+  }
+
+  Future<TermsOfService> getTermsOfService() {
+    return fetch(canvasDio().get('accounts/self/terms_of_service'));
   }
 }

@@ -48,6 +48,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(SchoolDomain.serializer)
       ..add(Submission.serializer)
       ..add(SubmissionTypes.serializer)
+      ..add(TermsOfService.serializer)
       ..add(UnreadCount.serializer)
       ..add(User.serializer)
       ..addBuilderFactory(
