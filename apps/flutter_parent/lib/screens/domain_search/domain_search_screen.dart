@@ -128,6 +128,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             TextField(
               maxLines: 1,
               autofocus: true,
+              key: Key("FindSchoolTextField"),
               controller: _inputController,
               style: TextStyle(fontSize: 18),
               keyboardType: TextInputType.url,
