@@ -70,6 +70,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
@@ -220,6 +221,9 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     @SuppressLint("SetJavaScriptEnabled")
     private void init(Context context) {
         mContext = context;
+
+        // Enabled to allow better support for http content
+        this.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
         this.getSettings().setJavaScriptEnabled(true);
         this.getSettings().setBuiltInZoomControls(true);

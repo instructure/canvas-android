@@ -61,6 +61,7 @@
         android:hardwareAccelerated="true"
         android:supportsRtl="@bool/supportRTL"
         android:largeHeap="true"
+        android:usesCleartextTraffic="true"
         tools:replace="android:supportsRtl"
         tools:overrideLibrary="com.instructure.canvasapi">
 
