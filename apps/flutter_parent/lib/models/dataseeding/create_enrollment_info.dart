@@ -12,28 +12,29 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-library user_name_data;
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-part 'user_name_data.g.dart';
 
-abstract class UserNameData implements Built<UserNameData, UserNameDataBuilder> {
+part 'create_enrollment_info.g.dart';
+
+abstract class CreateEnrollmentInfo implements Built<CreateEnrollmentInfo, CreateEnrollmentInfoBuilder> {
+
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<UserNameData> get serializer => _$userNameDataSerializer;
+  static Serializer<CreateEnrollmentInfo> get serializer => _$createEnrollmentInfoSerializer;
 
-  UserNameData._();
-  factory UserNameData([void Function(UserNameDataBuilder) updates]) = _$UserNameData;
+  CreateEnrollmentInfo._();
+  factory CreateEnrollmentInfo([void Function(CreateEnrollmentInfoBuilder) updates]) = _$CreateEnrollmentInfo;
 
-  String get name;
-  @BuiltValueField(wireName: "short_name")
-  String get shortName;
-  @BuiltValueField(wireName: "sortable_name")
-  String get sortableName;
+  @BuiltValueField(wireName: "user_id")
+  String get userId;
+  String get type;
+  String get role;
+  @BuiltValueField(wireName: "enrollment_state")
+  String get enrollmentState;
   @nullable
-  @BuiltValueField(wireName: "terms_of_use")
-  bool get termsOfUse;
+  @BuiltValueField(wireName: "associated_user_id")
+  String get associatedUserId;
 
-  static void _initializeBuilder(UserNameDataBuilder b) => b
-    ..name = '';
+  static void _initializeBuilder(CreateEnrollmentInfoBuilder b) => b
+    ..role = "";
 }

@@ -57,7 +57,12 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
 
 import 'assignment_override.dart';
+import 'dataseeding/create_course_info.dart';
+import 'dataseeding/create_course_wrapper.dart';
+import 'dataseeding/create_enrollment_info.dart';
+import 'dataseeding/create_enrollment_wrapper.dart';
 import 'dataseeding/create_user_info.dart';
+import 'dataseeding/seed_context.dart';
 import 'dataseeding/seeded_user.dart';
 import 'dataseeding/user_name_data.dart';
 import 'file_upload_config.dart';
@@ -82,6 +87,10 @@ part 'serializers.g.dart';
   Conversation,
   Course,
   CourseTab,
+  CreateCourseInfo,
+  CreateCourseWrapper,
+  CreateEnrollmentInfo,
+  CreateEnrollmentWrapper,
   CreateUserInfo,
   Enrollment,
   FileUploadConfig,
@@ -103,6 +112,7 @@ part 'serializers.g.dart';
   RemoteFile,
   SchoolDomain,
   ScheduleItem,
+  SeedContext,
   SeededUser,
   Submission,
   TermsOfService,

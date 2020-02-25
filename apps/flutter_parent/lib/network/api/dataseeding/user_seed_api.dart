@@ -39,7 +39,7 @@ class UserSeedApi {
   static const authCodeChannel = const MethodChannel("GET_AUTH_CODE");
 
   static Future<SeededUser> createUser() async {
-    var url = ApiPrefs.getBaseSeedingUrl() + _createUserEndpoint;
+    var url = ApiPrefs.baseSeedingUrl + _createUserEndpoint;
 
     var lastName = faker.person.lastName();
     var firstName = faker.person.firstName();
@@ -64,12 +64,7 @@ class UserSeedApi {
 
     await ApiPrefs.init();
 
-    var dio =  DioConfig(
-        baseUrl: ApiPrefs.getBaseSeedingUrl(),
-        baseHeaders: ApiPrefs.getHeaderMap(
-            forceDeviceLanguage: true,
-            token: DATA_SEEDING_ADMIN_TOKEN,
-            extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'}) ).dio;
+    var dio =  seedingDio();
 
     var response = await dio.post(_createUserEndpoint, data: postBody);
 //    var response = await http.post(url,
@@ -112,14 +107,7 @@ class UserSeedApi {
 
   static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
 
-    var dio = DioConfig(
-      baseUrl: 'https://${user.domain}/',
-      baseHeaders: ApiPrefs.getHeaderMap(
-          forceDeviceLanguage: true,
-          token: DATA_SEEDING_ADMIN_TOKEN,
-          extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'}),
-
-    ).dio;
+    var dio = seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post(
       'login/oauth2/token',

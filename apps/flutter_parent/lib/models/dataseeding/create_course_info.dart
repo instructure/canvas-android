@@ -1,4 +1,3 @@
-
 // Copyright (C) 2020 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -12,24 +11,29 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-library communication_channel;
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-part 'communication_channel.g.dart';
+part 'create_course_info.g.dart';
 
-abstract class CommunicationChannel implements Built<CommunicationChannel, CommunicationChannelBuilder> {
+abstract class CreateCourseInfo implements Built<CreateCourseInfo, CreateCourseInfoBuilder> {
+
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CommunicationChannel> get serializer => _$communicationChannelSerializer;
+  static Serializer<CreateCourseInfo> get serializer => _$createCourseInfoSerializer;
 
-  CommunicationChannel._();
-  factory CommunicationChannel([void Function(CommunicationChannelBuilder) updates]) = _$CommunicationChannel;
+  CreateCourseInfo._();
+  factory CreateCourseInfo([void Function(CreateCourseInfoBuilder) updates]) = _$CreateCourseInfo;
 
-  @BuiltValueField(wireName: "skip_confirmation")
-  bool get skipConfirmation;
+  String get name;
+  @BuiltValueField(wireName: "course_code")
+  String get courseCode;
+  @nullable
+  @BuiltValueField(wireName: "enrollment_term_id")
+  int get enrollmentTermId;
+  String get role;
 
-  static void _initializeBuilder(CommunicationChannelBuilder b) => b
-      ..skipConfirmation = false;
+  static void _initializeBuilder(CreateCourseInfoBuilder b) => b
+      ..role = "student";
 
 }

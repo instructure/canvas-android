@@ -25,6 +25,10 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(ConversationWorkflowState.serializer)
       ..add(Course.serializer)
       ..add(CourseTab.serializer)
+      ..add(CreateCourseInfo.serializer)
+      ..add(CreateCourseWrapper.serializer)
+      ..add(CreateEnrollmentInfo.serializer)
+      ..add(CreateEnrollmentWrapper.serializer)
       ..add(CreateUserInfo.serializer)
       ..add(Enrollment.serializer)
       ..add(FileUploadConfig.serializer)
@@ -50,6 +54,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(RemoteFile.serializer)
       ..add(ScheduleItem.serializer)
       ..add(SchoolDomain.serializer)
+      ..add(SeedContext.serializer)
       ..add(SeededUser.serializer)
       ..add(Submission.serializer)
       ..add(SubmissionTypes.serializer)
@@ -108,6 +113,10 @@ Serializers _$_serializers = (new Serializers().toBuilder()
             const FullType(BuiltList, const [const FullType(String)])
           ]),
           () => new MapBuilder<String, BuiltList<String>>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltMap, const [const FullType(String), const FullType(String)]),
+          () => new MapBuilder<String, String>())
       ..addBuilderFactory(
           const FullType(
               BuiltMap, const [const FullType(String), const FullType(String)]),

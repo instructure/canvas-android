@@ -19,6 +19,8 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 
+import 'private_consts.dart';
+
 /// Class that helps to create and configure [Dio] instances for common use cases
 class DioConfig {
   final String baseUrl;
@@ -192,4 +194,14 @@ Dio canvasDio({
           pageSize: pageSize,
           includeApiPath: includeApiPath)
       .dio;
+}
+
+// Convenience method that returns a [Dio] instance for data-seeding
+Dio seedingDio({String baseUrl = ApiPrefs.baseSeedingUrl}) {
+  return DioConfig(
+      baseUrl: baseUrl,
+      baseHeaders: ApiPrefs.getHeaderMap(
+          forceDeviceLanguage: true,
+          token: DATA_SEEDING_ADMIN_TOKEN,
+          extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'}) ).dio;
 }
