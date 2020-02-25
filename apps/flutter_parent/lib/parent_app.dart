@@ -61,7 +61,6 @@ class _ParentAppState extends State<ParentApp> {
           theme: themeData,
           home: ApiPrefs.isLoggedIn() ? SplashScreen() : LoginLandingScreen(),
           onGenerateRoute: ParentRouter.router.generator,
-          initialRoute: ParentRouter.root,
         ),
       ),
     );
@@ -70,8 +69,8 @@ class _ParentAppState extends State<ParentApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         const fallback = Locale('en', '');
-        Locale resolvedLocale = AppLocalizations.delegate.resolution(
-            fallback: fallback, matchCountry: false)(locale, supportedLocales);
+        Locale resolvedLocale =
+            AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(locale, supportedLocales);
 
         // Update the state if the locale changed
         if (_locale != resolvedLocale) {

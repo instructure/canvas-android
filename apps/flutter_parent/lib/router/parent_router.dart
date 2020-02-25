@@ -20,29 +20,27 @@ import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 
 class ParentRouter {
-  static Router router = Router();
+  static final Router router = Router();
 
-  static String root = '/';
-  static String conversations = '/conversations';
+  static bool _isInitialized = false;
+
+  static final String root = '/';
+  static final String conversations = '/conversations';
 
   static void init() {
-    router.notFoundHandler = Handler(
-        handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-      return null; // TODO - Default to dashboard or unsupported content here?
-    });
-
-    router.define(root, handler: _rootHandler);
-    router.define(conversations, handler: _conversationsHandler);
+    if (!_isInitialized) {
+      _isInitialized = true;
+      router.define(root, handler: _rootHandler);
+      router.define(conversations, handler: _conversationsHandler);
+    }
   }
 
   // Handlers
-  static Handler _rootHandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _rootHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return ParentApp();
   });
 
-  static Handler _conversationsHandler = Handler(
-      handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return ConversationListScreen();
   });
 }
