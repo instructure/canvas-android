@@ -19,6 +19,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
@@ -59,6 +60,8 @@ class _ParentAppState extends State<ParentApp> {
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
           home: ApiPrefs.isLoggedIn() ? SplashScreen() : LoginLandingScreen(),
+          onGenerateRoute: ParentRouter.router.generator,
+          initialRoute: ParentRouter.root,
         ),
       ),
     );
@@ -67,8 +70,8 @@ class _ParentAppState extends State<ParentApp> {
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
         const fallback = Locale('en', '');
-        Locale resolvedLocale =
-            AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(locale, supportedLocales);
+        Locale resolvedLocale = AppLocalizations.delegate.resolution(
+            fallback: fallback, matchCountry: false)(locale, supportedLocales);
 
         // Update the state if the locale changed
         if (_locale != resolvedLocale) {
