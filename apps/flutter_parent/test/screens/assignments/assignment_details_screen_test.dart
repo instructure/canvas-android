@@ -274,6 +274,35 @@ void main() {
         StudentColorSet.shamrock.lightHC);
   });
 
+  testWidgetsWithAccessibilityChecks('shows Assignment data with no submission', (tester) async {
+    final assignmentName = 'Testing Assignment';
+    final dueDate = DateTime.utc(2000);
+
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(
+            assignment: assignment.rebuild((b) => b
+              ..name = assignmentName
+              ..pointsPossible = 1.0
+              ..submissionList = BuiltList<Submission>.of([]).toBuilder()
+              ..submissionTypes = ListBuilder([SubmissionTypes.none])
+              ..dueAt = dueDate)));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+        studentId: studentId,
+        studentName: '',
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(assignmentName), findsOneWidget);
+    expect(find.text('1 pts'), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('shows Assignment with no due date', (tester) async {
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment.rebuild((b) => b..dueAt = null)));
