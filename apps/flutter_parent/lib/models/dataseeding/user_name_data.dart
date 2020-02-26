@@ -12,8 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-library user_name_data;
-
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 part 'user_name_data.g.dart';

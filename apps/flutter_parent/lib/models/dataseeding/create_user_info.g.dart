@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of create_user_info;
+part of 'create_user_info.dart';
 
 // **************************************************************************
 // BuiltValueGenerator

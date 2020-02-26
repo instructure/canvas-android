@@ -50,8 +50,6 @@ void main() {
       seedContext.getNamedObject<Course>("course2")
     ];
     var parent = seedContext.getNamedObject<SeededUser>("parent");
-    await Future.delayed(const Duration(seconds: 2));
-//      await driver.scroll(find.text(course1.name), 0, 150, Duration(milliseconds: 200)); // Refresh
 
     await driver.waitFor(
         find.byType("DashboardScreen"), timeout: Duration(seconds: 5));

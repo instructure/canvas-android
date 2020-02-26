@@ -73,6 +73,8 @@ class AppSeedUtils {
       result.students.add(newStudent);
     }
 
+    // TODO: A different path where courses could be exclusive to students.
+    // I.e., create nCourses courses for each student.
     for(int i=0; i<nCourses; i++) {
       var newCourse = await CourseSeedApi.createCourse();
       result.courses.add(newCourse);

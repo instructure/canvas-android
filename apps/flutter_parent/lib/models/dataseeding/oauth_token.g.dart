@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of oauth_token;
+part of 'oauth_token.dart';
 
 // **************************************************************************
 // BuiltValueGenerator

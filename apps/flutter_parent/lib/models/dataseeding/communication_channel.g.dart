@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of communication_channel;
+part of 'communication_channel.dart';
 
 // **************************************************************************
 // BuiltValueGenerator

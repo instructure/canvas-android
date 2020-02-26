@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of pseudonym;
+part of 'pseudonym.dart';
 
 // **************************************************************************
 // BuiltValueGenerator

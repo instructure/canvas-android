@@ -53,43 +53,30 @@ class UserSeedApi {
       ..build()
     );
 
-//    }) new CreateUserInfo(
-//        user:
-//        new UserNameData(name: "$firstName $lastName", shortName: firstName, sortableName: "$lastName, $firstName"),
-//        pseudonym: new Pseudonym(uniqueId: Guid().guid(), password: Guid().guid()),
-//        communicationChannel: new CommunicationChannel());
-
     var postBody = json.encode(serialize(userData));
     print("New user postBody: $postBody");
 
     await ApiPrefs.init();
 
-    var dio =  seedingDio();
+    var dio = seedingDio();
 
     var response = await dio.post(_createUserEndpoint, data: postBody);
-//    var response = await http.post(url,
-//        headers: ApiPrefs.getHeaderMap(
-//            forceDeviceLanguage: true,
-//            token: _DATA_SEEDING_ADMIN_TOKEN,
-//            extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'}),
-//        body: postBody);
 
     if (response.statusCode == 200) {
-      print("Create User response: ${response.data}");
+      //print("Create User response: ${response.data}");
       var result = deserialize<SeededUser>(response.data);
       result = result.rebuild((b) => b
         ..loginId = userData.pseudonym.uniqueId
         ..password = userData.pseudonym.password
-        ..domain = response.request.uri.host
-        ..token = "TODO"); // TODO: Make API call to get token
+        ..domain = response.request.uri.host);
 
-      print("request headers: ${response.request.headers.toString()}");
+      //print("request headers: ${response.request.headers.toString()}");
 
       var verifyResult = await AuthApi().mobileVerify(result.domain);
-      print("verifyResult = $verifyResult");
+      //print("verifyResult = $verifyResult");
 
       var authCode = await _getAuthCode(result, verifyResult);
-      print("authCode = $authCode");
+      //print("authCode = $authCode");
 
       var token = await _getToken(result, verifyResult, authCode);
 
@@ -105,6 +92,7 @@ class UserSeedApi {
     }
   }
 
+  // Get the token for the SeededUser, given MobileVerifyResult and authCode
   static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
 
     var dio = seedingDio(baseUrl: "https://${user.domain}/");
@@ -118,25 +106,12 @@ class UserSeedApi {
         "redirect_uri" : _REDIRECT_URI
       }
     );
-//    var url = 'https://${user.domain}/login/oauth2/token'
-//        '?client_id=${verifyResult.clientId}'
-//        '&client_secret=${verifyResult.clientSecret}'
-//        '&code=${authCode}'
-//        '&redirect_uri=${_REDIRECT_URI}';
-//
-//    var response = await http.post(
-//      url,
-//      headers: ApiPrefs.getHeaderMap(
-//          forceDeviceLanguage: true,
-//          token: _DATA_SEEDING_ADMIN_TOKEN,
-//          extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'}),
-//    );
 
     if (response.statusCode == 200) {
       var parsedResponse = deserialize<OAuthToken>(response.data);
       var token = parsedResponse.accessToken;
 
-      print("getToken result = $token");
+      //print("getToken result = $token");
 
       return token;
     } else {
@@ -145,6 +120,8 @@ class UserSeedApi {
     }
   }
 
+  // Get the authCode for the SeededUser, using the clientId from verifyResult.
+  // This one is a little tricky as we have to call into native Android jsoup logic.
   static Future<String> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
     try {
       var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
@@ -155,7 +132,7 @@ class UserSeedApi {
         'password': user.password
       });
 
-      print("authCode from native jsoup call: " + result);
+      //print("authCode from native jsoup call: " + result);
       return result;
     } on PlatformException catch (e) {
       print("authCode platform exception: $e");
