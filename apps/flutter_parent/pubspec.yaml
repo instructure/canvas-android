@@ -83,6 +83,9 @@ dependencies:
   url_launcher: 5.2.5
   webview_flutter: 0.3.19+5
 
+  # Routing
+  fluro: ^1.5.2
+
 dev_dependencies:
   flutter_driver:
     sdk: flutter
