@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/reminder.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -31,19 +32,16 @@ import 'package:flutter_svg/svg.dart';
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
   final String studentId;
-  final String studentName;
   final String assignmentId;
 
-  const AssignmentDetailsScreen(
-      {Key key,
-      @required this.courseId,
-      @required this.assignmentId,
-      @required this.studentId,
-      @required this.studentName})
-      : assert(courseId != null),
+  const AssignmentDetailsScreen({
+    Key key,
+    @required this.courseId,
+    @required this.assignmentId,
+    @required this.studentId,
+  })  : assert(courseId != null),
         assert(assignmentId != null),
         assert(studentId != null),
-        assert(studentName != null),
         super(key: key);
 
   @override
@@ -322,8 +320,9 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   }
 
   _sendMessage(AssignmentDetails details) {
-    String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
-    String postscript = L10n(context).messageLinkPostscript(widget.studentName, details.assignment.htmlUrl);
+    String studentName = ApiPrefs.getCurrentStudent().name;
+    String subject = L10n(context).assignmentSubjectMessage(studentName, details.assignment.name);
+    String postscript = L10n(context).messageLinkPostscript(studentName, details.assignment.htmlUrl);
     Widget screen = CreateConversationScreen(widget.courseId, widget.studentId, subject, postscript);
     locator.get<QuickNav>().push(context, screen);
   }

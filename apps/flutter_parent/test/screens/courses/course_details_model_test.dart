@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:mockito/mockito.dart';
@@ -32,7 +33,13 @@ import 'package:tuple/tuple.dart';
 import '../../utils/test_app.dart';
 
 const _studentId = '123';
+const _studentName = 'billy jean';
 const _courseId = '321';
+
+final _student = User((b) => b
+  ..id = _studentId
+  ..name = _studentName);
+
 final _course = Course((b) => b..id = _courseId);
 
 void main() {
@@ -47,14 +54,14 @@ void main() {
   });
 
   test('constructing with a course updates the course id', () {
-    final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+    final model = CourseDetailsModel.withCourse(_student, _course);
 
     expect(model.courseId, _courseId);
   });
 
   group('loadData for course', () {
     test('does not refresh course if it has data', () async {
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
 
       await model.loadData();
 
@@ -65,7 +72,7 @@ void main() {
     test('refreshes course if course refresh forced', () async {
       final expected = null;
       when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
 
       await model.loadData(refreshCourse: true);
 
@@ -76,7 +83,7 @@ void main() {
     test('refreshes course if course is null', () async {
       final expected = null;
       when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
 
       await model.loadData();
 
@@ -92,7 +99,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..userId = _studentId);
       final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       await model.loadData();
       await model.loadAssignments();
@@ -107,7 +114,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..userId = _studentId);
       final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       await model.loadData();
       await model.loadAssignments();
@@ -124,7 +131,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..userId = _studentId);
       final course = _course.rebuild((b) => b..enrollments = ListBuilder([enrollment]));
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       when(interactor.loadCourse(_courseId)).thenAnswer((_) async => course.rebuild((b) =>
           b..enrollments = ListBuilder([enrollment.rebuild((e) => e..currentGradingPeriodId = badGradingPeriodId)])));
@@ -163,7 +170,7 @@ void main() {
           .thenAnswer((_) async => assignmentGroups);
 
       // Make the call to test
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
       final gradeDetails = await model.loadAssignments();
 
       expect(gradeDetails.termEnrollment, termEnrollment); // Should match only the first enrollment
@@ -177,7 +184,7 @@ void main() {
           .thenAnswer((_) async => null);
 
       // Make the call to test
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
       var gradeDetails = await model.loadAssignments();
 
       expect(gradeDetails.assignmentGroups, null);
@@ -226,7 +233,7 @@ void main() {
           .thenAnswer((_) async => assignmentGroups);
 
       // Make the call to test
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
       final gradeDetails = await model.loadAssignments();
 
       expect(gradeDetails.assignmentGroups, [
@@ -242,7 +249,7 @@ void main() {
         ..title = 'Period 1');
 
       // Create the model
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
 
       // Update the grading period, but it shouldn't percolate until a load is called
       model.updateGradingPeriod(gradingPeriod);
@@ -268,7 +275,7 @@ void main() {
       when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, any)).thenAnswer((_) async => [itemB]);
 
       // Use the model
-      final model = CourseDetailsModel.withCourse(_studentId, '', _course);
+      final model = CourseDetailsModel.withCourse(_student, _course);
 
       final expected = [itemA, itemB];
       final actual = await model.loadSummary(refresh: true);
@@ -406,7 +413,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = null
         ..homePage = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.tabCount(), 1);
     });
@@ -415,7 +422,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = HomePage.wiki);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.tabCount(), 2);
     });
@@ -424,7 +431,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = HomePage.syllabus);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.tabCount(), 3);
     });
@@ -433,7 +440,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
             CourseTab((b) => b..id = HomePage.syllabus.name),
@@ -447,7 +454,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
             CourseTab((b) => b..id = HomePage.assignments.name),
@@ -462,7 +469,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = HomePage.syllabus);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.hasHomePageAsSyllabus, true);
       expect(model.showSummary, true); // TODO: test once we can access the course flag
@@ -473,7 +480,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
             CourseTab((b) => b..id = HomePage.syllabus.name),
@@ -489,7 +496,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..syllabusBody = 'body'
         ..homePage = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => []);
       await model.loadData();
@@ -501,7 +508,7 @@ void main() {
 
     test('returns front page if the course has a home page page', () {
       final course = _course.rebuild((b) => b..homePage = HomePage.wiki);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.hasHomePageAsFrontPage, true);
       expect(model.hasHomePageAsSyllabus, false);
@@ -512,7 +519,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..homePage = HomePage.wiki
         ..syllabusBody = 'body');
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.hasHomePageAsFrontPage, true);
       expect(model.hasHomePageAsSyllabus, false);
@@ -523,7 +530,7 @@ void main() {
       final course = _course.rebuild((b) => b
         ..homePage = null
         ..syllabusBody = null);
-      final model = CourseDetailsModel.withCourse(_studentId, '', course);
+      final model = CourseDetailsModel.withCourse(_student, course);
 
       expect(model.hasHomePageAsFrontPage, false);
       expect(model.hasHomePageAsSyllabus, false);
@@ -531,7 +538,7 @@ void main() {
     });
 
     test('returns false for all if the course is null', () {
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
 
       expect(model.hasHomePageAsFrontPage, false);
       expect(model.hasHomePageAsSyllabus, false);

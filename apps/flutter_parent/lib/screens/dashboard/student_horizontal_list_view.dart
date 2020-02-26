@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -55,6 +56,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
         var idx = widget._students.indexOf(student);
         ParentTheme.of(context).studentIndex = idx;
         Provider.of<SelectedStudentNotifier>(context, listen: false).value = student;
+        ApiPrefs.setCurrentStudent(student);
         widget.onTap();
       },
       child: Semantics(

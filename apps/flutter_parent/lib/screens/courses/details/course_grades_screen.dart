@@ -229,7 +229,7 @@ class _CourseGradeHeader extends StatelessWidget {
   /// The total grade in the course/grading period
   Widget _gradeTotal(BuildContext context, CourseDetailsModel model) {
     final grade = model.course.getCourseGrade(
-      model.studentId,
+      model.student.id,
       enrollment: termEnrollment,
       gradingPeriodId: model.currentGradingPeriod()?.id,
       forceAllPeriods: termEnrollment == null && model.currentGradingPeriod()?.id == null,
@@ -273,8 +273,8 @@ class _AssignmentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
-    final studentId = model.studentId;
-    final studentName = model.studentName;
+    final studentId = model.student.id;
+    final studentName = model.student.name;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
@@ -286,7 +286,6 @@ class _AssignmentRow extends StatelessWidget {
           courseId: assignment.courseId,
           assignmentId: assignment.id,
           studentId: studentId,
-          studentName: studentName,
         ),
       ),
       child: Padding(

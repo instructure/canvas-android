@@ -12,13 +12,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -33,6 +37,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -51,15 +56,17 @@ void main() {
 
   Widget _testableMaterialWidget({Widget widget, highContrast = false, SelectedStudentNotifier notifier = null}) =>
       TestApp(
-          ChangeNotifierProvider<SelectedStudentNotifier>(
-              create: (context) => notifier ?? SelectedStudentNotifier()
-                ..update(_mockStudent('1')),
-              child: Consumer<SelectedStudentNotifier>(
-                builder: (context, model, _) {
-                  return Scaffold(body: widget ?? CoursesScreen());
-                },
-              )),
-          highContrast: highContrast);
+        ChangeNotifierProvider<SelectedStudentNotifier>(
+            create: (context) => notifier ?? SelectedStudentNotifier()
+              ..update(_mockStudent('1')),
+            child: Consumer<SelectedStudentNotifier>(
+              builder: (context, model, _) {
+                return Scaffold(body: widget ?? CoursesScreen());
+              },
+            )),
+        highContrast: highContrast,
+        platformConfig: PlatformConfig(mockPrefs: null),
+      );
 
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
@@ -235,6 +242,8 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
       var student = _mockStudent('1');
+      await setupPlatformChannels(
+          config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
       var courses = List.generate(
         1,
         (idx) => _mockCourse(
@@ -256,6 +265,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(CourseDetailsScreen), findsOneWidget);
+
+      ApiPrefs.clean();
     });
   });
 }

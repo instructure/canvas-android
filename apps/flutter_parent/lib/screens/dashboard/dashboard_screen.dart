@@ -85,6 +85,7 @@ class DashboardState extends State<DashboardScreen> {
       _students = widget.students;
       _selectedStudent = _students.first;
       _selectedStudentNotifier.value = _selectedStudent;
+      ApiPrefs.setCurrentStudent(_students.first);
       _interactor.getAlertCountNotifier().update(_selectedStudent.id);
     } else {
       _loadStudents();
@@ -127,6 +128,7 @@ class DashboardState extends State<DashboardScreen> {
         setState(() async {
           _selectedStudentNotifier.value = _students.first;
           _selectedStudent = _students.first;
+          ApiPrefs.setCurrentStudent(_students.first);
           await _interactor.getAlertCountNotifier().update(_selectedStudent.id);
         });
       }

@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -42,6 +43,11 @@ import '../../utils/test_app.dart';
 const _studentId = '123';
 const _courseId = '321';
 const _assignmentGroupId = '101';
+const _studentName = 'billy jean';
+
+final _student = User((b) => b
+  ..id = _studentId
+  ..name = _studentName);
 
 void main() {
   final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
@@ -57,7 +63,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Can refresh course and group data', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
 
     // Pump the widget
     await tester.pumpWidget(_testableWidget(model));
@@ -75,7 +81,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
 
     await tester.pumpWidget(_testableWidget(model));
     await tester.pump();
@@ -88,7 +94,7 @@ void main() {
     // failing, the exception doesn't break the runtime code. The reason this happens is there are no listeners for the
     // 'catchError' on the assignment group future, so flutter calls it 'unhandled' and fails the test even though it
     // will still perform the rest of the test.
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null))
         .thenAnswer((_) async => Future<List<AssignmentGroup>>.error('Error getting assignment groups'));
 
@@ -105,7 +111,7 @@ void main() {
 
   // We still want to show the grades page even if we can't get the term enrollment
   testWidgetsWithAccessibilityChecks('Does not show error for term enrollment failure', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, any, forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) async => Future<List<Enrollment>>.error('Error getting term enrollment'));
 
@@ -118,7 +124,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows empty', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => List<AssignmentGroup>());
 
     await tester.pumpWidget(_testableWidget(model));
@@ -130,7 +136,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows empty with period header', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
 
     final gradingPeriod = GradingPeriod((b) => b
       ..id = '123'
@@ -162,7 +168,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows empty without period header', (tester) async {
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
 
     final gradingPeriod = null;
     final enrollment = Enrollment((b) => b
@@ -200,7 +206,7 @@ void main() {
     ]);
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
@@ -232,7 +238,7 @@ void main() {
     ];
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
@@ -255,7 +261,7 @@ void main() {
     ];
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
@@ -287,7 +293,7 @@ void main() {
     ]);
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
@@ -313,7 +319,7 @@ void main() {
         ..enrollmentState = 'active'
         ..grades = _mockGrade(currentScore: 1.2345));
 
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse();
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
@@ -336,7 +342,7 @@ void main() {
       final enrollment = Enrollment((b) => b
         ..enrollmentState = 'active'
         ..grades = _mockGrade(currentGrade: grade));
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse();
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
@@ -358,7 +364,7 @@ void main() {
       final enrollment = Enrollment((b) => b
         ..enrollmentState = 'active'
         ..multipleGradingPeriodsEnabled = true);
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
       when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
       when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
@@ -385,7 +391,7 @@ void main() {
         ..enrollmentState = 'active'
         ..grades = _mockGrade(currentScore: 12)
         ..multipleGradingPeriodsEnabled = true);
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.updateGradingPeriod(gradingPeriod);
       model.course = _mockCourse().rebuild((b) => b..hasGradingPeriods = true);
 
@@ -422,7 +428,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..currentPeriodComputedCurrentScore = 12
         ..computedCurrentScore = 1);
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.updateGradingPeriod(gradingPeriod);
       model.course = _mockCourse().rebuild((b) => b
         ..hasGradingPeriods = true
@@ -461,7 +467,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..currentPeriodComputedCurrentScore = 12
         ..computedCurrentScore = 1);
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.updateGradingPeriod(gradingPeriod);
       model.course = _mockCourse().rebuild((b) => b
         ..hasGradingPeriods = true
@@ -501,7 +507,7 @@ void main() {
         ..multipleGradingPeriodsEnabled = true
         ..currentPeriodComputedCurrentScore = 12
         ..computedCurrentScore = 1);
-      final model = CourseDetailsModel(_studentId, '', _courseId);
+      final model = CourseDetailsModel(_student, _courseId);
       model.updateGradingPeriod(gradingPeriod);
       model.course = _mockCourse().rebuild((b) => b
         ..hasGradingPeriods = true
@@ -528,7 +534,7 @@ void main() {
       _mockAssignmentGroup(assignments: [_mockAssignment()])
     ];
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
@@ -554,7 +560,7 @@ void main() {
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
     final gradingPeriods = [GradingPeriod((b) => b..title = 'period 1'), GradingPeriod((b) => b..title = 'period 2')];
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => [group]);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(gradingPeriods).toBuilder()));
@@ -590,7 +596,7 @@ void main() {
     ];
     final enrollment = Enrollment((b) => b..enrollmentState = 'active');
 
-    final model = CourseDetailsModel(_studentId, '', _courseId);
+    final model = CourseDetailsModel(_student, _courseId);
     model.course = _mockCourse();
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
     when(interactor.loadGradingPeriods(_courseId)).thenAnswer(

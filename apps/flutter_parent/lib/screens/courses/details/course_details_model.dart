@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
@@ -27,8 +28,7 @@ import 'package:tuple/tuple.dart';
 
 class CourseDetailsModel extends BaseModel {
   static int selectedTab = 0;
-  String studentId;
-  String studentName;
+  User student;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
   List<CourseTab> tabs = List();
@@ -36,10 +36,10 @@ class CourseDetailsModel extends BaseModel {
   GradingPeriod _currentGradingPeriod;
   GradingPeriod _nextGradingPeriod;
 
-  CourseDetailsModel(this.studentId, this.studentName, this.courseId);
+  CourseDetailsModel(this.student, this.courseId);
 
   // A convenience constructor when we already have the course data
-  CourseDetailsModel.withCourse(this.studentId, this.studentName, this.course) : this.courseId = course.id;
+  CourseDetailsModel.withCourse(this.student, this.course) : this.courseId = course.id;
 
   /// Used only be the skeleton to load the course data for creating tabs and the app bar
   Future<void> loadData({bool refreshCourse = false}) {
@@ -57,7 +57,7 @@ class CourseDetailsModel extends BaseModel {
 
       // Set the _nextGradingPeriod to the current enrollment period (if active and if not already set)
       final enrollment =
-          course?.enrollments?.firstWhere((enrollment) => enrollment.userId == studentId, orElse: () => null);
+          course?.enrollments?.firstWhere((enrollment) => enrollment.userId == student.id, orElse: () => null);
       if (_nextGradingPeriod == null && enrollment?.hasActiveGradingPeriod() == true) {
         _nextGradingPeriod = GradingPeriod((b) => b
           ..id = enrollment.currentGradingPeriodId
@@ -73,7 +73,7 @@ class CourseDetailsModel extends BaseModel {
     }
 
     final groupFuture = _interactor()
-        .loadAssignmentGroups(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
+        .loadAssignmentGroups(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
         ?.then((groups) async {
       // Remove unpublished assignments to match web
       return groups
@@ -88,7 +88,7 @@ class CourseDetailsModel extends BaseModel {
 
     // Get the grades for the term
     final enrollmentsFuture = _interactor()
-        .loadEnrollmentsForGradingPeriod(courseId, studentId, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
+        .loadEnrollmentsForGradingPeriod(courseId, student.id, _nextGradingPeriod?.id, forceRefresh: forceRefresh)
         ?.then((enrollments) {
       return enrollments.length > 0 ? enrollments.first : null;
     })?.catchError((_) => null); // Some 'legacy' parents can't read grades for students, so catch and return null
@@ -113,7 +113,7 @@ class CourseDetailsModel extends BaseModel {
     ]);
 
     // Potentially heavy list operations going on here, so we'll use a background isolate
-    return compute(processSummaryItems, Tuple2(results, studentId));
+    return compute(processSummaryItems, Tuple2(results, student.id));
   }
 
   @visibleForTesting
