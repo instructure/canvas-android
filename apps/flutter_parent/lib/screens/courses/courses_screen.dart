@@ -109,9 +109,9 @@ class _CoursesScreenState extends State<CoursesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 8),
-                Text(course.name ?? '', style: Theme.of(context).textTheme.subhead),
+                Text(course.name ?? '', style: Theme.of(context).textTheme.subhead, key: Key("${course.courseCode}_name")),
                 SizedBox(height: 2),
-                Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption),
+                Text(course.courseCode ?? '', style: Theme.of(context).textTheme.caption, key: Key("${course.courseCode}_code")),
                 if (grade != null) SizedBox(height: 4),
                 if (grade != null) grade,
                 SizedBox(height: 8),
@@ -140,6 +140,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
     return Text(
       text,
+      key: Key("${course.courseCode}_grade"),
       style: TextStyle(
         color: Theme.of(context).accentColor,
         fontSize: 16,
