@@ -20,7 +20,7 @@ import '../user.dart';
 
 part 'seeded_user.g.dart';
 
-abstract class SeededUser implements Built<SeededUser,SeededUserBuilder>{
+abstract class SeededUser implements Built<SeededUser, SeededUserBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<SeededUser> get serializer => _$seededUserSerializer;
 
@@ -61,30 +61,26 @@ abstract class SeededUser implements Built<SeededUser,SeededUserBuilder>{
   @nullable
   String get domain;
 
-  static void _initializeBuilder(SeededUserBuilder b) => b
-    ..name = '';
+  static void _initializeBuilder(SeededUserBuilder b) => b..name = '';
 
   User toUser() {
     return User((b) => b
-        ..id = id
-        ..name = name
-        ..shortName = shortName
-        ..sortableName = sortableName
-        ..build()
-
-    );
+      ..id = id
+      ..name = name
+      ..shortName = shortName
+      ..sortableName = sortableName
+      ..build());
   }
 
   Login toLogin() {
     return Login((b) => b
-        ..domain = "https://$domain/"
-        ..clientSecret = token
-        ..accessToken = token
-        ..user.name = name
-        ..user.id = id
-        ..user.shortName = shortName
-        ..user.sortableName = sortableName
-        ..build()
-    );
+      ..domain = "https://$domain/"
+      ..clientSecret = token
+      ..accessToken = token
+      ..user.name = name
+      ..user.id = id
+      ..user.shortName = shortName
+      ..user.sortableName = sortableName
+      ..build());
   }
 }

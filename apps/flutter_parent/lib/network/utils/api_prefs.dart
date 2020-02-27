@@ -49,7 +49,8 @@ class ApiPrefs {
   }
 
   static void _checkInit() {
-    if (_prefs == null || _packageInfo == null) throw StateError('ApiPrefs has not been initialized');
+    if (_prefs == null || _packageInfo == null)
+      throw StateError('ApiPrefs has not been initialized');
   }
 
   // Login
@@ -63,7 +64,8 @@ class ApiPrefs {
     _checkInit();
     if (_currentLogin == null) {
       final currentLoginUuid = getCurrentLoginUuid();
-      _currentLogin = getLogins().firstWhere((it) => it.uuid == currentLoginUuid, orElse: () => null);
+      _currentLogin = getLogins()
+          .firstWhere((it) => it.uuid == currentLoginUuid, orElse: () => null);
     }
     return _currentLogin;
   }
@@ -84,7 +86,8 @@ class ApiPrefs {
     if (!switchingLogins) {
       // Remove reminders
       ReminderDb reminderDb = locator<ReminderDb>();
-      final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
+      final reminders =
+          await reminderDb.getAllForUser(getDomain(), getUser().id);
       final reminderIds = reminders.map((it) => it.id).toList();
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
       await reminderDb.deleteAllForUser(getDomain(), getUser().id);
@@ -100,21 +103,28 @@ class ApiPrefs {
 
   static Future<void> saveLogins(List<Login> logins) async {
     _checkInit();
-    List<String> jsonList = logins.map((it) => json.encode(serialize(it))).toList();
+    List<String> jsonList =
+        logins.map((it) => json.encode(serialize(it))).toList();
     await _prefs.setStringList(KEY_LOGINS, jsonList);
   }
 
   static Future<void> addLogin(Login login) async {
     _checkInit();
     var logins = getLogins();
-    logins.removeWhere((it) => it.domain == login.domain && it.user.id == login.user.id); // Remove duplicates
+    logins.removeWhere((it) =>
+        it.domain == login.domain &&
+        it.user.id == login.user.id); // Remove duplicates
     logins.insert(0, login);
     await saveLogins(logins);
   }
 
   static List<Login> getLogins() {
     _checkInit();
-    return _prefs.getStringList(KEY_LOGINS)?.map((it) => deserialize<Login>(json.decode(it)))?.toList() ?? [];
+    return _prefs
+            .getStringList(KEY_LOGINS)
+            ?.map((it) => deserialize<Login>(json.decode(it)))
+            ?.toList() ??
+        [];
   }
 
   static Future<void> removeLogin(Login login) => removeLoginByUuid(login.uuid);
@@ -127,7 +137,8 @@ class ApiPrefs {
   }
 
   /// Updates the current login. If passing in the root app, it will be rebuilt on locale change.
-  static Future<void> updateCurrentLogin(dynamic Function(LoginBuilder) updates, {app}) async {
+  static Future<void> updateCurrentLogin(dynamic Function(LoginBuilder) updates,
+      {app}) async {
     _checkInit();
     final login = getCurrentLogin();
     Locale oldLocale = effectiveLocale();
@@ -138,7 +149,8 @@ class ApiPrefs {
 
     // Save persisted login
     List<Login> allLogins = getLogins();
-    int currentLoginIndex = allLogins.indexWhere((it) => it.uuid == updatedLogin.uuid);
+    int currentLoginIndex =
+        allLogins.indexWhere((it) => it.uuid == updatedLogin.uuid);
     if (currentLoginIndex != -1) {
       allLogins[currentLoginIndex] = updatedLogin;
       saveLogins(allLogins);
@@ -161,7 +173,10 @@ class ApiPrefs {
   static Locale effectiveLocale() {
     _checkInit();
     User user = getUser();
-    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
+    List<String> userLocale = (user?.effectiveLocale ??
+            user?.locale ??
+            ui.window.locale.toLanguageTag())
+        .split('-x-');
 
     if (userLocale[0].isEmpty) {
       return null;
@@ -183,7 +198,8 @@ class ApiPrefs {
 
   static User getUser() => getCurrentLogin()?.user;
 
-  static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
+  static String getUserAgent() =>
+      'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
@@ -199,7 +215,8 @@ class ApiPrefs {
 
   static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
 
-  static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
+  static Future<void> setHasMigrated(bool hasMigrated) =>
+      _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
 
   static Future<void> _setPrefBool(String key, bool value) async {
     _checkInit();
@@ -227,7 +244,9 @@ class ApiPrefs {
 
     var headers = {
       'Authorization': 'Bearer $token',
-      'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
+      'accept-language': (forceDeviceLanguage
+              ? ui.window.locale.toLanguageTag()
+              : effectiveLocale()?.toLanguageTag())
           .replaceAll('-', ','),
       'User-Agent': getUserAgent(),
     };

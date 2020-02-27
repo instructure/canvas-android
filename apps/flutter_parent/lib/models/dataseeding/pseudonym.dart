@@ -17,7 +17,7 @@ import 'package:built_value/serializer.dart';
 
 part 'pseudonym.g.dart';
 
-abstract class Pseudonym implements Built<Pseudonym, PseudonymBuilder>{
+abstract class Pseudonym implements Built<Pseudonym, PseudonymBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<Pseudonym> get serializer => _$pseudonymSerializer;
 

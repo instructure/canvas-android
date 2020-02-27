@@ -17,7 +17,7 @@ import 'package:built_value/serializer.dart';
 
 part 'oauth_token.g.dart';
 
-abstract class OAuthToken implements Built<OAuthToken,OAuthTokenBuilder> {
+abstract class OAuthToken implements Built<OAuthToken, OAuthTokenBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<OAuthToken> get serializer => _$oAuthTokenSerializer;
 
@@ -31,6 +31,5 @@ abstract class OAuthToken implements Built<OAuthToken,OAuthTokenBuilder> {
   @BuiltValueField(wireName: "access_token")
   String get accessToken;
 
-  static void _initializeBuilder(OAuthTokenBuilder b) => b
-    ..accessToken = '';
+  static void _initializeBuilder(OAuthTokenBuilder b) => b..accessToken = '';
 }

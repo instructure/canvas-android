@@ -36,27 +36,24 @@ class SeedResults {
 // Some app-side helper logic to abstract the "GetSeedContext" app call logic and
 // mark data seeding as complete.
 class AppSeedUtils {
-
   // Initial seeding context: Not yet completed
-  static SeedContext _seedContext = SeedContext( (b) => b
-      ..seedingComplete = false
-      ..build()
-  );
+  static SeedContext _seedContext = SeedContext((b) => b
+    ..seedingComplete = false
+    ..build());
 
   // The listener/handler to pass to enableFlutterDriverExtension()
   static DataHandler seedContextListener = (String message) async {
-    if(message == "GetSeedContext") {
+    if (message == "GetSeedContext") {
       return json.encode(serialize(_seedContext));
     }
   };
 
   // Lets the test driver know that data seeding has completed.
-  static void markSeedingComplete(MapBuilder<String,String> seedObjects) {
-    _seedContext = SeedContext( (b) => b
-        ..seedingComplete = true
-        ..seedObjects = seedObjects
-        ..build()
-    );
+  static void markSeedingComplete(MapBuilder<String, String> seedObjects) {
+    _seedContext = SeedContext((b) => b
+      ..seedingComplete = true
+      ..seedObjects = seedObjects
+      ..build());
   }
 
   // Generic data seeding utility.
@@ -68,28 +65,36 @@ class AppSeedUtils {
     result.parents.add(await UserSeedApi.createUser());
     result.teachers.add(await UserSeedApi.createUser());
 
-    for(int i=0; i<nStudents; i++) {
+    for (int i = 0; i < nStudents; i++) {
       var newStudent = await UserSeedApi.createUser();
       result.students.add(newStudent);
     }
 
     // TODO: A different path where courses could be exclusive to students.
     // I.e., create nCourses courses for each student.
-    for(int i=0; i<nCourses; i++) {
+    for (int i = 0; i < nCourses; i++) {
       var newCourse = await CourseSeedApi.createCourse();
       result.courses.add(newCourse);
 
-      await EnrollmentSeedApi.createEnrollment(result.teachers.first.id, newCourse.id, "TeacherEnrollment", "");
-      for(int i=0; i<result.students.length; i++) {
-        await EnrollmentSeedApi.createEnrollment(result.students.elementAt(i).id, newCourse.id, "StudentEnrollment", "");
-        await EnrollmentSeedApi.createEnrollment(result.parents.first.id, newCourse.id, "ObserverEnrollment", result.students.elementAt(i).id);
+      await EnrollmentSeedApi.createEnrollment(
+          result.teachers.first.id, newCourse.id, "TeacherEnrollment", "");
+      for (int i = 0; i < result.students.length; i++) {
+        await EnrollmentSeedApi.createEnrollment(
+            result.students.elementAt(i).id,
+            newCourse.id,
+            "StudentEnrollment",
+            "");
+        await EnrollmentSeedApi.createEnrollment(
+            result.parents.first.id,
+            newCourse.id,
+            "ObserverEnrollment",
+            result.students.elementAt(i).id);
       }
-
     }
-    
+
     return result;
   }
-  
+
   // Signs in a user via ApiPrefs.  That user should then be the reference
   // user when the initial screen starts.
   static Future signIn(SeededUser user) async {

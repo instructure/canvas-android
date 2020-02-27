@@ -1,4 +1,3 @@
-
 // Copyright (C) 2020 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
@@ -18,17 +17,20 @@ import 'package:built_value/serializer.dart';
 
 part 'communication_channel.g.dart';
 
-abstract class CommunicationChannel implements Built<CommunicationChannel, CommunicationChannelBuilder> {
+abstract class CommunicationChannel
+    implements Built<CommunicationChannel, CommunicationChannelBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CommunicationChannel> get serializer => _$communicationChannelSerializer;
+  static Serializer<CommunicationChannel> get serializer =>
+      _$communicationChannelSerializer;
 
   CommunicationChannel._();
-  factory CommunicationChannel([void Function(CommunicationChannelBuilder) updates]) = _$CommunicationChannel;
+  factory CommunicationChannel(
+          [void Function(CommunicationChannelBuilder) updates]) =
+      _$CommunicationChannel;
 
   @BuiltValueField(wireName: "skip_confirmation")
   bool get skipConfirmation;
 
-  static void _initializeBuilder(CommunicationChannelBuilder b) => b
-      ..skipConfirmation = false;
-
+  static void _initializeBuilder(CommunicationChannelBuilder b) =>
+      b..skipConfirmation = false;
 }

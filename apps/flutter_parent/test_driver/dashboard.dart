@@ -21,28 +21,27 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 
 import 'app_seed_utils.dart';
 
-
 void main() async {
   enableFlutterDriverExtension(handler: AppSeedUtils.seedContextListener);
-  
+
   // Initialize our ApiPrefs
   await ApiPrefs.init();
 
   // Seed our data
   var data = await AppSeedUtils.seed(nStudents: 2, nCourses: 2);
-  
+
   // Sign in the parent
   await AppSeedUtils.signIn(data.parents.first);
 
   // Let the test driver know that seeding has completed
-  AppSeedUtils.markSeedingComplete( MapBuilder({
-    "parent" : json.encode(serialize(data.parents.first)),
-    "student1" : json.encode(serialize(data.students[0])),
-    "student2" : json.encode(serialize(data.students[1])),
-    "course1" : json.encode(serialize(data.courses[0])),
-    "course2" : json.encode(serialize(data.courses[1]))
+  AppSeedUtils.markSeedingComplete(MapBuilder({
+    "parent": json.encode(serialize(data.parents.first)),
+    "student1": json.encode(serialize(data.students[0])),
+    "student2": json.encode(serialize(data.students[1])),
+    "course1": json.encode(serialize(data.courses[0])),
+    "course2": json.encode(serialize(data.courses[1]))
   }));
-  
+
   // Call app.main(), which should bring up the dashboard.
   app.main();
 }

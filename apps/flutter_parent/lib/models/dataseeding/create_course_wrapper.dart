@@ -18,17 +18,20 @@ import 'create_course_info.dart';
 
 part 'create_course_wrapper.g.dart';
 
-abstract class CreateCourseWrapper implements Built<CreateCourseWrapper, CreateCourseWrapperBuilder> {
+abstract class CreateCourseWrapper
+    implements Built<CreateCourseWrapper, CreateCourseWrapperBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CreateCourseWrapper> get serializer => _$createCourseWrapperSerializer;
+  static Serializer<CreateCourseWrapper> get serializer =>
+      _$createCourseWrapperSerializer;
 
   CreateCourseWrapper._();
-  factory CreateCourseWrapper([void Function(CreateCourseWrapperBuilder) updates]) = _$CreateCourseWrapper;
+  factory CreateCourseWrapper(
+          [void Function(CreateCourseWrapperBuilder) updates]) =
+      _$CreateCourseWrapper;
 
   CreateCourseInfo get course;
   bool get offer;
 
-  static void _initializeBuilder(CreateCourseWrapperBuilder b) => b
-    ..offer = true;
-
+  static void _initializeBuilder(CreateCourseWrapperBuilder b) =>
+      b..offer = true;
 }

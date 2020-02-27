@@ -43,7 +43,8 @@ import 'package:provider/provider.dart';
 import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
-  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   DashboardScreen({Key key, this.students}) : super(key: key);
 
@@ -168,10 +169,13 @@ class DashboardState extends State<DashboardScreen> {
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
-                    options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
+                    options: BadgeOptions(
+                        includeBorder: true, onPrimarySurface: true),
                   ),
-                  onPressed: () => DashboardScreen.scaffoldKey.currentState.openDrawer(),
-                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  onPressed: () =>
+                      DashboardScreen.scaffoldKey.currentState.openDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
             ),
@@ -203,7 +207,8 @@ class DashboardState extends State<DashboardScreen> {
               ),
               Expanded(child: _currentPage())
             ]),
-            bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+            bottomNavigationBar:
+                ParentTheme.of(context).bottomNavigationDivider(
               BottomNavigationBar(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 items: _bottomNavigationBarItems(),
@@ -240,18 +245,17 @@ class DashboardState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Avatar(
-                selectedStudent.avatarUrl,
-                name: selectedStudent.shortName,
-                radius: 24,
-                key: Key("student_expansion_touch_target")
-              ),
+              Avatar(selectedStudent.avatarUrl,
+                  name: selectedStudent.shortName,
+                  radius: 24,
+                  key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+                  UserName.fromUserShortName(selectedStudent,
+                      style: Theme.of(context).primaryTextTheme.subhead),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],
@@ -265,8 +269,12 @@ class DashboardState extends State<DashboardScreen> {
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(L10n(context).coursesLabel)),
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.calendar_month), title: Text(L10n(context).calendarLabel)),
+      BottomNavigationBarItem(
+          icon: Icon(CanvasIcons.courses),
+          title: Text(L10n(context).coursesLabel)),
+      BottomNavigationBarItem(
+          icon: Icon(CanvasIcons.calendar_month),
+          title: Text(L10n(context).calendarLabel)),
       BottomNavigationBarItem(
         icon: WidgetBadge(
           Icon(CanvasIcons.alerts),
@@ -355,7 +363,8 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) {
       return LoginLandingScreen();
     }), (Route<dynamic> route) => false);
   }
@@ -364,10 +373,12 @@ class DashboardState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 0, 12), child: Avatar(user.avatarUrl, name: user.shortName)),
+              padding: const EdgeInsets.fromLTRB(16, 16, 0, 12),
+              child: Avatar(user.avatarUrl, name: user.shortName)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+            child: UserName.fromUser(user,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -393,7 +404,8 @@ class DashboardState extends State<DashboardScreen> {
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (context, index) => items[index],
-      separatorBuilder: (context, index) => const Divider(height: 0, indent: 16),
+      separatorBuilder: (context, index) =>
+          const Divider(height: 0, indent: 16),
     );
   }
 
@@ -408,8 +420,9 @@ class DashboardState extends State<DashboardScreen> {
         ),
       );
 
-  _navDrawerManageStudents() =>
-      ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
+  _navDrawerManageStudents() => ListTile(
+      title: Text(L10n(context).manageStudents),
+      onTap: () => _navigateToManageStudents(context));
 
   _navDrawerSettings() => ListTile(
         title: Text(L10n(context).settings),
@@ -431,11 +444,13 @@ class DashboardState extends State<DashboardScreen> {
                 content: Text(L10n(context).logoutConfirmation),
                 actions: <Widget>[
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                    child: Text(
+                        MaterialLocalizations.of(context).cancelButtonLabel),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    child:
+                        Text(MaterialLocalizations.of(context).okButtonLabel),
                     onPressed: () => _performLogOut(context),
                   )
                 ],
@@ -458,7 +473,8 @@ class DashboardState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(16),
               child: FutureBuilder(
                 future: PackageInfo.fromPlatform(),
-                builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
                     L10n(context).appVersion(snapshot.data?.version),
                     style: Theme.of(context).textTheme.subtitle,

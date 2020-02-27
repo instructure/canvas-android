@@ -20,21 +20,21 @@ import 'package:flutter_parent/models/dataseeding/user_name_data.dart';
 
 part 'create_user_info.g.dart';
 
-abstract class CreateUserInfo implements Built<CreateUserInfo, CreateUserInfoBuilder> {
+abstract class CreateUserInfo
+    implements Built<CreateUserInfo, CreateUserInfoBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CreateUserInfo> get serializer => _$createUserInfoSerializer;
+  static Serializer<CreateUserInfo> get serializer =>
+      _$createUserInfoSerializer;
 
   CreateUserInfo._();
-  factory CreateUserInfo([void Function(CreateUserInfoBuilder) updates]) = _$CreateUserInfo;
-
+  factory CreateUserInfo([void Function(CreateUserInfoBuilder) updates]) =
+      _$CreateUserInfo;
 
 //  CreateUserInfo({
 //    this.user,
 //    this.pseudonym,
 //    this.communicationChannel
 //  });
-
-
 
   UserNameData get user;
   Pseudonym get pseudonym;

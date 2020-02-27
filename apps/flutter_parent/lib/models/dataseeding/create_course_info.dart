@@ -17,13 +17,15 @@ import 'package:built_value/serializer.dart';
 
 part 'create_course_info.g.dart';
 
-abstract class CreateCourseInfo implements Built<CreateCourseInfo, CreateCourseInfoBuilder> {
-
+abstract class CreateCourseInfo
+    implements Built<CreateCourseInfo, CreateCourseInfoBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CreateCourseInfo> get serializer => _$createCourseInfoSerializer;
+  static Serializer<CreateCourseInfo> get serializer =>
+      _$createCourseInfoSerializer;
 
   CreateCourseInfo._();
-  factory CreateCourseInfo([void Function(CreateCourseInfoBuilder) updates]) = _$CreateCourseInfo;
+  factory CreateCourseInfo([void Function(CreateCourseInfoBuilder) updates]) =
+      _$CreateCourseInfo;
 
   String get name;
   @BuiltValueField(wireName: "course_code")
@@ -33,7 +35,6 @@ abstract class CreateCourseInfo implements Built<CreateCourseInfo, CreateCourseI
   int get enrollmentTermId;
   String get role;
 
-  static void _initializeBuilder(CreateCourseInfoBuilder b) => b
-      ..role = "student";
-
+  static void _initializeBuilder(CreateCourseInfoBuilder b) =>
+      b..role = "student";
 }

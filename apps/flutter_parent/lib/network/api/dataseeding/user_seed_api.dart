@@ -14,20 +14,16 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:convert' as convert;
 
 import 'package:faker/faker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/models/dataseeding/create_user_info.dart';
 import 'package:flutter_parent/models/dataseeding/oauth_token.dart';
 import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
-import 'package:flutter_parent/models/dataseeding/user_name_data.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
-import 'package:flutter_parent/network/utils/private_consts.dart';
 
 import '../auth_api.dart';
 
@@ -50,8 +46,7 @@ class UserSeedApi {
       ..pseudonym.uniqueId = Guid().guid()
       ..pseudonym.password = Guid().guid()
       // Don't care about CommunicationChannel initialization for now
-      ..build()
-    );
+      ..build());
 
     var postBody = json.encode(serialize(userData));
     print("New user postBody: $postBody");
@@ -80,12 +75,12 @@ class UserSeedApi {
 
       var token = await _getToken(result, verifyResult, authCode);
 
-      result = result.rebuild((b) => b
-        ..token = token
-      );
+      result = result.rebuild((b) => b..token = token);
       return result;
     } else {
-      print("error request:" + response.request.toString() + ", headers: ${response.request.headers.toString()}");
+      print("error request:" +
+          response.request.toString() +
+          ", headers: ${response.request.headers.toString()}");
       print(
           "error response body: ${response.data}, status: ${response.statusCode}, message: ${response.statusMessage} ");
       return null;
@@ -93,19 +88,16 @@ class UserSeedApi {
   }
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
-  static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
-
+  static Future<String> _getToken(
+      SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
     var dio = seedingDio(baseUrl: "https://${user.domain}/");
 
-    var response = await dio.post(
-      'login/oauth2/token',
-      queryParameters: {
-        "client_id" : verifyResult.clientId,
-        "client_secret" : verifyResult.clientSecret,
-        "code" : authCode,
-        "redirect_uri" : _REDIRECT_URI
-      }
-    );
+    var response = await dio.post('login/oauth2/token', queryParameters: {
+      "client_id": verifyResult.clientId,
+      "client_secret": verifyResult.clientSecret,
+      "code": authCode,
+      "redirect_uri": _REDIRECT_URI
+    });
 
     if (response.statusCode == 200) {
       var parsedResponse = deserialize<OAuthToken>(response.data);
@@ -122,9 +114,11 @@ class UserSeedApi {
 
   // Get the authCode for the SeededUser, using the clientId from verifyResult.
   // This one is a little tricky as we have to call into native Android jsoup logic.
-  static Future<String> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
+  static Future<String> _getAuthCode(
+      SeededUser user, MobileVerifyResult verifyResult) async {
     try {
-      var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
+      var result =
+          await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
         'domain': user.domain,
         'clientId': verifyResult.clientId,
         'redirectUrl': _REDIRECT_URI,
