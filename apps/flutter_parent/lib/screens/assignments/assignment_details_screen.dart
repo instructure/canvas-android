@@ -136,7 +136,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(widget.studentId);
     final fullyLocked = assignment.isFullyLocked;
-    final showStatus = assignment.isSubmittable() || submission.isGraded();
+    final showStatus = assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;
     final submittedColor = submitted ? ParentTheme.of(context).successColor : textTheme.caption.color;
 
@@ -168,7 +168,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                   Text(
                     !submitted
                         ? l10n.assignmentNotSubmittedLabel
-                        : submission.isGraded() ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                        : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
                     style: textTheme.caption.copyWith(color: submittedColor),
                   ),
               ],
