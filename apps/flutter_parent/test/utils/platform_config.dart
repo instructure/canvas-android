@@ -14,10 +14,13 @@
 
 import 'dart:core';
 
+import 'package:flutter_parent/models/login.dart';
+
 class PlatformConfig {
   final bool initPackageInfo;
   final bool initDeviceInfo;
   final bool initWebview;
+  final Login initLoggedInUser;
 
   final Map<String, dynamic> mockPrefs;
 
@@ -28,6 +31,7 @@ class PlatformConfig {
     this.initDeviceInfo = true,
     this.initWebview = false,
     this.mockPrefs = const {},
+    this.initLoggedInUser = null,
   });
 
   /// SharedPreferences requires that test configurations use 'flutter.' at the beginning of keys in the map
