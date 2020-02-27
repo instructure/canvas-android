@@ -57,7 +57,7 @@ class _ParentAppState extends State<ParentApp> {
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
-          initialRoute: ParentRouter.root(),
+          initialRoute: ParentRouter.rootSplash(),
           onGenerateRoute: ParentRouter.router.generator,
         ),
       ),

@@ -19,7 +19,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
@@ -34,9 +33,15 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  final login = Login((b) => b
+    ..domain = 'domain'
+    ..accessToken = 'token'
+    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
     var interactor = _MockInteractor();
     var nav = _MockNav();
@@ -61,15 +66,7 @@ void main() {
       locator.registerFactory<DashboardInteractor>(() => interactor);
     });
 
-    var login = Login((b) => b
-      ..domain = 'domain'
-      ..accessToken = 'token'
-      ..user = CanvasModelTestUtils.mockUser().toBuilder());
-
-    await setupPlatformChannels();
-    await ApiPrefs.addLogin(login);
-    await ApiPrefs.switchLogins(login);
-    expect(ApiPrefs.isLoggedIn(), true);
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => Future.value([]));
 
@@ -130,15 +127,7 @@ void main() {
       locator.registerFactory<DashboardInteractor>(() => interactor);
     });
 
-    var login = Login((b) => b
-      ..domain = 'domain'
-      ..accessToken = 'token'
-      ..user = CanvasModelTestUtils.mockUser().toBuilder());
-
-    await setupPlatformChannels();
-    await ApiPrefs.addLogin(login);
-    await ApiPrefs.switchLogins(login);
-    expect(ApiPrefs.isLoggedIn(), true);
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     final completer = Completer<List<User>>();
     when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
@@ -146,29 +135,22 @@ void main() {
     when(interactor.getAlertCountNotifier()).thenReturn(_MockAlertCountNotifier());
     when(interactor.getInboxCountNotifier()).thenReturn(_MockInboxCountNotifier());
 
-//    await tester.pumpWidget(TestApp(
-//      SplashScreen(),
-//      highContrast: true,
-//      navigatorObservers: [observer],
-//    ));
-    var capturedContext;
-    await TestApp.showWidgetFromTap(tester, (BuildContext context) {
-      capturedContext = context;
-      return Navigator.of(context).pushNamed(ParentRouter.root());
-    }, observers: [observer]);
-    await tester.pump();
+    await tester.pumpWidget(TestApp(
+      SplashScreen(),
+      highContrast: true,
+      navigatorObservers: [observer],
+    ));
     await tester.pump();
 
     completer.completeError('Fake error');
     await tester.pump();
-    await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
 
     var route =
-        verify(observer.didReplace(newRoute: anyNamed('newRoute'), oldRoute: captureAnyNamed('oldRoute'))).captured[0];
-    expect(route.runtimeType, MaterialPageRoute);
+        verify(observer.didReplace(newRoute: captureAnyNamed('newRoute'), oldRoute: anyNamed('oldRoute'))).captured[0];
+    expect(route.runtimeType, PageRouteBuilder);
 
-    var screen = (route as MaterialPageRoute).buildPage(capturedContext, null, null);
+    var screen = route.buildPage(null, null, null);
     expect(screen.runtimeType, DashboardScreen);
     expect((screen as DashboardScreen).students, isNull);
     ApiPrefs.clean();

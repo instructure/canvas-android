@@ -27,9 +27,9 @@ class ParentRouter {
 
   static bool _isInitialized = false;
 
-  static final String _root = '/';
-  static String root() {
-    return _root;
+  static final String _rootSplash = '/';
+  static String rootSplash() {
+    return _rootSplash;
   }
 
   static final String _rootWithUrl = '/external/:externalUrl';
@@ -65,45 +65,42 @@ class ParentRouter {
   static void init() {
     if (!_isInitialized) {
       _isInitialized = true;
-      router.notFoundHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-        print('default sup dog');
-        return Container(
-          child: Text('WAHTS UP IM THE DEFAULT'),
-        );
-      });
-      router.define(_root, handler: _rootHandler);
+      router.define(_rootSplash, handler: _rootSplashHandler);
       router.define(_conversations, handler: _conversationsHandler);
       router.define(_dashboard, handler: _dashboardHandler);
       router.define(_login, handler: _loginHandler);
       router.define(_notParent, handler: _notParentHandler);
+      // EXTERNAL
+
+      // INTERNAL
+
     }
   }
 
   // Handlers
-  static Handler _rootHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    print('splash sup dog');
+  static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return SplashScreen();
   });
 
   static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    print('conv sup dog');
     return ConversationListScreen();
   });
 
   static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    print('dashboard sup dog');
     return DashboardScreen();
   });
 
   static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    print('login sup dog');
     return LoginLandingScreen();
   });
 
   static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    print('not a parent sup dog');
     return NotAParentScreen();
   });
+
+  // INTERNAL HANDLER
+
+  // EXTERNAL HANDLER
 
   /**
    *  Handles all links, preps them to be appropriate for the router

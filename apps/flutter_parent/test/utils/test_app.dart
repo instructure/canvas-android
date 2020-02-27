@@ -51,7 +51,7 @@ class TestApp extends StatefulWidget {
   _TestAppState createState() => _TestAppState();
 
   static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext context),
-      {bool highContrast = false, List<NavigatorObserver> observers = const []}) async {
+      {bool highContrast = false}) async {
     await tester.pumpWidget(TestApp(
       Builder(
           builder: (context) => RaisedButton(
@@ -60,7 +60,6 @@ class TestApp extends StatefulWidget {
                 onPressed: () => tapCallback(context),
               )),
       highContrast: highContrast,
-      navigatorObservers: observers,
     ));
     await tester.pumpAndSettle();
 
@@ -170,6 +169,11 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   }
 
   if (config.initWebview) _initPlatformWebView();
+
+  if (config.initLoggedInUser != null) {
+    ApiPrefs.addLogin(config.initLoggedInUser);
+    ApiPrefs.switchLogins(config.initLoggedInUser);
+  }
 
   // Return all the futures that were created
   return Future.wait([
