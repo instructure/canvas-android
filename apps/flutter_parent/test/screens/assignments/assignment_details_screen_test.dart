@@ -31,6 +31,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
@@ -79,6 +80,7 @@ void main() {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
+    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
   });
 
   setUp(() {
@@ -274,6 +276,34 @@ void main() {
     expect(find.text(AppLocalizations().assignmentSubmittedLabel), findsOneWidget);
     expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style.color,
         StudentColorSet.shamrock.lightHC);
+  });
+
+  testWidgetsWithAccessibilityChecks('shows Assignment data with no submission', (tester) async {
+    final assignmentName = 'Testing Assignment';
+    final dueDate = DateTime.utc(2000);
+
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
+        .thenAnswer((_) async => AssignmentDetails(
+            assignment: assignment.rebuild((b) => b
+              ..name = assignmentName
+              ..pointsPossible = 1.0
+              ..submissionList = BuiltList<Submission>.of([]).toBuilder()
+              ..submissionTypes = ListBuilder([SubmissionTypes.none])
+              ..dueAt = dueDate)));
+
+    await tester.pumpWidget(TestApp(
+      AssignmentDetailsScreen(
+        courseId: courseId,
+        assignmentId: assignmentId,
+        studentId: studentId,
+      ),
+      highContrast: true,
+    ));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text(assignmentName), findsOneWidget);
+    expect(find.text('1 pts'), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows Assignment with no due date', (tester) async {

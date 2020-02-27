@@ -21,57 +21,77 @@
     <meta name="viewport" content="width=device-width" charset="utf-8"/>
 </head>
 <style>
-        html,body {
-            width: 100%;
-            height: auto;
-            margin: 0;
-            padding: 0;
-        }
+    html,body {
+        width: 100%;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
 
-        img {
-            max-width: 100% !important;
-            height: auto;
-            margin: 0;
-            padding: 0;
-        }
+    img {
+        max-width: 100% !important;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
 
-        video {
-            width: 100%    !important;
-            height: auto   !important;
-            margin: 0;
-            padding: 0;
-        }
+    video {
+        width: 100%    !important;
+        height: auto   !important;
+        margin: 0;
+        padding: 0;
+    }
 
-        iframe {
-            width: 100%    !important;
-            margin: 0;
-            padding-top: 0;
-        }
+    iframe {
+        width: 100%    !important;
+        margin: 0;
+        padding-top: 0;
+    }
 
-        /* makes the videos in fullscreen black */
-        :-webkit-full-screen-ancestor:not(iframe) { background-color: black }
+    /* makes the videos in fullscreen black */
+    :-webkit-full-screen-ancestor:not(iframe) { background-color: black }
 
-        pre {
-            white-space: pre-wrap;       /* Since CSS 2.1 */
-            white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-            white-space: -pre-wrap;      /* Opera 4-6 */
-            white-space: -o-pre-wrap;    /* Opera 7 */
-            word-wrap: break-word;       /* Internet Explorer 5.5+ */
-        }
+    pre {
+        white-space: pre-wrap;       /* Since CSS 2.1 */
+        white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+        white-space: -pre-wrap;      /* Opera 4-6 */
+        white-space: -o-pre-wrap;    /* Opera 7 */
+        word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
 
-        #content {
-            padding: 0px {PADDING}px {PADDING}px;
-        }
+    #content {
+        padding: 0px {PADDING}px {PADDING}px;
+    }
 
-        a {
-            word-wrap: break-word;
-        }
+    a {
+        word-wrap: break-word;
+    }
 
-
+    .lti_button {
+        margin-bottom: 12px;
+        height: 38px;
+        width: 100%;
+        border: 0.5px solid #C7CDD1;
+        border-radius: 4px;
+        background-color: #F5F5F5;
+        text-align: center;
+        vertical-align: middle;
+        line-height: 38px;
+        color: #394B58;
+        font-size: 13px;
+        margin: auto;
+    }
 </style>
 <body>
 <div id="content">
     {CANVAS_CONTENT}
 </div>
+<script type="text/javascript">
+    function onLtiToolButtonPressed(id) {
+        OnLtiToolButtonPressed.postMessage(id);
+        window.event.cancelBubble = true;
+        window.event.stopPropagation();
+    }
+</script>
 </body>
 </html>

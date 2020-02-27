@@ -22,6 +22,7 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
@@ -49,6 +50,7 @@ void main() {
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
     _locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
     _locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
+    _locator.registerFactory<CourseApi>(() => _MockCourseApi());
     _locator.registerFactory<QuickNav>(() => QuickNav());
 
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
@@ -288,6 +290,8 @@ class _MockCoursesInteractor extends CoursesInteractor {
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
+
+class _MockCourseApi extends Mock implements CourseApi {}
 
 List<Course> generateCoursesForStudent(String userId, {int numberOfCourses = 1}) {
   var student = _mockStudent(userId);

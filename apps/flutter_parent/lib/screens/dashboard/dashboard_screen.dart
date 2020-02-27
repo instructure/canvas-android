@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/CalendarScreen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
@@ -23,7 +24,6 @@ import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart'
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
-import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
@@ -337,7 +337,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    locator<QuickNav>().push(context, ConversationListScreen());
+    Navigator.pushNamed(context, ParentRouter.conversations());
   }
 
   _navigateToManageStudents(context) {

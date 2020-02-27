@@ -19,9 +19,9 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -134,7 +134,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     final assignment = snapshot.data.assignment;
     final submission = assignment.submission(widget.studentId);
     final fullyLocked = assignment.isFullyLocked;
-    final showStatus = assignment.isSubmittable() || submission.isGraded();
+    final showStatus = assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;
     final submittedColor = submitted ? ParentTheme.of(context).successColor : textTheme.caption.color;
 
@@ -166,7 +166,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                   Text(
                     !submitted
                         ? l10n.assignmentNotSubmittedLabel
-                        : submission.isGraded() ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                        : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
                     style: textTheme.caption.copyWith(color: submittedColor),
                   ),
               ],
@@ -234,9 +234,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                     title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
                         ? l10n.assignmentInstructionsLabel
                         : l10n.assignmentDescriptionLabel,
-                    child: ConstrainedWebView(
+                    child: CanvasWebView(
                       content: assignment.description,
                       emptyDescription: l10n.assignmentNoDescriptionBody,
+                      fullScreen: false,
                     ),
                   ),
                 );

@@ -24,6 +24,7 @@ import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -58,6 +59,7 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<EventDetailsInteractor>(() => interactor);
+    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
   });
 
   tearDown(() {
@@ -435,6 +437,7 @@ void main() {
         EventDetailsScreen.withEvent(event: event), PlatformConfig(initWebview: true, mockPrefs: null), false));
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
+    await tester.pump(); // Let the webview future finish
 
     expect(find.text(l10n.assignmentDescriptionLabel), findsOneWidget);
     expect(find.byType(WebView), findsOneWidget);

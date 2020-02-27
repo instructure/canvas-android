@@ -17,9 +17,9 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseHomePageScreen extends StatefulWidget {
@@ -91,10 +91,11 @@ class _CourseHomePage extends StatelessWidget {
       physics: AlwaysScrollableScrollPhysics(),
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0),
-        child: ConstrainedWebView(
+        child: CanvasWebView(
           content: homePage.body,
           emptyDescription: homePage.lockExplanation ?? L10n(context).noPageFound,
           horizontalPadding: 16,
+          fullScreen: false,
         ),
       ),
     );

@@ -18,9 +18,9 @@ import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/constrained_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -200,9 +200,10 @@ class _EventDetails extends StatelessWidget {
           ),
         ),
         // No external padding for the webview, defined via the html in the web view
-        ConstrainedWebView(
+        CanvasWebView(
           content: event.description,
           horizontalPadding: 16,
+          fullScreen: false,
         ),
       ],
     );

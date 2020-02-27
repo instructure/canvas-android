@@ -31,7 +31,6 @@ import 'package:flutter_parent/screens/announcements/announcement_details_intera
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
-import 'package:flutter_parent/screens/courses/details/course_syllabus/course_syllabus_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
@@ -48,6 +47,7 @@ import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -96,7 +96,6 @@ void setupLocator() {
   locator.registerFactory<ConversationReplyInteractor>(() => ConversationReplyInteractor());
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
-  locator.registerFactory<CourseSyllabusInteractor>(() => CourseSyllabusInteractor());
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
   locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
@@ -106,6 +105,7 @@ void setupLocator() {
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
+  locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
 
   // Veneers and mockable dependencies
   locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());

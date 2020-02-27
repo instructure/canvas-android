@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
@@ -49,7 +50,8 @@ class TestApp extends StatefulWidget {
   @override
   _TestAppState createState() => _TestAppState();
 
-  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext), {bool highContrast = false}) async {
+  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext context),
+      {bool highContrast = false}) async {
     await tester.pumpWidget(TestApp(
       Builder(
           builder: (context) => RaisedButton(
@@ -77,7 +79,7 @@ class _TestAppState extends State<TestApp> {
   @override
   void initState() {
     super.initState();
-
+    ParentRouter.init();
     setupPlatformChannels(config: widget.platformConfig);
   }
 
@@ -101,6 +103,7 @@ class _TestAppState extends State<TestApp> {
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
           home: Material(child: widget.home),
+          onGenerateRoute: ParentRouter.router.generator,
         ),
       ),
     );
@@ -166,6 +169,11 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   }
 
   if (config.initWebview) _initPlatformWebView();
+
+  if (config.initLoggedInUser != null) {
+    ApiPrefs.addLogin(config.initLoggedInUser);
+    ApiPrefs.switchLogins(config.initLoggedInUser);
+  }
 
   // Return all the futures that were created
   return Future.wait([

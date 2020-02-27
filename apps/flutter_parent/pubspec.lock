@@ -267,6 +267,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.11"
+  fluro:
+    dependency: "direct main"
+    description:
+      name: fluro
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -928,10 +935,10 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.19+5"
+      path: "plugins/webview_flutter"
+      relative: true
+    source: path
+    version: "0.3.19+4"
   xml:
     dependency: transitive
     description:

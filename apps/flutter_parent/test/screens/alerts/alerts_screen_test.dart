@@ -26,6 +26,7 @@ import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -50,6 +51,7 @@ void main() {
     _locator.registerFactory<AlertsInteractor>(() => interactor ?? _MockAlertsInteractor());
     _locator.registerFactory<AnnouncementDetailsInteractor>(
         () => announcementDetailsInteractor ?? _MockAnnouncementDetailsInteractor());
+    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
     _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
     _locator.registerFactory<QuickNav>(() => QuickNav());
   }
