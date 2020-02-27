@@ -97,7 +97,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     _animation.addListener(() {
       if (_animation.status == AnimationStatus.completed) {
         // Use a custom page route for the circle reveal animation
-        ParentRouter.router.navigateTo(context, route, transition: TransitionType.custom, transitionBuilder: (
+        ParentRouter.router.navigateTo(context, route,
+            replace: true,
+            transitionDuration: const Duration(milliseconds: 500),
+            transition: TransitionType.custom, transitionBuilder: (
           context,
           animation,
           secondaryAnimation,

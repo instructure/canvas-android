@@ -50,7 +50,8 @@ class TestApp extends StatefulWidget {
   @override
   _TestAppState createState() => _TestAppState();
 
-  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext), {bool highContrast = false}) async {
+  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext context),
+      {bool highContrast = false, List<NavigatorObserver> observers = const []}) async {
     await tester.pumpWidget(TestApp(
       Builder(
           builder: (context) => RaisedButton(
@@ -59,6 +60,7 @@ class TestApp extends StatefulWidget {
                 onPressed: () => tapCallback(context),
               )),
       highContrast: highContrast,
+      navigatorObservers: observers,
     ));
     await tester.pumpAndSettle();
 

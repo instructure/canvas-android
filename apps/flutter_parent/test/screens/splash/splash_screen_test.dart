@@ -14,10 +14,17 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
@@ -26,6 +33,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -46,12 +54,22 @@ void main() {
     expect(find.byType(CanvasLoadingIndicator), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Routes to not-a-parent screen when there are no students', (tester) async {
+  testWidgetsWithAccessibilityChecks('Routes to not-a-parent screen when there are no students and user is logged in',
+      (tester) async {
     var interactor = _MockInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
+
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+    await setupPlatformChannels();
+    await ApiPrefs.addLogin(login);
+    await ApiPrefs.switchLogins(login);
+    expect(ApiPrefs.isLoggedIn(), true);
 
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => Future.value([]));
 
@@ -59,8 +77,24 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NotAParentScreen), findsOneWidget);
+    await ApiPrefs.clean();
   });
 
+  testWidgetsWithAccessibilityChecks('Routes to login screen when the user is not logged in', (tester) async {
+    var interactor = _MockInteractor();
+    setupTestLocator((locator) {
+      locator.registerFactory<DashboardInteractor>(() => interactor);
+    });
+
+    await ApiPrefs.clean();
+
+    await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginLandingScreen), findsOneWidget);
+  });
+
+  /* - TODO - fix this up if this route starts to pre-fetch students again
   testWidgetsWithAccessibilityChecks('Routes to dashboard when there are students', (tester) async {
     var interactor = _MockInteractor();
     var nav = _MockNav();
@@ -87,34 +121,66 @@ void main() {
     expect(screen.runtimeType, DashboardScreen);
     expect((screen as DashboardScreen).students, students);
   });
+   */
 
   testWidgetsWithAccessibilityChecks('Routes to dashboard without students on error', (tester) async {
     var interactor = _MockInteractor();
-    var nav = _MockNav();
+    var observer = _MockNavigatorObserver();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<QuickNav>(() => nav);
     });
 
-    final completer = Completer<List<User>>();
-    when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => completer.future);
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-    await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
+    await setupPlatformChannels();
+    await ApiPrefs.addLogin(login);
+    await ApiPrefs.switchLogins(login);
+    expect(ApiPrefs.isLoggedIn(), true);
+
+    final completer = Completer<List<User>>();
+    when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
+    when(interactor.getSelf()).thenAnswer((_) => Future.value(login.user));
+    when(interactor.getAlertCountNotifier()).thenReturn(_MockAlertCountNotifier());
+    when(interactor.getInboxCountNotifier()).thenReturn(_MockInboxCountNotifier());
+
+//    await tester.pumpWidget(TestApp(
+//      SplashScreen(),
+//      highContrast: true,
+//      navigatorObservers: [observer],
+//    ));
+    var capturedContext;
+    await TestApp.showWidgetFromTap(tester, (BuildContext context) {
+      capturedContext = context;
+      return Navigator.of(context).pushNamed(ParentRouter.root());
+    }, observers: [observer]);
+    await tester.pump();
     await tester.pump();
 
     completer.completeError('Fake error');
     await tester.pump();
-    await tester.pump(Duration(milliseconds: 350));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
 
-    var route = verify(nav.replaceRoute(any, captureAny)).captured[0];
-    expect(route.runtimeType, PageRouteBuilder);
+    var route =
+        verify(observer.didReplace(newRoute: anyNamed('newRoute'), oldRoute: captureAnyNamed('oldRoute'))).captured[0];
+    expect(route.runtimeType, MaterialPageRoute);
 
-    var screen = route.pageBuilder(null, null, null);
+    var screen = (route as MaterialPageRoute).buildPage(capturedContext, null, null);
     expect(screen.runtimeType, DashboardScreen);
     expect((screen as DashboardScreen).students, isNull);
+    ApiPrefs.clean();
   });
 }
 
 class _MockInteractor extends Mock implements DashboardInteractor {}
 
 class _MockNav extends Mock implements QuickNav {}
+
+class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
+
+class _MockInboxCountNotifier extends Mock implements InboxCountNotifier {}
