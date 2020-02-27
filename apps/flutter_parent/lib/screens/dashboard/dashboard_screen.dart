@@ -335,7 +335,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    Navigator.pushNamed(context, ParentRouter.conversations);
+    Navigator.pushNamed(context, ParentRouter.conversations());
   }
 
   _navigateToManageStudents(context) {

@@ -15,15 +15,14 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-
-import '../not_a_parent_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,76 +46,87 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: FutureBuilder(
-        future: _dataFuture,
-        builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.data.isEmpty) {
-              // User is not observing any students. Show the not-a-parent screen.
-              _navigate(NotAParentScreen());
-            } else {
-              // Proceed with pre-fetched student list
-              _navigate(DashboardScreen(students: snapshot.data));
+    if (!ApiPrefs.isLoggedIn()) {
+      // route to login screen
+      _navigate(context, ParentRouter.login());
+      return _defaultBody(context);
+    } else {
+      return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        body: FutureBuilder(
+          future: _dataFuture,
+          builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data.isEmpty) {
+                // User is not observing any students. Show the not-a-parent screen.
+                _navigate(context, ParentRouter.notParent());
+              } else {
+                // Proceed with pre-fetched student list
+                // TODO - revert to include pre-fetch later on
+                _navigate(context, ParentRouter.dashboard());
+              }
+            } else if (snapshot.hasError) {
+              // On error, proceed without pre-fetched student list
+              _navigate(context, ParentRouter.dashboard());
             }
-          } else if (snapshot.hasError) {
-            // On error, proceed without pre-fetched student list
-            _navigate(DashboardScreen());
-          }
-          return Container(
-            child: Center(
-              child: ScaleTransition(
-                  scale: Tween<double>(begin: 1.0, end: 0.0).animate(_animation),
-                  child: const CanvasLoadingIndicator()),
-            ),
-          );
-        },
-      ),
-    );
+            return Container(
+              child: Center(
+                child: ScaleTransition(
+                    scale: Tween<double>(begin: 1.0, end: 0.0).animate(_animation),
+                    child: const CanvasLoadingIndicator()),
+              ),
+            );
+          },
+        ),
+      );
+    }
   }
 
-  _navigate(Widget screen) {
+  Widget _defaultBody(BuildContext cont) {
+    return Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        body: Container(
+          child: Center(
+            child: ScaleTransition(
+                scale: Tween<double>(begin: 1.0, end: 0.0).animate(_animation), child: const CanvasLoadingIndicator()),
+          ),
+        ));
+  }
+
+  _navigate(BuildContext context, String route) {
     _animation.addListener(() {
       if (_animation.status == AnimationStatus.completed) {
         // Use a custom page route for the circle reveal animation
-        locator<QuickNav>().replaceRoute(context, _zoomRoute(widget, screen));
-      }
-    });
-    _controller.forward();
-  }
-
-  _zoomRoute(Widget exitPage, Widget enterPage) {
-    return PageRouteBuilder(
-      transitionDuration: const Duration(milliseconds: 500),
-      pageBuilder: (_, __, ___) => enterPage,
-      transitionsBuilder: (
-        context,
-        animation,
-        secondaryAnimation,
-        child,
-      ) {
-        return ScaleTransition(
-          scale: Tween<double>(
-            begin: 2.0,
-            end: 1.0,
-          ).animate(CurvedAnimation(
-            parent: animation,
-            curve: Curves.easeOutQuad,
-          )),
-          child: _CircleClipTransition(
-            child: child,
+        ParentRouter.router.navigateTo(context, route, transition: TransitionType.custom, transitionBuilder: (
+          context,
+          animation,
+          secondaryAnimation,
+          child,
+        ) {
+          return ScaleTransition(
             scale: Tween<double>(
-              begin: 0.0,
+              begin: 2.0,
               end: 1.0,
             ).animate(CurvedAnimation(
               parent: animation,
-              curve: Curves.easeInExpo,
+              curve: Curves.easeOutQuad,
             )),
-          ),
-        );
-      },
-    );
+            child: _CircleClipTransition(
+              child: child,
+              scale: Tween<double>(
+                begin: 0.0,
+                end: 1.0,
+              ).animate(CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeInExpo,
+              )),
+            ),
+          );
+        });
+      }
+    });
+
+    _controller.forward();
   }
 
   @override
