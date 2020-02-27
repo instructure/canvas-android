@@ -127,27 +127,21 @@ Serializers jsonSerializers = (_serializers.toBuilder()
       ..addPlugin(RemoveNullInMapConvertedListPlugin())
       ..add(Iso8601DateTimeSerializer())
       ..add(ResultEnumSerializer())
-      ..addBuilderFactory(
-          FullType(BuiltList, [FullType(String)]), () => ListBuilder<String>())
+      ..addBuilderFactory(FullType(BuiltList, [FullType(String)]), () => ListBuilder<String>())
       ..addBuilderFactory(
           FullType(BuiltMap, [
             FullType(String),
             FullType(BuiltList, [FullType(String)])
           ]),
           () => MapBuilder<String, BuiltList<String>>())
-      ..addBuilderFactory(
-          FullType(BuiltMap, [FullType(String), FullType(String)]),
-          () => MapBuilder<String, String>()))
+      ..addBuilderFactory(FullType(BuiltMap, [FullType(String), FullType(String)]), () => MapBuilder<String, String>()))
     .build();
 
-T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(
-    jsonSerializers.serializerForType(T), value);
+T deserialize<T>(dynamic value) => jsonSerializers.deserializeWith<T>(jsonSerializers.serializerForType(T), value);
 
-dynamic serialize<T>(T value) =>
-    jsonSerializers.serializeWith(jsonSerializers.serializerForType(T), value);
+dynamic serialize<T>(T value) => jsonSerializers.serializeWith(jsonSerializers.serializerForType(T), value);
 
-List<T> deserializeList<T>(dynamic value) =>
-    List.from(value?.map((value) => deserialize<T>(value))?.toList() ?? []);
+List<T> deserializeList<T>(dynamic value) => List.from(value?.map((value) => deserialize<T>(value))?.toList() ?? []);
 
 /// Plugin that works around an issue where deserialization breaks if a map key is null
 /// Sourced from https://github.com/google/built_value.dart/issues/653#issuecomment-495964030

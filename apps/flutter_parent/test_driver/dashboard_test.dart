@@ -45,27 +45,19 @@ void main() {
       seedContext.getNamedObject<SeededUser>("student1"),
       seedContext.getNamedObject<SeededUser>("student2")
     ];
-    var courses = [
-      seedContext.getNamedObject<Course>("course1"),
-      seedContext.getNamedObject<Course>("course2")
-    ];
+    var courses = [seedContext.getNamedObject<Course>("course1"), seedContext.getNamedObject<Course>("course2")];
     var parent = seedContext.getNamedObject<SeededUser>("parent");
 
-    await driver.waitFor(find.byType("DashboardScreen"),
-        timeout: Duration(seconds: 5));
+    await driver.waitFor(find.byType("DashboardScreen"), timeout: Duration(seconds: 5));
 
     // Verify that our course names, codes and grades are listed
     await courses.forEach((course) async {
-      var actualName =
-          await driver.getText(find.byValueKey("${course.courseCode}_name"));
+      var actualName = await driver.getText(find.byValueKey("${course.courseCode}_name"));
       expect(actualName, course.name);
-      var actualCode =
-          await driver.getText(find.byValueKey("${course.courseCode}_code"));
+      var actualCode = await driver.getText(find.byValueKey("${course.courseCode}_code"));
       expect(actualCode, course.courseCode);
-      var actualGrade =
-          await driver.getText(find.byValueKey("${course.courseCode}_grade"));
-      expect(actualGrade,
-          "No Grade"); // AppLocalizations().noGrade would pull in dart:ui
+      var actualGrade = await driver.getText(find.byValueKey("${course.courseCode}_grade"));
+      expect(actualGrade, "No Grade"); // AppLocalizations().noGrade would pull in dart:ui
     });
 
     // Verify that first student is showing
@@ -76,15 +68,13 @@ void main() {
 
     // Verify that each of our students are on the student list
     await students.forEach((student) async {
-      var actualName =
-          await driver.getText(find.byValueKey("${student.shortName}_text"));
+      var actualName = await driver.getText(find.byValueKey("${student.shortName}_text"));
       expect(actualName, student.shortName);
     });
 
     // Now select the second student (which should close the student list expansion)
     await driver.tap(find.byValueKey("${students[1].shortName}_text"));
-    await Future.delayed(
-        Duration(seconds: 2)); // Wait for animation to complete.
+    await Future.delayed(Duration(seconds: 2)); // Wait for animation to complete.
 
     // And make sure that the second student is now displayed
     await driver.waitFor(find.text(students[1].shortName));
@@ -94,7 +84,5 @@ void main() {
 
     // And the name of our parent is displayed
     await driver.waitFor(find.text(parent.name));
-  },
-      timeout: Timeout(
-          Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
+  }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
 }

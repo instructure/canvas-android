@@ -61,20 +61,17 @@ class DioConfig {
   /// Creates a [Dio] instance using this configuration
   Dio get dio {
     // Add canvas-string-ids header to ensure Canvas IDs are returned as Strings
-    baseHeaders[HttpHeaders.acceptHeader] =
-        'application/json+canvas-string-ids';
+    baseHeaders[HttpHeaders.acceptHeader] = 'application/json+canvas-string-ids';
 
     // Configure base options
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
 
     // Add per_page query param if requested
-    if (pageSize.size > 0)
-      options.queryParameters = {'per_page': pageSize.size};
+    if (pageSize.size > 0) options.queryParameters = {'per_page': pageSize.size};
 
     // Add cache configuration to base options
     if (cacheMaxAge != Duration.zero) {
-      var extras =
-          buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
+      var extras = buildCacheOptions(cacheMaxAge, forceRefresh: forceRefresh).extra;
       options.extra.addAll(extras);
     }
 
@@ -102,16 +99,11 @@ class DioConfig {
   }
 
   Interceptor _cacheInterceptor() {
-    Interceptor interceptor =
-        DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
+    Interceptor interceptor = DioCacheManager(CacheConfig(baseUrl: baseUrl)).interceptor;
     return InterceptorsWrapper(
-      onRequest: (RequestOptions options) =>
-          options.method == 'GET' ? interceptor.onRequest(options) : options,
-      onResponse: (Response response) => response.request.method == 'GET'
-          ? interceptor.onResponse(response)
-          : response,
-      onError: (DioError e) =>
-          e, // interceptor falls back to cache on error, a behavior we currently don't want
+      onRequest: (RequestOptions options) => options.method == 'GET' ? interceptor.onRequest(options) : options,
+      onResponse: (Response response) => response.request.method == 'GET' ? interceptor.onResponse(response) : response,
+      onError: (DioError e) => e, // interceptor falls back to cache on error, a behavior we currently don't want
     );
   }
 
@@ -125,8 +117,7 @@ class DioConfig {
     PageSize pageSize: PageSize.none,
   }) {
     return DioConfig(
-        baseUrl:
-            includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
+        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
         baseHeaders: ApiPrefs.getHeaderMap(
           forceDeviceLanguage: forceDeviceLanguage,
           token: overrideToken,
@@ -160,14 +151,12 @@ class DioConfig {
   Future<bool> clearCache({String path}) {
     // The methods below are currently broken in unit tests due to sqflite (even when the sqflite MethodChannel has been
     // mocked) so we'll just return 'true' for tests. See https://github.com/tekartik/sqflite/issues/83.
-    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding)
-      return Future.value(true);
+    if (WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding) return Future.value(true);
 
     if (path == null) {
       return DioCacheManager(CacheConfig(baseUrl: baseUrl)).clearAll();
     } else {
-      return DioCacheManager(CacheConfig(baseUrl: baseUrl))
-          .deleteByPrimaryKey(path);
+      return DioCacheManager(CacheConfig(baseUrl: baseUrl)).deleteByPrimaryKey(path);
     }
   }
 }
@@ -185,8 +174,7 @@ class PageSize {
   static const PageSize canvasMax = const PageSize(100);
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is PageSize && this.size == other.size;
+  bool operator ==(Object other) => identical(this, other) || other is PageSize && this.size == other.size;
 }
 
 /// Convenience method that returns a [Dio] instance configured by calling through to [DioConfig.canvas]
@@ -215,8 +203,5 @@ Dio seedingDio({String baseUrl = ApiPrefs.baseSeedingUrl}) {
       baseHeaders: ApiPrefs.getHeaderMap(
           forceDeviceLanguage: true,
           token: DATA_SEEDING_ADMIN_TOKEN,
-          extraHeaders: {
-            'Content-type': 'application/json',
-            'Accept': 'application/json'
-          })).dio;
+          extraHeaders: {'Content-type': 'application/json', 'Accept': 'application/json'})).dio;
 }

@@ -40,14 +40,12 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
     return ListView.separated(
         padding: EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
-        itemBuilder: (context, idx) => idx < widget._students.length
-            ? _studentWidget(widget._students[idx])
-            : _addWidget(),
+        itemBuilder: (context, idx) =>
+            idx < widget._students.length ? _studentWidget(widget._students[idx]) : _addWidget(),
         separatorBuilder: (context, idx) {
           return SizedBox(width: 8);
         },
-        itemCount: widget._students.length +
-            1); // Add one for the 'Add Student' button
+        itemCount: widget._students.length + 1); // Add one for the 'Add Student' button
   }
 
   Widget _studentWidget(User student) {
@@ -56,8 +54,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
       onTap: () {
         var idx = widget._students.indexOf(student);
         ParentTheme.of(context).studentIndex = idx;
-        Provider.of<SelectedStudentNotifier>(context, listen: false).value =
-            student;
+        Provider.of<SelectedStudentNotifier>(context, listen: false).value = student;
         widget.onTap();
       },
       child: Semantics(
@@ -72,21 +69,15 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 SizedBox(height: 8),
                 Container(
                   child: Avatar.fromUser(student, radius: 24),
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: const Color(0x1E000000),
-                        offset: Offset(1.5, 1.5),
-                        blurRadius: 4)
-                  ], borderRadius: BorderRadius.all(Radius.circular(40))),
+                  decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(color: const Color(0x1E000000), offset: Offset(1.5, 1.5), blurRadius: 4)],
+                      borderRadius: BorderRadius.all(Radius.circular(40))),
                 ),
                 SizedBox(height: 8),
                 Text(
                   student.shortName,
                   key: Key("${student.shortName}_text"),
-                  style: Theme.of(context)
-                      .textTheme
-                      .subtitle
-                      .copyWith(color: ParentTheme.of(context).onSurfaceColor),
+                  style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
                   overflow: TextOverflow.ellipsis,
                   textWidthBasis: TextWidthBasis.longestLine,
                 ),
@@ -121,9 +112,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 ),
                 shape: CircleBorder(
                   side: BorderSide(
-                      color: ParentTheme.of(context).isDarkMode
-                          ? Theme.of(context).accentColor
-                          : Colors.white,
+                      color: ParentTheme.of(context).isDarkMode ? Theme.of(context).accentColor : Colors.white,
                       width: 1),
                 ),
                 elevation: 8,
@@ -139,10 +128,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
             SizedBox(height: 8),
             Text(
               L10n(context).addStudent,
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle
-                  .copyWith(color: ParentTheme.of(context).onSurfaceColor),
+              style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
             ),
           ],
         ),

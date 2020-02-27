@@ -76,19 +76,12 @@ class AppSeedUtils {
       var newCourse = await CourseSeedApi.createCourse();
       result.courses.add(newCourse);
 
-      await EnrollmentSeedApi.createEnrollment(
-          result.teachers.first.id, newCourse.id, "TeacherEnrollment", "");
+      await EnrollmentSeedApi.createEnrollment(result.teachers.first.id, newCourse.id, "TeacherEnrollment", "");
       for (int i = 0; i < result.students.length; i++) {
         await EnrollmentSeedApi.createEnrollment(
-            result.students.elementAt(i).id,
-            newCourse.id,
-            "StudentEnrollment",
-            "");
+            result.students.elementAt(i).id, newCourse.id, "StudentEnrollment", "");
         await EnrollmentSeedApi.createEnrollment(
-            result.parents.first.id,
-            newCourse.id,
-            "ObserverEnrollment",
-            result.students.elementAt(i).id);
+            result.parents.first.id, newCourse.id, "ObserverEnrollment", result.students.elementAt(i).id);
       }
     }
 

@@ -27,14 +27,12 @@ abstract class SeedContext implements Built<SeedContext, SeedContextBuilder> {
   static Serializer<SeedContext> get serializer => _$seedContextSerializer;
 
   SeedContext._();
-  factory SeedContext([void Function(SeedContextBuilder) updates]) =
-      _$SeedContext;
+  factory SeedContext([void Function(SeedContextBuilder) updates]) = _$SeedContext;
 
   bool get seedingComplete;
   BuiltMap<String, String> get seedObjects;
 
-  static void _initializeBuilder(SeedContextBuilder b) =>
-      b..seedingComplete = false;
+  static void _initializeBuilder(SeedContextBuilder b) => b..seedingComplete = false;
 
   // Convenience method for extracting seed objects
   T getNamedObject<T>(String objectName) {

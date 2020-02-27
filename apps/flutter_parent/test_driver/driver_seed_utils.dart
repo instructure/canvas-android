@@ -27,8 +27,7 @@ class DriverSeedUtils {
   }
 
   // Driver side: Retrieve the SeedContext once seeding is complete
-  static Future<SeedContext> waitForSeedingToComplete(
-      FlutterDriver driver) async {
+  static Future<SeedContext> waitForSeedingToComplete(FlutterDriver driver) async {
     var seedContext = await _getSeedContext(driver);
     while (!seedContext.seedingComplete) {
       await Future.delayed(const Duration(seconds: 1));

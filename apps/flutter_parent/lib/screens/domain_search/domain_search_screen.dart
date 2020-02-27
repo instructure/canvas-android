@@ -60,8 +60,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
     if (thisQuery.length < _MIN_SEARCH_LENGTH) thisQuery = '';
 
-    if (thisQuery == _currentQuery)
-      return; // Do nothing if the search query has not effectively changed
+    if (thisQuery == _currentQuery) return; // Do nothing if the search query has not effectively changed
 
     _currentQuery = thisQuery;
 
@@ -103,8 +102,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             L10n(context).findSchool,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
-          bottom:
-              ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             MaterialButton(
               minWidth: 20,
@@ -187,10 +185,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   return ListTile(
                     title: Text(item.name),
                     onTap: () => locator<QuickNav>().push(
-                        context,
-                        WebLoginScreen(item.domain,
-                            authenticationProvider:
-                                item.authenticationProvider)),
+                        context, WebLoginScreen(item.domain, authenticationProvider: item.authenticationProvider)),
                   );
                 },
               ),
@@ -215,8 +210,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   _showHelpDialog(BuildContext context) {
     var canvasGuidesText = L10n(context).canvasGuides;
     var canvasSupportText = L10n(context).canvasSupport;
-    var body =
-        L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
+    var body = L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
 
     showDialog(
         context: context,
@@ -230,14 +224,12 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   TextSpan(
                     text: canvasGuidesText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = _interactor.openCanvasGuides,
+                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasGuides,
                   ),
                   TextSpan(
                     text: canvasSupportText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = _interactor.openCanvasSupport,
+                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasSupport,
                   ),
                 ],
               ),
@@ -253,10 +245,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         });
   }
 
-  TextSpan _helpBodySpan(
-      {@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans =
-        inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _helpBodySpan({@required String text, @required List<TextSpan> inputSpans}) {
+    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;

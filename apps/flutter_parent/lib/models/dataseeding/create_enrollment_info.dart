@@ -17,16 +17,12 @@ import 'package:built_value/serializer.dart';
 
 part 'create_enrollment_info.g.dart';
 
-abstract class CreateEnrollmentInfo
-    implements Built<CreateEnrollmentInfo, CreateEnrollmentInfoBuilder> {
+abstract class CreateEnrollmentInfo implements Built<CreateEnrollmentInfo, CreateEnrollmentInfoBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CreateEnrollmentInfo> get serializer =>
-      _$createEnrollmentInfoSerializer;
+  static Serializer<CreateEnrollmentInfo> get serializer => _$createEnrollmentInfoSerializer;
 
   CreateEnrollmentInfo._();
-  factory CreateEnrollmentInfo(
-          [void Function(CreateEnrollmentInfoBuilder) updates]) =
-      _$CreateEnrollmentInfo;
+  factory CreateEnrollmentInfo([void Function(CreateEnrollmentInfoBuilder) updates]) = _$CreateEnrollmentInfo;
 
   @BuiltValueField(wireName: "user_id")
   String get userId;

@@ -78,9 +78,7 @@ class UserSeedApi {
       result = result.rebuild((b) => b..token = token);
       return result;
     } else {
-      print("error request:" +
-          response.request.toString() +
-          ", headers: ${response.request.headers.toString()}");
+      print("error request:" + response.request.toString() + ", headers: ${response.request.headers.toString()}");
       print(
           "error response body: ${response.data}, status: ${response.statusCode}, message: ${response.statusMessage} ");
       return null;
@@ -88,8 +86,7 @@ class UserSeedApi {
   }
 
   // Get the token for the SeededUser, given MobileVerifyResult and authCode
-  static Future<String> _getToken(
-      SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
+  static Future<String> _getToken(SeededUser user, MobileVerifyResult verifyResult, String authCode) async {
     var dio = seedingDio(baseUrl: "https://${user.domain}/");
 
     var response = await dio.post('login/oauth2/token', queryParameters: {
@@ -114,11 +111,9 @@ class UserSeedApi {
 
   // Get the authCode for the SeededUser, using the clientId from verifyResult.
   // This one is a little tricky as we have to call into native Android jsoup logic.
-  static Future<String> _getAuthCode(
-      SeededUser user, MobileVerifyResult verifyResult) async {
+  static Future<String> _getAuthCode(SeededUser user, MobileVerifyResult verifyResult) async {
     try {
-      var result =
-          await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
+      var result = await authCodeChannel.invokeMethod('getAuthCode', <String, dynamic>{
         'domain': user.domain,
         'clientId': verifyResult.clientId,
         'redirectUrl': _REDIRECT_URI,

@@ -18,16 +18,12 @@ import 'package:flutter_parent/models/dataseeding/create_enrollment_info.dart';
 
 part 'create_enrollment_wrapper.g.dart';
 
-abstract class CreateEnrollmentWrapper
-    implements Built<CreateEnrollmentWrapper, CreateEnrollmentWrapperBuilder> {
+abstract class CreateEnrollmentWrapper implements Built<CreateEnrollmentWrapper, CreateEnrollmentWrapperBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
-  static Serializer<CreateEnrollmentWrapper> get serializer =>
-      _$createEnrollmentWrapperSerializer;
+  static Serializer<CreateEnrollmentWrapper> get serializer => _$createEnrollmentWrapperSerializer;
 
   CreateEnrollmentWrapper._();
-  factory CreateEnrollmentWrapper(
-          [void Function(CreateEnrollmentWrapperBuilder) updates]) =
-      _$CreateEnrollmentWrapper;
+  factory CreateEnrollmentWrapper([void Function(CreateEnrollmentWrapperBuilder) updates]) = _$CreateEnrollmentWrapper;
 
   CreateEnrollmentInfo get enrollment;
 

@@ -42,14 +42,12 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
   CoursesInteractor _interactor = locator<CoursesInteractor>();
 
-  final GlobalKey<RefreshIndicatorState> _refreshKey =
-      new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshKey = new GlobalKey<RefreshIndicatorState>();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    var _selectedStudent =
-        Provider.of<SelectedStudentNotifier>(context, listen: true).value;
+    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
     if (_student != _selectedStudent) {
       // The student was changed by the user, update the courses
       _student = _selectedStudent;
@@ -72,8 +70,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
       builder: (context, snapshot) {
         Widget _body;
         if (snapshot.hasError) {
-          _body = ErrorPandaWidget(L10n(context).errorLoadingCourses,
-              () => _refreshKey.currentState.show());
+          _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState.show());
         } else if (snapshot.hasData) {
           _courses = snapshot.data;
           final studentCourses = _courses.where(_enrollmentFilter);
@@ -113,12 +110,10 @@ class _CoursesScreenState extends State<CoursesScreen> {
               children: <Widget>[
                 SizedBox(height: 8),
                 Text(course.name ?? '',
-                    style: Theme.of(context).textTheme.subhead,
-                    key: Key("${course.courseCode}_name")),
+                    style: Theme.of(context).textTheme.subhead, key: Key("${course.courseCode}_name")),
                 SizedBox(height: 2),
                 Text(course.courseCode ?? '',
-                    style: Theme.of(context).textTheme.caption,
-                    key: Key("${course.courseCode}_code")),
+                    style: Theme.of(context).textTheme.caption, key: Key("${course.courseCode}_code")),
                 if (grade != null) SizedBox(height: 4),
                 if (grade != null) grade,
                 SizedBox(height: 8),
@@ -134,9 +129,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     format.maximumFractionDigits = 2;
 
     if (grade.isCourseGradeLocked(
-      forAllGradingPeriods: course?.enrollments
-              ?.any((enrollment) => enrollment.hasActiveGradingPeriod()) !=
-          true,
+      forAllGradingPeriods: course?.enrollments?.any((enrollment) => enrollment.hasActiveGradingPeriod()) != true,
     )) {
       return null;
     }
@@ -145,9 +138,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
     // or a score
     var text = grade.noCurrentGrade()
         ? L10n(context).noGrade
-        : grade.currentGrade()?.isNotEmpty == true
-            ? grade.currentGrade()
-            : format.format(grade.currentScore() / 100);
+        : grade.currentGrade()?.isNotEmpty == true ? grade.currentGrade() : format.format(grade.currentScore() / 100);
 
     return Text(
       text,
@@ -162,14 +153,11 @@ class _CoursesScreenState extends State<CoursesScreen> {
 
   /// Filters enrollments by those associated with the currently selected user
   bool _enrollmentFilter(Course course) {
-    return course.enrollments
-            ?.any((enrollment) => enrollment.userId == _student?.id) ??
-        false;
+    return course.enrollments?.any((enrollment) => enrollment.userId == _student?.id) ?? false;
   }
 
   void _courseTapped(context, Course course) {
-    locator<QuickNav>().push(context,
-        CourseDetailsScreen.withCourse(_student.id, _student.name, course));
+    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(_student.id, _student.name, course));
   }
 
   Future<void> _refresh() {

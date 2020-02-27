@@ -17,14 +17,12 @@ import 'package:built_value/serializer.dart';
 
 part 'user_name_data.g.dart';
 
-abstract class UserNameData
-    implements Built<UserNameData, UserNameDataBuilder> {
+abstract class UserNameData implements Built<UserNameData, UserNameDataBuilder> {
   @BuiltValueSerializer(serializeNulls: true)
   static Serializer<UserNameData> get serializer => _$userNameDataSerializer;
 
   UserNameData._();
-  factory UserNameData([void Function(UserNameDataBuilder) updates]) =
-      _$UserNameData;
+  factory UserNameData([void Function(UserNameDataBuilder) updates]) = _$UserNameData;
 
   String get name;
   @BuiltValueField(wireName: "short_name")

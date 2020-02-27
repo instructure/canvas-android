@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
