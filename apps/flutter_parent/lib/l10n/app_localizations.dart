@@ -1107,6 +1107,11 @@ class AppLocalizations {
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
 
+  String get launchExternalTool => Intl.message(
+        'Launch External Tool',
+        desc: 'Button text added to webviews to let users open external tools in their browser',
+      );
+
   String dateAtTime(String date, String time) => Intl.message(
         '$date at $time',
         args: [date, time],
