@@ -155,7 +155,7 @@ class MockThemePrefs extends ThemePrefs {
 ///
 /// Returned is a future that completes when all async tasks spawned by this method call have completed. Waiting isn't
 /// required, though is probably good practice and results in more stable tests.
-Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) {
+Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) async {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   if (config.initPackageInfo) _initPackageInfo();
@@ -170,15 +170,14 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   if (config.initWebview) _initPlatformWebView();
 
+  await Future.wait([
+    if (apiPrefsInitFuture != null) apiPrefsInitFuture,
+  ]);
+
   if (config.initLoggedInUser != null) {
     ApiPrefs.addLogin(config.initLoggedInUser);
     ApiPrefs.switchLogins(config.initLoggedInUser);
   }
-
-  // Return all the futures that were created
-  return Future.wait([
-    if (apiPrefsInitFuture != null) apiPrefsInitFuture,
-  ]);
 }
 
 /// WebView helpers. These are needed as web views tie into platform views. These are special though as the channel
