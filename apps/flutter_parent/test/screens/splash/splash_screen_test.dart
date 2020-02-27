@@ -83,8 +83,6 @@ void main() {
       locator.registerFactory<DashboardInteractor>(() => interactor);
     });
 
-    await ApiPrefs.clean();
-
     await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
