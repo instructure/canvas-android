@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
@@ -103,7 +102,6 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
 
   Widget _buildListItem(ScheduleItem item) {
     String dateText;
-    String studentName = ApiPrefs.getCurrentStudent().name;
     var date = item.startAt ?? item.allDayDate;
     if (date == null) {
       dateText = L10n(context).noDueDate;
@@ -122,7 +120,6 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
               EventDetailsScreen.withEvent(
                 event: item,
                 courseId: widget.model.courseId,
-                studentId: widget.model.student.id,
               ));
         } else {
           locator<QuickNav>().push(

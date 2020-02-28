@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -32,15 +33,13 @@ class EventDetailsScreen extends StatefulWidget {
   final ScheduleItem event;
   final String eventId;
 
-  // Course ID and id are used for messaging. The message FAB will not be shown if any of these are null.
+  // Course ID is used for messaging. The message FAB will not be shown if it or current student is null.
   final String courseId;
-  final String studentId;
 
   EventDetailsScreen.withEvent({
     Key key,
     this.event,
     this.courseId,
-    this.studentId,
   })  : assert(event != null),
         eventId = event.id,
         super(key: key);
@@ -49,7 +48,6 @@ class EventDetailsScreen extends StatefulWidget {
     Key key,
     this.eventId,
     this.courseId,
-    this.studentId,
   })  : assert(eventId != null),
         event = null,
         super(key: key);
@@ -114,8 +112,8 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
   }
 
   Widget _fab(AsyncSnapshot<ScheduleItem> snapshot) {
-    String studentName = ApiPrefs.getCurrentStudent().name;
-    if (!snapshot.hasData || widget.courseId == null || widget.studentId == null || studentName == null) {
+    User student = ApiPrefs.getCurrentStudent();
+    if (!snapshot.hasData || widget.courseId == null || student.id == null || student.name == null) {
       // The data hasn't loaded, or course/student info is missing (e.g. if we deep linked to this page)
       return null;
     }
@@ -125,11 +123,11 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
       child: Padding(padding: const EdgeInsets.only(left: 4, top: 4), child: Icon(CanvasIconsSolid.comment)),
       onPressed: () {
         final event = snapshot.data;
-        String subject = L10n(context).eventSubjectMessage(studentName, event.title);
-        String postscript = L10n(context).messageLinkPostscript(studentName, event.htmlUrl);
+        String subject = L10n(context).eventSubjectMessage(student.name, event.title);
+        String postscript = L10n(context).messageLinkPostscript(student.name, event.htmlUrl);
         Widget screen = CreateConversationScreen(
           widget.courseId,
-          widget.studentId,
+          student.id,
           subject,
           postscript,
         );
