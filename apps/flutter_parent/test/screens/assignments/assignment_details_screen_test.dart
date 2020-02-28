@@ -199,8 +199,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows Assignment data', (tester) async {
-    setupPlatformChannels(config: PlatformConfig(initWebview: true));
-
     final assignmentName = 'Testing Assignment';
     final description = 'This is a description';
     final dueDate = DateTime.utc(2000);
@@ -220,7 +218,8 @@ void main() {
         assignmentId: assignmentId,
       ),
       highContrast: true,
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig:
+          PlatformConfig(initWebview: true, mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
