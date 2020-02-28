@@ -111,13 +111,16 @@ void main() {
   });
 
   group('auth content', () {
-    setupPlatformChannels(config: PlatformConfig(initWebview: true));
+    final config = PlatformConfig(initWebview: true);
 
     testWidgetsWithAccessibilityChecks('shows loading while waiting to authenticate content', (tester) async {
       final content = 'html_content';
       when(interactor.authContent(content, AppLocalizations().launchExternalTool)).thenAnswer((_) async => content);
 
-      await tester.pumpWidget(TestApp(CanvasWebView(content: content, authContentIfNecessary: true)));
+      await tester.pumpWidget(TestApp(
+        CanvasWebView(content: content, authContentIfNecessary: true),
+        platformConfig: config,
+      ));
       await tester.pump(); // Let the webview build
 
       expect(find.byType(WebView), findsNothing);
@@ -127,7 +130,10 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('does not call to authenticate content', (tester) async {
       final content = 'html_content';
-      await tester.pumpWidget(TestApp(CanvasWebView(content: content, authContentIfNecessary: false)));
+      await tester.pumpWidget(TestApp(
+        CanvasWebView(content: content, authContentIfNecessary: false),
+        platformConfig: config,
+      ));
       await tester.pump(); // Let the webview build
       await tester.pump(); // Let the future finish
 
@@ -139,7 +145,7 @@ void main() {
       final content = 'html_content';
       when(interactor.authContent(content, AppLocalizations().launchExternalTool)).thenAnswer((_) async => content);
 
-      await tester.pumpWidget(TestApp(CanvasWebView(content: content)));
+      await tester.pumpWidget(TestApp(CanvasWebView(content: content), platformConfig: config));
       await tester.pump(); // Let the webview build
       await tester.pump(); // Let the future finish
 

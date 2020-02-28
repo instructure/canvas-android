@@ -22,13 +22,13 @@ import '../../test_app.dart';
 
 void main() {
   setupTestLocator((locator) => locator.registerFactory<WebViewInteractor>(() => WebViewInteractor()));
-  setupPlatformChannels(config: PlatformConfig(initWebview: true));
+  final config = PlatformConfig(initWebview: true);
 
   testWidgetsWithAccessibilityChecks('shows title in app bar', (tester) async {
     final url = 'https://www.google.com';
     final title = 'title';
 
-    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title)));
+    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title), platformConfig: config));
     await tester.pump();
 
     expect(find.text(title), findsOneWidget);
@@ -38,7 +38,7 @@ void main() {
     final url = 'https://www.google.com';
     final title = 'title';
 
-    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title)));
+    await tester.pumpWidget(TestApp(SimpleWebViewScreen(url, title), platformConfig: config));
     await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);

@@ -66,11 +66,13 @@ void main() {
       locator.registerFactory<DashboardInteractor>(() => interactor);
     });
 
-    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => Future.value([]));
 
-    await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(
+      SplashScreen(),
+      highContrast: true,
+      platformConfig: PlatformConfig(initLoggedInUser: login),
+    ));
     await tester.pumpAndSettle();
 
     expect(find.byType(NotAParentScreen), findsOneWidget);
@@ -125,8 +127,6 @@ void main() {
       locator.registerFactory<DashboardInteractor>(() => interactor);
     });
 
-    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-
     final completer = Completer<List<User>>();
     when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) => completer.future);
     when(interactor.getSelf()).thenAnswer((_) => Future.value(login.user));
@@ -137,6 +137,7 @@ void main() {
       SplashScreen(),
       highContrast: true,
       navigatorObservers: [observer],
+      platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pump();
 
