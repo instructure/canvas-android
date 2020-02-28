@@ -12,6 +12,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -22,8 +24,10 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -38,6 +42,7 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 const _studentId = '123';
@@ -603,7 +608,8 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model));
+    await tester.pumpWidget(_testableWidget(model,
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_student))})));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -676,12 +682,14 @@ Submission _mockSubmission({String assignmentId = '', String grade, bool isLate,
     ..isLate = isLate ?? false);
 }
 
-Widget _testableWidget(CourseDetailsModel model, {bool highContrastMode = false}) {
+Widget _testableWidget(CourseDetailsModel model,
+    {bool highContrastMode = false, PlatformConfig platformConfig = const PlatformConfig()}) {
   return TestApp(
     Scaffold(
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseGradesScreen()),
     ),
     highContrast: highContrastMode,
+    platformConfig: platformConfig,
   );
 }
 

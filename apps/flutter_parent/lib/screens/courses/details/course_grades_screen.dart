@@ -285,7 +285,6 @@ class _AssignmentRow extends StatelessWidget {
         AssignmentDetailsScreen(
           courseId: assignment.courseId,
           assignmentId: assignment.id,
-          studentId: studentId,
         ),
       ),
       child: Padding(

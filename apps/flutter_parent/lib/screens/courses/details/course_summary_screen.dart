@@ -130,7 +130,6 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
             AssignmentDetailsScreen(
               courseId: widget.model.courseId,
               assignmentId: item.assignment.id,
-              studentId: widget.model.student.id,
             ),
           );
         }
