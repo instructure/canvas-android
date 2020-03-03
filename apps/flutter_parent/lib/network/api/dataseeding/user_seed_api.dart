@@ -65,14 +65,8 @@ class UserSeedApi {
         ..password = userData.pseudonym.password
         ..domain = response.request.uri.host);
 
-      //print("request headers: ${response.request.headers.toString()}");
-
       var verifyResult = await AuthApi().mobileVerify(result.domain);
-      //print("verifyResult = $verifyResult");
-
       var authCode = await _getAuthCode(result, verifyResult);
-      //print("authCode = $authCode");
-
       var token = await _getToken(result, verifyResult, authCode);
 
       result = result.rebuild((b) => b..token = token);
@@ -100,8 +94,6 @@ class UserSeedApi {
       var parsedResponse = deserialize<OAuthToken>(response.data);
       var token = parsedResponse.accessToken;
 
-      //print("getToken result = $token");
-
       return token;
     } else {
       print("Token fetch FAILED, status=${response.statusCode}");
@@ -121,7 +113,6 @@ class UserSeedApi {
         'password': user.password
       });
 
-      //print("authCode from native jsoup call: " + result);
       return result;
     } on PlatformException catch (e) {
       print("authCode platform exception: $e");

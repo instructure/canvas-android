@@ -36,8 +36,6 @@ class CourseSeedApi {
 
     var postBody = json.encode(serialize(courseCreateWrapper));
 
-    //print("createCourse: courseCreateWrapper: $courseCreateWrapper, postBody: $postBody");
-
     return fetch(dio.post("accounts/self/courses", data: postBody));
   }
 }

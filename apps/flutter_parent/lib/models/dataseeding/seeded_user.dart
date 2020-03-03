@@ -27,18 +27,6 @@ abstract class SeededUser implements Built<SeededUser, SeededUserBuilder> {
   SeededUser._();
   factory SeededUser([void Function(SeededUserBuilder) updates]) = _$SeededUser;
 
-//  SeededUser({
-//    this.id,
-//    this.name,
-//    this.shortName,
-//    this.sortableName,
-//    this.loginId,
-//    this.password,
-//    this.avatarUrl,
-//    this.token,
-//    this.domain
-//  });
-
   String get id;
   String get name;
   @BuiltValueField(wireName: "short_name")

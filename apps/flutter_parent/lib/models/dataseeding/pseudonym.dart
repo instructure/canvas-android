@@ -24,11 +24,6 @@ abstract class Pseudonym implements Built<Pseudonym, PseudonymBuilder> {
   Pseudonym._();
   factory Pseudonym([void Function(PseudonymBuilder) updates]) = _$Pseudonym;
 
-//  Pseudonym({
-//    this.uniqueId,
-//    this.password
-//  });
-
   @BuiltValueField(wireName: "unique_id")
   String get uniqueId;
   String get password;

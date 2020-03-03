@@ -27,12 +27,6 @@ abstract class CreateUserInfo implements Built<CreateUserInfo, CreateUserInfoBui
   CreateUserInfo._();
   factory CreateUserInfo([void Function(CreateUserInfoBuilder) updates]) = _$CreateUserInfo;
 
-//  CreateUserInfo({
-//    this.user,
-//    this.pseudonym,
-//    this.communicationChannel
-//  });
-
   UserNameData get user;
   Pseudonym get pseudonym;
   @BuiltValueField(wireName: "communication_channel")

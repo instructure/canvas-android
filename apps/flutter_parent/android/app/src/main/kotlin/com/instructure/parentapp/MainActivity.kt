@@ -64,8 +64,6 @@ class MainActivity : FlutterActivity() {
                         loginForm.getElementById("pseudonym_session_unique_id").`val`(login)
                         loginForm.getElementById("pseudonym_session_password").`val`(password)
                         val authFormResponse = loginForm.submit().cookies(loginPageResponse.cookies()).execute()
-                        //print("authFormResponse: ${authFormResponse.toString()}")
-                        //Log.v("authLogic", "authFormResponse: ${authFormResponse.body()}")
                         val authForm = authFormResponse.parse().select("form").first() as FormElement
                         val responseUrl = authForm.submit().cookies(authFormResponse.cookies()).execute().url().toString()
                         authCode = HttpUrl.parse(responseUrl)?.queryParameter("code")
@@ -76,10 +74,8 @@ class MainActivity : FlutterActivity() {
 
                     override fun onPostExecute(nullResult: Void?) : Unit {
                         result.success(authCode)
-                        //return null
                     }
                 }.execute(call)
-                //}
             } else {
                 result.notImplemented(); // Unknown call
             }

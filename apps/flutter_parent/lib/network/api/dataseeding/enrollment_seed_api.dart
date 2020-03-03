@@ -34,8 +34,6 @@ class EnrollmentSeedApi {
 
     var postBody = json.encode(serialize(enrollmentWrapper));
 
-    //print("createEnrollment: enrollmentWrapper: $enrollmentWrapper, postBody: $postBody");
-
     return fetch(dio.post("courses/${courseId}/enrollments", data: postBody));
   }
 }

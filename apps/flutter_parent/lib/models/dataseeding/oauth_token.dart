@@ -24,10 +24,6 @@ abstract class OAuthToken implements Built<OAuthToken, OAuthTokenBuilder> {
   OAuthToken._();
   factory OAuthToken([void Function(OAuthTokenBuilder) updates]) = _$OAuthToken;
 
-//  OAuthToken({
-//    this.accessToken
-//  });
-
   @BuiltValueField(wireName: "access_token")
   String get accessToken;
 
