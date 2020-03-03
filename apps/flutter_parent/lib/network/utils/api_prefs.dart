@@ -249,4 +249,7 @@ class ApiPrefs {
     _checkInit();
     return deserialize<User>(json.decode(_prefs.getString(KEY_CURRENT_STUDENT)));
   }
+
+  static const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
+
 }

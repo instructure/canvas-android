@@ -62,6 +62,7 @@ android {
 
         //noinspection GroovyAccessibility
         PrivateData.merge(project, "parent")
+        PrivateData.merge(project, "dataseeding-flutter")
         addManifestPlaceholders([
                 fabricApiKey:"$fabricApiKey"
         ])
@@ -102,6 +103,8 @@ dependencies {
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "com.squareup.okhttp3:okhttp:3.13.1"
+    implementation 'org.jsoup:jsoup:1.11.3'
 }
 
 // Comment out this line if the reporting logic starts going wonky.
