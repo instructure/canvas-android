@@ -165,6 +165,7 @@ class DashboardState extends State<DashboardScreen> {
                     Icon(
                       Icons.menu,
                       color: Theme.of(context).primaryIconTheme.color,
+                      key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
                     options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
@@ -239,11 +240,8 @@ class DashboardState extends State<DashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Avatar(
-                selectedStudent.avatarUrl,
-                name: selectedStudent.shortName,
-                radius: 24,
-              ),
+              Avatar(selectedStudent.avatarUrl,
+                  name: selectedStudent.shortName, radius: 24, key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -238,4 +238,6 @@ class ApiPrefs {
 
     return headers;
   }
+
+  static const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
 }
