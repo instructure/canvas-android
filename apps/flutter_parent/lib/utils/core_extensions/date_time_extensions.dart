@@ -27,4 +27,21 @@ extension Format on DateTime {
     String time = (timeFormat ?? DateFormat.jm()).format(local);
     return localizer(date, time);
   }
+
+  bool isSameDayAs(DateTime other) {
+    if (this == null || other == null) return false;
+    return this.year == other.year && this.month == other.month && this.day == other.day;
+  }
+
+  DateTime withFirstDayOfWeek() {
+    if (this == null) return null;
+    final firstDay = DateFormat().dateSymbols.FIRSTDAYOFWEEK;
+    var offset = (this.weekday - 1 - firstDay) % 7;
+    return DateTime(this.year, this.month, this.day - offset);
+  }
+
+  bool isWeekend() {
+    if (this == null) return false;
+    return DateFormat().dateSymbols.WEEKENDRANGE.contains((this.weekday - 1) % 7);
+  }
 }

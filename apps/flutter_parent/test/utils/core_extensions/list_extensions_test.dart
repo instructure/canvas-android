@@ -152,6 +152,26 @@ void main() {
       expect(list.count((_) => true), 100);
     });
   });
+
+  group('mapIndexed', () {
+    test('Maps items with index', () {
+      List<String> original = ['', 'A', 'AB', 'ABC'];
+      List<String> expected = ['0', '1', '2', '3'];
+
+      List<String> actual = original.mapIndexed((index, item) {
+        expect(item, original[index]);
+        return item.length.toString();
+      });
+
+      expect(actual, expected);
+    });
+
+    test('Returns null if list is null', () {
+      List<String> original = null;
+      List<String> actual = original.mapIndexed((index, item) => '');
+      expect(actual, isNull);
+    });
+  });
 }
 
 class _TestClass {

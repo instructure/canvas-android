@@ -88,4 +88,13 @@ extension ListUtils<T> on List<T> {
     });
     return count;
   }
+
+  List<R> mapIndexed<R>(R transform(int index, T t)) {
+    if (this == null) return null;
+    final List<R> list = [];
+    for (int i = 0; i < this.length; i++) {
+      list.add(transform(i, this[i]));
+    }
+    return list;
+  }
 }
