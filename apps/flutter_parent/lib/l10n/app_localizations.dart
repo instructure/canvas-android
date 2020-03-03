@@ -209,6 +209,8 @@ class AppLocalizations {
 
   String selectedMonthLabel(String month) => Intl.message(
         'Month of $month',
+        name: 'selectedMonthLabel',
+        args: [month],
         desc: 'Accessibility label for the button that expands/collapses the month view',
       );
 
