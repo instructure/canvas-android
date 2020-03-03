@@ -120,8 +120,6 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
               EventDetailsScreen.withEvent(
                 event: item,
                 courseId: widget.model.courseId,
-                studentName: widget.model.studentName,
-                studentId: widget.model.studentId,
               ));
         } else {
           locator<QuickNav>().push(
@@ -129,8 +127,6 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
             AssignmentDetailsScreen(
               courseId: widget.model.courseId,
               assignmentId: item.assignment.id,
-              studentId: widget.model.studentId,
-              studentName: widget.model.studentName,
             ),
           );
         }

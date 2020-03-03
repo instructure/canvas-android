@@ -12,10 +12,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
@@ -37,6 +42,10 @@ import '../../utils/test_app.dart';
 void main() {
   final studentId = '123';
   final courseId = '321';
+  final studentName = 'Panda';
+  final student = User((b) => b
+    ..id = studentId
+    ..name = studentName);
 
   _setupLocator({CourseDetailsInteractor interactor, CreateConversationInteractor convoInteractor}) {
     final _locator = GetIt.instance;
@@ -50,9 +59,18 @@ void main() {
     _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
   }
 
+  setUp(() async {
+    await setupPlatformChannels(
+        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+  });
+
+  tearDown(() {
+    ApiPrefs.clean();
+  });
+
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
     _setupLocator();
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -63,7 +81,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.error('This is an error'));
     _setupLocator(interactor: interactor);
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -87,7 +105,7 @@ void main() {
       ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pumpAndSettle(); // Widget creation
 
     expect(find.text(course.name), findsOneWidget);
@@ -101,7 +119,7 @@ void main() {
     when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
     _setupLocator(interactor: interactor);
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -116,7 +134,7 @@ void main() {
       ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -134,7 +152,7 @@ void main() {
       ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -147,7 +165,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows no tabs when no syllabus and no front page', (tester) async {
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, '', courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -168,7 +186,7 @@ void main() {
       ..name = 'Course Name');
     _setupLocator();
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(studentId, '', course)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -187,7 +205,7 @@ void main() {
     _setupLocator();
 
     await tester.pumpWidget(TestApp(
-      CourseDetailsScreen.withCourse(studentId, '', course),
+      CourseDetailsScreen.withCourse(course),
       platformConfig: PlatformConfig(initWebview: true),
     ));
 
@@ -211,7 +229,7 @@ void main() {
     when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
 
     await tester.pumpWidget(TestApp(
-      CourseDetailsScreen.withCourse(studentId, '', course),
+      CourseDetailsScreen.withCourse(course),
       platformConfig: PlatformConfig(initWebview: true),
     ));
 
@@ -233,7 +251,7 @@ void main() {
     _setupLocator();
 
     await tester.pumpWidget(TestApp(
-      CourseDetailsScreen.withCourse(studentId, '', course),
+      CourseDetailsScreen.withCourse(course),
       highContrast: true,
     ));
     await tester.pump(); // Widget creation
@@ -260,7 +278,7 @@ void main() {
 
     String studentName = 'Panda';
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -297,7 +315,7 @@ void main() {
 
     String studentName = 'Panda';
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
@@ -340,7 +358,7 @@ void main() {
 
     String studentName = 'Panda';
 
-    await tester.pumpWidget(TestApp(CourseDetailsScreen(studentId, studentName, courseId)));
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 

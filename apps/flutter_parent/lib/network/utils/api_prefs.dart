@@ -32,6 +32,7 @@ class ApiPrefs {
   static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
   static const String KEY_LOGINS = 'logins';
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
+  static const String KEY_CURRENT_STUDENT = 'current_student';
 
   static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -239,5 +240,16 @@ class ApiPrefs {
     return headers;
   }
 
+  static Future<void> setCurrentStudent(User currentStudent) async {
+    _checkInit();
+    _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
+  }
+
+  static User getCurrentStudent() {
+    _checkInit();
+    return deserialize<User>(json.decode(_prefs.getString(KEY_CURRENT_STUDENT)));
+  }
+
   static const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
+
 }

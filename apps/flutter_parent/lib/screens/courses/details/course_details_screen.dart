@@ -34,13 +34,13 @@ import 'package:provider/provider.dart';
 class CourseDetailsScreen extends StatefulWidget {
   final CourseDetailsModel _model;
 
-  CourseDetailsScreen(String studentId, String studentName, String courseId, {Key key})
-      : this._model = CourseDetailsModel(studentId, studentName, courseId),
+  CourseDetailsScreen(String courseId, {Key key})
+      : this._model = CourseDetailsModel(ApiPrefs.getCurrentStudent(), courseId),
         super(key: key);
 
   // A convenience constructor when we already have the course data, so we don't load something we already have
-  CourseDetailsScreen.withCourse(String studentId, String studentName, Course course, {Key key})
-      : this._model = CourseDetailsModel.withCourse(studentId, studentName, course),
+  CourseDetailsScreen.withCourse(Course course, {Key key})
+      : this._model = CourseDetailsModel.withCourse(ApiPrefs.getCurrentStudent(), course),
         super(key: key);
 
   @override
@@ -133,21 +133,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     String urlLink = '${ApiPrefs.getDomain()}/courses/${widget._model.courseId}';
     if (CourseDetailsModel.selectedTab == 0) {
       // Grades
-      subject = L10n(context).gradesSubjectMessage(widget._model.studentName);
+      subject = L10n(context).gradesSubjectMessage(widget._model.student.name);
       urlLink += '/grades';
     } else if (hasSyllabus) {
       // Syllabus
-      subject = L10n(context).syllabusSubjectMessage(widget._model.studentName);
+      subject = L10n(context).syllabusSubjectMessage(widget._model.student.name);
       urlLink += '/assignments/syllabus';
     } else {
       // Front Page
-      subject = L10n(context).frontPageSubjectMessage(widget._model.studentName);
+      subject = L10n(context).frontPageSubjectMessage(widget._model.student.name);
     }
 
-    String postscript = L10n(context).messageLinkPostscript(widget._model.studentName, urlLink);
+    String postscript = L10n(context).messageLinkPostscript(widget._model.student.name, urlLink);
     Widget screen = CreateConversationScreen(
       widget._model.courseId,
-      widget._model.studentId,
+      widget._model.student.id,
       subject,
       postscript,
     );

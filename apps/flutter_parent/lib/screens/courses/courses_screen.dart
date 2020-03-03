@@ -157,7 +157,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _courseTapped(context, Course course) {
-    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(_student.id, _student.name, course));
+    locator<QuickNav>().push(context, CourseDetailsScreen.withCourse(course));
   }
 
   Future<void> _refresh() {

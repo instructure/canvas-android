@@ -11,6 +11,8 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'dart:convert';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -19,7 +21,10 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/reminder.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
@@ -44,11 +49,16 @@ void main() {
   final courseId = '123';
   final assignmentId = '321';
   final studentId = '1337';
+  final studentName = 'billy jean';
   final assignmentName = 'Instructure 101';
   final assignmentUrl = 'https://www.instructure.com';
 
   final interactor = _MockAssignmentDetailsInteractor();
   final convoInteractor = _MockCreateConversationInteractor();
+
+  final student = User((b) => b
+    ..id = studentId
+    ..name = studentName);
 
   final assignment = Assignment((b) => b
     ..id = assignmentId
@@ -82,9 +92,8 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pump();
@@ -105,10 +114,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -124,10 +132,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -144,8 +151,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Can send a message', (tester) async {
-    String studentName = 'Panda';
-
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(Course(), []));
     when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
         .thenAnswer((_) async => AssignmentDetails(assignment: assignment));
@@ -154,10 +159,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: studentName,
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -180,10 +184,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -213,11 +216,10 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
-      platformConfig: PlatformConfig(initWebview: true),
+      platformConfig:
+          PlatformConfig(initWebview: true, mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -258,10 +260,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -292,10 +293,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -312,10 +312,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -338,10 +337,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -370,10 +368,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -399,10 +396,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -428,10 +424,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -449,10 +444,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -471,10 +465,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -492,10 +485,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -515,10 +507,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -558,10 +549,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -601,10 +591,9 @@ void main() {
       AssignmentDetailsScreen(
         courseId: courseId,
         assignmentId: assignmentId,
-        studentId: studentId,
-        studentName: '',
       ),
       highContrast: true,
+      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();

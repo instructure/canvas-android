@@ -15,6 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/reminder.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -30,20 +32,14 @@ import 'package:flutter_svg/svg.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
   final String courseId;
-  final String studentId;
-  final String studentName;
   final String assignmentId;
 
-  const AssignmentDetailsScreen(
-      {Key key,
-      @required this.courseId,
-      @required this.assignmentId,
-      @required this.studentId,
-      @required this.studentName})
-      : assert(courseId != null),
+  const AssignmentDetailsScreen({
+    Key key,
+    @required this.courseId,
+    @required this.assignmentId,
+  })  : assert(courseId != null),
         assert(assignmentId != null),
-        assert(studentId != null),
-        assert(studentName != null),
         super(key: key);
 
   @override
@@ -57,9 +53,11 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   Future<AssignmentDetails> _assignmentFuture;
   Future<Reminder> _reminderFuture;
   Future<void> _animationFuture;
+  User _currentStudent;
 
   @override
   void initState() {
+    _currentStudent = ApiPrefs.getCurrentStudent();
     _reminderFuture = _loadReminder();
     _assignmentFuture = _loadAssignment();
     super.initState();
@@ -71,7 +69,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         forceRefresh,
         widget.courseId,
         widget.assignmentId,
-        widget.studentId,
+        _currentStudent.id,
       );
 
   Future<Reminder> _loadReminder() => _interactor.loadReminder(widget.assignmentId);
@@ -134,7 +132,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
 
     final l10n = L10n(context);
     final assignment = snapshot.data.assignment;
-    final submission = assignment.submission(widget.studentId);
+    final submission = assignment.submission(_currentStudent.id);
     final fullyLocked = assignment.isFullyLocked;
     final showStatus = assignment.isSubmittable() || submission?.isGraded() == true;
     final submitted = submission?.submittedAt != null;
@@ -323,9 +321,9 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   }
 
   _sendMessage(AssignmentDetails details) {
-    String subject = L10n(context).assignmentSubjectMessage(widget.studentName, details.assignment.name);
-    String postscript = L10n(context).messageLinkPostscript(widget.studentName, details.assignment.htmlUrl);
-    Widget screen = CreateConversationScreen(widget.courseId, widget.studentId, subject, postscript);
+    String subject = L10n(context).assignmentSubjectMessage(_currentStudent.name, details.assignment.name);
+    String postscript = L10n(context).messageLinkPostscript(_currentStudent.name, details.assignment.htmlUrl);
+    Widget screen = CreateConversationScreen(widget.courseId, _currentStudent.id, subject, postscript);
     locator.get<QuickNav>().push(context, screen);
   }
 }

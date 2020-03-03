@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,9 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
+import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
@@ -35,13 +39,26 @@ import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
-const studentId = '1234';
-const courseId = '1234';
-
 void main() {
+  final studentId = '1234';
+  final studentName = 'billy jean';
+
+  final student = User((b) => b
+    ..id = studentId
+    ..name = studentName);
   AppLocalizations l10n = AppLocalizations();
+
+  setUp(() async {
+    await setupPlatformChannels(
+        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+  });
+
+  tearDown(() {
+    ApiPrefs.clean();
+  });
 
   testWidgetsWithAccessibilityChecks('Loads data using model', (tester) async {
     final model = _MockModel();
@@ -264,8 +281,7 @@ void main() {
 
     final model = _MockModel();
     when(model.courseId).thenReturn('course_123');
-    when(model.studentId).thenReturn('student_123');
-    when(model.studentName).thenReturn('Student 123');
+    when(model.student).thenReturn(student);
     when(model.course).thenReturn(Course((c) => c..courseCode = 'CRS 123'));
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
 
@@ -288,6 +304,7 @@ void main() {
 
     final model = _MockModel();
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
+    when(model.student).thenAnswer((_) => student);
 
     var nav = _MockNav();
     setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
@@ -307,6 +324,7 @@ Widget _testableWidget(CourseDetailsModel model) {
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseSummaryScreen()),
     ),
     highContrast: true,
+    platformConfig: PlatformConfig(mockPrefs: null),
   );
 }
 
