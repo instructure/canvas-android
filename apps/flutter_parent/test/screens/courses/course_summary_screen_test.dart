@@ -20,42 +20,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
+import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
+final studentId = '1234';
+final studentName = 'billy jean';
+
+final login = Login((b) => b
+  ..domain = 'domain'
+  ..accessToken = 'token'
+  ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+final student = User((b) => b
+  ..id = studentId
+  ..name = studentName);
+AppLocalizations l10n = AppLocalizations();
+
 void main() {
-  final studentId = '1234';
-  final studentName = 'billy jean';
-
-  final student = User((b) => b
-    ..id = studentId
-    ..name = studentName);
-  AppLocalizations l10n = AppLocalizations();
-
-  setUp(() async {
-    await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
-  });
-
   tearDown(() {
     ApiPrefs.clean();
   });
@@ -285,15 +288,23 @@ void main() {
     when(model.course).thenReturn(Course((c) => c..courseCode = 'CRS 123'));
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
 
-    var nav = _MockNav();
-    setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
-
-    await tester.pumpWidget(_testableWidget(model));
+    var interactor = _MockAssignmentDetailsInteractor();
+    setupTestLocator((locator) => locator.registerFactory<AssignmentDetailsInteractor>(() => interactor));
+    var observer = _MockNavigatorObserver();
+    await tester.pumpWidget(_testableWidget(
+      model,
+      observers: [observer],
+      platformConfig: PlatformConfig(
+          mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
+    ));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(event.title));
 
-    verify(nav.push(any, argThat(isA<AssignmentDetailsScreen>())));
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Tapping calendar event item loads event details', (tester) async {
@@ -306,28 +317,38 @@ void main() {
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
     when(model.student).thenAnswer((_) => student);
 
-    var nav = _MockNav();
-    setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
+    var interactor = _MockEventDetailsInteractor();
+    setupTestLocator((locator) => locator.registerLazySingleton<EventDetailsInteractor>(() => interactor));
 
     await tester.pumpWidget(_testableWidget(model));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(event.title));
 
-    verify(nav.push(any, argThat(isA<EventDetailsScreen>())));
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(EventDetailsScreen), findsOneWidget);
   });
 }
 
-Widget _testableWidget(CourseDetailsModel model) {
+Widget _testableWidget(CourseDetailsModel model,
+    {List<NavigatorObserver> observers = const [], PlatformConfig platformConfig = const PlatformConfig()}) {
   return TestApp(
     Scaffold(
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseSummaryScreen()),
     ),
     highContrast: true,
-    platformConfig: PlatformConfig(mockPrefs: null),
+    platformConfig: PlatformConfig(
+        mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
+    navigatorObservers: observers,
   );
 }
 
 class _MockModel extends Mock implements CourseDetailsModel {}
 
-class _MockNav extends Mock implements QuickNav {}
+class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
+
+class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
+
+class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}

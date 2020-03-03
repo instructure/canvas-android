@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -23,10 +24,8 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
-import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
@@ -335,7 +334,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    Navigator.pushNamed(context, ParentRouter.conversations());
+    ParentRouter.router.navigateTo(context, ParentRouter.conversations(), transition: TransitionType.material);
   }
 
   _navigateToManageStudents(context) {
@@ -347,7 +346,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    locator<QuickNav>().push(context, HelpScreen());
+    ParentRouter.router.navigateTo(context, ParentRouter.help(), transition: TransitionType.material);
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
@@ -411,7 +410,8 @@ class DashboardState extends State<DashboardScreen> {
 
   _navDrawerSettings() => ListTile(
         title: Text(L10n(context).settings),
-        onTap: () => locator<QuickNav>().push(context, SettingsScreen()),
+        onTap: () =>
+            ParentRouter.router.navigateTo(context, ParentRouter.settings(), transition: TransitionType.material),
       );
 
   _navDrawerHelp() => ListTile(

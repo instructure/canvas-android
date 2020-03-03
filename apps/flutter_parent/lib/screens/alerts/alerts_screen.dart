@@ -12,13 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensions.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
-import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
@@ -235,14 +236,13 @@ class __AlertsListState extends State<_AlertsList> {
   void _routeAlert(Alert alert, int index) async {
     switch (alert.alertType) {
       case AlertType.courseAnnouncement:
-        locator<QuickNav>().push(
-            context,
-            AnnouncementDetailScreen(
-                alert.contextId, AnnouncementType.COURSE, alert.getCourseIdForAnnouncement(), context));
+        ParentRouter.router.navigateTo(
+            context, ParentRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId),
+            transition: TransitionType.material);
         break;
       case AlertType.institutionAnnouncement:
-        locator<QuickNav>()
-            .push(context, AnnouncementDetailScreen(alert.contextId, AnnouncementType.INSTITUTION, '', context));
+        ParentRouter.router.navigateTo(context, ParentRouter.institutionAnnouncementDetails(alert.contextId),
+            transition: TransitionType.material);
         break;
       default:
         locator<QuickNav>().push(context, UnderConstructionScreen(showAppBar: true));

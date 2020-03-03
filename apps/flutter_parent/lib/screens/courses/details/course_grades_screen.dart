@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
@@ -19,7 +20,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
-import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -30,8 +31,6 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -274,19 +273,14 @@ class _AssignmentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
     final studentId = model.student.id;
-    final studentName = model.student.name;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
     return InkWell(
-      onTap: () => locator<QuickNav>().push(
-        context,
-        AssignmentDetailsScreen(
-          courseId: assignment.courseId,
-          assignmentId: assignment.id,
-        ),
-      ),
+      onTap: () => ParentRouter.router.navigateTo(
+          context, ParentRouter.assignmentDetails(assignment.courseId, assignment.id),
+          transition: TransitionType.material),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

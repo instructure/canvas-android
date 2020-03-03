@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -82,17 +83,23 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('tapping terms of use navigates to Terms of Use screen', (tester) async {
     final nav = _MockNav();
-    setupTestLocator((locator) => locator.registerSingleton<QuickNav>(nav));
+    setupTestLocator((locator) {
+      locator.registerSingleton<QuickNav>(nav);
+      locator.registerLazySingleton<AccountsApi>(() => _MockAccountsApi());
+    });
 
     await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()), highContrast: true);
 
     await tester.tap(find.text(l10n.termsOfUse));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
-    verify(nav.push(any, argThat(isA<TermsOfUseScreen>())));
+    expect(find.byType(TermsOfUseScreen), findsOneWidget);
   });
 }
 
 class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
 
 class _MockNav extends Mock implements QuickNav {}
+
+class _MockAccountsApi extends Mock implements AccountsApi {}

@@ -14,11 +14,12 @@
 
 import 'dart:math';
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/splash/splash_screen.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
@@ -32,8 +33,6 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
-
-import 'domain_search/domain_search_screen.dart';
 
 class LoginLandingScreen extends StatelessWidget {
   @override
@@ -141,7 +140,8 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushAndRemoveAll(context, SplashScreen());
+                      ParentRouter.router.navigateTo(context, ParentRouter.rootSplash(),
+                          transition: TransitionType.material, clearStack: true);
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
@@ -191,6 +191,6 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    locator<QuickNav>().push(context, DomainSearchScreen());
+    ParentRouter.router.navigateTo(context, ParentRouter.domainSearch(), transition: TransitionType.material);
   }
 }
