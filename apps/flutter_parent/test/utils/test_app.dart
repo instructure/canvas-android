@@ -37,6 +37,7 @@ class TestApp extends StatefulWidget {
     this.navigatorObservers = const [],
     this.darkMode = false,
     this.highContrast = false,
+    this.locale = null,
   });
 
   static final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
@@ -46,6 +47,7 @@ class TestApp extends StatefulWidget {
   final List<NavigatorObserver> navigatorObservers;
   final bool darkMode;
   final bool highContrast;
+  final Locale locale;
 
   @override
   _TestAppState createState() => _TestAppState();
@@ -79,6 +81,7 @@ class _TestAppState extends State<TestApp> {
   @override
   void initState() {
     super.initState();
+    _locale = widget.locale;
     ParentRouter.init();
     setupPlatformChannels(config: widget.platformConfig);
   }

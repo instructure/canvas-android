@@ -172,6 +172,58 @@ class AppLocalizations {
         desc: 'Confirmation message displayed when the user tries to log out',
       );
 
+  /// Plalendar
+
+  String get calendars => Intl.message(
+        'Calendars',
+        desc: 'Label for button that lets users select which calendars to display',
+      );
+
+  String nextMonth(String month) => Intl.message(
+        'Next month: $month',
+        name: 'nextMonth',
+        args: [month],
+        desc: 'Label for the button that switches the calendar to the next month',
+      );
+
+  String previousMonth(String month) => Intl.message(
+        'Previous month: $month',
+        name: 'previousMonth',
+        args: [month],
+        desc: 'Label for the button that switches the calendar to the previous month',
+      );
+
+  String nextWeek(String date) => Intl.message(
+        'Next week starting $date',
+        name: 'nextWeek',
+        args: [date],
+        desc: 'Label for the button that switches the calendar to the next week',
+      );
+
+  String previousWeek(String date) => Intl.message(
+        'Previous week starting $date',
+        name: 'previousWeek',
+        args: [date],
+        desc: 'Label for the button that switches the calendar to the previous week',
+      );
+
+  String selectedMonthLabel(String month) => Intl.message(
+        'Month of $month',
+        name: 'selectedMonthLabel',
+        args: [month],
+        desc: 'Accessibility label for the button that expands/collapses the month view',
+      );
+
+  String get monthTapExpandHint => Intl.message(
+        'expand',
+        desc: 'Accessibility label for the on-tap hint for the button that expands/collapses the month view',
+      );
+
+  String get monthTapCollapseHint => Intl.message(
+        'collapse',
+        desc: 'Accessibility label for the on-tap hint for the button that expands/collapses the month view',
+      );
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
