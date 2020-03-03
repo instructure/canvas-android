@@ -49,18 +49,6 @@ void main() {
     expect(find.bySemanticsLabel('Saturday, January 1'), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Sets a11y description', (tester) async {
-    await tester.pumpWidget(TestApp(CalendarDay(
-      date: dayDate,
-      selectedDay: selectedDate,
-      onDaySelected: (_) {},
-      eventCount: CalendarEventCount(),
-    )));
-    await tester.pump();
-
-    expect(find.bySemanticsLabel('Saturday, January 1'), findsOneWidget);
-  });
-
   testWidgetsWithAccessibilityChecks('Uses dark text color for week days', (tester) async {
     final date = DateTime(2000, 1, 3); // Jan 3 2000, a Monday
     await tester.pumpWidget(TestApp(CalendarDay(
