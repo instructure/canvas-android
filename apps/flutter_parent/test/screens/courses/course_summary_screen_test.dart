@@ -36,6 +36,7 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -289,7 +290,10 @@ void main() {
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
 
     var interactor = _MockAssignmentDetailsInteractor();
-    setupTestLocator((locator) => locator.registerFactory<AssignmentDetailsInteractor>(() => interactor));
+    setupTestLocator((locator) {
+      locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    });
     var observer = _MockNavigatorObserver();
     await tester.pumpWidget(_testableWidget(
       model,
@@ -318,7 +322,10 @@ void main() {
     when(model.student).thenAnswer((_) => student);
 
     var interactor = _MockEventDetailsInteractor();
-    setupTestLocator((locator) => locator.registerLazySingleton<EventDetailsInteractor>(() => interactor));
+    setupTestLocator((locator) {
+      locator.registerFactory<EventDetailsInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    });
 
     await tester.pumpWidget(_testableWidget(model));
     await tester.pumpAndSettle();

@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -144,6 +145,7 @@ void main() {
     var interactor = _MockInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
     await tester.pumpWidget(
