@@ -77,9 +77,9 @@ void setupLocator() {
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
   locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
-  locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
   locator.registerLazySingleton<OAuthApi>(() => OAuthApi());
   locator.registerLazySingleton<PageApi>(() => PageApi());
+  locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
 
   // DB helpers
   locator.registerLazySingleton<Database>(() => DbUtil.instance);
