@@ -13,10 +13,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../utils/accessibility_utils.dart';
@@ -84,12 +85,11 @@ void main() {
       ));
       await tester.pump();
 
-      expect(find.text(pointsPossible.toString()), findsOneWidget);
+      expect(find.text(AppLocalizations().assignmentTotalPoints(pointsPossible.toString())), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows assignment icon for assignments', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'assignment');
-      var assetPath = 'assets/svg/assignment.svg';
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -97,14 +97,13 @@ void main() {
       ));
       await tester.pump();
 
-      var svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      var icon = tester.widget<Icon>(find.byType(Icon));
 
-      expect((svg.pictureProvider as ExactAssetPicture).assetName, assetPath);
+      expect(icon.icon, CanvasIcons.assignment);
     });
 
     testWidgetsWithAccessibilityChecks('shows quiz icon for quizzes', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'quiz');
-      var assetPath = 'assets/svg/quiz.svg';
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -112,14 +111,13 @@ void main() {
       ));
       await tester.pump();
 
-      var svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      var icon = tester.widget<Icon>(find.byType(Icon));
 
-      expect((svg.pictureProvider as ExactAssetPicture).assetName, assetPath);
+      expect(icon.icon, CanvasIcons.quiz);
     });
 
     testWidgetsWithAccessibilityChecks('shows announcement icon for announcements', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'announcement');
-      var assetPath = 'assets/svg/announcement.svg';
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -127,14 +125,13 @@ void main() {
       ));
       await tester.pump();
 
-      var svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      var icon = tester.widget<Icon>(find.byType(Icon));
 
-      expect((svg.pictureProvider as ExactAssetPicture).assetName, assetPath);
+      expect(icon.icon, CanvasIcons.announcement);
     });
 
     testWidgetsWithAccessibilityChecks('shows calendar event icon for calendar events', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'calendar_event');
-      var assetPath = 'assets/svg/calendar-event.svg';
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -142,9 +139,9 @@ void main() {
       ));
       await tester.pump();
 
-      var svg = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      var icon = tester.widget<Icon>(find.byType(Icon));
 
-      expect((svg.pictureProvider as ExactAssetPicture).assetName, assetPath);
+      expect(icon.icon, CanvasIcons.calendar_day);
     });
   });
 

@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 
 class CalendarDayListTile extends StatelessWidget {
   final PlannerItem _item;
@@ -66,22 +66,22 @@ class CalendarDayListTile extends StatelessWidget {
   }
 
   Widget _getIcon(BuildContext context, PlannerItem item) {
-    String assetPath = 'assets/svg/';
+    IconData icon;
     switch (item.plannableType) {
       case 'assignment':
-        assetPath += 'assignment.svg';
+        icon = CanvasIcons.assignment;
         break;
       case 'quiz':
-        assetPath += 'quiz.svg';
+        icon = CanvasIcons.quiz;
         break;
       case 'announcement':
-        assetPath += 'announcement.svg';
+        icon = CanvasIcons.announcement;
         break;
       case 'calendar_event':
-        assetPath += 'calendar-event.svg';
+        icon = CanvasIcons.calendar_day;
         break;
     }
-    return SvgPicture.asset(assetPath, excludeFromSemantics: true, color: Theme.of(context).accentColor);
+    return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).accentColor);
   }
 
   List<Widget> _getDueDate(BuildContext context, PlannerItem plannerItem) {
