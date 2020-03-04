@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -20,6 +19,8 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -37,8 +38,7 @@ class NotAParentScreen extends StatelessWidget {
               buttonText: L10n(context).returnToLogin,
               onButtonTap: () async {
                 await ApiPrefs.performLogout();
-                ParentRouter.router
-                    .navigateTo(context, ParentRouter.login(), transition: TransitionType.material, clearStack: true);
+                locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.login());
               },
             ),
           ),

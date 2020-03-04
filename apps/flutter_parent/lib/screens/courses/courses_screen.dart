@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -23,6 +22,7 @@ import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart'
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -157,7 +157,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _courseTapped(context, Course course) {
-    ParentRouter.router.navigateTo(context, ParentRouter.courseDetails(course.id), transition: TransitionType.material);
+    locator<QuickNav>().pushRoute(context, ParentRouter.courseDetails(course.id));
   }
 
   Future<void> _refresh() {

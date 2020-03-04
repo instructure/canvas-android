@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
@@ -31,6 +30,8 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -278,9 +279,8 @@ class _AssignmentRow extends StatelessWidget {
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
     return InkWell(
-      onTap: () => ParentRouter.router.navigateTo(
-          context, ParentRouter.assignmentDetails(assignment.courseId, assignment.id),
-          transition: TransitionType.material),
+      onTap: () =>
+          locator<QuickNav>().pushRoute(context, ParentRouter.assignmentDetails(assignment.courseId, assignment.id)),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

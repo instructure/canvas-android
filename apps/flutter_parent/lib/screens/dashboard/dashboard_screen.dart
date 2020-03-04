@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -334,7 +333,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    ParentRouter.router.navigateTo(context, ParentRouter.conversations(), transition: TransitionType.material);
+    locator<QuickNav>().pushRoute(context, ParentRouter.conversations());
   }
 
   _navigateToManageStudents(context) {
@@ -346,7 +345,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    ParentRouter.router.navigateTo(context, ParentRouter.help(), transition: TransitionType.material);
+    locator<QuickNav>().pushRoute(context, ParentRouter.help());
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
@@ -409,10 +408,8 @@ class DashboardState extends State<DashboardScreen> {
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
   _navDrawerSettings() => ListTile(
-        title: Text(L10n(context).settings),
-        onTap: () =>
-            ParentRouter.router.navigateTo(context, ParentRouter.settings(), transition: TransitionType.material),
-      );
+      title: Text(L10n(context).settings),
+      onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.settings()));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),

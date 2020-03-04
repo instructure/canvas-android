@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
@@ -23,6 +22,8 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CourseSummaryScreen extends StatelessWidget {
@@ -113,12 +114,10 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
         if (item.type == ScheduleItem.typeCalendar) {
-          ParentRouter.router.navigateTo(context, ParentRouter.eventDetails(widget.model.courseId, item.id),
-              transition: TransitionType.material);
+          locator<QuickNav>().pushRoute(context, ParentRouter.eventDetails(widget.model.courseId, item.id));
         } else {
-          ParentRouter.router.navigateTo(
-              context, ParentRouter.assignmentDetails(widget.model.courseId, item.assignment.id),
-              transition: TransitionType.material);
+          locator<QuickNav>()
+              .pushRoute(context, ParentRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
         }
       },
     );

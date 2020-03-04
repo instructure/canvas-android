@@ -11,12 +11,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LegalScreen extends StatelessWidget {
@@ -39,8 +40,7 @@ class LegalScreen extends StatelessWidget {
             _LegalRow(
               label: L10n(context).termsOfUse,
               icon: CanvasIcons.document,
-              onTap: () => ParentRouter.router
-                  .navigateTo(context, ParentRouter.termsOfUse(), transition: TransitionType.material),
+              onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.termsOfUse()),
             ),
             _LegalRow(
               label: l10n.canvasOnGithub,

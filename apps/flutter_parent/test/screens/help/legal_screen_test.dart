@@ -13,8 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
-import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -83,18 +83,14 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('tapping terms of use navigates to Terms of Use screen', (tester) async {
     final nav = _MockNav();
-    setupTestLocator((locator) {
-      locator.registerSingleton<QuickNav>(nav);
-      locator.registerLazySingleton<AccountsApi>(() => _MockAccountsApi());
-    });
+    setupTestLocator((locator) => locator.registerSingleton<QuickNav>(nav));
 
     await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()), highContrast: true);
 
     await tester.tap(find.text(l10n.termsOfUse));
-    await tester.pump();
-    await tester.pump();
+    await tester.pumpAndSettle();
 
-    expect(find.byType(TermsOfUseScreen), findsOneWidget);
+    verify(nav.pushRoute(any, argThat(matches(ParentRouter.termsOfUse()))));
   });
 }
 

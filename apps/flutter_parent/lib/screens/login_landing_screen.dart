@@ -14,7 +14,6 @@
 
 import 'dart:math';
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -140,8 +139,7 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      ParentRouter.router.navigateTo(context, ParentRouter.rootSplash(),
-                          transition: TransitionType.material, clearStack: true);
+                      locator<QuickNav>().pushRoute(context, ParentRouter.rootSplash());
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
@@ -191,6 +189,6 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    ParentRouter.router.navigateTo(context, ParentRouter.domainSearch(), transition: TransitionType.material);
+    locator<QuickNav>().pushRoute(context, ParentRouter.domainSearch());
   }
 }

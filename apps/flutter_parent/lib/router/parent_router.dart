@@ -17,7 +17,9 @@
 import 'dart:core';
 
 import 'package:fluro/fluro.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -39,160 +41,163 @@ class ParentRouter {
 
   static bool _isInitialized = false;
 
-  static final String _rootSplash = '/';
-  static String rootSplash() => _rootSplash;
-
-  static final String _rootWithUrl = '/external/:externalUrl';
-  static String rootWithUrl(String url) => '/external/$url';
-
-  static final String _dashboard = '/dashboard';
-  static String dashboard() => _dashboard;
-
-  static final String _login = '/login';
-  static String login() => _login;
-
+  static String rootSplash() => '/';
+  static String dashboard() => '/dashboard';
+  static String login() => '/login';
   static final String _loginWeb = '/loginWeb';
   static String loginWeb(String domain, String authenticationProvider) =>
-      '/loginWeb?domain=$domain&authenticationProvider=$authenticationProvider';
-
-  static final String _domainSearch = '/domainSearch';
-  static String domainSearch() => _domainSearch;
-
-  static final String _notParent = '/not_parent';
-  static String notParent() => _notParent;
-
-  static final String _conversations = '/conversations';
-  static String conversations() => _conversations;
-
-  static final String _manageStudents = '/manage_students';
-  static String manageStudents() => _manageStudents;
-
-  static final String _help = '/help';
-  static String help() => _help;
-
-  static final String _legal = '/legal';
-  static String legal() => _legal;
-
-  static final String _termsOfUse = '/terms_of_use';
-  static String termsOfUse() => _termsOfUse;
-
-  static final String _settings = '/settings';
-  static String settings() => _settings;
-
-  static final String _assignmentDetails = '/courses/:courseId/assignments/:assignmentId';
+      '$_loginWeb?domain=$domain&authenticationProvider=$authenticationProvider';
+  static String domainSearch() => '/domainSearch';
+  static String notParent() => '/not_parent';
+  static String conversations() => '/conversations';
+  static String manageStudents() => '/manage_students';
+  static String help() => '/help';
+  static String legal() => '/legal';
+  static String termsOfUse() => '/terms_of_use';
+  static String settings() => '/settings';
   static String assignmentDetails(String courseId, String assignmentId) =>
       '/courses/$courseId/assignments/$assignmentId';
-
-  static final String _courseDetails = '/courses/:courseId';
   static String courseDetails(String courseId) => '/courses/$courseId';
-
-  static final _eventDetails = '/courses/:courseId/calendar_events/:eventId';
   static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
-
-  static final _courseAnnouncementDetails = '/courses/:courseId/discussion_topics/:announcementId';
   static String courseAnnouncementDetails(String courseId, String announcementId) =>
       '/courses/$courseId/discussion_topics/$announcementId';
-
-  static final _institutionAnnouncementDetails = '/account_notifications/:accountNotificationId';
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
 
   static void init() {
     if (!_isInitialized) {
       _isInitialized = true;
-      router.define(_rootSplash, handler: _rootSplashHandler);
-      router.define(_conversations, handler: _conversationsHandler);
-      router.define(_dashboard, handler: _dashboardHandler);
-      router.define(_login, handler: _loginHandler);
+      router.define(rootSplash(), handler: _rootSplashHandler);
+      router.define(conversations(), handler: _conversationsHandler);
+      router.define(dashboard(), handler: _dashboardHandler);
+      router.define(login(), handler: _loginHandler);
       router.define(_loginWeb, handler: _loginWebHandler);
-      router.define(_domainSearch, handler: _domainSearchHandler);
-      router.define(_notParent, handler: _notParentHandler);
+      router.define(domainSearch(), handler: _domainSearchHandler);
+      router.define(notParent(), handler: _notParentHandler);
       // EXTERNAL
 
       // INTERNAL
-      router.define(_courseDetails, handler: _courseDetailsHandler);
-      router.define(_assignmentDetails, handler: _assignmentDetailsHandler);
-      router.define(_eventDetails, handler: _eventDetailsHandler);
-      router.define(_help, handler: _helpHandler);
-      router.define(_legal, handler: _legalHandler);
-      router.define(_termsOfUse, handler: _termsOfUseHandler);
-      router.define(_settings, handler: _settingsHandler);
-      router.define(_courseAnnouncementDetails, handler: _courseAnnouncementDetailsHandler);
-      router.define(_institutionAnnouncementDetails, handler: _institutionAnnouncementDetailsHandler);
+      router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
+      router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
+          handler: _assignmentDetailsHandler);
+      router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
+      router.define(help(), handler: _helpHandler);
+      router.define(legal(), handler: _legalHandler);
+      router.define(termsOfUse(), handler: _termsOfUseHandler);
+      router.define(settings(), handler: _settingsHandler);
+      router.define(courseAnnouncementDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.announcementId}'),
+          handler: _courseAnnouncementDetailsHandler);
+      router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
+          handler: _institutionAnnouncementDetailsHandler);
     }
   }
 
   // Handlers
   static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return SplashScreen();
+    var widget = SplashScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return ConversationListScreen();
+    var widget = ConversationListScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return DashboardScreen();
+    var widget = DashboardScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return LoginLandingScreen();
+    var widget = LoginLandingScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return WebLoginScreen(params["domain"][0], authenticationProvider: params["authenticationProvider"][0]);
+    var widget = WebLoginScreen(params[_RouterKeys.domain][0],
+        authenticationProvider: params[_RouterKeys.authenticationProvider][0]);
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return DomainSearchScreen();
+    var widget = DomainSearchScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return NotAParentScreen();
+    var widget = NotAParentScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   // INTERNAL HANDLER
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return CourseDetailsScreen(params["courseId"][0]);
+    var widget = CourseDetailsScreen(params[_RouterKeys.courseId][0]);
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _assignmentDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AssignmentDetailsScreen(
-      courseId: params["courseId"][0],
-      assignmentId: params["assignmentId"][0],
+    var widget = AssignmentDetailsScreen(
+      courseId: params[_RouterKeys.courseId][0],
+      assignmentId: params[_RouterKeys.assignmentId][0],
     );
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return EventDetailsScreen.withId(eventId: params["eventId"][0], courseId: params["courseId"][0]);
+    var widget =
+        EventDetailsScreen.withId(eventId: params[_RouterKeys.eventId][0], courseId: params[_RouterKeys.courseId][0]);
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _helpHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return HelpScreen();
+    var widget = HelpScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _legalHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return LegalScreen();
+    var widget = LegalScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return TermsOfUseScreen();
+    var widget = TermsOfUseScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _settingsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return SettingsScreen();
+    var widget = SettingsScreen();
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _courseAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AnnouncementDetailScreen(
-        params['announcementId'][0], AnnouncementType.COURSE, params['courseId'][0], context);
+    var widget = AnnouncementDetailScreen(
+        params[_RouterKeys.announcementId][0], AnnouncementType.COURSE, params[_RouterKeys.courseId][0], context);
+    _logRoute(params, widget);
+    return widget;
   });
 
   static Handler _institutionAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AnnouncementDetailScreen(params['accountNotificationId'][0], AnnouncementType.INSTITUTION, '', context);
+    var widget = AnnouncementDetailScreen(
+        params[_RouterKeys.accountNotificationId][0], AnnouncementType.INSTITUTION, '', context);
+    _logRoute(params, widget);
+    return widget;
   });
 
   // EXTERNAL HANDLER
@@ -218,4 +223,24 @@ class ParentRouter {
 
     }
   }
+
+  static void _logRoute(Map<String, List<String>> params, Widget widget) {
+    final message =
+        'Pushing widget: ${widget.runtimeType.toString()} ${params.isNotEmpty ? 'with params: $params' : ''}';
+    if (kReleaseMode) {
+      FlutterCrashlytics().log(message);
+    } else {
+      print(message);
+    }
+  }
+}
+
+class _RouterKeys {
+  static final courseId = 'courseId';
+  static final assignmentId = 'assignmentId';
+  static final eventId = 'eventId';
+  static final announcementId = 'announcementId';
+  static final accountNotificationId = 'accountNotificationId';
+  static final domain = 'domain';
+  static final authenticationProvider = 'authenticationProvider';
 }

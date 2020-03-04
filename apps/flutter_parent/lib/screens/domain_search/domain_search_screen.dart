@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -20,6 +19,7 @@ import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 import 'domain_search_interactor.dart';
@@ -265,7 +265,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   void _next(BuildContext context) {
     var domain = _query;
     if (domain.indexOf('.') == -1) domain += '.instructure.com';
-
-    ParentRouter.router.navigateTo(context, ParentRouter.loginWeb(domain, ''), transition: TransitionType.material);
+    locator<QuickNav>().pushRoute(context, ParentRouter.loginWeb(domain, ''));
   }
 }
