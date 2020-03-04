@@ -49,7 +49,7 @@ class CalendarDayListTile extends StatelessWidget {
                 Text(_item.plannable.title, style: textTheme.subhead),
                 ..._getDueDate(context, _item),
                 Text(
-                  _item.plannable.pointsPossible.toString(),
+                  L10n(context).assignmentTotalPoints(_item.plannable.pointsPossible.toString()),
                   style: textTheme.caption.copyWith(color: Theme.of(context).accentColor),
                   semanticsLabel: L10n(context).pointsPossible(_item.plannable.pointsPossible.toString()),
                 ),
