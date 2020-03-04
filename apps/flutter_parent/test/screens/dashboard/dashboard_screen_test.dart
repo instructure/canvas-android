@@ -21,9 +21,11 @@ import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -65,6 +67,7 @@ void main() {
     _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
     _locator.registerLazySingleton<InboxApi>(() => inboxApi ?? MockInboxApi());
     _locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
+    _locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
   }
@@ -249,8 +252,8 @@ void main() {
       // Courses is the default content screen, so we'll navigate away from there, then try navigating
       // back
 
-      // Navigate to Calendar
-      await tester.tap(find.text(AppLocalizations().calendarLabel));
+      // Navigate to Alerts
+      await tester.tap(find.text(AppLocalizations().alertsLabel));
       await tester.pumpAndSettle();
 
       // Navigate to Courses
@@ -260,21 +263,18 @@ void main() {
       expect(find.byType(CoursesScreen), findsOneWidget);
     });
 
-    // TODO: Uncomment when Calendar gets put in
-//  testWidgetsWithAccessibilityChecks(
-//      'tapping calendar sets correct current page index', (tester) async {
-//
-//    _setupLocator(MockInteractor());
-//
-//    await tester.pumpWidget(_testableMaterialWidget());
-//    await tester.pumpAndSettle();
-//
-//    // Navigate to Calendar
-//    await tester.tap(find.text(AppLocalizations().calendarLabel));
-//    await tester.pumpAndSettle();
-//
-//    expect(find.byType(CalendarScreen), findsOneWidget);
-//  });
+    testWidgetsWithAccessibilityChecks('tapping calendar sets correct current page index', (tester) async {
+      _setupLocator();
+
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Navigate to Calendar
+      await tester.tap(find.text(AppLocalizations().calendarLabel));
+      await tester.pump();
+
+      expect(find.byType(CalendarScreen), findsOneWidget);
+    });
 
     testWidgetsWithAccessibilityChecks('tapping alerts sets correct current page index', (tester) async {
       _setupLocator();
@@ -704,3 +704,5 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
 class _MockReminderDb extends Mock implements ReminderDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
+
+class MockPlannerApi extends Mock implements PlannerApi {}

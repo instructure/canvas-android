@@ -18,7 +18,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
-import 'package:flutter_parent/screens/calendar/CalendarScreen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';

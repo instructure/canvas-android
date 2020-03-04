@@ -25,6 +25,7 @@ import 'package:flutter_parent/network/api/file_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
+import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
@@ -76,6 +77,7 @@ void setupLocator() {
   locator.registerLazySingleton<ErrorReportApi>(() => ErrorReportApi());
   locator.registerLazySingleton<FileApi>(() => FileApi());
   locator.registerLazySingleton<InboxApi>(() => InboxApi());
+  locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
   locator.registerLazySingleton<OAuthApi>(() => OAuthApi());
   locator.registerLazySingleton<PageApi>(() => PageApi());
 
