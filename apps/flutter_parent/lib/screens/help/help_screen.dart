@@ -15,6 +15,7 @@ import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -25,8 +26,6 @@ import 'package:intent/extra.dart' as android;
 import 'package:intent/intent.dart' as android;
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'legal_screen.dart';
 
 class HelpScreen extends StatefulWidget {
   @override
@@ -68,7 +67,7 @@ class _HelpScreenState extends State<HelpScreen> {
             ListTile(
               title: Text(l10n.helpLegalLabel),
               subtitle: Text(l10n.helpLegalDescription),
-              onTap: _showLegal,
+              onTap: () => _showLegal(),
             ),
           ],
         ),
@@ -139,5 +138,5 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void _showShareLove() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 
-  void _showLegal() => locator<QuickNav>().push(context, LegalScreen());
+  void _showLegal() => locator<QuickNav>().pushRoute(context, ParentRouter.legal());
 }

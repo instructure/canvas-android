@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -29,9 +30,15 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  final login = Login((b) => b
+    ..domain = 'domain'
+    ..accessToken = 'token'
+    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
   setupLocator();
 
   testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
@@ -135,19 +142,24 @@ void main() {
         ..domain = 'domain1'
         ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
     ];
+    var interactor = _MockInteractor();
+    setupTestLocator((locator) {
+      locator.registerFactory<DashboardInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    });
 
-    var nav = _MockNav();
-    setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
-
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpWidget(
+        TestApp(LoginLandingScreen(), highContrast: true, platformConfig: PlatformConfig(initLoggedInUser: login)));
     await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(logins[0].user.name));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
 
+    expect(find.byType(SplashScreen), findsOneWidget);
     expect(ApiPrefs.getCurrentLogin(), logins[0]);
-    verify(nav.pushAndRemoveAll(any, argThat(isA<SplashScreen>())));
+    ApiPrefs.clean();
   });
 
   testWidgetsWithAccessibilityChecks('Tapping help button shows help dialog', (tester) async {
@@ -161,4 +173,4 @@ void main() {
   });
 }
 
-class _MockNav extends Mock implements QuickNav {}
+class _MockInteractor extends Mock implements DashboardInteractor {}

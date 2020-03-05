@@ -12,8 +12,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
-import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -89,10 +90,12 @@ void main() {
     await tester.tap(find.text(l10n.termsOfUse));
     await tester.pumpAndSettle();
 
-    verify(nav.push(any, argThat(isA<TermsOfUseScreen>())));
+    verify(nav.pushRoute(any, argThat(matches(ParentRouter.termsOfUse()))));
   });
 }
 
 class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
 
 class _MockNav extends Mock implements QuickNav {}
+
+class _MockAccountsApi extends Mock implements AccountsApi {}

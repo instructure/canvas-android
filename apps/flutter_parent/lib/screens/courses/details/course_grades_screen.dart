@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
-import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -274,19 +274,13 @@ class _AssignmentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = Provider.of<CourseDetailsModel>(context, listen: false);
     final studentId = model.student.id;
-    final studentName = model.student.name;
 
     final textTheme = Theme.of(context).textTheme;
     final assignmentStatus = _assignmentStatus(context, assignment, studentId);
 
     return InkWell(
-      onTap: () => locator<QuickNav>().push(
-        context,
-        AssignmentDetailsScreen(
-          courseId: assignment.courseId,
-          assignmentId: assignment.id,
-        ),
-      ),
+      onTap: () =>
+          locator<QuickNav>().pushRoute(context, ParentRouter.assignmentDetails(assignment.courseId, assignment.id)),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

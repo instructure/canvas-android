@@ -16,7 +16,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/school_domain.dart';
-import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -184,8 +184,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   var item = _schoolDomains[index];
                   return ListTile(
                     title: Text(item.name),
-                    onTap: () => locator<QuickNav>().push(
-                        context, WebLoginScreen(item.domain, authenticationProvider: item.authenticationProvider)),
+                    onTap: () => locator<QuickNav>().pushRoute(context,
+                        ParentRouter.loginWeb(item.domain, authenticationProvider: item.authenticationProvider)),
                   );
                 },
               ),
@@ -265,7 +265,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   void _next(BuildContext context) {
     var domain = _query;
     if (domain.indexOf('.') == -1) domain += '.instructure.com';
-
-    locator<QuickNav>().push(context, WebLoginScreen(domain));
+    locator<QuickNav>().pushRoute(context, ParentRouter.loginWeb(domain));
   }
 }

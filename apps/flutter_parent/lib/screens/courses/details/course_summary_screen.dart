@@ -15,9 +15,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
-import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
-import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -115,20 +114,10 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
         if (item.type == ScheduleItem.typeCalendar) {
-          locator<QuickNav>().push(
-              context,
-              EventDetailsScreen.withEvent(
-                event: item,
-                courseId: widget.model.courseId,
-              ));
+          locator<QuickNav>().pushRoute(context, ParentRouter.eventDetails(widget.model.courseId, item.id));
         } else {
-          locator<QuickNav>().push(
-            context,
-            AssignmentDetailsScreen(
-              courseId: widget.model.courseId,
-              assignmentId: item.assignment.id,
-            ),
-          );
+          locator<QuickNav>()
+              .pushRoute(context, ParentRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
         }
       },
     );

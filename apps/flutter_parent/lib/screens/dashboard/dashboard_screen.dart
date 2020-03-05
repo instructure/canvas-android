@@ -23,10 +23,8 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
-import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
@@ -335,7 +333,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    Navigator.pushNamed(context, ParentRouter.conversations());
+    locator<QuickNav>().pushRoute(context, ParentRouter.conversations());
   }
 
   _navigateToManageStudents(context) {
@@ -347,7 +345,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    locator<QuickNav>().push(context, HelpScreen());
+    locator<QuickNav>().pushRoute(context, ParentRouter.help());
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
@@ -410,9 +408,8 @@ class DashboardState extends State<DashboardScreen> {
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
   _navDrawerSettings() => ListTile(
-        title: Text(L10n(context).settings),
-        onTap: () => locator<QuickNav>().push(context, SettingsScreen()),
-      );
+      title: Text(L10n(context).settings),
+      onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.settings()));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),
