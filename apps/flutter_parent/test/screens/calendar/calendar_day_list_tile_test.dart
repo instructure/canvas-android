@@ -97,7 +97,8 @@ void main() {
         (tester) async {
       var pointsPossible = null;
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(_createPlannerItem(plannable: _createPlannable(pointsPossible: pointsPossible))),
+        CalendarDayListTile(
+            _createPlannerItem(contextName: 'blank', plannable: _createPlannable(pointsPossible: pointsPossible))),
         highContrast: true,
       ));
       await tester.pump();
@@ -158,7 +159,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows assignment icon for assignments', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'assignment');
+      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'assignment');
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -172,7 +173,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows quiz icon for quizzes', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'quiz');
+      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'quiz');
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -186,7 +187,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows announcement icon for announcements', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'announcement');
+      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'announcement');
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -200,7 +201,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows calendar event icon for calendar events', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'calendar_event');
+      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'calendar_event');
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
