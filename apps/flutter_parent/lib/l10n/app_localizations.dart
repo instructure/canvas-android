@@ -1242,10 +1242,4 @@ class AppLocalizations {
 
   String get loginHelpSubject =>
       Intl.message('I\'m having trouble logging in', desc: 'Subject of help dialog for a login help request');
-
-  String due(String date) => Intl.message(
-        'Due $date',
-        args: [date],
-        name: 'due',
-      );
 }
