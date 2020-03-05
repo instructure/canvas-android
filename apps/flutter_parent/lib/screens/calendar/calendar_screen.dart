@@ -17,9 +17,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
-import 'package:intl/intl.dart';
 
 class CalendarScreen extends StatefulWidget {
   final User _student;
@@ -36,8 +36,7 @@ class CalendarScreenState extends State<CalendarScreen> {
     return CalendarWidget(
       eventCount: _sampleEventCount(),
       dayBuilder: (BuildContext context, DateTime day) {
-        // TODO: This is just a sample page
-        return _buildSamplePage(context, day);
+        return CalendarDayPlanner(widget._student, day);
       },
     );
   }
@@ -53,25 +52,5 @@ class CalendarScreenState extends State<CalendarScreen> {
       }
     }
     return eventCount;
-  }
-
-  _buildSamplePage(BuildContext context, DateTime day) {
-    return ListView.builder(
-      itemCount: 11,
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: Center(
-              child: Text(
-                DateFormat.yMMMMEEEEd().format(day),
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-            ),
-          );
-        }
-        return ListTile(title: Text("Item $index"));
-      },
-    );
   }
 }

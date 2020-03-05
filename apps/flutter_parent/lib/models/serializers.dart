@@ -46,6 +46,9 @@ import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/plannable.dart';
+import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/remote_file.dart';
@@ -106,6 +109,9 @@ part 'serializers.g.dart';
   NotificationPayload,
   OAuthToken,
   Page,
+  Plannable,
+  PlannerItem,
+  PlannerSubmission,
   Pseudonym,
   Recipient,
   Reminder,

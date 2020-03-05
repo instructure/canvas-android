@@ -224,6 +224,13 @@ class AppLocalizations {
         desc: 'Accessibility label for the on-tap hint for the button that expands/collapses the month view',
       );
 
+  String pointsPossible(String points) => Intl.message(
+        '$points points possible',
+        name: 'pointsPossible',
+        args: [points],
+        desc: 'Screen reader label used for the points possible for an assignment, quiz, etc.',
+      );
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
@@ -1128,6 +1135,16 @@ class AppLocalizations {
   String get errorSeverityBlocking => Intl.message('I can\'t get things done until I hear back from you.');
 
   String get errorSeverityCritical => Intl.message('EXTREME CRITICAL EMERGENCY!!');
+
+  /// Calendar Screen
+  String get missing => Intl.message(
+        'Missing',
+        desc: 'Description for when a student has not turned anything in for an assignment',
+      );
+  String get notGraded => Intl.message(
+        'Not Graded',
+        desc: 'Description for an assignment has not been graded.',
+      );
 
   /// Miscellaneous
 
