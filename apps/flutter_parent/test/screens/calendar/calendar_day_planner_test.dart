@@ -47,7 +47,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows calendar day planner list', (tester) async {
       var api = MockPlannerApi();
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
-          .thenAnswer((_) => Future.value([_createPlannerItem()]));
+          .thenAnswer((_) => Future.value([_createPlannerItem(contextName: 'blank')]));
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
       setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
 
@@ -126,11 +126,11 @@ Plannable _createPlannable() => Plannable((b) => b
   ..id = ''
   ..title = '');
 
-PlannerItem _createPlannerItem() => PlannerItem((b) => b
+PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
   ..courseId = ''
   ..plannable = _createPlannable().toBuilder()
   ..contextType = ''
-  ..contextName = ''
+  ..contextName = contextName ?? ''
   ..plannableType = 'assignment');
 
 class MockPlannerApi extends Mock implements PlannerApi {}
