@@ -45,7 +45,7 @@ class ParentRouter {
   static String dashboard() => '/dashboard';
   static String login() => '/login';
   static final String _loginWeb = '/loginWeb';
-  static String loginWeb(String domain, String authenticationProvider) =>
+  static String loginWeb(String domain, {String authenticationProvider = null}) =>
       '$_loginWeb?domain=$domain&authenticationProvider=$authenticationProvider';
   static String domainSearch() => '/domainSearch';
   static String notParent() => '/not_parent';
@@ -118,8 +118,13 @@ class ParentRouter {
   });
 
   static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = WebLoginScreen(params[_RouterKeys.domain][0],
-        authenticationProvider: params[_RouterKeys.authenticationProvider][0]);
+    var authProvider = params[_RouterKeys.authenticationProvider][0];
+    var widget = (authProvider == null || authProvider == 'null')
+        ? WebLoginScreen(params[_RouterKeys.domain][0])
+        : WebLoginScreen(
+            params[_RouterKeys.domain][0],
+            authenticationProvider: authProvider,
+          );
     _logRoute(params, widget);
     return widget;
   });

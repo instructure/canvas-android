@@ -184,8 +184,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   var item = _schoolDomains[index];
                   return ListTile(
                     title: Text(item.name),
-                    onTap: () => ParentRouter.router
-                        .navigateTo(context, ParentRouter.loginWeb(item.domain, item.authenticationProvider)),
+                    onTap: () => locator<QuickNav>().pushRoute(context,
+                        ParentRouter.loginWeb(item.domain, authenticationProvider: item.authenticationProvider)),
                   );
                 },
               ),
@@ -265,6 +265,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   void _next(BuildContext context) {
     var domain = _query;
     if (domain.indexOf('.') == -1) domain += '.instructure.com';
-    locator<QuickNav>().pushRoute(context, ParentRouter.loginWeb(domain, ''));
+    locator<QuickNav>().pushRoute(context, ParentRouter.loginWeb(domain));
   }
 }

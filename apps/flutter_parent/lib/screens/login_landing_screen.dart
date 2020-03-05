@@ -139,7 +139,7 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRoute(context, ParentRouter.rootSplash());
+                      locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.rootSplash());
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
