@@ -15,6 +15,7 @@
 // Accessibility-related utilities for our widget tests.
 
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -34,7 +35,21 @@ void testWidgetsWithAccessibilityChecks(
   Duration initialTimeout,
   bool semanticsEnabled = true,
 }) {
+  Map<String, String> envVars = Platform.environment;
+
   testWidgets(description, (tester) async {
+    if (envVars["deviceWidth"] != null && envVars["deviceHeight"] != null) {
+      var width = double.parse(envVars["deviceWidth"]);
+      var height = double.parse(envVars["deviceHeight"]);
+      double ratio = 1.0;
+      if (envVars["pixelRatio"] != null) {
+        ratio = double.parse(envVars["pixelRatio"]);
+      }
+
+      print("Changing device res to width=$width, height=$height, ratio=$ratio");
+      tester.binding.window.physicalSizeTestValue = Size(width, height);
+      tester.binding.window.devicePixelRatioTestValue = ratio;
+    }
     final handle = tester.ensureSemantics();
     await callback(tester);
 
