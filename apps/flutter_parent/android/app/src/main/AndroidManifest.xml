@@ -27,7 +27,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
@@ -36,13 +36,34 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="*.instructure.com" />
+                <data android:host="*.canvas.net" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <data android:host="*"/>
+                <data android:scheme="canvas-courses"/>
+                <data android:scheme="canvas-parent"/>
+
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
         </activity>
 
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
 
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 

@@ -36,6 +36,10 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 
+///
+/// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
+/// viewed by calling `WidgetsBinding.instance.window.defaultRouteName`, though we don't have to manually do this
+/// as flutter sets this up for us.
 class ParentRouter {
   static final Router router = Router();
 
@@ -46,7 +50,7 @@ class ParentRouter {
   static String login() => '/login';
   static final String _loginWeb = '/loginWeb';
   static String loginWeb(String domain, {String authenticationProvider = null}) =>
-      '$_loginWeb?domain=$domain&authenticationProvider=$authenticationProvider';
+      '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider';
   static String domainSearch() => '/domainSearch';
   static String notParent() => '/not_parent';
   static String conversations() => '/conversations';
@@ -63,6 +67,8 @@ class ParentRouter {
       '/courses/$courseId/discussion_topics/$announcementId';
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
+  static final String _rootWithUrl = '/external';
+  static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=$url';
 
   static void init() {
     if (!_isInitialized) {
@@ -74,7 +80,6 @@ class ParentRouter {
       router.define(_loginWeb, handler: _loginWebHandler);
       router.define(domainSearch(), handler: _domainSearchHandler);
       router.define(notParent(), handler: _notParentHandler);
-      // EXTERNAL
 
       // INTERNAL
       router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
@@ -89,6 +94,9 @@ class ParentRouter {
           handler: _courseAnnouncementDetailsHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
+
+      // EXTERNAL
+      router.define(_rootWithUrl, handler: _rootWithUrlHandler);
     }
   }
 
@@ -206,6 +214,18 @@ class ParentRouter {
   });
 
   // EXTERNAL HANDLER
+  static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final link = prepLink(context, params[_RouterKeys.url][0]);
+
+    _logMessage('Handling url route: $link');
+    final match = router.match(link);
+    if (match == null) {
+      // No match means we don't support the link, default to the splash screen for now
+      return _rootSplashHandler.handlerFunc(context, {});
+    }
+
+    return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+  });
 
   /**
    *  Handles all links, preps them to be appropriate for the router
@@ -219,7 +239,9 @@ class ParentRouter {
 
     // Determine if we can handle the url natively
     // -formatting the url, router.matchRoute returns RouteMatchType.noMatch or not
-    RouteMatch match = router.matchRoute(context, uri.pathSegments.join('/'));
+    // Could add query params as well, but I don't think we ever need it for route matching
+    final path = '/${uri.pathSegments.join('/')}';
+    RouteMatch match = router.matchRoute(context, path);
     if (match.matchType == RouteMatchType.noMatch) {
       // route to SimpleWebScreen
 
@@ -227,11 +249,16 @@ class ParentRouter {
       // If supported, route
 
     }
+    return path;
   }
 
   static void _logRoute(Map<String, List<String>> params, Widget widget) {
     final message =
         'Pushing widget: ${widget.runtimeType.toString()} ${params.isNotEmpty ? 'with params: $params' : ''}';
+    _logMessage(message);
+  }
+
+  static void _logMessage(String message) {
     if (kReleaseMode) {
       FlutterCrashlytics().log(message);
     } else {
@@ -248,4 +275,5 @@ class _RouterKeys {
   static final accountNotificationId = 'accountNotificationId';
   static final domain = 'domain';
   static final authenticationProvider = 'authenticationProvider';
+  static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
 }

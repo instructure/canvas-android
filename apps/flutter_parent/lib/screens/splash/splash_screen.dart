@@ -35,20 +35,22 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
   AnimationController _controller;
   Animation<double> _animation;
+  String _route;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInBack);
     _dataFuture = locator<DashboardInteractor>().getStudents(forceRefresh: true);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInBack);
+    _animation.addListener(_animationListener);
   }
 
   @override
   Widget build(BuildContext context) {
     if (!ApiPrefs.isLoggedIn()) {
       // route to login screen
-      _navigate(context, ParentRouter.login());
+      _navigate(ParentRouter.login());
       return _defaultBody(context);
     } else {
       return Scaffold(
@@ -59,15 +61,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             if (snapshot.hasData) {
               if (snapshot.data.isEmpty) {
                 // User is not observing any students. Show the not-a-parent screen.
-                _navigate(context, ParentRouter.notParent());
+                _navigate(ParentRouter.notParent());
               } else {
                 // Proceed with pre-fetched student list
                 // TODO - revert to include pre-fetch later on
-                _navigate(context, ParentRouter.dashboard());
+                _navigate(ParentRouter.dashboard());
               }
             } else if (snapshot.hasError) {
               // On error, proceed without pre-fetched student list
-              _navigate(context, ParentRouter.dashboard());
+              _navigate(ParentRouter.dashboard());
             }
             return Container(
               child: Center(
@@ -93,14 +95,21 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         ));
   }
 
-  _navigate(BuildContext context, String route) {
-    _animation.addListener(() {
-      if (_animation.status == AnimationStatus.completed) {
-        // Use a custom page route for the circle reveal animation
-        ParentRouter.router.navigateTo(context, route,
-            replace: true,
-            transitionDuration: const Duration(milliseconds: 500),
-            transition: TransitionType.custom, transitionBuilder: (
+  _navigate(String route) {
+    _route = route;
+    _controller.forward(); // Start the animation, we'll navigate when it finishes
+  }
+
+  _animationListener() {
+    if (_animation.status == AnimationStatus.completed) {
+      // Use a custom page route for the circle reveal animation
+      ParentRouter.router.navigateTo(
+        context,
+        _route,
+        replace: true,
+        transitionDuration: const Duration(milliseconds: 500),
+        transition: TransitionType.custom,
+        transitionBuilder: (
           context,
           animation,
           secondaryAnimation,
@@ -125,11 +134,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               )),
             ),
           );
-        });
-      }
-    });
-
-    _controller.forward();
+        },
+      );
+    }
   }
 
   @override
