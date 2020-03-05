@@ -15,6 +15,7 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/plannable.dart';
+import 'package:flutter_parent/models/planner_submission.dart';
 
 part 'planner_item.g.dart';
 
@@ -40,8 +41,9 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
 
   Plannable get plannable;
 
-//  @nullable
-//  PlannerSubmission get submissions;
+  @nullable
+  @BuiltValueField(wireName: 'submissions')
+  PlannerSubmission get submissionStatus;
 
   factory PlannerItem([void Function(PlannerItemBuilder) updates]) = _$PlannerItem;
 }

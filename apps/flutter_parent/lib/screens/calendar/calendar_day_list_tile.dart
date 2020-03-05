@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:intl/intl.dart';
 
 class CalendarDayListTile extends StatelessWidget {
   final PlannerItem _item;
@@ -48,11 +49,7 @@ class CalendarDayListTile extends StatelessWidget {
                 SizedBox(height: 2),
                 Text(_item.plannable.title, style: textTheme.subhead),
                 ..._getDueDate(context, _item),
-                Text(
-                  L10n(context).assignmentTotalPoints(_item.plannable.pointsPossible.toString()),
-                  style: textTheme.caption.copyWith(color: Theme.of(context).accentColor),
-                  semanticsLabel: L10n(context).pointsPossible(_item.plannable.pointsPossible.toString()),
-                ),
+                ..._getPointsOrStatus(context, _item),
                 SizedBox(height: 12),
               ],
             ),
@@ -88,14 +85,47 @@ class CalendarDayListTile extends StatelessWidget {
     if (plannerItem.plannable.dueAt != null) {
       return [
         SizedBox(height: 4),
-        Text(L10n(context).due(_formatDate(context, plannerItem.plannable.dueAt)),
+        Text(plannerItem.plannable.dueAt.l10nFormat(L10n(context).dueDateAtTime),
             style: Theme.of(context).textTheme.caption),
       ];
     }
     return [];
   }
 
-  String _formatDate(BuildContext context, DateTime date) {
-    return date?.l10nFormat(L10n(context).dateAtTime) ?? '';
+  List<Widget> _getPointsOrStatus(BuildContext context, PlannerItem plannerItem) {
+    var submissionStatus = plannerItem.submissionStatus;
+    String pointsOrStatus = null;
+    String semanticLabel = null;
+    // Submission status can be null for non-assignment contexts like announcements
+    if (submissionStatus != null) {
+      if (submissionStatus.excused) {
+        pointsOrStatus = L10n(context).excused;
+      } else if (submissionStatus.missing) {
+        pointsOrStatus = L10n(context).missing;
+      } else if (submissionStatus.graded) {
+        pointsOrStatus = L10n(context).assignmentGradedLabel;
+      } else if (submissionStatus.needsGrading) {
+        pointsOrStatus = L10n(context).assignmentSubmittedLabel;
+      } else if (plannerItem.plannable.pointsPossible != null) {
+        // We don't have a status, but we should have points
+        String score = NumberFormat.decimalPattern().format(plannerItem.plannable.pointsPossible);
+        pointsOrStatus = L10n(context).assignmentTotalPoints(score);
+        semanticLabel = L10n(context).pointsPossible(score);
+      }
+    }
+
+    // Don't show this row if it doesn't have a score or status (e.g. announcement)
+    if (pointsOrStatus != null) {
+      return [
+        SizedBox(height: 4),
+        Text(
+          pointsOrStatus,
+          style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).accentColor),
+          semanticsLabel: semanticLabel,
+        ),
+      ];
+    }
+
+    return [];
   }
 }

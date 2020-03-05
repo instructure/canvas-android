@@ -31,5 +31,16 @@ abstract class PlannerSubmission implements Built<PlannerSubmission, PlannerSubm
   bool get late;
   bool get missing;
 
+  @BuiltValueField(wireName: 'needs_grading')
+  bool get needsGrading;
+
+  static void _initializeBuilder(PlannerSubmissionBuilder b) => b
+    ..submitted = false
+    ..excused = false
+    ..graded = false
+    ..late = false
+    ..missing = false
+    ..needsGrading = false;
+
   factory PlannerSubmission([void Function(PlannerSubmissionBuilder) updates]) = _$PlannerSubmission;
 }

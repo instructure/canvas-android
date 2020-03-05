@@ -34,7 +34,13 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       serializers.serialize(object.plannable,
           specifiedType: const FullType(Plannable)),
     ];
-
+    result.add('submissions');
+    if (object.submissionStatus == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.submissionStatus,
+          specifiedType: const FullType(PlannerSubmission)));
+    }
     return result;
   }
 
@@ -70,6 +76,11 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
           result.plannable.replace(serializers.deserialize(value,
               specifiedType: const FullType(Plannable)) as Plannable);
           break;
+        case 'submissions':
+          result.submissionStatus.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(PlannerSubmission))
+              as PlannerSubmission);
+          break;
       }
     }
 
@@ -88,6 +99,8 @@ class _$PlannerItem extends PlannerItem {
   final String plannableType;
   @override
   final Plannable plannable;
+  @override
+  final PlannerSubmission submissionStatus;
 
   factory _$PlannerItem([void Function(PlannerItemBuilder) updates]) =>
       (new PlannerItemBuilder()..update(updates)).build();
@@ -97,7 +110,8 @@ class _$PlannerItem extends PlannerItem {
       this.contextType,
       this.contextName,
       this.plannableType,
-      this.plannable})
+      this.plannable,
+      this.submissionStatus})
       : super._() {
     if (courseId == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'courseId');
@@ -131,17 +145,20 @@ class _$PlannerItem extends PlannerItem {
         contextType == other.contextType &&
         contextName == other.contextName &&
         plannableType == other.plannableType &&
-        plannable == other.plannable;
+        plannable == other.plannable &&
+        submissionStatus == other.submissionStatus;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc(0, courseId.hashCode), contextType.hashCode),
-                contextName.hashCode),
-            plannableType.hashCode),
-        plannable.hashCode));
+            $jc(
+                $jc($jc($jc(0, courseId.hashCode), contextType.hashCode),
+                    contextName.hashCode),
+                plannableType.hashCode),
+            plannable.hashCode),
+        submissionStatus.hashCode));
   }
 
   @override
@@ -151,7 +168,8 @@ class _$PlannerItem extends PlannerItem {
           ..add('contextType', contextType)
           ..add('contextName', contextName)
           ..add('plannableType', plannableType)
-          ..add('plannable', plannable))
+          ..add('plannable', plannable)
+          ..add('submissionStatus', submissionStatus))
         .toString();
   }
 }
@@ -181,6 +199,12 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
       _$this._plannable ??= new PlannableBuilder();
   set plannable(PlannableBuilder plannable) => _$this._plannable = plannable;
 
+  PlannerSubmissionBuilder _submissionStatus;
+  PlannerSubmissionBuilder get submissionStatus =>
+      _$this._submissionStatus ??= new PlannerSubmissionBuilder();
+  set submissionStatus(PlannerSubmissionBuilder submissionStatus) =>
+      _$this._submissionStatus = submissionStatus;
+
   PlannerItemBuilder();
 
   PlannerItemBuilder get _$this {
@@ -190,6 +214,7 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
       _contextName = _$v.contextName;
       _plannableType = _$v.plannableType;
       _plannable = _$v.plannable?.toBuilder();
+      _submissionStatus = _$v.submissionStatus?.toBuilder();
       _$v = null;
     }
     return this;
@@ -218,12 +243,15 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
               contextType: contextType,
               contextName: contextName,
               plannableType: plannableType,
-              plannable: plannable.build());
+              plannable: plannable.build(),
+              submissionStatus: _submissionStatus?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'plannable';
         plannable.build();
+        _$failedField = 'submissionStatus';
+        _submissionStatus?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'PlannerItem', _$failedField, e.toString());

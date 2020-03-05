@@ -1137,8 +1137,14 @@ class AppLocalizations {
   String get errorSeverityCritical => Intl.message('EXTREME CRITICAL EMERGENCY!!');
 
   /// Calendar Screen
-  String get missing => Intl.message('Missing');
-  String get notGraded => Intl.message('Not Graded');
+  String get missing => Intl.message(
+        'Missing',
+        desc: 'Description for when a student has not turned anything in for an assignment',
+      );
+  String get notGraded => Intl.message(
+        'Not Graded',
+        desc: 'Description for an assignment has not been graded.',
+      );
 
   /// Miscellaneous
 

@@ -33,6 +33,9 @@ class _$PlannerSubmissionSerializer
       'missing',
       serializers.serialize(object.missing,
           specifiedType: const FullType(bool)),
+      'needs_grading',
+      serializers.serialize(object.needsGrading,
+          specifiedType: const FullType(bool)),
     ];
 
     return result;
@@ -71,6 +74,10 @@ class _$PlannerSubmissionSerializer
           result.missing = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
+        case 'needs_grading':
+          result.needsGrading = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
       }
     }
 
@@ -89,13 +96,20 @@ class _$PlannerSubmission extends PlannerSubmission {
   final bool late;
   @override
   final bool missing;
+  @override
+  final bool needsGrading;
 
   factory _$PlannerSubmission(
           [void Function(PlannerSubmissionBuilder) updates]) =>
       (new PlannerSubmissionBuilder()..update(updates)).build();
 
   _$PlannerSubmission._(
-      {this.submitted, this.excused, this.graded, this.late, this.missing})
+      {this.submitted,
+      this.excused,
+      this.graded,
+      this.late,
+      this.missing,
+      this.needsGrading})
       : super._() {
     if (submitted == null) {
       throw new BuiltValueNullFieldError('PlannerSubmission', 'submitted');
@@ -111,6 +125,9 @@ class _$PlannerSubmission extends PlannerSubmission {
     }
     if (missing == null) {
       throw new BuiltValueNullFieldError('PlannerSubmission', 'missing');
+    }
+    if (needsGrading == null) {
+      throw new BuiltValueNullFieldError('PlannerSubmission', 'needsGrading');
     }
   }
 
@@ -130,17 +147,20 @@ class _$PlannerSubmission extends PlannerSubmission {
         excused == other.excused &&
         graded == other.graded &&
         late == other.late &&
-        missing == other.missing;
+        missing == other.missing &&
+        needsGrading == other.needsGrading;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc($jc($jc(0, submitted.hashCode), excused.hashCode),
-                graded.hashCode),
-            late.hashCode),
-        missing.hashCode));
+            $jc(
+                $jc($jc($jc(0, submitted.hashCode), excused.hashCode),
+                    graded.hashCode),
+                late.hashCode),
+            missing.hashCode),
+        needsGrading.hashCode));
   }
 
   @override
@@ -150,7 +170,8 @@ class _$PlannerSubmission extends PlannerSubmission {
           ..add('excused', excused)
           ..add('graded', graded)
           ..add('late', late)
-          ..add('missing', missing))
+          ..add('missing', missing)
+          ..add('needsGrading', needsGrading))
         .toString();
   }
 }
@@ -179,7 +200,13 @@ class PlannerSubmissionBuilder
   bool get missing => _$this._missing;
   set missing(bool missing) => _$this._missing = missing;
 
-  PlannerSubmissionBuilder();
+  bool _needsGrading;
+  bool get needsGrading => _$this._needsGrading;
+  set needsGrading(bool needsGrading) => _$this._needsGrading = needsGrading;
+
+  PlannerSubmissionBuilder() {
+    PlannerSubmission._initializeBuilder(this);
+  }
 
   PlannerSubmissionBuilder get _$this {
     if (_$v != null) {
@@ -188,6 +215,7 @@ class PlannerSubmissionBuilder
       _graded = _$v.graded;
       _late = _$v.late;
       _missing = _$v.missing;
+      _needsGrading = _$v.needsGrading;
       _$v = null;
     }
     return this;
@@ -214,7 +242,8 @@ class PlannerSubmissionBuilder
             excused: excused,
             graded: graded,
             late: late,
-            missing: missing);
+            missing: missing,
+            needsGrading: needsGrading);
     replace(_$result);
     return _$result;
   }
