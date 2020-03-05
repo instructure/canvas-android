@@ -23,6 +23,7 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/fetcher/attachment_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/fetcher/attachment_fetcher_interactor.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -145,6 +146,7 @@ void main() {
     var interactor = _MockInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AttachmentFetcherInteractor>(() => interactor);
+      locator.registerLazySingleton<Logger>(() => Logger());
     });
 
     when(interactor.fetchAttachmentFile(any, any)).thenAnswer((_) => Future.error(''));

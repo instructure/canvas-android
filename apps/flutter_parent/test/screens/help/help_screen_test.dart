@@ -21,6 +21,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,8 +35,15 @@ import '../../utils/test_app.dart';
 void main() {
   final l10n = AppLocalizations();
 
+  setupTestLocator((locator) {
+    locator.registerSingleton<QuickNav>(QuickNav());
+    locator.registerLazySingleton<Logger>(() => Logger());
+    locator.registerLazySingleton<AndroidIntentVeneer>(() => _MockAndroidIntentVeneer());
+  });
+
   testWidgetsWithAccessibilityChecks('displays all options', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
+    await tester.pumpWidget(TestApp(HelpScreen()));
+    await tester.pump();
 
     expect(find.text(l10n.help), findsOneWidget);
 
@@ -59,7 +67,8 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
+    await tester.pumpWidget(TestApp(HelpScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.helpSearchCanvasDocsLabel));
     await tester.pumpAndSettle();
@@ -81,7 +90,8 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
+    await tester.pumpWidget(TestApp(HelpScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.helpShareLoveLabel));
     await tester.pumpAndSettle();
@@ -103,7 +113,8 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()), highContrast: true);
+    await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.helpReportProblemLabel));
     await tester.pumpAndSettle();
@@ -119,10 +130,6 @@ void main() {
       ..primaryEmail = '123@321.com'
       ..effectiveLocale = 'en-jp');
     final login = Login((b) => b..domain = 'dough main');
-    final veneer = _MockAndroidIntentVeneer();
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<AndroidIntentVeneer>(() => veneer);
-    });
 
     ApiPrefs.switchLogins(login);
     ApiPrefs.setUser(user);
@@ -151,7 +158,8 @@ void main() {
       return null;
     });
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()));
+    await tester.pumpWidget(TestApp(HelpScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.helpRequestFeatureLabel));
     await tester.pumpAndSettle();
@@ -160,9 +168,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping legal shows legal screen', (tester) async {
-    setupTestLocator((locator) => locator.registerSingleton<QuickNav>(QuickNav()));
-
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, HelpScreen()), highContrast: true);
+    await tester.pumpWidget(TestApp(HelpScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.helpLegalLabel));
     await tester.pumpAndSettle();

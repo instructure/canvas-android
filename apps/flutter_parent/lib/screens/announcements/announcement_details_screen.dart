@@ -28,16 +28,12 @@ import 'announcement_details_interactor.dart';
 enum AnnouncementType { INSTITUTION, COURSE }
 
 class AnnouncementDetailScreen extends StatefulWidget {
-  final _interactor = locator<AnnouncementDetailsInteractor>();
-  final String _announcementId;
-  final String _courseId;
-  final AnnouncementType _announcementType;
-  final String _toolbarTitle;
+  final String announcementId;
+  final String courseId;
+  final AnnouncementType announcementType;
 
-  AnnouncementDetailScreen(this._announcementId, this._announcementType, this._courseId, BuildContext context,
-      {Key key})
-      : this._toolbarTitle = L10n(context).institutionAnnouncementTitle,
-        super(key: key);
+  AnnouncementDetailScreen(this.announcementId, this.announcementType, this.courseId, BuildContext context, {Key key})
+      : super(key: key);
 
   @override
   State createState() => _AnnouncementDetailScreenState();
@@ -46,17 +42,16 @@ class AnnouncementDetailScreen extends StatefulWidget {
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   Future<AnnouncementViewState> _announcementFuture;
 
-  Future<AnnouncementViewState> _loadAnnouncement() => widget._interactor
-      .getAnnouncement(widget._announcementId, widget._announcementType, widget._courseId, widget._toolbarTitle);
+  Future<AnnouncementViewState> _loadAnnouncement(BuildContext context) => _interactor.getAnnouncement(
+      widget.announcementId, widget.announcementType, widget.courseId, L10n(context).institutionAnnouncementTitle);
 
-  @override
-  void initState() {
-    super.initState();
-    _announcementFuture = _loadAnnouncement();
-  }
+  get _interactor => locator<AnnouncementDetailsInteractor>();
 
   @override
   Widget build(BuildContext context) {
+    if (_announcementFuture == null) {
+      _announcementFuture = _loadAnnouncement(context);
+    }
     return FutureBuilder(
       future: _announcementFuture,
       builder: (context, AsyncSnapshot<AnnouncementViewState> snapshot) {
@@ -116,8 +111,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: ErrorPandaWidget(L10n(context).errorLoadingAnnouncement, () {
           setState(() {
-            _announcementFuture = widget._interactor.getAnnouncement(widget._announcementId, widget._announcementType,
-                widget._courseId, L10n(context).institutionAnnouncementTitle);
+            _announcementFuture = _loadAnnouncement(context);
           });
         }));
   }
@@ -129,6 +123,6 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         padding: EdgeInsets.only(top: 12),
         child: AttachmentIndicatorWidget(
             attachment: attachment,
-            onAttachmentClicked: (attachment) => {widget._interactor.viewAttachment(context, attachment)}));
+            onAttachmentClicked: (attachment) => {_interactor.viewAttachment(context, attachment)}));
   }
 }

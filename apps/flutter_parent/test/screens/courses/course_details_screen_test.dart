@@ -30,6 +30,7 @@ import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.da
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -54,9 +55,10 @@ void main() {
     _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
     _locator
         .registerFactory<CreateConversationInteractor>(() => convoInteractor ?? _MockCreateConversationInteractor());
+    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
 
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    _locator.registerLazySingleton<Logger>(() => Logger());
   }
 
   setUp(() async {

@@ -36,7 +36,7 @@ class WebLoginScreen extends StatelessWidget {
   final String successUrl = '/login/oauth2/auth?code=';
   final String errorUrl = '/login/oauth2/auth?error=access_denied';
 
-  final _interactor = locator<WebLoginInteractor>();
+  get _interactor => locator<WebLoginInteractor>();
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
 
   @override

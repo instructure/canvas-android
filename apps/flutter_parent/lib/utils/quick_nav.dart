@@ -13,11 +13,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:fluro/fluro.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class QuickNav {
   Future<T> push<T extends Object>(BuildContext context, Widget widget) {
@@ -43,10 +43,6 @@ class QuickNav {
 
   void _logShow(Widget widget) {
     final message = 'Pushing widget: ${widget.runtimeType.toString()}';
-    if (kReleaseMode) {
-      FlutterCrashlytics().log(message);
-    } else {
-      print(message);
-    }
+    locator<Logger>().log(message);
   }
 }

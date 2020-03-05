@@ -18,6 +18,7 @@ import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart'
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -99,6 +100,7 @@ void main() {
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<QuickNav>(() => QuickNav());
+        locator.registerLazySingleton<Logger>(() => Logger());
       });
 
       // Setup the widget

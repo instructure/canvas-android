@@ -42,6 +42,7 @@ import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -70,6 +71,7 @@ void main() {
     _locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
+    _locator.registerLazySingleton<Logger>(() => Logger());
   }
 
   setUpAll(() => setupPlatformChannels());
