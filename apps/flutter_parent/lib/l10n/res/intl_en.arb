@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-02-20T22:07:03.311135",
+  "@@last_modified": "2020-03-06T16:19:50.821493",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -79,6 +79,72 @@
     "description": "Confirmation message displayed when the user tries to log out",
     "type": "text",
     "placeholders": {}
+  },
+  "Calendars": "Calendars",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nextMonth": "Next month: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Previous month: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Next week starting {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Previous week starting {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Month of {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "expand",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapse": "collapse",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} points possible",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
   },
   "Previous Logins": "Previous Logins",
   "@Previous Logins": {
@@ -1314,6 +1380,29 @@
     "type": "text",
     "placeholders": {}
   },
+  "Privacy Policy": "Privacy Policy",
+  "@Privacy Policy": {
+    "description": "Label for the privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Use": "Terms of Use",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas on GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "There was a problem loading the Terms of Use",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Device": "Device",
   "@Device": {
     "description": "Label used for device manufacturer/model in the error report",
@@ -1405,6 +1494,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "Not Graded": "Not Graded",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders": {}
+  },
   "Cancel": "Cancel",
   "@Cancel": {
     "type": "text",
@@ -1461,6 +1556,12 @@
   },
   "An unexpected error occurred": "An unexpected error occurred",
   "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Launch External Tool": "Launch External Tool",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
     "type": "text",
     "placeholders": {}
   },
