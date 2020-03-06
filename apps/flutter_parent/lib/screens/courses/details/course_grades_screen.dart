@@ -207,9 +207,12 @@ class _CourseGradeHeader extends StatelessWidget {
           InkWell(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-              child: Text(
-                L10n(context).filter,
-                style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: 48, minWidth: 48),
+                child: Text(
+                  L10n(context).filter,
+                  style: Theme.of(context).textTheme.caption.copyWith(color: studentColor),
+                ),
               ),
             ),
             onTap: () async {

@@ -50,30 +50,32 @@ class MessageWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Avatar(author.avatarUrl, name: author.name),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _authorText(context, conversation, message, author),
-                    SizedBox(height: 2),
-                    Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
-                  ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Avatar(author.avatarUrl, name: author.name),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _authorText(context, conversation, message, author),
+                      SizedBox(height: 2),
+                      Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
-          Text(message.body),
-          _attachmentsWidget(context, message)
-        ],
+              ],
+            ),
+            SizedBox(height: 16),
+            Text(message.body),
+            _attachmentsWidget(context, message)
+          ],
+        ),
       ),
     );
   }
@@ -131,6 +133,7 @@ class MessageWidget extends StatelessWidget {
       height: 108,
       padding: EdgeInsets.only(top: 12),
       child: ListView.separated(
+        key: Key('message_attachment_list'),
         shrinkWrap: true,
         itemCount: attachments.length,
         scrollDirection: Axis.horizontal,

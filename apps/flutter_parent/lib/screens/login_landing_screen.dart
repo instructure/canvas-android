@@ -80,30 +80,32 @@ class LoginLandingScreen extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SvgPicture.asset(
-            'assets/svg/canvas-parent-login-logo.svg',
-            semanticsLabel: L10n(context).canvasLogoLabel,
-          ),
-          SizedBox(height: 64),
-          RaisedButton(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                L10n(context).findSchool,
-                style: TextStyle(fontSize: 16),
-              ),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset(
+              'assets/svg/canvas-parent-login-logo.svg',
+              semanticsLabel: L10n(context).canvasLogoLabel,
             ),
-            color: Theme.of(context).accentColor,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-            onPressed: () {
-              onFindSchoolPressed(context);
-            },
-          ),
-        ],
+            SizedBox(height: 64),
+            RaisedButton(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  L10n(context).findSchool,
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+              onPressed: () {
+                onFindSchoolPressed(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
