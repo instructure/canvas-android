@@ -13,12 +13,14 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day_of_week_headers.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
@@ -28,13 +30,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays six weeks for a 6-week month', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 5, // May 2020, which spans six weeks in the en_US locale
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(1.0),
         ),
       ),
@@ -46,13 +47,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays five weeks for a 5-week month', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1, // Jan 2020, which spans five weeks in the en_US locale
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(1.0),
         ),
       ),
@@ -64,13 +64,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays day-of-week headers', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(1.0),
         ),
       ),
@@ -82,13 +81,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays all days in all weeks spanned by the month', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(1.0),
         ),
       ),
@@ -123,7 +121,7 @@ void main() {
     DateTime selected = null;
 
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
@@ -131,7 +129,6 @@ void main() {
             selected = day;
           },
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(1.0),
         ),
       ),
@@ -146,13 +143,12 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays only selected week when collapsed', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(0.0),
         ),
       ),
@@ -175,13 +171,12 @@ void main() {
   testWidgetsWithAccessibilityChecks('Positions weeks according to expansion value', (tester) async {
     final expansionValue = 0.12345;
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: MonthExpansionNotifier(expansionValue),
         ),
       ),
@@ -200,13 +195,12 @@ void main() {
   testWidgetsWithAccessibilityChecks('Updates week positions on expansion value change', (tester) async {
     final expansionNotifier = MonthExpansionNotifier(0.0);
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarMonth(
           year: 2020,
           month: 1,
           onDaySelected: (_) {},
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           monthExpansionListener: expansionNotifier,
         ),
       ),
@@ -233,4 +227,21 @@ void main() {
       expect(position.dx, 0.0);
     }
   });
+}
+
+Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
+  return TestApp(
+    ChangeNotifierProvider<PlannerFetcher>(
+      create: (BuildContext context) => fetcher ?? _FakeFetcher(),
+      child: child,
+    ),
+    highContrast: true,
+  );
+}
+
+class _FakeFetcher extends PlannerFetcher {
+  AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  @override
+  AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
 }

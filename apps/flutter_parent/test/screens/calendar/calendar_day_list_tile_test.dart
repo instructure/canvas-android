@@ -12,11 +12,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -246,4 +248,5 @@ PlannerItem _createPlannerItem(
       ..contextType = ''
       ..contextName = contextName ?? ''
       ..plannableType = plannableType ?? 'assignment'
-      ..submissionStatus = submission != null ? submission.toBuilder() : null);
+      ..plannableDate = DateTime.now()
+      ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);

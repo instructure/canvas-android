@@ -40,8 +40,22 @@ extension Format on DateTime {
     return DateTime(this.year, this.month, this.day - offset);
   }
 
+  int get localDayOfWeek {
+    if (this == null) return null;
+    final firstDay = DateFormat().dateSymbols.FIRSTDAYOFWEEK;
+    return (this.weekday - 1 - firstDay) % 7;
+  }
+
   bool isWeekend() {
     if (this == null) return false;
     return DateFormat().dateSymbols.WEEKENDRANGE.contains((this.weekday - 1) % 7);
   }
+
+  DateTime withStartOfDay() => this == null ? null : DateTime(year, month, day);
+
+  DateTime withEndOfDay() => this == null ? null : DateTime(year, month, day, 23, 59, 59, 999);
+
+  DateTime withStartOfMonth() => this == null ? null : DateTime(year, month, 1);
+
+  DateTime withEndOfMonth() => this == null ? null : DateTime(year, month + 1, 0, 23, 59, 59, 999);
 }

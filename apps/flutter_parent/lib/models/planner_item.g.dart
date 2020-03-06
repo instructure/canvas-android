@@ -18,9 +18,6 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
   Iterable<Object> serialize(Serializers serializers, PlannerItem object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'course_id',
-      serializers.serialize(object.courseId,
-          specifiedType: const FullType(String)),
       'context_type',
       serializers.serialize(object.contextType,
           specifiedType: const FullType(String)),
@@ -33,13 +30,23 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       'plannable',
       serializers.serialize(object.plannable,
           specifiedType: const FullType(Plannable)),
+      'plannable_date',
+      serializers.serialize(object.plannableDate,
+          specifiedType: const FullType(DateTime)),
     ];
-    result.add('submissions');
-    if (object.submissionStatus == null) {
+    result.add('course_id');
+    if (object.courseId == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.submissionStatus,
-          specifiedType: const FullType(PlannerSubmission)));
+      result.add(serializers.serialize(object.courseId,
+          specifiedType: const FullType(String)));
+    }
+    result.add('submissions');
+    if (object.submissionStatusRaw == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.submissionStatusRaw,
+          specifiedType: const FullType(JsonObject)));
     }
     return result;
   }
@@ -76,10 +83,13 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
           result.plannable.replace(serializers.deserialize(value,
               specifiedType: const FullType(Plannable)) as Plannable);
           break;
+        case 'plannable_date':
+          result.plannableDate = serializers.deserialize(value,
+              specifiedType: const FullType(DateTime)) as DateTime;
+          break;
         case 'submissions':
-          result.submissionStatus.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(PlannerSubmission))
-              as PlannerSubmission);
+          result.submissionStatusRaw = serializers.deserialize(value,
+              specifiedType: const FullType(JsonObject)) as JsonObject;
           break;
       }
     }
@@ -100,7 +110,9 @@ class _$PlannerItem extends PlannerItem {
   @override
   final Plannable plannable;
   @override
-  final PlannerSubmission submissionStatus;
+  final DateTime plannableDate;
+  @override
+  final JsonObject submissionStatusRaw;
 
   factory _$PlannerItem([void Function(PlannerItemBuilder) updates]) =>
       (new PlannerItemBuilder()..update(updates)).build();
@@ -111,11 +123,9 @@ class _$PlannerItem extends PlannerItem {
       this.contextName,
       this.plannableType,
       this.plannable,
-      this.submissionStatus})
+      this.plannableDate,
+      this.submissionStatusRaw})
       : super._() {
-    if (courseId == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'courseId');
-    }
     if (contextType == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'contextType');
     }
@@ -127,6 +137,9 @@ class _$PlannerItem extends PlannerItem {
     }
     if (plannable == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'plannable');
+    }
+    if (plannableDate == null) {
+      throw new BuiltValueNullFieldError('PlannerItem', 'plannableDate');
     }
   }
 
@@ -146,7 +159,8 @@ class _$PlannerItem extends PlannerItem {
         contextName == other.contextName &&
         plannableType == other.plannableType &&
         plannable == other.plannable &&
-        submissionStatus == other.submissionStatus;
+        plannableDate == other.plannableDate &&
+        submissionStatusRaw == other.submissionStatusRaw;
   }
 
   @override
@@ -154,11 +168,13 @@ class _$PlannerItem extends PlannerItem {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, courseId.hashCode), contextType.hashCode),
-                    contextName.hashCode),
-                plannableType.hashCode),
-            plannable.hashCode),
-        submissionStatus.hashCode));
+                $jc(
+                    $jc($jc($jc(0, courseId.hashCode), contextType.hashCode),
+                        contextName.hashCode),
+                    plannableType.hashCode),
+                plannable.hashCode),
+            plannableDate.hashCode),
+        submissionStatusRaw.hashCode));
   }
 
   @override
@@ -169,7 +185,8 @@ class _$PlannerItem extends PlannerItem {
           ..add('contextName', contextName)
           ..add('plannableType', plannableType)
           ..add('plannable', plannable)
-          ..add('submissionStatus', submissionStatus))
+          ..add('plannableDate', plannableDate)
+          ..add('submissionStatusRaw', submissionStatusRaw))
         .toString();
   }
 }
@@ -199,11 +216,15 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
       _$this._plannable ??= new PlannableBuilder();
   set plannable(PlannableBuilder plannable) => _$this._plannable = plannable;
 
-  PlannerSubmissionBuilder _submissionStatus;
-  PlannerSubmissionBuilder get submissionStatus =>
-      _$this._submissionStatus ??= new PlannerSubmissionBuilder();
-  set submissionStatus(PlannerSubmissionBuilder submissionStatus) =>
-      _$this._submissionStatus = submissionStatus;
+  DateTime _plannableDate;
+  DateTime get plannableDate => _$this._plannableDate;
+  set plannableDate(DateTime plannableDate) =>
+      _$this._plannableDate = plannableDate;
+
+  JsonObject _submissionStatusRaw;
+  JsonObject get submissionStatusRaw => _$this._submissionStatusRaw;
+  set submissionStatusRaw(JsonObject submissionStatusRaw) =>
+      _$this._submissionStatusRaw = submissionStatusRaw;
 
   PlannerItemBuilder();
 
@@ -214,7 +235,8 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
       _contextName = _$v.contextName;
       _plannableType = _$v.plannableType;
       _plannable = _$v.plannable?.toBuilder();
-      _submissionStatus = _$v.submissionStatus?.toBuilder();
+      _plannableDate = _$v.plannableDate;
+      _submissionStatusRaw = _$v.submissionStatusRaw;
       _$v = null;
     }
     return this;
@@ -244,14 +266,13 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
               contextName: contextName,
               plannableType: plannableType,
               plannable: plannable.build(),
-              submissionStatus: _submissionStatus?.build());
+              plannableDate: plannableDate,
+              submissionStatusRaw: submissionStatusRaw);
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'plannable';
         plannable.build();
-        _$failedField = 'submissionStatus';
-        _submissionStatus?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'PlannerItem', _$failedField, e.toString());

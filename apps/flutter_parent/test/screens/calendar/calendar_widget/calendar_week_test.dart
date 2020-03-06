@@ -12,11 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day_of_week_headers.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
@@ -29,7 +32,6 @@ void main() {
     final week = CalendarWeek(
       firstDay: weekStart,
       selectedDay: selectedDate,
-      eventCount: CalendarEventCount(),
       onDaySelected: (_) {},
       displayDayOfWeekHeader: false,
     );
@@ -46,11 +48,10 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays all days in week', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarWeek(
           firstDay: weekStart,
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           onDaySelected: (_) {},
           displayDayOfWeekHeader: false,
         ),
@@ -71,11 +72,10 @@ void main() {
   testWidgetsWithAccessibilityChecks('Invokes onDaySelected callback', (tester) async {
     DateTime selected = null;
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarWeek(
           firstDay: weekStart,
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           onDaySelected: (day) {
             selected = day;
           },
@@ -93,11 +93,10 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays day-of-week headers if specified', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarWeek(
           firstDay: weekStart,
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           onDaySelected: (_) {},
           displayDayOfWeekHeader: true,
         ),
@@ -110,11 +109,10 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Does not display day-of-week headers if not specified', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarWeek(
           firstDay: weekStart,
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           onDaySelected: (_) {},
           displayDayOfWeekHeader: false,
         ),
@@ -127,11 +125,10 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Expands CalendarDay widgets across screen', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      _appWithFetcher(
         CalendarWeek(
           firstDay: weekStart,
           selectedDay: selectedDate,
-          eventCount: CalendarEventCount(),
           onDaySelected: (_) {},
           displayDayOfWeekHeader: false,
         ),
@@ -148,4 +145,21 @@ void main() {
       expect(widgetSize.width, moreOrLessEquals(expectedWidgetWidth));
     }
   });
+}
+
+Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
+  return TestApp(
+    ChangeNotifierProvider<PlannerFetcher>(
+      create: (BuildContext context) => fetcher ?? _FakeFetcher(),
+      child: child,
+    ),
+    highContrast: true,
+  );
+}
+
+class _FakeFetcher extends PlannerFetcher {
+  AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  @override
+  AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
 }

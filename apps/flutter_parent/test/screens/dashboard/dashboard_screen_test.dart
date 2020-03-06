@@ -273,7 +273,9 @@ void main() {
 
       // Navigate to Calendar
       await tester.tap(find.text(AppLocalizations().calendarLabel));
-      await tester.pump();
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
 
       expect(find.byType(CalendarScreen), findsOneWidget);
     });

@@ -13,10 +13,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
+import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/accessibility_utils.dart';
@@ -40,7 +41,7 @@ void main() {
       TestApp(
         CalendarWidget(
           dayBuilder: (_, __) => Container(),
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -54,7 +55,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Expand button expands and collapses month', (tester) async {
     final calendar = CalendarWidget(
       dayBuilder: (_, __) => Container(),
-      eventCount: CalendarEventCount(),
+      fetcher: _FakeFetcher(),
     );
     await tester.pumpWidget(
       TestApp(
@@ -84,7 +85,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Can drag to expand and collapse month', (tester) async {
     final calendar = CalendarWidget(
       dayBuilder: (_, __) => Container(),
-      eventCount: CalendarEventCount(),
+      fetcher: _FakeFetcher(),
     );
     await tester.pumpWidget(
       TestApp(
@@ -114,7 +115,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Can fling to expand and collapse month', (tester) async {
     final calendar = CalendarWidget(
       dayBuilder: (_, __) => Container(),
-      eventCount: CalendarEventCount(),
+      fetcher: _FakeFetcher(),
     );
     await tester.pumpWidget(
       TestApp(
@@ -145,7 +146,7 @@ void main() {
     final dayContentKey = Key('day-content');
     final calendar = CalendarWidget(
       dayBuilder: (_, __) => Container(key: dayContentKey),
-      eventCount: CalendarEventCount(),
+      fetcher: _FakeFetcher(),
     );
     await tester.pumpWidget(
       TestApp(
@@ -180,7 +181,7 @@ void main() {
             dateForDayBuilder = day;
             return Container();
           },
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -212,7 +213,7 @@ void main() {
             dateForDayBuilder = day;
             return Container();
           },
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -248,7 +249,7 @@ void main() {
       TestApp(
         CalendarWidget(
           dayBuilder: (_, day) => Container(),
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -282,7 +283,7 @@ void main() {
       TestApp(
         CalendarWidget(
           dayBuilder: (_, day) => Container(),
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -316,7 +317,7 @@ void main() {
       TestApp(
         CalendarWidget(
           dayBuilder: (_, day) => Container(),
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -356,7 +357,7 @@ void main() {
       TestApp(
         CalendarWidget(
           dayBuilder: (_, day) => Container(),
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -397,7 +398,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -420,7 +421,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -450,7 +451,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -480,7 +481,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -506,7 +507,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -541,7 +542,7 @@ void main() {
         MediaQuery(
           child: CalendarWidget(
             dayBuilder: (_, __) => Container(),
-            eventCount: CalendarEventCount(),
+            fetcher: _FakeFetcher(),
           ),
           data: MediaQueryData(accessibleNavigation: true),
         ),
@@ -579,7 +580,7 @@ void main() {
             dateForDayBuilder = day;
             return Container();
           },
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -613,7 +614,7 @@ void main() {
             dateForDayBuilder = day;
             return Container();
           },
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -652,7 +653,7 @@ void main() {
             dateForDayBuilder = day;
             return Container(key: dayContentKey);
           },
-          eventCount: CalendarEventCount(),
+          fetcher: _FakeFetcher(),
         ),
         highContrast: true,
       ),
@@ -677,4 +678,11 @@ void main() {
     expect(monthWidget.year, 2000);
     expect(monthWidget.month, 1);
   });
+}
+
+class _FakeFetcher extends PlannerFetcher {
+  AsyncSnapshot<List<PlannerItem>> nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
+
+  @override
+  AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) => nextSnapshot;
 }
