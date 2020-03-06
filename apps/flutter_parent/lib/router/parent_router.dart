@@ -17,9 +17,7 @@
 import 'dart:core';
 
 import 'package:fluro/fluro.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -35,6 +33,8 @@ import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 ///
 /// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
@@ -68,7 +68,7 @@ class ParentRouter {
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
   static final String _rootWithUrl = '/external';
-  static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=$url';
+  static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static void init() {
     if (!_isInitialized) {
@@ -126,7 +126,7 @@ class ParentRouter {
   });
 
   static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var authProvider = params[_RouterKeys.authenticationProvider][0];
+    var authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
     var widget = (authProvider == null || authProvider == 'null')
         ? WebLoginScreen(params[_RouterKeys.domain][0])
         : WebLoginScreen(
@@ -215,9 +215,9 @@ class ParentRouter {
 
   // EXTERNAL HANDLER
   static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    final link = prepLink(context, params[_RouterKeys.url][0]);
+    final link = _prepLink(context, params[_RouterKeys.url][0]);
 
-    _logMessage('Handling url route: $link');
+    locator<Logger>().log('Handling url route: $link');
     final match = router.match(link);
     if (match == null) {
       // No match means we don't support the link, default to the splash screen for now
@@ -232,7 +232,7 @@ class ParentRouter {
    *
    *  Should handle external / internal / download
    */
-  static String prepLink(BuildContext context, String link) {
+  static String _prepLink(BuildContext context, String link) {
     // Validate the url
     Uri uri = Uri.parse(link);
     // - validating the host, check if it matches currently logged in user
@@ -255,15 +255,7 @@ class ParentRouter {
   static void _logRoute(Map<String, List<String>> params, Widget widget) {
     final message =
         'Pushing widget: ${widget.runtimeType.toString()} ${params.isNotEmpty ? 'with params: $params' : ''}';
-    _logMessage(message);
-  }
-
-  static void _logMessage(String message) {
-    if (kReleaseMode) {
-      FlutterCrashlytics().log(message);
-    } else {
-      print(message);
-    }
+    locator<Logger>().log(message);
   }
 }
 

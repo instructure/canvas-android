@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/domain_search/domain_search_interactor.da
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -37,6 +38,8 @@ void main() {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerLazySingleton(() => QuickNav());
+    _locator.registerLazySingleton<Logger>(() => Logger());
+
     _locator.registerFactory<DomainSearchInteractor>(() => interactor);
     _locator.registerFactory<WebLoginInteractor>(() => webInteractor ?? _MockWebLoginInteractor());
   }

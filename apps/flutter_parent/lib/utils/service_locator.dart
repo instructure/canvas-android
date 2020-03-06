@@ -50,6 +50,7 @@ import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachm
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
@@ -120,4 +121,5 @@ void setupLocator() {
   locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
+  locator.registerLazySingleton<Logger>(() => Logger());
 }

@@ -22,6 +22,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interac
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -45,6 +46,7 @@ void main() {
     locator.registerFactory<AlertThresholdsInteractor>(() => thresholdInteractor);
     locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? _MockManageStudentsInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
+    locator.registerLazySingleton<Logger>(() => Logger());
   }
 
   void _clickFAB(WidgetTester tester) async {

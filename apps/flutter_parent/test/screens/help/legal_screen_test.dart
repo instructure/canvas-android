@@ -28,7 +28,8 @@ void main() {
   final l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('displays all options', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()));
+    await tester.pumpWidget(TestApp(LegalScreen()));
+    await tester.pump();
 
     expect(find.text(l10n.helpLegalLabel), findsOneWidget);
 
@@ -41,7 +42,8 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()));
+    await tester.pumpWidget(TestApp(LegalScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.privacyPolicy));
     await tester.pumpAndSettle();
@@ -63,7 +65,8 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()));
+    await tester.pumpWidget(TestApp(LegalScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.canvasOnGithub));
     await tester.pumpAndSettle();
@@ -85,7 +88,8 @@ void main() {
     final nav = _MockNav();
     setupTestLocator((locator) => locator.registerSingleton<QuickNav>(nav));
 
-    await TestApp.showWidgetFromTap(tester, (context) => QuickNav().push(context, LegalScreen()), highContrast: true);
+    await tester.pumpWidget(TestApp(LegalScreen()));
+    await tester.pump();
 
     await tester.tap(find.text(l10n.termsOfUse));
     await tester.pumpAndSettle();

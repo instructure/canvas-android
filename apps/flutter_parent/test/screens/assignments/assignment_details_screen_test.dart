@@ -35,6 +35,7 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
+import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -78,9 +79,10 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
-    locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
     locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<QuickNav>(() => QuickNav());
+    locator.registerLazySingleton<Logger>(() => Logger());
   });
 
   setUp(() {
