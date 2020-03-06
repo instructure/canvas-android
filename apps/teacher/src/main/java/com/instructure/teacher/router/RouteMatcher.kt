@@ -93,6 +93,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:course_id/files/folder(\\/.*)*"), FileListFragment::class.java))
         // Same as above, but if they access nested user files instead of course files
         routes.add(Route("/files/folder(\\/.*)*", RouteContext.FILE))
+        routes.add(Route("/files/:${RouterParams.FILE_ID}", RouteContext.FILE)) // Triggered by new RCE content file links
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
 
