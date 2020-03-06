@@ -41,8 +41,7 @@ class CalendarWidget extends StatefulWidget {
   /// Called to obtain the child widget for the specified [day]
   final Widget Function(BuildContext context, DateTime day) dayBuilder;
 
-  /// (Temporary) A [PlannerFetcher] used for displaying activity dots on the calendar. This is a temporary class
-  /// and will be removed/replaced as part of MBL-13911.
+  /// A [PlannerFetcher] that handles fetching planner events from the API
   final PlannerFetcher fetcher;
 
   final VoidCallback onFilterTap;
