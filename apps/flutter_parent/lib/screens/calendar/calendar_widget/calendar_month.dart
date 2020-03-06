@@ -13,7 +13,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 
@@ -26,7 +25,6 @@ class CalendarMonth extends StatefulWidget {
   final int month;
   final DateTime selectedDay;
   final DaySelectedCallback onDaySelected;
-  final CalendarEventCount eventCount;
   final MonthExpansionNotifier monthExpansionListener;
 
   CalendarMonth({
@@ -34,7 +32,6 @@ class CalendarMonth extends StatefulWidget {
     @required this.year,
     @required this.month,
     @required this.selectedDay,
-    @required this.eventCount,
     @required this.onDaySelected,
     @required this.monthExpansionListener,
   }) : super(key: key);
@@ -76,7 +73,6 @@ class _CalendarMonthState extends State<CalendarMonth> {
       final weekWidget = CalendarWeek(
         firstDay: weekStart,
         selectedDay: widget.selectedDay,
-        eventCount: widget.eventCount,
         onDaySelected: widget.onDaySelected,
         displayDayOfWeekHeader: false,
       );

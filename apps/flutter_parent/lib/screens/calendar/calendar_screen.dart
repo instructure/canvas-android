@@ -12,45 +12,51 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
+import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
+import 'package:provider/provider.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final User _student;
-
-  CalendarScreen(this._student, {Key key}) : super(key: key);
+  CalendarScreen({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CalendarScreenState();
 }
 
 class CalendarScreenState extends State<CalendarScreen> {
+  User _student;
+  PlannerFetcher _fetcher;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
+    if (_student != _selectedStudent) {
+      // The student was changed by the user, create/reset the fetcher
+      _student = _selectedStudent;
+      if (_fetcher == null) {
+        _fetcher = PlannerFetcher(userId: _student.id);
+      } else {
+        _fetcher.reset(_student.id, []);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CalendarWidget(
-      eventCount: _sampleEventCount(),
+      fetcher: _fetcher,
+      onFilterTap: () {
+        // TODO: MBL-13920 course filter. On courses changed, reset _fetcher with new contexts.
+      },
       dayBuilder: (BuildContext context, DateTime day) {
-        return CalendarDayPlanner(widget._student, day);
+        return CalendarDayPlanner(day);
       },
     );
-  }
-
-  CalendarEventCount _sampleEventCount() {
-    final eventCount = CalendarEventCount();
-    final Random randy = Random();
-    for (int i = -60; i <= 60; i++) {
-      if (randy.nextDouble() < 0.2) {
-        final today = DateTime.now();
-        var date = DateTime(today.year, today.month, today.day).add(Duration(days: i));
-        eventCount.setCountForDate(date, 1 + randy.nextInt(3));
-      }
-    }
-    return eventCount;
   }
 }

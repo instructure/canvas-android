@@ -18,14 +18,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_event_count.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:intl/intl.dart' hide TextDirection;
+import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import 'calendar_day_of_week_headers.dart';
@@ -40,11 +41,18 @@ class CalendarWidget extends StatefulWidget {
   /// Called to obtain the child widget for the specified [day]
   final Widget Function(BuildContext context, DateTime day) dayBuilder;
 
-  /// (Temporary) A [CalendarEventCount] used for displaying activity dots on the calendar. This is a temporary class
+  /// (Temporary) A [PlannerFetcher] used for displaying activity dots on the calendar. This is a temporary class
   /// and will be removed/replaced as part of MBL-13911.
-  final CalendarEventCount eventCount;
+  final PlannerFetcher fetcher;
 
-  const CalendarWidget({Key key, @required this.dayBuilder, @required this.eventCount}) : super(key: key);
+  final VoidCallback onFilterTap;
+
+  const CalendarWidget({
+    Key key,
+    @required this.dayBuilder,
+    @required this.fetcher,
+    this.onFilterTap,
+  }) : super(key: key);
 
   @override
   CalendarWidgetState createState() => CalendarWidgetState();
@@ -202,14 +210,17 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        _calendarHeader(),
-        _calendar(),
-        Divider(height: 1),
-        Expanded(child: _dayPager()),
-      ],
+    return ChangeNotifierProvider<PlannerFetcher>(
+      create: (context) => widget.fetcher,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _calendarHeader(),
+          _calendar(),
+          Divider(height: 1),
+          Expanded(child: _dayPager()),
+        ],
+      ),
     );
   }
 
@@ -259,9 +270,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         ),
         ...a11yButtons,
         InkWell(
-          onTap: () {
-            // TODO: MBL-13920 course filter
-          },
+          onTap: widget.onFilterTap,
           child: Container(
             height: 48,
             alignment: Alignment.bottomRight,
@@ -366,7 +375,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           year: yearMonth.item1,
           month: yearMonth.item2,
           selectedDay: selectedDay,
-          eventCount: widget.eventCount,
           monthExpansionListener: _monthExpansionNotifier,
           onDaySelected: (day) {
             selectDay(day, dayPagerBehavior: CalendarPageChangeBehavior.jump);
@@ -463,7 +471,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         final weekStart = _weekStartForIndex(index);
         return CalendarWeek(
           selectedDay: selectedDay,
-          eventCount: widget.eventCount,
           firstDay: weekStart,
           displayDayOfWeekHeader: true,
           onDaySelected: (day) {
