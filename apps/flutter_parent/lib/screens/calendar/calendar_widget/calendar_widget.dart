@@ -129,7 +129,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static DateTime _dayForIndex(int index) {
     final today = DateTime.now();
     final diff = index - _todayDayIndex;
-    return DateTime(today.year, today.month, today.day).add(Duration(days: diff));
+    return DateTime(today.year, today.month, today.day).add(Duration(days: diff)).roundToMidnight();
   }
 
   // Returns the DateTime that represents the first day of the week associated with the specified week pager index
