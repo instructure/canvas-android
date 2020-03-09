@@ -174,11 +174,8 @@ class DashboardRecyclerAdapter(
             addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
 
             // Add groups
-            val rawGroups = groups.filter { group ->
-                if (group.canAccess == false) return@filter false
-                val groupCourse = mCourseMap[group.courseId] ?: return@filter true // Account groups don't have a course
-                with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true } && !group.concluded
-            }
+            val rawGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
+
             val favoriteGroups = rawGroups.filter {
                 (it.isFavorite)
             }

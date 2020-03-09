@@ -17,7 +17,9 @@
 package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.utils.isValidTerm
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Suppress("unused")
 @JvmSuppressWildcards
@@ -58,7 +60,13 @@ data class Group(
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.GROUP
 
+    fun isActive(course: Course?): Boolean {
+        if (canAccess == false) return false
+        val courseAvailable = course?.run { isValidTerm() && !accessRestrictedByDate && endDate?.before(Date()) != true }
 
+        // Either the group belongs to a course (that's available) or has no course id (Account groups)
+        return (courseAvailable == true || courseId == 0L) && !concluded
+    }
 
     enum class JoinLevel {
         /* If "parent_context_auto_join", anyone can join and will be automatically accepted */
