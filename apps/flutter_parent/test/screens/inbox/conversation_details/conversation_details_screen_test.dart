@@ -67,7 +67,10 @@ void main() {
       when(interactor.getCurrentUserId()).thenReturn('123');
 
       await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
+        TestApp(
+          ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
+          highContrast: true,
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -84,19 +87,19 @@ void main() {
         ..messages = ListBuilder([
           Message((m) => m
             ..authorId = '123'
-            ..createdAt = DateTime.now()
+            ..createdAt = DateTime.now().subtract(Duration(seconds: 5))
             ..body = 'This is message 1'
             ..attachments = ListBuilder([])
             ..participatingUserIds = ListBuilder(['123'])),
           Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime.now()
+            ..authorId = '124'
+            ..createdAt = DateTime.now().subtract(Duration(minutes: 1))
             ..body = 'This is message 2'
             ..attachments = ListBuilder([])
             ..participatingUserIds = ListBuilder(['123'])),
           Message((m) => m
-            ..authorId = '123'
-            ..createdAt = DateTime.now()
+            ..authorId = '125'
+            ..createdAt = DateTime.now().subtract(Duration(minutes: 5))
             ..body = 'This is message 3'
             ..attachments = ListBuilder([])
             ..participatingUserIds = ListBuilder(['123']))
@@ -105,13 +108,22 @@ void main() {
           BasicUser((b) => b
             ..id = '123'
             ..name = 'Myself'),
+          BasicUser((b) => b
+            ..id = '124'
+            ..name = 'Some Person'),
+          BasicUser((b) => b
+            ..id = '125'
+            ..name = 'Some Other Person'),
         ]));
 
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));
       when(interactor.getCurrentUserId()).thenReturn('123');
 
       await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
+        TestApp(
+          ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
+          highContrast: true,
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -261,7 +273,10 @@ void main() {
       when(interactor.getCurrentUserId()).thenReturn('123');
 
       await tester.pumpWidget(
-        TestApp(ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: '')),
+        TestApp(
+          ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
+          highContrast: true,
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -502,7 +517,9 @@ void main() {
       var updatedConversation = conversation.rebuild((c) => c
         ..messages = ListBuilder([
           c.messages[0],
-          c.messages[0].rebuild((m) => m..body = message2Body),
+          c.messages[0].rebuild((m) => m
+            ..body = message2Body
+            ..createdAt = DateTime.now()),
         ]));
 
       when(interactor.getConversation(any)).thenAnswer((_) => Future.value(conversation));

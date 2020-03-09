@@ -53,6 +53,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_utils.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -337,7 +338,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Settings
-      await tester.tap(find.text(AppLocalizations().settings));
+      var settingsFinder = find.text(AppLocalizations().settings);
+      await ensureVisibleByScrolling(settingsFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(settingsFinder);
       await tester.pumpAndSettle();
 
       // Test that settings screen was loaded
@@ -355,7 +359,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Help
-      await tester.tap(find.text(AppLocalizations().help));
+      var helpFinder = find.text(AppLocalizations().help);
+      await ensureVisibleByScrolling(helpFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(helpFinder);
       await tester.pumpAndSettle();
 
       expect(find.byType(HelpScreen), findsOneWidget);
@@ -392,7 +399,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Click on Sign Out
-        await tester.tap(find.text(AppLocalizations().logOut));
+        var logoutFinder = find.text(AppLocalizations().logOut);
+        await ensureVisibleByScrolling(logoutFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+        await tester.pumpAndSettle();
+        await tester.tap(logoutFinder);
         await tester.pumpAndSettle();
 
         // Should show logout confirmation text
@@ -442,7 +452,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Sign Out
-      await tester.tap(find.text(AppLocalizations().logOut));
+      var logoutFinder = find.text(AppLocalizations().logOut);
+      await ensureVisibleByScrolling(logoutFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(logoutFinder);
       await tester.pumpAndSettle();
 
       // Tap the OK button in the confirmation dialog

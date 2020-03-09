@@ -357,7 +357,8 @@ void main() {
 
       await tester.pumpWidget(
         TestApp(
-          MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+          SingleChildScrollView(
+              child: MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId)),
           highContrast: true,
         ),
       );
@@ -590,11 +591,12 @@ void main() {
 
       var firstAttachment = find.byKey(Key('attachment-0'));
       var lastAttachment = find.byKey(Key('attachment-29'));
+      var attachmentList = find.byKey(Key('message_attachment_list'));
 
       expect(firstAttachment, findsOneWidget);
       expect(lastAttachment, findsNothing);
 
-      await tester.drag(firstAttachment, Offset(-3000, 0));
+      await tester.drag(attachmentList, Offset(-5000, 0));
       await tester.pumpAndSettle();
 
       expect(firstAttachment, findsNothing);

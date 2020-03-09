@@ -23,6 +23,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_utils.dart';
 
 void main() {
   SettingsInteractor interactor;
@@ -49,6 +50,8 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays theme viewer button in debug mode', (tester) async {
     await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true));
+    await tester.pumpAndSettle();
+    await ensureVisibleByScrolling(themeViewerButton(), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
     await tester.pumpAndSettle();
     expect(themeViewerButton(), findsOneWidget);
   });
@@ -119,7 +122,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Enables high contrast mode', (tester) async {
     await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
-    
+
     var state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isHC, isFalse);
 
