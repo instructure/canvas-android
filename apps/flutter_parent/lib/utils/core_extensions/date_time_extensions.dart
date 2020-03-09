@@ -58,4 +58,17 @@ extension Format on DateTime {
   DateTime withStartOfMonth() => this == null ? null : DateTime(year, month, 1);
 
   DateTime withEndOfMonth() => this == null ? null : DateTime(year, month + 1, 0, 23, 59, 59, 999);
+
+  /// Returns this DateTime rounded to the nearest date at midnight. In other words, if the time is before noon this
+  /// will return the same date but with the time set to midnight. If the time is at noon or after noon, this will
+  /// return the following day at midnight.
+  DateTime roundToMidnight() {
+    if (this == null) {
+      return null;
+    } else if (hour >= 12) {
+      return DateTime(year, month, day + 1);
+    } else {
+      return withStartOfDay();
+    }
+  }
 }
