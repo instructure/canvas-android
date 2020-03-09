@@ -357,7 +357,8 @@ void main() {
 
       await tester.pumpWidget(
         TestApp(
-          MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+          SingleChildScrollView(
+              child: MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId)),
           highContrast: true,
         ),
       );
