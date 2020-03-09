@@ -167,7 +167,7 @@ class RouterUtilsTest : TestCase() {
 
         route = callGetInternalRoute("https://mobiledev.instructure.com/files/63383591")
         assertNotNull(route)
-        assertEquals(FileListFragment::class.java, route!!.primaryClass)
+        assertEquals(RouteContext.FILE, route!!.routeContext)
 
         route = callGetInternalRoute("https://mobiledev.instructure.com/courses/833052/files/63383591/download?verifier=12344556")
         assertNotNull(route)
