@@ -176,8 +176,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route("/files", FileListFragment::class.java).apply{ canvasContext = ApiPrefs.user }) // validRoute for FileListFragment checks for a canvasContext, which is null on deep links
         routes.add(Route("/files/folder/:${RouterParams.FOLDER_NAME}", RouteContext.FILE))
-        routes.add(Route("/files/:${RouterParams.FILE_ID}", FileListFragment::class.java)) // TODO TEST
         routes.add(Route("/files/:${RouterParams.FILE_ID}/download", RouteContext.FILE)) // trigger webview's download listener
+        routes.add(Route("/files/:${RouterParams.FILE_ID}", RouteContext.FILE)) // Triggered by new RCE content file links
 
         //Notification Preferences
         routes.add(Route("/profile/communication", RouteContext.NOTIFICATION_PREFERENCES))
