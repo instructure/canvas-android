@@ -237,6 +237,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                     child: CanvasWebView(
                       content: assignment.description,
                       emptyDescription: l10n.assignmentNoDescriptionBody,
+                      navigationTitle: widget.assignmentId,
                       fullScreen: false,
                     ),
                   ),

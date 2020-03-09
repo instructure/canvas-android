@@ -18,6 +18,8 @@ import 'dart:core';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -33,6 +35,7 @@ import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -69,6 +72,11 @@ class ParentRouter {
       '/account_notifications/$accountNotificationId';
   static final String _rootWithUrl = '/external';
   static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static final String _simpleWebView = '/internal';
+  static String simpleWebView(String url, {String authenticateUrl = 'false'}) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.authenticateUrl}=$authenticateUrl';
+  static final String _errorView = '/error';
+  static String errorView(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static void init() {
     if (!_isInitialized) {
@@ -94,6 +102,8 @@ class ParentRouter {
           handler: _courseAnnouncementDetailsHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
+      router.define(_simpleWebView, handler: _simpleWebViewHandler);
+      router.define(_errorView, handler: _errorViewHandler);
 
       // EXTERNAL
       router.define(_rootWithUrl, handler: _rootWithUrlHandler);
@@ -213,43 +223,58 @@ class ParentRouter {
     return widget;
   });
 
-  // EXTERNAL HANDLER
-  static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    final link = _prepLink(context, params[_RouterKeys.url][0]);
-
-    locator<Logger>().log('Handling url route: $link');
-    final match = router.match(link);
-    if (match == null) {
-      // No match means we don't support the link, default to the splash screen for now
-      return _rootSplashHandler.handlerFunc(context, {});
-    }
-
-    return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+  static Handler _errorViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final url = params[_RouterKeys.url][0];
+    return RouterErrorScreen(url);
   });
 
-  /**
-   *  Handles all links, preps them to be appropriate for the router
-   *
-   *  Should handle external / internal / download
-   */
-  static String _prepLink(BuildContext context, String link) {
-    // Validate the url
+  static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final url = params[_RouterKeys.url][0];
+    final authenticateUrl = params[_RouterKeys.authenticateUrl][0];
+
+    return SimpleWebViewScreen(url, url, authenticateUrl: authenticateUrl == 'true' ? true : false);
+  });
+
+  // EXTERNAL HANDLER
+
+  static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final link = params[_RouterKeys.url][0];
     Uri uri = Uri.parse(link);
-    // - validating the host, check if it matches currently logged in user
+    final path = '/${uri.pathSegments.join('/')}';
+    final match = router.match(path);
+    if (match != null) {
+      return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+    }
+
+    // We don't support the link, default to the splash screen for now
+    return _rootSplashHandler.handlerFunc(context, {});
+  });
+
+  /// Checks if the link matches any native routes and returns a RouteMatch
+  /// If the RouteMatch is null, there is no match.
+  static RouteMatch canHandleInternally(BuildContext context, String link) {
+    Uri uri = Uri.parse(link);
 
     // Determine if we can handle the url natively
-    // -formatting the url, router.matchRoute returns RouteMatchType.noMatch or not
-    // Could add query params as well, but I don't think we ever need it for route matching
     final path = '/${uri.pathSegments.join('/')}';
-    RouteMatch match = router.matchRoute(context, path);
-    if (match.matchType == RouteMatchType.noMatch) {
-      // route to SimpleWebScreen
+    final match = router.matchRoute(context, path);
 
+    return match;
+  }
+
+  /// Handles links validated by canHandleInternally
+  static String routeInternally(BuildContext context, String link, {String title = ''}) {
+    // Validate the url
+    Uri uri = Uri.parse(link);
+    final path = '/${uri.pathSegments.join('/')}';
+
+    if (ApiPrefs.getDomain().contains(uri.host)) {
+      // validate the host, check if it matches currently logged in user
+      return path;
     } else {
-      // If supported, route
-
+      // If the host doesn't match, route them to the link error page
+      return errorView(link);
     }
-    return path;
   }
 
   static void _logRoute(Map<String, List<String>> params, Widget widget) {
@@ -268,4 +293,5 @@ class _RouterKeys {
   static final domain = 'domain';
   static final authenticationProvider = 'authenticationProvider';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
+  static final authenticateUrl = 'authenticateUrl';
 }

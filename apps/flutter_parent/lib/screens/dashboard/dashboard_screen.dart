@@ -23,7 +23,6 @@ import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
@@ -351,9 +350,7 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {
-      return LoginLandingScreen();
-    }), (Route<dynamic> route) => false);
+    locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.login());
   }
 
   _navDrawerHeader(User user) => Column(

@@ -16,6 +16,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
@@ -33,8 +34,8 @@ class CanvasWebView extends StatefulWidget {
   /// The empty description to show when the provided content is blank
   final String emptyDescription;
 
-  /// The title string passed into [SimpleWebViewScreen] when navigating on a link click. If not provided, links will
-  /// load in this webview
+  /// The title string passed into [SimpleWebViewScreen] when navigating on a link click. If provided, links will
+  /// navigate within this webview
   final String navigationTitle;
 
   /// The initial height to set the webview to, not used if [fullScreen] is true
@@ -199,12 +200,16 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
   }
 
   Future<NavigationDecision> _handleNavigation(NavigationRequest request) async {
-    // TODO: Wire in routing here when it's ready
     if (widget.navigationTitle == null) return NavigationDecision.navigate;
 
     String url = await _interactor.getAuthUrl(request.url);
 
-    locator.get<QuickNav>().push(context, SimpleWebViewScreen(url, widget.navigationTitle));
+    if (ParentRouter.canHandleInternally(context, url) != null) {
+      locator.get<QuickNav>().pushRoute(context, ParentRouter.routeInternally(context, url));
+    } else {
+      launch(url, forceWebView: true, enableJavaScript: true);
+    }
+
     return NavigationDecision.prevent;
   }
 
