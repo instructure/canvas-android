@@ -121,55 +121,56 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             ),
           ],
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Divider(height: 1),
-            TextField(
-              maxLines: 1,
-              autofocus: true,
-              key: Key("FindSchoolTextField"),
-              controller: _inputController,
-              style: TextStyle(fontSize: 18),
-              keyboardType: TextInputType.url,
-              textInputAction: TextInputAction.go,
-              onSubmitted: (_) => _query.isNotEmpty ? _next(context) : null,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(16),
-                border: InputBorder.none,
-                hintText: L10n(context).domainSearchInputHint,
-                suffixIcon: _query.isEmpty
-                    ? null
-                    : IconButton(
-                        key: Key('clear-query'),
-                        icon: Icon(
-                          Icons.clear,
-                          color: ParentColors.ash,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(height: 1),
+              TextField(
+                maxLines: 1,
+                autofocus: true,
+                key: Key("FindSchoolTextField"),
+                controller: _inputController,
+                style: TextStyle(fontSize: 18),
+                keyboardType: TextInputType.url,
+                textInputAction: TextInputAction.go,
+                onSubmitted: (_) => _query.isNotEmpty ? _next(context) : null,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(16),
+                  border: InputBorder.none,
+                  hintText: L10n(context).domainSearchInputHint,
+                  suffixIcon: _query.isEmpty
+                      ? null
+                      : IconButton(
+                          key: Key('clear-query'),
+                          icon: Icon(
+                            Icons.clear,
+                            color: ParentColors.ash,
+                          ),
+                          onPressed: () {
+                            // Need to perform this post-frame due to bug while widget testing
+                            // See https://github.com/flutter/flutter/issues/17647
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              _inputController.text = '';
+                              _searchDomains('');
+                            });
+                          },
                         ),
-                        onPressed: () {
-                          // Need to perform this post-frame due to bug while widget testing
-                          // See https://github.com/flutter/flutter/issues/17647
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            _inputController.text = '';
-                            _searchDomains('');
-                          });
-                        },
-                      ),
+                ),
+                onChanged: (query) => _searchDomains(query),
               ),
-              onChanged: (query) => _searchDomains(query),
-            ),
-            SizedBox(
-              height: 2,
-              child: LinearProgressIndicator(
-                value: _loading ? null : 0,
-                backgroundColor: Colors.transparent,
+              SizedBox(
+                height: 2,
+                child: LinearProgressIndicator(
+                  value: _loading ? null : 0,
+                  backgroundColor: Colors.transparent,
+                ),
               ),
-            ),
-            Divider(height: 1),
-            Flexible(
-              flex: 10000,
-              child: ListView.separated(
+              Divider(height: 1),
+              ListView.separated(
                 shrinkWrap: true,
+                primary: false,
+                physics: NeverScrollableScrollPhysics(),
                 separatorBuilder: (context, index) => Divider(
                   height: 0,
                 ),
@@ -189,19 +190,19 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   );
                 },
               ),
-            ),
-            Divider(height: 1),
-            Center(
-              child: FlatButton(
-                key: Key('help-button'),
-                child: Text(L10n(context).domainSearchHelpLabel),
-                textTheme: ButtonTextTheme.accent,
-                onPressed: () {
-                  _showHelpDialog(context);
-                },
+              Divider(height: 1),
+              Center(
+                child: FlatButton(
+                  key: Key('help-button'),
+                  child: Text(L10n(context).domainSearchHelpLabel),
+                  textTheme: ButtonTextTheme.accent,
+                  onPressed: () {
+                    _showHelpDialog(context);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
