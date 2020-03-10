@@ -269,6 +269,14 @@ void main() {
     testWidgetsWithAccessibilityChecks('tapping calendar sets correct current page index', (tester) async {
       _setupLocator();
 
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await ApiPrefs.addLogin(login);
+      await ApiPrefs.switchLogins(login);
+
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
