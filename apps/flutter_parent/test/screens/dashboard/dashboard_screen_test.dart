@@ -41,6 +41,7 @@ import 'package:flutter_parent/screens/manage_students/manage_students_screen.da
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -269,6 +270,14 @@ void main() {
     testWidgetsWithAccessibilityChecks('tapping calendar sets correct current page index', (tester) async {
       _setupLocator();
 
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await ApiPrefs.addLogin(login);
+      await ApiPrefs.switchLogins(login);
+
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
@@ -425,11 +434,13 @@ void main() {
     testWidgets('tapping Sign Out from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
       final reminderDb = _MockReminderDb();
+      final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
 
       _setupLocator();
       final _locator = GetIt.instance;
       _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
       _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
 
       when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
@@ -719,6 +730,8 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
 }
 
 class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
 

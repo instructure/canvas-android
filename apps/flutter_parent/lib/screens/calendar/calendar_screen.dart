@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
@@ -40,9 +41,13 @@ class CalendarScreenState extends State<CalendarScreen> {
       // The student was changed by the user, create/reset the fetcher
       _student = _selectedStudent;
       if (_fetcher == null) {
-        _fetcher = PlannerFetcher(userId: _student.id);
+        _fetcher = PlannerFetcher(
+          userId: ApiPrefs.getUser().id,
+          userDomain: ApiPrefs.getDomain(),
+          observeeId: _student.id,
+        );
       } else {
-        _fetcher.reset(_student.id, []);
+        _fetcher.setObserveeId(_student.id);
       }
     }
   }
@@ -51,8 +56,10 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return CalendarWidget(
       fetcher: _fetcher,
-      onFilterTap: () {
-        // TODO: MBL-13920 course filter. On courses changed, reset _fetcher with new contexts.
+      onFilterTap: () async {
+        // TODO: MBL-13920 course filter
+        // Get currently-selected contexts with _fetcher.getContexts().
+        // On courses changed, call _fetcher.setContexts().
       },
       dayBuilder: (BuildContext context, DateTime day) {
         return CalendarDayPlanner(day);

@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
@@ -37,9 +38,12 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows loading indicator when loading', (tester) async {
       var api = MockPlannerApi();
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
 
-      PlannerFetcher fetcher = PlannerFetcher(userId: student.id);
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
         ChangeNotifierProvider<PlannerFetcher>(
@@ -58,9 +62,12 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([_createPlannerItem(contextName: 'blank')]));
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
 
-      PlannerFetcher fetcher = PlannerFetcher(userId: student.id);
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
         ChangeNotifierProvider<PlannerFetcher>(
@@ -84,9 +91,12 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
 
-      PlannerFetcher fetcher = PlannerFetcher(userId: student.id);
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
         ChangeNotifierProvider<PlannerFetcher>(
@@ -116,9 +126,12 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
 
-      PlannerFetcher fetcher = PlannerFetcher(userId: student.id);
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
         ChangeNotifierProvider<PlannerFetcher>(
@@ -147,9 +160,12 @@ void main() {
       var api = MockPlannerApi();
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => []);
 
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
 
-      PlannerFetcher fetcher = PlannerFetcher(userId: student.id);
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
         ChangeNotifierProvider<PlannerFetcher>(
@@ -191,3 +207,5 @@ PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
   ..plannableType = 'assignment');
 
 class MockPlannerApi extends Mock implements PlannerApi {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}

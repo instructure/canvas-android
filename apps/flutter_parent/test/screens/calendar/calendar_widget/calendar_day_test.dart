@@ -160,7 +160,7 @@ void main() {
 
     // Reset count and rebuild
     fetcher.nextSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
-    fetcher.reset('', []);
+    fetcher.reset();
     await tester.pumpAndSettle();
 
     // Should not show any dots
