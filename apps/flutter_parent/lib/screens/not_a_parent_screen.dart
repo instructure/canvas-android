@@ -38,7 +38,7 @@ class NotAParentScreen extends StatelessWidget {
               buttonText: L10n(context).returnToLogin,
               onButtonTap: () async {
                 await ApiPrefs.performLogout();
-                locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.login());
+                locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
               },
             ),
           ),

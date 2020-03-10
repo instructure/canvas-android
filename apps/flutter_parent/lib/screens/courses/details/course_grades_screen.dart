@@ -280,7 +280,7 @@ class _AssignmentRow extends StatelessWidget {
 
     return InkWell(
       onTap: () =>
-          locator<QuickNav>().pushRoute(context, ParentRouter.assignmentDetails(assignment.courseId, assignment.id)),
+          locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(assignment.courseId, assignment.id)),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

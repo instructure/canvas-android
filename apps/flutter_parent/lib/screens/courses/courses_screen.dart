@@ -157,7 +157,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   void _courseTapped(context, Course course) {
-    locator<QuickNav>().pushRoute(context, ParentRouter.courseDetails(course.id));
+    locator<QuickNav>().pushRoute(context, PandaRouter.courseDetails(course.id));
   }
 
   Future<void> _refresh() {

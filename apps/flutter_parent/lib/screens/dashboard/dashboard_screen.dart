@@ -332,7 +332,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    locator<QuickNav>().pushRoute(context, ParentRouter.conversations());
+    locator<QuickNav>().pushRoute(context, PandaRouter.conversations());
   }
 
   _navigateToManageStudents(context) {
@@ -344,13 +344,13 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    locator<QuickNav>().pushRoute(context, ParentRouter.help());
+    locator<QuickNav>().pushRoute(context, PandaRouter.help());
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
-    locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.login());
+    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 
   _navDrawerHeader(User user) => Column(
@@ -405,8 +405,7 @@ class DashboardState extends State<DashboardScreen> {
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
   _navDrawerSettings() => ListTile(
-      title: Text(L10n(context).settings),
-      onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.settings()));
+      title: Text(L10n(context).settings), onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.settings()));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),

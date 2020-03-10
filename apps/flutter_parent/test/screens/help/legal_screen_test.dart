@@ -94,7 +94,7 @@ void main() {
     await tester.tap(find.text(l10n.termsOfUse));
     await tester.pumpAndSettle();
 
-    verify(nav.pushRoute(any, argThat(matches(ParentRouter.termsOfUse()))));
+    verify(nav.pushRoute(any, argThat(matches(PandaRouter.termsOfUse()))));
   });
 }
 

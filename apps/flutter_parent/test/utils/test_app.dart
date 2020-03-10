@@ -82,7 +82,7 @@ class _TestAppState extends State<TestApp> {
   void initState() {
     super.initState();
     _locale = widget.locale;
-    ParentRouter.init();
+    PandaRouter.init();
     setupPlatformChannels(config: widget.platformConfig);
   }
 
@@ -106,7 +106,7 @@ class _TestAppState extends State<TestApp> {
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
           home: Material(child: widget.home),
-          onGenerateRoute: ParentRouter.router.generator,
+          onGenerateRoute: PandaRouter.router.generator,
         ),
       ),
     );

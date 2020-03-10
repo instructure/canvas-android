@@ -15,19 +15,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../service_locator.dart';
-
 class SimpleWebViewScreen extends StatefulWidget {
   final String _url;
   final String _title;
-  final bool authenticateUrl;
 
-  SimpleWebViewScreen(this._url, this._title, {this.authenticateUrl = false});
+  SimpleWebViewScreen(this._url, this._title);
 
   @override
   State<StatefulWidget> createState() => _SimpleWebViewScreenState();
@@ -35,7 +31,6 @@ class SimpleWebViewScreen extends StatefulWidget {
 
 class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
   WebViewController _controller;
-  WebViewInteractor get _interactor => locator<WebViewInteractor>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +49,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
             gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
             onWebViewCreated: (controller) async {
               _controller = controller;
-              if (widget.authenticateUrl) {
-                String url = await _interactor.getAuthUrl(widget._url);
-                controller.loadUrl(url);
-              } else {
-                controller.loadUrl(widget._url);
-              }
+              controller.loadUrl(widget._url);
             }),
       ),
     );

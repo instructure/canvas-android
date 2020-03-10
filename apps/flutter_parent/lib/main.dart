@@ -38,13 +38,12 @@ void main() {
       DbUtil.init(),
     ]);
     setupLocator();
-    ParentRouter.init();
+    PandaRouter.init();
 
     // Currently must be initialized after locator has been set up. This may change once routing is implemented.
     await NotificationUtil.init();
 
-    await OldAppMigration
-        .performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+    await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     runApp(ParentApp());
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));

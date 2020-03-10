@@ -39,7 +39,7 @@ final _logger = _MockLogger();
 
 void main() {
   setUpAll(() {
-    ParentRouter.init();
+    PandaRouter.init();
     setupTestLocator((locator) {
       locator.registerLazySingleton<Logger>(() => _logger);
     });
@@ -55,29 +55,29 @@ void main() {
 
   group('handlers', () {
     test('rootSplash returns splash screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.rootSplash());
+      final widget = _getWidgetFromRoute(PandaRouter.rootSplash());
       expect(widget, isA<SplashScreen>());
     });
 
     test('conversations returns conversations list screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.conversations());
+      final widget = _getWidgetFromRoute(PandaRouter.conversations());
       expect(widget, isA<ConversationListScreen>());
     });
 
     test('dashboard returns dashboard screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.dashboard());
+      final widget = _getWidgetFromRoute(PandaRouter.dashboard());
       expect(widget, isA<DashboardScreen>());
     });
 
     test('login returns login landing screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.login());
+      final widget = _getWidgetFromRoute(PandaRouter.login());
       expect(widget, isA<LoginLandingScreen>());
     });
 
     test('loginWeb returns web login screen', () {
       final domain = 'domain';
       final widget = _getWidgetFromRoute(
-        ParentRouter.loginWeb(domain),
+        PandaRouter.loginWeb(domain),
       ) as WebLoginScreen;
 
       expect(widget, isA<WebLoginScreen>());
@@ -88,7 +88,7 @@ void main() {
       final domain = 'domain';
       final authProvider = 'auth';
       final widget = _getWidgetFromRoute(
-        ParentRouter.loginWeb(domain, authenticationProvider: authProvider),
+        PandaRouter.loginWeb(domain, authenticationProvider: authProvider),
       ) as WebLoginScreen;
 
       expect(widget, isA<WebLoginScreen>());
@@ -97,14 +97,14 @@ void main() {
     });
 
     test('notParent returns not a parent screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.notParent());
+      final widget = _getWidgetFromRoute(PandaRouter.notParent());
       expect(widget, isA<NotAParentScreen>());
     });
 
     test('courseDetails returns course details screen', () async {
       await setupPlatformChannels();
       final widget = _getWidgetFromRoute(
-        ParentRouter.courseDetails('123'),
+        PandaRouter.courseDetails('123'),
       );
       expect(widget, isA<CourseDetailsScreen>());
     });
@@ -113,7 +113,7 @@ void main() {
       final courseId = '123';
       final assignmentId = '321';
       final widget = _getWidgetFromRoute(
-        ParentRouter.assignmentDetails(courseId, assignmentId),
+        PandaRouter.assignmentDetails(courseId, assignmentId),
       ) as AssignmentDetailsScreen;
 
       expect(widget, isA<AssignmentDetailsScreen>());
@@ -125,7 +125,7 @@ void main() {
       final courseId = '123';
       final eventId = '321';
       final widget = _getWidgetFromRoute(
-        ParentRouter.eventDetails(courseId, eventId),
+        PandaRouter.eventDetails(courseId, eventId),
       ) as EventDetailsScreen;
 
       expect(widget, isA<EventDetailsScreen>());
@@ -134,22 +134,22 @@ void main() {
     });
 
     test('help returns help screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.help());
+      final widget = _getWidgetFromRoute(PandaRouter.help());
       expect(widget, isA<HelpScreen>());
     });
 
     test('legal returns legal screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.legal());
+      final widget = _getWidgetFromRoute(PandaRouter.legal());
       expect(widget, isA<LegalScreen>());
     });
 
     test('termsOfUse returns terms of use screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.termsOfUse());
+      final widget = _getWidgetFromRoute(PandaRouter.termsOfUse());
       expect(widget, isA<TermsOfUseScreen>());
     });
 
     test('settings returns settings screen', () {
-      final widget = _getWidgetFromRoute(ParentRouter.settings());
+      final widget = _getWidgetFromRoute(PandaRouter.settings());
       expect(widget, isA<SettingsScreen>());
     });
 
@@ -157,7 +157,7 @@ void main() {
       final courseId = '123';
       final announcementId = '321';
       final widget = _getWidgetFromRoute(
-        ParentRouter.courseAnnouncementDetails(courseId, announcementId),
+        PandaRouter.courseAnnouncementDetails(courseId, announcementId),
       ) as AnnouncementDetailScreen;
 
       expect(widget, isA<AnnouncementDetailScreen>());
@@ -169,7 +169,7 @@ void main() {
     test('institutionAnnouncementDetails returns announcemnt details screen', () {
       final notificationId = '321';
       final widget = _getWidgetFromRoute(
-        ParentRouter.institutionAnnouncementDetails(notificationId),
+        PandaRouter.institutionAnnouncementDetails(notificationId),
       ) as AnnouncementDetailScreen;
 
       expect(widget, isA<AnnouncementDetailScreen>());
@@ -183,7 +183,7 @@ void main() {
     test('returns splash when the url does not match any routes', () {
       final url = 'https://test.instructure.com/not-supported';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for splash handler
       );
 
@@ -193,7 +193,7 @@ void main() {
     test('returns dashboard for https scheme', () {
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -203,7 +203,7 @@ void main() {
     test('returns dashboard for http scheme', () {
       final url = 'http://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -213,7 +213,7 @@ void main() {
     test('returns dashboard for canvas-parent scheme', () {
       final url = 'canvas-parent://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -223,7 +223,7 @@ void main() {
     test('returns dashboard for canvas-courses scheme', () {
       final url = 'canvas-courses://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -233,7 +233,7 @@ void main() {
     test('returns course details ', () {
       final url = 'https://test.instructure.com/courses/123';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for course details handler
       );
 
@@ -245,7 +245,7 @@ void main() {
       final assignmentId = '321';
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
-        ParentRouter.rootWithUrl(url),
+        PandaRouter.rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for assignment details handler
       ) as AssignmentDetailsScreen;
 
@@ -257,7 +257,7 @@ void main() {
 }
 
 Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
-  final match = ParentRouter.router.match(route);
+  final match = PandaRouter.router.match(route);
   final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
 
   if (logCount > 0) {

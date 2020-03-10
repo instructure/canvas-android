@@ -114,10 +114,10 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
         if (item.type == ScheduleItem.typeCalendar) {
-          locator<QuickNav>().pushRoute(context, ParentRouter.eventDetails(widget.model.courseId, item.id));
+          locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(widget.model.courseId, item.id));
         } else {
           locator<QuickNav>()
-              .pushRoute(context, ParentRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
+              .pushRoute(context, PandaRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
         }
       },
     );

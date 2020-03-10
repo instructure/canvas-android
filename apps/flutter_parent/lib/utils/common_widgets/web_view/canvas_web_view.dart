@@ -20,7 +20,6 @@ import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -190,7 +189,10 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     );
 
     if (widget.fullScreen) {
-      return webView;
+      return WillPopScope(
+        onWillPop: () => _handleBackPress(context),
+        child: webView,
+      );
     } else {
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: _height),
@@ -199,17 +201,18 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     }
   }
 
-  Future<NavigationDecision> _handleNavigation(NavigationRequest request) async {
-    if (widget.navigationTitle == null) return NavigationDecision.navigate;
-
-    String url = await _interactor.getAuthUrl(request.url);
-
-    if (ParentRouter.canHandleInternally(context, url) != null) {
-      locator.get<QuickNav>().pushRoute(context, ParentRouter.routeInternally(context, url));
+  Future<bool> _handleBackPress(BuildContext context) async {
+    if (await _controller?.canGoBack()) {
+      _controller?.goBack();
+      return Future.value(false);
     } else {
-      launch(url, forceWebView: true, enableJavaScript: true);
+      return Future.value(true);
     }
+  }
 
+  Future<NavigationDecision> _handleNavigation(NavigationRequest request) async {
+    // Otherwise, we'll let the router handle it
+    PandaRouter.routeInternally(context, request.url);
     return NavigationDecision.prevent;
   }
 

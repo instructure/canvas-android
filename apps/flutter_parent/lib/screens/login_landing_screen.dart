@@ -139,7 +139,7 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.rootSplash());
+                      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
@@ -189,6 +189,6 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    locator<QuickNav>().pushRoute(context, ParentRouter.domainSearch());
+    locator<QuickNav>().pushRoute(context, PandaRouter.domainSearch());
   }
 }

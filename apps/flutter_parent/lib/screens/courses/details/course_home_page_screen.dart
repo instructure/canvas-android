@@ -95,6 +95,7 @@ class _CourseHomePage extends StatelessWidget {
           content: homePage.body,
           emptyDescription: homePage.lockExplanation ?? L10n(context).noPageFound,
           horizontalPadding: 16,
+          navigationTitle: homePage.title,
           fullScreen: false,
         ),
       ),

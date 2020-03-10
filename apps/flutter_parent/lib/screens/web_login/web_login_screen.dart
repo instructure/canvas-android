@@ -113,7 +113,7 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
-        locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.rootSplash());
+        locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {

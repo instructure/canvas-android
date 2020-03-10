@@ -109,6 +109,6 @@ class RouterErrorScreen extends StatelessWidget {
   _logout(BuildContext context) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: false);
-    locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.login());
+    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 }

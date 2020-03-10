@@ -138,5 +138,5 @@ class _HelpScreenState extends State<HelpScreen> {
 
   void _showShareLove() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 
-  void _showLegal() => locator<QuickNav>().pushRoute(context, ParentRouter.legal());
+  void _showLegal() => locator<QuickNav>().pushRoute(context, PandaRouter.legal());
 }

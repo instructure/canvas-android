@@ -236,10 +236,10 @@ class __AlertsListState extends State<_AlertsList> {
     switch (alert.alertType) {
       case AlertType.courseAnnouncement:
         locator<QuickNav>().pushRoute(
-            context, ParentRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId));
+            context, PandaRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId));
         break;
       case AlertType.institutionAnnouncement:
-        locator<QuickNav>().pushRoute(context, ParentRouter.institutionAnnouncementDetails(alert.contextId));
+        locator<QuickNav>().pushRoute(context, PandaRouter.institutionAnnouncementDetails(alert.contextId));
         break;
       default:
         locator<QuickNav>().push(context, UnderConstructionScreen(showAppBar: true));

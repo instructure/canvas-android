@@ -18,6 +18,7 @@ import 'dart:core';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -36,14 +37,19 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
 /// viewed by calling `WidgetsBinding.instance.window.defaultRouteName`, though we don't have to manually do this
 /// as flutter sets this up for us.
-class ParentRouter {
+class PandaRouter {
+  static WebViewInteractor get _interactor => locator<WebViewInteractor>();
+
   static final Router router = Router();
 
   static bool _isInitialized = false;
@@ -73,10 +79,9 @@ class ParentRouter {
   static final String _rootWithUrl = '/external';
   static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _simpleWebView = '/internal';
-  static String simpleWebView(String url, {String authenticateUrl = 'false'}) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.authenticateUrl}=$authenticateUrl';
-  static final String _errorView = '/error';
-  static String errorView(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String simpleWebView(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static final String _routerError = '/error';
+  static String routerError(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static void init() {
     if (!_isInitialized) {
@@ -103,7 +108,7 @@ class ParentRouter {
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
       router.define(_simpleWebView, handler: _simpleWebViewHandler);
-      router.define(_errorView, handler: _errorViewHandler);
+      router.define(_routerError, handler: _routerErrorHandler);
 
       // EXTERNAL
       router.define(_rootWithUrl, handler: _rootWithUrlHandler);
@@ -223,16 +228,15 @@ class ParentRouter {
     return widget;
   });
 
-  static Handler _errorViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
     return RouterErrorScreen(url);
   });
 
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
-    final authenticateUrl = params[_RouterKeys.authenticateUrl][0];
 
-    return SimpleWebViewScreen(url, url, authenticateUrl: authenticateUrl == 'true' ? true : false);
+    return SimpleWebViewScreen(url, url); // TODO - do we want a different title
   });
 
   // EXTERNAL HANDLER
@@ -240,40 +244,71 @@ class ParentRouter {
   static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final link = params[_RouterKeys.url][0];
     Uri uri = Uri.parse(link);
+
+    // Determine if we can handle the url natively
     final path = '/${uri.pathSegments.join('/')}';
     final match = router.match(path);
     if (match != null) {
-      return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+      if (ApiPrefs.getDomain().contains(uri.host)) {
+        // If its a link we can handle natively and within our domain, route
+        return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+      } else {
+        // Otherwise, we want to route to the error page
+        return _routerErrorHandler.handlerFunc(context, {});
+      }
     }
 
     // We don't support the link, default to the splash screen for now
     return _rootSplashHandler.handlerFunc(context, {});
   });
 
-  /// Checks if the link matches any native routes and returns a RouteMatch
-  /// If the RouteMatch is null, there is no match.
-  static RouteMatch canHandleInternally(BuildContext context, String link) {
+  /// Simple helper method to determine if the router can handle a url
+  static bool canRouteInternally(String link) {
+    Uri uri = Uri.parse(link);
+
+    // Determine if we can handle the url natively
+    final path = '/${uri.pathSegments.join('/')}';
+    final match = router.match(path);
+    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
+    if (match != null && path != '/' && ApiPrefs.getDomain().contains(uri.host)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static final bool limitWebAccess = false; // TODO - replace after MBL-13924 is implemented
+  static Future<void> routeInternally(BuildContext context, String link) async {
     Uri uri = Uri.parse(link);
 
     // Determine if we can handle the url natively
     final path = '/${uri.pathSegments.join('/')}';
     final match = router.matchRoute(context, path);
-
-    return match;
-  }
-
-  /// Handles links validated by canHandleInternally
-  static String routeInternally(BuildContext context, String link, {String title = ''}) {
-    // Validate the url
-    Uri uri = Uri.parse(link);
-    final path = '/${uri.pathSegments.join('/')}';
-
-    if (ApiPrefs.getDomain().contains(uri.host)) {
-      // validate the host, check if it matches currently logged in user
-      return path;
+    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
+    if (match.matchType != RouteMatchType.noMatch && path != '/') {
+      if (ApiPrefs.getDomain().contains(uri.host)) {
+        // Its a match, so we can route internally
+        locator.get<QuickNav>().pushRoute(context, match.route.settings.name);
+      } else {
+        // Show an error screen for non-matching domain
+        locator.get<QuickNav>().pushRoute(context, routerError(link));
+      }
     } else {
-      // If the host doesn't match, route them to the link error page
-      return errorView(link);
+      // No native route found, let's launch the url if possible, or show an error toast
+      var canLaunchBool = await canLaunch(link);
+      if (canLaunchBool) {
+        String authUrl = await _interactor.getAuthUrl(link);
+        if (limitWebAccess) {
+          // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
+          locator.get<QuickNav>().pushRoute(context, simpleWebView(link));
+        } else {
+          launch(authUrl);
+        }
+      } else {
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(L10n(context).routerLaunchErrorMessage),
+        ));
+      }
     }
   }
 
@@ -293,5 +328,4 @@ class _RouterKeys {
   static final domain = 'domain';
   static final authenticationProvider = 'authenticationProvider';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
-  static final authenticateUrl = 'authenticateUrl';
 }

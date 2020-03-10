@@ -40,7 +40,7 @@ class LegalScreen extends StatelessWidget {
             _LegalRow(
               label: L10n(context).termsOfUse,
               icon: CanvasIcons.document,
-              onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.termsOfUse()),
+              onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.termsOfUse()),
             ),
             _LegalRow(
               label: l10n.canvasOnGithub,

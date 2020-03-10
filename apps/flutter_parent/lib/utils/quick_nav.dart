@@ -28,17 +28,17 @@ class QuickNav {
   /// Default method for pushing screens, uses material transition
   Future<T> pushRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return ParentRouter.router.navigateTo(context, route, transition: transitionType);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType);
   }
 
   Future<T> replaceRoute<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return ParentRouter.router.navigateTo(context, route, transition: transitionType, replace: true);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, replace: true);
   }
 
   Future<T> pushRouteAndClearStack<T extends Object>(BuildContext context, String route,
       {TransitionType transitionType = TransitionType.material}) {
-    return ParentRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
+    return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
   }
 
   void _logShow(Widget widget) {
