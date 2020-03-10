@@ -14,11 +14,14 @@
 
 import 'dart:async';
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/calendar_filter.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class PlannerFetcher extends ChangeNotifier {
@@ -26,12 +29,26 @@ class PlannerFetcher extends ChangeNotifier {
 
   final Map<String, bool> failedMonths = {};
 
-  List<String> contexts;
+  final String userDomain;
 
-  String userId;
+  final String userId;
 
-  PlannerFetcher({@required this.userId, this.contexts = const [], DateTime fetchFirst}) {
+  String _observeeId;
+
+  String get observeeId => _observeeId;
+
+  PlannerFetcher({DateTime fetchFirst, @required String observeeId, @required this.userDomain, @required this.userId}) {
+    this._observeeId = observeeId;
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
+  }
+
+  Future<List<String>> getContexts() async {
+    CalendarFilter calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
+      userDomain,
+      userId,
+      _observeeId,
+    );
+    return calendarFilter?.filters?.toList() ?? [];
   }
 
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) {
@@ -59,8 +76,9 @@ class PlannerFetcher extends ChangeNotifier {
       }
       notifyListeners();
       try {
+        final contexts = await getContexts();
         List<PlannerItem> items = await locator<PlannerApi>().getUserPlannerItems(
-          userId,
+          _observeeId,
           date.withStartOfDay(),
           date.withEndOfDay(),
           contexts: contexts,
@@ -86,8 +104,9 @@ class PlannerFetcher extends ChangeNotifier {
 
   _fetchMonth(DateTime date, bool refresh) async {
     try {
+      final contexts = await getContexts();
       var items = await locator<PlannerApi>().getUserPlannerItems(
-        userId,
+        _observeeId,
         date.withStartOfMonth(),
         date.withEndOfMonth(),
         contexts: contexts,
@@ -135,11 +154,24 @@ class PlannerFetcher extends ChangeNotifier {
 
   String monthKeyForYearMonth(int year, int month) => '$year-$month';
 
-  void reset(String studentId, List<String> contexts) {
+  Future<void> setContexts(List<String> contexts) async {
+    CalendarFilter filter = CalendarFilter((b) => b
+      ..userDomain = userDomain
+      ..userId = userId
+      ..observeeId = _observeeId
+      ..filters = ListBuilder(contexts));
+    await locator<CalendarFilterDb>().insertOrUpdate(filter);
+    reset();
+  }
+
+  void setObserveeId(String observeeId) {
+    this._observeeId = observeeId;
+    reset();
+  }
+
+  void reset() {
     daySnapshots.clear();
     failedMonths.clear();
-    this.contexts = contexts;
-    this.userId = studentId;
     notifyListeners();
   }
 }

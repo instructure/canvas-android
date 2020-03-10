@@ -49,6 +49,7 @@ import 'package:flutter_parent/utils/common_widgets/error_report/error_report_in
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -84,6 +85,7 @@ void setupLocator() {
 
   // DB helpers
   locator.registerLazySingleton<Database>(() => DbUtil.instance);
+  locator.registerLazySingleton<CalendarFilterDb>(() => CalendarFilterDb());
   locator.registerLazySingleton<ReminderDb>(() => ReminderDb());
 
   // Interactors

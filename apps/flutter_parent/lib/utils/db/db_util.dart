@@ -12,19 +12,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:sqflite/sqflite.dart';
 
 List<OnDatabaseCreateFn> _creators = [
   ReminderDb.createTable,
+  CalendarFilterDb.createTable,
 ];
 
 List<OnDatabaseVersionChangeFn> _updaters = [
-  // Add references to updaters here
+  CalendarFilterDb.updateTable,
 ];
 
 class DbUtil {
-  static const dbVersion = 1;
+  static const dbVersion = 2;
   static const dbName = 'canvas_parent.db';
 
   static Database _db;

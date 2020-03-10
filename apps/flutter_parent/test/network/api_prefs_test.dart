@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -133,11 +134,13 @@ void main() {
     expect(ApiPrefs.getCurrentLoginUuid(), null);
   });
 
-  test('perform logout clears out reminder', () async {
+  test('perform logout clears out reminders and calendar filters', () async {
     final reminderDb = _MockReminderDb();
+    final calendarFilterDb = _MockCalendarFilterDb();
     final notificationUtil = _MockNotificationUtil();
     setupTestLocator((locator) {
       locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
       locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
     });
 
@@ -160,6 +163,7 @@ void main() {
     verify(reminderDb.getAllForUser(login.domain, login.user.id));
     verify(notificationUtil.deleteNotifications([reminder.id]));
     verify(reminderDb.deleteAllForUser(login.domain, login.user.id));
+    verify(calendarFilterDb.deleteAllForUser(login.domain, login.user.id));
   });
 
   test('setting user updates stored user', () async {
@@ -335,5 +339,7 @@ abstract class _Rebuildable {
 class _MockApp extends Mock implements _Rebuildable {}
 
 class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}

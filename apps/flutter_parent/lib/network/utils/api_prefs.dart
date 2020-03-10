@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -89,6 +90,9 @@ class ApiPrefs {
       final reminderIds = reminders.map((it) => it.id).toList();
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
       await reminderDb.deleteAllForUser(getDomain(), getUser().id);
+
+      // Remove calendar filters
+      locator<CalendarFilterDb>().deleteAllForUser(getDomain(), getUser().id);
 
       // Remove saved Login data
       await removeLoginByUuid(getCurrentLoginUuid());
