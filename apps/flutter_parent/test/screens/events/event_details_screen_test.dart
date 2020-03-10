@@ -59,7 +59,7 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<EventDetailsInteractor>(() => interactor);
-    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
   });
 
   tearDown(() {

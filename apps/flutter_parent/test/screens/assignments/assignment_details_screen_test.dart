@@ -80,7 +80,7 @@ void main() {
   setupTestLocator((locator) {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
     locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
-    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Logger>(() => Logger());
   });

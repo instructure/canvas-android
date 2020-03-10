@@ -48,7 +48,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// viewed by calling `WidgetsBinding.instance.window.defaultRouteName`, though we don't have to manually do this
 /// as flutter sets this up for us.
 class PandaRouter {
-  static WebViewInteractor get _interactor => locator<WebViewInteractor>();
+  static WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
   static final Router router = Router();
 
@@ -77,7 +77,6 @@ class PandaRouter {
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
   static final String _rootWithUrl = '/external';
-  static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _simpleWebView = '/internal';
   static String simpleWebView(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _routerError = '/error';

@@ -40,7 +40,7 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
-    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {

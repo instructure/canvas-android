@@ -18,7 +18,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/parent_router.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
@@ -32,10 +31,6 @@ class CanvasWebView extends StatefulWidget {
 
   /// The empty description to show when the provided content is blank
   final String emptyDescription;
-
-  /// The title string passed into [SimpleWebViewScreen] when navigating on a link click. If provided, links will
-  /// navigate within this webview
-  final String navigationTitle;
 
   /// The initial height to set the webview to, not used if [fullScreen] is true
   final double initialHeight;
@@ -55,7 +50,6 @@ class CanvasWebView extends StatefulWidget {
     Key key,
     this.content,
     this.emptyDescription,
-    this.navigationTitle,
     this.initialHeight = 1,
     this.horizontalPadding = 0,
     this.authContentIfNecessary = true,
@@ -74,7 +68,7 @@ class _CanvasWebViewState extends State<CanvasWebView> {
   String _content;
   Future<String> _contentFuture;
 
-  WebViewInteractor get _interactor => locator<WebViewInteractor>();
+  WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
   @override
   void initState() {
@@ -100,7 +94,6 @@ class _CanvasWebViewState extends State<CanvasWebView> {
         return _ResizingWebView(
           content: snapshot.data,
           emptyDescription: widget.emptyDescription,
-          navigationTitle: widget.navigationTitle,
           initialHeight: widget.initialHeight,
           horizontalPadding: widget.horizontalPadding,
           fullScreen: widget.fullScreen,
@@ -113,7 +106,6 @@ class _CanvasWebViewState extends State<CanvasWebView> {
 class _ResizingWebView extends StatefulWidget {
   final String content;
   final String emptyDescription;
-  final String navigationTitle;
 
   final double initialHeight;
   final double horizontalPadding;
@@ -124,7 +116,6 @@ class _ResizingWebView extends StatefulWidget {
     Key key,
     this.content,
     this.emptyDescription,
-    this.navigationTitle,
     this.initialHeight,
     this.horizontalPadding,
     this.fullScreen,
@@ -139,7 +130,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
   String _content;
   WebViewController _controller;
 
-  WebViewInteractor get _interactor => locator<WebViewInteractor>();
+  WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
   @override
   void initState() {
@@ -189,24 +180,12 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     );
 
     if (widget.fullScreen) {
-      return WillPopScope(
-        onWillPop: () => _handleBackPress(context),
-        child: webView,
-      );
+      return webView;
     } else {
       return ConstrainedBox(
         constraints: BoxConstraints(maxHeight: _height),
         child: webView,
       );
-    }
-  }
-
-  Future<bool> _handleBackPress(BuildContext context) async {
-    if (await _controller?.canGoBack()) {
-      _controller?.goBack();
-      return Future.value(false);
-    } else {
-      return Future.value(true);
     }
   }
 

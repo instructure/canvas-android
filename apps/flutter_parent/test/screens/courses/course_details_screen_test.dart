@@ -55,7 +55,7 @@ void main() {
     _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
     _locator
         .registerFactory<CreateConversationInteractor>(() => convoInteractor ?? _MockCreateConversationInteractor());
-    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    _locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
 
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
     _locator.registerLazySingleton<Logger>(() => Logger());

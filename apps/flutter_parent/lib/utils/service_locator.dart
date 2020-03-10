@@ -108,7 +108,7 @@ void setupLocator() {
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
-  locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+  locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
 
   // Veneers and mockable dependencies
   locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());

@@ -21,7 +21,7 @@ import '../../platform_config.dart';
 import '../../test_app.dart';
 
 void main() {
-  setupTestLocator((locator) => locator.registerFactory<WebViewInteractor>(() => WebViewInteractor()));
+  setupTestLocator((locator) => locator.registerFactory<WebContentInteractor>(() => WebContentInteractor()));
   final config = PlatformConfig(initWebview: true);
 
   testWidgetsWithAccessibilityChecks('shows title in app bar', (tester) async {

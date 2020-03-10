@@ -40,7 +40,7 @@ void main() {
     _locator.reset();
 
     _locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor ?? _MockAnnouncementDetailsInteractor());
-    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    _locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
   }
 
   group('Loading', () {

@@ -16,7 +16,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class WebViewInteractor {
+class WebContentInteractor {
   /// See [assets/html/html_wrapper.html] for usage of these strings
   final _onLtiToolButtonPressedChannel = 'OnLtiToolButtonPressed';
   final _onLtiToolButtonPressedFunction = 'onLtiToolButtonPressed';

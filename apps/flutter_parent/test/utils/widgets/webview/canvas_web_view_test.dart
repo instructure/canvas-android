@@ -27,7 +27,7 @@ import '../../test_app.dart';
 void main() {
   final interactor = _MockWebViewInteractor();
 
-  setupTestLocator((locator) => locator.registerFactory<WebViewInteractor>(() => interactor));
+  setupTestLocator((locator) => locator.registerFactory<WebContentInteractor>(() => interactor));
 
   setUp(() async {
     reset(interactor);
@@ -155,9 +155,9 @@ void main() {
   });
 }
 
-class _MockWebViewInteractor extends Mock implements WebViewInteractor {
+class _MockWebViewInteractor extends Mock implements WebContentInteractor {
   @override
   JavascriptChannel ltiToolPressedChannel(handler) {
-    return WebViewInteractor().ltiToolPressedChannel(handler);
+    return WebContentInteractor().ltiToolPressedChannel(handler);
   }
 }

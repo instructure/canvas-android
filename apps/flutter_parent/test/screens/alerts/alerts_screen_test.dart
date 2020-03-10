@@ -52,7 +52,7 @@ void main() {
     _locator.registerFactory<AlertsInteractor>(() => interactor ?? _MockAlertsInteractor());
     _locator.registerFactory<AnnouncementDetailsInteractor>(
         () => announcementDetailsInteractor ?? _MockAnnouncementDetailsInteractor());
-    _locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    _locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
     _locator.registerFactory<QuickNav>(() => QuickNav());
     _locator.registerLazySingleton<Logger>(() => Logger());

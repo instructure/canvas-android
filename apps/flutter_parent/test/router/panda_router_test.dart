@@ -183,7 +183,7 @@ void main() {
     test('returns splash when the url does not match any routes', () {
       final url = 'https://test.instructure.com/not-supported';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for splash handler
       );
 
@@ -193,7 +193,7 @@ void main() {
     test('returns dashboard for https scheme', () {
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -203,7 +203,7 @@ void main() {
     test('returns dashboard for http scheme', () {
       final url = 'http://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -213,7 +213,7 @@ void main() {
     test('returns dashboard for canvas-parent scheme', () {
       final url = 'canvas-parent://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -223,7 +223,7 @@ void main() {
     test('returns dashboard for canvas-courses scheme', () {
       final url = 'canvas-courses://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for conversations handler
       );
 
@@ -233,7 +233,7 @@ void main() {
     test('returns course details ', () {
       final url = 'https://test.instructure.com/courses/123';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for course details handler
       );
 
@@ -245,7 +245,7 @@ void main() {
       final assignmentId = '321';
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
-        PandaRouter.rootWithUrl(url),
+        _rootWithUrl(url),
         logCount: 2, // Once for root url handling, another for assignment details handler
       ) as AssignmentDetailsScreen;
 
@@ -255,6 +255,8 @@ void main() {
     });
   });
 }
+
+String _rootWithUrl(String url) => '/external?url=${Uri.encodeQueryComponent(url)}';
 
 Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
   final match = PandaRouter.router.match(route);

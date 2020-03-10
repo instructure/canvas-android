@@ -38,7 +38,6 @@ class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with Automa
       builder: (context, model, _) => CanvasWebView(
         content: widget._syllabus,
         horizontalPadding: 10,
-        navigationTitle: widget._courseName,
       ),
     );
   }
