@@ -12,12 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
+import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../utils/accessibility_utils.dart';
@@ -677,6 +679,129 @@ void main() {
     final monthWidget = tester.widget<CalendarMonth>(find.byType(CalendarMonth, skipOffstage: false));
     expect(monthWidget.year, 2000);
     expect(monthWidget.month, 1);
+  });
+
+  testWidgetsWithAccessibilityChecks('disables expand/collapse button for insufficient height', (tester) async {
+    final calendarHeight = 200;
+    final screenHeight = tester.binding.window.physicalSize.height / tester.binding.window.devicePixelRatio;
+    final calendar = CalendarWidget(
+      dayBuilder: (_, __) => Container(),
+      fetcher: _FakeFetcher(),
+    );
+    await tester.pumpWidget(
+      TestApp(
+        Column(
+          children: <Widget>[
+            SizedBox(height: screenHeight - calendarHeight),
+            Expanded(child: calendar),
+          ],
+        ),
+        highContrast: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Should not show dropdown arrow
+    expect(find.byType(DropdownArrow), findsNothing);
+
+    // Tap expand button
+    await tester.tap(find.byKey(Key('expand-button')));
+    await tester.pumpAndSettle();
+
+    // Should not show month
+    expect(find.byType(CalendarMonth), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('disables swipe-to-expand for insufficient height', (tester) async {
+    final calendarHeight = 200;
+    final screenHeight = tester.binding.window.physicalSize.height / tester.binding.window.devicePixelRatio;
+    final calendar = CalendarWidget(
+      dayBuilder: (_, __) => Container(),
+      fetcher: _FakeFetcher(),
+    );
+    await tester.pumpWidget(
+      TestApp(
+        Column(
+          children: <Widget>[
+            SizedBox(height: screenHeight - calendarHeight),
+            Expanded(child: calendar),
+          ],
+        ),
+        highContrast: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Fling down on week to try expand
+    await tester.fling(find.byType(CalendarWeek), Offset(0, 50), 300);
+    await tester.pumpAndSettle();
+
+    // Should not show month
+    expect(find.byType(CalendarMonth), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('collapses month if height becomes insufficient', (tester) async {
+    // Due to how we must capture height changes, when the month view is open and the height becomes insufficient
+    // there will be at least one build pass where the month layout overflows its parent. This is acceptable while the
+    // month view is animating its collapse into the week view. However, because such overflows will fail the test,
+    // we must intercept and ignore those specific errors
+    FlutterExceptionHandler onError = FlutterError.onError;
+    FlutterError.onError = (details) {
+      var exception = details.exception;
+      if (exception is FlutterError && exception?.message?.startsWith('A RenderFlex overflowed') == true) {
+        // Intentionally left blank
+      } else {
+        onError(details);
+      }
+    };
+
+    try {
+      double calendarHeight = 600;
+      final screenHeight = tester.binding.window.physicalSize.height / tester.binding.window.devicePixelRatio;
+
+      final calendar = CalendarWidget(
+        dayBuilder: (_, __) => Container(),
+        fetcher: _FakeFetcher(),
+      );
+
+      StateSetter stateSetter;
+
+      await tester.pumpWidget(
+        TestApp(
+          StatefulBuilder(
+            builder: (context, setState) {
+              stateSetter = setState;
+              return Column(
+                children: <Widget>[
+                  SizedBox(height: screenHeight - calendarHeight),
+                  Expanded(child: OverflowBox(maxHeight: calendarHeight, child: calendar)),
+                ],
+              );
+            },
+          ),
+          highContrast: true,
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Tap expand button
+      await tester.tap(find.byKey(Key('expand-button')));
+      await tester.pumpAndSettle();
+
+      // Should show month
+      expect(find.byType(CalendarMonth), findsOneWidget);
+
+      // Shrink calendar height and rebuild
+      calendarHeight = 200;
+      stateSetter(() {});
+      await tester.pumpAndSettle();
+
+      // Should no longer show month
+      expect(find.byType(CalendarMonth), findsNothing);
+    } finally {
+      // Restore exception handler
+      FlutterError.onError = onError;
+    }
   });
 }
 

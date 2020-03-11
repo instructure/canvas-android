@@ -98,6 +98,10 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   // Notifier that tracks the current month collapse/expand progress
   MonthExpansionNotifier _monthExpansionNotifier = MonthExpansionNotifier(0.0);
 
+  // Whether the calendar can be expanded to show the month view. This will only be false in cases where there
+  // is not enough vertical space available to display the entire month
+  bool _canExpandMonth = true;
+
   // Whether the month view is expanded, either partially or fully. This is updated by _monthExpansionNotifier
   // when the expansion value changes to or from zero.
   bool _isMonthExpanded = false;
@@ -215,9 +219,20 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _calendarHeader(),
-          _calendar(),
-          Divider(height: 1),
-          Expanded(child: _dayPager()),
+          Expanded(
+            child: Stack(
+              children: [
+                _heightMonitor(),
+                Column(
+                  children: <Widget>[
+                    _calendar(),
+                    Divider(height: 1),
+                    Expanded(child: _dayPager()),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -239,7 +254,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       children: <Widget>[
         InkWell(
           key: Key('expand-button'),
-          onTap: _toggleExpanded,
+          onTap: _canExpandMonth ? _toggleExpanded : null,
           child: Semantics(
             label: L10n(context).selectedMonthLabel(DateFormat.yMMMM().format(selectedDay)),
             onTapHint: _isMonthExpanded ? L10n(context).monthTapCollapseHint : L10n(context).monthTapExpandHint,
@@ -254,11 +269,15 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
                     children: <Widget>[
                       Text(DateFormat.MMMM().format(selectedDay), style: Theme.of(context).textTheme.display1),
                       SizedBox(width: 10),
-                      ValueListenableBuilder(
-                        builder: (BuildContext context, value, Widget child) {
-                          return DropdownArrow(specificProgress: value, color: ParentTheme.of(context).onSurfaceColor);
-                        },
-                        valueListenable: _monthExpansionNotifier,
+                      Visibility(
+                        visible: _canExpandMonth,
+                        child: ValueListenableBuilder(
+                          builder: (BuildContext context, value, Widget child) {
+                            return DropdownArrow(
+                                specificProgress: value, color: ParentTheme.of(context).onSurfaceColor);
+                          },
+                          valueListenable: _monthExpansionNotifier,
+                        ),
                       ),
                     ],
                   ),
@@ -288,17 +307,21 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   Widget _calendar() {
     return GestureDetector(
-      onVerticalDragUpdate: (details) {
-        var expansionDiff = details.primaryDelta / _monthExpansionHeight;
-        _monthExpansionNotifier.value = (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
-      },
-      onVerticalDragEnd: (details) {
-        _monthFlingAnimController?.stop();
-        if (_isMonthExpanded) {
-          _monthFlingAnimController.value = _monthExpansionNotifier.value;
-          _monthFlingAnimController.fling(velocity: details.primaryVelocity / _monthExpansionHeight);
-        }
-      },
+      onVerticalDragUpdate: _canExpandMonth
+          ? (details) {
+              var expansionDiff = details.primaryDelta / _monthExpansionHeight;
+              _monthExpansionNotifier.value = (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
+            }
+          : null,
+      onVerticalDragEnd: _canExpandMonth
+          ? (details) {
+              _monthFlingAnimController?.stop();
+              if (_isMonthExpanded) {
+                _monthFlingAnimController.value = _monthExpansionNotifier.value;
+                _monthFlingAnimController.fling(velocity: details.primaryVelocity / _monthExpansionHeight);
+              }
+            }
+          : null,
       child: ValueListenableBuilder(
         child: Stack(
           children: <Widget>[
@@ -559,6 +582,25 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         },
       ),
     ];
+  }
+
+  /// Builds a widget that monitors the available vertical space available for a fully-expanded month view. If the
+  /// space ever becomes insufficient, the month view will be collapsed and disabled.
+  Widget _heightMonitor() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool expansionAllowed = constraints.maxHeight > CalendarMonth.maxHeight;
+        if (expansionAllowed != _canExpandMonth) {
+          if (!expansionAllowed && _isMonthExpanded) _toggleExpanded();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _canExpandMonth = expansionAllowed;
+            });
+          });
+        }
+        return Container(width: double.infinity, height: double.infinity);
+      },
+    );
   }
 
   _toggleExpanded() {
