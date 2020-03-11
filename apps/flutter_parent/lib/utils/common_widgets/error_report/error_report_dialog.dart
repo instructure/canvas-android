@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:package_info/package_info.dart';
@@ -31,11 +32,18 @@ class ErrorReportDialog extends StatefulWidget {
   final String subject;
   final ErrorReportSeverity severity;
   final FlutterErrorDetails error;
-  final bool includeEmail; // Used when shown during login, so that users can get responses from created service tickets.
+  final bool includeEmail; // Used when shown during login, so that users can get responses from created service tickets
   final bool hideSeverityPicker;
 
-  const ErrorReportDialog._internal(this.title, this.subject, this.severity, this.includeEmail, this.hideSeverityPicker, this.error, {Key key})
-      : super(key: key);
+  const ErrorReportDialog._internal(
+    this.title,
+    this.subject,
+    this.severity,
+    this.includeEmail,
+    this.hideSeverityPicker,
+    this.error, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _ErrorReportDialogState createState() => _ErrorReportDialogState();
@@ -91,28 +99,33 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      title: Text(widget.title),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(L10n(context).cancel.toUpperCase()),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        FlatButton(
-          child: Text(L10n(context).sendReport.toUpperCase()),
-          onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              await _submitReport();
-              Navigator.of(context).pop();
-            } else {
-              // Start auto validating since they've tried to submit once
-              setState(() => _autoValidate = true);
-            }
-          },
+    return FullScreenScrollContainer(
+      horizontalPadding: 0,
+      children: <Widget>[
+        AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          title: Text(widget.title),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(L10n(context).cancel.toUpperCase()),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            FlatButton(
+              child: Text(L10n(context).sendReport.toUpperCase()),
+              onPressed: () async {
+                if (_formKey.currentState.validate()) {
+                  await _submitReport();
+                  Navigator.of(context).pop();
+                } else {
+                  // Start auto validating since they've tried to submit once
+                  setState(() => _autoValidate = true);
+                }
+              },
+            ),
+          ],
+          content: _content(context),
         ),
       ],
-      content: _content(context),
     );
   }
 
@@ -158,26 +171,27 @@ class _ErrorReportDialogState extends State<ErrorReportDialog> {
                 onChanged: (text) => _description = text,
               ),
               SizedBox(height: 16),
-              if(!widget.hideSeverityPicker) Text(L10n(context).reportProblemSeverity),
-              if(!widget.hideSeverityPicker) Container(
-                color: ParentTheme.of(context).nearSurfaceColor,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                child: DropdownButton<_SeverityOption>(
-                  itemHeight: null,
-                  isExpanded: true,
-                  underline: SizedBox(),
-                  onChanged: (option) async {
-                    setState(() => _selectedSeverity = option.severity);
-                    // Clear focus here, as it can go back to the text forms if they were previously selected
-                    // NO!  This messes up dpav-nav
-                    //_focusScopeNode.requestFocus(FocusNode());
-                  },
-                  value: severityOptions.firstWhere((option) => option.severity == _selectedSeverity),
-                  items: severityOptions.map((option) {
-                    return DropdownMenuItem<_SeverityOption>(value: option, child: Text(option.label));
-                  }).toList(),
+              if (!widget.hideSeverityPicker) Text(L10n(context).reportProblemSeverity),
+              if (!widget.hideSeverityPicker)
+                Container(
+                  color: ParentTheme.of(context).nearSurfaceColor,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: DropdownButton<_SeverityOption>(
+                    itemHeight: null,
+                    isExpanded: true,
+                    underline: SizedBox(),
+                    onChanged: (option) async {
+                      setState(() => _selectedSeverity = option.severity);
+                      // Clear focus here, as it can go back to the text forms if they were previously selected
+                      // NO!  This messes up dpad-nav
+                      //_focusScopeNode.requestFocus(FocusNode());
+                    },
+                    value: severityOptions.firstWhere((option) => option.severity == _selectedSeverity),
+                    items: severityOptions.map((option) {
+                      return DropdownMenuItem<_SeverityOption>(value: option, child: Text(option.label));
+                    }).toList(),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
