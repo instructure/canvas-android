@@ -33,6 +33,7 @@ import 'package:mockito/mockito.dart';
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_utils.dart';
 
 void main() {
   //String studentName = 'Student Name';
@@ -828,9 +829,19 @@ void main() {
       expect(role, findsOneWidget);
     }
 
+    _makeTileVisible(String withText) async {
+      var finder = find.ancestor(of: find.text(withText), matching: find.byType(ListTile));
+      await ensureVisibleByScrolling(finder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+    }
+
+    await _makeTileVisible(l10n.enrollmentTypeStudent);
     _expectRole('User 0', l10n.enrollmentTypeStudent);
+    await _makeTileVisible(l10n.enrollmentTypeTeacher);
     _expectRole('User 1', l10n.enrollmentTypeTeacher);
+    await _makeTileVisible(l10n.enrollmentTypeTA);
     _expectRole('User 2', l10n.enrollmentTypeTA);
+    await _makeTileVisible(l10n.enrollmentTypeObserver);
     _expectRole('User 3', l10n.enrollmentTypeObserver);
 
     await tester.tapAt(Offset(0, 0));

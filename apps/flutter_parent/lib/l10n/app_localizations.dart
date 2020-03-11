@@ -231,6 +231,21 @@ class AppLocalizations {
         desc: 'Screen reader label used for the points possible for an assignment, quiz, etc.',
       );
 
+  String get noEventsTitle => Intl.message(
+        'No Events Today!',
+        desc: 'Title displayed when there are no calendar events for the current day',
+      );
+
+  String get noEventsMessage => Intl.message(
+        'It looks like a great day to rest, relax, and recharge.',
+        desc: 'Message displayed when there are no calendar events for the current day',
+      );
+
+  String get errorLoadingEvents => Intl.message(
+        'There was an error loading your student\'s calendar',
+        desc: 'Message displayed when calendar events could not be loaded for the current student',
+      );
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');

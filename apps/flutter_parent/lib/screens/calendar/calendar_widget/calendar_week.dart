@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 
 import 'calendar_day.dart';
 import 'calendar_day_of_week_headers.dart';
-import 'calendar_event_count.dart';
 
 class CalendarWeek extends StatelessWidget {
   static double weekHeight = DayOfWeekHeaders.headerHeight + CalendarDay.dayHeight;
@@ -24,7 +23,6 @@ class CalendarWeek extends StatelessWidget {
   final DateTime firstDay;
   final DateTime selectedDay;
   final DaySelectedCallback onDaySelected;
-  final CalendarEventCount eventCount;
   final bool displayDayOfWeekHeader;
   final List<DateTime> days;
 
@@ -32,7 +30,6 @@ class CalendarWeek extends StatelessWidget {
     Key key,
     @required this.firstDay,
     @required this.selectedDay,
-    @required this.eventCount,
     @required this.onDaySelected,
     @required this.displayDayOfWeekHeader,
   })  : days = generateDays(firstDay),
@@ -59,7 +56,6 @@ class CalendarWeek extends StatelessWidget {
                     date: day,
                     selectedDay: selectedDay,
                     onDaySelected: onDaySelected,
-                    eventCount: eventCount,
                   ),
                 )
             ],

@@ -132,11 +132,8 @@ class EditFavoritesRecyclerAdapter(
             val validCourses = rawCourses.filter { !it.accessRestrictedByDate && !it.isInvited() }
             addOrUpdateAllItems(ItemType.COURSE_HEADER,validCourses)
             val courseMap = rawCourses.associateBy { it.id }
-            val groups = rawGroups.filter { group ->
-                if (group.canAccess == false) return@filter false
-                val groupCourse = courseMap[group.courseId] ?: return@filter true // Account groups don't have a course
-                with(groupCourse) { isValidTerm() && !accessRestrictedByDate && endDate?.before(java.util.Date()) != true }
-            }
+            val groups = rawGroups.filter { group -> group.isActive(courseMap[group.courseId]) }
+
             addOrUpdateAllItems(ItemType.GROUP_HEADER,groups)
             notifyDataSetChanged()
             isAllPagesLoaded = true

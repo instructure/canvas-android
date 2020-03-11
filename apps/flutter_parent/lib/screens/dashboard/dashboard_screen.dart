@@ -122,11 +122,11 @@ class DashboardState extends State<DashboardScreen> {
       _students = users;
 
       if (_selectedStudent == null && _students.isNotEmpty) {
-        setState(() async {
+        setState(() {
           _selectedStudentNotifier.value = _students.first;
           _selectedStudent = _students.first;
           ApiPrefs.setCurrentStudent(_students.first);
-          await _interactor.getAlertCountNotifier().update(_selectedStudent.id);
+          _interactor.getAlertCountNotifier().update(_selectedStudent.id);
         });
       }
 
@@ -317,7 +317,7 @@ class DashboardState extends State<DashboardScreen> {
 
     switch (_currentIndex) {
       case 1:
-        return CalendarScreen(_selectedStudentNotifier.value);
+        return CalendarScreen();
         break;
       case 2:
         return AlertsScreen();

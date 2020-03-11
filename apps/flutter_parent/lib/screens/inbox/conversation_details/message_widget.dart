@@ -131,6 +131,7 @@ class MessageWidget extends StatelessWidget {
       height: 108,
       padding: EdgeInsets.only(top: 12),
       child: ListView.separated(
+        key: Key('message_attachment_list'),
         shrinkWrap: true,
         itemCount: attachments.length,
         scrollDirection: Axis.horizontal,

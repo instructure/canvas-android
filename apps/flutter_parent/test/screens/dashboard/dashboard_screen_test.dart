@@ -41,6 +41,7 @@ import 'package:flutter_parent/screens/manage_students/manage_students_screen.da
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -53,6 +54,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_utils.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -268,12 +270,22 @@ void main() {
     testWidgetsWithAccessibilityChecks('tapping calendar sets correct current page index', (tester) async {
       _setupLocator();
 
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await ApiPrefs.addLogin(login);
+      await ApiPrefs.switchLogins(login);
+
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
       // Navigate to Calendar
       await tester.tap(find.text(AppLocalizations().calendarLabel));
-      await tester.pump();
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
 
       expect(find.byType(CalendarScreen), findsOneWidget);
     });
@@ -335,7 +347,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Settings
-      await tester.tap(find.text(AppLocalizations().settings));
+      var settingsFinder = find.text(AppLocalizations().settings);
+      await ensureVisibleByScrolling(settingsFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(settingsFinder);
       await tester.pumpAndSettle();
 
       // Test that settings screen was loaded
@@ -353,7 +368,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Help
-      await tester.tap(find.text(AppLocalizations().help));
+      var helpFinder = find.text(AppLocalizations().help);
+      await ensureVisibleByScrolling(helpFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(helpFinder);
       await tester.pumpAndSettle();
 
       expect(find.byType(HelpScreen), findsOneWidget);
@@ -390,7 +408,10 @@ void main() {
         await tester.pumpAndSettle();
 
         // Click on Sign Out
-        await tester.tap(find.text(AppLocalizations().logOut));
+        var logoutFinder = find.text(AppLocalizations().logOut);
+        await ensureVisibleByScrolling(logoutFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+        await tester.pumpAndSettle();
+        await tester.tap(logoutFinder);
         await tester.pumpAndSettle();
 
         // Should show logout confirmation text
@@ -413,11 +434,13 @@ void main() {
     testWidgets('tapping Sign Out from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
       final reminderDb = _MockReminderDb();
+      final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
 
       _setupLocator();
       final _locator = GetIt.instance;
       _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
       _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
 
       when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
@@ -440,7 +463,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Click on Sign Out
-      await tester.tap(find.text(AppLocalizations().logOut));
+      var logoutFinder = find.text(AppLocalizations().logOut);
+      await ensureVisibleByScrolling(logoutFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(logoutFinder);
       await tester.pumpAndSettle();
 
       // Tap the OK button in the confirmation dialog
@@ -704,6 +730,8 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
 }
 
 class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
 

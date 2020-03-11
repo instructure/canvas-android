@@ -223,4 +223,33 @@ void main() {
       expect(DateTime(2000, 1, 9).isWeekend(), isFalse); // Sunday
     });
   });
+
+  group('roundToMidnight', () {
+    test('returns same date if already midnight', () {
+      final date = DateTime(2000, 1, 12);
+      final actual = date.roundToMidnight();
+      expect(actual, date);
+    });
+
+    test('returns same date if hour is less than 12', () {
+      final date = DateTime(2000, 1, 12, 7);
+      final expected = DateTime(2000, 1, 12);
+      final actual = date.roundToMidnight();
+      expect(actual, expected);
+    });
+
+    test('returns next day if hour is 12', () {
+      final date = DateTime(2000, 1, 12, 12);
+      final expected = DateTime(2000, 1, 13);
+      final actual = date.roundToMidnight();
+      expect(actual, expected);
+    });
+
+    test('returns next day if hour is greater than 12', () {
+      final date = DateTime(2000, 1, 12, 23);
+      final expected = DateTime(2000, 1, 13);
+      final actual = date.roundToMidnight();
+      expect(actual, expected);
+    });
+  });
 }

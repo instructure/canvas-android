@@ -14,29 +14,42 @@
 
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
+import '../courses/course_summary_screen_test.dart';
 
 void main() {
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows loading indicator when loading', (tester) async {
       var api = MockPlannerApi();
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
+
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
-        CalendarDayPlanner(student, DateTime.now()),
+        ChangeNotifierProvider<PlannerFetcher>(
+          create: (_) => fetcher,
+          child: CalendarDayPlanner(DateTime.now()),
+        ),
         highContrast: true,
       ));
       await tester.pump();
@@ -49,10 +62,18 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([_createPlannerItem(contextName: 'blank')]));
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
+
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
-        CalendarDayPlanner(student, DateTime.now()),
+        ChangeNotifierProvider<PlannerFetcher>(
+          create: (_) => fetcher,
+          child: CalendarDayPlanner(DateTime.now()),
+        ),
         highContrast: true,
       ));
       await tester.pump();
@@ -70,22 +91,30 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
+
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
-        CalendarDayPlanner(student, dateTime),
+        ChangeNotifierProvider<PlannerFetcher>(
+          create: (_) => fetcher,
+          child: CalendarDayPlanner(dateTime),
+        ),
         highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
 
-      verify(api.getUserPlannerItems(student.id, dateTime, dateTime.add(Duration(days: 1)), forceRefresh: true))
-          .called(1);
+      verify(api.getUserPlannerItems(student.id, any, any, contexts: [], forceRefresh: false));
 
       completer.completeError('Error');
       await tester.pumpAndSettle();
 
       expect(find.byType(ErrorPandaWidget), findsOneWidget);
+      expect(find.text(l10n.errorLoadingEvents), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows empty panda view when we have no events', (tester) async {
@@ -97,17 +126,24 @@ void main() {
       when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => completer.future);
 
-      setupTestLocator((locator) => locator.registerLazySingleton<PlannerApi>(() => api));
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
+
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
 
       await tester.pumpWidget(TestApp(
-        CalendarDayPlanner(student, dateTime),
+        ChangeNotifierProvider<PlannerFetcher>(
+          create: (_) => fetcher,
+          child: CalendarDayPlanner(dateTime),
+        ),
         highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
 
-      verify(api.getUserPlannerItems(student.id, dateTime, dateTime.add(Duration(days: 1)), forceRefresh: true))
-          .called(1);
+      verify(api.getUserPlannerItems(student.id, any, any, contexts: [], forceRefresh: false)).called(1);
 
       completer.complete(<PlannerItem>[]);
       await tester.pumpAndSettle();
@@ -117,8 +153,44 @@ void main() {
   });
 
   group('Interaction', () {
-    // TODO
-//    testWidgetsWithAccessibilityChecks('pull to refresh refreshes list', (tester) async {});
+    testWidgetsWithAccessibilityChecks('pull to refresh refreshes list', (tester) async {
+      var student = CanvasModelTestUtils.mockUser(name: 'Panda');
+      var dateTime = DateTime.now();
+
+      var api = MockPlannerApi();
+      when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => []);
+
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<PlannerApi>(() => api);
+        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      });
+
+      PlannerFetcher fetcher = PlannerFetcher(userId: '', userDomain: '', observeeId: student.id);
+
+      await tester.pumpWidget(TestApp(
+        ChangeNotifierProvider<PlannerFetcher>(
+          create: (_) => fetcher,
+          child: CalendarDayPlanner(dateTime),
+        ),
+        highContrast: true,
+      ));
+      await tester.pumpAndSettle();
+
+      // Empty state
+      expect(find.byType(CalendarDayList), findsNothing);
+      expect(find.byType(EmptyPandaWidget), findsOneWidget);
+
+      when(api.getUserPlannerItems(any, any, any, forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) async => [_createPlannerItem(contextName: 'blank')]);
+
+      // PTR
+      await tester.drag(find.byType(RefreshIndicator), Offset(0, 300));
+      await tester.pumpAndSettle();
+
+      // Should now show list
+      expect(find.byType(EmptyPandaWidget), findsNothing);
+      expect(find.byType(CalendarDayList), findsOneWidget);
+    });
   });
 }
 
@@ -130,7 +202,10 @@ PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
   ..courseId = ''
   ..plannable = _createPlannable().toBuilder()
   ..contextType = ''
+  ..plannableDate = DateTime.now()
   ..contextName = contextName ?? ''
   ..plannableType = 'assignment');
 
 class MockPlannerApi extends Mock implements PlannerApi {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}

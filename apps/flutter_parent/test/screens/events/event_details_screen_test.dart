@@ -33,6 +33,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_utils.dart';
 
 void main() {
   // Setup
@@ -335,6 +336,8 @@ void main() {
       when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
 
       // Tap on switch to open date picker
+      await ensureVisibleByScrolling(find.byType(Switch), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
@@ -372,6 +375,8 @@ void main() {
       when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
 
       // Tap on switch to open date picker
+      await ensureVisibleByScrolling(find.byType(Switch), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
@@ -407,6 +412,8 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => null);
 
+      await ensureVisibleByScrolling(find.byType(Switch), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
 
@@ -440,6 +447,8 @@ void main() {
     await tester.pump(); // Let the webview future finish
 
     expect(find.text(l10n.assignmentDescriptionLabel), findsOneWidget);
+    await ensureVisibleByScrolling(find.byType(WebView), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+    await tester.pumpAndSettle();
     expect(find.byType(WebView), findsOneWidget);
   });
 }

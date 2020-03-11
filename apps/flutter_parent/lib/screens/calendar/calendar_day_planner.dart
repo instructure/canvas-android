@@ -14,67 +14,57 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
-import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
+import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:provider/provider.dart';
 
 class CalendarDayPlanner extends StatefulWidget {
   final DateTime _day;
-  final User _student;
 
-  CalendarDayPlanner(this._student, this._day);
+  CalendarDayPlanner(this._day);
 
   @override
   State<StatefulWidget> createState() => CalendarDayPlannerState();
 }
 
 class CalendarDayPlannerState extends State<CalendarDayPlanner> {
-  Future<List<PlannerItem>> _eventsFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _eventsFuture = locator
-        .get<PlannerApi>()
-        .getUserPlannerItems(widget._student.id, widget._day, widget._day.add(Duration(days: 1)), forceRefresh: true);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _eventsFuture,
-        builder: (BuildContext context, AsyncSnapshot<List<PlannerItem>> snapshot) {
-          Widget body;
-          if (snapshot.hasError) {
-            body = ErrorPandaWidget('There was an error', () {});
-          } else if (!snapshot.hasData) {
-            body = LoadingIndicator();
+    return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
+      selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day),
+      builder: (_, snapshot, __) {
+        Widget body;
+        if (snapshot.hasError) {
+          body = ErrorPandaWidget(L10n(context).errorLoadingEvents, _refresh);
+        } else if (!snapshot.hasData) {
+          body = LoadingIndicator();
+        } else {
+          if (snapshot.data.isEmpty) {
+            body = EmptyPandaWidget(
+              svgPath: 'assets/svg/panda-no-events.svg',
+              title: L10n(context).noEventsTitle,
+              subtitle: L10n(context).noEventsMessage,
+              header: SizedBox(height: 32),
+            );
           } else {
-            if (snapshot.data.isEmpty) {
-              body = EmptyPandaWidget(title: 'No events for this day', subtitle: 'Get some real events n00b');
-            } else {
-              body = CalendarDayList(snapshot.data);
-            }
+            body = CalendarDayList(snapshot.data);
           }
+        }
 
-          return RefreshIndicator(
-            child: body,
-            onRefresh: () {
-              // TODO:
-              return Future.value([]);
-//              setState(() {
-////                _eventsFuture = PlannerApi().getUserPlannerItems(widget._student.id, day, forceRefresh: true);
-//              });
-//              return _eventsFuture;
-            },
-          );
-        });
+        return RefreshIndicator(
+          child: body,
+          onRefresh: _refresh,
+        );
+      },
+    );
   }
+
+  Future<void> _refresh() => Provider.of<PlannerFetcher>(context).refreshItemsForDate(widget._day);
 }
 
 class CalendarDayList extends StatelessWidget {

@@ -83,11 +83,6 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setOnContextualToolbarLifecycleListener(this)
-
-        ViewStyler.themeActionBar(this, supportActionBar, ThemePrefs.primaryColor)
-
-        findViewById<View>(R.id.pspdf__activity_thumbnail_bar)?.setBackgroundColor(ThemePrefs.brandColor)
-        findViewById<View>(R.id.pspdf__activity_title_overlay)?.setBackgroundColor(ThemePrefs.brandColor)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {

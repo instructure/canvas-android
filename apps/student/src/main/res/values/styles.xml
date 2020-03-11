@@ -38,9 +38,9 @@
     </style>
 
     <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/canvasRed</item>
-        <item name="colorAccent">@color/canvasRed</item>
-        <item name="colorPrimaryDark">@color/canvasRed</item>
+        <item name="colorPrimary">@color/annotationToolbarBackground</item>
+        <item name="colorAccent">@color/annotationToolbarBackground</item>
+        <item name="colorPrimaryDark">@color/annotationToolbarBackground</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
