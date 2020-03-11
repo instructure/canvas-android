@@ -76,7 +76,7 @@ class PandaRouter {
       '/courses/$courseId/discussion_topics/$announcementId';
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
-  static final String _rootWithUrl = '/external';
+  static final String _rootWithExternalUrl = '/external';
   static final String _simpleWebView = '/internal';
   static String simpleWebView(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _routerError = '/error';
@@ -110,7 +110,7 @@ class PandaRouter {
       router.define(_routerError, handler: _routerErrorHandler);
 
       // EXTERNAL
-      router.define(_rootWithUrl, handler: _rootWithUrlHandler);
+      router.define(_rootWithExternalUrl, handler: _rootWithExternalUrlHandler);
     }
   }
 
@@ -163,7 +163,6 @@ class PandaRouter {
     return widget;
   });
 
-  // INTERNAL HANDLER
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var widget = CourseDetailsScreen(params[_RouterKeys.courseId][0]);
     _logRoute(params, widget);
@@ -238,19 +237,19 @@ class PandaRouter {
     return SimpleWebViewScreen(url, url); // TODO - do we want a different title
   });
 
-  // EXTERNAL HANDLER
-
-  static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+  /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
+  static Handler _rootWithExternalUrlHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final link = params[_RouterKeys.url][0];
-    Uri uri = Uri.parse(link);
+    final urlRouteWrapper = getRouteWrapper(link);
 
-    // Determine if we can handle the url natively
-    final path = '/${uri.pathSegments.join('/')}';
-    final match = router.match(path);
-    if (match != null) {
-      if (ApiPrefs.getDomain().contains(uri.host)) {
+    locator<Logger>().log('Attempting to route EXTERNAL url: $link');
+
+    if (urlRouteWrapper.appRouteMatch != null) {
+      if (urlRouteWrapper.validHost) {
         // If its a link we can handle natively and within our domain, route
-        return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
+            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
       } else {
         // Otherwise, we want to route to the error page
         return _routerErrorHandler.handlerFunc(context, {});
@@ -261,33 +260,17 @@ class PandaRouter {
     return _rootSplashHandler.handlerFunc(context, {});
   });
 
-  /// Simple helper method to determine if the router can handle a url
-  static bool canRouteInternally(String link) {
-    Uri uri = Uri.parse(link);
-
-    // Determine if we can handle the url natively
-    final path = '/${uri.pathSegments.join('/')}';
-    final match = router.match(path);
-    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
-    if (match != null && path != '/' && ApiPrefs.getDomain().contains(uri.host)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  static final bool limitWebAccess = false; // TODO - replace after MBL-13924 is implemented
+  /// Used to handle urls and links clicked within web content
   static Future<void> routeInternally(BuildContext context, String link) async {
-    Uri uri = Uri.parse(link);
+    final urlRouteWrapper = getRouteWrapper(link);
 
-    // Determine if we can handle the url natively
-    final path = '/${uri.pathSegments.join('/')}';
-    final match = router.matchRoute(context, path);
+    locator<Logger>().log('Attempting to route INTERNAL url: $link');
+
     // Check to see if the route can be handled internally, isn't to root, and matches our current domain
-    if (match.matchType != RouteMatchType.noMatch && path != '/') {
-      if (ApiPrefs.getDomain().contains(uri.host)) {
+    if (urlRouteWrapper.appRouteMatch != null) {
+      if (urlRouteWrapper.validHost) {
         // Its a match, so we can route internally
-        locator.get<QuickNav>().pushRoute(context, match.route.settings.name);
+        locator.get<QuickNav>().pushRoute(context, urlRouteWrapper.path);
       } else {
         // Show an error screen for non-matching domain
         locator.get<QuickNav>().pushRoute(context, routerError(link));
@@ -311,6 +294,25 @@ class PandaRouter {
     }
   }
 
+  static final bool limitWebAccess = false; // TODO - replace after MBL-13924 is implemented
+
+  /// Simple helper method to determine if the router can handle a url
+  /// returns a RouteWrapper
+  /// _RouteWrapper.appRouteMatch will be null when there is no match
+  static _UrlRouteWrapper getRouteWrapper(String link) {
+    Uri uri = Uri.parse(link);
+
+    // Determine if we can handle the url natively
+    final path = '/${uri.pathSegments.join('/')}';
+    final match = router.match(path);
+    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
+    if (match != null && path != '/' && ApiPrefs.getDomain().contains(uri.host)) {
+      return _UrlRouteWrapper(path, true, match);
+    } else {
+      return _UrlRouteWrapper(path, false, null);
+    }
+  }
+
   static void _logRoute(Map<String, List<String>> params, Widget widget) {
     final message =
         'Pushing widget: ${widget.runtimeType.toString()} ${params.isNotEmpty ? 'with params: $params' : ''}';
@@ -318,6 +320,7 @@ class PandaRouter {
   }
 }
 
+/// Simple helper class to keep route keys/params consistently named
 class _RouterKeys {
   static final courseId = 'courseId';
   static final assignmentId = 'assignmentId';
@@ -327,4 +330,13 @@ class _RouterKeys {
   static final domain = 'domain';
   static final authenticationProvider = 'authenticationProvider';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
+}
+
+/// Simple helper class to manage the repeated data extracted from a link to be routed
+class _UrlRouteWrapper {
+  final String path;
+  final bool validHost;
+  final AppRouteMatch appRouteMatch;
+
+  _UrlRouteWrapper(this.path, this.validHost, this.appRouteMatch);
 }

@@ -72,9 +72,10 @@ class RouterErrorScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
               child: FlatButton(
                 onPressed: () {
-                  _logoutDialog(context);
+                  _switchUsers(context);
                 },
-                child: Text(L10n(context).logOut, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
+                child:
+                    Text(L10n(context).switchUsers, style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),
                 shape: RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(4.0),
                   side: BorderSide(color: ParentColors.tiara),
@@ -85,30 +86,9 @@ class RouterErrorScreen extends StatelessWidget {
     );
   }
 
-  _logoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: Text(L10n(context).logoutConfirmation),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            FlatButton(
-              child: Text(MaterialLocalizations.of(context).okButtonLabel),
-              onPressed: () => _logout(context),
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  _logout(BuildContext context) async {
-    ParentTheme.of(context).studentIndex = 0;
-    await ApiPrefs.performLogout(switchingLogins: false);
+  _switchUsers(BuildContext context) async {
+    ParentTheme.of(context).studentIndex = 0; // TODO - Test this, do we need it here?
+    await ApiPrefs.performLogout(switchingLogins: true);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 }
