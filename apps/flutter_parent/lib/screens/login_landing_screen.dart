@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -67,9 +68,15 @@ class LoginLandingScreen extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: <Widget>[
-              _helpRequestButton(context),
-              Expanded(child: _body(context)),
-              SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
+              Expanded(
+                child: FullScreenScrollContainer(
+                  children: <Widget>[
+                    _helpRequestButton(context),
+                    Expanded(child: _body(context)),
+                    SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
+                  ],
+                ),
+              ),
               _previousLogins(context),
             ],
           ),
