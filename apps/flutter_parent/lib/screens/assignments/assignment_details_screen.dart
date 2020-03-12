@@ -103,7 +103,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           children: [
             Text(L10n(context).assignmentDetailsTitle),
             if (snapshot.hasData)
-              Text(snapshot.data.course?.name ?? '', style: Theme.of(context).primaryTextTheme.caption),
+              Text(snapshot.data.course?.name ?? '',
+                  style: Theme.of(context).primaryTextTheme.caption, key: Key("assignment_details_coursename")),
           ],
         ),
       );
@@ -154,21 +155,22 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             titleStyle: textTheme.display1,
             child: Row(
               children: <Widget>[
-                Text(
-                  l10n.assignmentTotalPoints(points),
-                  style: textTheme.caption,
-                  semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
-                ),
+                Text(l10n.assignmentTotalPoints(points),
+                    style: textTheme.caption,
+                    semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
+                    key: Key("assignment_details_total_points")),
                 if (showStatus) SizedBox(width: 16),
                 if (showStatus) Icon(submitted ? Icons.check_circle : Icons.do_not_disturb, color: submittedColor),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
                   Text(
-                    !submitted
-                        ? l10n.assignmentNotSubmittedLabel
-                        : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
-                    style: textTheme.caption.copyWith(color: submittedColor),
-                  ),
+                      !submitted
+                          ? l10n.assignmentNotSubmittedLabel
+                          : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                      style: textTheme.caption.copyWith(
+                        color: submittedColor,
+                      ),
+                      key: Key("assignment_details_status")),
               ],
             ),
           ),
@@ -176,7 +178,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             Divider(),
             ..._rowTile(
               title: l10n.assignmentDueLabel,
-              child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate, style: textTheme.subhead),
+              child: Text(_dateFormat(assignment?.dueAt?.toLocal()) ?? l10n.noDueDate,
+                  style: textTheme.subhead, key: Key("assignment_details_due_date")),
             ),
           ],
           GradeCell.forSubmission(context, assignment, submission),

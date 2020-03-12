@@ -20,6 +20,9 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:test/test.dart';
 
 import 'driver_seed_utils.dart';
+import 'pages/assignment_details_page.dart';
+import 'pages/course_grades_page.dart';
+import 'pages/dashboard_page.dart';
 
 void main() {
   FlutterDriver driver;
@@ -36,7 +39,7 @@ void main() {
     }
   });
 
-  test('Grades E2E', () async {
+  test('Grades+Assignments E2E', () async {
     // Wait for seeding to complete
     var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
 
@@ -49,45 +52,45 @@ void main() {
       seedContext.getNamedObject<Assignment>("assignment4")
     ];
 
-    await driver.waitFor(find.byType("DashboardScreen"), timeout: Duration(seconds: 5));
-
-    await driver.tap(find.text(course.name));
-
     // Assignment-specific data
     var expectedStatuses = ["missing", "not submitted", "submitted", "submitted"];
     var expectedGrades = ["-", "-", "-", "19"];
 
-    // We're now on the assignments/grades list.  Verify that each assignment is present.
-    for (int i = 0; i < assignments.length; i++) {
-      var a = assignments[i];
-      //print("assignment: $a");
-      await driver.scrollIntoView(find.byValueKey("assignment_${a.id}_row"));
+    // apparently this is important
+    await DashboardPage.waitForRender(driver);
 
-      // Verify assignment name
-      var assignmentName = await driver.getText(find.byValueKey("assignment_${a.id}_name"));
-      //print("assignment name text = $assignmentName");
-      expect(assignmentName, a.name, reason: "Expected assignment name to be ${a.name}");
+    // Verify that we are showing the correct grade for the course
+    await DashboardPage.verifyCourse(driver, course, grade: "95%");
 
-      // Verify assignment status
-      var assignmentStatus = await driver.getText(find.byValueKey("assignment_${a.id}_status"));
-      expect(assignmentStatus.toLowerCase(), expectedStatuses[i].toLowerCase(),
-          reason: "Expected status to be ${expectedStatuses[i]}");
+    // Select our course
+    await DashboardPage.selectCourse(driver, course); // Why wouldn't swipe-to-refresh work instead of the above?
 
-      // Verify assignment grade
-      var assignmentGrade = await driver.getText(find.byValueKey("assignment_${a.id}_grade"));
-      //print("assignment grade text = $assignmentGrade");
-      expect(assignmentGrade.contains(a.pointsPossible.toInt().toString()), true,
-          reason: "Expected grade to contain ${a.pointsPossible.toInt()}");
-      expect(assignmentGrade.contains(expectedGrades[i]), true,
-          reason: "Expected grade to contain ${expectedGrades[i]}");
-    }
+    // We're now on the assignments/grades list.
 
     // Make sure that our total grade is correct
-    var totalGradeFinder = find.byValueKey("total_grade");
-    await driver.scrollIntoView(totalGradeFinder);
-    var totalGrade = await driver.getText(totalGradeFinder);
-    expect(totalGrade.contains("95"), true, reason: "Total grade should be 95");
+    await CourseGradesPage.verifyTotalGradeContains(driver, "95");
 
-    await Future.delayed(Duration(seconds: 3));
+    // Verify that each assignment is present.
+    for (int i = 0; i < assignments.length; i++) {
+      var a = assignments[i];
+      await CourseGradesPage.verifyAssignment(driver, a, grade: expectedGrades[i], status: expectedStatuses[i]);
+    }
+
+    // For each assignment, open the assignment details page and verify its correctness
+    await CourseGradesPage.selectAssignment(driver, assignments[0]);
+    await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignments[0]);
+    await driver.tap(find.pageBack());
+
+    await CourseGradesPage.selectAssignment(driver, assignments[1]);
+    await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignments[1]);
+    await driver.tap(find.pageBack());
+
+    await CourseGradesPage.selectAssignment(driver, assignments[2]);
+    await AssignmentDetailsPage.validateSubmittedAssignment(driver, assignments[2]);
+    await driver.tap(find.pageBack());
+
+    await CourseGradesPage.selectAssignment(driver, assignments[3]);
+    await AssignmentDetailsPage.validateGradedAssignment(driver, assignments[3], "19");
+    await driver.tap(find.pageBack());
   }, timeout: Timeout(Duration(minutes: 1)));
 }

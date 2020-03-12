@@ -33,6 +33,9 @@ class DriverSeedUtils {
       await Future.delayed(const Duration(seconds: 1));
       seedContext = await (_getSeedContext(driver));
     }
+
+    // Throw in a delay to allow rendering to complete
+    await Future.delayed(Duration(seconds: 2));
     return seedContext;
   }
 }

@@ -26,9 +26,12 @@ class AssignmentSeedApi {
   static Future<Assignment> createAssignment(String courseId,
       {double pointsPossible = 20, DateTime dueAt = null, bool published = true}) async {
     if (dueAt == null) dueAt = DateTime.now().add(Duration(days: 1)).toUtc();
-    final assignmentName = faker.food.dish() + ' ' + faker.randomGenerator.integer(100, min: 1).toString();
+    final dish = faker.food.dish();
+    final assignmentName = dish + ' ' + faker.randomGenerator.integer(100, min: 1).toString();
+    final assignmentDescription = "Let's have some $dish!";
     final assignmentCreateWrapper = CreateAssignmentWrapper((b) => b
       ..assignment.name = assignmentName
+      ..assignment.description = assignmentDescription
       ..assignment.courseId = courseId
       ..assignment.dueAt = dueAt
       ..assignment.published = published

@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 import 'package:test/test.dart';
 
 import 'driver_seed_utils.dart';
+import 'pages/dashboard_page.dart';
 
 void main() {
   FlutterDriver driver;
@@ -48,39 +49,22 @@ void main() {
     var courses = [seedContext.getNamedObject<Course>("course1"), seedContext.getNamedObject<Course>("course2")];
     var parent = seedContext.getNamedObject<SeededUser>("parent");
 
-    await driver.waitFor(find.byType("DashboardScreen"), timeout: Duration(seconds: 5));
+    await DashboardPage.waitForRender(driver);
 
-    // Verify that our course names, codes and grades are listed
-    await courses.forEach((course) async {
-      var actualName = await driver.getText(find.byValueKey("${course.courseCode}_name"));
-      expect(actualName, course.name);
-      var actualCode = await driver.getText(find.byValueKey("${course.courseCode}_code"));
-      expect(actualCode, course.courseCode);
-      var actualGrade = await driver.getText(find.byValueKey("${course.courseCode}_grade"));
-      expect(actualGrade, "No Grade"); // AppLocalizations().noGrade would pull in dart:ui
-    });
+    await DashboardPage.verifyCourses(driver, courses);
 
     // Verify that first student is showing
-    await driver.waitFor(find.text(students[0].shortName));
+    await DashboardPage.verifyStudentDisplayed(driver, students[0]);
+    //await driver.waitFor(find.text(students[0].shortName));
 
-    // Let's open the student list expansion
-    await driver.tap(find.byValueKey('student_expansion_touch_target'));
+    // Switch students
+    await DashboardPage.changeStudent(driver, students[1]);
 
-    // Verify that each of our students are on the student list
-    await students.forEach((student) async {
-      var actualName = await driver.getText(find.byValueKey("${student.shortName}_text"));
-      expect(actualName, student.shortName);
-    });
-
-    // Now select the second student (which should close the student list expansion)
-    await driver.tap(find.byValueKey("${students[1].shortName}_text"));
-    await Future.delayed(Duration(seconds: 2)); // Wait for animation to complete.
-
-    // And make sure that the second student is now displayed
-    await driver.waitFor(find.text(students[1].shortName));
+    // Verify that the second student is showing
+    await DashboardPage.verifyStudentDisplayed(driver, students[1]);
 
     // Now let's make sure that the drawer opens
-    await driver.tap(find.byValueKey("drawer_menu"));
+    await DashboardPage.openNavDrawer(driver);
 
     // And the name of our parent is displayed
     await driver.waitFor(find.text(parent.name));
