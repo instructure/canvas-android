@@ -35,7 +35,7 @@ class UserSeedApi {
   static const authCodeChannel = const MethodChannel("GET_AUTH_CODE");
 
   static Future<SeededUser> createUser() async {
-    var url = ApiPrefs.baseSeedingUrl + _createUserEndpoint;
+    var url = baseSeedingUrl + _createUserEndpoint;
 
     var lastName = faker.person.lastName();
     var firstName = faker.person.firstName();

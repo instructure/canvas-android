@@ -196,8 +196,10 @@ Dio canvasDio({
       .dio;
 }
 
+const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
+
 // Convenience method that returns a [Dio] instance for data-seeding
-Dio seedingDio({String baseUrl = ApiPrefs.baseSeedingUrl}) {
+Dio seedingDio({String baseUrl = baseSeedingUrl}) {
   return DioConfig(
       baseUrl: baseUrl,
       baseHeaders: ApiPrefs.getHeaderMap(

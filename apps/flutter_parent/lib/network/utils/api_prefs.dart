@@ -255,6 +255,4 @@ class ApiPrefs {
     if (studentJson == null || studentJson.isEmpty) return null;
     return deserialize<User>(json.decode(studentJson));
   }
-
-  static const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
 }
