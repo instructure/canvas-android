@@ -18,6 +18,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 
 import 'private_consts.dart';
 
@@ -77,6 +78,9 @@ class DioConfig {
 
     // Create Dio instance and add interceptors
     final dio = Dio(options);
+
+    // Authentication refresh interceptor
+    dio.interceptors.add(AuthenticationInterceptor(dio));
 
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
