@@ -246,6 +246,9 @@ class AppLocalizations {
         desc: 'Message displayed when calendar events could not be loaded for the current student',
       );
 
+  String get calendarTapToFavoriteDesc => Intl.message('Tap to favorite the courses you want to see on the Calendar.',
+      desc: 'Description text on calendar filter screen.');
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
