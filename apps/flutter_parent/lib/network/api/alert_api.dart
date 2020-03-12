@@ -27,8 +27,11 @@ class AlertsApi {
     return fetchList(dio.get('users/self/observer_alerts/$studentId'), depaginateWith: dio);
   }
 
-  Future<Alert> updateAlertWorkflow(String alertId, String workflowState) async {
-    return fetch(canvasDio().put('users/self/observer_alerts/$alertId/$workflowState'));
+  Future<Alert> updateAlertWorkflow(String studentId, String alertId, String workflowState) async {
+    final config = DioConfig.canvas();
+    // Read/dismissed data has changed and makes the cache stale
+    config.clearCache(path: 'users/self/observer_alerts/$studentId');
+    return fetch(config.dio.put('users/self/observer_alerts/$alertId/$workflowState'));
   }
 
   // Always force a refresh when retrieving this data

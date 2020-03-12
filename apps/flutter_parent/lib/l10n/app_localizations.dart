@@ -798,6 +798,11 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
+  String get dismissAlert => Intl.message(
+        'dismiss',
+        desc: 'Accessibility label to dismiss an alert',
+      );
+
   String get courseAnnouncement => Intl.message(
         'Course Announcement',
         desc: 'Title for alerts when there is a course announcement',
