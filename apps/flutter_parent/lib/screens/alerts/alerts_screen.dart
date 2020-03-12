@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensions.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';

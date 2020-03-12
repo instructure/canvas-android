@@ -14,7 +14,9 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -29,16 +31,36 @@ import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
 import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/veneers/flutter_launch_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
 
+import '../utils/accessibility_utils.dart';
+import '../utils/canvas_model_utils.dart';
+import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
 final _logger = _MockLogger();
 
 void main() {
-  setUpAll(() {
+  final String _domain = 'https://test.instructure.com';
+  final login = Login((b) => b
+    ..domain = _domain
+    ..accessToken = 'token'
+    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+  final _mockNav = _MockNav();
+  final _mockWebContentInteractor = _MockWebContentInteractor();
+  final _mockLauncher = _MockLauncher();
+  final _mockSnackbar = _MockSnackbar();
+
+  setUpAll(() async {
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
     PandaRouter.init();
     setupTestLocator((locator) {
       locator.registerLazySingleton<Logger>(() => _logger);
@@ -177,9 +199,27 @@ void main() {
       expect(widget.announcementId, notificationId);
       expect(widget.announcementType, AnnouncementType.INSTITUTION);
     });
+
+    test('RouterErrorScreen returns RouterErrorScreen', () {
+      final url = 'https://test.instructure.com/blah-blah-blah';
+      final widget = _getWidgetFromRoute(
+        PandaRouter.routerError(url),
+      ) as RouterErrorScreen;
+
+      expect(widget, isA<RouterErrorScreen>());
+    });
+
+    test('RouterErrorScreen returns RouterErrorScreen', () {
+      final url = 'https://test.instructure.com/conversations';
+      final widget = _getWidgetFromRoute(
+        PandaRouter.simpleWebView(url),
+      ) as SimpleWebViewScreen;
+
+      expect(widget, isA<SimpleWebViewScreen>());
+    });
   });
 
-  group('url handler', () {
+  group('external url handler', () {
     test('returns splash when the url does not match any routes', () {
       final url = 'https://test.instructure.com/not-supported';
       final widget = _getWidgetFromRoute(
@@ -253,6 +293,125 @@ void main() {
       expect(widget.courseId, courseId);
       expect(widget.assignmentId, assignmentId);
     });
+
+    test('returns router error screen for mismatched domain with valid route', () {
+      final courseId = '123';
+      final assignmentId = '321';
+      final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
+      final widget = _getWidgetFromRoute(
+        _rootWithUrl(url),
+        logCount: 2,
+      ) as RouterErrorScreen;
+
+      expect(widget, isA<RouterErrorScreen>());
+    });
+  });
+
+  group('internal url handler', () {
+    testWidgetsWithAccessibilityChecks('returns assignment details', (tester) async {
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<Logger>(() => _logger);
+        locator.registerLazySingleton<QuickNav>(() => _mockNav);
+        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
+        locator.registerLazySingleton<FlutterLaunchVeneer>(() => FlutterLaunchVeneer());
+      });
+
+      final courseId = '123';
+      final assignmentId = '321';
+      final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
+      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
+
+      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_mockNav.pushRoute(any, PandaRouter.assignmentDetails(courseId, assignmentId)));
+    });
+
+    testWidgetsWithAccessibilityChecks('returns router error screen for mismatched domain with valid route',
+        (tester) async {
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<Logger>(() => _logger);
+        locator.registerLazySingleton<QuickNav>(() => _mockNav);
+        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
+        locator.registerLazySingleton<FlutterLaunchVeneer>(() => FlutterLaunchVeneer());
+      });
+      final courseId = '123';
+      final assignmentId = '321';
+      final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
+      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
+
+      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_mockNav.pushRoute(any, PandaRouter.routerError(url)));
+    });
+
+    testWidgetsWithAccessibilityChecks('launches url for route without match', (tester) async {
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<Logger>(() => _logger);
+        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
+        locator.registerLazySingleton<FlutterLaunchVeneer>(() => _mockLauncher);
+      });
+      final url = 'https://test.instructure.com/courses/1567973/pages/key-test';
+      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
+      when(_mockLauncher.launch(url)).thenAnswer((_) => Future.value(true));
+      when(_mockWebContentInteractor.getAuthUrl(url)).thenAnswer((_) => Future.value(url));
+
+      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
+
+      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(
+        _mockLauncher.launch(url),
+      ).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows snackbar error for canLaunch false', (tester) async {
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<Logger>(() => _logger);
+        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
+        locator.registerLazySingleton<FlutterLaunchVeneer>(() => _mockLauncher);
+        locator.registerLazySingleton<FlutterSnackbarVeneer>(() => _mockSnackbar);
+      });
+      final url = 'https://test.instructure.com/brokenurl';
+      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(false));
+
+      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
+
+      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_mockSnackbar.showSnackBar(any, 'An error occurred when trying to display this link'));
+    });
+
+//     Todo once MBL-13924 is done
+//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
+//    });
+  });
+
+  group('internal url handler', () {
+    test('returns valid UrlRouteWrapper', () {
+      final path = '/courses/1567973';
+      final url = '$_domain$path';
+      final routeWrapper = PandaRouter.getRouteWrapper(url);
+
+      assert(routeWrapper.path == path);
+      assert(routeWrapper.validHost);
+      assert(routeWrapper.appRouteMatch != null);
+    });
+
+    test('returns UrlRouteWrapper with validHost false and null routematch', () {
+      final path = '/courses/12347/modules/12345';
+      final url = 'https://fakedomain.instructure.com$path';
+      final routeWrapper = PandaRouter.getRouteWrapper(url);
+
+      assert(routeWrapper.path == path);
+      assert(routeWrapper.validHost == false);
+      assert(routeWrapper.appRouteMatch == null);
+    });
+
+    test('root path returns with validHost and null routematch', () {
+      final path = '/';
+      final url = '$_domain$path';
+      final routeWrapper = PandaRouter.getRouteWrapper(url);
+
+      assert(routeWrapper.path == path);
+      assert(routeWrapper.validHost == true);
+      assert(routeWrapper.appRouteMatch == null);
+    });
   });
 }
 
@@ -272,3 +431,11 @@ Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
 }
 
 class _MockLogger extends Mock implements Logger {}
+
+class _MockNav extends Mock implements QuickNav {}
+
+class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
+
+class _MockLauncher extends Mock implements FlutterLaunchVeneer {}
+
+class _MockSnackbar extends Mock implements FlutterSnackbarVeneer {}

@@ -19,7 +19,7 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -106,7 +106,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       PandaRouter.router.navigateTo(
         context,
         _route,
-        replace: true,
+        clearStack: true,
         transitionDuration: const Duration(milliseconds: 500),
         transition: TransitionType.custom,
         transitionBuilder: (

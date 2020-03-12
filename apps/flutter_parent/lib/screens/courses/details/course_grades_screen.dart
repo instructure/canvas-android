@@ -19,7 +19,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';

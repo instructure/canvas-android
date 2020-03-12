@@ -56,6 +56,8 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_launch_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -115,6 +117,8 @@ void setupLocator() {
   // Veneers and mockable dependencies
   locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());
   locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
+  locator.registerLazySingleton<FlutterLaunchVeneer>(() => FlutterLaunchVeneer());
+  locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
   locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
 

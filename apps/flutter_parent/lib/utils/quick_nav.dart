@@ -15,11 +15,12 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class QuickNav {
+  @Deprecated('Deprecated in favor of using PushRoute etc, end goal is for all routes to go through PandaRouter')
   Future<T> push<T extends Object>(BuildContext context, Widget widget) {
     _logShow(widget);
     return Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget));

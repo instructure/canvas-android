@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/db/db_util.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
