@@ -264,7 +264,7 @@ class PandaRouter {
     return _rootSplashHandler.handlerFunc(context, {});
   });
 
-  /// Used to handle urls and links clicked within web content
+  /// Used to handle links clicked within web content
   static Future<void> routeInternally(BuildContext context, String link) async {
     final urlRouteWrapper = getRouteWrapper(link);
 
@@ -299,7 +299,7 @@ class PandaRouter {
 
   /// Simple helper method to determine if the router can handle a url
   /// returns a RouteWrapper
-  /// _RouteWrapper.appRouteMatch will be null when there is no match
+  /// _RouteWrapper.appRouteMatch will be null when there is no match or path is root
   static _UrlRouteWrapper getRouteWrapper(String link) {
     Uri uri = Uri.parse(link);
 
