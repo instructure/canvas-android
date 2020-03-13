@@ -82,8 +82,6 @@ class _AlertsScreenState extends State<AlertsScreen> {
         Widget child;
         if (snapshot.hasError) {
           child = _error(context);
-        } else if (snapshot.data == null || snapshot.data.alerts == null || snapshot.data.alerts.isEmpty) {
-          child = _empty(context);
         } else {
           child = _AlertsList(_student, snapshot.data);
         }
@@ -102,14 +100,6 @@ class _AlertsScreenState extends State<AlertsScreen> {
 
   Widget _error(BuildContext context) {
     return FullScreenScrollContainer(children: [Text(L10n(context).unexpectedError)]);
-  }
-
-  Widget _empty(BuildContext context) {
-    return EmptyPandaWidget(
-      svgPath: 'assets/svg/panda-no-alerts.svg',
-      title: L10n(context).noAlertsTitle,
-      subtitle: L10n(context).noAlertsMessage,
-    );
   }
 }
 
@@ -136,10 +126,14 @@ class __AlertsListState extends State<_AlertsList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _data.alerts.length,
-      itemBuilder: (context, index) => _alertTile(context, _data.alerts[index], index),
-    );
+    if (_data == null || _data.alerts == null || _data.alerts.isEmpty) {
+      return _empty(context);
+    } else {
+      return ListView.builder(
+        itemCount: _data.alerts.length,
+        itemBuilder: (context, index) => _alertTile(context, _data.alerts[index], index),
+      );
+    }
   }
 
   Widget _alertTile(BuildContext context, Alert alert, int index) {
@@ -152,7 +146,7 @@ class __AlertsListState extends State<_AlertsList> {
         children: <Widget>[
           SizedBox(width: 18),
           Padding(
-            padding: const EdgeInsets.only(top: 14),
+            padding: const EdgeInsets.only(top: 12),
             child: Icon(_alertIcon(alert), color: alertColor, size: 20),
           ),
           SizedBox(width: 34),
@@ -171,6 +165,14 @@ class __AlertsListState extends State<_AlertsList> {
             ),
           ),
           SizedBox(width: 16),
+          IconButton(
+            tooltip: L10n(context).dismissAlert,
+            color: ParentColors.ash,
+            padding: EdgeInsets.all(0), // No extra padding, we're already padded enough with min touch size
+            icon: Icon(Icons.clear, size: 20),
+            onPressed: () => _dismissAlert(alert),
+          ),
+          SizedBox(width: 16),
         ],
       ),
     );
@@ -182,6 +184,14 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   /// Utilities
+
+  Widget _empty(BuildContext context) {
+    return EmptyPandaWidget(
+      svgPath: 'assets/svg/panda-no-alerts.svg',
+      title: L10n(context).noAlertsTitle,
+      subtitle: L10n(context).noAlertsMessage,
+    );
+  }
 
   IconData _alertIcon(Alert alert) {
     if (alert.isAlertInfo() || alert.isAlertPositive()) return CanvasIcons.info;
@@ -249,8 +259,18 @@ class __AlertsListState extends State<_AlertsList> {
     // We're done if the alert was already read, otherwise mark it read
     if (alert.workflowState == AlertWorkflowState.read) return;
 
-    final readAlert = await widget._interactor.markAlertRead(alert.id);
+    final readAlert = await widget._interactor.markAlertRead(widget._student.id, alert.id);
     setState(() => _data.alerts.setRange(index, index + 1, [readAlert]));
     locator<AlertCountNotifier>().update(widget._student.id);
+  }
+
+  void _dismissAlert(Alert alert) async {
+    await widget._interactor.markAlertDismissed(widget._student.id, alert.id);
+    setState(() => _data.alerts.remove(alert));
+
+    // Update the unread count if the alert was unread
+    if (alert.workflowState == AlertWorkflowState.unread) {
+      locator<AlertCountNotifier>().update(widget._student.id);
+    }
   }
 }

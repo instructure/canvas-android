@@ -20,6 +20,10 @@ import 'package:mockito/mockito.dart';
 import '../accessibility_utils.dart';
 
 void main() {
+  test('throws error when horizontal padding is null', () {
+    expect(() => FullScreenScrollContainer(children: <Widget>[], horizontalPadding: null), throwsAssertionError);
+  });
+
   group('Single child', () {
     testWidgetsWithAccessibilityChecks('is visible', (tester) async {
       final children = [Text('a')];

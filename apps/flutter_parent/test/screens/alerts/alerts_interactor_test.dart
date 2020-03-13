@@ -22,6 +22,9 @@ import 'package:test/test.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  final alertId = '123';
+  final studentId = '12321';
+
   final api = _MockAlertsApi();
 
   setupTestLocator((_locator) {
@@ -33,18 +36,23 @@ void main() {
   });
 
   test('mark alert read calls the api', () {
-    final alertId = '123';
+    when(api.updateAlertWorkflow(studentId, alertId, 'read')).thenAnswer((_) => Future.value(null));
 
-    when(api.updateAlertWorkflow(alertId, 'read')).thenAnswer((_) => Future.value(null));
+    AlertsInteractor().markAlertRead(studentId, alertId);
 
-    AlertsInteractor().markAlertRead(alertId);
+    verify(api.updateAlertWorkflow(studentId, alertId, 'read')).called(1);
+  });
 
-    verify(api.updateAlertWorkflow(alertId, 'read')).called(1);
+  test('mark alert dismissed calls the api', () {
+    when(api.updateAlertWorkflow(studentId, alertId, 'dismissed')).thenAnswer((_) => Future.value(null));
+
+    AlertsInteractor().markAlertDismissed(studentId, alertId);
+
+    verify(api.updateAlertWorkflow(studentId, alertId, 'dismissed')).called(1);
   });
 
   test('get alerts for student returns date sorted list', () async {
     final date = DateTime.now();
-    final studentId = '123';
     final data = List.generate(5, (index) {
       // Create a list of alerts with dates in ascending order (reversed)
       return Alert((b) => b
@@ -61,8 +69,6 @@ void main() {
   });
 
   test('get alerts for student returns thresholds', () async {
-    final studentId = '123';
-
     final data = List.generate(5, (index) {
       return AlertThreshold((b) => b..id = '$index');
     });

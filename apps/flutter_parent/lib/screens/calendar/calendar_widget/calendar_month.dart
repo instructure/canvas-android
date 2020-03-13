@@ -36,6 +36,9 @@ class CalendarMonth extends StatefulWidget {
     @required this.monthExpansionListener,
   }) : super(key: key);
 
+  /// The maximum possible height of this widget
+  static double maxHeight = DayOfWeekHeaders.headerHeight + (6 * CalendarDay.dayHeight);
+
   static List<DateTime> generateWeekStarts(int year, int month) {
     DateTime firstDayOfMonth = DateTime(year, month);
     DateTime firstDayOfWeek = firstDayOfMonth.withFirstDayOfWeek();

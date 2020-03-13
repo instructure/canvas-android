@@ -22,8 +22,11 @@ import 'package:flutter/material.dart';
 class FullScreenScrollContainer extends StatelessWidget {
   final Widget header;
   final List<Widget> children;
+  final double horizontalPadding;
 
-  const FullScreenScrollContainer({@required this.children, this.header, Key key}) : super(key: key);
+  const FullScreenScrollContainer({@required this.children, this.header, this.horizontalPadding = 32, Key key})
+      : assert(horizontalPadding != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class FullScreenScrollContainer extends StatelessWidget {
                 if (header != null) header,
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,

@@ -32,8 +32,12 @@ class AlertsInteractor {
     return AlertsList(await alertsFuture, await thresholdsFuture);
   }
 
-  Future<Alert> markAlertRead(String alertId) {
-    return _alertsApi().updateAlertWorkflow(alertId, AlertWorkflowState.read.name);
+  Future<Alert> markAlertRead(String studentId, String alertId) {
+    return _alertsApi().updateAlertWorkflow(studentId, alertId, AlertWorkflowState.read.name);
+  }
+
+  Future markAlertDismissed(String studentId, String alertId) {
+    return _alertsApi().updateAlertWorkflow(studentId, alertId, AlertWorkflowState.dismissed.name);
   }
 
   AlertsApi _alertsApi() => locator<AlertsApi>();
