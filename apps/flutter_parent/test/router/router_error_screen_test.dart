@@ -20,16 +20,16 @@ import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/veneers/flutter_launch_veneer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
 
 void main() {
   final String _domain = 'https://test.instructure.com';
-  final _mockLauncher = _MockLauncher();
 
   testWidgetsWithAccessibilityChecks('router error renders correctly with url', (tester) async {
     await tester.pumpWidget(TestApp(
@@ -45,11 +45,18 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('router error screen open in browser calls launch with url', (tester) async {
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<FlutterLaunchVeneer>(() => _mockLauncher);
-    });
+    final _mockLauncher = _MockUrlLauncherPlatform();
+    UrlLauncherPlatform.instance = _mockLauncher;
 
-    when(_mockLauncher.launch(_domain)).thenAnswer((_) => Future.value(true));
+    when(_mockLauncher.launch(
+      _domain,
+      useSafariVC: anyNamed('useSafariVC'),
+      useWebView: anyNamed('useWebView'),
+      enableJavaScript: anyNamed('enableJavaScript'),
+      enableDomStorage: anyNamed('enableDomStorage'),
+      universalLinksOnly: anyNamed('universalLinksOnly'),
+      headers: anyNamed('headers'),
+    )).thenAnswer((_) => Future.value(true));
 
     await tester.pumpWidget(TestApp(
       RouterErrorScreen(_domain),
@@ -59,9 +66,15 @@ void main() {
     await tester.tap(find.text(AppLocalizations().openInBrowser));
     await tester.pump();
 
-    verify(
-      _mockLauncher.launch(_domain),
-    ).called(1);
+    verify(_mockLauncher.launch(
+      _domain,
+      useSafariVC: anyNamed('useSafariVC'),
+      useWebView: anyNamed('useWebView'),
+      enableJavaScript: anyNamed('enableJavaScript'),
+      enableDomStorage: anyNamed('enableDomStorage'),
+      universalLinksOnly: anyNamed('universalLinksOnly'),
+      headers: anyNamed('headers'),
+    )).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('router error screen switch users', (tester) async {
@@ -84,4 +97,4 @@ void main() {
   });
 }
 
-class _MockLauncher extends Mock implements FlutterLaunchVeneer {}
+class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}

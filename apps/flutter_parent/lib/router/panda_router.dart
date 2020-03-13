@@ -37,12 +37,12 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/veneers/flutter_launch_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
@@ -79,9 +79,9 @@ class PandaRouter {
       '/account_notifications/$accountNotificationId';
   static final String _rootWithExternalUrl = '/external';
   static final String _simpleWebView = '/internal';
-  static String simpleWebView(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _routerError = '/error';
-  static String routerError(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String _routerErrorRoute(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static void init() {
     if (!_isInitialized) {
@@ -274,20 +274,20 @@ class PandaRouter {
     if (urlRouteWrapper.appRouteMatch != null) {
       if (urlRouteWrapper.validHost) {
         // Its a match, so we can route internally
-        locator.get<QuickNav>().pushRoute(context, urlRouteWrapper.path);
+        locator<QuickNav>().pushRoute(context, urlRouteWrapper.path);
       } else {
         // Show an error screen for non-matching domain
-        locator.get<QuickNav>().pushRoute(context, routerError(link));
+        locator<QuickNav>().pushRoute(context, _routerErrorRoute(link));
       }
     } else {
       // No native route found, let's launch the url if possible, or show an error toast
-      if (await locator<FlutterLaunchVeneer>().canLaunch(link)) {
+      if (await canLaunch(link)) {
         String authUrl = await _interactor.getAuthUrl(link);
         if (limitWebAccess) {
           // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-          locator.get<QuickNav>().pushRoute(context, simpleWebView(link));
+          locator<QuickNav>().pushRoute(context, _simpleWebViewRoute(link));
         } else {
-          locator<FlutterLaunchVeneer>().launch(authUrl);
+          launch(authUrl);
         }
       } else {
         locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);

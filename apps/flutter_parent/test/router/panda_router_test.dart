@@ -32,13 +32,14 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/veneers/flutter_launch_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/canvas_model_utils.dart';
@@ -56,7 +57,6 @@ void main() {
 
   final _mockNav = _MockNav();
   final _mockWebContentInteractor = _MockWebContentInteractor();
-  final _mockLauncher = _MockLauncher();
   final _mockSnackbar = _MockSnackbar();
 
   setUpAll(() async {
@@ -203,7 +203,7 @@ void main() {
     test('RouterErrorScreen returns RouterErrorScreen', () {
       final url = 'https://test.instructure.com/blah-blah-blah';
       final widget = _getWidgetFromRoute(
-        PandaRouter.routerError(url),
+        _routerErrorRoute(url),
       ) as RouterErrorScreen;
 
       expect(widget, isA<RouterErrorScreen>());
@@ -212,7 +212,7 @@ void main() {
     test('RouterErrorScreen returns RouterErrorScreen', () {
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
-        PandaRouter.simpleWebView(url),
+        _simpleWebViewRoute(url),
       ) as SimpleWebViewScreen;
 
       expect(widget, isA<SimpleWebViewScreen>());
@@ -313,7 +313,6 @@ void main() {
         locator.registerLazySingleton<Logger>(() => _logger);
         locator.registerLazySingleton<QuickNav>(() => _mockNav);
         locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-        locator.registerLazySingleton<FlutterLaunchVeneer>(() => FlutterLaunchVeneer());
       });
 
       final courseId = '123';
@@ -331,7 +330,6 @@ void main() {
         locator.registerLazySingleton<Logger>(() => _logger);
         locator.registerLazySingleton<QuickNav>(() => _mockNav);
         locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-        locator.registerLazySingleton<FlutterLaunchVeneer>(() => FlutterLaunchVeneer());
       });
       final courseId = '123';
       final assignmentId = '321';
@@ -339,37 +337,54 @@ void main() {
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
       verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
-      verify(_mockNav.pushRoute(any, PandaRouter.routerError(url)));
+      verify(_mockNav.pushRoute(any, _routerErrorRoute(url)));
     });
 
     testWidgetsWithAccessibilityChecks('launches url for route without match', (tester) async {
+      var mockLauncher = _MockUrlLauncherPlatform();
+      UrlLauncherPlatform.instance = mockLauncher;
       setupTestLocator((locator) {
         locator.registerLazySingleton<Logger>(() => _logger);
         locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-        locator.registerLazySingleton<FlutterLaunchVeneer>(() => _mockLauncher);
       });
       final url = 'https://test.instructure.com/courses/1567973/pages/key-test';
-      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
-      when(_mockLauncher.launch(url)).thenAnswer((_) => Future.value(true));
+
+      when(mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
+      when(mockLauncher.launch(
+        url,
+        useSafariVC: anyNamed('useSafariVC'),
+        useWebView: anyNamed('useWebView'),
+        enableJavaScript: anyNamed('enableJavaScript'),
+        enableDomStorage: anyNamed('enableDomStorage'),
+        universalLinksOnly: anyNamed('universalLinksOnly'),
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(true));
       when(_mockWebContentInteractor.getAuthUrl(url)).thenAnswer((_) => Future.value(url));
 
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
       verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
-      verify(
-        _mockLauncher.launch(url),
-      ).called(1);
+      verify(mockLauncher.launch(
+        url,
+        useSafariVC: anyNamed('useSafariVC'),
+        useWebView: anyNamed('useWebView'),
+        enableJavaScript: anyNamed('enableJavaScript'),
+        enableDomStorage: anyNamed('enableDomStorage'),
+        universalLinksOnly: anyNamed('universalLinksOnly'),
+        headers: anyNamed('headers'),
+      )).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('shows snackbar error for canLaunch false', (tester) async {
+      var mockLauncher = _MockUrlLauncherPlatform();
+      UrlLauncherPlatform.instance = mockLauncher;
       setupTestLocator((locator) {
         locator.registerLazySingleton<Logger>(() => _logger);
         locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-        locator.registerLazySingleton<FlutterLaunchVeneer>(() => _mockLauncher);
         locator.registerLazySingleton<FlutterSnackbarVeneer>(() => _mockSnackbar);
       });
       final url = 'https://test.instructure.com/brokenurl';
-      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(false));
+      when(mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(false));
 
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
@@ -416,6 +431,8 @@ void main() {
 }
 
 String _rootWithUrl(String url) => '/external?url=${Uri.encodeQueryComponent(url)}';
+String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(url)}';
+String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
 Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
   final match = PandaRouter.router.match(route);
@@ -436,6 +453,6 @@ class _MockNav extends Mock implements QuickNav {}
 
 class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
 
-class _MockLauncher extends Mock implements FlutterLaunchVeneer {}
-
 class _MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
+
+class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}

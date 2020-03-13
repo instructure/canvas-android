@@ -17,7 +17,7 @@ import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:webview_flutter/webview_flutter.dart';

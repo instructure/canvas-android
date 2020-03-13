@@ -47,7 +47,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
         body: WebView(
             javascriptMode: JavascriptMode.unrestricted,
             gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
-            onWebViewCreated: (controller) async {
+            onWebViewCreated: (controller) {
               _controller = controller;
               controller.loadUrl(widget._url);
             }),
