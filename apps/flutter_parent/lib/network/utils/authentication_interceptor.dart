@@ -24,9 +24,9 @@ import 'api_prefs.dart';
 class AuthenticationInterceptor extends InterceptorsWrapper {
   final String _RETRY_HEADER = 'mobile_refresh';
 
-  final Dio dio;
+  final Dio _dio;
 
-  AuthenticationInterceptor(this.dio);
+  AuthenticationInterceptor(this._dio);
 
   @override
   Future onError(DioError error) async {
@@ -47,8 +47,8 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     }
 
     // Lock new requests from being processed while refreshing the token
-    dio.interceptors?.requestLock?.lock();
-    dio.interceptors?.responseLock?.lock();
+    _dio.interceptors?.requestLock?.lock();
+    _dio.interceptors?.responseLock?.lock();
 
     // Refresh the token and update the login
     dynamic result = error;
@@ -68,11 +68,11 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
       options.headers['Authorization'] = 'Bearer ${tokens.accessToken}';
       options.headers[_RETRY_HEADER] = _RETRY_HEADER; // Mark retry to prevent infinite recursion
 
-      result = dio.request(options.path, options: options);
+      result = _dio.request(options.path, options: options);
     }
 
-    dio.interceptors?.requestLock?.unlock();
-    dio.interceptors?.responseLock?.unlock();
+    _dio.interceptors?.requestLock?.unlock();
+    _dio.interceptors?.responseLock?.unlock();
 
     return result;
   }
