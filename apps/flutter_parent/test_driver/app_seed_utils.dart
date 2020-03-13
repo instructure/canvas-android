@@ -20,10 +20,11 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/dataseeding/seed_context.dart';
 import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 import 'package:flutter_parent/models/serializers.dart';
-import 'package:flutter_parent/network/api/dataseeding/course_seed_api.dart';
-import 'package:flutter_parent/network/api/dataseeding/enrollment_seed_api.dart';
-import 'package:flutter_parent/network/api/dataseeding/user_seed_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+
+import 'apis/course_seed_api.dart';
+import 'apis/enrollment_seed_api.dart';
+import 'apis/user_seed_api.dart';
 
 // A data class to encapsulate all information created by the seed() call.
 class SeedResults {

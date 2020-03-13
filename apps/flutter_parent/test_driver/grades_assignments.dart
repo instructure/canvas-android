@@ -4,10 +4,10 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter_driver/driver_extension.dart';
 import 'package:flutter_parent/main.dart' as app;
 import 'package:flutter_parent/models/serializers.dart';
-import 'package:flutter_parent/network/api/dataseeding/assignment_seed_api.dart';
-import 'package:flutter_parent/network/api/dataseeding/submission_seed_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 
+import 'apis/assignment_seed_api.dart';
+import 'apis/submission_seed_api.dart';
 import 'app_seed_utils.dart';
 
 void main() async {
