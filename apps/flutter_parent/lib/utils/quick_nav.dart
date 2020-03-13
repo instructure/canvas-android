@@ -42,6 +42,16 @@ class QuickNav {
     return PandaRouter.router.navigateTo(context, route, transition: transitionType, clearStack: true);
   }
 
+  Future<T> pushRouteWithCustomTransition<T extends Object>(BuildContext context, String route, bool clearStack,
+      Duration transitionDuration, RouteTransitionsBuilder transitionsBuilder,
+      {TransitionType transitionType = TransitionType.custom}) {
+    return PandaRouter.router.navigateTo(context, route,
+        clearStack: clearStack,
+        transitionDuration: transitionDuration,
+        transition: transitionType,
+        transitionBuilder: transitionsBuilder);
+  }
+
   void _logShow(Widget widget) {
     final message = 'Pushing widget: ${widget.runtimeType.toString()}';
     locator<Logger>().log(message);
