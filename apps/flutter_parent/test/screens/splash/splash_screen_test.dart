@@ -21,7 +21,6 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
@@ -66,6 +65,7 @@ void main() {
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
       locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => Future.value([]));
@@ -86,6 +86,7 @@ void main() {
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
       locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
     await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
@@ -126,9 +127,11 @@ void main() {
   testWidgetsWithAccessibilityChecks('Routes to dashboard without students on error', (tester) async {
     var interactor = _MockInteractor();
     var observer = _MockNavigatorObserver();
+    var mockNav = _MockNav();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
       locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<QuickNav>(() => mockNav);
     });
 
     final completer = Completer<List<User>>();
@@ -149,13 +152,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 350));
 
-    var route =
-        verify(observer.didReplace(newRoute: captureAnyNamed('newRoute'), oldRoute: anyNamed('oldRoute'))).captured[0];
-    expect(route.runtimeType, PageRouteBuilder);
-
-    var screen = route.buildPage(null, null, null);
-    expect(screen.runtimeType, DashboardScreen);
-    expect((screen as DashboardScreen).students, isNull);
+    verify(mockNav.pushRouteWithCustomTransition(any, '/dashboard', any, any, any));
     ApiPrefs.clean();
   });
 }

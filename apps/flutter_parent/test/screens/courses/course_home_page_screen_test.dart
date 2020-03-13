@@ -18,7 +18,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -40,7 +40,7 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
-    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {

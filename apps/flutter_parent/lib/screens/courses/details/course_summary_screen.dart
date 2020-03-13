@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
@@ -114,10 +114,10 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
         if (item.type == ScheduleItem.typeCalendar) {
-          locator<QuickNav>().pushRoute(context, ParentRouter.eventDetails(widget.model.courseId, item.id));
+          locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(widget.model.courseId, item.id));
         } else {
           locator<QuickNav>()
-              .pushRoute(context, ParentRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
+              .pushRoute(context, PandaRouter.assignmentDetails(widget.model.courseId, item.assignment.id));
         }
       },
     );

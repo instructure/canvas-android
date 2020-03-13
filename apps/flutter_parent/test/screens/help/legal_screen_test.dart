@@ -13,7 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -94,7 +94,7 @@ void main() {
     await tester.tap(find.text(l10n.termsOfUse));
     await tester.pumpAndSettle();
 
-    verify(nav.pushRoute(any, argThat(matches(ParentRouter.termsOfUse()))));
+    verify(nav.pushRoute(any, argThat(matches(PandaRouter.termsOfUse()))));
   });
 }
 

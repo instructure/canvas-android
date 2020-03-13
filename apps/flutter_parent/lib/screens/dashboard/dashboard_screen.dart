@@ -16,14 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
@@ -333,7 +332,7 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToInbox(context) {
     // Close the drawer, then push the inbox in
     Navigator.of(context).pop();
-    locator<QuickNav>().pushRoute(context, ParentRouter.conversations());
+    locator<QuickNav>().pushRoute(context, PandaRouter.conversations());
   }
 
   _navigateToManageStudents(context) {
@@ -345,15 +344,13 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
-    locator<QuickNav>().pushRoute(context, ParentRouter.help());
+    locator<QuickNav>().pushRoute(context, PandaRouter.help());
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) {
-      return LoginLandingScreen();
-    }), (Route<dynamic> route) => false);
+    locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 
   _navDrawerHeader(User user) => Column(
@@ -408,8 +405,7 @@ class DashboardState extends State<DashboardScreen> {
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
   _navDrawerSettings() => ListTile(
-      title: Text(L10n(context).settings),
-      onTap: () => locator<QuickNav>().pushRoute(context, ParentRouter.settings()));
+      title: Text(L10n(context).settings), onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.settings()));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),

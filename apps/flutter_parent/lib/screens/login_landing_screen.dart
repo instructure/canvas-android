@@ -18,7 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
@@ -146,7 +146,7 @@ class LoginLandingScreen extends StatelessWidget {
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
-                      locator<QuickNav>().pushRouteAndClearStack(context, ParentRouter.rootSplash());
+                      locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
                     },
                     leading: Avatar.fromUser(login.user),
                     title: UserName.fromUser(login.user),
@@ -196,6 +196,6 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    locator<QuickNav>().pushRoute(context, ParentRouter.domainSearch());
+    locator<QuickNav>().pushRoute(context, PandaRouter.domainSearch());
   }
 }

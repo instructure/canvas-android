@@ -31,7 +31,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
@@ -80,7 +80,7 @@ void main() {
   setupTestLocator((locator) {
     locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
     locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
-    locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Logger>(() => Logger());
   });

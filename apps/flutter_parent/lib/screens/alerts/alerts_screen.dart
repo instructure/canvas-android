@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensions.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -246,10 +246,10 @@ class __AlertsListState extends State<_AlertsList> {
     switch (alert.alertType) {
       case AlertType.courseAnnouncement:
         locator<QuickNav>().pushRoute(
-            context, ParentRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId));
+            context, PandaRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId));
         break;
       case AlertType.institutionAnnouncement:
-        locator<QuickNav>().pushRoute(context, ParentRouter.institutionAnnouncementDetails(alert.contextId));
+        locator<QuickNav>().pushRoute(context, PandaRouter.institutionAnnouncementDetails(alert.contextId));
         break;
       default:
         locator<QuickNav>().push(context, UnderConstructionScreen(showAppBar: true));

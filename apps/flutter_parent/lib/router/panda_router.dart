@@ -18,6 +18,9 @@ import 'dart:core';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
@@ -33,14 +36,21 @@ import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
 /// viewed by calling `WidgetsBinding.instance.window.defaultRouteName`, though we don't have to manually do this
 /// as flutter sets this up for us.
-class ParentRouter {
+class PandaRouter {
+  static WebContentInteractor get _interactor => locator<WebContentInteractor>();
+
   static final Router router = Router();
 
   static bool _isInitialized = false;
@@ -67,8 +77,11 @@ class ParentRouter {
       '/courses/$courseId/discussion_topics/$announcementId';
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
-  static final String _rootWithUrl = '/external';
-  static String rootWithUrl(String url) => '/external?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static final String _rootWithExternalUrl = '/external';
+  static final String _simpleWebView = '/internal';
+  static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static final String _routerError = '/error';
+  static String _routerErrorRoute(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static void init() {
     if (!_isInitialized) {
@@ -94,9 +107,11 @@ class ParentRouter {
           handler: _courseAnnouncementDetailsHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
+      router.define(_simpleWebView, handler: _simpleWebViewHandler);
+      router.define(_routerError, handler: _routerErrorHandler);
 
       // EXTERNAL
-      router.define(_rootWithUrl, handler: _rootWithUrlHandler);
+      router.define(_rootWithExternalUrl, handler: _rootWithExternalUrlHandler);
     }
   }
 
@@ -149,7 +164,6 @@ class ParentRouter {
     return widget;
   });
 
-  // INTERNAL HANDLER
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var widget = CourseDetailsScreen(params[_RouterKeys.courseId][0]);
     _logRoute(params, widget);
@@ -213,43 +227,87 @@ class ParentRouter {
     return widget;
   });
 
-  // EXTERNAL HANDLER
-  static Handler _rootWithUrlHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    final link = _prepLink(context, params[_RouterKeys.url][0]);
-
-    locator<Logger>().log('Handling url route: $link');
-    final match = router.match(link);
-    if (match == null) {
-      // No match means we don't support the link, default to the splash screen for now
-      return _rootSplashHandler.handlerFunc(context, {});
-    }
-
-    return (match.route.handler as Handler).handlerFunc(context, match.parameters);
+  static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final url = params[_RouterKeys.url][0];
+    var widget = RouterErrorScreen(url);
+    _logRoute(params, widget);
+    return widget;
   });
 
-  /**
-   *  Handles all links, preps them to be appropriate for the router
-   *
-   *  Should handle external / internal / download
-   */
-  static String _prepLink(BuildContext context, String link) {
-    // Validate the url
+  static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final url = params[_RouterKeys.url][0];
+    var widget = SimpleWebViewScreen(url, url);
+    _logRoute(params, widget);
+    return widget;
+  });
+
+  /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
+  static Handler _rootWithExternalUrlHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    final link = params[_RouterKeys.url][0];
+    final urlRouteWrapper = getRouteWrapper(link);
+
+    locator<Logger>().log('Attempting to route EXTERNAL url: $link');
+
+    if (urlRouteWrapper.appRouteMatch != null) {
+      if (urlRouteWrapper.validHost) {
+        // If its a link we can handle natively and within our domain, route
+        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
+            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+      } else {
+        // Otherwise, we want to route to the error page
+        return _routerErrorHandler.handlerFunc(context, params);
+      }
+    }
+
+    // We don't support the link, default to the splash screen for now
+    return _rootSplashHandler.handlerFunc(context, {});
+  });
+
+  /// Used to handle links clicked within web content
+  static Future<void> routeInternally(BuildContext context, String link) async {
+    final urlRouteWrapper = getRouteWrapper(link);
+
+    locator<Logger>().log('Attempting to route INTERNAL url: $link');
+
+    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
+    if (urlRouteWrapper.appRouteMatch != null) {
+      if (urlRouteWrapper.validHost) {
+        // Its a match, so we can route internally
+        locator<QuickNav>().pushRoute(context, urlRouteWrapper.path);
+      } else {
+        // Show an error screen for non-matching domain
+        locator<QuickNav>().pushRoute(context, _routerErrorRoute(link));
+      }
+    } else {
+      // No native route found, let's launch the url if possible, or show an error toast
+      if (await canLaunch(link)) {
+        String authUrl = await _interactor.getAuthUrl(link);
+        if (limitWebAccess) {
+          // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
+          locator<QuickNav>().pushRoute(context, _simpleWebViewRoute(link));
+        } else {
+          launch(authUrl);
+        }
+      } else {
+        locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);
+      }
+    }
+  }
+
+  static final bool limitWebAccess = false; // TODO - replace after MBL-13924 is implemented
+
+  /// Simple helper method to determine if the router can handle a url
+  /// returns a RouteWrapper
+  /// _RouteWrapper.appRouteMatch will be null when there is no match or path is root
+  static _UrlRouteWrapper getRouteWrapper(String link) {
     Uri uri = Uri.parse(link);
-    // - validating the host, check if it matches currently logged in user
 
     // Determine if we can handle the url natively
-    // -formatting the url, router.matchRoute returns RouteMatchType.noMatch or not
-    // Could add query params as well, but I don't think we ever need it for route matching
     final path = '/${uri.pathSegments.join('/')}';
-    RouteMatch match = router.matchRoute(context, path);
-    if (match.matchType == RouteMatchType.noMatch) {
-      // route to SimpleWebScreen
-
-    } else {
-      // If supported, route
-
-    }
-    return path;
+    final match = router.match(path);
+    // Check to see if the route can be handled internally, isn't to root, and matches our current domain
+    return _UrlRouteWrapper(path, ApiPrefs.getDomain().contains(uri.host), path == '/' ? null : match);
   }
 
   static void _logRoute(Map<String, List<String>> params, Widget widget) {
@@ -259,6 +317,7 @@ class ParentRouter {
   }
 }
 
+/// Simple helper class to keep route keys/params consistently named
 class _RouterKeys {
   static final courseId = 'courseId';
   static final assignmentId = 'assignmentId';
@@ -268,4 +327,13 @@ class _RouterKeys {
   static final domain = 'domain';
   static final authenticationProvider = 'authenticationProvider';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
+}
+
+/// Simple helper class to manage the repeated data extracted from a link to be routed
+class _UrlRouteWrapper {
+  final String path;
+  final bool validHost;
+  final AppRouteMatch appRouteMatch;
+
+  _UrlRouteWrapper(this.path, this.validHost, this.appRouteMatch);
 }

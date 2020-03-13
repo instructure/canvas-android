@@ -20,7 +20,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
@@ -82,7 +82,7 @@ class _TestAppState extends State<TestApp> {
   void initState() {
     super.initState();
     _locale = widget.locale;
-    ParentRouter.init();
+    PandaRouter.init();
     setupPlatformChannels(config: widget.platformConfig);
   }
 
@@ -106,7 +106,7 @@ class _TestAppState extends State<TestApp> {
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
           home: Material(child: widget.home),
-          onGenerateRoute: ParentRouter.router.generator,
+          onGenerateRoute: PandaRouter.router.generator,
         ),
       ),
     );

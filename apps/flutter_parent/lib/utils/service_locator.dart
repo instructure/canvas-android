@@ -48,7 +48,7 @@ import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audio_video_attachment_viewer_interactor.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/logger.dart';
@@ -56,6 +56,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -110,11 +111,12 @@ void setupLocator() {
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
-  locator.registerFactory<WebViewInteractor>(() => WebViewInteractor());
+  locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
 
   // Veneers and mockable dependencies
   locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());
   locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
+  locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
   locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
 

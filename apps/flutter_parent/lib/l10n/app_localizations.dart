@@ -1262,4 +1262,15 @@ class AppLocalizations {
 
   String get loginHelpSubject =>
       Intl.message('I\'m having trouble logging in', desc: 'Subject of help dialog for a login help request');
+
+  String get routerLaunchErrorMessage => Intl.message('An error occurred when trying to display this link',
+      desc: 'Error message shown when a link can\'t be opened');
+
+  String get routerErrorMessage => Intl.message(
+      'We are unable to display this link, it may belong to an institution you currently aren\'t logged in to.',
+      desc: 'Description for error page shown when clicking a link');
+
+  String get routerErrorTitle => Intl.message('Link Error', desc: 'Title for error page shown when clicking a link');
+
+  String get openInBrowser => Intl.message('Open In Browser', desc: 'Text for button to open a link in the browswer');
 }

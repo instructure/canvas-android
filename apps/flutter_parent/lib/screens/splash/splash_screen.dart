@@ -15,13 +15,13 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/router/parent_router.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -50,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     if (!ApiPrefs.isLoggedIn()) {
       // route to login screen
-      _navigate(ParentRouter.login());
+      _navigate(PandaRouter.login());
       return _defaultBody(context);
     } else {
       return Scaffold(
@@ -61,15 +61,15 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             if (snapshot.hasData) {
               if (snapshot.data.isEmpty) {
                 // User is not observing any students. Show the not-a-parent screen.
-                _navigate(ParentRouter.notParent());
+                _navigate(PandaRouter.notParent());
               } else {
                 // Proceed with pre-fetched student list
                 // TODO - revert to include pre-fetch later on
-                _navigate(ParentRouter.dashboard());
+                _navigate(PandaRouter.dashboard());
               }
             } else if (snapshot.hasError) {
               // On error, proceed without pre-fetched student list
-              _navigate(ParentRouter.dashboard());
+              _navigate(PandaRouter.dashboard());
             }
             return Container(
               child: Center(
@@ -103,13 +103,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   _animationListener() {
     if (_animation.status == AnimationStatus.completed) {
       // Use a custom page route for the circle reveal animation
-      ParentRouter.router.navigateTo(
+      locator<QuickNav>().pushRouteWithCustomTransition(
         context,
         _route,
-        replace: true,
-        transitionDuration: const Duration(milliseconds: 500),
-        transition: TransitionType.custom,
-        transitionBuilder: (
+        true,
+        Duration(milliseconds: 500),
+        (
           context,
           animation,
           secondaryAnimation,

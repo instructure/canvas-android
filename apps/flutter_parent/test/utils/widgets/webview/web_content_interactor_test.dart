@@ -17,7 +17,7 @@ import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_view_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -46,7 +46,7 @@ void main() {
       final target = '$domain/target_url';
       when(oauthApi.getAuthenticatedUrl(target))
           .thenAnswer((_) async => Future<AuthenticatedUrl>.error('Failed to authenticate url').catchError((_) {}));
-      final actual = await WebViewInteractor().getAuthUrl(target);
+      final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, target);
       verify(oauthApi.getAuthenticatedUrl(target)).called(1);
@@ -57,7 +57,7 @@ void main() {
       final expected = 'session_url';
       when(oauthApi.getAuthenticatedUrl(target))
           .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = expected));
-      final actual = await WebViewInteractor().getAuthUrl(target);
+      final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, expected);
       verify(oauthApi.getAuthenticatedUrl(target)).called(1);
@@ -66,7 +66,7 @@ void main() {
     test('returns target if it is not in the domain', () async {
       final target = 'https://www.pandas.com';
 
-      final actual = await WebViewInteractor().getAuthUrl(target);
+      final actual = await WebContentInteractor().getAuthUrl(target);
 
       expect(actual, target);
     });
@@ -74,20 +74,20 @@ void main() {
 
   test('ltiToolPressedChannel has a name that matches in html_wrapper', () async {
     String fileText = await rootBundle.loadString('assets/html/html_wrapper.html');
-    JavascriptChannel channel = WebViewInteractor().ltiToolPressedChannel((_) {});
+    JavascriptChannel channel = WebContentInteractor().ltiToolPressedChannel((_) {});
 
     expect(fileText, contains('${channel.name}.postMessage'));
   });
 
   group('authContent', () {
     test('returns empty string if content is empty or null', () async {
-      expect(await WebViewInteractor().authContent('', ''), '');
-      expect(await WebViewInteractor().authContent(null, null), null);
+      expect(await WebContentInteractor().authContent('', ''), '');
+      expect(await WebContentInteractor().authContent(null, null), null);
     });
 
     test('returns content when no iframes are present', () async {
       final content = '<html><p>This is some content to display<br>It does not need to be authenticated</p></html>';
-      final actual = await WebViewInteractor().authContent(content, null);
+      final actual = await WebContentInteractor().authContent(content, null);
 
       expect(actual, content);
     });
@@ -102,7 +102,7 @@ void main() {
       when(oauthApi.getAuthenticatedUrl(target))
           .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
 
-      final actual = await WebViewInteractor().authContent(content, buttonText);
+      final actual = await WebContentInteractor().authContent(content, buttonText);
 
       expect(actual, expected);
       verify(oauthApi.getAuthenticatedUrl(target)).called(1);
@@ -118,7 +118,7 @@ void main() {
       when(oauthApi.getAuthenticatedUrl(target))
           .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
 
-      final actual = await WebViewInteractor().authContent(content, null);
+      final actual = await WebContentInteractor().authContent(content, null);
 
       expect(actual, expected);
       verify(oauthApi.getAuthenticatedUrl(target)).called(1);
@@ -136,7 +136,7 @@ void main() {
       when(oauthApi.getAuthenticatedUrl(target))
           .thenAnswer((_) async => AuthenticatedUrl((b) => b..sessionUrl = authenticated));
 
-      final actual = await WebViewInteractor().authContent(content, buttonText);
+      final actual = await WebContentInteractor().authContent(content, buttonText);
 
       expect(actual, expected);
       verify(oauthApi.getAuthenticatedUrl(target)).called(2);
