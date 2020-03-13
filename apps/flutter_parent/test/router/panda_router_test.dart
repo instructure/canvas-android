@@ -58,17 +58,25 @@ void main() {
   final _mockNav = _MockNav();
   final _mockWebContentInteractor = _MockWebContentInteractor();
   final _mockSnackbar = _MockSnackbar();
+  final _mockLauncher = _MockUrlLauncherPlatform();
 
   setUpAll(() async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
     PandaRouter.init();
+    UrlLauncherPlatform.instance = _mockLauncher;
     setupTestLocator((locator) {
       locator.registerLazySingleton<Logger>(() => _logger);
+      locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
+      locator.registerLazySingleton<QuickNav>(() => _mockNav);
+      locator.registerLazySingleton<FlutterSnackbarVeneer>(() => _mockSnackbar);
     });
   });
 
   setUp(() {
     reset(_logger);
+    reset(_mockLauncher);
+    reset(_mockNav);
+    reset(_mockSnackbar);
   });
 
   group('route generators', () {
@@ -309,12 +317,6 @@ void main() {
 
   group('internal url handler', () {
     testWidgetsWithAccessibilityChecks('returns assignment details', (tester) async {
-      setupTestLocator((locator) {
-        locator.registerLazySingleton<Logger>(() => _logger);
-        locator.registerLazySingleton<QuickNav>(() => _mockNav);
-        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-      });
-
       final courseId = '123';
       final assignmentId = '321';
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
@@ -326,11 +328,6 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('returns router error screen for mismatched domain with valid route',
         (tester) async {
-      setupTestLocator((locator) {
-        locator.registerLazySingleton<Logger>(() => _logger);
-        locator.registerLazySingleton<QuickNav>(() => _mockNav);
-        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-      });
       final courseId = '123';
       final assignmentId = '321';
       final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
@@ -341,16 +338,10 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('launches url for route without match', (tester) async {
-      var mockLauncher = _MockUrlLauncherPlatform();
-      UrlLauncherPlatform.instance = mockLauncher;
-      setupTestLocator((locator) {
-        locator.registerLazySingleton<Logger>(() => _logger);
-        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-      });
       final url = 'https://test.instructure.com/courses/1567973/pages/key-test';
 
-      when(mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
-      when(mockLauncher.launch(
+      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
+      when(_mockLauncher.launch(
         url,
         useSafariVC: anyNamed('useSafariVC'),
         useWebView: anyNamed('useWebView'),
@@ -364,7 +355,7 @@ void main() {
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
       verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
-      verify(mockLauncher.launch(
+      verify(_mockLauncher.launch(
         url,
         useSafariVC: anyNamed('useSafariVC'),
         useWebView: anyNamed('useWebView'),
@@ -376,15 +367,8 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows snackbar error for canLaunch false', (tester) async {
-      var mockLauncher = _MockUrlLauncherPlatform();
-      UrlLauncherPlatform.instance = mockLauncher;
-      setupTestLocator((locator) {
-        locator.registerLazySingleton<Logger>(() => _logger);
-        locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
-        locator.registerLazySingleton<FlutterSnackbarVeneer>(() => _mockSnackbar);
-      });
       final url = 'https://test.instructure.com/brokenurl';
-      when(mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(false));
+      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(false));
 
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
