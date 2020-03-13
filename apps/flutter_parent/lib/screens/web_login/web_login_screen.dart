@@ -139,11 +139,12 @@ class WebLoginScreen extends StatelessWidget {
     var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
     var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
 
-    // TODO: Support skipping mobile verify
-//    if (forceAuthRedirect || || mCanvasLogin == MOBILE_VERIFY_FLOW || (domain.contains(".test."))) {
+    // TODO: Support skipping mobile verify better
+    // forceAuthRedirect || mCanvasLogin == MOBILE_VERIFY_FLOW || domain.contains(".test.")
+    if (domain.contains(".test.")) {
 //      //Skip mobile verify
-//      redirect = Uri.encodeQueryComponent("urn:ietf:wg:oauth:2.0:oob");
-//    }
+      redirect = Uri.encodeQueryComponent("urn:ietf:wg:oauth:2.0:oob");
+    }
 
     var result =
         '$baseUrl/login/oauth2/auth?client_id=$clientId&response_type=code&mobile=1&purpose=$purpose&redirect_uri=$redirect';
