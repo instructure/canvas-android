@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-06T16:19:50.821493",
+  "@@last_modified": "2020-03-13T11:03:31.927140",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -145,6 +145,24 @@
     "placeholders": {
       "points": {}
     }
+  },
+  "No Events Today!": "No Events Today!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "It looks like a great day to rest, relax, and recharge.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "There was an error loading your student's calendar",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
   },
   "Previous Logins": "Previous Logins",
   "@Previous Logins": {
@@ -907,6 +925,12 @@
   "There’s nothing to be notified of yet.": "There’s nothing to be notified of yet.",
   "@There’s nothing to be notified of yet.": {
     "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dismiss": "dismiss",
+  "@dismiss": {
+    "description": "Accessibility label to dismiss an alert",
     "type": "text",
     "placeholders": {}
   },
