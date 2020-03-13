@@ -65,6 +65,7 @@ void main() {
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
       locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => Future.value([]));
@@ -85,6 +86,7 @@ void main() {
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
       locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
     await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
