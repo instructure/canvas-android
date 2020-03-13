@@ -64,10 +64,9 @@ class GradeCell extends StatelessWidget {
       key: Key('grade-cell-submitted-container'),
       child: Column(
         children: <Widget>[
-          Text(
-            L10n(context).submissionStatusSuccessTitle,
-            style: Theme.of(context).textTheme.headline.copyWith(color: ParentTheme.of(context).successColor),
-          ),
+          Text(L10n(context).submissionStatusSuccessTitle,
+              style: Theme.of(context).textTheme.headline.copyWith(color: ParentTheme.of(context).successColor),
+              key: Key("grade-cell-submit-status")),
           SizedBox(height: 6),
           Text(data.submissionText, textAlign: TextAlign.center),
         ],

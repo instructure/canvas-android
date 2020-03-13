@@ -25,7 +25,7 @@ import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 
-import '../auth_api.dart';
+import '../../lib/network/api/auth_api.dart';
 
 const _REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
 
@@ -35,7 +35,7 @@ class UserSeedApi {
   static const authCodeChannel = const MethodChannel("GET_AUTH_CODE");
 
   static Future<SeededUser> createUser() async {
-    var url = ApiPrefs.baseSeedingUrl + _createUserEndpoint;
+    var url = baseSeedingUrl + _createUserEndpoint;
 
     var lastName = faker.person.lastName();
     var firstName = faker.person.firstName();

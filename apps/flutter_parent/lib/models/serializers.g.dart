@@ -25,14 +25,20 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(ConversationWorkflowState.serializer)
       ..add(Course.serializer)
       ..add(CourseTab.serializer)
+      ..add(CreateAssignmentInfo.serializer)
+      ..add(CreateAssignmentWrapper.serializer)
       ..add(CreateCourseInfo.serializer)
       ..add(CreateCourseWrapper.serializer)
       ..add(CreateEnrollmentInfo.serializer)
       ..add(CreateEnrollmentWrapper.serializer)
+      ..add(CreateSubmissionInfo.serializer)
+      ..add(CreateSubmissionWrapper.serializer)
       ..add(CreateUserInfo.serializer)
       ..add(Enrollment.serializer)
       ..add(FileUploadConfig.serializer)
       ..add(Grade.serializer)
+      ..add(GradeSubmissionInfo.serializer)
+      ..add(GradeSubmissionWrapper.serializer)
       ..add(GradingPeriod.serializer)
       ..add(GradingPeriodResponse.serializer)
       ..add(GradingType.serializer)
@@ -107,6 +113,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Submission)]),
           () => new ListBuilder<Submission>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
+          () => new ListBuilder<SubmissionTypes>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(SubmissionTypes)]),
           () => new ListBuilder<SubmissionTypes>())

@@ -253,7 +253,7 @@ class _CourseGradeHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(L10n(context).courseTotalGradeLabel, style: textTheme.body1),
-          Text(_courseGrade(context, grade), style: textTheme.body1),
+          Text(_courseGrade(context, grade), style: textTheme.body1, key: Key("total_grade")),
         ],
       ),
     );
@@ -292,6 +292,7 @@ class _AssignmentRow extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
+          key: Key("assignment_${assignment.id}_row"),
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
@@ -309,9 +310,10 @@ class _AssignmentRow extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(assignment.name, style: textTheme.subhead),
+                        Text(assignment.name, style: textTheme.subhead, key: Key("assignment_${assignment.id}_name")),
                         SizedBox(height: 2),
-                        Text(_formatDate(context, assignment.dueAt), style: textTheme.caption),
+                        Text(_formatDate(context, assignment.dueAt),
+                            style: textTheme.caption, key: Key("assignment_${assignment.id}_dueAt")),
                         if (assignmentStatus != null) SizedBox(height: 4),
                         if (assignmentStatus != null) assignmentStatus,
                       ],
@@ -332,27 +334,24 @@ class _AssignmentRow extends StatelessWidget {
     final localizations = L10n(context);
     final textTheme = Theme.of(context).textTheme;
     final status = assignment.getStatus(studentId: studentId);
-
+    final key = Key("assignment_${assignment.id}_status");
     switch (status) {
       case SubmissionStatus.NONE:
         return null; // An 'invisible' status, just don't show anything
       case SubmissionStatus.LATE:
-        return Text(
-          localizations.assignmentLateSubmittedLabel,
-          style: textTheme.caption.copyWith(
-            // Late will be orange, regardless of the current student
-            color: ParentTheme.of(context).getColorVariantForCurrentState(StudentColorSet.fire),
-          ),
-        );
+        return Text(localizations.assignmentLateSubmittedLabel,
+            style: textTheme.caption.copyWith(
+              // Late will be orange, regardless of the current student
+              color: ParentTheme.of(context).getColorVariantForCurrentState(StudentColorSet.fire),
+            ),
+            key: key);
       case SubmissionStatus.MISSING:
-        return Text(
-          localizations.assignmentMissingSubmittedLabel,
-          style: textTheme.caption.copyWith(color: ParentColors.failure),
-        );
+        return Text(localizations.assignmentMissingSubmittedLabel,
+            style: textTheme.caption.copyWith(color: ParentColors.failure), key: key);
       case SubmissionStatus.SUBMITTED:
-        return Text(localizations.assignmentSubmittedLabel, style: textTheme.caption);
+        return Text(localizations.assignmentSubmittedLabel, style: textTheme.caption, key: key);
       case SubmissionStatus.NOT_SUBMITTED:
-        return Text(localizations.assignmentNotSubmittedLabel, style: textTheme.caption);
+        return Text(localizations.assignmentNotSubmittedLabel, style: textTheme.caption, key: key);
       default:
         return null;
     }
@@ -380,7 +379,10 @@ class _AssignmentRow extends StatelessWidget {
       semantics = localizations.contentDescriptionScoreOutOfPointsPossible('', points); // Read as "out of x points"
     }
 
-    return Text(text, semanticsLabel: semantics, style: Theme.of(context).textTheme.subhead);
+    return Text(text,
+        semanticsLabel: semantics,
+        style: Theme.of(context).textTheme.subhead,
+        key: Key("assignment_${assignment.id}_grade"));
   }
 
   String _formatDate(BuildContext context, DateTime date) {
