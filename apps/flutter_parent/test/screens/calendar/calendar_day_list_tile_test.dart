@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -19,14 +21,35 @@ import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
+import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
+import 'package:flutter_parent/screens/events/event_details_interactor.dart';
+import 'package:flutter_parent/screens/events/event_details_screen.dart';
+import 'package:flutter_parent/screens/quizzes/quiz_details_screen.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/logger.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  final studentId = '1337';
+  final studentName = 'Instructure Panda';
+
+  final student = User((b) => b
+    ..id = studentId
+    ..name = studentName);
+
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows title', (tester) async {
       var title = 'The Title';
@@ -218,19 +241,113 @@ void main() {
   });
 
   group('Interaction', () {
-    // TODO: Finish when routing is in place
-//    testWidgetsWithAccessibilityChecks('tapping assignment plannable navigates to assignment details page',
-//        (tester) async {
-//      var plannerItem = _createPlannerItem(plannableType: 'assignment', contextName: 'Tap me');
-//
-//      await tester.pumpWidget(TestApp(CalendarDayListTile(plannerItem)));
-//      await tester.pump();
-//
-//      await tester.tap(find.text('Tap me'));
-//      await tester.pump();
-//
-//      expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
-//    });
+    testWidgetsWithAccessibilityChecks('tapping assignment plannable navigates to assignment details page',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'assignment', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => Logger())
+        ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping announcement plannable navigates to announcement details page',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'announcement', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => Logger())
+        ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping quiz plannable navigates to quiz details page', (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'quiz', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => Logger()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(QuizDetailsScreen), findsOneWidget);
+    });
+
+    // TODO: Change test description when we get routing in place for discussions
+    testWidgetsWithAccessibilityChecks('tapping discussion plannable navigates to under construction page',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'discussion_topic', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => Logger()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to event details page',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'calendar_event', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => Logger())
+        ..registerFactory<EventDetailsInteractor>(() => _MockEventDetailsInteractor()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(EventDetailsScreen), findsOneWidget);
+    });
   });
 }
 
@@ -250,3 +367,9 @@ PlannerItem _createPlannerItem(
       ..plannableType = plannableType ?? 'assignment'
       ..plannableDate = DateTime.now()
       ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);
+
+class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
+
+class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
+
+class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}

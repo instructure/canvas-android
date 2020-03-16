@@ -15,8 +15,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
 class CalendarDayListTile extends StatelessWidget {
@@ -29,7 +33,30 @@ class CalendarDayListTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     Widget tile = InkWell(
       onTap: () {
-        // TODO: route stuff
+        switch (_item.plannableType) {
+          case 'assignment':
+            locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'announcement':
+            // Observers don't get institutional announcements, so we're only dealing with course announcements
+            locator<QuickNav>()
+                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'quiz':
+            locator<QuickNav>().pushRoute(context, PandaRouter.quizDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'discussion_topic':
+            // TODO: Probably have to use the announcement route since both the discussion and announcement urls are the same
+            locator<QuickNav>().push(context, UnderConstructionScreen());
+            break;
+          case 'calendar_event':
+            // Case where the observed user has a personal calendar event
+            locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId, _item.plannable.id));
+            break;
+          default:
+            // This is a type that we don't handle - do nothing
+            break;
+        }
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

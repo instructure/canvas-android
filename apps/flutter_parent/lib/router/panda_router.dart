@@ -33,6 +33,7 @@ import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/screens/quizzes/quiz_details_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -71,6 +72,7 @@ class PandaRouter {
   static String settings() => '/settings';
   static String assignmentDetails(String courseId, String assignmentId) =>
       '/courses/$courseId/assignments/$assignmentId';
+  static String quizDetails(String courseId, String quizId) => '/courses/$courseId/quizzes/$quizId';
   static String courseDetails(String courseId) => '/courses/$courseId';
   static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
   static String courseAnnouncementDetails(String courseId, String announcementId) =>
@@ -98,6 +100,7 @@ class PandaRouter {
       router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
       router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
           handler: _assignmentDetailsHandler);
+      router.define(quizDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.quizId}'), handler: _quizDetailsHandler);
       router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
       router.define(help(), handler: _helpHandler);
       router.define(legal(), handler: _legalHandler);
@@ -175,6 +178,15 @@ class PandaRouter {
     var widget = AssignmentDetailsScreen(
       courseId: params[_RouterKeys.courseId][0],
       assignmentId: params[_RouterKeys.assignmentId][0],
+    );
+    _logRoute(params, widget);
+    return widget;
+  });
+
+  static Handler _quizDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    var widget = QuizDetailsScreen(
+      courseId: params[_RouterKeys.courseId][0],
+      quizId: params[_RouterKeys.quizId][0],
     );
     _logRoute(params, widget);
     return widget;
@@ -319,13 +331,15 @@ class PandaRouter {
 
 /// Simple helper class to keep route keys/params consistently named
 class _RouterKeys {
-  static final courseId = 'courseId';
-  static final assignmentId = 'assignmentId';
-  static final eventId = 'eventId';
-  static final announcementId = 'announcementId';
   static final accountNotificationId = 'accountNotificationId';
-  static final domain = 'domain';
+  static final announcementId = 'announcementId';
+  static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
+  static final courseId = 'courseId';
+  static final domain = 'domain';
+  static final eventId = 'eventId';
+  static final quizId = 'quizId';
+  static final topicId = 'to;icId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
 }
 
