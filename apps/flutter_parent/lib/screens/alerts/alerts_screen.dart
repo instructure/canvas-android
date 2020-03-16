@@ -172,7 +172,6 @@ class __AlertsListState extends State<_AlertsList> {
             icon: Icon(Icons.clear, size: 20),
             onPressed: () => _dismissAlert(alert),
           ),
-          SizedBox(width: 16),
         ],
       ),
     );
