@@ -18,11 +18,12 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class AnnouncementApi {
-  Future<Announcement> getCourseAnnouncement(String courseId, String announcementId) {
-    return fetch(canvasDio().get('courses/$courseId/discussion_topics/$announcementId'));
+  Future<Announcement> getCourseAnnouncement(String courseId, String announcementId, bool forceRefresh) {
+    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/discussion_topics/$announcementId'));
   }
 
-  Future<AccountNotification> getAccountNotification(String accountNotificationid) {
-    return fetch(canvasDio().get('accounts/self/users/self/account_notifications/$accountNotificationid'));
+  Future<AccountNotification> getAccountNotification(String accountNotificationId, bool forceRefresh) {
+    return fetch(canvasDio(forceRefresh: forceRefresh)
+        .get('accounts/self/users/self/account_notifications/$accountNotificationId'));
   }
 }

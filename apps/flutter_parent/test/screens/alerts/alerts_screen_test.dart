@@ -73,7 +73,7 @@ void main() {
         .thenAnswer((_) => Future.value(alerts.first.rebuild((b) => b..workflowState = AlertWorkflowState.read)));
 
     final response = AnnouncementViewState('hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now(), null);
-    when(announcementInteractor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value(response));
+    when(announcementInteractor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value(response));
 
     await tester.pumpWidget(_testableWidget(highContrastMode: true));
     await tester.pumpAndSettle();

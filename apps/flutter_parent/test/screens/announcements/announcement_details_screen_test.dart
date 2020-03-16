@@ -46,7 +46,7 @@ void main() {
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
       final interactor = _MockAnnouncementDetailsInteractor();
-      when(interactor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
@@ -57,7 +57,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Does not show once loaded', (tester) async {
       final interactor = _MockAnnouncementDetailsInteractor();
-      when(interactor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.value());
+      when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
       _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
@@ -70,16 +70,51 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows error', (tester) async {
     final interactor = _MockAnnouncementDetailsInteractor();
-    when(interactor.getAnnouncement(any, any, any, any)).thenAnswer((_) => Future.error('error'));
+    when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.error('error'));
     _setupLocator(interactor: interactor);
 
     await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().errorLoadingAnnouncement), findsOneWidget);
+
+    when(interactor.getAnnouncement(any, any, any, any, any))
+        .thenAnswer((_) async => AnnouncementViewState('', '', '', null, null));
+    await tester.tap(find.text(AppLocalizations().retry));
+
+    verify(interactor.getAnnouncement(any, any, any, any, false)).called(1);
+    verify(interactor.getAnnouncement(any, any, any, any, true)).called(1);
   });
 
   group('With data', () {
+    testWidgetsWithAccessibilityChecks('Can pull to refresh', (tester) async {
+      final interactor = _MockAnnouncementDetailsInteractor();
+      final announcementId = '123';
+      final courseId = '123';
+      final announcementMessage = 'hodor';
+      final announcementSubject = 'hodor subject';
+      final postedAt = DateTime.now();
+      final courseName = 'flowers for hodornon';
+
+      final response = AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
+      when(interactor.getAnnouncement(
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
+          .thenAnswer((_) => Future.value(response));
+      _setupLocator(interactor: interactor);
+
+      await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
+      await tester.pumpAndSettle();
+
+      // Pull to refresh
+      final matchedWidget = find.byType(RefreshIndicator);
+      await tester.drag(matchedWidget, const Offset(0, 200));
+      await tester.pumpAndSettle();
+
+      // Once for initial (non forced) load, once for forced refresh
+      verify(interactor.getAnnouncement(any, any, any, any, false)).called(1);
+      verify(interactor.getAnnouncement(any, any, any, any, true)).called(1);
+    });
+
     testWidgetsWithAccessibilityChecks('Shows course announcement', (tester) async {
       final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
@@ -91,7 +126,7 @@ void main() {
 
       final response = AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(
-              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle))
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
@@ -119,7 +154,7 @@ void main() {
       final response =
           AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, attachment);
       when(interactor.getAnnouncement(
-              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle))
+              announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
@@ -146,7 +181,7 @@ void main() {
       final toolbarTitle = AppLocalizations().institutionAnnouncementTitle;
 
       final response = AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
-      when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle))
+      when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle, any))
           .thenAnswer((_) => Future.value(response));
       _setupLocator(interactor: interactor);
 
