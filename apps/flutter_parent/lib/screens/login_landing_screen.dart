@@ -39,7 +39,7 @@ class LoginLandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
-        endDrawer: kReleaseMode
+        endDrawer: !ApiPrefs.isDebug
             ? null // Don't show snickers in release mode
             : Drawer(
                 child: SafeArea(

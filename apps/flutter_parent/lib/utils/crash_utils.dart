@@ -20,12 +20,12 @@ import 'package:flutter_parent/screens/crash_screen.dart';
 
 class CrashUtils {
   static Future<void> init() async {
-    if (kReleaseMode) await FlutterCrashlytics().initialize();
+    if (!ApiPrefs.isDebug) await FlutterCrashlytics().initialize();
 
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
-      if (!kReleaseMode) {
+      if (ApiPrefs.isDebug) {
         FlutterError.dumpErrorToConsole(error);
       } else {
         FlutterCrashlytics().log('Widget Crash');
@@ -35,11 +35,11 @@ class CrashUtils {
 
     // Set up error handling
     FlutterError.onError = (error) {
-      if (kReleaseMode) {
-        reportCrash(error.exception, error.stack);
-      } else {
+      if (ApiPrefs.isDebug) {
         // Manually handle debug reporting here, as this console formatting is nicer than simple print(stacktrace)
         FlutterError.dumpErrorToConsole(error);
+      } else {
+        reportCrash(error.exception, error.stack);
       }
     };
   }
@@ -49,7 +49,7 @@ class CrashUtils {
     print('Caught exception: $exception');
     debugPrintStack(stackTrace: stacktrace);
 
-    if (kReleaseMode) {
+    if (!ApiPrefs.isDebug) {
       // Set any user info that will help to debug the issue
       await Future.wait([
         FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),

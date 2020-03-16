@@ -15,6 +15,7 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
@@ -38,6 +39,10 @@ class ApiPrefs {
   static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
   static Login _currentLogin;
+
+  // A static bool rather than a persisted pref, change this as desired during release testing
+  static bool _debugMode = kDebugMode;
+  static bool get isDebug => !kReleaseMode || _debugMode;
 
   static Future<void> init() async {
     if (_prefs == null) _prefs = await SharedPreferences.getInstance();

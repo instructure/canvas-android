@@ -11,15 +11,15 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter/foundation.dart';
 import 'package:flutter_crashlytics/flutter_crashlytics.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 
 class Logger {
   void log(String message) {
-    if (kReleaseMode) {
-      FlutterCrashlytics().log(message);
-    } else {
+    if (ApiPrefs.isDebug) {
       print(message);
+    } else {
+      FlutterCrashlytics().log(message);
     }
   }
 }

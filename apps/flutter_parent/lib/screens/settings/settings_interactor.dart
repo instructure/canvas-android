@@ -12,8 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -21,7 +21,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import '../theme_viewer_screen.dart';
 
 class SettingsInteractor {
-  bool isDebugMode() => kDebugMode;
+  bool isDebugMode() => ApiPrefs.isDebug;
 
   void routeToThemeViewer(BuildContext context) {
     locator<QuickNav>().push(context, ThemeViewerScreen());
