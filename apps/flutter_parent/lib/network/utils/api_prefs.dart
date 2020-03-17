@@ -244,7 +244,7 @@ class ApiPrefs {
     return headers;
   }
 
-  static Future<void> setCurrentStudent(User currentStudent) async {
+  static setCurrentStudent(User currentStudent) {
     _checkInit();
     _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
   }

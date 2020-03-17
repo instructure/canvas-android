@@ -260,6 +260,54 @@ void main() {
       verifyNever(filterDb.insertOrUpdate(any));
     });
   });
+
+  testWidgetsWithAccessibilityChecks('filter returns empty list if all items selected', (tester) async {
+    _setup();
+
+    var completer = Completer<List<Course>>();
+
+    final observer = _MockNavigatorObserver();
+
+    when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+        .thenAnswer((_) => completer.future);
+
+    await tester.pumpWidget(_testableMaterialWidget(observer: observer));
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([]));
+
+    // Tap on the calendar filter button
+    await tester.tap(find.text(AppLocalizations().calendars));
+    await tester.pump();
+    await tester.pump();
+
+    // Setup the capture of navigation arguments
+    Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
+    List<String> result = [];
+    pushedRoute.popped.then((value) {
+      result = value;
+    });
+
+    completer.complete(Future.value(_mockCourses()));
+    await tester.pumpAndSettle();
+
+    // Check for the filter screen
+    expect(find.byType(CalendarFilterListScreen), findsOneWidget);
+
+    // Tap on unselected context items
+    await tester.tap(find.text('Course2'));
+    await tester.tap(find.text('Course3'));
+    await tester.pumpAndSettle();
+
+    // Tap on the back button
+    await tester.pageBack();
+    await tester.pumpAndSettle(Duration(seconds: 1));
+
+    // Verify that the list of selected items was updated correctly
+    expect(result, <String>[]);
+  });
 }
 
 Widget _testableMaterialWidget(

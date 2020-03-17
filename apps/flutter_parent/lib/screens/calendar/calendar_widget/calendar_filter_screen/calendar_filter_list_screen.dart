@@ -37,6 +37,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   List<String> selectedContextIds = []; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   bool selectAllIfEmpty = true;
+  int courseLength = -1;
 
   @override
   void initState() {
@@ -48,7 +49,8 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pop(context, selectedContextIds);
+        // An empty list is interpreted as all courses selected
+        Navigator.pop(context, courseLength == selectedContextIds.length ? <String>[] : selectedContextIds);
         return false;
       },
       child: DefaultParentTheme(
@@ -84,6 +86,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
             _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshCoursesKey.currentState.show());
           } else if (snapshot.hasData) {
             _courses = snapshot.data;
+            courseLength = _courses.length;
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
               // contexts, then they will all automatically be put into the selected list
