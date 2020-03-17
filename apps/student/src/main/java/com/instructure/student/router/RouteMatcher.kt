@@ -38,12 +38,16 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.interactions.router.*
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
+import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.student.R
 import com.instructure.student.activity.*
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.util.FileUtils
 import retrofit2.Call
@@ -172,7 +176,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/lti_collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/collaborations.*"), UnsupportedTabFragment::class.java, Tab.COLLABORATIONS_ID))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/outcomes.*"), UnsupportedTabFragment::class.java, Tab.OUTCOMES_ID))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"), ConferencesFragment::class.java, Tab.CONFERENCES_ID))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/conferences.*"), ConferenceListFragment::class.java, Tab.CONFERENCES_ID))
 
         routes.add(Route("/files", FileListFragment::class.java).apply{ canvasContext = ApiPrefs.user }) // validRoute for FileListFragment checks for a canvasContext, which is null on deep links
         routes.add(Route("/files/folder/:${RouterParams.FOLDER_NAME}", RouteContext.FILE))

@@ -613,11 +613,6 @@
         <item quantity="other">%d questions</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minute</item>
-        <item quantity="other">%s Minutes</item>
-    </plurals>
-
     <string name="discussion_details">Discussion Details</string>
     <string name="discussions_pinned">Pinned</string>
     <string name="discussions_unpinned">Discussions</string>

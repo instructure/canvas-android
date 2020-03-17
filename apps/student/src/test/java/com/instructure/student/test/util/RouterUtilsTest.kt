@@ -444,22 +444,6 @@ class RouterUtilsTest : TestCase() {
     }
 
     @Test
-    fun testGetInternalRoute_conferences() {
-        val courseId = "836357"
-        var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/")
-        val expectedParams = hashMapOf(RouterParams.COURSE_ID to courseId)
-        assertNotNull(route)
-        assertEquals(ConferencesFragment::class.java, route!!.primaryClass)
-        assertEquals(expectedParams, route.paramsHash)
-
-        route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/234") // not an actual url
-        assertNotNull(route)
-        assertEquals(ConferencesFragment::class.java, route!!.primaryClass)
-        assertEquals(expectedParams, route.paramsHash)
-
-    }
-
-    @Test
     fun testCreateBookmarkCourse() {
         ApiPrefs.domain = "mobiledev.instructure.com"
         val replacementParams = HashMap<String, String>()
