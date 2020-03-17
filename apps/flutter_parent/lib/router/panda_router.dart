@@ -331,7 +331,7 @@ class _RouterKeys {
   static final domain = 'domain';
   static final eventId = 'eventId';
   static final quizId = 'quizId';
-  static final topicId = 'toicId';
+  static final topicId = 'topicId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
 }
 
