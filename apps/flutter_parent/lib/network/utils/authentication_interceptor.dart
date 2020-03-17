@@ -30,6 +30,9 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
 
   @override
   Future onError(DioError error) async {
+    // Only proceed if it was an authentication error
+    if (error.response?.statusCode != 401) return error;
+
     final currentLogin = ApiPrefs.getCurrentLogin();
 
     // Check for any errors

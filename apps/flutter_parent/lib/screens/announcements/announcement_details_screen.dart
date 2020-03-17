@@ -42,8 +42,14 @@ class AnnouncementDetailScreen extends StatefulWidget {
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   Future<AnnouncementViewState> _announcementFuture;
 
-  Future<AnnouncementViewState> _loadAnnouncement(BuildContext context) => _interactor.getAnnouncement(
-      widget.announcementId, widget.announcementType, widget.courseId, L10n(context).institutionAnnouncementTitle);
+  Future<AnnouncementViewState> _loadAnnouncement(BuildContext context, {bool forceRefresh = false}) =>
+      _interactor.getAnnouncement(
+        widget.announcementId,
+        widget.announcementType,
+        widget.courseId,
+        L10n(context).institutionAnnouncementTitle,
+        forceRefresh,
+      );
 
   get _interactor => locator<AnnouncementDetailsInteractor>();
 
@@ -73,17 +79,20 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
       appBar: AppBar(
         title: Text(announcementViewState.toolbarTitle),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: _announcementBody(announcementViewState),
-      ),
+      body: RefreshIndicator(
+          onRefresh: () {
+            setState(() {
+              _announcementFuture = _loadAnnouncement(context, forceRefresh: true);
+            });
+            return _announcementFuture.catchError((_) {});
+          },
+          child: _announcementBody(announcementViewState)),
     );
   }
 
   Widget _announcementBody(AnnouncementViewState announcementViewState) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      padding: const EdgeInsets.all(16),
       children: <Widget>[
         Text(
           announcementViewState.announcementTitle,
@@ -96,10 +105,9 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         ),
         SizedBox(height: 20),
         Divider(),
-        Expanded(
-          child: CanvasWebView(
-            content: announcementViewState.announcementMessage,
-          ),
+        CanvasWebView(
+          content: announcementViewState.announcementMessage,
+          fullScreen: false,
         ),
         _attachmentsWidget(context, announcementViewState.attachment),
       ],
@@ -111,7 +119,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: ErrorPandaWidget(L10n(context).errorLoadingAnnouncement, () {
           setState(() {
-            _announcementFuture = _loadAnnouncement(context);
+            _announcementFuture = _loadAnnouncement(context, forceRefresh: true);
           });
         }));
   }
