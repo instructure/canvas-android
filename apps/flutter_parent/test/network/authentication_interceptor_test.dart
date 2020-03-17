@@ -42,9 +42,17 @@ void main() {
     reset(authApi);
   });
 
+  test('returns error if response code is not 401', () async {
+    await setupPlatformChannels();
+    final error = DioError(request: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 403));
+
+    // Test the error response
+    expect(await interceptor.onError(error), error);
+  });
+
   test('returns error if path is accounts/self', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions(path: 'accounts/self'));
+    final error = DioError(request: RequestOptions(path: 'accounts/self'), response: Response(statusCode: 401));
 
     // Test the error response
     expect(await interceptor.onError(error), error);
@@ -52,7 +60,10 @@ void main() {
 
   test('returns error if headers have the retry header', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}));
+    final error = DioError(
+      request: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}),
+      response: Response(statusCode: 401),
+    );
 
     // Test the error response
     expect(await interceptor.onError(error), error);
@@ -61,7 +72,7 @@ void main() {
 
   test('returns error if login is null', () async {
     await setupPlatformChannels();
-    final error = DioError(request: RequestOptions());
+    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
     expect(await interceptor.onError(error), error);
@@ -70,7 +81,7 @@ void main() {
 
   test('returns error if login client id is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientId = null)));
-    final error = DioError(request: RequestOptions());
+    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
     expect(await interceptor.onError(error), error);
@@ -79,7 +90,7 @@ void main() {
 
   test('returns error if login client secret is null', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login.rebuild((b) => b..clientSecret = null)));
-    final error = DioError(request: RequestOptions());
+    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
 
     // Test the error response
     expect(await interceptor.onError(error), error);
@@ -88,7 +99,7 @@ void main() {
 
   test('returns error if the refresh api call failed', () async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
-    final error = DioError(request: RequestOptions());
+    final error = DioError(request: RequestOptions(), response: Response(statusCode: 401));
 
     when(authApi.refreshToken()).thenAnswer((_) => Future.error('Failed to refresh'));
 
@@ -104,7 +115,7 @@ void main() {
 
     final tokens = CanvasToken((b) => b..accessToken = 'token');
     final path = 'test/path/stuff';
-    final error = DioError(request: RequestOptions(path: path));
+    final error = DioError(request: RequestOptions(path: path), response: Response(statusCode: 401));
     final expectedOptions = RequestOptions(path: path, headers: {
       'Authorization': 'Bearer ${tokens.accessToken}',
       'mobile_refresh': 'mobile_refresh',
