@@ -15,8 +15,8 @@
 import 'dart:ui';
 
 import 'package:flutter_parent/models/login.dart';
-import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/reminder.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
@@ -319,18 +319,15 @@ void main() {
 
     expect(ApiPrefs.getHasMigrated(), isTrue);
   });
-}
 
-MobileVerifyResult _mockVerifyResult(String domain) => MobileVerifyResult((b) {
-      return b
-        ..baseUrl = domain
-        ..authorized = true
-        ..result = VerifyResultEnum.success
-        ..clientId = 'clientId'
-        ..clientSecret = 'clientSecret'
-        ..apiKey = 'key'
-        ..build();
-    });
+  test('gets and sets selected student', () async {
+    await setupPlatformChannels();
+    User user = CanvasModelTestUtils.mockUser();
+    await ApiPrefs.setCurrentStudent(user);
+
+    expect(ApiPrefs.getCurrentStudent(), user);
+  });
+}
 
 abstract class _Rebuildable {
   void rebuild(Locale locale);

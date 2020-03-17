@@ -32,7 +32,11 @@ object ExternalToolManager {
         forceNetwork: Boolean
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(canvasContext = canvasContext, isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(
+            canvasContext = canvasContext,
+            isForceReadFromNetwork = forceNetwork,
+            usePerPageQueryParam = true
+        )
 
         ExternalToolAPI.getExternalToolsForCanvasContext(canvasContext.id, adapter, params, callback)
     }

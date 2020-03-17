@@ -29,6 +29,8 @@ import retrofit2.http.Url
 
 
 internal object ExternalToolAPI {
+    // This returns a paged response, so either we have to depaginate, or pull down 100, since we're typically looking
+    // for the Studio LTI.
     internal interface ExternalToolInterface {
         @GET("{contextId}/external_tools?include_parents=true")
         fun getExternalToolsForCanvasContext(@Path("contextId") contextId: Long): Call<List<LTITool>>
