@@ -38,6 +38,21 @@ class AssignmentDetailsInteractor {
     );
   }
 
+  Future<AssignmentDetails> loadQuizDetails(
+    bool forceRefresh,
+    String courseId,
+    String assignmentId,
+    String studentId,
+  ) async {
+    final course = locator<CourseApi>().getCourse(courseId);
+    final quiz = locator<AssignmentApi>().getAssignment(courseId, assignmentId, forceRefresh: forceRefresh);
+
+    return AssignmentDetails(
+      assignment: (await quiz),
+      course: (await course),
+    );
+  }
+
   Future<Reminder> loadReminder(String assignmentId) async {
     final reminder = await locator<ReminderDb>().getByItem(
       ApiPrefs.getDomain(),

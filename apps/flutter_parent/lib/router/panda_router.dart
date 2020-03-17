@@ -55,33 +55,35 @@ class PandaRouter {
 
   static bool _isInitialized = false;
 
-  static String rootSplash() => '/';
+  static String assignmentDetails(String courseId, String assignmentId) =>
+      '/courses/$courseId/assignments/$assignmentId';
+  static String conversations() => '/conversations';
+  static String courseAnnouncementDetails(String courseId, String announcementId) =>
+      '/courses/$courseId/discussion_topics/$announcementId';
+  static String courseDetails(String courseId) => '/courses/$courseId';
   static String dashboard() => '/dashboard';
+  static String discussionDetails(String courseId, String topicId) => courseAnnouncementDetails(courseId, topicId);
+  static String domainSearch() => '/domainSearch';
+  static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
+  static String help() => '/help';
+  static String institutionAnnouncementDetails(String accountNotificationId) =>
+      '/account_notifications/$accountNotificationId';
+  static String legal() => '/legal';
   static String login() => '/login';
   static final String _loginWeb = '/loginWeb';
   static String loginWeb(String domain, {String authenticationProvider = null}) =>
       '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider';
-  static String domainSearch() => '/domainSearch';
-  static String notParent() => '/not_parent';
-  static String conversations() => '/conversations';
   static String manageStudents() => '/manage_students';
-  static String help() => '/help';
-  static String legal() => '/legal';
-  static String termsOfUse() => '/terms_of_use';
-  static String settings() => '/settings';
-  static String assignmentDetails(String courseId, String assignmentId) =>
-      '/courses/$courseId/assignments/$assignmentId';
-  static String courseDetails(String courseId) => '/courses/$courseId';
-  static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
-  static String courseAnnouncementDetails(String courseId, String announcementId) =>
-      '/courses/$courseId/discussion_topics/$announcementId';
-  static String institutionAnnouncementDetails(String accountNotificationId) =>
-      '/account_notifications/$accountNotificationId';
+  static String notParent() => '/not_parent';
+  static String quizAssignmentDetails(String courseId, String quizId) => assignmentDetails(courseId, quizId);
   static final String _rootWithExternalUrl = '/external';
-  static final String _simpleWebView = '/internal';
-  static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
   static final String _routerError = '/error';
   static String _routerErrorRoute(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String rootSplash() => '/';
+  static final String _simpleWebView = '/internal';
+  static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String settings() => '/settings';
+  static String termsOfUse() => '/terms_of_use';
 
   static void init() {
     if (!_isInitialized) {
@@ -97,6 +99,8 @@ class PandaRouter {
       // INTERNAL
       router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
       router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
+          handler: _assignmentDetailsHandler);
+      router.define(quizAssignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.quizId}'),
           handler: _assignmentDetailsHandler);
       router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
       router.define(help(), handler: _helpHandler);
@@ -322,13 +326,15 @@ class PandaRouter {
 
 /// Simple helper class to keep route keys/params consistently named
 class _RouterKeys {
-  static final courseId = 'courseId';
-  static final assignmentId = 'assignmentId';
-  static final eventId = 'eventId';
-  static final announcementId = 'announcementId';
   static final accountNotificationId = 'accountNotificationId';
-  static final domain = 'domain';
+  static final announcementId = 'announcementId';
+  static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
+  static final courseId = 'courseId';
+  static final domain = 'domain';
+  static final eventId = 'eventId';
+  static final quizId = 'quizId';
+  static final topicId = 'topicId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
 }
 

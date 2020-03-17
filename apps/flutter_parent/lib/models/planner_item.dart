@@ -51,6 +51,9 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
   @BuiltValueField(wireName: 'submissions')
   JsonObject get submissionStatusRaw;
 
+  @BuiltValueField(wireName: 'html_url')
+  String get htmlUrl;
+
   @nullable
   PlannerSubmission get submissionStatus {
     if (submissionStatusRaw == null || submissionStatusRaw.isBool) return null;
