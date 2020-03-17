@@ -37,5 +37,10 @@ abstract class Plannable implements Built<Plannable, PlannableBuilder> {
   @BuiltValueField(wireName: 'due_at')
   DateTime get dueAt;
 
+  // Used to determine if a quiz is an assignment or not
+  @nullable
+  @BuiltValueField(wireName: 'assignment_id')
+  String get assignmentId;
+
   factory Plannable([void Function(PlannableBuilder) updates]) = _$Plannable;
 }

@@ -17,6 +17,7 @@ import 'dart:convert';
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
@@ -30,15 +31,17 @@ import 'package:flutter_parent/screens/assignments/assignment_details_screen.dar
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
-import 'package:flutter_parent/screens/quizzes/quiz_details_screen.dart';
-import 'package:flutter_parent/screens/under_construction_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
@@ -241,7 +244,7 @@ void main() {
   });
 
   group('Interaction', () {
-    testWidgetsWithAccessibilityChecks('tapping assignment plannable navigates to assignment details page',
+    testWidgetsWithAccessibilityChecks('tapping assignment plannable navigates to assignment details screen',
         (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'assignment', contextName: 'Tap me');
 
@@ -263,7 +266,7 @@ void main() {
       expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('tapping announcement plannable navigates to announcement details page',
+    testWidgetsWithAccessibilityChecks('tapping announcement plannable navigates to announcement details screen',
         (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'announcement', contextName: 'Tap me');
 
@@ -285,12 +288,18 @@ void main() {
       expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('tapping quiz plannable navigates to quiz details page', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'quiz', contextName: 'Tap me');
+    testWidgetsWithAccessibilityChecks('tapping quiz assignment plannable navigates to assignment details screen',
+        (tester) async {
+      var plannerItem = _createPlannerItem(
+        plannableType: 'quiz',
+        contextName: 'Tap me',
+        plannable: _createPlannable(assignmentId: '123'),
+      );
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger()));
+        ..registerLazySingleton<Logger>(() => Logger())
+        ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -302,17 +311,78 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.byType(QuizDetailsScreen), findsOneWidget);
+      expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
     });
 
-    // TODO: Change test description when we get routing in place for discussions
-    testWidgetsWithAccessibilityChecks('tapping discussion plannable navigates to under construction page',
+    testWidgetsWithAccessibilityChecks('tapping quiz plannable launches mobile browser', (tester) async {
+      var login = Login((b) => b
+        ..domain = 'https://test.instructure.com'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      final url = 'https://test.instructure.com/courses/1/quizzes/1';
+      var plannerItem = _createPlannerItem(
+        plannableType: 'quiz',
+        contextName: 'Tap me',
+        htmlUrl: '/courses/1/quizzes/1',
+      );
+
+      final _mockLauncher = _MockUrlLauncherPlatform();
+      final _mockWebContentInteractor = _MockWebContentInteractor();
+      final _logger = _MockLogger();
+
+      when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
+      when(_mockLauncher.launch(
+        url,
+        useSafariVC: anyNamed('useSafariVC'),
+        useWebView: anyNamed('useWebView'),
+        enableJavaScript: anyNamed('enableJavaScript'),
+        enableDomStorage: anyNamed('enableDomStorage'),
+        universalLinksOnly: anyNamed('universalLinksOnly'),
+        headers: anyNamed('headers'),
+      )).thenAnswer((_) => Future.value(true));
+      when(_mockWebContentInteractor.getAuthUrl(url)).thenAnswer((_) => Future.value(url));
+
+      UrlLauncherPlatform.instance = _mockLauncher;
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerLazySingleton<Logger>(() => _logger)
+        ..registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        highContrast: true,
+        platformConfig: PlatformConfig(mockPrefs: {
+          ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student)),
+          ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid,
+        }),
+      ));
+      await ApiPrefs.addLogin(login);
+      await tester.pump();
+
+      // Tap the quiz widget
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+
+      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_mockLauncher.launch(
+        url,
+        useSafariVC: anyNamed('useSafariVC'),
+        useWebView: anyNamed('useWebView'),
+        enableJavaScript: anyNamed('enableJavaScript'),
+        enableDomStorage: anyNamed('enableDomStorage'),
+        universalLinksOnly: anyNamed('universalLinksOnly'),
+        headers: anyNamed('headers'),
+      )).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping discussion plannable navigates to course announcement details screen',
         (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'discussion_topic', contextName: 'Tap me');
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger()));
+        ..registerLazySingleton<Logger>(() => Logger())
+        ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -324,10 +394,10 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to event details page',
+    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to event details screen',
         (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'calendar_event', contextName: 'Tap me');
 
@@ -351,14 +421,20 @@ void main() {
   });
 }
 
-Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible}) => Plannable((b) => b
-  ..id = ''
-  ..title = title ?? ''
-  ..pointsPossible = pointsPossible
-  ..dueAt = dueAt);
+Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible, String assignmentId}) =>
+    Plannable((b) => b
+      ..id = ''
+      ..title = title ?? ''
+      ..pointsPossible = pointsPossible
+      ..dueAt = dueAt
+      ..assignmentId = assignmentId);
 
 PlannerItem _createPlannerItem(
-        {String contextName, Plannable plannable, String plannableType, PlannerSubmission submission}) =>
+        {String contextName,
+        Plannable plannable,
+        String plannableType,
+        PlannerSubmission submission,
+        String htmlUrl}) =>
     PlannerItem((b) => b
       ..courseId = ''
       ..plannable = plannable != null ? plannable.toBuilder() : _createPlannable().toBuilder()
@@ -366,6 +442,7 @@ PlannerItem _createPlannerItem(
       ..contextName = contextName ?? ''
       ..plannableType = plannableType ?? 'assignment'
       ..plannableDate = DateTime.now()
+      ..htmlUrl = htmlUrl ?? ''
       ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);
 
 class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
@@ -373,3 +450,9 @@ class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetails
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
 
 class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
+
+class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+
+class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
+
+class _MockLogger extends Mock implements Logger {}

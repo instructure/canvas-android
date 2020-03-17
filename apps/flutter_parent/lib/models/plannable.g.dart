@@ -38,6 +38,13 @@ class _$PlannableSerializer implements StructuredSerializer<Plannable> {
       result.add(serializers.serialize(object.dueAt,
           specifiedType: const FullType(DateTime)));
     }
+    result.add('assignment_id');
+    if (object.assignmentId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.assignmentId,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -69,6 +76,10 @@ class _$PlannableSerializer implements StructuredSerializer<Plannable> {
           result.dueAt = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
           break;
+        case 'assignment_id':
+          result.assignmentId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -85,11 +96,14 @@ class _$Plannable extends Plannable {
   final double pointsPossible;
   @override
   final DateTime dueAt;
+  @override
+  final String assignmentId;
 
   factory _$Plannable([void Function(PlannableBuilder) updates]) =>
       (new PlannableBuilder()..update(updates)).build();
 
-  _$Plannable._({this.id, this.title, this.pointsPossible, this.dueAt})
+  _$Plannable._(
+      {this.id, this.title, this.pointsPossible, this.dueAt, this.assignmentId})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Plannable', 'id');
@@ -113,14 +127,18 @@ class _$Plannable extends Plannable {
         id == other.id &&
         title == other.title &&
         pointsPossible == other.pointsPossible &&
-        dueAt == other.dueAt;
+        dueAt == other.dueAt &&
+        assignmentId == other.assignmentId;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, id.hashCode), title.hashCode), pointsPossible.hashCode),
-        dueAt.hashCode));
+        $jc(
+            $jc($jc($jc(0, id.hashCode), title.hashCode),
+                pointsPossible.hashCode),
+            dueAt.hashCode),
+        assignmentId.hashCode));
   }
 
   @override
@@ -129,7 +147,8 @@ class _$Plannable extends Plannable {
           ..add('id', id)
           ..add('title', title)
           ..add('pointsPossible', pointsPossible)
-          ..add('dueAt', dueAt))
+          ..add('dueAt', dueAt)
+          ..add('assignmentId', assignmentId))
         .toString();
   }
 }
@@ -154,6 +173,10 @@ class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
   DateTime get dueAt => _$this._dueAt;
   set dueAt(DateTime dueAt) => _$this._dueAt = dueAt;
 
+  String _assignmentId;
+  String get assignmentId => _$this._assignmentId;
+  set assignmentId(String assignmentId) => _$this._assignmentId = assignmentId;
+
   PlannableBuilder();
 
   PlannableBuilder get _$this {
@@ -162,6 +185,7 @@ class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
       _title = _$v.title;
       _pointsPossible = _$v.pointsPossible;
       _dueAt = _$v.dueAt;
+      _assignmentId = _$v.assignmentId;
       _$v = null;
     }
     return this;
@@ -184,7 +208,11 @@ class PlannableBuilder implements Builder<Plannable, PlannableBuilder> {
   _$Plannable build() {
     final _$result = _$v ??
         new _$Plannable._(
-            id: id, title: title, pointsPossible: pointsPossible, dueAt: dueAt);
+            id: id,
+            title: title,
+            pointsPossible: pointsPossible,
+            dueAt: dueAt,
+            assignmentId: assignmentId);
     replace(_$result);
     return _$result;
   }
