@@ -40,7 +40,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
         darkMode: true,
       ));
@@ -59,7 +59,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
         darkMode: true,
       ));
@@ -83,7 +83,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
         darkMode: true,
       ));
@@ -105,7 +105,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value(selectedCourses)),
+        CalendarFilterListScreen(selectedCourses),
         highContrast: true,
       ));
       await tester.pump();
@@ -122,7 +122,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
       ));
       await tester.pump();
@@ -139,7 +139,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
       ));
       await tester.pump();
@@ -157,7 +157,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value([])),
+        CalendarFilterListScreen(<String>[]),
         highContrast: true,
       ));
       await tester.pump();
@@ -181,7 +181,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value(['course_123'])),
+        CalendarFilterListScreen(['course_123']),
         highContrast: true,
       ));
       await tester.pump();
@@ -208,7 +208,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value(selectedContexts)),
+        CalendarFilterListScreen(selectedContexts),
         highContrast: true,
       ));
       await tester.pump();
@@ -261,7 +261,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(Future.value(selectedContexts)),
+        CalendarFilterListScreen(selectedContexts),
         highContrast: true,
       ));
       await tester.pump();
