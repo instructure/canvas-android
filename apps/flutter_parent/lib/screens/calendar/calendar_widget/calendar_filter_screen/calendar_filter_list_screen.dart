@@ -24,9 +24,9 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CalendarFilterListScreen extends StatefulWidget {
-  Future<List<String>> _selectedCoursesFuture;
+  List<String> _selectedCourses;
 
-  CalendarFilterListScreen(this._selectedCoursesFuture);
+  CalendarFilterListScreen(this._selectedCourses);
 
   @override
   State<StatefulWidget> createState() => CalendarFilterListScreenState();
@@ -34,13 +34,13 @@ class CalendarFilterListScreen extends StatefulWidget {
 
 class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   Future<List<Course>> _coursesFuture;
-  List<String> selectedContextIds; // Public, to allow for testing
+  List<String> selectedContextIds = []; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   bool selectAllIfEmpty = true;
 
   @override
   void initState() {
-    _coursesFuture = locator.get<CalendarFilterListInteractor>().getCoursesForSelectedStudent(isRefresh: true);
+    _coursesFuture = locator.get<CalendarFilterListInteractor>().getCoursesForSelectedStudent(isRefresh: false);
     super.initState();
   }
 
@@ -87,7 +87,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
             if (selectedContextIds.isEmpty && selectAllIfEmpty) {
               // We only want to do this the first time we load, otherwise if the user ever deselects all the
               // contexts, then they will all automatically be put into the selected list
-              // Note: As unlikely as it is, ff the user deselects all contexts then all contexts will be returned in the calendar
+              // Note: As unlikely as it is, if the user deselects all contexts then all contexts will be returned in the calendar
 
               // List will be empty when all courses are selected (on first load)
               selectedContextIds.addAll(_courses.map((c) => 'course_${c.id}').toList());
@@ -101,15 +101,13 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                   )
                 : _courseList(_courses);
           } else {
-            widget._selectedCoursesFuture.then((c) {
-              selectedContextIds = c;
-              if (selectedContextIds.isNotEmpty) {
-                // The list isn't empty so we don't want to continue checking if the list is empty above, and
-                // select everything again (though if the user doesn't select anything and they go back, everything will be
-                // selected).
-                selectAllIfEmpty = false;
-              }
-            });
+            selectedContextIds.addAll(widget._selectedCourses);
+            if (selectedContextIds.isNotEmpty) {
+              // The list isn't empty so we don't want to continue checking if the list is empty above, and
+              // select everything again (though if the user doesn't select anything and they go back, everything will be
+              // selected).
+              selectAllIfEmpty = false;
+            }
             return LoadingIndicator();
           }
 
@@ -127,20 +125,22 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   }
 
   ListView _courseList(List<Course> courses) {
-    List<Widget> _listItems = List.from([
+    List<Widget> _listItems = [
       _listHeader(L10n(context).coursesLabel),
       ...courses.map((c) => MergeSemantics(
             child: LabeledCheckbox(
                 label: c.name,
                 padding: const EdgeInsets.only(left: 2.0, right: 16.0),
-                value: selectedContextIds.contains('course_${c.id}'),
+                value: selectedContextIds.contains(c.contextFilterId()),
                 onChanged: (bool newValue) {
                   setState(() {
-                    newValue ? selectedContextIds.add('course_${c.id}') : selectedContextIds.remove('course_${c.id}');
+                    newValue
+                        ? selectedContextIds.add(c.contextFilterId())
+                        : selectedContextIds.remove(c.contextFilterId());
                   });
                 }),
           ))
-    ]);
+    ];
     return ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: _listItems.length, // Add one for the Courses header

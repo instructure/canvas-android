@@ -156,6 +156,8 @@ abstract class Course implements Built<Course, CourseBuilder> {
             ),
         forceAllPeriods: forceAllPeriods,
       );
+
+  String contextFilterId() => 'course_${this.id}';
 }
 
 @BuiltValueEnum(wireName: 'default_view')

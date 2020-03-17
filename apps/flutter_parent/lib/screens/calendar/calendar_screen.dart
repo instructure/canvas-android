@@ -62,9 +62,24 @@ class CalendarScreenState extends State<CalendarScreen> {
       onFilterTap: () async {
         // Get currently-selected contexts with _fetcher.getContexts().
         // On courses changed, call _fetcher.setContexts().
-        var updatedContexts =
-            await locator.get<QuickNav>().push(context, CalendarFilterListScreen(_fetcher.getContexts()));
-        _fetcher.setContexts(updatedContexts);
+        List<String> currentContexts = await _fetcher.getContexts();
+        List<String> updatedContexts = await locator.get<QuickNav>().push(
+              context,
+              CalendarFilterListScreen(currentContexts),
+            );
+        // Check if the list changed or not
+        if (currentContexts.length != updatedContexts.length) {
+          // Lists are different - update
+          _fetcher.setContexts(updatedContexts);
+        } else {
+          for (int c = 0; c < currentContexts.length; c++) {
+            if (!updatedContexts.contains(currentContexts[c])) {
+              // Lists are different - update
+              _fetcher.setContexts(updatedContexts);
+              break;
+            }
+          }
+        }
       },
       dayBuilder: (BuildContext context, DateTime day) {
         return CalendarDayPlanner(day);

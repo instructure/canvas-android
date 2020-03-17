@@ -121,13 +121,12 @@ void main() {
       }
     });
 
-    testWidgetsWithAccessibilityChecks('returning from filter screen updates selected contexts in fetcher',
-        (tester) async {
+    testWidgetsWithAccessibilityChecks('filter screen returns updated contexts', (tester) async {
       _setup();
 
       var completer = Completer<List<Course>>();
 
-      final observer = MockNavigatorObserver();
+      final observer = _MockNavigatorObserver();
 
       when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => completer.future);
@@ -167,6 +166,98 @@ void main() {
 
       // Verify that the list of selected items was updated correctly
       expect(result, ['course_123', 'course_234']);
+    });
+
+    testWidgetsWithAccessibilityChecks('planner updated if user filtered different contexts', (tester) async {
+      _setup();
+
+      var completer = Completer<List<Course>>();
+
+      final observer = _MockNavigatorObserver();
+
+      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => completer.future);
+
+      await tester.pumpWidget(_testableMaterialWidget(observer: observer));
+      await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+      when(plannerApi.getUserPlannerItems(any, any, any,
+              contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value([]));
+
+      // Tap on the calendar filter button
+      await tester.tap(find.text(AppLocalizations().calendars));
+      await tester.pump();
+      await tester.pump();
+
+      // Setup the capture of navigation arguments
+      Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
+      List<String> result = [];
+      pushedRoute.popped.then((value) {
+        result = value;
+      });
+
+      completer.complete(Future.value(_mockCourses()));
+      await tester.pumpAndSettle();
+
+      // Check for the filter screen
+      expect(find.byType(CalendarFilterListScreen), findsOneWidget);
+
+      // Tap on a context item
+      await tester.tap(find.text('Course2'));
+      await tester.pumpAndSettle();
+
+      // Tap on the back button
+      await tester.pageBack();
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Verify that the list of selected items was updated correctly
+      expect(result, ['course_123', 'course_234']);
+      verify(filterDb.insertOrUpdate(any)).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('planner not updated if user did not change filtered contexts', (tester) async {
+      _setup();
+
+      var completer = Completer<List<Course>>();
+
+      final observer = _MockNavigatorObserver();
+
+      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => completer.future);
+
+      await tester.pumpWidget(_testableMaterialWidget(observer: observer));
+      await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+      when(plannerApi.getUserPlannerItems(any, any, any,
+              contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value([]));
+
+      // Tap on the calendar filter button
+      await tester.tap(find.text(AppLocalizations().calendars));
+      await tester.pump();
+      await tester.pump();
+
+      // Setup the capture of navigation arguments
+      Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
+      List<String> result = [];
+      pushedRoute.popped.then((value) {
+        result = value;
+      });
+
+      completer.complete(Future.value(_mockCourses()));
+      await tester.pumpAndSettle();
+
+      // Check for the filter screen
+      expect(find.byType(CalendarFilterListScreen), findsOneWidget);
+
+      // Tap on the back button
+      await tester.pageBack();
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Verify that the list of selected items was updated correctly
+      expect(result, ['course_123']);
+      verifyNever(filterDb.insertOrUpdate(any));
     });
   });
 }
@@ -232,4 +323,4 @@ class _MockLogger extends Mock implements Logger {}
 
 class _MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
 
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
+class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
