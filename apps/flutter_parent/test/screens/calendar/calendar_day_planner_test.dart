@@ -204,6 +204,7 @@ PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
   ..contextType = ''
   ..plannableDate = DateTime.now()
   ..contextName = contextName ?? ''
+  ..htmlUrl = ''
   ..plannableType = 'assignment');
 
 class MockPlannerApi extends Mock implements PlannerApi {}
