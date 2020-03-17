@@ -169,7 +169,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     final weekStart = day.withFirstDayOfWeek();
     final thisWeekStart = DateTime.now().withFirstDayOfWeek();
     double weeksDiff = thisWeekStart.difference(weekStart).inDays / 7;
-    return _todayWeekIndex - weeksDiff.floor();
+    return _todayWeekIndex - weeksDiff.round();
   }
 
   // Returns the day pager index associated with the specified day
