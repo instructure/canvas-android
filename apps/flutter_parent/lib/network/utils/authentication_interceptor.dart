@@ -30,11 +30,12 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
 
   @override
   Future onError(DioError error) async {
+    if (error.response?.statusCode != 401) return error;
+
     final currentLogin = ApiPrefs.getCurrentLogin();
 
     // Check for any errors
-    if (error.request?.path?.contains('accounts/self') == true ||
-        error.request?.path?.contains('login/oauth2/token') == true) {
+    if (error.request?.path?.contains('accounts/self') == true) {
       // We are likely just checking if the user can masquerade or not, which happens on login - don't try to re-auth here
       return error;
     } else if (error.request.headers[_RETRY_HEADER] != null) {
