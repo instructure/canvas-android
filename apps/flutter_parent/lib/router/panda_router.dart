@@ -249,18 +249,19 @@ class PandaRouter {
 
     locator<Logger>().log('Attempting to route EXTERNAL url: $link');
 
-    if (urlRouteWrapper.appRouteMatch != null) {
+    // We only care about valid app routes if they are already signed in
+    if (urlRouteWrapper.appRouteMatch != null && ApiPrefs.isLoggedIn()) {
       if (urlRouteWrapper.validHost) {
         // If its a link we can handle natively and within our domain, route
         return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
             .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
       } else {
-        // Otherwise, we want to route to the error page
+        // Otherwise, we want to route to the error page if they are already logged in
         return _routerErrorHandler.handlerFunc(context, params);
       }
     }
 
-    // We don't support the link, default to the splash screen for now
+    // We don't support the link or the user isn't signed in, default to the splash screen for now
     return _rootSplashHandler.handlerFunc(context, {});
   });
 
@@ -306,8 +307,10 @@ class PandaRouter {
     // Determine if we can handle the url natively
     final path = '/${uri.pathSegments.join('/')}';
     final match = router.match(path);
+    final currentDomain = ApiPrefs.getDomain();
     // Check to see if the route can be handled internally, isn't to root, and matches our current domain
-    return _UrlRouteWrapper(path, ApiPrefs.getDomain().contains(uri.host), path == '/' ? null : match);
+    return _UrlRouteWrapper(
+        path, currentDomain == null ? true : currentDomain.contains(uri.host), path == '/' ? null : match);
   }
 
   static void _logRoute(Map<String, List<String>> params, Widget widget) {

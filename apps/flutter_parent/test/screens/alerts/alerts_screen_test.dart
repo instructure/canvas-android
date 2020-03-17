@@ -16,15 +16,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
-import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
-import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
@@ -46,16 +46,23 @@ import '../../utils/test_app.dart';
 
 final _studentId = '123';
 void main() {
+  final String domain = 'https://test.instructure.com';
+  final login = Login((b) => b
+    ..domain = domain
+    ..accessToken = 'token'
+    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
   final interactor = _MockAlertsInteractor();
   final announcementInteractor = _MockAnnouncementDetailsInteractor();
   final alertNotifier = _MockAlertCountNotifier();
+  final mockNav = _MockNav();
 
   setupTestLocator((locator) {
     locator.registerFactory<AlertsInteractor>(() => interactor);
     locator.registerFactory<AnnouncementDetailsInteractor>(() => announcementInteractor);
     locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     locator.registerLazySingleton<AlertCountNotifier>(() => alertNotifier);
-    locator.registerFactory<QuickNav>(() => QuickNav());
+    locator.registerFactory<QuickNav>(() => mockNav);
     locator.registerLazySingleton<Logger>(() => Logger());
   });
 
@@ -63,6 +70,7 @@ void main() {
     reset(interactor);
     reset(announcementInteractor);
     reset(alertNotifier);
+    reset(mockNav);
   });
 
   void _pumpAndTapAlert(WidgetTester tester, Alert alert) async {
@@ -314,7 +322,8 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Can tap alert to mark as read', (tester) async {
-      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
+      final alerts =
+          _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread, htmlUrl: '$domain/courses/12345');
 
       when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
       when(interactor.markAlertRead(_studentId, alerts.first.id))
@@ -331,7 +340,8 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Tapping alert that is read does not call to mark as read', (tester) async {
-      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.read);
+      final alerts =
+          _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.read, htmlUrl: '$domain/courses/12345');
 
       when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
 
@@ -392,84 +402,85 @@ void main() {
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..htmlUrl = 'https://instructure.com/api/v1/courses/1234/discussion_topics/1234'
+        ..htmlUrl = '$domain/courses/1234/discussion_topics/1234'
         ..alertType = AlertType.courseAnnouncement);
 
       await _pumpAndTapAlert(tester, alert);
 
-      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
 
     testWidgetsWithAccessibilityChecks('Can tap institution announcement alert to go to announcement', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
+        ..contextId = '12345'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
         ..alertType = AlertType.institutionAnnouncement);
       await _pumpAndTapAlert(tester, alert);
 
-      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
+      verify(mockNav.pushRoute(any, PandaRouter.institutionAnnouncementDetails(alert.contextId)));
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to show under construction', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap assignment missing alert to show assignment details', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.assignmentMissing);
+        ..alertType = AlertType.assignmentMissing
+        ..htmlUrl = '$domain/courses/1234/assignments/1234');
       await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that assignment shows
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to show under construction',
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade high alert to show assignment details',
         (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.assignmentGradeHigh);
+        ..alertType = AlertType.assignmentGradeHigh
+        ..htmlUrl = '$domain/courses/1234/assignments/1234');
       await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that assignment shows
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to show under construction', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap assignment grade low alert to show assignment details', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.assignmentGradeLow);
+        ..alertType = AlertType.assignmentGradeLow
+        ..htmlUrl = '$domain/courses/1234/assignments/1234');
       await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that assignment shows
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap course grade high alert to show under construction', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap course grade high alert to show course details', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.courseGradeHigh);
+        ..alertType = AlertType.courseGradeHigh
+        ..htmlUrl = '$domain/courses/1234');
       await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that assignment shows
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
 
-    testWidgetsWithAccessibilityChecks('Can tap course grade low alert to show under construction', (tester) async {
+    testWidgetsWithAccessibilityChecks('Can tap course grade low alert to show course details', (tester) async {
       final alert = Alert((b) => b
         ..id = '123'
         ..title = 'Hodor'
         ..workflowState = AlertWorkflowState.unread
-        ..alertType = AlertType.courseGradeLow);
+        ..alertType = AlertType.courseGradeLow
+        ..htmlUrl = '$domain/courses/1234');
       await _pumpAndTapAlert(tester, alert);
 
-      // TODO: Test that assignment shows
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
   });
 }
@@ -488,14 +499,16 @@ Widget _testableWidget({User student, bool highContrastMode = false}) {
   );
 }
 
-List<Alert> _mockData({int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read}) {
+List<Alert> _mockData(
+    {int size = 1, AlertType type, AlertWorkflowState state = AlertWorkflowState.read, String htmlUrl = ''}) {
   return List.generate(
       size,
       (index) => Alert((b) => b
         ..id = index.toString()
         ..title = 'Alert $index'
         ..workflowState = state
-        ..alertType = type ?? AlertType.institutionAnnouncement));
+        ..alertType = type ?? AlertType.institutionAnnouncement
+        ..htmlUrl = htmlUrl));
 }
 
 class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
@@ -503,3 +516,5 @@ class _MockAlertsInteractor extends Mock implements AlertsInteractor {}
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
 
 class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
+
+class _MockNav extends Mock implements QuickNav {}

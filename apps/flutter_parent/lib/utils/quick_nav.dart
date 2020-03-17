@@ -52,6 +52,10 @@ class QuickNav {
         transitionBuilder: transitionsBuilder);
   }
 
+  Future<void> routeInternally(BuildContext context, String url) {
+    return PandaRouter.routeInternally(context, url);
+  }
+
   void _logShow(Widget widget) {
     final message = 'Pushing widget: ${widget.runtimeType.toString()}';
     locator<Logger>().log(message);

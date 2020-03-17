@@ -21,7 +21,6 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_extensi
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
-import 'package:flutter_parent/screens/under_construction_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
@@ -242,17 +241,10 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _routeAlert(Alert alert, int index) async {
-    switch (alert.alertType) {
-      case AlertType.courseAnnouncement:
-        locator<QuickNav>().pushRoute(
-            context, PandaRouter.courseAnnouncementDetails(alert.getCourseIdForAnnouncement(), alert.contextId));
-        break;
-      case AlertType.institutionAnnouncement:
-        locator<QuickNav>().pushRoute(context, PandaRouter.institutionAnnouncementDetails(alert.contextId));
-        break;
-      default:
-        locator<QuickNav>().push(context, UnderConstructionScreen(showAppBar: true));
-        break;
+    if (alert.alertType == AlertType.institutionAnnouncement) {
+      locator<QuickNav>().pushRoute(context, PandaRouter.institutionAnnouncementDetails(alert.contextId));
+    } else {
+      locator<QuickNav>().routeInternally(context, alert.htmlUrl);
     }
 
     // We're done if the alert was already read, otherwise mark it read
