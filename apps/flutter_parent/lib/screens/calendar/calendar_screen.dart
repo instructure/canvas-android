@@ -17,9 +17,12 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CalendarScreen extends StatefulWidget {
@@ -57,9 +60,26 @@ class CalendarScreenState extends State<CalendarScreen> {
     return CalendarWidget(
       fetcher: _fetcher,
       onFilterTap: () async {
-        // TODO: MBL-13920 course filter
         // Get currently-selected contexts with _fetcher.getContexts().
         // On courses changed, call _fetcher.setContexts().
+        List<String> currentContexts = await _fetcher.getContexts();
+        List<String> updatedContexts = await locator.get<QuickNav>().push(
+              context,
+              CalendarFilterListScreen(currentContexts),
+            );
+        // Check if the list changed or not
+        if (currentContexts.length != updatedContexts.length) {
+          // Lists are different - update
+          _fetcher.setContexts(updatedContexts);
+        } else {
+          for (int c = 0; c < currentContexts.length; c++) {
+            if (!updatedContexts.contains(currentContexts[c])) {
+              // Lists are different - update
+              _fetcher.setContexts(updatedContexts);
+              break;
+            }
+          }
+        }
       },
       dayBuilder: (BuildContext context, DateTime day) {
         return CalendarDayPlanner(day);
