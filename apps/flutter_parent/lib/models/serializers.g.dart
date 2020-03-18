@@ -42,6 +42,8 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(GradingPeriod.serializer)
       ..add(GradingPeriodResponse.serializer)
       ..add(GradingType.serializer)
+      ..add(HelpLink.serializer)
+      ..add(HelpLinks.serializer)
       ..add(HomePage.serializer)
       ..add(LockInfo.serializer)
       ..add(LockedModule.serializer)
@@ -93,8 +95,17 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(GradingPeriod)]),
           () => new ListBuilder<GradingPeriod>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HelpLink)]),
+          () => new ListBuilder<HelpLink>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(HelpLink)]),
+          () => new ListBuilder<HelpLink>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(RemoteFile)]),
           () => new ListBuilder<RemoteFile>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(String)]),
+          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())

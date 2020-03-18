@@ -14,9 +14,11 @@
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -27,52 +29,102 @@ import 'package:intent/intent.dart' as android;
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'help_screen_interactor.dart';
+
 class HelpScreen extends StatefulWidget {
   @override
   _HelpScreenState createState() => _HelpScreenState();
 }
 
 class _HelpScreenState extends State<HelpScreen> {
+  final _interactor = locator<HelpScreenInteractor>();
+  Future<List<HelpLink>> _helpLinksFuture;
+  AppLocalizations l10n;
+
+  @override
+  void initState() {
+    _helpLinksFuture = _interactor.getObserverCustomHelpLinks(forceRefresh: true);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final l10n = L10n(context);
-    return DefaultParentTheme(
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text(l10n.help),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
-        ),
-        body: ListView(
-          children: <Widget>[
-            ListTile(
-              title: Text(l10n.helpSearchCanvasDocsLabel),
-              subtitle: Text(l10n.helpSearchCanvasDocsDescription),
-              onTap: _showSearch,
-            ),
-            ListTile(
-              title: Text(l10n.helpReportProblemLabel),
-              subtitle: Text(l10n.helpReportProblemDescription),
-              onTap: _showReportProblem,
-            ),
-            ListTile(
-              title: Text(l10n.helpRequestFeatureLabel),
-              subtitle: Text(l10n.helpRequestFeatureDescription),
-              onTap: _showRequestFeature,
-            ),
-            ListTile(
-              title: Text(l10n.helpShareLoveLabel),
-              subtitle: Text(l10n.helpShareLoveDescription),
-              onTap: _showShareLove,
-            ),
-            ListTile(
-              title: Text(l10n.helpLegalLabel),
-              subtitle: Text(l10n.helpLegalDescription),
-              onTap: () => _showLegal(),
-            ),
-          ],
-        ),
+    l10n = L10n(context);
+    return FutureBuilder(
+        future: _helpLinksFuture,
+        builder: (context, snapshot) {
+          Widget _body;
+          _body = snapshot.connectionState == ConnectionState.waiting ? LoadingIndicator() : _success(snapshot.data);
+          return DefaultParentTheme(
+            builder: (context) => Scaffold(
+                appBar: AppBar(
+                  title: Text(l10n.help),
+                  bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+                ),
+                body: _body),
+          );
+        });
+  }
+
+  Widget _success(List<HelpLink> links) => ListView(children: _generateLinks(links));
+
+  List<Widget> _generateLinks(List<HelpLink> links) {
+    List<Widget> helpLinks = List.from(links.map(
+      (l) => ListTile(
+        title: Text(l.text),
+        subtitle: Text(l.subtext),
+        onTap: () => _linkClick(l),
       ),
-    );
+    ));
+
+    // Add in the legal and share the love tiles
+    helpLinks.addAll([
+      ListTile(
+        title: Text(l10n.helpShareLoveLabel),
+        subtitle: Text(l10n.helpShareLoveDescription),
+        onTap: _showShareLove,
+      ),
+      ListTile(
+        title: Text(l10n.helpLegalLabel),
+        subtitle: Text(l10n.helpLegalDescription),
+        onTap: () => _showLegal(),
+      )
+    ]);
+
+    return helpLinks;
+  }
+
+  void _linkClick(HelpLink link) {
+    String url = link.url;
+    if (url[0] == '#') {
+      // Internal link
+      if (url.contains('#create_ticket')) {
+        _showReportProblem();
+      } else if (url.contains('#share_the_love')) {
+        // Custom for Android
+        _showShareLove();
+      }
+    } else if (link.id.contains('submit_feature_idea')) {
+      _showRequestFeature();
+    } else if (link.url.startsWith('tel:+')) {
+      // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
+      _handlePhoneLinks(link.url);
+    } else if (link.url.startsWith('mailto:')) {
+      // Support mailto links: https://community.canvaslms.com/docs/DOC-12664-4214610054
+      _handleMailtoLinks(link.url);
+    } else if (link.url.contains('cases.canvaslms.com/liveagentchat')) {
+      // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
+      // to the external browser
+      launch(link.url); // TODO: Make sure this works
+//      val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(link.url) }
+//      startActivity(intent)
+    } else if (link.id.contains('search_the_canvas_guides')) {
+      // Send them to the mobile Canvas guides
+      _showSearch();
+    } else {
+      // External url
+      launch(link.url);
+    }
   }
 
   void _showSearch() => launch(
@@ -139,4 +191,18 @@ class _HelpScreenState extends State<HelpScreen> {
   void _showShareLove() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 
   void _showLegal() => locator<QuickNav>().pushRoute(context, PandaRouter.legal());
+
+  void _handlePhoneLinks(String url) {
+    android.Intent()
+      ..setAction(android.Action.ACTION_DIAL)
+      ..setData(Uri.parse(url))
+      ..startActivity(createChooser: false);
+  }
+
+  void _handleMailtoLinks(String url) {
+    android.Intent()
+      ..setAction(android.Action.ACTION_SENDTO)
+      ..setData(Uri.parse(url))
+      ..startActivity(createChooser: true);
+  }
 }

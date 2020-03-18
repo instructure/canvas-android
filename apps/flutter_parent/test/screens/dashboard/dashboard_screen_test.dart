@@ -16,6 +16,7 @@ import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -35,6 +36,7 @@ import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
+import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
@@ -64,6 +66,7 @@ void main() {
     _locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
     _locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
     _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
+    _locator.registerFactory<HelpScreenInteractor>(() => MockHelpScreenInteractor());
     _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
     _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
     _locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
@@ -372,7 +375,8 @@ void main() {
       await ensureVisibleByScrolling(helpFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
       await tester.pumpAndSettle();
       await tester.tap(helpFinder);
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
 
       expect(find.byType(HelpScreen), findsOneWidget);
     });
@@ -677,6 +681,11 @@ void main() {
       expect(find.text('77'), findsOneWidget);
     });
   });
+}
+
+class MockHelpScreenInteractor extends HelpScreenInteractor {
+  @override
+  Future<List<HelpLink>> getObserverCustomHelpLinks({bool forceRefresh = false}) => Future.value(<HelpLink>[]);
 }
 
 class MockAlertsInteractor extends AlertsInteractor {}
