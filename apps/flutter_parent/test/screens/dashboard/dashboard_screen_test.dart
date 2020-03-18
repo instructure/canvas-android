@@ -718,7 +718,7 @@ class MockAlertsApi extends Mock implements AlertsApi {}
 
 class MockCoursesInteractor extends CoursesInteractor {
   @override
-  Future<List<Course>> getCourses(String studentId, {bool isRefresh = false}) async {
+  Future<List<Course>> getCourses({bool isRefresh = false}) async {
     var courses = List<Course>();
     return courses;
   }

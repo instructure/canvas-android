@@ -16,11 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/under_construction_screen.dart';
+import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
+import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/accessibility_utils.dart';
@@ -95,12 +97,13 @@ void main() {
       expect(called, true);
     });
 
-    testWidgetsWithAccessibilityChecks('add student tap shows under construction screen', (tester) async {
+    testWidgetsWithAccessibilityChecks('add student tap shows add student dialog', (tester) async {
       var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<QuickNav>(() => QuickNav());
         locator.registerLazySingleton<Logger>(() => Logger());
+        locator.registerLazySingleton<ManageStudentsInteractor>(() => _MockManageStudentsInteractor());
       });
 
       // Setup the widget
@@ -111,11 +114,89 @@ void main() {
 
       // Tap the 'Add Student' button and wait for any transition animations to finish
       await tester.tap(find.byType(RaisedButton));
-      await tester.pumpAndSettle();
+      await tester.pump();
 
       // Check for the under construction screen
-      expect(find.byType(UnderConstructionScreen), findsOneWidget);
+      expect(find.byType(AddStudentDialog), findsOneWidget);
     });
+  });
+
+  testWidgetsWithAccessibilityChecks('attempt to pair with a student calls get students', (tester) async {
+    var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
+
+    ManageStudentsInteractor interactor = _MockManageStudentsInteractor();
+
+    when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+      locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
+    });
+
+    // Setup the widget
+    await tester.pumpWidget(TestApp(StudentHorizontalListView(
+      [student1],
+      onAddStudent: () {},
+    )));
+    await tester.pump();
+
+    expect(find.text(AppLocalizations().addStudent), findsOneWidget);
+
+    // Tap the 'Add Student' button and wait for any transition animations to finish
+    await tester.tap(find.byType(RaisedButton));
+    await tester.pump();
+
+    // Check for the under construction screen
+    expect(find.byType(AddStudentDialog), findsOneWidget);
+
+    // Tap on the 'OK' button
+    await tester.tap(find.text(AppLocalizations().ok));
+    await tester.pumpAndSettle();
+
+    // Verify that we called the interactor to get students
+    verify(interactor.pairWithStudent((any))).called(1);
+  });
+
+  testWidgetsWithAccessibilityChecks('successful pairing calls onAddStudent callback', (tester) async {
+    var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
+    var callbackCalled = false;
+
+    ManageStudentsInteractor interactor = _MockManageStudentsInteractor();
+
+    when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+      locator.registerLazySingleton<Logger>(() => Logger());
+      locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
+    });
+
+    // Setup the widget
+    await tester.pumpWidget(TestApp(StudentHorizontalListView(
+      [student1],
+      onAddStudent: () {
+        callbackCalled = true;
+      },
+    )));
+    await tester.pump();
+
+    expect(find.text(AppLocalizations().addStudent), findsOneWidget);
+
+    // Tap the 'Add Student' button and wait for any transition animations to finish
+    await tester.tap(find.byType(RaisedButton));
+    await tester.pump();
+
+    // Check for the under construction screen
+    expect(find.byType(AddStudentDialog), findsOneWidget);
+
+    // Tap on the 'OK' button
+    await tester.tap(find.text(AppLocalizations().ok));
+    await tester.pumpAndSettle();
+
+    // Verify that we called the interactor to get students
+    verify(interactor.pairWithStudent((any))).called(1);
+    expect(callbackCalled, true);
   });
 }
 
@@ -134,3 +215,5 @@ class SelectedStudentNotifierTestApp extends StatelessWidget {
     );
   }
 }
+
+class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}

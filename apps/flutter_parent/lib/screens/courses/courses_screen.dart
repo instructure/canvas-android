@@ -49,17 +49,14 @@ class _CoursesScreenState extends State<CoursesScreen> {
     super.didChangeDependencies();
     var _selectedStudent = Provider.of<SelectedStudentNotifier>(context, listen: true).value;
     if (_student != _selectedStudent) {
-      // The student was changed by the user, update the courses
+      // The student was changed by the user
       _student = _selectedStudent;
-      if (_courses.isEmpty) {
-        // We haven't loaded the courses yet, let's do it now
-        _coursesFuture = _loadCourses();
-      }
+      // Update the courses - this is done in case a new user was added after the initial course grabbing
+      _coursesFuture = _loadCourses(forceRefresh: true);
     }
   }
 
-  Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
-      _interactor.getCourses(_student.id, isRefresh: forceRefresh);
+  Future<List<Course>> _loadCourses({bool forceRefresh = false}) => _interactor.getCourses(isRefresh: forceRefresh);
 
   @override
   Widget build(BuildContext context) => _content(context);
