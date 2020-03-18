@@ -49,7 +49,7 @@ class ConferenceDetailsUpdate : UpdateInit<ConferenceDetailsModel, ConferenceDet
             is ConferenceDetailsEvent.JoinConferenceClicked -> {
                 val conference = model.conference
                 val url: String = conference.joinUrl
-                    ?: "${ApiPrefs.fullDomain}/${model.canvasContext.toAPIString()}/conferences/${conference.id}/join"
+                    ?: "${ApiPrefs.fullDomain}${model.canvasContext.toAPIString()}/conferences/${conference.id}/join"
                 val authenticate: Boolean = url.startsWith(ApiPrefs.fullDomain)
                 Next.next(
                     model.copy(isJoining = true),

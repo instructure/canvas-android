@@ -158,7 +158,7 @@ class ConferenceDetailsUpdateTest {
     fun `JoinConferenceClicked falls back to constructed url if join url is null`() {
         val inputModel = initModel.copy(conference = baseConference.copy(joinUrl = null))
         val expectedModel = inputModel.copy(isJoining = true)
-        val expectedJoinUrl = "$fakeDomain/${canvasContext.toAPIString()}/conferences/${baseConference.id}/join"
+        val expectedJoinUrl = "$fakeDomain${canvasContext.toAPIString()}/conferences/${baseConference.id}/join"
         updateSpec
             .given(inputModel)
             .whenEvent(ConferenceDetailsEvent.JoinConferenceClicked)

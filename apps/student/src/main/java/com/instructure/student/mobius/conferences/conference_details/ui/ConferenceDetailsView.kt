@@ -111,7 +111,7 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
         intent.data = Uri.parse(url)
 
         // Exclude Instructure apps from chooser options
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) intent = intent.asChooserExcludingInstructure()
+        intent = intent.asChooserExcludingInstructure()
 
         context.startActivity(intent)
     }

@@ -22,10 +22,10 @@ import androidx.annotation.RequiresApi
 
 /**
  * Creates a chooser from this intent that will exclude Instructure components (i.e. student, parent, and teacher apps).
- * Only works on Android N and above.
+ * Only works on Android N and above. On pre-N devices this intent is returned unmodified.
  */
-@RequiresApi(Build.VERSION_CODES.N)
 fun Intent.asChooserExcludingInstructure(title: String? = null): Intent {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return this
     val excludeComponents = arrayOf(
         // Student
         ComponentName("com.instructure.candroid", "com.instructure.student.activity.InterwebsToApplication"),

@@ -27,6 +27,7 @@ import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 import com.instructure.student.router.RouteMatcher
 import junit.framework.TestCase
@@ -440,6 +441,22 @@ class RouterUtilsTest : TestCase() {
         assertNotNull(route)
         assertEquals(UnsupportedTabFragment::class.java, route!!.primaryClass)
         //        assertEquals(Tab.OUTCOMES_ID, route.getTabId());
+        assertEquals(expectedParams, route.paramsHash)
+    }
+
+    @Test
+    fun testGetInternalRoute_conferences() {
+        val courseId = "836357"
+        var route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/")
+        val expectedParams = hashMapOf(RouterParams.COURSE_ID to courseId)
+        assertNotNull(route)
+        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
+        assertEquals(expectedParams, route.paramsHash)
+
+        // There is currently no API endpoint for specific conferences, so we must route to the conference list
+        route = callGetInternalRoute("https://mobiledev.instructure.com/courses/$courseId/conferences/234") // not an actual url
+        assertNotNull(route)
+        assertEquals(ConferenceListFragment::class.java, route!!.primaryClass)
         assertEquals(expectedParams, route.paramsHash)
     }
 
