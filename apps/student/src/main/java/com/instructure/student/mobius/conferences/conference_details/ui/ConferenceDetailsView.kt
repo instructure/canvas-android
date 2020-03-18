@@ -87,9 +87,9 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
         val view = LayoutInflater.from(context).inflate(R.layout.adapter_conference_recording_item, null)
         with(view) {
             onClick { consumer?.accept(ConferenceDetailsEvent.RecordingClicked(state.recordingId)) }
-            title.text = state.title
-            date.text = state.date
-            duration.text = state.duration
+            recordingTitle.text = state.title
+            recordingDate.text = state.date
+            recordingDuration.text = state.duration
             isEnabled = !state.isLaunching
             recordingProgressBar.setVisible(state.isLaunching)
             recordingContent.alpha = if (state.isLaunching) 0.35f else 1.0f

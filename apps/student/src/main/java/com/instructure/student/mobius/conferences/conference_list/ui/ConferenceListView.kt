@@ -49,7 +49,7 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
         toolbar.subtitle = canvasContext.name
 
         // Set up menu
-        with(toolbar.menu.add(R.string.openInBrowser)){
+        with(toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)){
             setIcon(R.drawable.vd_open_in_browser)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener {
