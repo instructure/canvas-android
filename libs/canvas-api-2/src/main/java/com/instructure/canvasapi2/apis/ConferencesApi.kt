@@ -23,12 +23,16 @@ import com.instructure.canvasapi2.models.ConferenceList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Url
 
 object ConferencesApi {
 
     internal interface ConferencesInterface {
         @GET("{canvasContext}/conferences")
         fun getConferences(@Path("canvasContext", encoded = true) canvasContext: String): Call<ConferenceList>
+
+        @GET
+        fun getNextPage(@Url nextUrl: String): Call<ConferenceList>
     }
 
     fun getConferences(
@@ -41,6 +45,19 @@ object ConferencesApi {
             adapter
                 .build(ConferencesInterface::class.java, params)
                 .getConferences(canvasContext.toAPIString().drop(1))
+        ).enqueue(callback)
+    }
+
+    fun getNextPage(
+        nextUrl: String,
+        adapter: RestBuilder,
+        callback: StatusCallback<ConferenceList>,
+        params: RestParams
+    ) {
+        callback.addCall(
+            adapter
+                .build(ConferencesInterface::class.java, params)
+                .getNextPage(nextUrl)
         ).enqueue(callback)
     }
 

@@ -69,13 +69,12 @@ data class ConferenceRecording(
     val recordingId: String = "",
     val title: String = ""
 ) : Parcelable {
-
     val createdAt: Date get() = Date(createdAtMillis)
-
-    @Parcelize
-    data class PlaybackFormat(
-        val length: String,
-        val type: String,
-        val url: String
-    ) : Parcelable
 }
+
+@Parcelize
+data class PlaybackFormat(
+    val length: String,
+    val type: String,
+    val url: String
+) : Parcelable

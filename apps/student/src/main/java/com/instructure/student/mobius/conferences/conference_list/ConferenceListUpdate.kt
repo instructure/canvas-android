@@ -52,7 +52,7 @@ class ConferenceListUpdate : UpdateInit<ConferenceListModel, ConferenceListEvent
                 Next.next(model.copy(isLoading = false, listResult = event.listResult))
             }
             is ConferenceListEvent.ConferenceClicked -> {
-                val conference = model.listResult!!.dataOrThrow.conferences.find { it.id == event.conferenceId }!!
+                val conference = model.listResult!!.dataOrThrow.find { it.id == event.conferenceId }!!
                 Next.dispatch(setOf(ConferenceListEffect.ShowConferenceDetails(conference)))
             }
             ConferenceListEvent.LaunchInBrowser -> {

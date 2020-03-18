@@ -37,16 +37,18 @@ class ConferenceDetailsUpdate : UpdateInit<ConferenceDetailsModel, ConferenceDet
             )
             is ConferenceDetailsEvent.RefreshFinished -> {
                 if (event.result.isFail) {
-                    Next.dispatch<ConferenceDetailsModel, ConferenceDetailsEffect>(setOf(ConferenceDetailsEffect.DisplayRefreshError))
+                    Next.next<ConferenceDetailsModel, ConferenceDetailsEffect>(
+                        model.copy(isLoading = false),
+                        setOf(ConferenceDetailsEffect.DisplayRefreshError)
+                    )
                 } else {
-                    val conference = event.result.dataOrThrow.conferences.find { it.id == model.conference.id }!!
+                    val conference = event.result.dataOrThrow.find { it.id == model.conference.id }!!
                     Next.next<ConferenceDetailsModel, ConferenceDetailsEffect>(model.copy(conference = conference, isLoading = false))
                 }
             }
             is ConferenceDetailsEvent.JoinConferenceClicked -> {
                 val conference = model.conference
                 val url: String = conference.joinUrl
-                    ?: conference.url
                     ?: "${ApiPrefs.fullDomain}/${model.canvasContext.toAPIString()}/conferences/${conference.id}/join"
                 val authenticate: Boolean = url.startsWith(ApiPrefs.fullDomain)
                 Next.next(

@@ -18,14 +18,13 @@ package com.instructure.student.mobius.conferences.conference_list
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.ConferenceList
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class ConferenceListEvent {
     object PullToRefresh : ConferenceListEvent()
     object LaunchInBrowser : ConferenceListEvent()
     object LaunchInBrowserFinished : ConferenceListEvent()
-    data class DataLoaded(val listResult: DataResult<ConferenceList>) : ConferenceListEvent()
+    data class DataLoaded(val listResult: DataResult<List<Conference>>) : ConferenceListEvent()
     data class ConferenceClicked(val conferenceId: Long) : ConferenceListEvent()
 }
 
@@ -39,5 +38,5 @@ data class ConferenceListModel(
     val canvasContext: CanvasContext,
     val isLoading: Boolean = false,
     val isLaunchingInBrowser: Boolean = false,
-    val listResult: DataResult<ConferenceList>? = null
+    val listResult: DataResult<List<Conference>>? = null
 )

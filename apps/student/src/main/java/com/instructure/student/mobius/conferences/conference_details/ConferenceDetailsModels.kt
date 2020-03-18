@@ -18,7 +18,6 @@ package com.instructure.student.mobius.conferences.conference_details
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.ConferenceList
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class ConferenceDetailsEvent {
@@ -27,7 +26,7 @@ sealed class ConferenceDetailsEvent {
     object JoinConferenceFinished : ConferenceDetailsEvent()
     data class RecordingClicked(val recordingId: String) : ConferenceDetailsEvent()
     data class ShowRecordingFinished(val recordingId: String) : ConferenceDetailsEvent()
-    data class RefreshFinished(val result: DataResult<ConferenceList>) : ConferenceDetailsEvent()
+    data class RefreshFinished(val result: DataResult<List<Conference>>) : ConferenceDetailsEvent()
 }
 
 sealed class ConferenceDetailsEffect {

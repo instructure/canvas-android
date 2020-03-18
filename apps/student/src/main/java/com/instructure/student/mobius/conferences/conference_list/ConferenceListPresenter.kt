@@ -41,11 +41,11 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
         }
 
         // Success state
-        if (model.listResult?.dataOrNull?.conferences?.isNotEmpty() == true) {
+        if (model.listResult?.dataOrNull?.isNotEmpty() == true) {
             val color = model.canvasContext.color
 
             // Sort conferences by in-progress, then not-started, then concluded
-            val conferences = model.listResult.dataOrThrow.conferences.sortedBy {
+            val conferences = model.listResult.dataOrThrow.sortedBy {
                 if (it.endedAt != null) 2 else if (it.startedAt != null) 0 else 1
             }
 

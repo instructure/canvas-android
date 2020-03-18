@@ -19,8 +19,8 @@ package com.instructure.student.test.conferences.conference_list
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.ConferenceList
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
@@ -34,6 +34,8 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
+import io.mockk.every
+import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -44,6 +46,7 @@ class ConferenceListUpdateTest : Assert() {
     private val initSpec = InitSpec(ConferenceListUpdate()::init)
     private val updateSpec = UpdateSpec(ConferenceListUpdate()::update)
 
+    private val fakeDomain = "https://fake.domain.com"
     private lateinit var initModel: ConferenceListModel
     private lateinit var canvasContext: CanvasContext
 
@@ -51,6 +54,9 @@ class ConferenceListUpdateTest : Assert() {
     fun setup() {
         canvasContext = Course(id = 123L)
         initModel = ConferenceListModel(canvasContext)
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.fullDomain } returns fakeDomain
     }
 
     @Test
@@ -83,7 +89,7 @@ class ConferenceListUpdateTest : Assert() {
     @Test
     fun `DataLoaded event updates the model`() {
         val inputModel = initModel.copy(isLoading = true)
-        val result = DataResult.Success(ConferenceList())
+        val result = DataResult.Success(emptyList<Conference>())
         val expectedModel = initModel.copy(isLoading = false, listResult = result)
         updateSpec
             .given(inputModel)
@@ -98,7 +104,7 @@ class ConferenceListUpdateTest : Assert() {
     @Test
     fun `ConferenceClicked event produces ShowConferenceDetails event`() {
         val conference = Conference(id = 345L)
-        val result = DataResult.Success(ConferenceList(listOf(conference)))
+        val result = DataResult.Success(listOf(conference))
         val inputModel = initModel.copy(listResult = result)
         updateSpec
             .given(inputModel)
@@ -120,7 +126,21 @@ class ConferenceListUpdateTest : Assert() {
             .then(
                 assertThatNext<ConferenceListModel, ConferenceListEffect>(
                     NextMatchers.hasModel(expectedModel),
-                    matchesEffects(ConferenceListEffect.LaunchInBrowser("/courses/123/conferences"))
+                    matchesEffects(ConferenceListEffect.LaunchInBrowser("$fakeDomain/courses/123/conferences"))
+                )
+            )
+    }
+
+    @Test
+    fun `LaunchInBrowserFinished event produces updates model`() {
+        val inputModel = initModel.copy(isLaunchingInBrowser = true)
+        val expectedModel = inputModel.copy(isLaunchingInBrowser = false)
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.LaunchInBrowserFinished)
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel)
                 )
             )
     }

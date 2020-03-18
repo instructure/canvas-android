@@ -21,7 +21,6 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
-import com.instructure.canvasapi2.models.ConferenceList
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.color
@@ -76,7 +75,7 @@ class ConferenceListPresenterTest : Assert() {
     @Test
     fun `Returns single empty item state if results are empty`() {
         // Set up model with empty result
-        val result = DataResult.Success<ConferenceList>(ConferenceList(conferences = emptyList()))
+        val result = DataResult.Success(emptyList<Conference>())
         val model = ConferenceListModel(canvasContext, listResult = result)
 
         // Generate state
@@ -91,7 +90,7 @@ class ConferenceListPresenterTest : Assert() {
     fun `Returns only 'new' header and items if there are no concluded conferences`() {
         // Set up model with a dateless (i.e. not-started) Conference
         val conference = Conference()
-        val result = DataResult.Success(ConferenceList(conferences = listOf(conference)))
+        val result = DataResult.Success(listOf(conference))
         val model = ConferenceListModel(canvasContext, listResult = result)
 
         // Generate state
@@ -110,7 +109,7 @@ class ConferenceListPresenterTest : Assert() {
     fun `Returns only 'concluded' header and items if there are no new conferences`() {
         // Set up model with a concluded Conference
         val conference = Conference(startedAt = Date(), endedAt = Date())
-        val result = DataResult.Success(ConferenceList(conferences = listOf(conference)))
+        val result = DataResult.Success(listOf(conference))
         val model = ConferenceListModel(canvasContext, listResult = result)
 
         // Generate state
@@ -131,7 +130,7 @@ class ConferenceListPresenterTest : Assert() {
         val notStarted = Conference(startedAt = null, endedAt = null)
         val concluded = Conference(startedAt = Date(), endedAt = Date())
         val inProgress = Conference(startedAt = Date(), endedAt = null)
-        val result = DataResult.Success(ConferenceList(conferences = listOf(notStarted, concluded, inProgress)))
+        val result = DataResult.Success(listOf(notStarted, concluded, inProgress))
         val model = ConferenceListModel(canvasContext, listResult = result)
 
         // Generate state
