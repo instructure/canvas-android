@@ -33,6 +33,8 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
 import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -77,6 +79,11 @@ class ConferenceDetailsUpdateTest {
 
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.fullDomain } returns fakeDomain
+    }
+
+    @After
+    fun cleanup() {
+        unmockkAll()
     }
 
     @Test
