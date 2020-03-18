@@ -15,8 +15,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 
 class CalendarDayListTile extends StatelessWidget {
@@ -29,7 +33,36 @@ class CalendarDayListTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     Widget tile = InkWell(
       onTap: () {
-        // TODO: route stuff
+        switch (_item.plannableType) {
+          case 'assignment':
+            locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'announcement':
+            // Observers don't get institutional announcements, so we're only dealing with course announcements
+            locator<QuickNav>()
+                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'quiz':
+            if (_item.plannable.assignmentId != null) {
+              // This is a quiz assignment, go to the assignment page
+              locator<QuickNav>()
+                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
+            } else {
+              // No routes will match this url currently, so routing internally will throw it in an implicit intent
+              PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
+            }
+            break;
+          case 'discussion_topic':
+            locator<QuickNav>().pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.id));
+            break;
+          case 'calendar_event':
+            // Case where the observed user has a personal calendar event
+            locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId, _item.plannable.id));
+            break;
+          default:
+            // This is a type that we don't handle - do nothing
+            break;
+        }
       },
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

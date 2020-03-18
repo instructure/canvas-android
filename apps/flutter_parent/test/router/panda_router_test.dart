@@ -183,7 +183,7 @@ void main() {
       expect(widget, isA<SettingsScreen>());
     });
 
-    test('courseAnnouncementDetails returns announcemnt details screen', () {
+    test('courseAnnouncementDetails returns announcement details screen', () {
       final courseId = '123';
       final announcementId = '321';
       final widget = _getWidgetFromRoute(
@@ -196,7 +196,7 @@ void main() {
       expect(widget.announcementType, AnnouncementType.COURSE);
     });
 
-    test('institutionAnnouncementDetails returns announcemnt details screen', () {
+    test('institutionAnnouncementDetails returns announcement details screen', () {
       final notificationId = '321';
       final widget = _getWidgetFromRoute(
         PandaRouter.institutionAnnouncementDetails(notificationId),
@@ -206,6 +206,19 @@ void main() {
       expect(widget.courseId, '');
       expect(widget.announcementId, notificationId);
       expect(widget.announcementType, AnnouncementType.INSTITUTION);
+    });
+
+    test('discussionDetails returns announcement details screen', () {
+      final courseId = '123';
+      final topicId = '321';
+      final widget = _getWidgetFromRoute(
+        PandaRouter.discussionDetails(courseId, topicId),
+      ) as AnnouncementDetailScreen;
+
+      expect(widget, isA<AnnouncementDetailScreen>());
+      expect(widget.courseId, courseId);
+      expect(widget.announcementId, topicId);
+      expect(widget.announcementType, AnnouncementType.COURSE);
     });
 
     test('RouterErrorScreen returns RouterErrorScreen', () {

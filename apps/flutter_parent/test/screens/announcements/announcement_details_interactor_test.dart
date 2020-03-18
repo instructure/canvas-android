@@ -84,16 +84,16 @@ void main() {
 
     final announcementApi = _MockAnnouncementApi();
     final courseApi = _MockCourseApi();
-    when(announcementApi.getCourseAnnouncement(courseId, announcementId))
+    when(announcementApi.getCourseAnnouncement(courseId, announcementId, any))
         .thenAnswer((_) => Future.value(announcementData));
     when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
 
     _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
 
     final actualViewState =
-        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '');
+        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '', true);
 
-    verify(announcementApi.getCourseAnnouncement(courseId, announcementId)).called(1);
+    verify(announcementApi.getCourseAnnouncement(courseId, announcementId, true)).called(1);
     verify(courseApi.getCourse(courseId)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
@@ -139,16 +139,16 @@ void main() {
 
     final announcementApi = _MockAnnouncementApi();
     final courseApi = _MockCourseApi();
-    when(announcementApi.getCourseAnnouncement(courseId, announcementId))
+    when(announcementApi.getCourseAnnouncement(courseId, announcementId, any))
         .thenAnswer((_) => Future.value(announcementData));
     when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
 
     _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
 
     final actualViewState =
-        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '');
+        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '', true);
 
-    verify(announcementApi.getCourseAnnouncement(courseId, announcementId)).called(1);
+    verify(announcementApi.getCourseAnnouncement(courseId, announcementId, true)).called(1);
     verify(courseApi.getCourse(courseId)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
@@ -177,15 +177,15 @@ void main() {
         AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
 
     final announcementApi = _MockAnnouncementApi();
-    when(announcementApi.getAccountNotification(announcementId))
+    when(announcementApi.getAccountNotification(announcementId, any))
         .thenAnswer((_) => Future.value(accountNotificationData));
 
     _setupLocator(announcementApi: announcementApi);
 
-    final actualViewState =
-        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, toolbarTitle);
+    final actualViewState = await AnnouncementDetailsInteractor()
+        .getAnnouncement(announcementId, announcementType, courseId, toolbarTitle, true);
 
-    verify(announcementApi.getAccountNotification(announcementId)).called(1);
+    verify(announcementApi.getAccountNotification(announcementId, true)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
     expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);

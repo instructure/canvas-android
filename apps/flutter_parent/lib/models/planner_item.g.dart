@@ -33,6 +33,9 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       'plannable_date',
       serializers.serialize(object.plannableDate,
           specifiedType: const FullType(DateTime)),
+      'html_url',
+      serializers.serialize(object.htmlUrl,
+          specifiedType: const FullType(String)),
     ];
     result.add('course_id');
     if (object.courseId == null) {
@@ -91,6 +94,10 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
           result.submissionStatusRaw = serializers.deserialize(value,
               specifiedType: const FullType(JsonObject)) as JsonObject;
           break;
+        case 'html_url':
+          result.htmlUrl = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -113,6 +120,8 @@ class _$PlannerItem extends PlannerItem {
   final DateTime plannableDate;
   @override
   final JsonObject submissionStatusRaw;
+  @override
+  final String htmlUrl;
 
   factory _$PlannerItem([void Function(PlannerItemBuilder) updates]) =>
       (new PlannerItemBuilder()..update(updates)).build();
@@ -124,7 +133,8 @@ class _$PlannerItem extends PlannerItem {
       this.plannableType,
       this.plannable,
       this.plannableDate,
-      this.submissionStatusRaw})
+      this.submissionStatusRaw,
+      this.htmlUrl})
       : super._() {
     if (contextType == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'contextType');
@@ -140,6 +150,9 @@ class _$PlannerItem extends PlannerItem {
     }
     if (plannableDate == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'plannableDate');
+    }
+    if (htmlUrl == null) {
+      throw new BuiltValueNullFieldError('PlannerItem', 'htmlUrl');
     }
   }
 
@@ -160,7 +173,8 @@ class _$PlannerItem extends PlannerItem {
         plannableType == other.plannableType &&
         plannable == other.plannable &&
         plannableDate == other.plannableDate &&
-        submissionStatusRaw == other.submissionStatusRaw;
+        submissionStatusRaw == other.submissionStatusRaw &&
+        htmlUrl == other.htmlUrl;
   }
 
   @override
@@ -169,12 +183,16 @@ class _$PlannerItem extends PlannerItem {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, courseId.hashCode), contextType.hashCode),
-                        contextName.hashCode),
-                    plannableType.hashCode),
-                plannable.hashCode),
-            plannableDate.hashCode),
-        submissionStatusRaw.hashCode));
+                    $jc(
+                        $jc(
+                            $jc($jc(0, courseId.hashCode),
+                                contextType.hashCode),
+                            contextName.hashCode),
+                        plannableType.hashCode),
+                    plannable.hashCode),
+                plannableDate.hashCode),
+            submissionStatusRaw.hashCode),
+        htmlUrl.hashCode));
   }
 
   @override
@@ -186,7 +204,8 @@ class _$PlannerItem extends PlannerItem {
           ..add('plannableType', plannableType)
           ..add('plannable', plannable)
           ..add('plannableDate', plannableDate)
-          ..add('submissionStatusRaw', submissionStatusRaw))
+          ..add('submissionStatusRaw', submissionStatusRaw)
+          ..add('htmlUrl', htmlUrl))
         .toString();
   }
 }
@@ -226,6 +245,10 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
   set submissionStatusRaw(JsonObject submissionStatusRaw) =>
       _$this._submissionStatusRaw = submissionStatusRaw;
 
+  String _htmlUrl;
+  String get htmlUrl => _$this._htmlUrl;
+  set htmlUrl(String htmlUrl) => _$this._htmlUrl = htmlUrl;
+
   PlannerItemBuilder();
 
   PlannerItemBuilder get _$this {
@@ -237,6 +260,7 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
       _plannable = _$v.plannable?.toBuilder();
       _plannableDate = _$v.plannableDate;
       _submissionStatusRaw = _$v.submissionStatusRaw;
+      _htmlUrl = _$v.htmlUrl;
       _$v = null;
     }
     return this;
@@ -267,7 +291,8 @@ class PlannerItemBuilder implements Builder<PlannerItem, PlannerItemBuilder> {
               plannableType: plannableType,
               plannable: plannable.build(),
               plannableDate: plannableDate,
-              submissionStatusRaw: submissionStatusRaw);
+              submissionStatusRaw: submissionStatusRaw,
+              htmlUrl: htmlUrl);
     } catch (_) {
       String _$failedField;
       try {
