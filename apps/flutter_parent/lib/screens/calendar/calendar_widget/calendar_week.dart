@@ -47,7 +47,6 @@ class CalendarWeek extends StatelessWidget {
         Container(
           height: CalendarDay.dayHeight,
           child: Row(
-            textDirection: TextDirection.ltr,
             mainAxisSize: MainAxisSize.max,
             children: [
               for (DateTime day in days)

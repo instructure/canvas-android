@@ -31,7 +31,6 @@ class DayOfWeekHeaders extends StatelessWidget {
       child: Container(
         height: headerHeight,
         child: Row(
-          textDirection: TextDirection.ltr,
           mainAxisSize: MainAxisSize.max,
           children: List.generate(7, (index) {
             final day = (firstDayOfWeek + index + 1) % 7;

@@ -18,6 +18,7 @@ import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dar
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day_of_week_headers.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
+import 'package:flutter_parent/utils/core_extensions/list_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
@@ -145,14 +146,68 @@ void main() {
       expect(widgetSize.width, moreOrLessEquals(expectedWidgetWidth));
     }
   });
+
+  testWidgetsWithAccessibilityChecks('Correctly displays days LTR order', (tester) async {
+    final weekWidget = CalendarWeek(
+      firstDay: weekStart,
+      selectedDay: selectedDate,
+      onDaySelected: (_) {},
+      displayDayOfWeekHeader: false,
+    );
+    await tester.pumpWidget(
+      _appWithFetcher(
+        weekWidget,
+      ),
+    );
+    await tester.pump();
+
+    // Get X position of day widget centers
+    final List<double> centers = weekWidget.days.map((it) {
+      var finder = find.text(it.day.toString());
+      return tester.getCenter(finder).dx;
+    }).toList();
+
+    // We expect X positions to be in ascending order
+    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it]);
+
+    expect(centers, expectedCenters);
+  });
+
+  testWidgetsWithAccessibilityChecks('Correctly displays days RTL order', (tester) async {
+    final weekWidget = CalendarWeek(
+      firstDay: weekStart,
+      selectedDay: selectedDate,
+      onDaySelected: (_) {},
+      displayDayOfWeekHeader: false,
+    );
+    await tester.pumpWidget(
+      _appWithFetcher(
+        weekWidget,
+        locale: Locale('ar'),
+      ),
+    );
+    await tester.pump();
+
+    // Get X position of day widget centers
+    final List<double> centers = weekWidget.days.map((it) {
+      var finder = find.text(it.day.toString());
+      return tester.getCenter(finder).dx;
+    }).toList();
+
+    // We expect X positions to be in descending order
+    final List<double> expectedCenters = List<double>.from(centers).sortBy([(it) => it], descending: true);
+
+    expect(centers, expectedCenters);
+  });
 }
 
-Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
+Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher, Locale locale}) {
   return TestApp(
     ChangeNotifierProvider<PlannerFetcher>(
       create: (BuildContext context) => fetcher ?? _FakeFetcher(),
       child: child,
     ),
+    locale: locale,
     highContrast: true,
   );
 }
