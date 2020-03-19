@@ -11,18 +11,17 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
-import 'package:flutter_parent/utils/debug_flags.dart';
 
-class Logger {
-  void log(String message) {
-    if (kReleaseMode) {
-      FlutterCrashlytics().log(message);
-    }
-
-    if (DebugFlags.isDebug) {
-      print(message);
-    }
-  }
+/// A collection of boolean flags that will control when debug features are used
+///
+/// To edit this file and have git ignore your local changes, run this command:
+/// git update-index --skip-worktree apps/flutter_parent/lib/utils/debug_flags.dart
+///
+/// To start tracking local changes again, run this command:
+/// git update-index --no-skip-worktree apps/flutter_parent/lib/utils/debug_flags.dart
+class DebugFlags {
+  static bool isDebug = kDebugMode; // Defaults to kDebugMode, can set to true to have debug features in release builds
+  static bool isDebugApi = false;
 }

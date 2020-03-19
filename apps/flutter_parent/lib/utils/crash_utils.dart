@@ -20,26 +20,26 @@ import 'package:flutter_parent/screens/crash_screen.dart';
 
 class CrashUtils {
   static Future<void> init() async {
-    if (!ApiPrefs.isDebug) await FlutterCrashlytics().initialize();
+    if (kReleaseMode) await FlutterCrashlytics().initialize();
 
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
-      if (ApiPrefs.isDebug) {
-        FlutterError.dumpErrorToConsole(error);
-      } else {
+      if (kReleaseMode) {
         FlutterCrashlytics().log('Widget Crash');
+      } else {
+        FlutterError.dumpErrorToConsole(error);
       }
       return CrashScreen(error);
     };
 
     // Set up error handling
     FlutterError.onError = (error) {
-      if (ApiPrefs.isDebug) {
+      if (kReleaseMode) {
+        reportCrash(error.exception, error.stack);
+      } else {
         // Manually handle debug reporting here, as this console formatting is nicer than simple print(stacktrace)
         FlutterError.dumpErrorToConsole(error);
-      } else {
-        reportCrash(error.exception, error.stack);
       }
     };
   }
@@ -49,15 +49,15 @@ class CrashUtils {
     print('Caught exception: $exception');
     debugPrintStack(stackTrace: stacktrace);
 
-    if (!ApiPrefs.isDebug) {
-      // Set any user info that will help to debug the issue
-      await Future.wait([
-        FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),
-        FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id),
-      ]);
+    // Report to Crashlytics, only in release mode
+    if (!kReleaseMode) return;
 
-      // Report to crashlytics
-      await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
-    }
+    // Set any user info that will help to debug the issue
+    await Future.wait([
+      FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),
+      FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id),
+    ]);
+
+    await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
   }
 }
