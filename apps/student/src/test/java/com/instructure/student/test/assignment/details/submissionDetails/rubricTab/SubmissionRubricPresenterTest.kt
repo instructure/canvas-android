@@ -43,6 +43,8 @@ class SubmissionRubricPresenterTest : Assert() {
     @Before
     fun setup() {
         context = ApplicationProvider.getApplicationContext()
+        val courseColor = course.color // Define here so the color gets cached properly for all tests
+
         assignmentTemplate = Assignment(
             courseId = course.id,
             freeFormCriterionComments = false,
@@ -91,7 +93,7 @@ class SubmissionRubricPresenterTest : Assert() {
             criterionId = "123",
             showDescriptionButton = true,
             comment = "This is a comment",
-            tint = course.color
+            tint = courseColor
         )
     }
 
@@ -348,6 +350,35 @@ class SubmissionRubricPresenterTest : Assert() {
                     ratings = listOf(
                         RatingData("_id1", "5.5", isSelected = true, isAssessed = false),
                         RatingData("_id2", "10", isSelected = false, isAssessed = true),
+                        RatingData("_id3", "15", isSelected = false, isAssessed = false)
+                    )
+                )
+            )
+        )
+        val actualState = SubmissionRubricPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns correct state for partially graded rubric`() {
+        val comment = "This is not yet graded"
+        val model = modelTemplate.copy(
+            submission = submissionTemplate.copy(
+                rubricAssessment = hashMapOf(
+                    "123" to RubricCriterionAssessment("_id2", null, comment)
+                )
+            )
+        )
+        val expectedState = SubmissionRubricViewState(
+            listOf(
+                gradeTemplate,
+                criterionTemplate.copy(
+                    ratingTitle = null,
+                    ratingDescription = null,
+                    comment = comment,
+                    ratings = listOf(
+                        RatingData("_id1", "5.5", isSelected = false, isAssessed = false),
+                        RatingData("_id2", "10", isSelected = false, isAssessed = false),
                         RatingData("_id3", "15", isSelected = false, isAssessed = false)
                     )
                 )
