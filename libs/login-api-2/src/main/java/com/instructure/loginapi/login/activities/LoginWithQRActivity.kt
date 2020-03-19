@@ -54,7 +54,7 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
                 // Valid link, let's launch it
                 launchApplicationWithQRLogin(loginUri)
             } else {
-                Toast.makeText(this, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.invalidQRCodeError, Toast.LENGTH_LONG).show()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -71,7 +71,7 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
                     val integrator = IntentIntegrator(this@LoginWithQRActivity)
                     integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
                     integrator.setOrientationLocked(true)
-                    integrator.setPrompt(getString(R.string.qrCodeExplanation))
+                    integrator.setPrompt(getString(R.string.qrCodeScanningPrompt))
                     integrator.setBeepEnabled(false)
                     integrator.initiateScan()
                 } else {
