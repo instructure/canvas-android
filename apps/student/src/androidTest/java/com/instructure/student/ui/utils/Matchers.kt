@@ -17,12 +17,15 @@ package com.instructure.student.ui.utils
 
 import android.view.View
 import android.widget.TextView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.assertThat
-import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.*
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -92,6 +95,20 @@ fun ViewInteraction.assertFontSizeSP(expectedSP: Float) {
 
         override fun describeTo(description: Description) {
             description.appendText("with fontSize: ${expectedSP}px")
+        }
+    }
+    check(matches(matcher))
+}
+
+fun ViewInteraction.assertIsRefreshing(isRefreshing: Boolean) {
+    val matcher = object : BoundedMatcher<View, SwipeRefreshLayout>(SwipeRefreshLayout::class.java) {
+
+        override fun describeTo(description: Description) {
+            description.appendText(if (isRefreshing) "is refreshing" else "is not refreshing")
+        }
+
+        override fun matchesSafely(view: SwipeRefreshLayout): Boolean {
+            return view.isRefreshing == isRefreshing
         }
     }
     check(matches(matcher))

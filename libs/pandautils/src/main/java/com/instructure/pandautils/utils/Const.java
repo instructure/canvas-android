@@ -59,6 +59,7 @@ public class Const {
     public static final String CHILD_POSITION = "childPosition";
     public static final String CLASS_NAME = "className";
     public static final String COMPOSE_FRAGMENT = "composeFragment";
+    public static final String CONFERENCE = "conference";
     public static final String COURSE = "course";
     public static final String COURSE_HOMEPAGE = "course_homepage";
     public static final String DEFAULT_TAB = "defaultTab";

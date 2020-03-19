@@ -158,7 +158,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
     fun buildRollCallAdapter(url: String): Retrofit {
         val gson = GsonBuilder().setLenient().create()
         val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.level = if (DEBUG) HttpLoggingInterceptor.Level.HEADERS else HttpLoggingInterceptor.Level.NONE
+        loggingInterceptor.level = if (DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         return Retrofit.Builder()
             .baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create(gson))

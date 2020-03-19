@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
 import com.instructure.student.fragment.*
+import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object TabHelper {
@@ -83,7 +84,7 @@ object TabHelper {
             Tab.SYLLABUS_ID -> SyllabusFragment.makeRoute(canvasContext as Course)
             Tab.QUIZZES_ID -> QuizListFragment.makeRoute(canvasContext)
             Tab.OUTCOMES_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
-            Tab.CONFERENCES_ID -> ConferencesFragment.makeRoute(canvasContext)
+            Tab.CONFERENCES_ID -> ConferenceListFragment.makeRoute(canvasContext)
             Tab.COLLABORATIONS_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
             Tab.ANNOUNCEMENTS_ID -> AnnouncementListFragment.makeRoute(canvasContext)
             Tab.GRADES_ID -> GradesListFragment.makeRoute(canvasContext)

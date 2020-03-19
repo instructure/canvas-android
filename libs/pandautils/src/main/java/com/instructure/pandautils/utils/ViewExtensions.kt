@@ -89,10 +89,10 @@ inline fun <T : View> T.setVisible(isVisible: Boolean = true): T = apply {
     visibility = if (isVisible) View.VISIBLE else View.GONE
 }
 
-/** Set this view's visibility to View.VISIBLE **/
+/** Set this view's visibility to View.INVISIBLE **/
 @Suppress("NOTHING_TO_INLINE")
-inline fun <T : View> T.setHidden(isVisible: Boolean? = null): T = apply {
-    visibility = if (isVisible != false) View.VISIBLE else View.INVISIBLE
+inline fun <T : View> T.setHidden(isHidden: Boolean = true): T = apply {
+    visibility = if (isHidden) View.INVISIBLE else View.VISIBLE
 }
 
 /** Set this view's visibility to View.INVISIBLE **/

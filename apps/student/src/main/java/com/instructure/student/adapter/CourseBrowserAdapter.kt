@@ -60,7 +60,7 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
     override fun getItemViewType(position: Int): Int {
         return when (items[position].tabId) {
             Tab.HOME_ID -> HOME
-            Tab.COLLABORATIONS_ID, Tab.OUTCOMES_ID, Tab.CONFERENCES_ID -> WEB_VIEW_ITEM
+            Tab.COLLABORATIONS_ID, Tab.OUTCOMES_ID -> WEB_VIEW_ITEM
             else -> ITEM
         }
     }
