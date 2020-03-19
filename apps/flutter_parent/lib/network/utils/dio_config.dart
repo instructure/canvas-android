@@ -19,6 +19,7 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
+import 'package:flutter_parent/utils/debug_flags.dart';
 
 import 'private_consts.dart';
 
@@ -87,7 +88,7 @@ class DioConfig {
       dio.interceptors.add(_cacheInterceptor());
     }
 
-    bool debug = false;
+    bool debug = DebugFlags.isDebugApi;
 
     // Log interceptor
     dio.interceptors.add(LogInterceptor(

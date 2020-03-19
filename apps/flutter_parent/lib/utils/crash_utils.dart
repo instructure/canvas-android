@@ -25,10 +25,10 @@ class CrashUtils {
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
-      if (!kReleaseMode) {
-        FlutterError.dumpErrorToConsole(error);
-      } else {
+      if (kReleaseMode) {
         FlutterCrashlytics().log('Widget Crash');
+      } else {
+        FlutterError.dumpErrorToConsole(error);
       }
       return CrashScreen(error);
     };
@@ -49,15 +49,15 @@ class CrashUtils {
     print('Caught exception: $exception');
     debugPrintStack(stackTrace: stacktrace);
 
-    if (kReleaseMode) {
-      // Set any user info that will help to debug the issue
-      await Future.wait([
-        FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),
-        FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id),
-      ]);
+    // Report to Crashlytics, only in release mode
+    if (!kReleaseMode) return;
 
-      // Report to crashlytics
-      await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
-    }
+    // Set any user info that will help to debug the issue
+    await Future.wait([
+      FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),
+      FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id),
+    ]);
+
+    await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
   }
 }

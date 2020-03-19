@@ -14,7 +14,6 @@
 
 import 'dart:math';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -25,6 +24,7 @@ import 'package:flutter_parent/utils/common_widgets/error_report/error_report_di
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
+import 'package:flutter_parent/utils/debug_flags.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -39,7 +39,7 @@ class LoginLandingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
-        endDrawer: kReleaseMode
+        endDrawer: !DebugFlags.isDebug
             ? null // Don't show snickers in release mode
             : Drawer(
                 child: SafeArea(
