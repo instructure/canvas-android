@@ -16,30 +16,22 @@
  */
 package com.instructure.loginapi.login.activities
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.google.zxing.integration.android.IntentIntegrator
-import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
-import kotlinx.android.synthetic.main.activity_find_school.*
 import kotlinx.android.synthetic.main.activity_login_with_qr.*
-import kotlinx.android.synthetic.main.activity_login_with_qr.toolbar
 
 abstract class LoginWithQRActivity : AppCompatActivity() {
 
@@ -62,7 +54,7 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
                 // Valid link, let's launch it
                 launchApplicationWithQRLogin(loginUri)
             } else {
-                Toast.makeText(this, R.string.qrCodeError, Toast.LENGTH_LONG).show()
+                Toast.makeText(this, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
@@ -79,7 +71,7 @@ abstract class LoginWithQRActivity : AppCompatActivity() {
                     val integrator = IntentIntegrator(this@LoginWithQRActivity)
                     integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
                     integrator.setOrientationLocked(true)
-                    integrator.setPrompt(getString(R.string.qrCodeScanningPrompt))
+                    integrator.setPrompt(getString(R.string.qrCodeExplanation))
                     integrator.setBeepEnabled(false)
                     integrator.initiateScan()
                 } else {

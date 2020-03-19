@@ -22,6 +22,7 @@ import com.instructure.loginapi.login.activities.LoginWithQRActivity
 class StudentLoginWithQRActivity : LoginWithQRActivity() {
 
     override fun launchApplicationWithQRLogin(loginUri: Uri) {
+        // The InterwebsToApplication activity is set up to handle the QR code url from inside or outside the app
         startActivity(InterwebsToApplication.createIntent(this, loginUri))
     }
 

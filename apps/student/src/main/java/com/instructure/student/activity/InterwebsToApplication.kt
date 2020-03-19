@@ -71,7 +71,7 @@ class InterwebsToApplication : AppCompatActivity() {
     }
 
     private fun loadRoute(data: Uri, url: String) {
-        loadingJob = weave {
+        loadingJob = tryWeave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
 
             // Do some logging
@@ -90,45 +90,43 @@ class InterwebsToApplication : AppCompatActivity() {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
-                    return@weave
+                    return@tryWeave
                 } catch (e: StatusCallbackError) {
                     Toast.makeText(this@InterwebsToApplication, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
                     finish()
-                    return@weave
+                    return@tryWeave
                 }
             }
 
 
-            try {
-                if (!signedIn) {
-                    delay(700)
-                    val intent = if (host.isNotBlank()) {
-                        SignInActivity.createIntent(this@InterwebsToApplication, AccountDomain(host))
-                    } else {
-                        LoginActivity.createIntent(this@InterwebsToApplication)
-                    }
-                    startActivity(intent)
-                    finish()
-                    return@weave
-                }
-
-                if (signedIn && !domain.contains(host)) {
-                    delay(700)
-                    val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
-                    intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
-                    finish()
-                    return@weave
+            if (!signedIn) {
+                delay(700)
+                val intent = if (host.isNotBlank()) {
+                    SignInActivity.createIntent(this@InterwebsToApplication, AccountDomain(host))
                 } else {
-                    // Allow the UI to show
-                    delay(700)
-                    RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                    LoginActivity.createIntent(this@InterwebsToApplication)
                 }
-            } catch (e: Throwable) {
+                startActivity(intent)
                 finish()
+                return@tryWeave
             }
 
+            if (signedIn && !domain.contains(host)) {
+                delay(700)
+                val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+                return@tryWeave
+            } else {
+                // Allow the UI to show
+                delay(700)
+                RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+            }
+
+        } catch {
+            finish()
         }
     }
 

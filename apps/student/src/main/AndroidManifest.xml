@@ -201,6 +201,16 @@
                     android:scheme="https"
                     android:host="sso.canvaslms.com"
                     android:pathPattern="/canvas/login" />
+
+                <data
+                    android:scheme="https"
+                    android:host="sso.test.canvaslms.com"
+                    android:pathPattern="/canvas/login" />
+
+                <data
+                    android:scheme="https"
+                    android:host="sso.beta.canvaslms.com"
+                    android:pathPattern="/canvas/login" />
             </intent-filter>
         </activity>
 
@@ -250,7 +260,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.instructure.loginapi.login.activities.LoginWithQRActivity" />
         <activity android:name=".activity.StudentLoginWithQRActivity" />
 
         <service android:name="com.instructure.pandautils.services.NotoriousUploadService"

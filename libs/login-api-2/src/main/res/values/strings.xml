@@ -104,7 +104,8 @@
     <string name="findMySchool">Find my school</string>
     <string name="loginWithQRCode">QR Code</string>
     <string name="locateQRCode">Locate QR Code</string>
-    <string name="qrCodeExplanation">You\'ll find the QR code on the web in your account profile. Click on \"QR for Mobile\" in the list.</string>
+    <string name="qrCodeExplanation">You\'ll find the QR code on the web in your account profile. Click on \'QR for Mobile\' in the list.</string>
+    <string name="qrCodeScanningPrompt">Scan a QR code from canvas to login</string>
     <string name="loginWithQRCodeError">There was an error logging in. Please generate another QR Code and try again.</string>
     <string name="qrCodeScreenshotContentDescription">Screenshot showing location of QR code generation in browser</string>
     <string name="whatsYourSchoolName">What\'s your school\'s name?</string>
