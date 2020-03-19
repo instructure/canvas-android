@@ -35,10 +35,10 @@ open class ApiPactTestBase {
     val provider = PactProviderRule("Canvas LMS API", PactSpecVersion.V2, this)
 
     val DEFAULT_MOBILE_STUDENT = "Mobile Student"
-    fun getClient(pathPrefix: String = "/api/v1/") : Retrofit {
+    fun getClient(pathPrefix: String = "/api/v1/", caller: String = DEFAULT_MOBILE_STUDENT) : Retrofit {
 
         val okHttpClient = OkHttpClient.Builder()
-                .addInterceptor(PactRequestInterceptor(DEFAULT_MOBILE_STUDENT))
+                .addInterceptor(PactRequestInterceptor(caller))
                 .addInterceptor { chain ->
                     val request = chain.request()
                     val builder = request.newBuilder()
