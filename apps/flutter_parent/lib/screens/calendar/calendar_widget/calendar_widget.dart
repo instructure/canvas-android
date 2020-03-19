@@ -390,7 +390,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       key: _monthKey,
       itemCount: _maxMonthIndex,
       controller: _monthController,
-      reverse: Directionality.of(context) == TextDirection.rtl,
       itemBuilder: (context, index) {
         final yearMonth = _yearAndMonthForIndex(index);
         return CalendarMonth(
@@ -488,7 +487,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       key: _weekKey,
       itemCount: _maxWeekIndex,
       controller: _weekController,
-      reverse: Directionality.of(context) == TextDirection.rtl,
       itemBuilder: (context, index) {
         final weekStart = _weekStartForIndex(index);
         return CalendarWeek(

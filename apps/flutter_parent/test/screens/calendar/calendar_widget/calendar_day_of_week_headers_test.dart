@@ -123,31 +123,31 @@ void main() {
     });
   });
 
-  testWidgetsWithAccessibilityChecks('Displays correctly for Arabic locale', (tester) async {
-    // Weekday names in expected display order
+  testWidgetsWithAccessibilityChecks('Displays correctly for Arabic locale - RTL', (tester) async {
+    // Weekday names in expected display order (RTL)
     final allDays = [
-      find.text('السبت'),
-      find.text('الأحد'),
-      find.text('الاثنين'),
-      find.text('الثلاثاء'),
-      find.text('الأربعاء'),
-      find.text('الخميس'),
       find.text('الجمعة'),
+      find.text('الخميس'),
+      find.text('الأربعاء'),
+      find.text('الثلاثاء'),
+      find.text('الاثنين'),
+      find.text('الأحد'),
+      find.text('السبت'),
     ];
 
     // Weekdays
     final weekdays = [
-      find.text('الأحد'),
-      find.text('الاثنين'),
-      find.text('الثلاثاء'),
-      find.text('الأربعاء'),
       find.text('الخميس'),
+      find.text('الأربعاء'),
+      find.text('الثلاثاء'),
+      find.text('الاثنين'),
+      find.text('الأحد'),
     ];
 
     // Weekend days
     final weekends = [
-      find.text('السبت'),
       find.text('الجمعة'),
+      find.text('السبت'),
     ];
 
     await tester.pumpWidget(TestApp(DayOfWeekHeaders(), locale: Locale('ar')));
