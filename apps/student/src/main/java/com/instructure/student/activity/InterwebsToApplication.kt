@@ -21,19 +21,23 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
+import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.Analytics
 import com.instructure.student.util.LoggingUtility
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.Job
@@ -67,43 +71,64 @@ class InterwebsToApplication : AppCompatActivity() {
     }
 
     private fun loadRoute(data: Uri, url: String) {
-        loadingJob = tryWeave {
+        loadingJob = weave {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
 
             // Do some logging
             LoggingUtility.Log(this@InterwebsToApplication, Log.WARN, data.toString())
 
             val token = ApiPrefs.getValidToken()
-
             val signedIn = token.isNotEmpty()
             val domain = ApiPrefs.domain
-            if (!signedIn) {
-                delay(700)
-                val intent = if (host.isNotBlank()) {
-                    SignInActivity.createIntent(this@InterwebsToApplication, AccountDomain(host))
-                } else {
-                    LoginActivity.createIntent(this@InterwebsToApplication)
+
+            if (verifySSOLoginUri(data)) {
+                // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
+                try {
+                    performSSOLogin(data, signedIn, this@InterwebsToApplication)
+                    delay(700)
+                    val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                    return@weave
+                } catch (e: StatusCallbackError) {
+                    Toast.makeText(this@InterwebsToApplication, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
+                    finish()
+                    return@weave
                 }
-                startActivity(intent)
-                finish()
-                return@tryWeave
             }
 
-            if (signedIn && !domain.contains(host)) {
-                delay(700)
-                val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
-                intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+
+            try {
+                if (!signedIn) {
+                    delay(700)
+                    val intent = if (host.isNotBlank()) {
+                        SignInActivity.createIntent(this@InterwebsToApplication, AccountDomain(host))
+                    } else {
+                        LoginActivity.createIntent(this@InterwebsToApplication)
+                    }
+                    startActivity(intent)
+                    finish()
+                    return@weave
+                }
+
+                if (signedIn && !domain.contains(host)) {
+                    delay(700)
+                    val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                    intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                    return@weave
+                } else {
+                    // Allow the UI to show
+                    delay(700)
+                    RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                }
+            } catch (e: Throwable) {
                 finish()
-                return@tryWeave
-            } else {
-                // Allow the UI to show
-                delay(700)
-                RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
             }
-        } catch {
-            finish()
+
         }
     }
 

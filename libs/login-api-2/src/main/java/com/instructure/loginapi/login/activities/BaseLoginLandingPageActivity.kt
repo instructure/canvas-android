@@ -82,6 +82,10 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
     protected open fun appChangesLink(): String? = null
 
+    protected open fun loginWithQRCodeEnabled(): Boolean = false
+
+    protected abstract fun loginWithQRIntent(): Intent?
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_landing_page)
@@ -123,6 +127,17 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         }
 
         helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
+
+        if(loginWithQRCodeEnabled()) {
+            qrLogin.setVisible()
+            qrDivider.setVisible()
+            qrLogin.onClick {
+                startActivity(loginWithQRIntent())
+            }
+        } else {
+            qrLogin.setGone()
+            qrDivider.setGone()
+        }
     }
 
     private fun requestLoginHelp() {

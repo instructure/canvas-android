@@ -104,6 +104,10 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_RECYCLERVIEW
+    implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
+
+    implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.3.0'
 }
 
 task copySnickerDoodles(type: Copy) {
