@@ -348,7 +348,6 @@ Widget _testableWidget(CourseDetailsModel model,
     Scaffold(
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseSummaryScreen()),
     ),
-    highContrast: true,
     platformConfig: PlatformConfig(
         mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
     navigatorObservers: observers,

@@ -69,7 +69,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -122,7 +121,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -210,7 +208,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -275,7 +272,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -359,7 +355,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -395,7 +390,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -433,7 +427,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -455,7 +448,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: conversationId, conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -479,7 +471,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: conversationId, conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -528,7 +519,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           ConversationDetailsScreen(conversationId: '', conversationSubject: '', courseName: ''),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -571,7 +561,6 @@ void main() {
               ),
             ),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -614,7 +603,6 @@ void main() {
               ),
             ),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();

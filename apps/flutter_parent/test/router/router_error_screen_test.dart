@@ -34,7 +34,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('router error renders correctly with url', (tester) async {
     await tester.pumpWidget(TestApp(
       RouterErrorScreen(_domain),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -60,7 +59,6 @@ void main() {
 
     await tester.pumpWidget(TestApp(
       RouterErrorScreen(_domain),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(AppLocalizations().openInBrowser));
@@ -86,7 +84,6 @@ void main() {
 
     await tester.pumpWidget(TestApp(
       RouterErrorScreen(_domain),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
     await tester.tap(find.text(AppLocalizations().switchUsers));

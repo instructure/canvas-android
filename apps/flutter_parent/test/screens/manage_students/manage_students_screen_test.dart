@@ -93,7 +93,7 @@ void main() {
       _setupLocator(interactor);
 
       // Start the screen with no users
-      await tester.pumpWidget(TestApp(ManageStudentsScreen([]), highContrast: true));
+      await tester.pumpWidget(TestApp(ManageStudentsScreen([])));
       await tester.pumpAndSettle();
 
       // Pull to refresh
@@ -205,7 +205,6 @@ void main() {
       // Start the page with a 'null' list of students
       await tester.pumpWidget(TestApp(
         ManageStudentsScreen(null),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 
@@ -221,7 +220,6 @@ void main() {
       // Start the page with an empty list of students
       await tester.pumpWidget(TestApp(
         ManageStudentsScreen(observedStudents),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 
@@ -260,7 +258,7 @@ void main() {
         CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: 'he/him'),
       ];
 
-      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents), highContrast: true));
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
       await tester.pumpAndSettle();
 
       await _clickFAB(tester);
@@ -275,8 +273,7 @@ void main() {
 
       _setupLocator(interactor);
 
-      await tester.pumpWidget(
-          TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')]), highContrast: true));
+      await tester.pumpWidget(TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')])));
       await tester.pumpAndSettle();
 
       await _clickFAB(tester);
@@ -295,7 +292,6 @@ void main() {
       // (the bottom sheet header text doesn't pass our a11y contrast ratio test by default)
       await tester.pumpWidget(TestApp(
         ManageStudentsScreen(observedStudents),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 
@@ -325,7 +321,7 @@ void main() {
       _setupLocator(interactor);
 
       // Setup page
-      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent), highContrast: true));
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudent)));
       await tester.pumpAndSettle();
 
       // Make sure we only have one student
@@ -370,7 +366,6 @@ void main() {
       // Setup the main widget
       await tester.pumpWidget(TestApp(
         ManageStudentsScreen(observedStudents),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 

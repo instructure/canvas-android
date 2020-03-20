@@ -83,7 +83,6 @@ void main() {
 
   Widget _testableMaterialWidget([Widget widget]) => TestApp(
         Scaffold(body: widget ?? DashboardScreen()),
-        highContrast: true,
       );
 
   group('Render', () {

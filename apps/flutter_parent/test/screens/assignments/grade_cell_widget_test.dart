@@ -26,7 +26,7 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   Future<void> setupWithData(WidgetTester tester, GradeCellData data) async {
-    await tester.pumpWidget(TestApp(GradeCell(data), highContrast: true));
+    await tester.pumpWidget(TestApp(GradeCell(data)));
     await tester.pumpAndSettle();
   }
 

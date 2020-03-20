@@ -30,7 +30,6 @@ void main() {
     testWidgetsWithAccessibilityChecks('header', (tester) async {
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -42,7 +41,6 @@ void main() {
     testWidgetsWithAccessibilityChecks('text input', (tester) async {
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -54,7 +52,6 @@ void main() {
     testWidgetsWithAccessibilityChecks('action buttons', (tester) async {
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -75,7 +72,6 @@ void main() {
       // Setup the dialog
       var widget = TestApp(
         AlertThresholdsPercentageDialog([initialThreshold], alertType, studentId),
-        highContrast: true,
       );
 
       // Launch the dialog
@@ -94,7 +90,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -114,7 +109,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([highThreshold], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -136,7 +130,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([lowThreshold], AlertType.courseGradeHigh, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -156,7 +149,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -176,7 +168,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -198,7 +189,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([highThreshold], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -220,7 +210,6 @@ void main() {
 
       var widget = TestApp(
         AlertThresholdsPercentageDialog([lowThreshold], AlertType.courseGradeHigh, ''),
-        highContrast: true,
       );
 
       await tester.pumpWidget(widget);
@@ -316,7 +305,6 @@ void main() {
       // Setup the dialog
       var widget = TestApp(
         AlertThresholdsPercentageDialog([initialThreshold], alertType, studentId),
-        highContrast: true,
       );
 
       // Launch the dialog
@@ -348,7 +336,6 @@ void main() {
       var widget = TestApp(
         AlertThresholdsPercentageDialog(
             [_mockThreshold(type: AlertType.courseGradeLow, value: '42')], AlertType.courseGradeLow, ''),
-        highContrast: true,
       );
 
       // Show the dialog

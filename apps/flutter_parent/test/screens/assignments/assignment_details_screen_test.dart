@@ -117,7 +117,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -135,7 +134,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -162,7 +160,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -187,7 +184,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -219,7 +215,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig:
           PlatformConfig(initWebview: true, mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
@@ -230,10 +225,10 @@ void main() {
     expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
     expect(find.text('1.5 pts'), findsOneWidget);
     expect(find.byIcon(Icons.do_not_disturb), findsOneWidget);
-    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.licorice);
+    expect((tester.widget(find.byIcon(Icons.do_not_disturb)) as Icon).color, ParentColors.ash);
     expect(find.text(AppLocalizations().assignmentNotSubmittedLabel), findsOneWidget);
     expect((tester.widget(find.text(AppLocalizations().assignmentNotSubmittedLabel)) as Text).style.color,
-        ParentColors.licorice);
+        ParentColors.ash);
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
     expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsOneWidget);
@@ -263,7 +258,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -271,11 +265,11 @@ void main() {
 
     expect(find.text('1 pts'), findsOneWidget);
     expect(find.byIcon(Icons.check_circle), findsOneWidget);
-    expect((tester.widget(find.byIcon(Icons.check_circle)) as Icon).color, StudentColorSet.shamrock.lightHC);
+    expect((tester.widget(find.byIcon(Icons.check_circle)) as Icon).color, StudentColorSet.shamrock.light);
 
     expect(find.text(AppLocalizations().assignmentSubmittedLabel), findsOneWidget);
     expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style.color,
-        StudentColorSet.shamrock.lightHC);
+        StudentColorSet.shamrock.light);
   });
 
   testWidgetsWithAccessibilityChecks('shows Assignment data with no submission', (tester) async {
@@ -296,7 +290,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -315,7 +308,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -340,7 +332,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -371,7 +362,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -399,7 +389,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -427,7 +416,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -447,7 +435,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -468,7 +455,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -488,7 +474,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -510,7 +495,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -552,7 +536,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
@@ -594,7 +577,6 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      highContrast: true,
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 

@@ -60,7 +60,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(plannable: plannable)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -72,7 +71,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(contextName: contextName)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -85,7 +83,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(plannable: _createPlannable(dueAt: date))),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -98,7 +95,6 @@ void main() {
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(
             plannable: _createPlannable(dueAt: null, pointsPossible: pointsPossible), submission: status)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -114,7 +110,6 @@ void main() {
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(
             plannable: _createPlannable(pointsPossible: pointsPossible), submission: submissionStatus)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -127,7 +122,6 @@ void main() {
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(
             _createPlannerItem(contextName: 'blank', plannable: _createPlannable(pointsPossible: pointsPossible))),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -146,7 +140,6 @@ void main() {
       var submissionStatus = PlannerSubmission((b) => b.excused = true);
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(submission: submissionStatus)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -157,7 +150,6 @@ void main() {
       var submissionStatus = PlannerSubmission((b) => b.missing = true);
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(submission: submissionStatus)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -168,7 +160,6 @@ void main() {
       var submissionStatus = PlannerSubmission((b) => b.graded = true);
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(submission: submissionStatus)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -179,7 +170,6 @@ void main() {
       var submissionStatus = PlannerSubmission((b) => b.needsGrading = true);
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(_createPlannerItem(submission: submissionStatus)),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -191,7 +181,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -205,7 +194,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -219,7 +207,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -233,7 +220,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -350,7 +336,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        highContrast: true,
         platformConfig: PlatformConfig(mockPrefs: {
           ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student)),
           ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid,

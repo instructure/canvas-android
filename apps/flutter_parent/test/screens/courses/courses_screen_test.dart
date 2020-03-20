@@ -58,8 +58,7 @@ void main() {
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
   }
 
-  Widget _testableMaterialWidget({Widget widget, highContrast = false, SelectedStudentNotifier notifier = null}) =>
-      TestApp(
+  Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null}) => TestApp(
         ChangeNotifierProvider<SelectedStudentNotifier>(
             create: (context) => notifier ?? SelectedStudentNotifier()
               ..update(_mockStudent('1')),
@@ -68,7 +67,6 @@ void main() {
                 return Scaffold(body: widget ?? CoursesScreen());
               },
             )),
-        highContrast: highContrast,
         platformConfig: PlatformConfig(mockPrefs: null),
       );
 
@@ -292,7 +290,7 @@ void main() {
 
       _setupLocator(_MockedCoursesInteractor(courses: courses));
 
-      await tester.pumpWidget(_testableMaterialWidget(highContrast: true));
+      await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
 
       final matchedWidget = find.text(courses.first.name);

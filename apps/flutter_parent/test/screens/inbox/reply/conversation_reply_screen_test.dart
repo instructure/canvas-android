@@ -52,7 +52,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('displays "Reply" as as title for reply', (tester) async {
     _setupInteractor();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     expect(find.descendant(of: find.byType(AppBar), matching: find.text(l10n.reply)), findsOneWidget);
@@ -61,7 +61,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('displays "Reply All" as as title for reply all', (tester) async {
     _setupInteractor();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, true), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, true)));
     await tester.pumpAndSettle();
 
     expect(find.descendant(of: find.byType(AppBar), matching: find.text(l10n.replyAll)), findsOneWidget);
@@ -72,7 +72,7 @@ void main() {
 
     final conversation = _makeConversation();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, null, false)));
     await tester.pumpAndSettle();
 
     expect(find.descendant(of: find.byType(AppBar), matching: find.text(conversation.subject)), findsOneWidget);
@@ -84,7 +84,7 @@ void main() {
     final conversation = _makeConversation();
     final message = conversation.messages[1];
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false)));
     await tester.pumpAndSettle();
 
     expect(find.descendant(of: find.byType(MessageWidget), matching: find.text(message.body)), findsOneWidget);
@@ -114,7 +114,7 @@ void main() {
           ..name = 'Myself'),
       ]));
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(Key('attachment-1')));
@@ -128,7 +128,7 @@ void main() {
 
     final conversation = _makeConversation();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, null, false)));
     await tester.pumpAndSettle();
 
     final expectedMessage = conversation.messages[0];
@@ -138,7 +138,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
     _setupInteractor();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     final sendButton = find.byKey(ConversationReplyScreen.sendKey);
@@ -149,7 +149,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('can enter message text', (tester) async {
     _setupInteractor();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     final messageText = 'Some text here';
@@ -163,7 +163,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('sending is enabled once message is present', (tester) async {
     _setupInteractor();
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     var matchedWidget = find.byKey(ConversationReplyScreen.messageKey);
@@ -182,7 +182,7 @@ void main() {
     final replyAll = true;
     final text = 'some text here';
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, replyAll), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, replyAll)));
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byKey(ConversationReplyScreen.messageKey), text);
@@ -271,7 +271,7 @@ void main() {
     final interactor = _setupInteractor();
     when(interactor.createReply(any, any, any, any, any)).thenAnswer((_) => Future.error(''));
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     // Set message body
@@ -324,7 +324,7 @@ void main() {
 
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     // Set message body
@@ -373,7 +373,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byKey(ConversationReplyScreen.attachmentKey));
@@ -409,7 +409,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -470,7 +470,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -500,7 +500,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -523,7 +523,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -548,7 +548,7 @@ void main() {
     when(interactor.addAttachment(any)).thenAnswer((_) => Future.value(handler));
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -575,7 +575,7 @@ void main() {
     when(interactor.createReply(any, any, any, any, any)).thenAnswer((_) => completer.future);
 
     // Create page and add attachment
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(CreateConversationScreen.attachmentKey));
     await tester.pump();
@@ -619,7 +619,7 @@ void main() {
         .thenAnswer((answer) => ConversationReplyInteractor().addAttachment(answer.positionalArguments[0]));
 
     // Create page
-    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationReplyScreen(_makeConversation(), null, false)));
     await tester.pumpAndSettle();
 
     // Tap attachment button
@@ -642,7 +642,6 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
       ),
     ),
     navigatorObservers: [observer],
-    highContrast: true,
   );
 
   await tester.pumpWidget(app);

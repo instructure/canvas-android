@@ -203,7 +203,6 @@ Widget _testableWidget(String announcementId, AnnouncementType type, String cour
         return AnnouncementDetailScreen(announcementId, type, courseId, context);
       },
     ),
-    highContrast: true,
     platformConfig: PlatformConfig(initWebview: true),
   );
 }

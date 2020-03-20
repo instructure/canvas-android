@@ -72,7 +72,6 @@ void main() {
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
-      highContrast: true,
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));
     await tester.pumpAndSettle();
@@ -89,7 +88,7 @@ void main() {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
-    await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(SplashScreen()));
     await tester.pumpAndSettle();
 
     expect(find.byType(LoginLandingScreen), findsOneWidget);
@@ -108,7 +107,7 @@ void main() {
     final completer = Completer<List<User>>();
     when(interactor.getStudents(forceRefresh: true)).thenAnswer((_) => completer.future);
 
-    await tester.pumpWidget(TestApp(SplashScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(SplashScreen()));
     await tester.pump();
 
     completer.complete(students);
@@ -142,7 +141,6 @@ void main() {
 
     await tester.pumpWidget(TestApp(
       SplashScreen(),
-      highContrast: true,
       navigatorObservers: [observer],
       platformConfig: PlatformConfig(initLoggedInUser: login),
     ));

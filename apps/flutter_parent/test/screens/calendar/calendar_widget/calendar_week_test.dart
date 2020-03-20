@@ -208,7 +208,6 @@ Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher, Locale locale}) {
       child: child,
     ),
     locale: locale,
-    highContrast: true,
   );
 }
 

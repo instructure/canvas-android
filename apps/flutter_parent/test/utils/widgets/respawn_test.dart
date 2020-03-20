@@ -24,7 +24,6 @@ void main() {
     await tester.pumpWidget(
       TestApp(
         Respawn(child: _RespawnTestWidget()),
-        highContrast: true,
       ),
     );
     await tester.pump();
