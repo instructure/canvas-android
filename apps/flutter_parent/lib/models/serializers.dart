@@ -39,6 +39,8 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
+import 'package:flutter_parent/models/help_link.dart';
+import 'package:flutter_parent/models/help_links.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/login.dart';
@@ -112,6 +114,8 @@ part 'serializers.g.dart';
   GradeSubmissionWrapper,
   GradingPeriod,
   GradingPeriodResponse,
+  HelpLink,
+  HelpLinks,
   LockInfo,
   LockedModule,
   Login,

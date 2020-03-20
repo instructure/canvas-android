@@ -1033,37 +1033,6 @@ class AppLocalizations {
       Intl.message('You will be notified about this event on…', desc: 'Description for when an event reminder is set');
 
   /// Help Screen
-
-  String get helpSearchCanvasDocsLabel => Intl.message(
-        'Search the Canvas Guides',
-        desc: 'Label for option to search the Canvas Guides',
-      );
-
-  String get helpSearchCanvasDocsDescription => Intl.message(
-        'Find answers to common questions',
-        desc: 'Description for option to search the Canvas Guides',
-      );
-
-  String get helpReportProblemLabel => Intl.message(
-        'Report a Problem',
-        desc: 'Label for option to report a problem',
-      );
-
-  String get helpReportProblemDescription => Intl.message(
-        'If the app misbehaves, let us know',
-        desc: 'Description for option to report a problem',
-      );
-
-  String get helpRequestFeatureLabel => Intl.message(
-        'Request a Feature',
-        desc: 'Label for option to request a feature',
-      );
-
-  String get helpRequestFeatureDescription => Intl.message(
-        'Have an idea to improve the app?',
-        desc: 'Description for option to request a feature',
-      );
-
   String get helpShareLoveLabel => Intl.message(
         'Share Your Love for the App',
         desc: 'Label for option to open the app store',
