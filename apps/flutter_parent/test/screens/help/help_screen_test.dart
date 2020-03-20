@@ -38,19 +38,18 @@ import '../../utils/test_app.dart';
 
 void main() {
   final l10n = AppLocalizations();
+  HelpScreenInteractor interactor = _MockHelpScreenInteractor();
 
   setupTestLocator((locator) {
     locator.registerSingleton<QuickNav>(QuickNav());
     locator.registerLazySingleton<Logger>(() => Logger());
     locator.registerLazySingleton<AndroidIntentVeneer>(() => _MockAndroidIntentVeneer());
+    locator.registerLazySingleton<HelpScreenInteractor>(() => interactor);
   });
 
   testWidgetsWithAccessibilityChecks('displays links', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink()]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -66,11 +65,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping search launches url', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer(
         (_) => Future.value([createHelpLink(id: 'search_the_canvas_guides', text: 'Search the Canvas Guides')]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
@@ -78,7 +74,7 @@ void main() {
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(l10n.helpSearchCanvasDocsLabel));
+    await tester.tap(find.text('Search the Canvas Guides'));
     await tester.pumpAndSettle();
 
     verify(
@@ -95,11 +91,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping share love launches url', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
@@ -124,11 +117,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('tapping report problem shows error report dialog', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: '#create_ticket', text: 'Report a Problem')]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
@@ -136,18 +126,15 @@ void main() {
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(l10n.helpReportProblemLabel));
+    await tester.tap(find.text('Report a Problem'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping request feature launches email intent', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(id: 'submit_feature_idea', text: 'Request a Feature')]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     await setupPlatformChannels();
 
@@ -187,20 +174,15 @@ void main() {
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text(l10n.helpRequestFeatureLabel));
+    await tester.tap(find.text('Request a Feature'));
     await tester.pumpAndSettle();
 
     await completer.future; // Wait for the completer to finish the test
   });
 
   testWidgetsWithAccessibilityChecks('tapping legal shows legal screen', (tester) async {
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([]));
-    setupTestLocator((locator) => locator
-      ..registerLazySingleton<HelpScreenInteractor>(() => interactor)
-      ..registerLazySingleton<QuickNav>(() => QuickNav())
-      ..registerLazySingleton<Logger>(() => Logger()));
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -215,12 +197,8 @@ void main() {
     var telUri = 'tel:+123';
     var text = 'Telephone';
 
-    // Setup locator
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: telUri, text: text)]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     // Get the platform channels going
     await setupPlatformChannels();
@@ -248,15 +226,11 @@ void main() {
     var url = 'https://cases.canvaslms.com/liveagentchat';
     var text = 'Chat';
 
-    // Setup locator
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
 
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -281,12 +255,8 @@ void main() {
     var mailto = 'mailto:pandas@instructure.com';
     var text = 'Mailto';
 
-    // Setup locator
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: mailto, text: text)]));
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     // Get the platform channels going
     await setupPlatformChannels();
@@ -313,16 +283,11 @@ void main() {
   testWidgetsWithAccessibilityChecks('tapping an unhandled link launches', (tester) async {
     var url = 'https://www.instructure.com';
     var text = 'Some link';
-
-    // Setup locator
-    HelpScreenInteractor interactor = _MockHelpScreenInteractor();
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
 
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
-
-    setupTestLocator((locator) => locator.registerLazySingleton<HelpScreenInteractor>(() => interactor));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -351,7 +316,7 @@ HelpLinks createHelpLinks({bool customLinks = false, bool defaultLinks = false})
 HelpLink createHelpLink({String id, String text, String url}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
-  ..availableTo = BuiltList.of(<String>[]).toBuilder()
+  ..availableTo = BuiltList.of(<AvailableTo>[]).toBuilder()
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
   ..subtext = 'subtext');

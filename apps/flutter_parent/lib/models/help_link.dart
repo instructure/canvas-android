@@ -32,13 +32,28 @@ abstract class HelpLink implements Built<HelpLink, HelpLinkBuilder> {
 
   String get type;
 
-  // Possible values: "user", "student", "teacher", "admin", "observer", "unenrolled"
   @BuiltValueField(wireName: 'available_to')
-  BuiltList<String> get availableTo;
+  BuiltList<AvailableTo> get availableTo;
 
   String get url;
 
   String get text;
 
   String get subtext;
+}
+
+class AvailableTo extends EnumClass {
+  static Serializer<AvailableTo> get serializer => _$availableToSerializer;
+
+  static const AvailableTo user = _$user;
+  static const AvailableTo student = _$student;
+  static const AvailableTo teacher = _$teacher;
+  static const AvailableTo admin = _$admin;
+  static const AvailableTo observer = _$observer;
+  static const AvailableTo unenrolled = _$unenrolled;
+
+  const AvailableTo._(String name) : super(name);
+
+  static BuiltSet<AvailableTo> get values => _$atValues;
+  static AvailableTo valueOf(String name) => _$atValueOf(name);
 }

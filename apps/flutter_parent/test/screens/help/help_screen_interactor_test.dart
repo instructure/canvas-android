@@ -36,10 +36,10 @@ void main() {
   test('getObserverCustomHelpLinks only returns links for observers', () async {
     var api = _MockHelpLinksApi();
     var customLinks = [
-      createHelpLink(availableTo: ['observer']),
-      createHelpLink(availableTo: ['user']),
-      createHelpLink(availableTo: ['unenrolled']),
-      createHelpLink(availableTo: ['teacher'])
+      createHelpLink(availableTo: [AvailableTo.observer]),
+      createHelpLink(availableTo: [AvailableTo.user]),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
+      createHelpLink(availableTo: [AvailableTo.teacher])
     ];
 
     setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
@@ -52,25 +52,25 @@ void main() {
     verify(api.getHelpLinks(forceRefresh: false)).called(1);
 
     // Make sure the link available only to teachers is not in the returned list, but everything else is
-    expect(list.any((l) => l.availableTo.contains('teacher')), false);
-    expect(list.any((l) => l.availableTo.contains('observer')), true);
-    expect(list.any((l) => l.availableTo.contains('user')), true);
-    expect(list.any((l) => l.availableTo.contains('unenrolled')), true);
+    expect(list.any((l) => l.availableTo.contains(AvailableTo.teacher)), false);
+    expect(list.any((l) => l.availableTo.contains(AvailableTo.observer)), true);
+    expect(list.any((l) => l.availableTo.contains(AvailableTo.user)), true);
+    expect(list.any((l) => l.availableTo.contains(AvailableTo.unenrolled)), true);
   });
 
   test('containsObserverLinks returns true when observer links present in list, false otherwise', () async {
     var observerLinks = [
-      createHelpLink(availableTo: ['observer']),
-      createHelpLink(availableTo: ['user']),
-      createHelpLink(availableTo: ['unenrolled']),
-      createHelpLink(availableTo: ['teacher']),
+      createHelpLink(availableTo: [AvailableTo.observer]),
+      createHelpLink(availableTo: [AvailableTo.user]),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
+      createHelpLink(availableTo: [AvailableTo.teacher]),
     ];
 
     var nonObserverLinks = [
-      createHelpLink(availableTo: ['student']),
-      createHelpLink(availableTo: ['teacher']),
-      createHelpLink(availableTo: ['admin']),
-      createHelpLink(availableTo: ['admin']),
+      createHelpLink(availableTo: [AvailableTo.student]),
+      createHelpLink(availableTo: [AvailableTo.teacher]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
     ];
 
     expect(HelpScreenInteractor().containsObserverLinks(BuiltList.from(observerLinks)), true);
@@ -79,16 +79,16 @@ void main() {
 
   test('filterObserverLinks only returns observer links', () async {
     var observerLinks = [
-      createHelpLink(availableTo: ['observer']),
-      createHelpLink(availableTo: ['user']),
-      createHelpLink(availableTo: ['unenrolled']),
+      createHelpLink(availableTo: [AvailableTo.observer]),
+      createHelpLink(availableTo: [AvailableTo.user]),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
     ];
 
     var nonObserverLinks = [
-      createHelpLink(availableTo: ['student']),
-      createHelpLink(availableTo: ['teacher']),
-      createHelpLink(availableTo: ['admin']),
-      createHelpLink(availableTo: ['admin']),
+      createHelpLink(availableTo: [AvailableTo.student]),
+      createHelpLink(availableTo: [AvailableTo.teacher]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
     ];
 
     expect(HelpScreenInteractor().filterObserverLinks(BuiltList.from([...observerLinks, ...nonObserverLinks])),
@@ -98,16 +98,16 @@ void main() {
   test('custom list is returned if there are any custom lists', () async {
     var api = _MockHelpLinksApi();
     var customLinks = [
-      createHelpLink(availableTo: ['observer']),
-      createHelpLink(availableTo: ['user']),
+      createHelpLink(availableTo: [AvailableTo.observer]),
+      createHelpLink(availableTo: [AvailableTo.user]),
     ];
 
     var defaultLinks = [
-      createHelpLink(availableTo: ['unenrolled']),
-      createHelpLink(availableTo: ['student']),
-      createHelpLink(availableTo: ['teacher']),
-      createHelpLink(availableTo: ['admin']),
-      createHelpLink(availableTo: ['admin']),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
+      createHelpLink(availableTo: [AvailableTo.student]),
+      createHelpLink(availableTo: [AvailableTo.teacher]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
+      createHelpLink(availableTo: [AvailableTo.admin]),
     ];
 
     setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
@@ -120,8 +120,8 @@ void main() {
   test('default list is returned if there are no custom lists', () async {
     var api = _MockHelpLinksApi();
     var defaultLinks = [
-      createHelpLink(availableTo: ['unenrolled']),
-      createHelpLink(availableTo: ['observer']),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
+      createHelpLink(availableTo: [AvailableTo.observer]),
     ];
 
     setupTestLocator((locator) => locator.registerLazySingleton<HelpLinksApi>(() => api));
@@ -136,10 +136,10 @@ HelpLinks createHelpLinks({List<HelpLink> customLinks, List<HelpLink> defaultLin
   ..customHelpLinks = ListBuilder(customLinks != null ? customLinks : [createHelpLink()])
   ..defaultHelpLinks = ListBuilder(defaultLinks != null ? defaultLinks : [createHelpLink()]));
 
-HelpLink createHelpLink({String id, String text, String url, List<String> availableTo}) => HelpLink((b) => b
+HelpLink createHelpLink({String id, String text, String url, List<AvailableTo> availableTo}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
-  ..availableTo = ListBuilder(availableTo != null ? availableTo : <String>[])
+  ..availableTo = ListBuilder(availableTo != null ? availableTo : <AvailableTo>[])
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
   ..subtext = 'subtext');

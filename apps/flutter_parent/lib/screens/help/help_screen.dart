@@ -115,9 +115,7 @@ class _HelpScreenState extends State<HelpScreen> {
     } else if (link.url.contains('cases.canvaslms.com/liveagentchat')) {
       // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
       // to the external browser
-      launch(link.url); // TODO: Make sure this works
-//      val intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(link.url) }
-//      startActivity(intent)
+      launch(link.url);
     } else if (link.id.contains('search_the_canvas_guides')) {
       // Send them to the mobile Canvas guides
       _showSearch();

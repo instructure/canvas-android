@@ -6,7 +6,44 @@ part of 'help_link.dart';
 // BuiltValueGenerator
 // **************************************************************************
 
+const AvailableTo _$user = const AvailableTo._('user');
+const AvailableTo _$student = const AvailableTo._('student');
+const AvailableTo _$teacher = const AvailableTo._('teacher');
+const AvailableTo _$admin = const AvailableTo._('admin');
+const AvailableTo _$observer = const AvailableTo._('observer');
+const AvailableTo _$unenrolled = const AvailableTo._('unenrolled');
+
+AvailableTo _$atValueOf(String name) {
+  switch (name) {
+    case 'user':
+      return _$user;
+    case 'student':
+      return _$student;
+    case 'teacher':
+      return _$teacher;
+    case 'admin':
+      return _$admin;
+    case 'observer':
+      return _$observer;
+    case 'unenrolled':
+      return _$unenrolled;
+    default:
+      throw new ArgumentError(name);
+  }
+}
+
+final BuiltSet<AvailableTo> _$atValues =
+    new BuiltSet<AvailableTo>(const <AvailableTo>[
+  _$user,
+  _$student,
+  _$teacher,
+  _$admin,
+  _$observer,
+  _$unenrolled,
+]);
+
 Serializer<HelpLink> _$helpLinkSerializer = new _$HelpLinkSerializer();
+Serializer<AvailableTo> _$availableToSerializer = new _$AvailableToSerializer();
 
 class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
   @override
@@ -25,7 +62,7 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
       'available_to',
       serializers.serialize(object.availableTo,
           specifiedType:
-              const FullType(BuiltList, const [const FullType(String)])),
+              const FullType(BuiltList, const [const FullType(AvailableTo)])),
       'url',
       serializers.serialize(object.url, specifiedType: const FullType(String)),
       'text',
@@ -60,8 +97,8 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
           break;
         case 'available_to':
           result.availableTo.replace(serializers.deserialize(value,
-                  specifiedType:
-                      const FullType(BuiltList, const [const FullType(String)]))
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(AvailableTo)]))
               as BuiltList<Object>);
           break;
         case 'url':
@@ -83,13 +120,30 @@ class _$HelpLinkSerializer implements StructuredSerializer<HelpLink> {
   }
 }
 
+class _$AvailableToSerializer implements PrimitiveSerializer<AvailableTo> {
+  @override
+  final Iterable<Type> types = const <Type>[AvailableTo];
+  @override
+  final String wireName = 'AvailableTo';
+
+  @override
+  Object serialize(Serializers serializers, AvailableTo object,
+          {FullType specifiedType = FullType.unspecified}) =>
+      object.name;
+
+  @override
+  AvailableTo deserialize(Serializers serializers, Object serialized,
+          {FullType specifiedType = FullType.unspecified}) =>
+      AvailableTo.valueOf(serialized as String);
+}
+
 class _$HelpLink extends HelpLink {
   @override
   final String id;
   @override
   final String type;
   @override
-  final BuiltList<String> availableTo;
+  final BuiltList<AvailableTo> availableTo;
   @override
   final String url;
   @override
@@ -178,10 +232,10 @@ class HelpLinkBuilder implements Builder<HelpLink, HelpLinkBuilder> {
   String get type => _$this._type;
   set type(String type) => _$this._type = type;
 
-  ListBuilder<String> _availableTo;
-  ListBuilder<String> get availableTo =>
-      _$this._availableTo ??= new ListBuilder<String>();
-  set availableTo(ListBuilder<String> availableTo) =>
+  ListBuilder<AvailableTo> _availableTo;
+  ListBuilder<AvailableTo> get availableTo =>
+      _$this._availableTo ??= new ListBuilder<AvailableTo>();
+  set availableTo(ListBuilder<AvailableTo> availableTo) =>
       _$this._availableTo = availableTo;
 
   String _url;

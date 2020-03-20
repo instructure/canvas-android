@@ -18,6 +18,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(AssignmentOverride.serializer)
       ..add(Attachment.serializer)
       ..add(AuthenticatedUrl.serializer)
+      ..add(AvailableTo.serializer)
       ..add(BasicUser.serializer)
       ..add(CanvasToken.serializer)
       ..add(CommunicationChannel.serializer)
@@ -89,6 +90,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
       ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(AvailableTo)]),
+          () => new ListBuilder<AvailableTo>())
+      ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())
       ..addBuilderFactory(
@@ -103,9 +107,6 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(RemoteFile)]),
           () => new ListBuilder<RemoteFile>())
-      ..addBuilderFactory(
-          const FullType(BuiltList, const [const FullType(String)]),
-          () => new ListBuilder<String>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(String)]),
           () => new ListBuilder<String>())
