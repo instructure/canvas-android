@@ -27,6 +27,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
@@ -54,7 +55,6 @@ import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audi
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
@@ -131,5 +131,5 @@ void setupLocator() {
   locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
-  locator.registerLazySingleton<Logger>(() => Logger());
+  locator.registerLazySingleton<Analytics>(() => Analytics());
 }

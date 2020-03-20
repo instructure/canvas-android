@@ -15,11 +15,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class StudentHorizontalListView extends StatefulWidget {
@@ -119,6 +121,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 onPressed: () async {
                   bool studentPaired = await _addStudentDialog(context);
                   if (studentPaired) {
+                    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD);
                     widget.onAddStudent();
                   }
                 },

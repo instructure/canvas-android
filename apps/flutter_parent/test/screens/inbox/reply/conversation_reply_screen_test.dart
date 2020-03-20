@@ -33,7 +33,6 @@ import 'package:flutter_parent/screens/inbox/reply/conversation_reply_screen.dar
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_screen.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -658,7 +657,6 @@ _MockInteractor _setupInteractor() {
   final interactor = _MockInteractor();
   setupTestLocator((locator) {
     locator.registerFactory<ConversationReplyInteractor>(() => interactor);
-    locator.registerLazySingleton<Logger>(() => Logger());
   });
   when(interactor.getCurrentUserId()).thenReturn('self');
   return interactor;

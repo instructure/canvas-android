@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
@@ -31,7 +32,6 @@ import 'package:flutter_parent/screens/courses/details/course_details_screen.dar
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -53,7 +53,7 @@ void main() {
     _locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
     _locator.registerFactory<CourseApi>(() => _MockCourseApi());
     _locator.registerFactory<QuickNav>(() => QuickNav());
-    _locator.registerLazySingleton<Logger>(() => Logger());
+    _locator.registerLazySingleton<Analytics>(() => Analytics());
 
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
   }

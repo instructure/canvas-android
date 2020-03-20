@@ -18,11 +18,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -35,6 +35,7 @@ import '../../utils/test_app.dart';
 
 void main() {
   mockNetworkImageResponse();
+  final analytics = _MockAnalytics();
 
   _setupLocator([_MockManageStudentsInteractor interactor]) {
     final locator = GetIt.instance;
@@ -46,8 +47,12 @@ void main() {
     locator.registerFactory<AlertThresholdsInteractor>(() => thresholdInteractor);
     locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? _MockManageStudentsInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
-    locator.registerLazySingleton<Logger>(() => Logger());
+    locator.registerLazySingleton<Analytics>(() => analytics);
   }
+
+  setUp(() {
+    reset(analytics);
+  });
 
   void _clickFAB(WidgetTester tester) async {
     await tester.tap(find.byType(FloatingActionButton));
@@ -349,6 +354,7 @@ void main() {
 
       // Make sure we made the call to get students
       verify(interactor.getStudents(forceRefresh: true)).called(1);
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
 
       // Make sure the dialog is gone
       expect(find.byType(AlertDialog), findsNothing);
@@ -394,3 +400,5 @@ void main() {
 class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
 
 class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
+
+class _MockAnalytics extends Mock implements Analytics {}

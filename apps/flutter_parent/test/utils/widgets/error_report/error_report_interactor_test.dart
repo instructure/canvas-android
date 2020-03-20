@@ -66,7 +66,7 @@ void main() {
   });
 
   test('Uses user data from api prefs', () async {
-    setupPlatformChannels();
+    await setupPlatformChannels();
 
     await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data
 
@@ -136,7 +136,7 @@ void main() {
   });
 
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
-    setupPlatformChannels();
+    await setupPlatformChannels();
 
     await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');

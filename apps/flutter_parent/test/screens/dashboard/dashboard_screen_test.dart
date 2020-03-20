@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
@@ -45,7 +46,6 @@ import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -55,11 +55,14 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_utils.dart';
 
 void main() {
   mockNetworkImageResponse();
+  final analyticsMock = _MockAnalytics();
+
   _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) {
     final _locator = GetIt.instance;
     _locator.reset();
@@ -76,14 +79,17 @@ void main() {
     _locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
-    _locator.registerLazySingleton<Logger>(() => Logger());
+    _locator.registerLazySingleton<Analytics>(() => analyticsMock);
   }
 
-  setUpAll(() => setupPlatformChannels());
+  setUp(() {
+    reset(analyticsMock);
+  });
 
-  Widget _testableMaterialWidget([Widget widget]) => TestApp(
-        Scaffold(body: widget ?? DashboardScreen()),
+  Widget _testableMaterialWidget({Login initLogin}) => TestApp(
+        Scaffold(body: DashboardScreen()),
         highContrast: true,
+        platformConfig: PlatformConfig(initLoggedInUser: initLogin),
       );
 
   group('Render', () {
@@ -278,10 +284,7 @@ void main() {
         ..accessToken = 'token'
         ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-      await ApiPrefs.addLogin(login);
-      await ApiPrefs.switchLogins(login);
-
-      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
       await tester.pumpAndSettle();
 
       // Navigate to Calendar
@@ -399,13 +402,10 @@ void main() {
           ..accessToken = 'token'
           ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-        await ApiPrefs.addLogin(login);
-        await ApiPrefs.switchLogins(login);
+        await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+        await tester.pumpAndSettle();
 
         expect(ApiPrefs.isLoggedIn(), true);
-
-        await tester.pumpWidget(_testableMaterialWidget());
-        await tester.pumpAndSettle();
 
         // Open the nav drawer
         DashboardScreen.scaffoldKey.currentState.openDrawer();
@@ -429,6 +429,7 @@ void main() {
         expect(find.text(AppLocalizations().logoutConfirmation), findsNothing);
         expect(find.byType(DashboardScreen), findsOneWidget);
         expect(ApiPrefs.isLoggedIn(), true);
+        verifyNever(analyticsMock.logEvent(AnalyticsEventConstants.LOGOUT));
       },
     );
 
@@ -454,13 +455,10 @@ void main() {
         ..accessToken = 'token'
         ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-      await ApiPrefs.addLogin(login);
-      await ApiPrefs.switchLogins(login);
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
 
       expect(ApiPrefs.isLoggedIn(), true);
-
-      await tester.pumpWidget(_testableMaterialWidget());
-      await tester.pumpAndSettle();
 
       // Open the nav drawer
       DashboardScreen.scaffoldKey.currentState.openDrawer();
@@ -480,6 +478,51 @@ void main() {
       // Test if we ended up on the Login Landing page and if we are logged out
       expect(find.byType(LoginLandingScreen), findsOneWidget);
       expect(ApiPrefs.isLoggedIn(), false);
+      verify(analyticsMock.logEvent(AnalyticsEventConstants.LOGOUT)).called(1);
+    });
+
+    // Not using the accessibility tester due to an issue where the
+    // Login Landing screen fails a contrast ratio test after logging out
+    // (the tests for that screen all pass accessibility checks, however)
+    testWidgets('tapping Switch Users from nav drawer signs user out and returns to the Login Landing screen',
+        (tester) async {
+      final reminderDb = _MockReminderDb();
+      final calendarFilterDb = _MockCalendarFilterDb();
+      final notificationUtil = _MockNotificationUtil();
+
+      _setupLocator();
+      final _locator = GetIt.instance;
+      _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
+      _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
+
+      when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      expect(ApiPrefs.isLoggedIn(), true);
+
+      // Open the nav drawer
+      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      // Click on Sign Out
+      var logoutFinder = find.text(AppLocalizations().switchUsers);
+      await ensureVisibleByScrolling(logoutFinder, tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+      await tester.pumpAndSettle();
+      await tester.tap(logoutFinder);
+      await tester.pumpAndSettle();
+
+      // Test if we ended up on the Login Landing page and if we are logged out
+      expect(find.byType(LoginLandingScreen), findsOneWidget);
+      expect(ApiPrefs.isLoggedIn(), false);
+      verify(analyticsMock.logEvent(AnalyticsEventConstants.SWITCH_USERS)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('tapping selected user opens and closes student selector', (tester) async {
@@ -745,3 +788,5 @@ class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
 
 class MockPlannerApi extends Mock implements PlannerApi {}
+
+class _MockAnalytics extends Mock implements Analytics {}
