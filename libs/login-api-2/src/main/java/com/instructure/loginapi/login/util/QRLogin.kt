@@ -33,7 +33,7 @@ object QRLogin {
 
     suspend fun performSSOLogin(data: Uri, isSwitchingUsers: Boolean, context: Context) {
         val domain = data.getQueryParameter("domain")
-        val code = data.getQueryParameter("android_code")
+        val code = data.getQueryParameter("code_android")
 
         val domainVerificationResult = awaitApi<DomainVerificationResult?> {
             MobileVerifyAPI.mobileVerify(domain, it)
@@ -107,7 +107,7 @@ object QRLogin {
         if (uri == null) return false
         val hostList = listOf("sso.canvaslms.com", "sso.beta.canvaslms.com", "sso.test.canvaslms.com")
         return hostList.contains(uri.host.orEmpty())
-                && uri.queryParameterNames.contains("android_code")
+                && uri.queryParameterNames.contains("code_android")
                 && uri.queryParameterNames.contains("domain")
     }
 
