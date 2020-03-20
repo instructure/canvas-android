@@ -93,6 +93,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -390,6 +391,10 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         return false;
     }
 
+    private void popBackStack() {
+        ((AppCompatActivity) getContext()).getSupportFragmentManager().popBackStack();
+    }
+
     @Deprecated
     public static String getRefererDomain(Context context) {
         // Mainly for embedded content such as vimeo, youtube, video tags, iframes, etc
@@ -521,12 +526,31 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 // Verify that the intent will resolve to an activity
                 if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-                    if (uri.getScheme().equals("yellowdig"))
+                    if (uri.getScheme().equals("yellowdig")) {
                         // Pop off the LTI page so it doesn't try to reload the yellowdig app when going back to our app
-                        ((AppCompatActivity)CanvasWebView.this.getContext()).getSupportFragmentManager().popBackStack();
+                        popBackStack();
+                    }
 
                     getContext().startActivity(intent);
                     return true;
+                }
+                if (url.startsWith("intent:")) {
+                    try {
+                        Intent appIntent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        if (appIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                            getContext().startActivity(appIntent);
+                            popBackStack();
+                            return true;
+                        }
+                        //try to find fallback url
+                        String fallbackUrl = appIntent.getStringExtra("browser_fallback_url");
+                        if (fallbackUrl != null) {
+                            view.loadUrl(fallbackUrl, extraHeaders);
+                            return true;
+                        }
+                    } catch (URISyntaxException e) {
+                        //not an intent uri
+                    }
                 }
             }
 
