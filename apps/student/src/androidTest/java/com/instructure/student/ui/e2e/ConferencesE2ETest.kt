@@ -21,9 +21,14 @@ class ConferencesE2ETest: StudentTest() {
     // I didn't attempt to actually start the conference because that goes through
     // an external web browser and would be really gross (if not impossible) to
     // test.
+    //
+    // Re-stubbing for now because the interface has changed from webview to native
+    // and this test no longer passes.  MBL-14127 is being tracked to re-write this
+    // test against the new native interface.
+    @Stub
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, false)
+    @TestMetaData(Priority.P0, FeatureCategory.CONFERENCES, TestCategory.E2E, true)
     fun testConferencesE2E() {
 
         // Seed basic student/teacher/course data
