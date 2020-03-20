@@ -18,6 +18,7 @@ package com.instructure.parentapp.tasks
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.parentapp.activity.LoginActivity
 import com.instructure.parentapp.util.ParentPrefs
@@ -31,6 +32,8 @@ class ParentLogoutTask(type: Type) : LogoutTask(type) {
     override fun createLoginIntent(context: Context): Intent {
         return LoginActivity.createIntent(context)
     }
+
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? = null
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
         listener(null)

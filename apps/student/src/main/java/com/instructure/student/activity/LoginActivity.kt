@@ -18,6 +18,7 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.TelemetryUtils
 import com.instructure.pandautils.utils.Utils
@@ -83,6 +85,12 @@ class LoginActivity : BaseLoginInitActivity() {
             TelemetryUtils.initialize(this.applicationContext, BuildConfig.NEWRELIC_APP_TOKEN)
         }
         super.onCreate(savedInstanceState)
+
+        // Check to see if we are switching users from an external QR scan
+        if(QRLogin.verifySSOLoginUri(intent.data)) {
+            startActivity(InterwebsToApplication.createIntent(this, intent.data!!))
+            finish()
+        }
     }
 
     /**
@@ -110,6 +118,14 @@ class LoginActivity : BaseLoginInitActivity() {
             val intent = Intent(context, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra(Route.ROUTE, route)
+            return intent
+        }
+
+        // Used specifically for a QR Scan user switch
+        fun createIntent(context: Context, uri: Uri): Intent {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.data = uri
             return intent
         }
     }

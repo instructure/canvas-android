@@ -32,4 +32,12 @@ class LoginInteractionTest : StudentTest() {
     fun testLogin_canFindSchool() {
         // Should be able to search for and select a school in the "What's your school's name?" page
     }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
+    fun testLogin_qrTutorialPageLoads() {
+        // Should be able to search for and select a school in the "What's your school's name?" page
+        loginLandingPage.clickQRCodeButton()
+        qrLoginPage.assertPageObjects()
+    }
 }

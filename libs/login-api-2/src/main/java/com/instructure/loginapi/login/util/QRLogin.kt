@@ -28,12 +28,19 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.loginapi.login.api.MobileVerifyAPI
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
+import com.instructure.loginapi.login.tasks.LogoutTask
 
 object QRLogin {
 
-    suspend fun performSSOLogin(data: Uri, isSwitchingUsers: Boolean, context: Context) {
-        val domain = data.getQueryParameter("domain")
-        val code = data.getQueryParameter("code_android")
+    private const val QR_DOMAIN = "domain"
+    private const val QR_AUTH_CODE = "code_android"
+    private const val QR_HOST = "sso.canvaslms.com"
+    private const val QR_HOST_BETA = "sso.beta.canvaslms.com"
+    private const val QR_HOST_TEST = "sso.test.canvaslms.com"
+
+    suspend fun performSSOLogin(data: Uri, context: Context) {
+        val domain = data.getQueryParameter(QR_DOMAIN)
+        val code = data.getQueryParameter(QR_AUTH_CODE)
 
         val domainVerificationResult = awaitApi<DomainVerificationResult?> {
             MobileVerifyAPI.mobileVerify(domain, it)
@@ -73,42 +80,26 @@ object QRLogin {
 
         val user = awaitApi<User> { UserManager.getSelf(it) }
 
-        // Add the user to signed in and api prefs, check if they are already signed in and switching users instead
-        if(isSwitchingUsers) {
-            // Update SignedInUser to preserve changes to name, locale, etc
-            val currentUser = ApiPrefs.user
-            val signedInUser = PreviousUsersUtils.getSignedInUser(
-                    ContextKeeper.appContext,
-                    ApiPrefs.domain,
-                    currentUser?.id ?: 0
-            )
-            if (currentUser != null && signedInUser != null) {
-                signedInUser.user = currentUser
-                PreviousUsersUtils.add(ContextKeeper.appContext, signedInUser)
-            }
-        } else {
-            ApiPrefs.user = user
-            PreviousUsersUtils.add(context, SignedInUser(
-                    user,
-                    updatedDomain,
-                    ApiPrefs.protocol,
-                    "",  // TODO - delete once we move over 100% to refresh tokens
-                    tokenResponse.accessToken!!,
-                    tokenResponse.refreshToken!!,
-                    null,
-                    null
-            ))
-        }
-
+        // Add the user to signed in and api prefs
+        ApiPrefs.user = user
+        PreviousUsersUtils.add(context, SignedInUser(
+                user,
+                updatedDomain,
+                ApiPrefs.protocol,
+                "",  // TODO - delete once we move over 100% to refresh tokens
+                tokenResponse.accessToken!!,
+                tokenResponse.refreshToken!!,
+                null,
+                null
+        ))
     }
 
     @JvmStatic
     fun verifySSOLoginUri(uri: Uri?): Boolean {
         if (uri == null) return false
-        val hostList = listOf("sso.canvaslms.com", "sso.beta.canvaslms.com", "sso.test.canvaslms.com")
+        val hostList = listOf(QR_HOST, QR_HOST_BETA, QR_HOST_TEST)
         return hostList.contains(uri.host.orEmpty())
-                && uri.queryParameterNames.contains("code_android")
-                && uri.queryParameterNames.contains("domain")
+                && uri.queryParameterNames.contains(QR_DOMAIN)
+                && uri.queryParameterNames.contains(QR_AUTH_CODE)
     }
-
 }

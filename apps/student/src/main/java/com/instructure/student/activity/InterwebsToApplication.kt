@@ -30,16 +30,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.Job
@@ -86,16 +89,33 @@ class InterwebsToApplication : AppCompatActivity() {
             if (verifySSOLoginUri(data)) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
-                    performSSOLogin(data, signedIn, this@InterwebsToApplication)
+                    if(signedIn) { // If the user is already signed in, use the QR Switch
+                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                        finish()
+                        return@tryWeave
+                    }
+
+                    performSSOLogin(data, this@InterwebsToApplication)
+
+                    // Log the analytics
+                    logQREvent(ApiPrefs.domain, true)
+
+                    // Add delay for animation and launch Navigation Activity
                     delay(700)
                     val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                    Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
                     return@tryWeave
                 } catch (e: StatusCallbackError) {
-                    Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE)
+                    // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
+                    if(!signedIn) {
+                        ApiPrefs.clearAllData()
+                    }
+
+                    // Log the analytics
+                    logQREvent(ApiPrefs.domain, false)
+
                     Toast.makeText(this@InterwebsToApplication, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
                     finish()
                     return@tryWeave
@@ -131,6 +151,17 @@ class InterwebsToApplication : AppCompatActivity() {
 
         } catch {
             finish()
+        }
+    }
+
+    private fun logQREvent(domain: String, isSuccess: Boolean) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
+        }
+        if(isSuccess) {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
+        } else {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
         }
     }
 
