@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-13T11:03:31.927140",
+  "@@last_modified": "2020-03-20T11:04:10.914171",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -161,6 +161,12 @@
   "There was an error loading your student's calendar": "There was an error loading your student's calendar",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Tap to favorite the courses you want to see on the Calendar.",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
     "type": "text",
     "placeholders": {}
   },
@@ -1677,6 +1683,30 @@
   "I'm having trouble logging in": "I'm having trouble logging in",
   "@I'm having trouble logging in": {
     "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "An error occurred when trying to display this link",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "We are unable to display this link, it may belong to an institution you currently aren't logged in to.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "Link Error",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Open In Browser",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
     "type": "text",
     "placeholders": {}
   }
