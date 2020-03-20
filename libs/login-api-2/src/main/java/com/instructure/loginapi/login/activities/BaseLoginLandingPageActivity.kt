@@ -39,6 +39,8 @@ import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
@@ -132,6 +134,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClick {
+                Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
                 startActivity(loginWithQRIntent())
             }
         } else {

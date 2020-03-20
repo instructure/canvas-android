@@ -28,6 +28,8 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
@@ -88,10 +90,12 @@ class InterwebsToApplication : AppCompatActivity() {
                     delay(700)
                     val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS)
                     startActivity(intent)
                     finish()
                     return@tryWeave
                 } catch (e: StatusCallbackError) {
+                    Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE)
                     Toast.makeText(this@InterwebsToApplication, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
                     finish()
                     return@tryWeave
