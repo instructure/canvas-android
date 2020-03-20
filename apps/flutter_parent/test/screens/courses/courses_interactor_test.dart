@@ -25,7 +25,7 @@ void main() {
     setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
     when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
 
-    await CoursesInteractor().getCourses('', isRefresh: true);
+    await CoursesInteractor().getCourses(isRefresh: true);
 
     verify(api.getObserveeCourses(forceRefresh: true));
   });
