@@ -16,35 +16,12 @@
  */
 package com.instructure.canvasapi2.pact.canvas.logic
 
-import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
-import java.util.*
-
-fun LambdaDslObject.populateAuthorFields() : LambdaDslObject {
-    this
-            .id("id")
-            .stringType("display_name")
-            .stringType("avatar_image_url")
-            .stringType("html_url")
-            .stringType("pronouns")
-
-    return this
-}
-
-fun assertAuthorPopulated(description: String, author: Author) {
-    assertNotNull("$description + id", author.id)
-    assertNotNull("$description + displayName", author.displayName)
-    assertNotNull("$description + avatarImageUrl", author.avatarImageUrl)
-    assertNotNull("$description + htmlUrl", author.htmlUrl)
-    assertNotNull("$description + pronouns", author.pronouns)
-}
 
 fun LambdaDslObject.populateSubmissionCommentFields() : LambdaDslObject {
     this
@@ -71,32 +48,6 @@ fun assertSubmissionCommentPopulated(description: String, submissionComment: Sub
     assertNotNull("$description + createdAt", submissionComment.createdAt)
     assertNotNull("$description + author", submissionComment.author)
     assertAuthorPopulated("$description + author", submissionComment.author!!)
-}
-
-fun LambdaDslObject.populateAttachmentFields(): LambdaDslObject {
-    this
-            .id("id")
-            .stringType("content-type")
-            .stringType("filename")
-            .stringType("display_name")
-            .stringType("url")
-            // .stringType("thumbnail_url") // TODO: Punt
-            // .stringType("preview_url") // TODO: Punt
-            .stringMatcher("created_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
-            .id("size") // long whole number
-
-    return this;
-}
-
-fun assertAttachmentPopulated(description: String, attachment: Attachment) {
-    assertNotNull("$description + id", attachment.id)
-    assertNotNull("$description + contentType", attachment.contentType)
-    assertNotNull("$description + filename", attachment.filename)
-    assertNotNull("$description + displayName", attachment.displayName)
-    assertNotNull("$description + url", attachment.url)
-    assertNotNull("$description + createdAt", attachment.createdAt)
-    assertNotNull("$description + size", attachment.size)
-
 }
 
 data class PactSubmissionFieldConfig(

@@ -17,12 +17,17 @@
 
 package com.instructure.canvasapi2.pact.canvas.logic
 
+import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentDueDate
+import com.instructure.canvasapi2.models.AssignmentOverride
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 
-
+//
+// region AssignmentDueDate logic
+//
 fun LambdaDslObject.populateAssignmentDueDateFields() : LambdaDslObject {
     this
             .id("id")
@@ -34,6 +39,20 @@ fun LambdaDslObject.populateAssignmentDueDateFields() : LambdaDslObject {
 
     return this;
 }
+
+fun assertAssignmentDueDatePopulated(description: String, assignmentDueDate: AssignmentDueDate) {
+    assertNotNull("$description + id", assignmentDueDate.id)
+    assertNotNull("$description + dueAt", assignmentDueDate.dueAt)
+    assertNotNull("$description + title", assignmentDueDate.title)
+    assertNotNull("$description + unlockAt", assignmentDueDate.unlockAt)
+    assertNotNull("$description + lockAt", assignmentDueDate.lockAt)
+    assertNotNull("$description + isBase", assignmentDueDate.isBase)
+}
+// endregion
+
+//
+// region AssignmentOverride logic
+//
 
 fun LambdaDslObject.populateAssignmentOverrideFields() : LambdaDslObject {
     this
@@ -57,6 +76,22 @@ fun LambdaDslObject.populateAssignmentOverrideFields() : LambdaDslObject {
 
     return this;
 }
+
+fun assertAssignmentOverridePopulated(description: String, assignmentOverride: AssignmentOverride) {
+    assertNotNull("$description + id", assignmentOverride.id)
+    assertNotNull("$description + assignmentId", assignmentOverride.assignmentId)
+    assertNotNull("$description + title", assignmentOverride.title)
+    assertNotNull("$description + dueAt", assignmentOverride.dueAt)
+    assertNotNull("$description + isAllDay", assignmentOverride.isAllDay)
+    assertNotNull("$description + allDayDate", assignmentOverride.allDayDate)
+    assertNotNull("$description + unlockAt", assignmentOverride.unlockAt)
+    assertNotNull("$description + lockAt", assignmentOverride.lockAt)
+    assertNotNull("$description + studentIds", assignmentOverride.studentIds)
+    assertTrue(
+            "$description + studentIds should have at least one element",
+            assignmentOverride.studentIds.size>=1)
+}
+// endregion
 
 data class PactAssignmentFieldConfig(
         val include_submission : Boolean = false,
@@ -88,12 +123,15 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig : PactAssignmentFieldCo
     this
             .id("id")
             .stringType("name")
-            .array("submission_types") { array ->
-                // Let's assume exactly one submission_type for now
-                array.stringMatcher(
-                        "discussion_topic|online_quiz|on_paper|none|external_tool|online_text_entry|online_url|online_upload|media_recording",
-                        "online_text_entry")
-            }
+            .minArrayLike(
+                    "submission_types",
+                    1,
+                    PactDslJsonRootValue.stringMatcher(
+                            "discussion_topic|online_quiz|on_paper|none|external_tool|online_text_entry|online_url|online_upload|media_recording",
+                            "online_text_entry"
+                    ),
+                    1
+            )
             .stringMatcher("due_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .numberType("points_possible", 20)
             .id("course_id")
@@ -215,10 +253,18 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
 
     if(fieldConfig.include_all_dates) {
         assertNotNull("$description + allDates", assignment.allDates)
+        assertTrue(
+                "$description + allDates should have at least one element",
+                assignment.allDates.size >= 1)
+        assertAssignmentDueDatePopulated("$description + allDates[0]", assignment.allDates[0])
     }
 
     if(fieldConfig.include_overrides) {
         assertNotNull("$description + overrides", assignment.overrides)
+        assertTrue(
+                "$description + overrides should have at least one element",
+                assignment.overrides!!.size >= 1)
+        assertAssignmentOverridePopulated("$description + overrides[0]", assignment.overrides!![0])
     }
 
     if(fieldConfig.is_quiz) {
