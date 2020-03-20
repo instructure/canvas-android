@@ -45,7 +45,7 @@ import '../../utils/test_app.dart';
 void main() {
   AppLocalizations l10n = AppLocalizations();
 
-  _setupLocator(_MockCoursesInteractor mockInteractor, {SelectedStudentNotifier notifier}) {
+  _setupLocator(CoursesInteractor mockInteractor, {SelectedStudentNotifier notifier}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
@@ -74,7 +74,7 @@ void main() {
 
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows loading indicator when retrieving courses', (tester) async {
-      _setupLocator(_MockCoursesInteractor());
+      _setupLocator(_MockedCoursesInteractor());
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pump();
@@ -87,7 +87,7 @@ void main() {
       var student = _mockStudent('1');
       var courses = generateCoursesForStudent(student.id);
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -100,7 +100,7 @@ void main() {
       var student = _mockStudent('1');
       var courses = generateCoursesForStudent(student.id);
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -110,7 +110,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows empty message after load', (tester) async {
-      _setupLocator(_MockCoursesInteractor(courses: []));
+      _setupLocator(_MockedCoursesInteractor(courses: []));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -120,7 +120,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Shows error state and performs refresh', (tester) async {
-      var interactor = _MockCoursesInteractor(courses: []);
+      var interactor = _MockedCoursesInteractor(courses: []);
 
       _setupLocator(interactor);
 
@@ -144,7 +144,7 @@ void main() {
       var student = _mockStudent('1');
       var courses = generateCoursesForStudent(student.id);
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -165,7 +165,7 @@ void main() {
         ),
       );
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -186,7 +186,7 @@ void main() {
         ),
       );
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle();
@@ -204,7 +204,7 @@ void main() {
       var courses2 = generateCoursesForStudent(student2.id, numberOfCourses: numCourses2);
 
       SelectedStudentNotifier notifier = SelectedStudentNotifier();
-      _setupLocator(_MockCoursesInteractor(courses: courses1..addAll(courses2)), notifier: notifier);
+      _setupLocator(_MockedCoursesInteractor(courses: courses1..addAll(courses2)), notifier: notifier);
 
       await tester.pumpWidget(_testableMaterialWidget(notifier: notifier));
       await tester.pumpAndSettle();
@@ -221,13 +221,45 @@ void main() {
       // Check for the courses of the second student
       expect(listTileWidget, findsNWidgets(numCourses2));
     });
+
+    testWidgetsWithAccessibilityChecks('updates courses when selected user changes', (tester) async {
+      var numCourses1 = 3;
+      var numCourses2 = 1;
+      var student1 = _mockStudent('1');
+      var student2 = _mockStudent('2');
+      var courses1 = generateCoursesForStudent(student1.id, numberOfCourses: numCourses1);
+      var courses2 = generateCoursesForStudent(student2.id, numberOfCourses: numCourses2);
+
+      SelectedStudentNotifier notifier = SelectedStudentNotifier();
+      var interactor = _MockCoursesInteractor();
+      when(interactor.getCourses(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => Future.value([...courses1, ...courses2]));
+
+      _setupLocator(interactor, notifier: notifier);
+
+      await tester.pumpWidget(_testableMaterialWidget(notifier: notifier));
+      await tester.pumpAndSettle();
+
+      // First student will be selected, verify that we show their courses
+      expect(find.byType(ListTile), findsNWidgets(numCourses1));
+
+      // Select second student
+      notifier.update(student2);
+      await tester.pumpAndSettle();
+
+      // Check for the courses of the second student
+      expect(find.byType(ListTile), findsNWidgets(numCourses2));
+
+      // Verify that we called getCourses twice, once on initial load and again when we switched students
+      verify(interactor.getCourses(isRefresh: true)).called(2);
+    });
   });
 
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('Pulls to refresh', (tester) async {
       var student = _mockStudent('1');
       var courses = generateCoursesForStudent(student.id);
-      var interactor = _MockCoursesInteractor(courses: []);
+      var interactor = _MockedCoursesInteractor(courses: []);
 
       _setupLocator(interactor);
 
@@ -258,7 +290,7 @@ void main() {
         ),
       );
 
-      _setupLocator(_MockCoursesInteractor(courses: courses));
+      _setupLocator(_MockedCoursesInteractor(courses: courses));
 
       await tester.pumpWidget(_testableMaterialWidget(highContrast: true));
       await tester.pumpAndSettle();
@@ -275,19 +307,21 @@ void main() {
   });
 }
 
-class _MockCoursesInteractor extends CoursesInteractor {
+class _MockedCoursesInteractor extends CoursesInteractor {
   List<Course> courses;
 
   bool error = false;
 
-  _MockCoursesInteractor({this.courses});
+  _MockedCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses(String studentId, {bool isRefresh = false}) async {
+  Future<List<Course>> getCourses({bool isRefresh = false}) async {
     if (error) throw '';
     return courses ?? [_mockCourse('1')];
   }
 }
+
+class _MockCoursesInteractor extends Mock implements CoursesInteractor {}
 
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 

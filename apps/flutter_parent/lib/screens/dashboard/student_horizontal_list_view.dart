@@ -17,19 +17,17 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
+import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
-
-import '../under_construction_screen.dart';
 
 class StudentHorizontalListView extends StatefulWidget {
   final List<User> _students;
   final Function onTap;
+  final Function onAddStudent;
 
-  StudentHorizontalListView(this._students, {this.onTap});
+  StudentHorizontalListView(this._students, {this.onTap, this.onAddStudent});
 
   @override
   State<StatefulWidget> createState() => StudentHorizontalListViewState();
@@ -95,10 +93,10 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
     return Center(
       child: Container(
         width: 120,
-        height: 88,
+        height: 92,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 8),
+            SizedBox(height: 12),
             Container(
               width: 48,
               height: 48,
@@ -118,12 +116,11 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                       width: 1),
                 ),
                 elevation: 8,
-                onPressed: () {
-                  locator.get<QuickNav>().push(
-                      context,
-                      UnderConstructionScreen(
-                        showAppBar: true,
-                      ));
+                onPressed: () async {
+                  bool studentPaired = await _addStudentDialog(context);
+                  if (studentPaired) {
+                    widget.onAddStudent();
+                  }
                 },
               ),
             ),
@@ -136,5 +133,16 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
         ),
       ),
     );
+  }
+
+  /// Dialog for pairing with a new student
+  /// Optional [pairingCode] for QR reader results
+  Future<bool> _addStudentDialog(BuildContext context, {String pairingCode = ''}) async {
+    return showDialog<bool>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AddStudentDialog(pairingCode);
+        });
   }
 }

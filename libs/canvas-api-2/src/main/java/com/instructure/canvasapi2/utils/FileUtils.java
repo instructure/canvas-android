@@ -189,11 +189,14 @@ public class FileUtils {
     }
 
     public static String getMimeType(String url) {
-        String type = null;
+        String type = "";
         String extension = MimeTypeMap.getFileExtensionFromUrl(url);
         if (extension != null) {
             MimeTypeMap mime = MimeTypeMap.getSingleton();
             type = mime.getMimeTypeFromExtension(extension);
+            if (type == null) {
+                type = "";
+            }
         }
         return type;
     }

@@ -269,8 +269,9 @@ public class FileUploadUtils {
             input = cr.openInputStream(uri);
             // add extension to filename if needed
             int lastDot = fileName.lastIndexOf(".");
-            if (lastDot == -1) {
-                fileName = fileName + "." + getFileExtensionFromMimeType(cr.getType(uri));
+            String extension = getFileExtensionFromMimeType(cr.getType(uri));
+            if (lastDot == -1 && !extension.isEmpty()) {
+                fileName = fileName + "." + extension;
             }
 
             // create a temp file to copy the uri contents into
@@ -320,15 +321,22 @@ public class FileUploadUtils {
             final String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME};
 
             // get file name
-            Cursor metaCursor = resolver.query(uri, proj, null, null, null);
-            if (metaCursor != null) {
-                try {
+            Cursor metaCursor = null;
+            // Don't have try with resources, so we get a finally block that can close the cursor
+            //noinspection TryFinallyCanBeTryWithResources
+            try {
+                metaCursor = resolver.query(uri, proj, null, null, null);
+                if (metaCursor != null) {
                     if (metaCursor.moveToFirst()) {
                         fileName = metaCursor.getString(0);
                     }
-                } catch (Exception ignore) {
-
-                } finally {
+                }
+            } catch (Exception ignore) {
+                if (fileName.isEmpty()) {
+                    fileName = uri.getLastPathSegment();
+                }
+            } finally {
+                if (metaCursor != null) {
                     metaCursor.close();
                 }
             }

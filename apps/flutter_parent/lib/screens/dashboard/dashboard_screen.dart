@@ -142,6 +142,27 @@ class DashboardState extends State<DashboardScreen> {
     });
   }
 
+  void _addStudent() {
+    setState(() {
+      _studentsLoading = true;
+      _studentsError = false;
+    });
+
+    _interactor.getStudents(forceRefresh: true).then((users) {
+      setState(() {
+        print('users: $users');
+        _students = users;
+        _studentsLoading = false;
+      });
+    }).catchError((error) {
+      setState(() {
+        _studentsLoading = false;
+        _studentsError = true;
+        print('Error loading students: $error');
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<SelectedStudentNotifier>(
@@ -187,6 +208,9 @@ class DashboardState extends State<DashboardScreen> {
                       child: StudentHorizontalListView(
                         _students,
                         onTap: () => setState(() => expand = !expand),
+                        onAddStudent: () {
+                          _addStudent();
+                        },
                       ),
                     ),
                     PreferredSize(
