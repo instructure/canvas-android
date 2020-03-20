@@ -233,7 +233,7 @@ class SettingsInteractionTest : StudentTest() {
         legalPage.openPrivacyPolicy()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle, as this content could be changed by another team.
-                WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "POLICIES HOME", 20)
+                WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "Policies Home", 20)
         )
     }
 
