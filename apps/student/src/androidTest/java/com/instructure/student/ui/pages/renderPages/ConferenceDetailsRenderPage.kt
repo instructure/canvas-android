@@ -20,6 +20,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withAlpha
 import com.instructure.espresso.*
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.student.R
@@ -106,6 +107,7 @@ class ConferenceDetailsRenderPage : ConferenceDetailsPage() {
     }
 
     fun assertDisplaysRecording(state: ConferenceRecordingViewState) {
+        scrollTo(state.duration)
         recordingTitle.assertDisplayed().assertHasText(state.title)
         recordingDate.assertDisplayed().assertHasText(state.date)
         recordingDuration.assertDisplayed().assertHasText(state.duration)
