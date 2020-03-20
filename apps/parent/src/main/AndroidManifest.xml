@@ -104,7 +104,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:noHistory="true">
-            <intent-filter android:autoVerify="true">
+            <intent-filter>
                 <data android:scheme="https" />
                 <data android:scheme="http" />
                 <data android:scheme="canvas-courses" />

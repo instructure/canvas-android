@@ -18,6 +18,7 @@
 import com.instructure.espresso.OnViewWithContentDescription
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithStringContentDescription
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 
@@ -26,5 +27,9 @@ class QRLoginPage : BasePage() {
     private val nextButton by OnViewWithId(R.id.next)
     private val qrCodeMessage by OnViewWithId(R.id.qrCodeExplanation)
     private val qrCodeScreenshot by OnViewWithContentDescription(R.string.qrCodeScreenshotContentDescription)
+
+    fun clickForA11y() {
+        qrCodeMessage.click()
+    }
 
 }
