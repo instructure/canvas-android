@@ -56,7 +56,7 @@ void main() {
       ..userDomain = 'domain'
       ..userId = 'user-id'
       ..observeeId = 'observee-id'
-      ..filters = ListBuilder([]));
+      ..filters = SetBuilder());
 
     final expected = calendarFilter.rebuild((b) => b..id = 123);
 
@@ -89,11 +89,11 @@ void main() {
       ..userDomain = 'domain'
       ..userId = 'user-id'
       ..observeeId = 'observee-id'
-      ..filters = ListBuilder(['course_123']));
+      ..filters = SetBuilder({'course_123'}));
 
     final existing = calendarFilter.rebuild((b) => b
       ..id = 123
-      ..filters = ListBuilder([]));
+      ..filters = SetBuilder());
 
     final expected = calendarFilter.rebuild((b) => b..id = 123);
 
@@ -196,28 +196,28 @@ void main() {
 
   group('joinFilters', () {
     test('joinfilters returns empty string for empty filter list', () {
-      List<String> filters = [];
+      Set<String> filters = {};
       final expected = '';
       final actual = CalendarFilterDb.joinFilters(filters);
       expect(actual, expected);
     });
 
     test('joinfilters returns empty string for null filter list', () {
-      List<String> filters = null;
+      Set<String> filters = null;
       final expected = '';
       final actual = CalendarFilterDb.joinFilters(filters);
       expect(actual, expected);
     });
 
     test('joinfilters returns correct string for single-item filter list', () {
-      List<String> filters = ['ABC'];
+      Set<String> filters = {'ABC'};
       final expected = 'ABC';
       final actual = CalendarFilterDb.joinFilters(filters);
       expect(actual, expected);
     });
 
     test('joinfilters returns correct string for multi-item filter list', () {
-      List<String> filters = ['ABC', '123', 'DEF', '456'];
+      Set<String> filters = {'ABC', '123', 'DEF', '456'};
       final expected = 'ABC|123|DEF|456';
       final actual = CalendarFilterDb.joinFilters(filters);
       expect(actual, expected);

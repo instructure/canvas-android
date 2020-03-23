@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CalendarFilterListScreen extends StatefulWidget {
-  List<String> _selectedCourses;
+  final Set<String> _selectedCourses;
 
   CalendarFilterListScreen(this._selectedCourses);
 
@@ -34,7 +34,7 @@ class CalendarFilterListScreen extends StatefulWidget {
 
 class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   Future<List<Course>> _coursesFuture;
-  List<String> selectedContextIds = []; // Public, to allow for testing
+  Set<String> selectedContextIds = {}; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
   bool selectAllIfEmpty = true;
   int courseLength = -1;
@@ -50,7 +50,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
     return WillPopScope(
       onWillPop: () async {
         // An empty list is interpreted as all courses selected
-        Navigator.pop(context, courseLength == selectedContextIds.length ? <String>[] : selectedContextIds);
+        Navigator.pop(context, courseLength == selectedContextIds.length ? <String>{} : selectedContextIds);
         return false;
       },
       child: DefaultParentTheme(

@@ -29,7 +29,7 @@ abstract class CalendarFilter implements Built<CalendarFilter, CalendarFilterBui
 
   String get observeeId;
 
-  BuiltList<String> get filters;
+  BuiltSet<String> get filters;
 
   CalendarFilter._();
   factory CalendarFilter([void Function(CalendarFilterBuilder) updates]) = _$CalendarFilter;
@@ -38,5 +38,5 @@ abstract class CalendarFilter implements Built<CalendarFilter, CalendarFilterBui
     ..userDomain = ''
     ..userId = ''
     ..observeeId = ''
-    ..filters = ListBuilder([]);
+    ..filters = SetBuilder();
 }

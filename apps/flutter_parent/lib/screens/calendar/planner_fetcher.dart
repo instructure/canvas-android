@@ -42,13 +42,13 @@ class PlannerFetcher extends ChangeNotifier {
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
   }
 
-  Future<List<String>> getContexts() async {
+  Future<Set<String>> getContexts() async {
     CalendarFilter calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
       userDomain,
       userId,
       _observeeId,
     );
-    return calendarFilter?.filters?.toList() ?? [];
+    return calendarFilter?.filters?.toSet() ?? {};
   }
 
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) {
@@ -154,12 +154,12 @@ class PlannerFetcher extends ChangeNotifier {
 
   String monthKeyForYearMonth(int year, int month) => '$year-$month';
 
-  Future<void> setContexts(List<String> contexts) async {
+  Future<void> setContexts(Set<String> contexts) async {
     CalendarFilter filter = CalendarFilter((b) => b
       ..userDomain = userDomain
       ..userId = userId
       ..observeeId = _observeeId
-      ..filters = ListBuilder(contexts));
+      ..filters = SetBuilder(contexts));
     await locator<CalendarFilterDb>().insertOrUpdate(filter);
     reset();
   }

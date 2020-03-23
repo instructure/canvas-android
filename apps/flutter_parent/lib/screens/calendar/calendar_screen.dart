@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
@@ -60,25 +61,14 @@ class CalendarScreenState extends State<CalendarScreen> {
     return CalendarWidget(
       fetcher: _fetcher,
       onFilterTap: () async {
-        // Get currently-selected contexts with _fetcher.getContexts().
-        // On courses changed, call _fetcher.setContexts().
-        List<String> currentContexts = await _fetcher.getContexts();
-        List<String> updatedContexts = await locator.get<QuickNav>().push(
+        Set<String> currentContexts = await _fetcher.getContexts();
+        Set<String> updatedContexts = await locator.get<QuickNav>().push(
               context,
               CalendarFilterListScreen(currentContexts),
             );
-        // Check if the list changed or not
-        if (currentContexts.length != updatedContexts.length) {
-          // Lists are different - update
+        if (!SetEquality().equals(currentContexts, updatedContexts)) {
+          // Sets are different - update
           _fetcher.setContexts(updatedContexts);
-        } else {
-          for (int c = 0; c < currentContexts.length; c++) {
-            if (!updatedContexts.contains(currentContexts[c])) {
-              // Lists are different - update
-              _fetcher.setContexts(updatedContexts);
-              break;
-            }
-          }
         }
       },
       dayBuilder: (BuildContext context, DateTime day) {
