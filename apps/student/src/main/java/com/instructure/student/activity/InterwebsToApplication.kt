@@ -97,8 +97,6 @@ class InterwebsToApplication : AppCompatActivity() {
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
 
-                    // Log the analytics
-                    logQREvent(ApiPrefs.domain, true)
 
                     // Add delay for animation and launch Navigation Activity
                     delay(700)
@@ -109,6 +107,8 @@ class InterwebsToApplication : AppCompatActivity() {
                         ApiPrefs.isMasqueradingFromQRCode = true
                         NavigationActivity.createIntent(this@InterwebsToApplication, tokenResponse.user!!.id)
                     } else {
+                        // Log the analytics - only for real logins, not masquerading
+                        logQREvent(ApiPrefs.domain, true)
                         Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
                     }
 

@@ -108,23 +108,4 @@ object QRLogin {
                 && uri.queryParameterNames.contains(QR_DOMAIN)
                 && uri.queryParameterNames.contains(QR_AUTH_CODE)
     }
-
-    /*
-    {
-  "access_token": "1~1xCIf8ikvGXNdQipIQDPD69ovlbFc8IchJoGhigoUeZxaaInyFrVIejwNHhnePpt",
-  "token_type": "Bearer",
-  "user": {
-    "id": 5834817,
-    "name": "Hackdown Hodor",
-    "global_id": "10000005834817",
-    "effective_locale": "en"
-  },
-  "real_user": {
-    "id": 170000004596934,
-    "name": "Trevor Needham",
-    "global_id": "170000004596934"
-  },
-  "refresh_token": "1~OukUtSznQIIRRcABWImSjrP1xjNCv6NWxQyc0uvJkVs3NrhxIZBx42O23EMCnVgC"
-}
-     */
 }
