@@ -41,7 +41,7 @@ class CalendarFilterDb {
         columnUserDomain: data.userDomain,
         columnUserId: data.userId,
         columnObserveeId: data.observeeId,
-        columnFilters: joinFilters(data.filters.toList()),
+        columnFilters: joinFilters(data.filters.toSet()),
       };
 
   static CalendarFilter fromMap(Map<String, dynamic> map) => CalendarFilter((b) => b
@@ -49,7 +49,7 @@ class CalendarFilterDb {
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
     ..observeeId = map[columnObserveeId]
-    ..filters = ListBuilder(splitFilters(map[columnFilters])));
+    ..filters = SetBuilder(splitFilters(map[columnFilters])));
 
   static Future<void> createTable(Database db, int version) async {
     await db.execute('''
@@ -76,14 +76,14 @@ class CalendarFilterDb {
     }
   }
 
-  static String joinFilters(List<String> filters) {
+  static String joinFilters(Set<String> filters) {
     if (filters == null || filters.isEmpty) return '';
     return filters.join('|');
   }
 
-  static List<String> splitFilters(String joinedFilters) {
-    if (joinedFilters == null || joinedFilters.isEmpty) return [];
-    return joinedFilters.split('|');
+  static Set<String> splitFilters(String joinedFilters) {
+    if (joinedFilters == null || joinedFilters.isEmpty) return {};
+    return joinedFilters.split('|').toSet();
   }
 
   Future<CalendarFilter> insertOrUpdate(CalendarFilter data) async {

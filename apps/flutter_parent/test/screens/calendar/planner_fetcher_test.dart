@@ -32,7 +32,7 @@ void main() {
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
   final String observeeId = 'observee_123';
-  final List<String> contexts = ['course_123'];
+  final Set<String> contexts = {'course_123'};
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<PlannerApi>(() => api);
@@ -50,7 +50,7 @@ void main() {
         ..userDomain = userDomain
         ..userId = userId
         ..observeeId = observeeId
-        ..filters = ListBuilder(contexts));
+        ..filters = SetBuilder(contexts));
     });
   });
 
@@ -77,7 +77,7 @@ void main() {
   test('fetches specified fetchFirst date', () async {
     final date = DateTime.now();
     final userId = 'user_123';
-    final contexts = ['course_123'];
+    final contexts = {'course_123'};
     PlannerFetcher(userId: userId, userDomain: userDomain, observeeId: observeeId, fetchFirst: date);
 
     await untilCalled(
@@ -264,7 +264,7 @@ void main() {
     expect(fetcher.daySnapshots, isNotEmpty);
     expect(fetcher.failedMonths, isNotEmpty);
 
-    final newContexts = ['course_123', 'course_456'];
+    final newContexts = {'course_123', 'course_456'};
     await fetcher.setContexts(newContexts);
 
     expect(notifyCount, 1);
@@ -275,7 +275,7 @@ void main() {
       ..userDomain = userDomain
       ..userId = userId
       ..observeeId = observeeId
-      ..filters = ListBuilder(newContexts));
+      ..filters = SetBuilder(newContexts));
     verify(filterDb.insertOrUpdate(expectedFilterData));
   });
 }

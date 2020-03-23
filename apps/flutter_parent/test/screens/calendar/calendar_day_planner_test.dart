@@ -108,7 +108,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(api.getUserPlannerItems(student.id, any, any, contexts: [], forceRefresh: false));
+      verify(api.getUserPlannerItems(student.id, any, any, contexts: {}, forceRefresh: false));
 
       completer.completeError('Error');
       await tester.pumpAndSettle();
@@ -143,7 +143,7 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(api.getUserPlannerItems(student.id, any, any, contexts: [], forceRefresh: false)).called(1);
+      verify(api.getUserPlannerItems(student.id, any, any, contexts: {}, forceRefresh: false)).called(1);
 
       completer.complete(<PlannerItem>[]);
       await tester.pumpAndSettle();
