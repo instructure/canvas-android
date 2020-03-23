@@ -17,6 +17,13 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.instructure.loginapi.login">
-    <application android:allowBackup="false"/>
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+    <application android:allowBackup="false">
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="fullSensor"
+            tools:replace="screenOrientation" />
+    </application>
 </manifest>

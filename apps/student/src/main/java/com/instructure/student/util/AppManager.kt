@@ -26,6 +26,7 @@ import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -61,6 +62,8 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
             .build()
 
         Fabric.with(this, crashlyticsKit)
+
+        MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
 
         ColorKeeper.defaultColor = ContextCompat.getColor(this, R.color.defaultPrimary)
 

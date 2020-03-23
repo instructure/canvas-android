@@ -94,6 +94,11 @@ object AnalyticsEventConstants {
     const val TOKEN_REFRESH_FAILURE_NO_SECRET = "token_refresh_failure_no_secret"
 
     const val WHAT_IF_GRADES = "what_if_grades_used"
+
+    /* QR Code Login */
+    const val QR_CODE_LOGIN_CLICKED = "qr_code_login_clicked"
+    const val QR_CODE_LOGIN_SUCCESS = "qr_code_login_success"
+    const val QR_CODE_LOGIN_FAILURE = "qr_code_login_failure"
 }
 
 /**

@@ -96,6 +96,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     @JvmStatic
     var isMasquerading by BooleanPref()
     @JvmStatic
+    var isMasqueradingFromQRCode by BooleanPref()
+    @JvmStatic
     var masqueradeId by LongPref(-1L)
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user")

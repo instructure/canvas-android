@@ -20,6 +20,7 @@ import android.app.Activity
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
@@ -37,16 +38,18 @@ import com.instructure.pandautils.utils.Utils
 import java.io.File
 import java.lang.Exception
 
-abstract class LogoutTask(val type: Type) {
+abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
 
     enum class Type {
         SWITCH_USERS,
         LOGOUT,
-        LOGOUT_NO_LOGIN_FLOW
+        LOGOUT_NO_LOGIN_FLOW,
+        QR_CODE_SWITCH
     }
 
     protected abstract fun onCleanup()
     protected abstract fun createLoginIntent(context: Context): Intent
+    protected abstract fun createQRLoginIntent(context: Context, uri: Uri): Intent?
     protected abstract fun getFcmToken(listener: (registrationId: String?) -> Unit)
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
@@ -76,7 +79,7 @@ abstract class LogoutTask(val type: Type) {
 
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> removeUser()
-                    Type.SWITCH_USERS -> updateUser()
+                    Type.SWITCH_USERS, Type.QR_CODE_SWITCH -> updateUser()
                 }
 
                 // Clean up masquerading
@@ -102,8 +105,9 @@ abstract class LogoutTask(val type: Type) {
 
             // Go to login page
             if (type != Type.LOGOUT_NO_LOGIN_FLOW) {
-                val intent = createLoginIntent(ContextKeeper.appContext)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                // If this was trigged by a QR switch, we need a different intent to include the URI
+                val intent = if(type == Type.QR_CODE_SWITCH && uri != null) createQRLoginIntent(ContextKeeper.appContext, uri) else createLoginIntent(ContextKeeper.appContext)
+                intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 ContextKeeper.appContext.startActivity(intent)
             }
         }

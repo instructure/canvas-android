@@ -28,6 +28,20 @@ data class OAuthTokenResponse(
         @SerializedName("access_token")
         val accessToken: String? = null,
         @SerializedName("refresh_token")
-        val refreshToken: String? = null
+        val refreshToken: String? = null,
+        @SerializedName("real_user")
+        val realUser: TokenUser? = null,
+        val user: TokenUser? = null
+)
+
+/**
+ * Used in OAuthTokenResponse as "real_user" to identify a token from a masquerade request
+ *
+ * Currently being used to identify when a user generates a login QR code for a user they are masquerading as
+ */
+data class TokenUser(
+        val id: Long,
+        val name: String? = null,
+        val globalId: String
 )
 

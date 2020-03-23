@@ -59,16 +59,49 @@
                     android:layout_marginTop="20dp"
                     android:text="@string/findMySchool"/>
 
-                <TextView
-                    android:id="@+id/canvasNetwork"
+                <LinearLayout
+                    android:id="@+id/secondaryLoginContainer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:background="?android:selectableItemBackground"
-                    android:padding="8dp"
-                    android:text="@string/canvasNetwork"
-                    android:textColor="@color/login_grayText"
-                    android:textSize="16sp"/>
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/qrLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_qr_code"
+                        android:drawablePadding="8dp"
+                        android:minHeight="48dp"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="8dp"
+                        android:text="@string/loginWithQRCode"
+                        android:textColor="@color/login_grayText"
+                        android:textSize="16sp"/>
+
+                    <View
+                        android:id="@+id/qrDivider"
+                        android:visibility="gone"
+                        android:layout_width="1dp"
+                        android:layout_height="18dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_gravity="center"
+                        android:background="@color/login_grayText"/>
+
+                    <TextView
+                        android:id="@+id/canvasNetwork"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:layout_marginTop="8dp"
+                        android:background="?android:selectableItemBackground"
+                        android:padding="8dp"
+                        android:text="@string/canvasNetwork"
+                        android:textColor="@color/login_grayText"
+                        android:textSize="16sp"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 

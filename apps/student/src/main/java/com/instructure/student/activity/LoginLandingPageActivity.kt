@@ -21,7 +21,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.content.ContextCompat
 import android.webkit.CookieManager
-import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -64,6 +63,10 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent {
         return SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
     }
+
+    override fun loginWithQRCodeEnabled(): Boolean = true
+
+    override fun loginWithQRIntent(): Intent = Intent(this, StudentLoginWithQRActivity::class.java)
 
     companion object {
         fun createIntent(context: Context): Intent {
