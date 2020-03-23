@@ -17,6 +17,7 @@
 package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
@@ -53,6 +54,8 @@ class ConferenceListRenderPage : ConferenceListPage() {
 
         onViewWithId(R.id.emptyIcon).assertDisplayed()
         onViewWithId(R.id.emptyTitle).assertDisplayed().assertHasText(R.string.noConferencesTitle)
+
+        scrollTo(R.string.noConferencesMessage)
         onViewWithId(R.id.emptyMessage).assertDisplayed().assertHasText(R.string.noConferencesMessage)
     }
 
@@ -68,10 +71,12 @@ class ConferenceListRenderPage : ConferenceListPage() {
     }
 
     fun assertDisplaysConferenceHeader(state: ConferenceListItemViewState.ConferenceHeader) {
+        scrollRecyclerView(R.id.recyclerView, state.title)
         onViewWithText(state.title).assertDisplayed()
     }
 
     fun assertDisplaysConferenceItems(state: ConferenceListItemViewState.ConferenceItem) {
+        scrollRecyclerView(R.id.recyclerView, state.subtitle)
         onViewWithText(state.title).assertDisplayed()
         onViewWithText(state.label).assertDisplayed()
         onViewWithText(state.subtitle).assertDisplayed()

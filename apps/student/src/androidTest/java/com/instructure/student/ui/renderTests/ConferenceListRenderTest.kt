@@ -16,6 +16,7 @@
 package com.instructure.student.ui.renderTests
 
 import android.graphics.Color
+import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -51,6 +52,9 @@ class ConferenceListRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysLaunchingInBrowserState() {
+        // Skip on API < 24 (known issue with progress bars)
+        if(Build.VERSION.SDK_INT < 24) return
+
         val state = ConferenceListViewState.Loaded(isLaunchingInBrowser = true, itemStates =  emptyList())
         loadPageWithViewState(state, canvasContext)
 

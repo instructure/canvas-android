@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.renderTests
 
+import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
@@ -86,6 +87,9 @@ class ConferenceDetailsRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysJoiningState() {
+        // Skip on API < 24 (known issue with progress bars)
+        if(Build.VERSION.SDK_INT < 24) return
+
         val state = baseState.copy(
             isJoining = true,
             showJoinContainer = true
@@ -165,6 +169,9 @@ class ConferenceDetailsRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysLaunchingRecording() {
+        // Skip on API < 24 (known issue with progress bars)
+        if(Build.VERSION.SDK_INT < 24) return
+
         val recordingState = baseRecordingState.copy(
             isLaunching = true
         )
