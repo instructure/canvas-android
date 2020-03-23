@@ -38,10 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.ErrorReportPreFill
-import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
@@ -130,7 +127,10 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
         helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
-        if(loginWithQRCodeEnabled()) {
+        val qrLoginEnabled = RemoteConfigUtils.getString(
+                RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
+                ?: false
+        if(loginWithQRCodeEnabled() && qrLoginEnabled) {
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClick {

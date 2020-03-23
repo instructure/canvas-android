@@ -79,7 +79,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
 
                 when (type) {
                     Type.LOGOUT, Type.LOGOUT_NO_LOGIN_FLOW -> removeUser()
-                    Type.SWITCH_USERS -> updateUser()
+                    Type.SWITCH_USERS, Type.QR_CODE_SWITCH -> updateUser()
                 }
 
                 // Clean up masquerading

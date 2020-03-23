@@ -38,7 +38,8 @@ object QRLogin {
     private const val QR_HOST_BETA = "sso.beta.canvaslms.com"
     private const val QR_HOST_TEST = "sso.test.canvaslms.com"
 
-    suspend fun performSSOLogin(data: Uri, context: Context) {
+    // Returns True if Masquerading, false otherwise
+    suspend fun performSSOLogin(data: Uri, context: Context): OAuthTokenResponse {
         val domain = data.getQueryParameter(QR_DOMAIN)
         val code = data.getQueryParameter(QR_AUTH_CODE)
 
@@ -78,20 +79,25 @@ object QRLogin {
         ApiPrefs.accessToken = tokenResponse.accessToken!!
         ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 
-        val user = awaitApi<User> { UserManager.getSelf(it) }
+        if(tokenResponse.realUser == null) {
+            // This is a real login, not masquerading. Go ahead and cache the user.
+            val user = awaitApi<User> { UserManager.getSelf(it) }
 
-        // Add the user to signed in and api prefs
-        ApiPrefs.user = user
-        PreviousUsersUtils.add(context, SignedInUser(
-                user,
-                updatedDomain,
-                ApiPrefs.protocol,
-                "",  // TODO - delete once we move over 100% to refresh tokens
-                tokenResponse.accessToken!!,
-                tokenResponse.refreshToken!!,
-                null,
-                null
-        ))
+            // Add the user to signed in and api prefs
+            ApiPrefs.user = user
+            PreviousUsersUtils.add(context, SignedInUser(
+                    user,
+                    updatedDomain,
+                    ApiPrefs.protocol,
+                    "",  // TODO - delete once we move over 100% to refresh tokens
+                    tokenResponse.accessToken!!,
+                    tokenResponse.refreshToken!!,
+                    null,
+                    null
+            ))
+        }
+
+        return tokenResponse
     }
 
     @JvmStatic
@@ -102,4 +108,23 @@ object QRLogin {
                 && uri.queryParameterNames.contains(QR_DOMAIN)
                 && uri.queryParameterNames.contains(QR_AUTH_CODE)
     }
+
+    /*
+    {
+  "access_token": "1~1xCIf8ikvGXNdQipIQDPD69ovlbFc8IchJoGhigoUeZxaaInyFrVIejwNHhnePpt",
+  "token_type": "Bearer",
+  "user": {
+    "id": 5834817,
+    "name": "Hackdown Hodor",
+    "global_id": "10000005834817",
+    "effective_locale": "en"
+  },
+  "real_user": {
+    "id": 170000004596934,
+    "name": "Trevor Needham",
+    "global_id": "170000004596934"
+  },
+  "refresh_token": "1~OukUtSznQIIRRcABWImSjrP1xjNCv6NWxQyc0uvJkVs3NrhxIZBx42O23EMCnVgC"
+}
+     */
 }

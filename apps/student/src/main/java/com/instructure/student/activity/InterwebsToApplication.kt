@@ -28,10 +28,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -86,7 +83,10 @@ class InterwebsToApplication : AppCompatActivity() {
             val signedIn = token.isNotEmpty()
             val domain = ApiPrefs.domain
 
-            if (verifySSOLoginUri(data)) {
+            val qrLoginEnabled = RemoteConfigUtils.getString(
+                    RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
+                    ?: false
+            if (verifySSOLoginUri(data) && qrLoginEnabled) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
@@ -95,19 +95,28 @@ class InterwebsToApplication : AppCompatActivity() {
                         return@tryWeave
                     }
 
-                    performSSOLogin(data, this@InterwebsToApplication)
+                    val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
 
                     // Log the analytics
                     logQREvent(ApiPrefs.domain, true)
 
                     // Add delay for animation and launch Navigation Activity
                     delay(700)
-                    val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+
+                    // If we have a real user, this is a QR code from a masquerading web user
+                    val intent = if(tokenResponse.realUser != null && tokenResponse.user != null) {
+                        // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
+                        ApiPrefs.isMasqueradingFromQRCode = true
+                        NavigationActivity.createIntent(this@InterwebsToApplication, tokenResponse.user!!.id)
+                    } else {
+                        Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                    }
+
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                     finish()
                     return@tryWeave
-                } catch (e: StatusCallbackError) {
+                } catch (e: Throwable) {
                     // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
                     if(!signedIn) {
                         ApiPrefs.clearAllData()

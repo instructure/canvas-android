@@ -321,4 +321,7 @@ public class Const {
 
     public static final String HIDE_TOOLBAR = "hideToolbar";
     public static final String STUDIO_LTI_TOOL = "studioLTITool";
+
+    // Intent String for QR Code Masquerading
+    public static final String QR_CODE_MASQUERADE_ID = "qrCodeMasqueradeId";
 }

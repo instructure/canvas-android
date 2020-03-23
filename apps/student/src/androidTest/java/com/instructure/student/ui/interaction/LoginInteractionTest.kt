@@ -36,7 +36,7 @@ class LoginInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
     fun testLogin_qrTutorialPageLoads() {
-        // Should be able to search for and select a school in the "What's your school's name?" page
+        // Should be able to view and assert page objects on the QR tutorial page
         loginLandingPage.clickQRCodeButton()
         qrLoginPage.assertPageObjects()
         qrLoginPage.clickForA11y()
