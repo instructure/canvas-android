@@ -21,14 +21,14 @@ class PlannerApi {
     String userId,
     DateTime startDay,
     DateTime endDay, {
-    List<String> contexts = const [],
+    Set<String> contexts = const {},
     bool forceRefresh = false,
   }) async {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
     var queryParams = {
       'start_date': startDay.toUtc().toIso8601String(),
       'end_date': endDay.toUtc().toIso8601String(),
-      'context_codes': contexts,
+      'context_codes': contexts.toList()..sort(), // Sort for cache consistency
     };
     return fetchList(dio.get('users/$userId/planner/items', queryParameters: queryParams), depaginateWith: dio);
   }

@@ -16,7 +16,7 @@ class _$CalendarFilter extends CalendarFilter {
   @override
   final String observeeId;
   @override
-  final BuiltList<String> filters;
+  final BuiltSet<String> filters;
 
   factory _$CalendarFilter([void Function(CalendarFilterBuilder) updates]) =>
       (new CalendarFilterBuilder()..update(updates)).build();
@@ -97,10 +97,10 @@ class CalendarFilterBuilder
   String get observeeId => _$this._observeeId;
   set observeeId(String observeeId) => _$this._observeeId = observeeId;
 
-  ListBuilder<String> _filters;
-  ListBuilder<String> get filters =>
-      _$this._filters ??= new ListBuilder<String>();
-  set filters(ListBuilder<String> filters) => _$this._filters = filters;
+  SetBuilder<String> _filters;
+  SetBuilder<String> get filters =>
+      _$this._filters ??= new SetBuilder<String>();
+  set filters(SetBuilder<String> filters) => _$this._filters = filters;
 
   CalendarFilterBuilder() {
     CalendarFilter._initializeBuilder(this);

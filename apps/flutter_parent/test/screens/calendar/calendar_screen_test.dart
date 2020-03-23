@@ -48,12 +48,12 @@ void main() {
   CalendarFilterListInteractor filterInteractor = _MockCalendarFilterListInteractor();
 
   when(filterDb.getByObserveeId(any, any, any))
-      .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = ListBuilder(['course_123']))));
+      .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = SetBuilder({'course_123'}))));
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
   final String observeeId = 'observee_123';
-  final List<String> contexts = ['course_123'];
+  final Set<String> contexts = {'course_123'};
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<PlannerApi>(() => plannerApi);
@@ -73,7 +73,7 @@ void main() {
         ..userDomain = userDomain
         ..userId = userId
         ..observeeId = observeeId
-        ..filters = ListBuilder(contexts));
+        ..filters = SetBuilder(contexts));
     });
   });
 
@@ -145,7 +145,7 @@ void main() {
 
       // Setup the capture of navigation arguments
       Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
-      List<String> result = [];
+      Set<String> result = {};
       pushedRoute.popped.then((value) {
         result = value;
       });
@@ -192,7 +192,7 @@ void main() {
 
       // Setup the capture of navigation arguments
       Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
-      List<String> result = [];
+      Set<String> result = {};
       pushedRoute.popped.then((value) {
         result = value;
       });
@@ -240,7 +240,7 @@ void main() {
 
       // Setup the capture of navigation arguments
       Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
-      List<String> result = [];
+      Set<String> result = {};
       pushedRoute.popped.then((value) {
         result = value;
       });
@@ -285,7 +285,7 @@ void main() {
 
     // Setup the capture of navigation arguments
     Route pushedRoute = verify(observer.didPush(captureAny, any)).captured[1];
-    List<String> result = [];
+    Set<String> result = {};
     pushedRoute.popped.then((value) {
       result = value;
     });

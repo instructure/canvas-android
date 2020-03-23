@@ -40,7 +40,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
         darkMode: true,
       ));
       await tester.pump();
@@ -58,7 +58,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
         darkMode: true,
       ));
       await tester.pump();
@@ -81,7 +81,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
         darkMode: true,
       ));
       await tester.pump();
@@ -94,7 +94,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows appbar title', (tester) async {
-      List<String> selectedCourses = ['course_123', 'course_234', 'course_345'];
+      Set<String> selectedCourses = {'course_123', 'course_234', 'course_345'};
       var interactor = _MockCalendarFilterListInteractor();
       when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
@@ -118,7 +118,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
       ));
       await tester.pump();
       await tester.pump();
@@ -134,7 +134,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
       ));
       await tester.pump();
       await tester.pump();
@@ -151,7 +151,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(<String>[]),
+        CalendarFilterListScreen(<String>{}),
       ));
       await tester.pump();
       await tester.pump();
@@ -174,7 +174,7 @@ void main() {
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(['course_123']),
+        CalendarFilterListScreen({'course_123'}),
       ));
       await tester.pump();
       await tester.pump();
@@ -196,7 +196,7 @@ void main() {
       when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
-      List<String> selectedContexts = ['course_123'];
+      Set<String> selectedContexts = {'course_123'};
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
@@ -248,7 +248,7 @@ void main() {
       when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
-      List<String> selectedContexts = ['course_123'];
+      Set<String> selectedContexts = {'course_123'};
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(

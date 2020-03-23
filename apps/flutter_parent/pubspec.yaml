@@ -52,6 +52,7 @@ dependencies:
   sqflite: 1.2.0
   faker: ^1.1.1
   uuid: ^2.0.2
+  collection: 1.14.11
 
   # File handling
   path_provider: 1.5.1
