@@ -64,13 +64,9 @@ fun LambdaDslObject.populateAssignmentOverrideFields() : LambdaDslObject {
             .stringMatcher("all_day_date", PACT_DATE_REGEX, "2020-01-23")
             .stringMatcher("unlock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .stringMatcher("lock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
-            .array("student_ids") { arr ->
-                arr.id() // Assume a single student, single id
-            }
-    // Could not get this to work. :-(
-//            .minArrayLike("student_ids", 1) { arr ->
-//                arr.id()
-//            }
+            .minArrayLike("student_ids", 1,
+                    PactDslJsonRootValue.id(),
+                    1)
             //.id("groupId") TODO
             //.id("course_section_id") TODO
 
@@ -93,32 +89,31 @@ fun assertAssignmentOverridePopulated(description: String, assignmentOverride: A
 }
 // endregion
 
+/** Field configuration settings for an Assignment object. */
 data class PactAssignmentFieldConfig(
-        val include_submission : Boolean = false,
-        val include_assignment_visibility : Boolean = false,
-        val include_all_dates : Boolean = false,
-        val include_overrides : Boolean = false,
-        val include_observed_users : Boolean = false,
-        val has_lock_info : Boolean = false,
-        val has_rubric : Boolean = false,
-        val has_discussion : Boolean = false,
-        val is_quiz : Boolean = false,
-        val is_teacher : Boolean = false
+        val includeSubmission : Boolean = false,
+        val includeAssignmentVisibility : Boolean = false,
+        val includeAllDates : Boolean = false,
+        val includeOverrides : Boolean = false,
+        val includeObservedUsers : Boolean = false,
+        val isQuiz : Boolean = false,
+        val role : String = "student"
 ) {
     companion object {
-        fun fromQueryString(isTeacher: Boolean = false, query: String) : PactAssignmentFieldConfig {
+        fun fromQueryString(role: String = "student", query: String) : PactAssignmentFieldConfig {
             return PactAssignmentFieldConfig(
-                    is_teacher = isTeacher,
-                    include_submission = query.contains("=submission"),
-                    include_assignment_visibility = query.contains("=assignment_visibility"),
-                    include_all_dates = query.contains("=all_dates"),
-                    include_overrides = query.contains("=overrides"),
-                    include_observed_users = query.contains("=observed_users")
+                    role = role,
+                    includeSubmission = query.contains("=submission"),
+                    includeAssignmentVisibility = query.contains("=assignment_visibility"),
+                    includeAllDates = query.contains("=all_dates"),
+                    includeOverrides = query.contains("=overrides"),
+                    includeObservedUsers = query.contains("=observed_users")
             )
         }
     }
 }
 
+/** Populate the fields in an Assignment object, based on the field settings. */
 fun LambdaDslObject.populateAssignmentFields(fieldConfig : PactAssignmentFieldConfig = PactAssignmentFieldConfig()) : LambdaDslObject {
     this
             .id("id")
@@ -171,13 +166,13 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig : PactAssignmentFieldCo
             //.booleanType("user_submitted") // Not used by our code
 
 
-    if(fieldConfig.include_submission)  {
+    if(fieldConfig.includeSubmission)  {
         this.`object`("submission") { obj -> // optional
             obj.populateSubmissionFields()
         }
     }
 
-    if(fieldConfig.include_all_dates) {
+    if(fieldConfig.includeAllDates) {
         this.array("all_dates") { arr -> // Assume one all_dates entry
             arr.`object`() {obj ->
                 obj.populateAssignmentDueDateFields()
@@ -185,7 +180,7 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig : PactAssignmentFieldCo
         }
     }
 
-    if(fieldConfig.include_overrides) {
+    if(fieldConfig.includeOverrides) {
         this.array("overrides") { arr -> // Assume one assignment override object
             arr.`object`() { obj ->
                 obj.populateAssignmentOverrideFields()
@@ -193,17 +188,19 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig : PactAssignmentFieldCo
         }
     }
 
-    if(fieldConfig.is_quiz) {
+    if(fieldConfig.isQuiz) {
         this.id("quiz_id") // only for online_quiz submission type
     }
 
-    if(fieldConfig.is_teacher) {
+    if(fieldConfig.role == "teacher") {
+        // Evidently, these only show up for teachers
         this
                 .numberType("needs_grading_count")
                 .stringType("description")
                 .booleanType("unpublishable")
     }
-    else {
+    else if(fieldConfig.role == "student") {
+        // And this only shows up for students.
         this.stringType("lock_explanation")
     }
 
@@ -247,11 +244,11 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
     assertNotNull("$description + moderatedGrading", assignment.moderatedGrading)
     assertNotNull("$description + anonymousGrading", assignment.anonymousGrading)
 
-    if(fieldConfig.include_submission)  {
+    if(fieldConfig.includeSubmission)  {
         assertNotNull("$description + submission", assignment.submission)
     }
 
-    if(fieldConfig.include_all_dates) {
+    if(fieldConfig.includeAllDates) {
         assertNotNull("$description + allDates", assignment.allDates)
         assertTrue(
                 "$description + allDates should have at least one element",
@@ -259,7 +256,7 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
         assertAssignmentDueDatePopulated("$description + allDates[0]", assignment.allDates[0])
     }
 
-    if(fieldConfig.include_overrides) {
+    if(fieldConfig.includeOverrides) {
         assertNotNull("$description + overrides", assignment.overrides)
         assertTrue(
                 "$description + overrides should have at least one element",
@@ -267,19 +264,16 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
         assertAssignmentOverridePopulated("$description + overrides[0]", assignment.overrides!![0])
     }
 
-    if(fieldConfig.is_quiz) {
+    if(fieldConfig.isQuiz) {
         assertNotNull("$description + quizId", assignment.quizId)
     }
 
-    if(fieldConfig.is_teacher) {
+    if(fieldConfig.role == "teacher") {
         assertNotNull("$description + description", assignment.description)
         assertNotNull("$description + needsGradingCount", assignment.needsGradingCount)
         assertNotNull("$description + unpublishable", assignment.unpublishable)
     }
-    else {
+    else if(fieldConfig.role == "student") {
         assertNotNull("$description + lockExplanation", assignment.lockExplanation)
     }
-
-    // TODO: More in-depth checking of objects and arrays
-
 }

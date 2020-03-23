@@ -34,8 +34,13 @@ fun LambdaDslObject.populateSubmissionCommentFields() : LambdaDslObject {
             .`object`("author") { obj ->
                 obj.populateAuthorFields()
             }
+//            .array("attachments") { arr ->
+//                arr.`object`() { obj ->
+//                    obj.populateAttachmentFields()
+//                }
+//            }
 
-    // TODO: media_comment.  attachments not supported by API?
+    // TODO: Punt on attachments, media_comment.
     return this
 }
 
@@ -48,17 +53,21 @@ fun assertSubmissionCommentPopulated(description: String, submissionComment: Sub
     assertNotNull("$description + createdAt", submissionComment.createdAt)
     assertNotNull("$description + author", submissionComment.author)
     assertAuthorPopulated("$description + author", submissionComment.author!!)
+//    assertNotNull("$description + attachments", submissionComment.attachments)
+//    assertTrue("$description + attachments should have at least one element",
+//            submissionComment.attachments.size > 0);
+//    assertAttachmentPopulated("$description + attachments[0]", submissionComment.attachments[0])
 }
 
 data class PactSubmissionFieldConfig(
-        val include_submission_history : Boolean = false,
-        val include_submission_comments : Boolean = false,
-        val include_rubric_assessment : Boolean = false,
-        val include_assignment : Boolean = false,
-        val include_visibility : Boolean = false,
-        val include_course : Boolean = false, // Unused -- we don't track course in submission
-        val include_user : Boolean = false,
-        val include_group : Boolean = false,
+        val includeSubmissionHistory : Boolean = false,
+        val includeSubmissionComments : Boolean = false,
+        val includeRubricAssessment : Boolean = false,
+        val includeAssignment : Boolean = false,
+        val includeVisibility : Boolean = false,
+        val includeCourse : Boolean = false, // Unused -- we don't track course in submission
+        val includeUser : Boolean = false,
+        val includeGroup : Boolean = false,
         val submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 ) {
     companion object {
@@ -67,14 +76,14 @@ data class PactSubmissionFieldConfig(
                 submissionType : Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         ): PactSubmissionFieldConfig {
             return PactSubmissionFieldConfig(
-                    include_submission_history = query.contains("=submission_history"),
-                    include_submission_comments = query.contains("=submission_comments"),
-                    include_rubric_assessment = query.contains("=rubric_assessment"),
-                    include_assignment = query.contains("=assignment"),
-                    include_visibility = query.contains("=visibility"),
-                    include_course = query.contains("=course"), // unused in Android code
-                    include_user = query.contains("=user"),
-                    include_group = query.contains("=group"),
+                    includeSubmissionHistory = query.contains("=submission_history"),
+                    includeSubmissionComments = query.contains("=submission_comments"),
+                    includeRubricAssessment = query.contains("=rubric_assessment"),
+                    includeAssignment = query.contains("=assignment"),
+                    includeVisibility = query.contains("=visibility"),
+                    includeCourse = query.contains("=course"), // unused in Android code
+                    includeUser = query.contains("=user"),
+                    includeGroup = query.contains("=group"),
                     submissionType = submissionType
             )
         }
@@ -92,7 +101,6 @@ fun LambdaDslObject.populateSubmissionFields(
             .stringMatcher("submitted_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             // comment_created not supported by API?
             // media_content_type, media_comment_url, media_comment_display not supported by API?
-            // attachments not support by API
             .booleanType("grade_matches_current_submission")
             .stringMatcher("workflow_state", "submitted|unsubmitted|graded|pending_review", "unsubmitted")
             .stringMatcher("submission_type","online_text_entry|online_url|online_upload|media_recording|basic_lti_launch", "online_text_entry")
@@ -104,14 +112,21 @@ fun LambdaDslObject.populateSubmissionFields(
             .id("assignment_id")
             .id("user_id")
             .id("grader_id")
-            // discussion_entries not supported by API?
-            // group not supported by API?
+            // TODO: Punt on discussion_entries; could be covered by another test
             .numberType("points_deducted")
             .numberType("entered_score") // supported?
             .stringType("entered_grade") // supported?
             .stringMatcher("posted_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
 
-    if(fieldConfig.include_submission_comments) {
+    if(fieldConfig.includeGroup) {
+        this.`object`("group") { obj ->
+            obj.id("id")
+            obj.stringType("name")
+
+        }
+    }
+
+    if(fieldConfig.includeSubmissionComments) {
         this.array("submission_comments") { array -> // Assume a single submission comment
             array.`object`() { obj ->
                 obj.populateSubmissionCommentFields()
@@ -119,7 +134,7 @@ fun LambdaDslObject.populateSubmissionFields(
         }
     }
 
-    if(fieldConfig.include_submission_history) {
+    if(fieldConfig.includeSubmissionHistory) {
         this.minArrayLike("submission_history", 1) { obj ->
             obj.populateSubmissionFields(PactSubmissionFieldConfig(submissionType = fieldConfig.submissionType))
         }
@@ -136,7 +151,7 @@ fun LambdaDslObject.populateSubmissionFields(
     //        }
     //    },
     //
-    // That _7316 is an id, and it's not possible to define it as "just some string".
+    // That _7316 is an assessment id, and it's not possible to define it as "just some string".
 //    if(fieldConfig.include_rubric_assessment) {
 //        this.`object`("rubric_assessment") { obj ->
 //            obj.`object`("blah") { inner ->
@@ -147,13 +162,13 @@ fun LambdaDslObject.populateSubmissionFields(
 //        }
 //    }
 
-    if(fieldConfig.include_assignment) {
+    if(fieldConfig.includeAssignment) {
         this.`object`("assignment") { obj -> // optional
             obj.populateAssignmentFields()
         }
     }
 
-    if(fieldConfig.include_user) {
+    if(fieldConfig.includeUser) {
         this.`object`("user") { obj -> // optional
             obj.populateUserFields()
         }
@@ -201,7 +216,13 @@ fun assertSubmissionPopulated(
     assertNotNull("$description + enteredGrade", submission.enteredGrade)
     assertNotNull("$description + postedAt", submission.postedAt)
 
-    if(fieldConfig.include_submission_comments) {
+    if(fieldConfig.includeGroup) {
+        assertNotNull("$description + group", submission.group)
+        assertNotNull("$description + group.id", submission.group!!.id)
+        assertNotNull("$description + group.name", submission.group!!.name)
+    }
+
+    if(fieldConfig.includeSubmissionComments) {
         assertNotNull("$description + submissionComments", submission.submissionComments)
         assertTrue(
                 "$description + submissionComments should have at least one comment",
@@ -211,7 +232,7 @@ fun assertSubmissionPopulated(
         }
     }
 
-    if(fieldConfig.include_submission_history) {
+    if(fieldConfig.includeSubmissionHistory) {
         assertNotNull("$description + submissionHistory", submission.submissionHistory)
         assertTrue(
                 "$description + submissionHistory should have at least one element",
@@ -224,16 +245,16 @@ fun assertSubmissionPopulated(
         }
     }
 
-    if(fieldConfig.include_rubric_assessment) {
+    if(fieldConfig.includeRubricAssessment) {
         // TODO: rubric_assessment?
     }
 
-    if(fieldConfig.include_assignment) {
+    if(fieldConfig.includeAssignment) {
         assertNotNull("$description + assignment", submission.assignment)
         assertAssignmentPopulated("$description + assignment", submission.assignment!!)
     }
 
-    if(fieldConfig.include_user) {
+    if(fieldConfig.includeUser) {
         assertNotNull("$description + user", submission.user)
         assertUserPopulated("$description + user", submission.user!!)
     }

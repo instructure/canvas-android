@@ -41,12 +41,12 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     //
 
     val getStudentAssignmentQuery = "include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides"
-    val getStudentAssignmentPath = "/api/v1/courses/3/assignments/2"
+    val getStudentAssignmentPath = "/api/v1/courses/3/assignments/1" // Has default submission type of online_text_entry
     // We won't get override info when we request the assignment as a student.
     val getStudentAssignmentFieldInfo =
             PactAssignmentFieldConfig
                     .fromQueryString(query = getStudentAssignmentQuery)
-                    .copy(include_overrides = false, is_teacher = false)
+                    .copy(includeOverrides = false, role = "student")
     val getStudentAssignmentResponseBody =  LambdaDsl.newJsonBody {  obj ->
         obj.populateAssignmentFields(getStudentAssignmentFieldInfo)
     }.build()
@@ -54,9 +54,9 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "android")
     fun getStudentAssignmentPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("mobile 3 assignments, 3 submissions")
 
-                .uponReceiving("A request for course 3 assignment 2 as student")
+                .uponReceiving("Grab an assignment as student")
                 .path(getStudentAssignmentPath)
                 .method("GET")
                 .query(getStudentAssignmentQuery)
@@ -72,10 +72,10 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getStudentAssignmentPact")
-    fun `grab course 3 assignment 2 as student`() {
+    fun `grab assignment as student`() {
         val service = createService()
 
-        val getAssignmentCall = service.getAssignment(courseId = 3, assignmentId = 2)
+        val getAssignmentCall = service.getAssignment(courseId = 3, assignmentId = 1)
         val getAssignmentResult = getAssignmentCall.execute()
 
         assertQueryParamsAndPath(getAssignmentCall, getStudentAssignmentQuery, getStudentAssignmentPath)
@@ -97,7 +97,7 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     val getTeacherAssignmentFieldInfo =
             PactAssignmentFieldConfig
                     .fromQueryString(query = getTeacherAssignmentQuery)
-                    .copy(include_submission = false, is_teacher = true)
+                    .copy(includeSubmission = false, role = "teacher")
     val getTeacherAssignmentResponseBody =  LambdaDsl.newJsonBody {  obj ->
         obj.populateAssignmentFields(getTeacherAssignmentFieldInfo)
     }.build()
@@ -105,9 +105,9 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "android")
     fun getTeacherAssignmentPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("mobile 3 assignments, 3 submissions")
 
-                .uponReceiving("A request for course 3 assignment 2 as teacher")
+                .uponReceiving("Grab an assignment as teacher")
                 .path(getTeacherAssignmentPath)
                 .method("GET")
                 .query(getTeacherAssignmentQuery)
@@ -126,7 +126,7 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
 
     @Test
     @PactVerification(fragment = "getTeacherAssignmentPact")
-    fun `grab course 3 assignment 2 as teacher`() {
+    fun `grab assignment as teacher`() {
         val service = createService("Mobile Teacher")
 
         val getAssignmentCall = service.getAssignment(courseId = 3, assignmentId = 2)

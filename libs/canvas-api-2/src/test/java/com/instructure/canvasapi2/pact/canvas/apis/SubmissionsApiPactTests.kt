@@ -42,7 +42,7 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     //
 
     val getTextSubmissionQuery = "include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group"
-    val getTextSubmissionPath = "/api/v1/courses/3/assignments/2/submissions/8" // Should /api/v1 be there?
+    val getTextSubmissionPath = "/api/v1/courses/3/assignments/1/submissions/8"
     val getTextSubmissionFieldInfo = PactSubmissionFieldConfig
             .fromQuery(getTextSubmissionQuery) // submissionType?
     val getTextSubmissionResponseBody =  LambdaDsl.newJsonBody { obj ->
@@ -52,7 +52,7 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "android")
     fun getTextSubmissionPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("mobile 3 assignments, 3 submissions")
 
                 .uponReceiving("A request for an online text submission")
                 .path(getTextSubmissionPath)
@@ -73,7 +73,7 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     fun `grab online text submission`() {
         val service = createService()
 
-        val getSubmissionCall = service.getSingleSubmission(courseId = 3, assignmentId = 2, studentId = 8)
+        val getSubmissionCall = service.getSingleSubmission(courseId = 3, assignmentId = 1, studentId = 8)
         val getSubmissionResult = getSubmissionCall.execute()
 
         assertQueryParamsAndPath(getSubmissionCall, getTextSubmissionQuery, getTextSubmissionPath)
@@ -86,11 +86,11 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     //endregion
 
     //
-    // region request a single online text submission
+    // region request a single online upload submission
     //
 
     val getAttachmentSubmissionQuery = "include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group"
-    val getAttachmentSubmissionPath = "/api/v1/courses/2/assignments/1/submissions/8"
+    val getAttachmentSubmissionPath = "/api/v1/courses/3/assignments/2/submissions/8"
     val getAttachmentSubmissionFieldInfo = PactSubmissionFieldConfig
             .fromQuery(getAttachmentSubmissionQuery, Assignment.SubmissionType.ONLINE_UPLOAD)
     val getAttachmentSubmissionResponseBody =  LambdaDsl.newJsonBody { obj ->
@@ -100,7 +100,7 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "android")
     fun getAttachmentSubmissionPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given(MAIN_PROVIDER_STATE)
+                .given("mobile 3 assignments, 3 submissions")
 
                 .uponReceiving("A request for an online upload submission")
                 .path(getAttachmentSubmissionPath)
@@ -121,7 +121,7 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     fun `grab online upload submission`() {
         val service = createService()
 
-        val getSubmissionCall = service.getSingleSubmission(courseId = 2, assignmentId = 1, studentId = 8)
+        val getSubmissionCall = service.getSingleSubmission(courseId = 3, assignmentId = 2, studentId = 8)
         val getSubmissionResult = getSubmissionCall.execute()
 
         assertQueryParamsAndPath(getSubmissionCall, getAttachmentSubmissionQuery, getAttachmentSubmissionPath)
