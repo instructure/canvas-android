@@ -89,7 +89,7 @@ puts 'Translations successfully imported!'
 home_dir = Dir.pwd
 puts 'Linking in flutter translations'
 projects.each do |project|
-    flutter_dir = project.fetch('flutter_dir')
+    flutter_dir = project['flutter_dir']
     project_name = project.fetch('name')
 
     if flutter_dir.nil?
