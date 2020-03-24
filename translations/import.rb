@@ -99,6 +99,7 @@ end
 puts 'S3 import completed'
 
 # Generate flutter link to translated string files
+=begin # Comment out the flutter generation until it's moved to it's own flow
 home_dir = Dir.pwd
 puts 'Linking in flutter translations'
 projects.each do |project|
@@ -121,6 +122,7 @@ projects.each do |project|
     # Return to the home directory for the next project and to commit
     Dir.chdir home_dir
 end
+=end
 
 # Create branch, add, and commit
 branch_name = "translations/#{Time.now.strftime('%Y-%m-%d')}"
