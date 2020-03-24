@@ -84,27 +84,5 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
 end
 
 puts 'Translations successfully imported!'
-
-# Generate flutter link to translated string files
-home_dir = Dir.pwd
-puts 'Linking in flutter translations'
-projects.each do |project|
-    flutter_dir = project['flutter_dir']
-    project_name = project.fetch('name')
-
-    if flutter_dir.nil?
-        puts "skipping non flutter project: #{project_name}"
-        next
-    end
-
-    # Change directories to the flutter project, so we can run the flutter command
-    project_dir = File.join(flutter_dir)
-    Dir.chdir project_dir
-
-    puts "Generating flutter files for #{project_name}"
-    success = system("flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n/generated --no-use-deferred-loading lib/l10n/app_localizations.dart lib/l10n/res/intl_*.arb")
-    raise 'Failed to generate flutter files' unless success
-
-    # Return to the home directory for the next project
-    Dir.chdir home_dir
-end
+puts '' # New line for slightly better formatting of flutter message
+puts "!!!!!!!!!!!!\nFlutter translations still need to have language hooks generated. Consider running `ruby translations/local-flutter-generate-hooks.rb`\n!!!!!!!!!!!!"

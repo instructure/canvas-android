@@ -98,32 +98,6 @@ end
 
 puts 'S3 import completed'
 
-# Generate flutter link to translated string files
-=begin # Comment out the flutter generation until it's moved to it's own flow
-home_dir = Dir.pwd
-puts 'Linking in flutter translations'
-projects.each do |project|
-    flutter_dir = project['flutter_dir']
-    project_name = project.fetch('name')
-
-    if flutter_dir.nil?
-        puts "skipping non flutter project: #{project_name}"
-        next
-    end
-
-    # Change directories to the flutter project, so we can run the flutter command
-    project_dir = File.join(flutter_dir)
-    Dir.chdir project_dir
-
-    puts "Generating flutter files for #{project_name}"
-    success = system("flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n/generated --no-use-deferred-loading lib/l10n/app_localizations.dart lib/l10n/res/intl_*.arb")
-    raise 'Failed to generate flutter files' unless success
-
-    # Return to the home directory for the next project and to commit
-    Dir.chdir home_dir
-end
-=end
-
 # Create branch, add, and commit
 branch_name = "translations/#{Time.now.strftime('%Y-%m-%d')}"
 system("git checkout -b #{branch_name}")
