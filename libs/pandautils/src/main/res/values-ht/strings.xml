@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Fichye yo prè pou telechaje, tanpri eseye ankò.</string>
     <string name="filePermissionDenied">Fichye a pa kapab telechaje san ou pa akòde li pèmisyon.</string>
     <string name="pleaseTryAgain">Pèmisyon Akòde, tanpri eseye ankò.</string>
-    <string name="pickVideo">Seleksyone yon Videyo</string>
-
+    <string name="pickFile">Seleksyone yon Fichye</string>
     <string name="assignmentSubmissionUpload">Transfè soumisyon pou %s</string>
     <string name="assignmentSubmissionError">Soumisyon echwe pou %s</string>
     <string name="assignmentSubmissionComplete">Soumisyon reyisi %s</string>

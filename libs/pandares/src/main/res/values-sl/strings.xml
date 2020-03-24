@@ -38,7 +38,7 @@
     <string name="assignmentDetails">Podrobnosti o nalogi</string>
     <string name="submission_types">Vrste oddaj</string>
     <string name="noAssignmentDescriptionStudent">Ni vsebine.</string>
-    <string name="dueLabel">Rok</string>
+    <string name="dueLabel">Roki</string>
     <string name="submissionStatusSuccessTitle">Uspešno poslano.</string>
     <string name="submissionStatusSuccessSubtitle">Oddaja čaka, da bo ocenjena.</string>
     <string name="submissionStatusUploadingTitle">Nalaganje oddaj ...</string>
@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Ta naloga je opravičena in ne bo upoštevana v končnem izračunu.</string>
     <string name="excused">Opravičeno</string>
     <!-- Assignment editing -->
-    <string name="points">Točke </string>
+    <string name="points">Točke\u0020</string>
     <string name="save">Shrani</string>
     <string name="cancel">Prekliči</string>
     <!-- Discussions -->
     <string name="forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
 
+    <string name="fileCurrentlyLocked">Ta datoteka je trenutno zaklenjena</string>
     <!-- Events -->
     <string name="Starts">Začne se</string>
     <string name="Ends">Konča se</string>
@@ -200,7 +201,7 @@
     <string name="closed_discussion">Zaprto za komentarje</string>
     <string name="discussionUploadDialog">Nalaganje razprave</string>
     <string name="totalScore">Vsota:</string>
-    <string name="noGradeText">Ni na voljo.</string>
+    <string name="noGradeText">Ni na voljo</string>
     <string name="checkBoxFinalGradeOption">Na podlagi ocenjenih nalog</string>
     <string name="checkBoxWhatIfGradeOption">Prikaži simulacijo rezultatov</string>
     <string name="whatIfDialogText">Simulacija rezultatov</string>
@@ -223,7 +224,7 @@
     <string name="selectCanvasCalendars">Izberi do 10 koledarjev</string>
     <string name="contentDesc_colored_calendar_indicator">Barvni kazalnik koledarja</string>
     <string name="noDatesSelected">Izberite datum.</string>
-    <string name="Todo">Seznam opravil</string>
+    <string name="Todo">Čakajoča opravila</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
     <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
@@ -244,8 +245,8 @@
 
     <string name="dueAt">Rok ob</string>
     <string name="dueAtTime">Rok ob %s</string>
-    <string name="toDoDue">Rok</string>
-    <string name="due">Rok %1$s</string>
+    <string name="toDoDue">Roki</string>
+    <string name="due">Roki %1$s</string>
     <plurals name="to_do_needs_grading">
         <item quantity="one">%d je treba oceniti.</item>
         <item quantity="other">%d je treba oceniti.</item>
@@ -330,7 +331,7 @@
     <string name="with">s/z</string>
     <string name="starConversation">Označi pogovor z zvezdico</string>
     <string name="deleteConversation">Odstrani pogovor</string>
-    <string name="sharedWith">Skupna raba s/z  </string>
+    <string name="sharedWith">Skupna raba s/z \u0020</string>
     <string name="sharedWithYou">Skupna raba z vami</string>
     <string name="inboxEmptyMessage">Tapnite »+«, da ustvarite nov pogovor.</string>
     <string name="inboxAllMessages">Vse</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Na voljo je zasebno.</string>
     <string name="publiclyAvailable">Na voljo je javno.</string>
-    <string name="starts">Začne se:  </string>
-    <string name="courseCode">Koda predmeta:  </string>
-    <string name="ends">Konča se:  </string>
-    <string name="visibility">Vidnost:  </string>
-    <string name="license">Licenca:  </string>
+    <string name="starts">Začne se: \u0020</string>
+    <string name="courseCode">Koda predmeta: \u0020</string>
+    <string name="ends">Konča se: \u0020</string>
+    <string name="visibility">Vidnost: \u0020</string>
+    <string name="license">Licenca: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -583,7 +584,7 @@
     <string name="termsOfUse">Pogoji uporabe</string>
     <string name="canvasOnGithub">Canvas na GitHub</string>
     <!-- Quiz Strings -->
-    <string name="assignmentQuizzes">Kvizi pri nalogah</string>
+    <string name="assignmentQuizzes">Kvizi kot naloge</string>
     <string name="practiceQuizzes">Kvizi za vajo</string>
     <string name="gradedSurveys">Ocenjene ankete</string>
     <string name="surveys">Ankete</string>
@@ -594,10 +595,10 @@
 
     <string name="flag_the_question">Označi vprašanje</string>
     <!-- Widget Strings -->
-    <string name="todoWidgetTitle">Seznam opravil</string>
+    <string name="todoWidgetTitle">Čakajoča opravila</string>
     <string name="gradesWidgetTitle">Ocene</string>
     <string name="notificationWidgetTitle">Obvestila</string>
-    <string name="todoWidgetTitleLong">Sistem Canvas – Seznam opravil</string>
+    <string name="todoWidgetTitleLong">Sistem Canvas – Čakajoča opravila</string>
     <string name="gradesWidgetTitleLong">Sistem Canvas – Ocene</string>
     <string name="notificationWidgetTitleLong">Sistem Canvas – Obvestila</string>
     <string name="notLoggedIn">Niste prijavljeni.</string>
@@ -631,7 +632,7 @@
 
     <!-- Tablet Strings -->
     <string name="courses">Predmeti</string>
-    <string name="toDoList">Seznam opravil</string>
+    <string name="toDoList">Čakajoča opravila</string>
     <string name="notifications">Obvestila</string>
     <string name="pushNotifications">Poslana obvestila</string>
     <string name="pushNotificationsError">Za to napravo ni registriranih poslanih obvestil.</string>
@@ -641,7 +642,7 @@
 
     <string name="launchSpeedgrader">Odpri aplikacijo SpeedGrader</string>
 
-    <string name="search_todo">seznamopravil seznam opravil seznami opravil seznam opravil</string>
+    <string name="search_todo">Čakajoča opravila Čakajočaopravila seznamopravil seznam opravil seznami opravil seznam opravila</string>
     <string name="search_course">predmet predmeti razred razredi</string>
     <string name="search_grades">ocena ocene</string>
 
@@ -679,7 +680,7 @@
 
     <string name="overdueAssignments">Zamujene naloge</string>
     <string name="upcomingAssignments">Prihodnje naloge</string>
-    <string name="undatedAssignments">Naloge brez datuma</string>
+    <string name="undatedAssignments">Naloge brez določenega datuma</string>
     <string name="pastAssignments">Pretekle naloge</string>
 
     <string name="could_not_find_course">Prišlo je do napake pri pridobivanju predmeta za ta element.</string>
@@ -744,7 +745,7 @@
     <string name="notification_pref_course_content">Vsebina predmeta</string>
     <string name="notification_pref_files">Datoteke</string>
     <string name="notification_pref_announcement">Obvestilo</string>
-    <string name="notification_pref_announcement_created_by_you">Obvestila, ki ste jih ustvarili.</string>
+    <string name="notification_pref_announcement_created_by_you">Obvestila, ki ste jih ustvarili</string>
     <string name="notification_pref_grading">Ocenjevanje</string>
     <string name="notification_pref_invitation">Povabilo</string>
     <string name="notification_pref_all_submissions">Vse oddaje</string>
@@ -761,12 +762,12 @@
     <string name="notification_pref_student_appointment_signups">Prijave študentov na sestanke</string>
     <string name="notification_pref_appointment_signups">Prijave na sestanke</string>
     <string name="notification_pref_appointment_cancelations">Preklici sestankov</string>
-    <string name="notification_pref_appointment_availability">Razpoložljivost sestanka</string>
+    <string name="notification_pref_appointment_availability">Objave novih sestankov</string>
     <string name="notification_pref_calendar">Koledar</string>
 
     <string name="notification_pref_membership_update">Posodobitev članstva</string>
     <string name="notification_pref_admin">Skrbniška obvestila</string>
-    <string name="notification_pref_recording_ready">Posnetek je pripravljen.</string>
+    <string name="notification_pref_recording_ready">Posnetek je pripravljen</string>
 
     <string name="notification_pref_type_email">E-pošta</string>
     <string name="notification_pref_type_push">Naprava</string>
@@ -847,8 +848,13 @@
     <string name="start">Začni</string>
     <string name="newPushNotifications">%1$s novih obvestil</string>
     <string name="like">všeček</string>
+    <string name="likeEntryLabel">Všečkaj vnos</string>
     <string name="likes">všečki</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s všeček</item>
+        <item quantity="other">%s všečkov</item>
+    </plurals>
     <string name="color_1">Rdeče</string>
     <string name="color_2">Živo rožnato</string>
     <string name="color_3">Sivka</string>
@@ -956,7 +962,7 @@
 
     <string name="homePageIdForNotifications">Nedavna aktivnost</string>
     <string name="homePageIdForModules">Moduli</string>
-    <string name="homePageIdForAssignments">Naloge:</string>
+    <string name="homePageIdForAssignments">Naloge</string>
     <string name="homePageIdForSyllabus">Učni načrt</string>
 
     <string name="contentDescriptionWidgetRefresh">Osveži pripomoček</string>
@@ -1029,7 +1035,7 @@
         <item quantity="other">Trenutno je skritih %d ocen</item>
     </plurals>
     <string name="postPolicyPostTo">Objavi v ...</string>
-    <string name="postPolicySections">Določene sekcije</string>
+    <string name="postPolicySections">Posamične sekcije</string>
     <string name="postToEveryoneTitle">Vsi</string>
     <string name="postToEveryoneMessage">Ocene bodo vidne vsem študentom</string>
     <string name="postToGradedTitle">Ocenjeno</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Ocena po objavi</string>
     <string name="gradeOverride">Preglasitev ocene</string>
     <string name="currentGrade">Trenutna ocena</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Izbrana glava: %s</string>
+    <string name="content_description_chosen_body">Izbrano telo: %s</string>
+    <string name="content_description_chosen_feet">Izbrane noge: %s</string>
+    <string name="content_description_panda_body_1">Vijolična obleka s srčki in rožnato obrobo</string>
+    <string name="content_description_panda_body_2">Zelena obleka z zvezdicami in modro obrobo</string>
+    <string name="content_description_panda_body_3">Rdeča obleka z zvezdicami in oranžno obrobo</string>
+    <string name="content_description_panda_body_4">Modri jopič, rdeči metuljček in sive hlače</string>
+    <string name="content_description_panda_body_5">Oranžna srajca in kavbojke</string>
+    <string name="content_description_panda_body_6">Rdeča srajca in rjave hlače</string>
+    <string name="content_description_panda_body_7">Rumena majica s sliko sonca in sive hlače</string>
+    <string name="content_description_panda_body_8">Zelenomodra majica s sliko žoge in vijolične hlače</string>
+    <string name="content_description_panda_body_9">Modra majica s sliko Androida in zelene hlače</string>
+    <string name="content_description_panda_body_10">Bela majica z napisom Instructure in modre hlače</string>
+    <string name="content_description_panda_body_11">Temno siva majica s tremi zvezdami in zelenomodre hlače</string>
+    <string name="content_description_panda_body_12">Vinsko rdeča čarovniška uniforma s čarobno palico in črne hlače</string>
+    <string name="content_description_panda_body_13">Trup pande</string>
+    <string name="content_description_panda_head_2">Pilotska sončna očala in šminka</string>
+    <string name="content_description_panda_head_3">Ličila in vijolična pentlja za lase</string>
+    <string name="content_description_panda_head_4">Urejeni brki</string>
+    <string name="content_description_panda_head_5">Zelena žurerska očala</string>
+    <string name="content_description_panda_head_6">Rjava očala</string>
+    <string name="content_description_panda_head_7">Zlata pustna maska in šminka</string>
+    <string name="content_description_panda_head_8">Pilotska sončna očala</string>
+    <string name="content_description_panda_head_9">Pegasta lica</string>
+    <string name="content_description_panda_head_10">Čarovnik z očali in brazgotino na čelu</string>
+    <string name="content_description_panda_feet_1">Bose noge</string>
+    <string name="content_description_panda_feet_2">Rožnati čevlji z vijoličnimi trakovi</string>
+    <string name="content_description_panda_feet_3">Modri čevlji z zelenimi trakovi</string>
+    <string name="content_description_panda_feet_4">Rdeči čevlji z oranžnimi trakovi</string>
+    <string name="content_description_panda_feet_5">Rdeči čevlji</string>
+    <string name="content_description_choose_head">Izberi glavo</string>
+    <string name="content_description_choose_body">Izberi telo</string>
+    <string name="content_description_choose_feet">Izberi noge</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

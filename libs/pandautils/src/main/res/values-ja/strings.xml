@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">ファイルはダウンロードの用意が出来ています、再度試して下さい。</string>
     <string name="filePermissionDenied">採点許可なしに、ファイルはダウンロードできません。</string>
     <string name="pleaseTryAgain">許可されました。再試行してください。</string>
-    <string name="pickVideo">ビデオを選択</string>
-
+    <string name="pickFile">ファイルを選択</string>
     <string name="assignmentSubmissionUpload">%s の提出をアップロードしています</string>
     <string name="assignmentSubmissionError">%s の提出に失敗しました</string>
     <string name="assignmentSubmissionComplete">%s の提出に成功しました</string>

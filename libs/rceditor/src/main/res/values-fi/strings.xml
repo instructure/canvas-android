@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Peruuta</string>
     <string name="rce_contentDescription_redo">Suorita uudelleen</string>
     <string name="rce_contentDescription_bold">Muotoilu Lihavoitu</string>
@@ -66,4 +67,6 @@
     <string name="rce_empty_message">Viesti</string>
     <string name="rce_empty_description">Lisää kuvaus</string>
     <string name="rce_scrollInstructions">Vieritä kaikkiin muokkaustyökaluihin</string>
+    <string name="rce_emptyUrlError">Url ei voi olla tyhjä</string>
+    <string name="rce_httpNotAllowed">Vain https-alkuiset url-osoitteet hyväksytään</string>
 </resources>

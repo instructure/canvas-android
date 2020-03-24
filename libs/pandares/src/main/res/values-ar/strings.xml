@@ -185,12 +185,13 @@
     <string name="excusedAssignment">تم الإعفاء عن هذه المهمة ولن يتم اعتبارها في الحساب الإجمالي</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">نقاط </string>
+    <string name="points">نقاط\u0020</string>
     <string name="save">حفظ</string>
     <string name="cancel">إلغاء</string>
     <!-- Discussions -->
     <string name="forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
 
+    <string name="fileCurrentlyLocked">هذا الملف مؤمّن في الوقت الحالي</string>
     <!-- Events -->
     <string name="Starts">يبدأ</string>
     <string name="Ends">ينتهي</string>
@@ -345,7 +346,7 @@
     <string name="with">مع</string>
     <string name="starConversation">وضع نجمة على المحادثة</string>
     <string name="deleteConversation">حذف المحادثة</string>
-    <string name="sharedWith">تمت المشاركة مع  </string>
+    <string name="sharedWith">تمت المشاركة مع \u0020</string>
     <string name="sharedWithYou">تمت المشاركة معك</string>
     <string name="inboxEmptyMessage">انقر فوق \"+\" لإنشاء محادثة جديدة.</string>
     <string name="inboxAllMessages">الكل</string>
@@ -567,11 +568,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">متاح بشكل خاص</string>
     <string name="publiclyAvailable">متاح للجميع</string>
-    <string name="starts">بدء:  </string>
-    <string name="courseCode">رمز المساق:  </string>
-    <string name="ends">انتهاء:  </string>
-    <string name="visibility">الرؤية:  </string>
-    <string name="license">الترخيص:  </string>
+    <string name="starts">بدء: \u0020</string>
+    <string name="courseCode">رمز المساق: \u0020</string>
+    <string name="ends">انتهاء: \u0020</string>
+    <string name="visibility">الرؤية: \u0020</string>
+    <string name="license">الترخيص: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -882,8 +883,17 @@
     <string name="start">البدء</string>
     <string name="newPushNotifications">%1$s من الإعلامات الجديدة</string>
     <string name="like">إعجاب</string>
+    <string name="likeEntryLabel">إعجاب بالمشاركة</string>
     <string name="likes">إعجابات</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="zero">%s إعجابات</item>
+        <item quantity="one">%s إعجاب</item>
+        <item quantity="two">%s إعجابات</item>
+        <item quantity="few">%s إعجابات</item>
+        <item quantity="many">%s إعجابات</item>
+        <item quantity="other">%s إعجابات</item>
+    </plurals>
     <string name="color_1">أحمر</string>
     <string name="color_2">وردي ناصع</string>
     <string name="color_3">أرجواني شاحب</string>
@@ -1097,6 +1107,41 @@
     <string name="gradeAfterPosting">التقدير بعد النشر</string>
     <string name="gradeOverride">تجاوز التقدير</string>
     <string name="currentGrade">التقدير الحالي</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">اختر الرأس: %s</string>
+    <string name="content_description_chosen_body">اختر الجسم: %s</string>
+    <string name="content_description_chosen_feet">اختر القدم: %s</string>
+    <string name="content_description_panda_body_1">فستان قلب أرجواني بزينة وردية</string>
+    <string name="content_description_panda_body_2">فستان نجمة خضراء بزينة زرقاء</string>
+    <string name="content_description_panda_body_3">فستان نجمة حمراء بزينة برتقالية</string>
+    <string name="content_description_panda_body_4">سترة زرقاء، وبابيون أحمر، وبنطال رمادي</string>
+    <string name="content_description_panda_body_5">قميص برتقالي بأزرار ياقة وجينز</string>
+    <string name="content_description_panda_body_6">قميص أحمر بأزرار ياقة وبنطال بني</string>
+    <string name="content_description_panda_body_7">تيشيرت أصفر برسمة شمس وبنطال رمادي</string>
+    <string name="content_description_panda_body_8">تيشيرت أزرق مخضر برسمة كرة سلة وبنطال أرجواني</string>
+    <string name="content_description_panda_body_9">تيشيرت أزرق برسمة أندرويد وبنطال أخضر</string>
+    <string name="content_description_panda_body_10">تيشيرت أبيض برسمة instructure وبنطال أزرق</string>
+    <string name="content_description_panda_body_11">تيشيرت رمادي غامق برسمة ثلاث رسمات ببنطال أزرق مخضر</string>
+    <string name="content_description_panda_body_12">زي ساحر خمري بعصا سحرية وبنطال أسود</string>
+    <string name="content_description_panda_body_13">جسم باندا بدون ملابس</string>
+    <string name="content_description_panda_head_2">نظارة شمسية أفياتور على شكل دمعة وأحمر شفاه</string>
+    <string name="content_description_panda_head_3">مكياج وربطة شعر أرجوانية</string>
+    <string name="content_description_panda_head_4">شارب أنيق</string>
+    <string name="content_description_panda_head_5">نظارة حفلات خضراء</string>
+    <string name="content_description_panda_head_6">نظارة  بنية</string>
+    <string name="content_description_panda_head_7">قناع تنكري ذهبي وأحمر شفاه</string>
+    <string name="content_description_panda_head_8">نظارة شمسية أفياتور على شكل دمعة</string>
+    <string name="content_description_panda_head_9">خدان بنمش</string>
+    <string name="content_description_panda_head_10">ساحر بنظارة وندبة بالجبهة</string>
+    <string name="content_description_panda_feet_1">قدم حافية</string>
+    <string name="content_description_panda_feet_2">حذاء وردي بربطة أرجوانية</string>
+    <string name="content_description_panda_feet_3">حذاء أزرق بربطة خضراء</string>
+    <string name="content_description_panda_feet_4">حذاء أحمر بربطة برتقالية</string>
+    <string name="content_description_panda_feet_5">حذاء أحمر</string>
+    <string name="content_description_choose_head">اختر الرأس</string>
+    <string name="content_description_choose_body">اختر الجسم</string>
+    <string name="content_description_choose_feet">اختر القدم</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

@@ -65,7 +65,7 @@
     <string name="practice_quiz">Practicumtoets</string>
     <string name="graded_survey">Beoordeelde enquête</string>
     <string name="ungraded_survey">Niet-beoordeelde enquête</string>
-    <string name="andMore"> en nog %d andere</string>
+    <string name="andMore">\u0020en nog %d andere</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Cursist</string>

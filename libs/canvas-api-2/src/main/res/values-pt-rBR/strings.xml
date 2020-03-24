@@ -66,7 +66,7 @@
     <string name="practice_quiz">Teste de prática</string>
     <string name="graded_survey">Pesquisa avaliada</string>
     <string name="ungraded_survey">Pesquisa sem avaliação</string>
-    <string name="andMore"> e %d mais</string>
+    <string name="andMore">\u0020e %d mais</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Aluno</string>

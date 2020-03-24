@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Файл теперь готов к загрузке, пожалуйста, попробуйте еще раз.</string>
     <string name="filePermissionDenied">Файл не может быть загружен без предоставления разрешения.</string>
     <string name="pleaseTryAgain">Разрешение дано, пожалуйста, попробуйте еще раз.</string>
-    <string name="pickVideo">Выберите видеоролик</string>
-
+    <string name="pickFile">Выбрать файл</string>
     <string name="assignmentSubmissionUpload">Загрузка отправки для %s</string>
     <string name="assignmentSubmissionError">Сбой отправки для %s</string>
     <string name="assignmentSubmissionComplete">Успешно отправлено %s</string>

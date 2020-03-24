@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Halló heimur!</string>
+    <string name="action_settings">Stillingar</string>
+    <string name="mobileVerifyGeneral">Þetta app er ekki heimilt til notkunar</string>
+    <string name="mobileVerifyDomainUnauthorized">Miðillinn sem þú settir inn er ekki heimill fyrir þetta app.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">Fulltrúi notanda fyrir þetta app er óheimill.</string>
+    <string name="mobileVerifyUnknownError">Við gátum ekki sannreynt miðilinn fyrir notkun með þessu appi.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Óvænt villa kom upp.</string>
+    <string name="pageNotFound">Síða fannst ekki.</string>
+    <string name="confirm">Staðfesta</string>
+    <string name="cancel">Hætta við</string>
+    <string name="help">Hjálp</string>
+    <string name="enterURL">Settu inn Canvas-vefslóðina þína:</string>
+    <string name="signIntoCanvasNetwork">Ertu að reyna að skrá þig inn á Canvas net?</string>
+    <string name="remove">Fjarlægja</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">Auðkenni notanda</string>
+    <string name="domain">Lén</string>
+    <string name="actAsUser">Bregðast við sem notandi</string>
+    <string name="stopActAsUser">Hætta að bregðast við sem notandi</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Fjarlægja þennan notanda?</string>
+    <string name="removedForever">Þú þarft að skrá þig inn á þennan notanda aftur til að fá aðgang að efni þeirra.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Canvas myndmerki</string>
+
+    <string name="canvasLoginOn">Canvas_Login: KVEIKT</string>
+    <string name="canvasLoginOff">Canvas_Login: SLÖKKT</string>
+    <string name="siteAdminLogin">Innskráning svæðisstjórnanda: KVEIKT</string>
+
+    <string name="username">Notandanafn</string>
+    <string name="password">Lykilorð</string>
+    <string name="authenticationRequired">Staðfestingar krafist</string>
+    <string name="invalidEmailPassword">Ógilt netfang eða lykilorð</string>
+    <string name="login">Innskráning</string>
+    <string name="logout">Útskráning</string>
+    <string name="matchingSchools">Paraðir skólar</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Viltu örugglega skrá þig út?</string>
+    <string name="logout_yes">Já</string>
+    <string name="logout_no">Nei</string>
+
+    <!--Smart Login-->
+    <string name="loginNearYou">Nálægt þér</string>
+    <string name="loginCanvasNetwork">Canvas net</string>
+    <string name="loginRightBehindYou">Beint fyrir aftan þig</string>
+    <string name="loginCanvasHelp">Sérðu ekki skólann þinn? Settu inn vefslóð skólans eða smelltu hér til að fá hjálp.</string>
+    <string name="loginCanvasHelpWithUser">Settu inn vefslóð skólans eða smelltu hér til að fá hjálp.</string>
+    <string name="loginHint">Finndu skólann þinn eða umdæmi</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Tilkynna vandamál</string>
+    <string name="errorReportSubject">Efni</string>
+    <string name="errorReportDescription">Lýsing</string>
+    <string name="errorReportWriteSomething">Skrifaðu eitthvað&#8230;</string>
+    <string name="errorReportSend">Senda</string>
+    <string name="errorReportThankyou">Takk fyrir að láta þjónustudeild okkar vita af vandamálinu.  Þú færð staðfestingu og uppfærslur með tölvupósti.</string>
+    <string name="errorReportSeverityText">Hvaða áhrif hefur þetta á þig?</string>
+    <string name="errorSeverityCasualQuestion">Bara almenn spurning, athugasemd, hugmynd, tillaga&#8230;</string>
+    <string name="errorSeverityNeedHelp">Ég þarf smá aðstoð en það liggur ekki á.</string>
+    <string name="errorSeveritySomethingsBroken">Eitthvað er í ólagi en ég get samt unnið í kringum það til að ljúka því sem ég þarf að ljúka.</string>
+    <string name="errorSeverityCantGetThingsDone">Ég get ekkert gert fyrr en þú svarar mér.</string>
+    <string name="errorSeverityExtremelyCritical">GÍFURLEGT NEYÐARÁSTAND!!</string>
+
+    <string name="errorReportEmailAddress">Netfang</string>
+    <string name="errorReportEnterEmail">Settu inn netfangið þitt&#8230;</string>
+    <string name="errorReportUnknown">Óþekkt</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 míla (1,6 km)</string>
+    <string name="oneMile">1 míla (1,6 km)</string>
+    <string name="miles">mílur</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Tæki</string>
+    <string name="osVersion">Útgáfa stýrikerfis</string>
+
+    <string name="previousLoginTitle">Fyrri innskráningar</string>
+    <string name="findMySchool">Finna skólann minn</string>
+    <string name="whatsYourSchoolName">Hvað heitir skólinn þinn?</string>
+    <string name="next">Næsti</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Fjarlægja fyrri notanda</string>
+    <string name="accountDomainFooter">Finnurðu ekki skólann þinn? Prufaðu að slá inn alla vefslóð skólans.</string>
+    <string name="accountDomainFooterLink">Smelltu hér til að fá hjálp.</string>
+
+    <string name="login_noInternetConnectionTitle">Engin nettenging</string>
+    <string name="login_noInternetConnectionMessage">Þessi aðgerð krefst nettengingar.</string>
+    <string name="empty_feedback">Efni og lýsingar er krafist til að senda inn endurgjöf.</string>
+    <string name="versionNum">Útgáfa númer</string>
+    <string name="scrollInstructions">Skrunaðu niður til að sjá allar upplýsingar</string>
+
+    <string name="masqueradeErrorUserId">Þú verður að setja inn notandaauðkenni.</string>
+    <string name="masqueradeErrorDomain">Þú verður að skrá gilt lén.</string>
+    <string name="masqueradeError">Villa við að reyna að dyljast.</string>
+    <string name="masqueradeInfo">\"Bregðast við sem\" þýðir í raun að skrá sig inn sem viðkomandi notandi án lykilorðs. Þú munt getað gripið til allra aðgerða eins og að þú værir viðkomandi notandi, frá sjónarhóli annarra notenda, þá mun það vera eins og þessi notandi hafi framkvæmt viðkomandi aðgerðir. Samt sem áður sýna endurskoðaðar skrár að það varst þú sem framkvæmdir aðgerðirnar fyrir hönd þessa notanda.</string>
+    <string name="masqueradingAs">Þú virkar sem %s</string>
+    <string name="stopActingAsTitle">Hætta að bregðast við sem&#8230;</string>
+    <string name="stopActingAsMessage">Þú munt hætta að bregðast við sem %s og fara aftur í þinn reikning.</string>
+    <string name="weMadeChanges">Við höfum gert nokkrar breytingar.</string>
+    <string name="whatsNewText">Sjáðu hvað er nýtt</string>
+</resources>

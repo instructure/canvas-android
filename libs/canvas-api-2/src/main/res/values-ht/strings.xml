@@ -65,7 +65,7 @@
     <string name="practice_quiz">Pratike Quiz</string>
     <string name="graded_survey">Ankèt Klase</string>
     <string name="ungraded_survey">Ankèt san Klase</string>
-    <string name="andMore"> e %d anplis</string>
+    <string name="andMore">\u0020e %d anplis</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Elèv</string>

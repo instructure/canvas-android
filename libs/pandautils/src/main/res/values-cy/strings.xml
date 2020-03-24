@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Ffeil yn barod i’w llwytho i lawr, rhowch gynnig arall arni.</string>
     <string name="filePermissionDenied">Does dim modd llwytho’r ffeil i lawr heb gael caniatâd.</string>
     <string name="pleaseTryAgain">Wedi cael caniatâd, rhowch gynnig arall arni.</string>
-    <string name="pickVideo">Dewiswch Fideo</string>
-
+    <string name="pickFile">Dewis Ffeil</string>
     <string name="assignmentSubmissionUpload">Wrthi\'n llwytho cyflwyniad i fyny ar gyfer %s</string>
     <string name="assignmentSubmissionError">Cyflwyniad wedi methu ar gyfer %s</string>
     <string name="assignmentSubmissionComplete">Wedi llwyddo i gyflwyno %s</string>

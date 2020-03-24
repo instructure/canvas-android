@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Fil er nu parat for download, prøv venligst igen.</string>
     <string name="filePermissionDenied">Filen kan ikke blive downloadet uden der gives tilladelse.</string>
     <string name="pleaseTryAgain">Tilladelse givet, prøv igen.</string>
-    <string name="pickVideo">Vælg en video</string>
-
+    <string name="pickFile">Vælg en fil</string>
     <string name="assignmentSubmissionUpload">Uploader aflevering til %s</string>
     <string name="assignmentSubmissionError">Aflevering mislykkedes for %s</string>
     <string name="assignmentSubmissionComplete">%s blev indsendt</string>

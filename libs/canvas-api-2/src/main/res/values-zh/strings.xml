@@ -65,7 +65,7 @@
     <string name="practice_quiz">练习测验</string>
     <string name="graded_survey">评分调查</string>
     <string name="ungraded_survey">非评分调查</string>
-    <string name="andMore"> 以及 %d 更多</string>
+    <string name="andMore">\u0020以及 %d 更多</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">学生</string>

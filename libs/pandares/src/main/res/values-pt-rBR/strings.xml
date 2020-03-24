@@ -187,13 +187,14 @@
     <string name="excused">EX</string>
 
     <!-- Assignment editing -->
-    <string name="points">Pontos </string>
+    <string name="points">Pontos\u0020</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
 
     <!-- Discussions -->
     <string name="forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
 
+    <string name="fileCurrentlyLocked">Este arquivo está travado no momento</string>
     <!-- Events -->
     <string name="Starts">Começa</string>
     <string name="Ends">Termina</string>
@@ -334,7 +335,7 @@
     <string name="with">com</string>
     <string name="starConversation">Estrelar a conversa</string>
     <string name="deleteConversation">Excluir conversa</string>
-    <string name="sharedWith">Compartilhado com  </string>
+    <string name="sharedWith">Compartilhado com \u0020</string>
     <string name="sharedWithYou">Compartilhado com você</string>
     <string name="inboxEmptyMessage">Toque em \"+\" para criar uma nova conversa.</string>
     <string name="inboxAllMessages">Todos</string>
@@ -551,11 +552,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Disponível em privado</string>
     <string name="publiclyAvailable">Disponível em público</string>
-    <string name="starts">Inicia:  </string>
-    <string name="courseCode">Código do curso:  </string>
-    <string name="ends">Termina:  </string>
-    <string name="visibility">Visibilidade:  </string>
-    <string name="license">Licença:  </string>
+    <string name="starts">Inicia: \u0020</string>
+    <string name="courseCode">Código do curso: \u0020</string>
+    <string name="ends">Termina: \u0020</string>
+    <string name="visibility">Visibilidade: \u0020</string>
+    <string name="license">Licença: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -857,8 +858,13 @@
     <string name="start">Iniciar</string>
     <string name="newPushNotifications">%1$s Novas notificações</string>
     <string name="like">curtir</string>
+    <string name="likeEntryLabel">Entrada de curtidas</string>
     <string name="likes">curte</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s curtida</item>
+        <item quantity="other">%s curtidas</item>
+    </plurals>
     <string name="color_1">Vermelho</string>
     <string name="color_2">Rosa quente</string>
     <string name="color_3">Lavanda</string>
@@ -1059,6 +1065,41 @@
     <string name="gradeAfterPosting">Nota após postar</string>
     <string name="gradeOverride">Substituição da nota</string>
     <string name="currentGrade">Nota atual </string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Cabeça escolhida: %s</string>
+    <string name="content_description_chosen_body">Corpo escolhido: %s</string>
+    <string name="content_description_chosen_feet">Pés escolhidos: %s</string>
+    <string name="content_description_panda_body_1">Vestido de coração roxo com acabamento rosa</string>
+    <string name="content_description_panda_body_2">Vestido de estrela verde com acabamento azul</string>
+    <string name="content_description_panda_body_3">Vestido de estrela vermelha com acabamento laranja</string>
+    <string name="content_description_panda_body_4">Blazer azul, gravata-borboleta vermelha e calça cinza</string>
+    <string name="content_description_panda_body_5">Abotoado laranja e jeans</string>
+    <string name="content_description_panda_body_6">Abotoado vermelho e calça marrom</string>
+    <string name="content_description_panda_body_7">Camiseta com estampa do sol amarelo e calça cinza</string>
+    <string name="content_description_panda_body_8">Camiseta com estampa de basquete azul-petróleo e calça cinza</string>
+    <string name="content_description_panda_body_9">Camiseta com estampa de android azul e calça verde</string>
+    <string name="content_description_panda_body_10">Camiseta com estampa de estrutura branca e calça azul</string>
+    <string name="content_description_panda_body_11">Camiseta com três estrelas cinza escuro e calça azul-petróleo</string>
+    <string name="content_description_panda_body_12">Uniforme do feiticeiro de Borgonha com varinha mágica e calça preta</string>
+    <string name="content_description_panda_body_13">Torso de panda nu</string>
+    <string name="content_description_panda_head_2">Óculos aviator e batom</string>
+    <string name="content_description_panda_head_3">Maquiagem e lacinho roxo</string>
+    <string name="content_description_panda_head_4">Bigode caro</string>
+    <string name="content_description_panda_head_5">Óculos de festa verde</string>
+    <string name="content_description_panda_head_6">Spectacles marrom</string>
+    <string name="content_description_panda_head_7">Máscara dourada e batom</string>
+    <string name="content_description_panda_head_8">Óculos aviator</string>
+    <string name="content_description_panda_head_9">Bochechas com sardas</string>
+    <string name="content_description_panda_head_10">Feiticeiro usando óculos com cicatriz na testa</string>
+    <string name="content_description_panda_feet_1">Pés descalços</string>
+    <string name="content_description_panda_feet_2">Sapatos em rosa com gravatas em roxo</string>
+    <string name="content_description_panda_feet_3">Sapatos em azul com gravatas em verde</string>
+    <string name="content_description_panda_feet_4">Sapatos em vermelho com gravatas em laranja</string>
+    <string name="content_description_panda_feet_5">Sapatos vermelhos</string>
+    <string name="content_description_choose_head">Escolher cabeça</string>
+    <string name="content_description_choose_body">Escolher corpo</string>
+    <string name="content_description_choose_feet">Escolher pés</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

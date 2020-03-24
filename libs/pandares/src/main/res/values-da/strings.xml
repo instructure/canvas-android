@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Opgaven blev udeladt og tages ikke i betragtning i den samlede beregning</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Point </string>
+    <string name="points">Point\u0020</string>
     <string name="save">Gem</string>
     <string name="cancel">Annullér</string>
     <!-- Discussions -->
     <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
 
+    <string name="fileCurrentlyLocked">Filen er låst på nuværende tidspunkt</string>
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -330,7 +331,7 @@
     <string name="with">med</string>
     <string name="starConversation">Stjerne konversation</string>
     <string name="deleteConversation">Slet konversation</string>
-    <string name="sharedWith">Delt med  </string>
+    <string name="sharedWith">Delt med \u0020</string>
     <string name="sharedWithYou">Delt med dig</string>
     <string name="inboxEmptyMessage">Tryk på \"+\" for at oprette en ny diskussion.</string>
     <string name="inboxAllMessages">Alle</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Tilgængelig privat</string>
     <string name="publiclyAvailable">Tilgængeligt offentligt</string>
-    <string name="starts">Starter:  </string>
-    <string name="courseCode">Fag-kode:  </string>
-    <string name="ends">Slutter:  </string>
-    <string name="visibility">Synlighed:  </string>
-    <string name="license">Licens:  </string>
+    <string name="starts">Starter: \u0020</string>
+    <string name="courseCode">Fag-kode: \u0020</string>
+    <string name="ends">Slutter: \u0020</string>
+    <string name="visibility">Synlighed: \u0020</string>
+    <string name="license">Licens: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Start</string>
     <string name="newPushNotifications">%1$s nye meddelelser</string>
     <string name="like">lide</string>
+    <string name="likeEntryLabel">Synes godt om post</string>
     <string name="likes">likes</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
     <string name="color_1">Rød</string>
     <string name="color_2">Hot pink</string>
     <string name="color_3">Lyselilla</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Karakter efter opslag</string>
     <string name="gradeOverride">Tilsidesættelse af karakter </string>
     <string name="currentGrade">Nuværende karakter </string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Valgt hoved: %s</string>
+    <string name="content_description_chosen_body">Valgt krop: %s</string>
+    <string name="content_description_chosen_feet">Valgte fødder: %s</string>
+    <string name="content_description_panda_body_1">Lilla hjertekjole med lyserød kant</string>
+    <string name="content_description_panda_body_2">Grøn stjernekjole med blå kant</string>
+    <string name="content_description_panda_body_3">Rød stjernekjole med orange kant</string>
+    <string name="content_description_panda_body_4">Blå blazer, rød sløjfe og grå bukser</string>
+    <string name="content_description_panda_body_5">Orange knapbluse og jeans</string>
+    <string name="content_description_panda_body_6">Rød knapbluse og brune bukser</string>
+    <string name="content_description_panda_body_7">Gul t-shirt med sol og grå bukser</string>
+    <string name="content_description_panda_body_8">Blågrøn t-shirt med basketball og lilla bukser</string>
+    <string name="content_description_panda_body_9">Blå t-shirt med android og grønne bukser</string>
+    <string name="content_description_panda_body_10">Hvid t-shirt med instructure og blå bukser</string>
+    <string name="content_description_panda_body_11">Mørkegrå trestjernet t-shirt og blågrønne bukser</string>
+    <string name="content_description_panda_body_12">Bordeaux troldmandsuniform med tryllestav og sorte bukser</string>
+    <string name="content_description_panda_body_13">Bart pandabryst</string>
+    <string name="content_description_panda_head_2">Aviator-solbriller med tåre og læbestift</string>
+    <string name="content_description_panda_head_3">Makeup og lilla hårbånd</string>
+    <string name="content_description_panda_head_4">Fancy overskæg</string>
+    <string name="content_description_panda_head_5">Grønne festbriller</string>
+    <string name="content_description_panda_head_6">Brune briller</string>
+    <string name="content_description_panda_head_7">Gylden maske og læbestift</string>
+    <string name="content_description_panda_head_8">Aviator-solbriller med tåre</string>
+    <string name="content_description_panda_head_9">Fregnede kinder</string>
+    <string name="content_description_panda_head_10">Troldmand med briller og ar i panden</string>
+    <string name="content_description_panda_feet_1">Bare fødder</string>
+    <string name="content_description_panda_feet_2">Lyserøde sko med lilla sløjfer</string>
+    <string name="content_description_panda_feet_3">Blå sko med grønne sløjfer</string>
+    <string name="content_description_panda_feet_4">Røde sko med orange sløjfer</string>
+    <string name="content_description_panda_feet_5">Røde sko</string>
+    <string name="content_description_choose_head">Vælg hoved</string>
+    <string name="content_description_choose_body">Vælg krop</string>
+    <string name="content_description_choose_feet">Vælg fødder</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

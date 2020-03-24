@@ -1,0 +1,430 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Velja miðil</string>
+    <string name="takeVideo">Taka myndband</string>
+    <string name="noCameraOnDevice">Engin myndavél</string>
+    <string name="takePhoto">Taka mynd</string>
+    <string name="choosePhotoFromGallery">Velja mynd úr gallerí</string>
+
+    <string name="utils_edit">Breyta</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Hleð upp til Canvas</string>
+    <string name="preparingUpload">Undirbý upphleðslu</string>
+    <string name="loadingFilesIndeterminate">Hleð skrám&#8230;</string>
+    <string name="fileUploadSuccess">Upphleðsla tókst</string>
+    <string name="noNetwork">Net ótiltækt - reyndu aftur síðar.</string>
+    <string name="uploadMessage">„Upphleðsla í gangi. Athuga tilkynningar fyrir stöðu upphleðslu.</string>
+    <string name="uploadingFile">Hleð upp skrá&#8230;</string>
+    <string name="errorUploadingFile">Villa kom upp upp upphleðslu skráarinnar. Vinsamlegast reynið aftur.</string>
+    <string name="fileSubmission">Senda inn skrá(r)</string>
+    <string name="uploadFiles">Hlaða upp skrá(m)</string>
+    <string name="upload">Hlaða upp</string>
+    <string name="errorSendingMessage">Villa kom upp við að senda skilaboðin þín. Vinsamlegast reynið aftur.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Upphleðsla tilkynninga</string>
+    <string name="notificationChannelNameFileUploadsDescription">Canvas-tilkynningar fyrir upphleðslur sem eru í gangi.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Veldu skrá frá&#8230;</string>
+    <string name="addFile">Bæta við skrá</string>
+    <string name="choose_a_file">Velja skrá</string>
+
+    <string name="fromCamera">Myndavél</string>
+    <string name="fromGallery">Gallerí</string>
+    <string name="fromDevice">Tæki</string>
+    <string name="fromOtherApplication">Annað</string>
+    <string name="Domain">Lén</string>
+    <string name="files">Skrár</string>
+    <string name="file">Skrá</string>
+    <string name="fileTalkBack">Skrá %s</string>
+    <string name="folderTalkBack">Mappa %s</string>
+    <string name="addItem">Bæta við atriði</string>
+    <string name="assignment">Verkefni</string>
+    <string name="attachedFiles">Viðhengdar skrár</string>
+    <string name="turnIn">Skila</string>
+    <string name="course">Námskeið</string>
+    <string name="sending">Sendi&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Stjörnueinkunn ein</string>
+    <string name="star2">Stjörnueinkunn tvær</string>
+    <string name="star3">Stjörnueinkunn þrjár</string>
+    <string name="star4">Stjörnueinkunn fjórar</string>
+    <string name="star5">Stjörnueinkunn fimm</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">Þú ert komin(n) fram úr skráageymsluplássi þínu.</string>
+    <string name="errorSubmittingFiles">Villa kom upp við að skila skránum. Vinsamlegast reynið aftur.</string>
+    <string name="errorLoadingFiles">Villa kom upp upp upphleðslu skráarinnar. Athugaðu nettengingu þína og reyndu aftur.</string>
+    <string name="filesUploadedSuccessfully">Skrám var hlaðið upp.</string>
+    <string name="filesSubmittedSuccessfully">Skrám var skilað.</string>
+    <string name="messageSentSuccessfully">Skilaboð voru send.</string>
+    <string name="shareWithCanvas">Önnur öpp geta deilt skrám með Canvas! Leitaðu að tákninu hér að neðan í öppum og smelltu á Canvas.</string>
+    <string name="shareWithCanvas2">Það mun opna appið. Veldu síðan hvaða námskeið og verkefni þú vilt skila skránni til.</string>
+    <string name="contentDescriptionSocialShare">Deila tákn</string>
+    <string name="submitAssignment">Skila verkefni</string>
+    <string name="assignmentHeader">Verkefni:</string>
+    <string name="submittingAssignment">Skila verkefni&#8230;</string>
+    <string name="conversations">Samræður </string>
+    <string name="inbox">Innhólf </string>
+    <string name="divider">Sirkill</string>
+    <string name="legal">Lögfræði</string>
+    <string name="completeHomework">LJÚKTU við heimavinnuna þína</string>
+    <string name="takeExam">Taktu próf</string>
+    <string name="fileIcon">Skráartákn</string>
+    <string name="uploadingFileNum" formatted="false">Hleð upp %d af %d</string>
+    <string name="fileLocked" formatted="false">%s var læst.</string>
+    <string name="filePermissionGranted">Skrá er núna tilbúin til niðurhals, reyndu aftur.</string>
+    <string name="filePermissionDenied">Hægt er að ná í skránna án leyfis.</string>
+    <string name="pleaseTryAgain">Leyfi gefið, reyndu aftur.</string>
+    <string name="pickFile">Velja skrá</string>
+    <string name="assignmentSubmissionUpload">Hleð upp skilum fyrir %s</string>
+    <string name="assignmentSubmissionError">Skil mistókust fyrir %s</string>
+    <string name="assignmentSubmissionComplete">Skil tókust %s</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">Óvænt villa kom upp.</string>
+    <string name="serverError">Miðlaravilla hefur komið upp.</string>
+    <string name="unauthorized">Þú hefur ekki aðgangsheimild að þessu. Annað hvort ertu ekki með leyfi eða þú hefur ekki aðgang ennþá (til dæmis ef námskeiðið er ekki hafið enn)</string>
+    <string name="fileNoLongerExists">Skráin er ekki lengur til.</string>
+    <string name="invalidAccessToken">Lotan þín er útrunnin. Skráðu þig inn til að byrja nýja lotu.</string>
+    <string name="uploadingFromSourceFailed">Ekki var hægt að ljúka upphleðslu á skrá frá þessum uppruna.</string>
+    <string name="errorGettingPhoto">Það var villa við að ná í ljósmyndina. Vinsamlegast reynið aftur.</string>
+    <string name="errorTextMissing">Bættu við texta til að senda skilaboð</string>
+
+    <string name="fileUploadNotSupported">Ekki er hægt að hlaða upp skrám á valin verkefni.</string>
+    <string name="noCourseSelected">Veldu námskeið</string>
+    <string name="selectCourse">Velja námskeið</string>
+    <string name="selectAssignment">Velja verkefni</string>
+    <string name="loadingAssignments">Hleð niður verkefnum&#8230;</string>
+    <string name="noAssignmentSelected">Veldu verkefni</string>
+    <string name="noAssignmentsWithFileUpload">Þetta námskeið hefur engin verkefni sem leyfa skráaupphleðslu.</string>
+    <string name="teacherNotAllowedFileSubmission">Sem kennari í þessu námskeiði getur þú ekki send inn skrár</string>
+    <string name="noFilesUploaded">Þú hefur ekki valið neinar skrár.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Ein eða fleiri af skránum er með nafnauka skrár sem er ekki leyfð</string>
+    <string name="extensionNotAllowed">Valin skráargerð er ekki leyfileg.</string>
+    <string name="allowedExtensions">Leyfðir nafnaukar:&#160;</string>
+    <string name="quizNetworkErrorTitle">Prófavilla</string>
+    <string name="quizNetworkErrorMessage">Nettenging virðist ekki vera fyrir hendi.</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Athugaðu gagnatengingu þína og reyndu aftur. </string>
+    <string name="noApps">Tækið er ekki með uppsett app sem getur opnað þessa skrá.</string>
+    <string name="noAppsShort">Ekki hægt að opna</string>
+    <string name="unexpectedErrorOpeningFile">Óvænt villa kom upp við að opna skránna.</string>
+    <string name="unexpectedErrorDownloadingFile">Óvænt villa kom upp við að ná í skránna.</string>
+
+    <string name="done">Lokið</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Til að nota þennan eiginleika, þarf fyrst að fá leyfi.</string>
+    <string name="noConnection">Ekki tengdur</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Uppáhalds námskeið og hópar sjást hér.</string>
+    <string name="addCoursesGroups">Bæta við námskeiði/hópum</string>
+    <string name="noDiscussions">Engar umræður</string>
+    <string name="noDiscussionsSubtext">Byrjaðu samtal við aðra.</string>
+    <string name="noDiscussionsTeacher">Byrjaðu samtal við nemendur þína.</string>
+    <string name="nothingUnread">Innhólf Núll!</string>
+    <string name="nothingUnreadSubtext">Þú ert búin(n) með allt!</string>
+    <string name="nothingStarred">Engin stjörnumerkt skilaboð</string>
+    <string name="nothingStarredSubtext">Hafðu mikilvæg skilaboð í þessum hluta með því að smella á stjörnuna í hverjum skilaboðum fyrir sig.</string>
+    <string name="nothingSent">Ekkert sent</string>
+    <string name="nothingSentSubtext">Þú hefur ekki sent nein skilaboð.</string>
+    <string name="nothingArchived">Ekkert safnvistað</string>
+    <string name="nothingArchivedSubtext">Þú hefur ekki safnvistað nein skilaboð.</string>
+    <string name="noQuizzes">Engin próf</string>
+    <string name="noQuizzesSubtext">Því miður eru engin próf til ennþá.</string>
+    <string name="noQuizzesTeacher">Það eru engir birt próf til að sýna.</string>
+    <string name="noAnnouncements">Engar tilkynningar</string>
+    <string name="noAnnouncementsSubtext">Ekkert hefur verið tilkynnt enn.</string>
+    <string name="noCourses">Engin námskeið</string>
+    <string name="noCoursesSubtext">Það virðast ekki vera nein námskeið tengd þessum reikningi. Heimsæktu vefinn til að búa til námskeið strax í dag.</string>
+    <string name="noAssignments">Engin verkefni</string>
+    <string name="noAssignmentsSubtext">Það virðast ekki vera nein verkefni búin til í þessu rými. Kominn tími til að fara út og kanna.</string>
+    <string name="noAssignmentsTeacher">Engin verkefni virðast hafa verið birt enn.</string>
+    <string name="noFiles">Engar skrár</string>
+    <string name="noFilesForAssignment">Það eru engar skrár fyrir þessi skil</string>
+    <string name="noFilesSubtext">Það eru engar skrár tengdar við þennan reikning.</string>
+    <string name="notSupported">Ekki stutt</string>
+    <string name="noEvents">Engir viðburðir í dag!</string>
+    <string name="noEventsSubtext">Þetta virðist vera góður dagur til að hvíla sig og slaka á.</string>
+    <string name="noSubmission">Engin skil</string>
+    <string name="noSubmissionTeacher">Þessi nemandi hefur engin skil enn.</string>
+    <string name="locked">Læst</string>
+    <string name="lockedSubtext">Þetta verkefni er læst til %1$s klukkan %2$s.</string>
+    <string name="chooseFile">Velja skrá</string>
+    <string name="chooseFileSubtext">Festu skrá við skilin með því að smella á valkostinn hér að neðan.</string>
+    <string name="chooseFileForUploadSubtext">Veldu skrá til að hlaða upp með því að smella á valkostinn hér að neðan</string>
+    <string name="noNotifications">Engar tilkynningar</string>
+    <string name="noNotificationsSubtext">Það er ekkert tilkynningavert enn.</string>
+    <string name="noTodos">Vel gert!</string>
+    <string name="noTodosSubtext">Verkefnalistinn þinn er tómur. Kominn tími á að hlaða rafhlöðurnar.</string>
+    <string name="noSyllabus">Engin kennsluáætlun</string>
+    <string name="noSyllabusSubtext">Kennsluáætlun hefur enn ekki verið gerð.</string>
+    <string name="noBookmarks">Engin bókamerki</string>
+    <string name="noBookmarksSubtext">Bókamerki eru flýtileiðir fyrir hvaða skjá sem er í appinu. Bættu þeim við skjáinn sem þú vilt bókamerkja.</string>
+    <string name="noModules">Engar einingar</string>
+    <string name="noModulesSubtext">Það lítur ekki út fyrir að einingar hafi verið búnar til.</string>
+    <string name="noPages">Engar síður</string>
+    <string name="noPagesSubtext">Engin síður virðast hafa verið stofnaðar enn.</string>
+
+    <!--General-->
+    <string name="yes">Já</string>
+    <string name="no">Nei</string>
+
+    <string name="inbox_all">Innhólf</string>
+    <string name="inbox_unread">Ólesið</string>
+    <string name="inbox_starred">Stjörnumerkt</string>
+    <string name="inbox_sent">Sent</string>
+    <string name="inbox_archived">Sett í safn</string>
+
+    <string name="forbidden">Svör eru bara sýnileg þeim sem hafa birt minnst eitt svar.</string>
+
+    <string name="like">líka við</string>
+    <string name="likes">Líkar við</string>
+    <string name="lockedAssignmentNotModule">Þetta verkefni er læst.</string>
+    <string name="deletedEntryNoChildren">Þessi eydda umræðufærsla hefur engin svör.</string>
+    <string name="deleted">Eytt</string>
+    <string name="deleted_by">[Eytt af %1$s]</string>
+    <string name="lockedDiscussionDesc">Þessi umræða er hluti af einingunni %s og hefur enn ekki verið opnuð.</string>
+    <string name="gradedDiscussion">Metin umræða</string>
+    <string name="pointsPossible">Mögulegir punktar</string>
+    <string name="sideCommentEntry">Í þessari gerð umræða getur þú ekki gert athugasemd við neina færslu á þessu stigi.</string>
+
+    <string name="accessibility_overflow">Yfirflæði</string>
+
+    <string name="discussion_response">Athugasemd</string>
+    <string name="discussion_responses">Athugasemdir</string>
+    <string name="discussion_unread">Ólesið</string>
+    <string name="discussion_reply">Svara</string>
+    <string name="close">Loka</string>
+
+    <string name="noInternetConnectionTitle">Engin nettenging</string>
+    <string name="noInternetConnectionMessage">Þessi aðgerð krefst nettengingar.</string>
+    <string name="content_description_avatar">Gengill</string>
+    <string name="formattedAvatarAction">Skoða notandaupplýsingar fyrir %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas kennari</string>
+    <string name="utils_canvasParent">Canvas-móðurskrá</string>
+    <string name="utils_polls">Canvas kannanir</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Hvernig gengur okkur?</string>
+    <string name="utils_rateUs">Hvaða einkunn myndirðu gefa okkur?</string>
+    <string name="utils_doBetter">Hvernig getum við bætt okkur?</string>
+    <string name="utils_sendFeedback">Senda endurgjöf</string>
+    <string name="utils_suggestions">Uppástungur fyrir Android</string>
+    <string name="utils_domain">Lén</string>
+    <string name="utils_versionNum">Útgáfa:</string>
+    <string name="utils_userId">Auðkenni notanda</string>
+    <string name="utils_email">Netfang</string>
+    <string name="utils_dontShowAgain">Ekki sýna aftur</string>
+    <string name="utils_installDate">Dagsetning uppsetningar:</string>
+    <string name="utils_device">Tæki</string>
+    <string name="utils_osVersion">Útgáfa stýrikerfis</string>
+    <string name="loading">Sæki</string>
+    <string name="save">Vista</string>
+    <string name="cropInstructions">Klíptu og dragðu til að laga myndina.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Svar</item>
+        <item quantity="other">%s Svör</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Eyddi þessu svari %s</string>
+    <string name="utils_discussionsUnknownAuthor">Óþekktur höfundur</string>
+    <string name="utils_discussionsReply">Svara</string>
+    <string name="utils_discussionsEdit">Breyta</string>
+    <string name="utils_discussionsDeleteWarning">Viltu örugglega eyða þessu svari?</string>
+    <string name="utils_availableToLabel">Tiltækt til:</string>
+    <string name="utils_availableFromLabel">Tiltækt frá:</string>
+    <string name="utils_dueDateHeaderLabel">Skilafrestur</string>
+    <string name="utils_dueLabel">Skil:</string>
+    <string name="utils_delete">Eyða</string>
+    <string name="utils_dueDateAtTime" formatted="false">Skiladagur %1s þann %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Tiltækileiki:</string>
+    <string name="utils_pinnedIcon">Tákn fyrir festar umræður</string>
+    <string name="utils_pinDiscussion">Festa umræður</string>
+    <string name="utils_unpinDiscussion">Taka burt umræður</string>
+    <string name="utils_discussionPinned">Umræður festar</string>
+    <string name="utils_pinnedDiscussions">Festar</string>
+    <string name="utils_discussionUnpinned">Umræður</string>
+    <string name="utils_emptyDiscussions">Engar umræður eru til að sýna í þessum hluta.</string>
+    <string name="utils_description">Lýsing</string>
+    <string name="utils_allowThreadedReplies">Heimila svaraþráð</string>
+    <string name="utils_usersMustPost">Nemendur verða að birta áður en svör sjást</string>
+    <string name="utils_discussionsClosed">Lokað fyrir athugasemdir</string>
+    <string name="utils_discussionsOpen">Opið fyrir athugasemdir</string>
+    <string name="utils_discussionsPin">Festa</string>
+    <string name="utils_discussionsUnpin">Losa</string>
+    <string name="utils_discussionsOptions">Valkostir</string>
+    <string name="utils_discussionsDeleteTitle">Eyða umræðu?</string>
+    <string name="utils_discussionsDelete">Eyða umræðu</string>
+    <string name="utils_discussionsDeleteMessage">Þetta eyðir öllum umræðunum og þræðinum.</string>
+    <string name="utils_discussionSentSuccess">Svar við umræðum tókst.</string>
+    <string name="utils_discussionUpdateSuccess">Breyting á umræðum tókst.</string>
+    <string name="utils_discussionSentEmpty">Svar við umræðum má ekki vera tómt.</string>
+    <string name="utils_discussionSentFailure">Ekki var hægt að senda svar við umræðum núna.</string>
+    <string name="utils_createDiscussion">Ný umræða</string>
+    <string name="utils_editDiscussion">Breyta umræðu</string>
+    <string name="utils_discussionDetails">Upplýsingar umræðu</string>
+    <string name="utils_discussionSuccessfullyUpdated">Umræða uppfærð.</string>
+    <string name="utils_saving">Vistar</string>
+    <string name="utils_discussionSuccessfullyCreated">Umræða stofnuð.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">Ekki var hægt að bæta þessu viðhengi við þessa umræðu. Athugaðu skráapláss þitt og reyndu aftur.</string>
+    <string name="utils_noTitle">Enginn titill</string>
+    <string name="utils_discussionsReplies_Title">Svör</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Fleiri kostir</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Síðasti póstur %s</string>
+    <string name="utils_postedOnDate">Birt þann %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Svör eru bara sýnileg þeim sem hafa birt minnst eitt svar.</string>
+    <string name="utils_createAnnouncementDelayPosting">Seinka birtingu</string>
+    <string name="utils_postAt">Birta á</string>
+    <string name="utils_postDate">Dagsetning birtingar</string>
+    <string name="utils_postTime">Tími birtingar</string>
+    <string name="utils_editAnnouncementTitle">Breyta tilkynningu</string>
+    <string name="utils_createAnnouncementTitle">Ný tilkynning</string>
+    <string name="utils_announcementDetails">Upplýsingar tilkynningar</string>
+    <string name="utils_createAnnouncementNoDescription">Lýsingar er krafist</string>
+    <string name="utils_errorSavingAnnouncement">Villa kom upp við að vista þessa tilkynningu. Reyndu aftur.</string>
+    <string name="utils_announcementSuccessfullyUpdated">Tilkynning uppfærð.</string>
+    <string name="utils_announcementSuccessfullyCreated">Tilkynning stofnuð.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Ólesið</item>
+        <item quantity="other">%s Ólesið</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Bæta við viðhengi</item>
+        <item quantity="one">Bæta við viðhengi</item>
+        <item quantity="other">Bæta við viðhengjum</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">Aflæsingardagur getur ekki verið eftir skiladag</string>
+    <string name="utils_lockBeforeDueDateError">Læsingardagur getur ekki verið fyrir skiladag</string>
+    <string name="utils_lockAfterUnlockError">Læsingardagur getur ekki verið fyrir opnunardag</string>
+    <string name="utils_assigneeBlankError">Viðtakandi má ekki vera auður</string>
+    <string name="utils_assignTo">Úthluta til</string>
+    <string name="utils_availableFrom">Tiltækt frá</string>
+    <string name="utils_availableTo">Tiltækt til</string>
+    <string name="utils_availableFromDate">Tiltækt frá degi</string>
+    <string name="utils_availableFromTime">Tiltækt frá tíma</string>
+    <string name="utils_availableToDate">Tiltækt til dags</string>
+    <string name="utils_availableToTime">Tiltækt til tíma</string>
+    <string name="utils_dueDate">Skiladagur</string>
+    <string name="utils_dueTime">Skilatími</string>
+    <string name="utils_addNew">Bæta við nýjum</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Hlaða niður viðhengi</string>
+    <string name="utils_removeAttachment">Fjarlægja viðhengi</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Halda áfram án þess að vista?</string>
+    <string name="utils_continueWithoutSavingMessage">Viltu örugglega halda áfram án þess að vista?</string>
+    <string name="utils_continueUnsaved">Halda áfram</string>
+    <string name="utils_exitWithoutSavingTitle">Hætta án þess að vista?</string>
+    <string name="utils_exitWithoutSavingMessage">Viltu örugglega hætta án þess að vista?</string>
+    <string name="utils_exitUnsaved">Hætta</string>
+    <string name="utils_cancel">Hætta við</string>
+
+    <string name="utils_contentDescriptionFiles">Skráartákn</string>
+    <string name="utils_turn_in">Skila</string>
+    <string name="utils_upload">Hlaða upp</string>
+    <string name="utils_okay">Í lagi</string>
+    <string name="utils_loadingFilesIndeterminate">Hleð skrám&#8230;</string>
+    <string name="utils_allowedExtensions">Leyfðir nafnaukar:&#160;</string>
+    <string name="utils_extensionNotAllowed">Valin skráargerð er ekki leyfileg.</string>
+    <string name="utils_errorUploadingFile">Villa kom upp upp upphleðslu skráarinnar. Vinsamlegast reynið aftur.</string>
+    <string name="utils_filesUploadedSuccessfully">Skrám var hlaðið upp.</string>
+    <string name="utils_uploadingFiles">Hleð upp skrám&#8230;</string>
+    <string name="utils_uploadingFile">Hleð upp skrá&#8230;</string>
+    <string name="utils_noApps">Tækið er ekki með uppsett app sem getur opnað þessa skrá.</string>
+    <string name="utils_errorGettingPhoto">Það var villa við að ná í ljósmyndina. Vinsamlegast reynið aftur.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Ein eða fleiri af skránum er með nafnauka skrár sem er ekki leyfð</string>
+    <string name="utils_fileUploadNotSupported">Ekki er hægt að hlaða upp skrám á valin verkefni.</string>
+    <string name="utils_noFilesUploaded">Þú hefur ekki valið neinar skrár.</string>
+    <string name="utils_attachments">Viðhengi</string>
+    <string name="utils_uploadTo">Hlaða upp til </string>
+    <string name="utils_uploadToCanvas">Hlaða upp til Canvas</string>
+    <string name="utils_uploadMyFiles">Mínar skrár</string>
+    <string name="utils_uploadCourseFiles">Námskeiðsskrár</string>
+    <string name="utils_uploadGroupFiles">Hópskrár</string>
+    <string name="utils_uploadToSubmissionComment">Hlaða upp í athugasemd við innsendingu</string>
+    <string name="utils_attachFile">Festa við skrá</string>
+    <string name="utils_with">með</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas-tilkynningar</string>
+    <string name="notificationChannelNamePrimary">Almennar Canvas-tilkynningar</string>
+    <string name="notificationChannelDescriptionPrimary">Frekari fínstillingar á tilkynningum má gera innan kjörstillingahluta Canvas-tilkynninga.</string>
+
+    <string name="copyLinkAddress">Afrita slóð tengils</string>
+    <string name="copyLink">Afrita tengil</string>
+    <string name="linkCopied">Tengill afritaður</string>
+    <string name="link">Tengill</string>
+    <string name="fileExists">Skrá er til</string>
+    <string name="replace">Skipta út</string>
+    <string name="shareLink">Deila tengli</string>
+
+    <string name="utils_launchExternalTool">Nota ytra verkfæri</string>
+    <string name="utils_externalToolTitle">Ytra tól</string>
+    <string name="utils_placeholderTitle">Ytra tól</string>
+    <string name="utils_placeholderDescription">Farðu á Canvas vefreikning þinn til að breyta þessu ytra verkfæri.</string>
+    <string name="utils_unableToViewInBrowser">Við gátum ekki fundið ytra app til að skoða þetta LTI verkfæri.</string>
+
+    <string name="utils_unsupportedFileMessage">Ekki var hægt að sýna þessa skrá. Notaðu hnappinn hér að neðan til að opna skránna með öðru appi á tækinu.</string>
+    <string name="utils_openWithAnotherApp">Opna með&#8230;</string>
+    <string name="utils_couldNotPlayFormat">Þetta miðlasnið er ekki stutt</string>
+    <string name="utils_fullscreen">heilskjár</string>
+
+    <string name="utils_dataUsageWarningTitle">Gagnanotkunarviðvörun</string>
+    <string name="utils_dataUsageWarningMessage">Þessi aðgerð gæti notað mikið gagnamagn, sem gæti stofnað til kostnaðar. Viltu halda áfram?</string>
+    <string name="utils_doNotShowMessageAgain">Ekki sýna þessi skilaboð aftur</string>
+
+    <string name="utils_no_data_connection">Athugaðu gagnatengingu þína og reyndu aftur.</string>
+    <string name="utils_playMedia">Spila margmiðlunarefni</string>
+    <string name="utils_tryAgain">Reyndu aftur</string>
+    <string name="image_uploading">Mynd í upphleðslu&#8230;</string>
+    <string name="image_upload_error">Villa við upphleðslu myndar</string>
+    <string name="retry">Reyna aftur</string>
+    <string name="search">Leita</string>
+    <string name="searchAssignmentsHint">Leita í verkefnum</string>
+    <string name="searchAnnouncementsHint">Leita í tilkynningum</string>
+    <string name="searchDiscussionsHint">Leita í umræðum</string>
+    <string name="searchPagesHint">Leita í síðum</string>
+    <string name="searchQuizzesHint">Leita í prófum</string>
+    <string name="noItemsMatchingQuery">Engin atriði passa við \"%s\"</string>
+
+    <string name="selected">Valið</string>
+
+</resources>

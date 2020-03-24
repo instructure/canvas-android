@@ -65,7 +65,7 @@
     <string name="practice_quiz">練習測驗</string>
     <string name="graded_survey">已評分的調查</string>
     <string name="ungraded_survey">未評分的調查</string>
-    <string name="andMore"> 以及其他 %d 項</string>
+    <string name="andMore">\u0020以及其他 %d 項</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">學生</string>

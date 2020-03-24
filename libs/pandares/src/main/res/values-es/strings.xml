@@ -101,8 +101,8 @@
     <string name="finalGradeFormatted">Calificación final: %s</string>
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s puntos</string>
-
     <string name="enterWhatIfScore">Ingresar puntaje hipotético</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Puntaje personalizado</string>
     <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta tarea</string>
@@ -187,13 +187,14 @@
     <string name="excused">EX</string>
 
     <!-- Assignment editing -->
-    <string name="points">Puntos </string>
+    <string name="points">Puntos\u0020</string>
     <string name="save">Guardar</string>
     <string name="cancel">Cancelar</string>
 
     <!-- Discussions -->
     <string name="forbidden">Las respuestas son visibles solamente para aquellos que han publicado al menos una respuesta.</string>
 
+    <string name="fileCurrentlyLocked">Este archivo está bloqueado actualmente</string>
     <!-- Events -->
     <string name="Starts">Comienza en</string>
     <string name="Ends">Finaliza</string>
@@ -334,7 +335,7 @@
     <string name="with">con</string>
     <string name="starConversation">Destacar conversación</string>
     <string name="deleteConversation">Eliminar conversación</string>
-    <string name="sharedWith">Compartido con  </string>
+    <string name="sharedWith">Compartido con \u0020</string>
     <string name="sharedWithYou">Compartido con usted</string>
     <string name="inboxEmptyMessage">Toque \"+\" para crear una nueva conversación.</string>
     <string name="inboxAllMessages">Todo</string>
@@ -551,11 +552,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Disponible privadamente</string>
     <string name="publiclyAvailable">Disponible públicamente</string>
-    <string name="starts">Comienza en:  </string>
-    <string name="courseCode">Código del curso:  </string>
-    <string name="ends">Finaliza:  </string>
-    <string name="visibility">Visibilidad:  </string>
-    <string name="license">Licencia:  </string>
+    <string name="starts">Comienza en: \u0020</string>
+    <string name="courseCode">Código del curso: \u0020</string>
+    <string name="ends">Finaliza: \u0020</string>
+    <string name="visibility">Visibilidad: \u0020</string>
+    <string name="license">Licencia: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -592,6 +593,7 @@
     <string name="privacyPolicy">Política de privacidad</string>
     <string name="termsOfUse">Términos de uso</string>
     <string name="canvasOnGithub">Canvas en GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Exámenes para tareas</string>
     <string name="practiceQuizzes">Exámenes de práctica</string>
@@ -600,9 +602,9 @@
     <string name="quizMatchingDefaultDisplay">[Escoger]</string>
     <string name="choose_answer_below">Elija su respuesta a continuación</string>
     <string name="choose_answers_below">Elija sus respuestas a continuación</string>
-
-
     <string name="flag_the_question">Marcar la pregunta</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Por hacer</string>
     <string name="gradesWidgetTitle">Calificaciones</string>
@@ -857,7 +859,12 @@
     <string name="start">Comenzar</string>
     <string name="newPushNotifications">%1$s Nuevas notificaciones</string>
     <string name="like">me gusta</string>
+    <string name="likeEntryLabel">Me gusta la entrada</string>
     <string name="likes">me gustan</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s Me gusta</item>
+        <item quantity="other">%s le gusta</item>
+    </plurals>
 
     <string name="color_1">Rojo</string>
     <string name="color_2">Rosa intenso</string>
@@ -1059,6 +1066,41 @@
     <string name="gradeAfterPosting">Calificación después de la publicación</string>
     <string name="gradeOverride">Anulación de las calificaciones</string>
     <string name="currentGrade">Calificación actual</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Cabeza seleccionada: %s</string>
+    <string name="content_description_chosen_body">Cuerpo seleccionado: %s</string>
+    <string name="content_description_chosen_feet">Pies seleccionados: %s</string>
+    <string name="content_description_panda_body_1">Vestido con corazones violetas y borde rosa</string>
+    <string name="content_description_panda_body_2">Vestido con estrellas verdes y borde azul</string>
+    <string name="content_description_panda_body_3">Vestido con estrellas rojas y borde naranja</string>
+    <string name="content_description_panda_body_4">Saco azul, moño rojo y pantalones grises</string>
+    <string name="content_description_panda_body_5">Camisa naranja y jeans</string>
+    <string name="content_description_panda_body_6">Camisa roja y pantalones marrones</string>
+    <string name="content_description_panda_body_7">Camiseta con estampado de sol amarillo y pantalones grises</string>
+    <string name="content_description_panda_body_8">Camiseta con estampado de pelota de baloncesto verde azulada y pantalones violetas</string>
+    <string name="content_description_panda_body_9">Camiseta con estampado de androide azul y pantalones verdes</string>
+    <string name="content_description_panda_body_10">Camiseta con estampado de Instructure blanco y pantalones azules</string>
+    <string name="content_description_panda_body_11">Camiseta con tres estrellas gris oscuro y pantalones verdes azulados</string>
+    <string name="content_description_panda_body_12">Uniforme de mago bermellón con varita mágica y pantalones negros</string>
+    <string name="content_description_panda_body_13">Torso con panda desnudo</string>
+    <string name="content_description_panda_head_2">Gafas de sol de estilo de aviador y lápiz de labios</string>
+    <string name="content_description_panda_head_3">Maquillaje y lazo para el cabello de color violeta</string>
+    <string name="content_description_panda_head_4">Bigote elegante</string>
+    <string name="content_description_panda_head_5">Gafas verdes para fiesta</string>
+    <string name="content_description_panda_head_6">Gafas marrones</string>
+    <string name="content_description_panda_head_7">Máscara dorada y lápiz de labios</string>
+    <string name="content_description_panda_head_8">Gafas de sol de estilo de aviador</string>
+    <string name="content_description_panda_head_9">Mejillas con pecas</string>
+    <string name="content_description_panda_head_10">Mago con gafas y la frente con cicatriz</string>
+    <string name="content_description_panda_feet_1">Pies desnudos</string>
+    <string name="content_description_panda_feet_2">Zapatos rosas con lazos violetas</string>
+    <string name="content_description_panda_feet_3">Zapatos azules con lazos verdes</string>
+    <string name="content_description_panda_feet_4">Zapatos rojos con lazos naranjas</string>
+    <string name="content_description_panda_feet_5">Zapatos rojos</string>
+    <string name="content_description_choose_head">Seleccionar cabeza</string>
+    <string name="content_description_choose_body">Seleccionar cuerpo</string>
+    <string name="content_description_choose_feet">Seleccionar pies</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

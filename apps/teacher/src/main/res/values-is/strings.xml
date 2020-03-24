@@ -1,0 +1,901 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">Stillingar</string>
+    <string name="tab_week">Vika</string>
+    <string name="tab_inbox">Innhólf</string>
+    <string name="tab_details">Upplýsingar</string>
+    <string name="tab_questions">Spurningar</string>
+    <string name="tab_submissions">Skil</string>
+    <string name="tab_assignments">Verkefni</string>
+    <string name="tab_profile">Upplýsingar</string>
+    <string name="tab_people">Fólk</string>
+    <string name="tab_quizzes">Próf</string>
+    <string name="tab_discussions">Umræður</string>
+    <string name="tab_announcements">Tilkynningar</string>
+    <string name="tab_attendance">Mæting</string>
+    <string name="tab_pages">Síður</string>
+    <string name="tab_todo">Verkefni</string>
+    <string name="content_description_school_logo">Myndmerki skóla</string>
+    <string name="search_guides">Leita í leiðbeiningum Canvas</string>
+    <string name="canvas_guides">Canvas leiðarvísar</string>
+    <string name="search_guides_icon">Myndmerki fyrir Canvas leiðarvísa</string>
+    <string name="search_guides_details">Svör við algengum spurningum</string>
+    <string name="report_problem">Tilkynna vandamál</string>
+    <string name="report_problem_icon"> Tákn fyrir tilkynna vandamál</string>
+    <string name="report_problem_details">Ef appið hegðar sér illa skaltu láta okkur vita</string>
+    <string name="request_feature">Biðja um eiginleika</string>
+    <string name="request_feature_icon">Tákn til að biðja um eiginleika</string>
+    <string name="request_feature_details">Segðu okkur hugmynd þína til að bæta appið</string>
+    <string name="share_your_love">Deildu ást þinni á appinu</string>
+    <string name="share_your_love_details">Segðu okkur um uppáhalds hluta þína í appinu</string>
+    <string name="masquerade">Dyljast</string>
+    <string name="issue_with_teacher_app">Vandamál við kennaraapp [Android]</string>
+    <string name="no_items_to_display_short">Engin atriði</string>
+    <string name="rate_the_app">Gefðu appinu einkunn</string>
+    <string name="rate_the_app_icon">Tákn fyrir gefðu appinu einkunn</string>
+    <string name="teacher_log_out">Útskráning</string>
+    <string name="teacher_switch_user">Skipta um notanda</string>
+    <string name="under_construction">Í byggingu</string>
+    <string name="toolbar_event">Viðburður</string>
+    <string name="location">Staðsetning</string>
+    <string name="event_date">Viðburðardagur</string>
+    <string name="course">Námskeið</string>
+    <string name="profile">Upplýsingar</string>
+    <string name="share">Deila</string>
+    <string name="share_with">Deila með&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Opnaðu yfirlitsskúffu</string>
+    <string name="navigation_drawer_close">Lokaðu yfirlitsskúffu</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(ekkert efnisheiti)</string>
+    <string name="compose_message">Semja skilaboð</string>
+    <string name="newMessage">Ný skilaboð</string>
+    <string name="courses">Námskeið</string>
+    <string name="compose_message_no_ellipsis">Semja skilaboð</string>
+    <string name="send">Senda</string>
+    <string name="attachment">Viðhengi</string>
+    <string name="attachments">Viðhengi</string>
+    <string name="not_available_offline">Virkni ekki tiltæk án nettengingar</string>
+    <string name="empty_message">Skilaboð geta ekki verið auð!</string>
+    <string name="message_has_no_recipients">Þessi skilaboð eru ekki með neinn móttakanda.</string>
+    <string name="course_spinner_title">Námskeið:</string>
+    <string name="reply_to_message">Svara</string>
+    <string name="forward_message">Áframsenda skilaboð</string>
+    <string name="label_to">Til</string>
+    <string name="label_course">Námskeið</string>
+    <string name="label_subject">Efni</string>
+
+    <string name="common_send">Senda</string>
+    <string name="common_edit">Breyta</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Hugmynd fyrir kennaraapp [Android]</string>
+    <string name="understand_request">Eftirfarandi upplýsingar munu hjálpa okkur að skilja hugmynd þína betur:</string>
+    <string name="send_mail">Senda tölvupóst&#8230;</string>
+
+    <string name="color_1">Rauður</string>
+    <string name="color_2">Skærbleikur</string>
+    <string name="color_3">Ljós fjólublár</string>
+    <string name="color_4">Blárauður</string>
+    <string name="color_5">Fjólublár</string>
+    <string name="color_6">Steingrár</string>
+    <string name="color_7">Blár</string>
+    <string name="color_8">Blágrænn</string>
+    <string name="color_9">Grænn</string>
+    <string name="color_10">Ljós gulgrænn</string>
+    <string name="color_11">Gulur</string>
+    <string name="color_12">Gylltur</string>
+    <string name="color_13">Appelsínugulur</string>
+    <string name="color_14">Bleikt</string>
+    <string name="color_15">Grár</string>
+
+    <string name="attachment_icon">Viðhengis tákn</string>
+    <string name="star_icon">Stjörnutákn</string>
+    <string name="monologue">Einræða</string>
+
+    <string name="create_announcement_topic_title_hint">Titill umræðuefnis</string>
+    <string name="post_date">Dagsetning birtingar</string>
+    <string name="announcement">Tilkynning</string>
+    <string name="create_announcement_title">Ný tilkynning</string>
+    <string name="create_announcement_no_description">Lýsingar er krafist</string>
+    <string name="announcementDetails">Upplýsingar tilkynningar</string>
+
+    <string name="no_title">Enginn titill</string>
+    <string name="announcement_create_success">Tilkynning stofnuð!</string>
+    <string name="announcement_create_fail">Ekki tókst að stofna tilkynningu. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="create_announcement_delay_posting">Seinka birtingu</string>
+
+    <string name="discussion">Umræða</string>
+
+    <string name="sunday">Sunnudagur</string>
+    <string name="monday">Mánudagur</string>
+    <string name="tuesday">Þriðjudagur</string>
+    <string name="wednesday">Miðvikudagur</string>
+    <string name="thursday">Fimmtudagur</string>
+    <string name="friday">Föstudagur</string>
+    <string name="saturday">Laugardagur</string>
+
+    <string name="add_attachment">Bæta við viðhengi</string>
+    <string name="content_description_files">Skráartákn</string>
+    <string name="next">Næsti</string>
+    <string name="upload_to_cnavas">Hlaða upp til Canvas</string>
+    <string name="upload_my_files">Mínar skrár</string>
+    <string name="upload_course_files">Námskeiðsskrár</string>
+    <string name="upload_to">Hlaða upp til</string>
+    <string name="message_attachments">Viðhengi skilaboða</string>
+    <string name="with">með</string>
+    <string name="discussion_attachment">Festa við skrá</string>
+    <string name="select_files_or_photos">Veldu skrár eða ljósmyndir</string>
+    <string name="uploading_files">Hleð upp skrám&#8230;</string>
+    <string name="no_attachment">(Ekkert viðhengi)</string>
+    <string name="creating_announcement">Stofna tilkynningu&#8230;</string>
+
+    <string name="copy_email">Afrita netfang</string>
+    <string name="all_grading_periods">Öll einkunnatímabil</string>
+    <string name="no_submissions">Engin skil</string>
+    <string name="all_submissions_graded">Öll skil hafa fengið einkunn</string>
+    <string name="icon">tákn</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="one">Meta þarf %d skil til einkunnar</item>
+        <item quantity="other">%d skil þurfa einkunnagjöf</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="one">%d viðtakandi er án einkunnar.</item>
+        <item quantity="other">%d viðtakendur eru án einkunna.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">Engin skilaboð</string>
+    <string name="inbox_empty_starred_title">Engin stjörnumerkt skilaboð</string>
+    <string name="inbox_empty_message">Smelltu á \"+\" til að búa til nýtt samtal.</string>
+    <string name="inbox_empty_starred_message">Stjörnumerktu skilaboð með því að smella á stjörnuna innan skilaboðanna.</string>
+
+    <string name="reply">Svara</string>
+    <string name="replyAll">Svara öllum</string>
+    <string name="forward">Áfram</string>
+    <string name="star">Stjörnumerkja</string>
+    <string name="archive">Safn</string>
+    <string name="delete">Eyða</string>
+    <string name="message">Skilaboð</string>
+    <string name="unarchive">Taka úr safni</string>
+    <string name="message_options">Valkostir skilaboða</string>
+    <string name="markAsUnread">Merkja sem ólesið</string>
+    <string name="message_delete_warning">Viltu örugglega eyða þínu afriti af þessum skilaboðum? Þessi aðgerð er óafturkræf.</string>
+    <string name="conversation_delete_warning">Viltu örugglega eyða afriti þínu af þessari samræðu? Þessi aðgerð er óafturkræf.</string>
+    <string name="error_conversation_generic">Ekki er hægt að framkvæma þessa aðgerð. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="message_archived">Skilaboð safnvistuð</string>
+    <string name="message_unarchived">Skilaboð tekin úr safni</string>
+    <string name="message_deleted">Skilaboðum eytt</string>
+    <string name="select_recipients">Velja móttakendur</string>
+    <string name="entire_group_selected">Allur hópur valinn</string>
+    <string name="no_users_in_group">Engir notendur í hópnum</string>
+
+    <string name="published">Birt</string>
+    <string name="not_published">Óbirt</string>
+    <string name="published_content_description">Birt gátmerki</string>
+    <string name="points_with_value">punktar</string>
+    <string name="point_with_value">punktar</string>
+    <string name="no_due_date">Enginn skiladagur</string>
+    <string name="due_date">Skiladagur</string>
+
+    <string name="view_replies">Skoða svör</string>
+    <string name="view_discussion">Skoða umræðu</string>
+
+    <string name="edit">Breyta</string>
+    <string name="save">Vista</string>
+    <string name="successfully_updated_assignment">Verkefni var uppfært.</string>
+    <string name="successfully_updated_quiz">Próf var uppfært.</string>
+    <string name="failure_updating_assignment">Eitthvað misfórst við að uppfæra verkefnið. Reyndu aftur.</string>
+    <string name="failure_deleting_assignment">Eitthvað misfórst við að eyða verkefninu. Reyndu aftur.</string>
+    <string name="cant_unpublish">Ekki hægt að afbirta ef skil nemenda eru til staðar.</string>
+    <string name="messages">Skilaboð</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="one">+ %d Skilaboð</item>
+        <item quantity="other">+ %d Skilaboð</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="one">Meta þarf %d skil til einkunnar</item>
+        <item quantity="other">%d skil þurfa einkunnagjöf</item>
+    </plurals>
+
+    <string name="delete_assignment_message">Viltu örugglega eyða þessu verkefni?</string>
+    <string name="question">Spurning</string>
+    <string name="quizMatchingDefaultDisplay">[Veldu]</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">Skilaboð til nemanda</string>
+
+    <string name="message_these_students">Senda skilaboð til þessara nemenda</string>
+    <string name="submission_status_missing">Vantar</string>
+    <string name="submission_status_late">Seint</string>
+    <string name="submission_status_submitted">Skilað</string>
+    <string name="submission_status_not_submitted">Ekki skilað enn</string>
+    <string name="submission_status_excused">Undanþegið</string>
+    <string name="last_login_format">Síðasta innskráning: %s</string>
+
+    <string name="muteGrades">Dempa einkunnir</string>
+    <string name="unmuteGrades">Afdempa einkunnir</string>
+    <string name="gradesMutedLabel">Einkunnir dempaðar</string>
+    <string name="turnOnAnonymousGrading">Kveiktu á nafnlausri einkunnagjöf</string>
+    <string name="turnOffAnonymousGrading">Slökktu á nafnlausri einkunnagjöf</string>
+    <string name="anonymousGradingLabel">Nafnlaus einkunnagjöf</string>
+    <string name="anonymousStudentLabel">Nemandi</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">Eiginleiki væntanlegur</string>
+
+    <string-array name="submission_filters">
+        <item>Öll skil</item>
+        <item>Of sein skil</item>
+        <item>Vantar skil</item>
+        <item>Einkunn há</item>
+        <item>Einkunn lág</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>Eftir nafni</item>
+        <item>Einkunnir frá háum til lágra</item>
+        <item>Einkunnir frá lágum til hárra</item>
+    </string-array>
+
+    <string name="content_description_course_tab">Námskeiðsflipi</string>
+    <string name="content_description_inbox_tab">Innhólfsflipi</string>
+    <string name="content_description_profile_tab">Uppsetningarflipi</string>
+    <string name="close">Loka</string>
+    <string name="no_course_selected">Veldu námskeið</string>
+    <string name="discussion_reply_to_entry">Svar við umræðu</string>
+    <string name="announcement_reply_to_entry">Svar við tilkynningu</string>
+    <string name="error_text_missing">Bættu við texta til að senda skilaboð</string>
+    <string name="error_sending_message">Ekki var hægt að senda þessi skilaboð. Smelltu til að reyna aftur.</string>
+    <string name="message_sent_successfully">Skilaboð voru send.</string>
+    <string name="error_occurred">Óvænt villa kom upp.</string>
+    <string name="no_assignments_with_file_upload">Þetta námskeið hefur engin verkefni sem leyfa skráaupphleðslu.</string>
+    <string name="extension_not_allowed">Valin skráargerð er ekki leyfileg.</string>
+    <string name="allowed_extensions">Leyfðir nafnaukar:&#160;</string>
+    <string name="files_uploaded_successfully">Skrám var hlaðið upp.</string>
+    <string name="error_uploading_file">Villa kom upp upp upphleðslu skráarinnar. Vinsamlegast reynið aftur.</string>
+    <string name="uploading_file">Hleð upp skrá&#8230;</string>
+    <string name="no_apps">Tækið er ekki með uppsett app sem getur opnað þessa skrá.</string>
+    <string name="turn_in">Skila</string>
+    <string name="error_getting_photo">Það var villa við að ná í ljósmyndina. Vinsamlegast reynið aftur.</string>
+    <string name="loading_files_indeterminate">Hleð skrám&#8230;</string>
+    <string name="no_files_uploaded">Þú hefur ekki valið neinar skrár.</string>
+    <string name="file_upload_not_supported">Ekki er hægt að hlaða upp skrám á valin verkefni.</string>
+    <string name="one_or_more_extension_not_allowed">Ein eða fleiri af skránum er með nafnauka skrár sem er ekki leyfð</string>
+
+    <string name="inbox_all">Innhólf</string>
+    <string name="inbox_unread">Ólesið</string>
+    <string name="inbox_starred">Stjörnumerkt</string>
+    <string name="inbox_sent">Sent</string>
+    <string name="inbox_archived">Sett í safn</string>
+    <string name="inbox_all_messages">Allt</string>
+    <string name="uploading_file_num" formatted="false">Hleð upp %d af %d</string>
+    <string name="page_not_found">Síða fannst ekki.</string>
+    <string name="no_connection">Ekki tengdur</string>
+    <string name="unauthorized_access">Þú hefur ekki aðgangsheimild að þessu. Annað hvort ertu ekki með leyfi eða þú hefur ekki aðgang ennþá (til dæmis ef námskeiðið er ekki hafið enn)</string>
+    <string name="server_error">Miðlaravilla hefur komið upp.</string>
+    <string name="error_loading_files">Villa kom upp upp upphleðslu skráarinnar. Athugaðu nettengingu þína og reyndu aftur.</string>
+    <string name="files_submitted_successfully">Skrám var skilað.</string>
+    <string name="no_data_connection">Athugaðu gagnatengingu þína og reyndu aftur.</string>
+    <string name="teacher_logout_warning">Viltu örugglega skrá þig út?</string>
+    <string name="teacher_yes">Já</string>
+    <string name="teacher_no">Nei</string>
+    <string name="teacher_sending">Sendi&#8230;</string>
+    <string name="teacher_cancel">Hætta við</string>
+    <string name="teacher_okay">Í lagi</string>
+    <string name="teacher_upload">Hlaða upp</string>
+    <string name="settings">Stillingar</string>
+    <string name="edit_courses">Breyta námskeiðum</string>
+    <string name="start_annotating">Byrja textaskýringar</string>
+    <string name="empty_speedgrader_content">Tómur Speedgrader skjár, þarf hönnun</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">Stillingar námskeiðs</string>
+    <string name="course_name">Heiti námskeiðs</string>
+    <string name="set_home_to">Stilla \'Heima\' á&#8230;</string>
+    <string name="course_activity_stream">Virknistreymi námskeiðs</string>
+    <string name="pages_front_page">Forsíða síðna</string>
+    <string name="frontPage">Forsíða</string>
+    <string name="course_modules">Námskeiðs námsefni</string>
+    <string name="assignments_list">Verkefnalisti</string>
+    <string name="syllabus">Kennsluáætlun</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">Margir skiladagar</string>
+    <string name="everyone">Allir</string>
+    <string name="everyone_else">Allir aðrir</string>
+    <string name="unknown_student">Óþekktur nemandi</string>
+    <string name="closed">Lokað</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">Skiladagur %1s þann %2s</string>
+    <string name="last_post" formatted="false">Síðasti póstur %s</string>
+    <string name="submission_types">Tegundir skila</string>
+    <string name="full_due_date_details">Upplýsingar um skiladag</string>
+    <string name="availability_label">Tiltækileiki:</string>
+    <string name="available_to_label">Tiltækt til:</string>
+    <string name="available_from_label">Tiltækt frá:</string>
+    <string name="due_for_label">Fyrir:</string>
+    <string name="due_label">Skil:</string>
+    <string name="details_available_to_label">Tiltækt til</string>
+    <string name="details_available_from_label">Tiltækt frá</string>
+    <string name="details_due_for_label">Fyrir</string>
+    <string name="due_date_header_label">Skilafrestur</string>
+    <string name="assignment_details">Upplýsingar um verkefni</string>
+    <string name="no_content">Ekkert efni</string>
+    <string name="submissions">Skil</string>
+    <string name="no_assignment_description_filler">Hjálpaðu nemendum þínum með þetta verkefni með því að bæta við leiðbeiningum.</string>
+    <string name="no_quiz_description_filler">Hjálpaðu nemendum þínum með þetta próf með því að bæta við leiðbeiningum.</string>
+    <string name="page_title_due_dates">Skiladagar</string>
+    <string name="edit_assignment">Breyta verkefni</string>
+    <string name="edit_quiz">Breyta prófi</string>
+    <string name="title">Titill</string>
+    <string name="description">Lýsing</string>
+    <string name="grade_total">Heildareinkunn</string>
+    <string name="grade">Einkunn</string>
+    <string name="enter_grade">Settu inn einkunn</string>
+    <string name="override">Hnekkja</string>
+    <string name="calculated_by_rubric">Reiknað út frá matsviðmiðum</string>
+    <string name="customize_grade">Sérsníða einkunn</string>
+    <string name="out_of_points">Af %1$s</string>
+    <string name="gpa">Meðaleinkunn</string>
+    <string name="letter_grade">Bókstafseinkunn</string>
+    <string name="excuse_student">Veita nemanda leyfi</string>
+    <string name="excuseGroup">Veita hóp leyfi</string>
+    <string name="complete_grade">Lokið</string>
+    <string name="incomplete_grade">Ólokið</string>
+    <string name="not_graded">Ekki metið</string>
+    <string name="excused">Undanþegið</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s af %2$s</string>
+    <string name="publish">Birta</string>
+    <string name="error_saving_assignment">Villa kom upp við að vista verkefnið. Reyndu aftur.</string>
+    <string name="error_saving_quiz">Villa kom upp við að vista prófið. Reyndu aftur.</string>
+    <string name="assignment_name_must_be_set">Verkefnið þarf að hafa titil.</string>
+    <string name="announcement_name_must_be_set">Tilkynningin þarf að hafa titil.</string>
+    <string name="quiz_title_must_be_set">Próf þarf að hafa titil.</string>
+    <string name="assignment_points_must_be_set">Punktar verkefnis þurfa að vera stilltir inn.</string>
+    <string name="assignment_points_must_be_a_number">Mögulegir punktar verða að vera tala</string>
+    <string name="quiz_points_must_be_set">Punktar prófs þurfa að vera stilltir inn.</string>
+    <string name="assignee_type_course_sections">Hlutar námskeiðs</string>
+    <string name="assignee_type_groups">Hópar</string>
+    <string name="assignee_type_students">Nemendur</string>
+    <string name="page_title_add_assignees">Bæta við viðtakendum</string>
+    <string name="assign_to">Úthluta til</string>
+    <string name="available_from">Tiltækt frá</string>
+    <string name="available_to">Tiltækt til</string>
+    <string name="unlock_after_due_date_error">Aflæsingardagur getur ekki verið eftir skiladag</string>
+    <string name="lock_before_due_date_error">Læsingardagur getur ekki verið fyrir skiladag</string>
+    <string name="lock_after_unlock_error">Læsingardagur getur ekki verið fyrir opnunardag</string>
+    <string name="assignee_blank_error">Viðtakandi má ekki vera auður</string>
+    <string name="remove">Fjarlægja</string>
+    <string name="add_due_date">Bæta við skiladegi</string>
+    <string name="full_submission_details">Heildar upplýsingar um skil</string>
+    <string name="graded">Metið</string>
+    <string name="needsGrading">Þarfnast einkunnargjafar</string>
+    <string name="not_submitted">Ekki lagt fram</string>
+    <string name="content_description_submission_donut_graded" formatted="false">Metið, %s af %s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">Þarf að meta, %s af %s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">Ekki lagt fram, %s af %s</string>
+    <string name="display_grade_as">Sýna einkunn sem&#8230;</string>
+    <string name="percentage">Hlutfall</string>
+    <string name="complete_incomplete">Lokið/Ólokið</string>
+    <string name="points">Punktar</string>
+    <string name="gpa_scale">Meðaleinkunnakvarði</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">Ekki kennari?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">Eitthvað að hinum öppunum okkar gæti hentað betur. Smelltu á eitt þeirra til að fara í Play Store.</string>
+
+    <string name="sg_tab_grade">Einkunn</string>
+    <string name="sg_tab_comments">Athugasemdir</string>
+    <string name="sg_tab_files">Skrár</string>
+    <string name="filter_submissions">Sía skil</string>
+    <string name="all_submissions">Öll skil</string>
+    <string name="submitted_late">Skilað seint</string>
+    <string name="havent_submitted_yet">Hafa ekki skilað enn</string>
+    <string name="havent_been_graded">Hafa ekki verið metin</string>
+    <string name="scored_less_than">Fékk lægri einkunn en&#8230;</string>
+    <string name="scored_more_than">Fékk hærri einkunn en&#8230;</string>
+    <string name="scored_less_than_value">Fékk lægri einkunn en %s</string>
+    <string name="scored_more_than_value">Fékk hærri einkunn en %s</string>
+    <string name="add_comment">Bæta við athugasemd</string>
+    <string name="editComment">Breyta athugasemd</string>
+    <string name="deleteComment">Eyða athugasemd</string>
+    <string name="deleteAnnotation">Eyða textaskýringu</string>
+    <string name="deleteCommentConfirmation">Viltu örugglega eyða þessari athugasemd?</string>
+    <string name="rubric_view_long_description">skoða langa lýsingu</string>
+    <string name="rubric">Matsviðmið</string>
+    <string name="enter_custom_value">Settu inn sérsniðið gildi</string>
+    <string name="success_saving_rubric_assessment">Matsviðmið vistað</string>
+    <string name="error_saving_rubric_assessment">Villa kom upp við vistun matsviðmiðs. Vinsamlegast reynið aftur.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s af %2$s</string>
+    <string name="criterion_rating_customize_score">Sérsníða einkunn</string>
+    <string name="edit_criterion_comment">Breyta athugasemd við forsendu</string>
+    <string name="sendMessageToHint">Senda skilaboð til: %s</string>
+    <string name="save_comment">Vista athugasemd</string>
+    <string name="cancel_editing_comment">Hætta við að breyta athugasemd</string>
+    <string name="skip">Sleppa</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">Sérsniðin einkunn %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="one">Af %s punkti</item>
+        <item quantity="other">Af %s punktum</item>
+    </plurals>
+
+    <string name="tab_courses">Námskeið</string>
+    <string name="course_options">Námskeiðs valkostir</string>
+    <string name="edit_favorite_courses">Breyta uppáhalds námskeiðum</string>
+    <string name="feedback_form">Endurgjafar eyðublað</string>
+    <string name="see_all">Sjá allt</string>
+    <string name="all_courses">Öll námskeið</string>
+    <string name="welcome">Velkomin(n)!</string>
+    <string name="empty_course_list_message">Bættu við nokkrum uppáhalds námskeiðum til að gera þetta að heimili þínu.</string>
+    <string name="add_courses">Bæta við námskeiði</string>
+    <string name="unable_to_add_course_to_favorites">Ekki hægt að bæta þessu námskeiði við námskeiðsvalmynd eins og er.</string>
+    <string name="grading_periods_filter">Sía einkunnatímabila</string>
+    <string name="assignments">Verkefni</string>
+    <string name="clear_filter">Hreinsa síu</string>
+    <string name="due">Skiladagur %1$s</string>
+    <string name="updated">Uppfært %1$s</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="one">%s þarfnast einkunnargjafar</item>
+        <item quantity="other">%s þarfnast einkunnargjafar</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="one">Þarfnast einkunnargjafar</item>
+        <item quantity="other">Þarfnast einkunnargjafar</item>
+    </plurals>
+    <string name="at">á</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="one">%s pt</item>
+        <item quantity="other">%s punktar</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="one">%s punktur</item>
+        <item quantity="other">%s punktar</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="one">%d einstaklingur</item>
+        <item quantity="other">%d einstaklingar</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="one">%d hópur</item>
+        <item quantity="other">%d hópar</item>
+    </plurals>
+    <string name="cmp_closed">Lokað</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">eftirlæti</string>
+    <string name="content_description_not_favorite">ekki eftirlæti</string>
+    <string name="edit_nickname">Breyta gælunafni</string>
+    <string name="edit_course_color">Breyta lit námskeiðs</string>
+    <string name="edit_course_nickname">Breyta gælunafni námskeiðs</string>
+
+    <string name="colorPickerDialogTitle">Litur námskeiðs</string>
+    <string name="colorPickerDialogMessage">Þetta er persónuleg litastilling þín. Aðeins þú sérð þessa litastillingu fyrir námskeiðið.</string>
+    <string name="colorPickerError">Ekki var hægt að stilla lit námskeiðs í augnablikinu.</string>
+
+    <string name="contentDescriptionColorCottonCandy">Bleikt</string>
+    <string name="contentDescriptionColorBarbie">Skærbleikur</string>
+    <string name="contentDescriptionColorBarneyPurple">Blárauður</string>
+    <string name="contentDescriptionColorEggplant">Fjólublár</string>
+    <string name="contentDescriptionColorUltramarine">Dökkblár</string>
+    <string name="contentDescriptionColorOcean11">Blár</string>
+    <string name="contentDescriptionColorCyan">Blágrænn</string>
+    <string name="contentDescriptionColorAquaMarine">Vatnsblár</string>
+    <string name="contentDescriptionColorEmeraldGreen">Smaragðsgrænn</string>
+    <string name="contentDescriptionColorFreshCutLawn">Grænn</string>
+    <string name="contentDescriptionColorChartreuse">Ljós gulgrænn</string>
+    <string name="contentDescriptionColorSunFlower">Gulur</string>
+    <string name="contentDescriptionColorTangerine">Appelsínugulur</string>
+    <string name="contentDescriptionColorBloodOrange">Dökk appelsínugulur</string>
+    <string name="contentDescriptionColorSriracha">Rauður</string>
+    <string name="launch_link_in_external_browser">Opna tengil í ytri vafra</string>
+    <string name="contentDescriptionSelectedFile">Valin skrá</string>
+    <string name="contentDescriptionFileIcon">Skráartákn</string>
+    <string name="contentDescriptionExpandPage">Útvíkka síðu</string>
+    <string name="contentDescriptionCollapsePage">Draga saman síðu</string>
+    <string name="noInternetConnectionTitle">Engin nettenging</string>
+    <string name="noInternetConnectionMessage">Þessi aðgerð krefst nettengingar.</string>
+
+    <string name="emptyDetailsMessage">Smelltu á atriði á listanum til að skoða upplýsingar</string>
+
+    <string name="assignmentQuizzes">Verkefnapróf</string>
+    <string name="practiceQuizzes">Æfingapróf</string>
+    <string name="gradedSurveys">Kannanir með einkunn</string>
+    <string name="surveys">Kannanir</string>
+    <string name="editQuiz">Breyta prófsupplýsingum</string>
+    <string name="requireAccessCode">Krefjast aðgangskóða</string>
+    <string name="accessCode">Aðgangskóði</string>
+    <string name="mustHaveAccessCode">Settu inn aðgangskóða eða slepptu því að krefjast aðgangskóða.</string>
+    <string name="errorSavingQuiz">Villa kom upp við að vista prófið. Reyndu aftur.</string>
+    <string name="successfullyUpdatedQuiz">Próf var uppfært.</string>
+    <string name="quizType">Tegund prófs</string>
+
+    <string name="practiceQuiz">Æfa próf</string>
+    <string name="gradedQuiz">Metið próf</string>
+    <string name="gradedSurvey">Metin könnun</string>
+    <string name="ungradedSurvey">Ómetin könnun</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">Ótekið</string>
+
+    <string name="quizStatusComplete">Lokið</string>
+    <string name="quizStatusPendingReview">Bíður mats</string>
+    <string name="quizStatusInProgress">Í gangi</string>
+    <string name="quizStatusNotStarted">Ekki byrjað</string>
+
+
+    <string name="quiz_settings_label_quiz_type">Tegund prófs:</string>
+    <string name="quiz_settings_label_assignment_group">Verkefnahópur:</string>
+    <string name="quiz_settings_label_shuffle_answers">Stokka svör:</string>
+    <string name="quiz_settings_label_multiple_attempts">Margar tilraunir:</string>
+    <string name="quiz_settings_label_time_limit">Tímamörk:</string>
+    <string name="quiz_settings_label_score_to_keep">Varðveita einkunn:</string>
+    <string name="quiz_settings_label_attempts">Tilraunir:</string>
+    <string name="quiz_settings_label_view_responses">Skoða svör:</string>
+    <string name="quiz_settings_label_show_correct_answers">Sýna rétt svör:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">Ein spurning í einu:</string>
+    <string name="quiz_settings_label_ip_filter">IP-sía:</string>
+    <string name="quiz_settings_label_points">Punktar:</string>
+    <string name="quiz_settings_label_access_code">Aðgangskóði:</string>
+    <string name="quiz_settings_label_anonymous_submissions">Nafnlaus skil:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">Læsa spurningum eftir svör:</string>
+
+    <string name="quizPreview">Forskoðun prófs</string>
+    <string name="preview_quiz">Forskoða próf</string>
+    <string name="quiz_details">Prófupplýsingar</string>
+    <string name="submission_versions">Útgáfur skila</string>
+    <string name="speedgrader_student_no_submissions">Þessi nemandi er ekki með nein skil fyrir þetta verkefni.</string>
+    <string name="speedgrader_group_no_submissions">Þessi hópur er ekki með nein skil fyrir þetta verkefni.</string>
+    <string name="speedgrader_unsupported_type">Óstudd gerð innsendingar</string>
+    <string name="unlimited">Ótakmarkað</string>
+    <string name="practice_quiz">Æfa próf</string>
+    <string name="graded_quiz">Metið próf</string>
+    <string name="graded_survey">Metin könnun</string>
+    <string name="ungraded_survey">Ómetin könnun</string>
+    <string name="no_time_limit">Engin tímamörk</string>
+    <string name="immediately">Tafarlaust</string>
+    <string name="quiz_details_no_points_assigned">Engum punktum úthlutað</string>
+
+    <string name="quiz_details_from_to">Frá %1$s til %2$s</string>
+    <string name="quiz_details_after">Eftir %1$s</string>
+    <string name="quiz_details_until">Þar til %1$s</string>
+    <string name="filterPointsMustBeSet">Settu inn gildi.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="one">%d spurning</item>
+        <item quantity="other">%d spurningar</item>
+    </plurals>
+
+    <plurals name="minutes">
+        <item quantity="one">%s Mínúta</item>
+        <item quantity="other">%s mínútur</item>
+    </plurals>
+
+    <string name="discussion_details">Upplýsingar umræðu</string>
+    <string name="discussions_pinned">Festar</string>
+    <string name="discussions_unpinned">Umræður</string>
+    <string name="discussions_closed">Lokað fyrir athugasemdir</string>
+    <string name="discussions_open">Opið fyrir athugasemdir</string>
+    <string name="discussions_pin">Festa</string>
+    <string name="discussions_unpin">Losa</string>
+    <string name="contentDescriptionDiscussionsOverflow">Fleiri kostir</string>
+    <string name="discussions_options">Valkostir</string>
+    <string name="discussions_replies" formatted="false">%s Svör</string>
+    <string name="discussions_unread" formatted="false">%s Ólesið</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">Viltu örugglega eyða þessu svari?</string>
+    <string name="discussions_replies_title">Svör</string>
+    <string name="discussions_reply">Svara</string>
+    <string name="discussions_edit">Breyta</string>
+    <string name="discussions_forbidden">Svör eru bara sýnileg þeim sem hafa birt minnst eitt svar.</string>
+    <string name="discussions_delete">Eyða umræðu</string>
+    <string name="discussions_delete_title">Eyða umræðu?</string>
+    <string name="discussions_delete_message">Þetta eyðir öllum umræðunum og þræðinum.</string>
+
+    <string name="dataUsageWarningTitle">Gagnanotkunarviðvörun</string>
+    <string name="dataUsageWarningMessage">Þessi aðgerð gæti notað mikið gagnamagn, sem gæti stofnað til kostnaðar. Viltu halda áfram?</string>
+    <string name="doNotShowMessageAgain">Ekki sýna þessi skilaboð aftur</string>
+    <string name="playMedia">Spila margmiðlunarefni</string>
+    <string name="submissionIsMediaFile">Þessi skil eru miðlaskrá</string>
+    <string name="tryAgain">Reyndu aftur</string>
+    <string name="couldNotPlayFormat">Þetta miðlasnið er ekki stutt</string>
+    <string name="openWithAnotherApp">Opna með&#8230;</string>
+
+    <string name="speedgraderCommentAddedSubmission">Verkefni lagt fram. Smelltu til að skoða.</string>
+    <string name="speedgraderCommentSubmittedFiles">Framlagðar skrár:</string>
+    <string name="no_submission_comments">Engar athugasemdir eru við skil</string>
+    <string name="mediaUploadAudio">Upphleðsla margmiðlunarefnis - Hljóð</string>
+    <string name="mediaUploadVideo">Upphleðsla margmiðlunarefnis - Myndband</string>
+    <string name="speedgraderCommentQuizAttempt">Tilraun %d</string>
+    <string name="speedGraderTextSubmission">Textaskil</string>
+    <string name="speedGraderExternalToolSubmission">Skil ytra tækis</string>
+    <string name="speedGraderDiscussionSubmission">Umræðuskil</string>
+    <string name="speedGraderQuizSubmission">Prófskil</string>
+    <string name="speedGraderMediaFile">Miðilsskrá</string>
+    <string name="submissionTypeAudio">Hljóð</string>
+    <string name="submissionTypeVideo">Myndband</string>
+    <string name="speedGraderUrlSubmission">Skilaslóð</string>
+
+    <string name="unsupportedFileMessage">Ekki var hægt að sýna þessa skrá. Notaðu hnappinn hér að neðan til að opna skránna með öðru appi á tækinu.</string>
+    <string name="speedGraderNoneMessage">Þetta verkefni leyfir ekki skil.</string>
+    <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra tæki fyrir skil.</string>
+    <string name="speedGraderOnPaperMessage">Þetta verkefni leyfir aðeins skil á pappír.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">Þessi skil voru vefslóð á ytri síðu. Hafðu í huga að þessi síða kann að hafa breyst síðan var skilað.</string>
+    <string name="speedGraderOpenUrl">Opna vefslóð</string>
+    <string name="annotationError">Textaskýringavilla</string>
+    <string name="annotationDialogMessage">Textaskýringum var eytt frá öðrum uppruna.</string>
+
+    <string name="selectCourse">Velja námskeið</string>
+
+    <string name="sendIndividualMessage">Senda sér skilaboð til hvers móttakanda</string>
+
+    <string name="filterInbox">Sía innhólf</string>
+    <string name="selectCanvasContext">Veldu námskeið eða hóp</string>
+
+    <string name="contentDescription_back">Til baka</string>
+
+    <string name="discussion_update_success">Breyting á umræðum tókst.</string>
+    <string name="discussion_update_empty">Umræðuskilaboðin mega ekki vera tóm.</string>
+    <string name="discussion_update_failure">Ekki var hægt að breyta umræðunum núna.</string>
+    <string name="discussion_sent_success">Svar við umræðum tókst.</string>
+    <string name="discussion_sent_empty">Svar við umræðum má ekki vera tómt.</string>
+    <string name="discussion_sent_failure">Ekki var hægt að senda svar við umræðum núna.</string>
+    <string name="discussion_first_to_respond">Verstu fyrst(ur) til að svara.</string>
+    <string name="addMorePeopleToMessage">Bæta við öðrum móttakanda. Ekki er hægt að senda skilaboð sem eru eingöngu með þig skráða/n sem móttakanda.</string>
+    <string name="tutorialSwipeMessage">Renndu til vinstri eða hægri til að skoða aðra nemendur.</string>
+    <string name="tutorialRubricMessage">Smelltu og haltu tölu til að sjá lýsingu.</string>
+
+    <string name="viewQuizSubmission">Skoða skil</string>
+    <string name="gradeQuizSubmission">Skil einkunna</string>
+    <string name="comment">Athugasemd</string>
+    <string name="messageStudentsWho">Senda skilaboð til nemenda sem&#8230;</string>
+
+    <string name="on">kveikt</string>
+
+    <string name="createDiscussion">Ný umræða</string>
+    <string name="options">Valkostir</string>
+    <string name="subscribe">Gerast áskrifandi</string>
+    <string name="allowThreadedReplies">Heimila svaraþráð</string>
+    <string name="usersMustPost">Notendur verða að birta áður en svör sjást</string>
+    <string name="allowUserComments">Leyfa notendum að gera athugasemdir</string>
+    <string name="discussionTitleMustBeSet">Umræða þarf að hafa titil.</string>
+    <string name="discussionSuccessfullyCreated">Umræða stofnuð.</string>
+    <string name="errorCreatingDiscussion">Villa kom upp við að búa til þessa umræðu. Reyndu aftur.</string>
+    <string name="editDiscussion">Breyta umræðu</string>
+    <string name="discussionSuccessfullyUpdated">Umræða uppfærð.</string>
+    <string name="input_text">Inntakstexti</string>
+    <string name="announcementSuccessfullyCreated">Tilkynning stofnuð.</string>
+    <string name="errorSavingAnnouncement">Villa kom upp við að vista þessa tilkynningu. Reyndu aftur.</string>
+    <string name="editAnnouncementTitle">Breyta tilkynningu</string>
+    <string name="announcementSuccessfullyUpdated">Tilkynning uppfærð.</string>
+    <string name="announcementDeleted">Tilkynningu eytt.</string>
+    <string name="postAt">Birta á</string>
+    <string name="errorDeletingAnnouncement">Villa kom upp við að eyða þessari tilkynningu. Reyndu aftur.</string>
+    <string name="deleteAnnouncementDialogTitle">Eyða tilkynningu?</string>
+    <string name="deleteAnnouncementDialogMessage">Viltu örugglega eyða þessum tilkynningum?</string>
+    <string name="deleteAnnouncement">Eyða tilkynningu</string>
+    <string name="annotationErrorOccurred">Óvænt villa við hleðslu á textaskýringum.</string>
+
+    <string name="account">Reikningur</string>
+    <string name="changeUser">Breyta notanda</string>
+    <string name="general">Almennt</string>
+    <string name="sendFeedback">Senda endurgjöf</string>
+    <string name="rateOnTheAppStore">Gefa einkunn á App Store</string>
+    <string name="privacyPolicy">Persónuverndarstefna</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Notandaskilmálar</string>
+    <string name="searchGuides">Leita í leiðbeiningum Canvas</string>
+    <string name="searchGuidesDetails">Finna svör við algengum spurningum</string>
+    <string name="reportProblem">Tilkynna vandamál</string>
+    <string name="reportProblemDetails">Ef appið hegðar sér illa skaltu láta okkur vita</string>
+    <string name="requestFeature">Biðja um eiginleika</string>
+    <string name="requestFeatureDetails">Ertu með hugmynd um hvernig bæta má appið?</string>
+    <string name="shareYourLove">Deildu ást þinni á appinu</string>
+    <string name="shareYourLoveDetails">Segðu okkur um uppáhalds hluta þína í appinu</string>
+    <string name="canvasGuides">Canvas leiðarvísar</string>
+    <string name="featureSubject">Hugmynd fyrir Canvas Kennari [Android]</string>
+    <string name="understandRequest">Eftirfarandi upplýsingar munu hjálpa okkur að skilja hugmynd þína betur:</string>
+    <string name="sendMail">Senda tölvupóst&#8230;</string>
+    <string name="editProfile">Breyta notandaupplýsingum</string>
+    <string name="name">Nafn</string>
+    <string name="bio">Lífsferill</string>
+    <string name="profileEditSuccess">Uppsetning var uppfærð</string>
+    <string name="profileEditFailure">Ekki var hægt að uppfæra uppsetningu</string>
+    <string name="takePhoto">Taka mynd</string>
+    <string name="choosePhotoFromGallery">Velja mynd úr gallerí</string>
+    <string name="fileNotFound">Skrá fannst ekki.</string>
+    <string name="version" formatted="false">Útgáfa %s</string>
+    <string name="fullVersion">Útgáfa %s (%d)</string>
+    <string name="tap_to_view_submissions_list">Smelltu til að skoða skilalista.</string>
+    <string name="assignmentDescriptionContentDescription">Lýsing verkefnis</string>
+    <string name="quizDescriptionContentDescription">Lýsing prófs</string>
+    <string name="removeDueDate">Fjarlægja skiladag</string>
+    <string name="removeDueDateMessage">Þetta fjarlægir skiladag og alla tengda viðtakendur.</string>
+    <string name="openTool">Opið verkfæri</string>
+    <string name="email">Netfang</string>
+    <string name="fullscreen">heilskjár</string>
+    <string name="addNew">Bæta við nýjum</string>
+    <string name="sendMessage">Senda skilaboð</string>
+    <string name="addMessage">Bæta við skilaboðum</string>
+    <string name="messageThisStudent">Skilaboð til nemanda</string>
+    <string name="scrollInstructions">Skrunaðu niður til að sjá allar upplýsingar</string>
+    <string name="dueTime">Skilatími</string>
+    <string name="available_from_date">Tiltækt frá degi</string>
+    <string name="available_from_time">Tiltækt frá tíma</string>
+    <string name="available_to_date">Tiltækt til dags</string>
+    <string name="available_to_time">Tiltækt til tíma</string>
+    <string name="addDescription">Bæta við lýsingu</string>
+    <string name="post_time">Tími birtingar</string>
+    <string name="allPeople">Allt fólk</string>
+    <string name="loading">Sæki</string>
+    <string name="saving">Vistar</string>
+    <string name="sendingSimple">Sendi</string>
+    <string name="uploading">Hlaða upp</string>
+    <string name="retry">Reyna aftur</string>
+    <string name="error_loading_submission">Það kom upp vandamál við að hlaða inn þessum skilum.</string>
+    <string name="search">Leita</string>
+    <string name="filterPeople">Sía fólk</string>
+    <string name="loadMore">Hlaða meira</string>
+    <string name="latestStudentActivityAtFormatted">Nýjasta virkni þann %1$s klukkan %2$s.</string>
+    <string name="errorLoadingStudentContextCard">Ekki var hægt að sækja upplýsingar um þennan notanda.</string>
+    <string name="enrollmentTypeStudent">Nemandi</string>
+    <string name="enrollmentTypeTeacher">Kennari</string>
+    <string name="enrollmentTypeObserver">Skoðandi</string>
+    <string name="enrollmentTypeTeachingAssistant">Aðstoðarkennari</string>
+    <string name="enrollmentTypeDesigner">Hönnuður</string>
+    <string name="enrollmentTypeUnknown">Óþekkt</string>
+    <string name="unableToLoadAttendance">Ekki var hægt að sækja mætingu núna.</string>
+    <string name="markRemainingAsPresent">Merkja mætt við alla sem eftir eru</string>
+    <string name="markAllAsPresent">Merkja mætt við alla</string>
+    <string name="calendar">Dagatal</string>
+    <string name="filterSections">Sía hluta</string>
+    <string name="addVideoComment">Bæta við myndbandsathugasemd</string>
+    <string name="addAudioComment">Bæta við hljóðathugasemd</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d klukkustundir, %2$d mínútur, og %3$d sekúndur</string>
+    <string name="recordingTimerSpeechDivider">%1$s af %2$s</string>
+    <string name="replay">Spila aftur</string>
+    <string name="stop">Stoppa</string>
+    <string name="startRecordingAudio">Hefja upptöku hljóðs</string>
+    <string name="stopRecordingAudio">Stoppa upptöku hljóðs</string>
+    <string name="startRecordingVideo">Hefja upptöku myndbands</string>
+    <string name="stopRecordingVideo">Stoppa upptöku myndbands</string>
+    <string name="closeRecordingView">Loka upptökuskjá</string>
+    <string name="deleteRecording">Eyða upptöku</string>
+    <string name="videoCommentReplay">Endurspilun myndbandsathugasemdar</string>
+    <string name="addMediaComment">Bæta við miðlaathugasemd</string>
+    <string name="copyrightHolder">Handhafi útgáfuréttar</string>
+    <string name="access">aðgangur</string>
+    <string name="usageRights">Notkunarréttindi</string>
+    <string name="deleteFile">Eyða skrá </string>
+    <string name="holdCopyright">Ég hef höfundarréttinn</string>
+    <string name="havePermission">Ég hef heimild til að nota skrá</string>
+    <string name="publicDomain">Skrá á opinberu léni</string>
+    <string name="fairUse">Undanþága fyrir ásættanlega notkun</string>
+    <string name="creativeCommons">Creative Commons skrá</string>
+    <string name="editFile">Breyta skrá</string>
+    <string name="deleteFolder">Eyða möppu</string>
+    <string name="editFolder">Breyta möppu</string>
+    <string name="deleteFileMessage">Viltu örugglega eyða þessari skrá?</string>
+    <string name="deleteFolderMessage">Viltu örugglega eyða þessari möppu? Öllu efni þessarar möppu verður einnig eytt.</string>
+    <string name="newFolder">Ný mappa</string>
+    <string name="createAFolder">Stofna möppu</string>
+    <string name="createFolder">Stofna möppu</string>
+    <string name="createAFile">Stofna skrá</string>
+    <string name="createFileFolderFabContentDesc">Sýna stofna skrá og stofna möppu hnappana</string>
+    <string name="hideCreateFileFolderFabContentDesc">Fela stofna skrá og stofna möppu hnappana</string>
+    <string name="unpublish">Taka úr birtingu</string>
+    <string name="restrictedAccess">Takmarkaður aðgangur</string>
+    <string name="restricted">Takmarkað</string>
+    <string name="hidden">Falið, skrár verða tiltækar með tenglum.</string>
+    <string name="studentsWithLink">Aðeins aðgengilegt nemendum með tengil. Ekki tiltækilegt í skrám nemanda.</string>
+    <string name="scheduleAvailability">Velja tiltækni nemanda</string>
+    <string name="folderCreationError">Villa kom upp við stofnun möppu.</string>
+
+    <string name="setAsFrontPage">Setja sem forsíðu</string>
+    <string name="canEdit">Getur breytt</string>
+    <string name="pageDetails">Upplýsingar um síðu</string>
+    <string name="pageSuccessfullyUpdated">Síða uppfærð.</string>
+    <string name="pageSuccessfullyCreated">Síða stofnuð.</string>
+    <string name="editPageTitle">Breyta síðu</string>
+    <string name="createPageTitle">Stofna síðu</string>
+    <string name="pageTitleMustBeSet">Síðutitill þarf að vera stilltur inn.</string>
+    <string name="pageDeleteTitle">Eyða síðu?</string>
+    <string name="pageDelete">Eyða síðu</string>
+    <string name="pageDeleteMessage">Þetta eyðir síðunni. Þessi aðgerð er óafturkræf.</string>
+    <string name="errorSavingPage">Villa kom upp við að vista þessa síðu. Reyndu aftur.</string>
+    <string name="frontPageUnpublishedError">Síða getur ekki verið forsíða og óbirt.</string>
+
+    <string name="onlyTeachers">Aðeins kennarar</string>
+    <string name="teachersAndStudents">Kennarar og nemendur</string>
+    <string name="anyone">Hver sem er</string>
+    <string name="groupMembers">Aðeins meðlimir</string>
+    <string name="license">Leyfi</string>
+    <string name="availableFromAfterTo">Tiltækileiki lokadagsetningar þarf að vera á eftir upphafsdagsetningu</string>
+    <string name="errorDeletingFile">Villa kom upp við eyðingu skráarinnar</string>
+    <string name="errorDeletingFolder">Villa kom upp við eyðingu möppunnar</string>
+    <string name="errorUpdatingFile">Villa kom upp við uppfærslu skráarinnar</string>
+    <string name="errorUpdatingFolder">Villa kom upp við uppfærslu möppunnar</string>
+
+    <string name="toDoEmpty">Ekkert annað á dagskrá!\n Njóttu dagsins.</string>
+    <string name="toDoNoSubmissions">Þetta verkefni er ekki með nein skil sem bíða mats.</string>
+    <string name="errorToDoRouteFailed">Villa kom upp við að skoða þetta verkefni á verkefnalista.</string>
+    <string name="errorIsDesigner">Hönnuðu innritun sér þetta ekki.</string>
+
+    <string name="sections">Fylki</string>
+    <string name="filterBy">Sía eftir&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">fyrir %s</string>
+    <string name="filterBySection">Sía eftir vali</string>
+    <string name="filterSubmissionsLowercase">Sía skil</string>
+    <string name="latePenalty">Viðurlög vegna of seinna skila</string>
+    <string name="finalGrade">Lokaeinkunn:</string>
+    <string name="moderatedGradingUnsupported">Stýrð einkunnagjöf er ekki studd eins og er í SpeedGrader fyrir farsíma.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="one">-%s punktur</item>
+        <item quantity="other">-%s punktar</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="one">-%s punktur</item>
+        <item quantity="other">-%s punktar</item>
+    </plurals>
+    <string name="todoUnreadCount">Verkefnalisti %d ólesin</string>
+    <string name="profileSettings">Uppsetningarstillingar</string>
+    <string name="downloadingFile">Sæki skrá&#8230;</string>
+    <string name="fileDownloadedSuccessfully">Skrá var sótt.</string>
+    <string name="tapToView">Smelltu til að skoða</string>
+    <string name="errorDownloadingFile">Villa kom upp við að sækja skránna. Vinsamlegast reynið aftur.</string>
+
+    <string name="postTo">Birta á</string>
+    <string name="allSections">Allir hlutar</string>
+
+    <string name="gauge">Mælir</string>
+    <string name="ltiLaunchFailure">Ekki var hægt að hlaða inn LTI verkfærinu í augnablikinu.</string>
+    <string name="downloading">Sæki&#8230;</string>
+
+</resources>

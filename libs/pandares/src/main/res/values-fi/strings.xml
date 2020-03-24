@@ -52,7 +52,6 @@
     <string name="allowedFileTypes">Sallittavat tiedostotyypit</string>
     <string name="resubmitAssignment">Lähetä tehtävä uudelleen</string>
     <string name="launchExternalTool">Käynnistä ulkoinen työkalu</string>
-
     <string name="preview">Esikatsele</string>
     <string name="submissionUploadFailedMessage">Yksi tai useampi tiedosto ei latautunut. Tarkista Internet-yhteytesi ja yritä lähettää uudelleen.</string>
     <string name="submissionUploadByteProgress">%1$s/%2$s</string>
@@ -63,18 +62,19 @@
     <string name="submissionDeleted">Lähetys poistettu.</string>
     <string name="missingSubmissionLabel">Puuttuu</string>
     <string name="gradedSubmissionLabel">Arvosteltu</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ei saatavissa esikatselua URL-linkeille, jotka käyttävät \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Syötä voimassa oleva URL</string>
     <string name="enterAUrlHereForYourSubmission">Syötä tässä URL lähetyksellesi</string>
     <string name="addFileFabContentDesc">Näytä Lisää tiedosto -asetukset</string>
     <string name="recordAudio">Nauhoita ääni</string>
-
     <string name="recordVideo">Nauhoita video</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
     <string name="textSubmissionFailureMessage">Jotakin meni pieleen lähetyksen päivityksessä. Lähetä uudelleen.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Lähetys</string>
     <string name="submissionVersions">Lähetyksen versiot</string>
@@ -93,6 +93,7 @@
     <string name="noneContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
     <string name="onPaperContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
     <string name="noOnlineSubmissions">Ei verkkolähetyksiä</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
@@ -101,10 +102,12 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s/%2$s pistettä</string>
     <string name="enterWhatIfScore">Syötä Mitä jos -pistemäärä.</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
     <string name="rubricViewLongDescription">Näytä pitkä kuvaus</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Ladataan tiedostoa %1$d/%2$d</string>
     <string name="assignmentSubmissionCommentUpload">Ladataan kommenttia kohteelle %s</string>
@@ -123,6 +126,7 @@
     <string name="commentSubmissionTypeMediaFile">Mediatiedosto</string>
     <string name="commentSubmissionTypeAudio">Ääni</string>
     <string name="commentSubmissionTypeVideo">Video</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Versio:</string>
 
@@ -165,7 +169,6 @@
     <string name="future">Tulevaisuus</string>
     <string name="next7Days">Seuraavat seitsemän päivää</string>
     <string name="days">Päivää</string>
-
     <string name="submissionDetailsDueTodayAt">Määräaika tänään %s</string>
     <string name="submissionDetailsDueTomorrowAt">Määräaika huomenna %s</string>
     <string name="submissionDetailsDueYesterdayAt">Määräaika eilen %s</string>
@@ -173,6 +176,8 @@
     <string name="submissionDetailsDueAt">Määräpäivä %1$s kohteessa %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">a.m.</string>
     <string name="lowercasePM">p.m.</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Lukittu</string>
     <string name="assignments">Tehtävät</string>
@@ -180,13 +185,16 @@
     <string name="noAssignmentsInGroup">Tässä ryhmässä ei ole tehtäviä</string>
     <string name="excusedAssignment">Tämän tehtävän annetaan mennä eikä sitä oteta huomioon koko laskelmassa</string>
     <string name="excused">EX</string>
+
     <!-- Assignment editing -->
-    <string name="points">Pisteitä </string>
+    <string name="points">Pisteitä\u0020</string>
     <string name="save">Tallenna</string>
     <string name="cancel">Peruuta</string>
+
     <!-- Discussions -->
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
 
+    <string name="fileCurrentlyLocked">Tämä tiedosto on parhaillaan lukittu</string>
     <!-- Events -->
     <string name="Starts">Alkaa</string>
     <string name="Ends">Päättyy</string>
@@ -205,9 +213,7 @@
     <string name="whatIfDialogText">Mitä jos -pistemäärä</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s pistettä, %3$s</string>
-
-
-    <string name="inbox">Tulevien laatikko</string>
+    <string name="inbox">Saapuneet</string>
     <string name="unread">Lukematon</string>
     <string name="archived">Arkistoitu</string>
     <string name="sent">Lähetetty</string>
@@ -329,7 +335,7 @@
     <string name="with">jossa</string>
     <string name="starConversation">Aloita keskustelu</string>
     <string name="deleteConversation">Poista keskustelu</string>
-    <string name="sharedWith">Kenen kanssa jaettu  </string>
+    <string name="sharedWith">Kenen kanssa jaettu \u0020</string>
     <string name="sharedWithYou">Jaettiin sinun kanssasi</string>
     <string name="inboxEmptyMessage">Luo uusi keskustelu napauttamalla \"+\".</string>
     <string name="inboxAllMessages">Kaikki</string>
@@ -386,8 +392,8 @@
     <string name="students">Opiskelijat</string>
     <string name="observers">Tarkkailijat</string>
     <string name="syllabusMissing">Opinto-ohjelmaa ei ole lisätty.</string>
-
     <string name="syllabusEventsError">Moduulien latauksessa ilmeni virhe.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Valitse vastaanottajat</string>
     <string name="messageHasNoRecipients">Tässä viestissä ei parhaillaan ole vastaanottajia.</string>
@@ -414,6 +420,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Poistettu</string>
+
     <string name="contentDescriptionFiles">Tiedostokuvake</string>
 
     <string name="loadingCanvas">Ladataan Canvas-sisältöä&#8230;</string>
@@ -437,6 +444,7 @@
     <string name="emptyId">Tunnus ei voi olla tyhjä.</string>
 
     <string name="goToQuiz">Siirry tietovisaan</string>
+
     <string name="quizzes">Tietovisat</string>
 
     <string name="lastDiscussionPost">Viimeinen lähetys</string>
@@ -495,8 +503,8 @@
     <string name="goToModules">Siirry Moduuleihin</string>
     <string name="markDone">Merkitse valmiiksi</string>
     <string name="moduleItemNotFound">Moduulin kohdetta ei löytynyt</string>
-
     <string name="errorLoadingModules">Moduulien latauksessa ilmeni virhe.</string>
+
     <string name="help">Ohje</string>
     <string name="instructor_question">Ohjaajan kysymys</string>
     <string name="link">Linkki</string>
@@ -512,11 +520,11 @@
     <string name="textEntry">Tekstin syöttäminen</string>
     <string name="onlineURL">Verkko-url</string>
     <string name="oneFileOnly">Lähetys hyväksyy vain yhden tiedoston latauksen</string>
-
-
     <string name="websiteEntry">Lisää verkkosivuston merkintä</string>
     <string name="mediaRecordingEntry">Median nauhoitukset</string>
     <string name="submit">Lähetä</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Tallentamaton edistyminen</string>
     <string name="informationLost">Tallentamattomat muutokset menetetään. Haluatko jatkaa?</string>
@@ -532,6 +540,7 @@
     <string name="next">Seuraava</string>
     <string name="turnedIn">Luovutettu:&#160;</string>
     <string name="addComment">Lisää kommentti&#8230;</string>
+
     <string name="home">Aloitussivu</string>
     <string name="Notifications">Ilmoitukset</string>
 
@@ -543,11 +552,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Yksityisesti saatavissa</string>
     <string name="publiclyAvailable">Julkisesti saatavissa</string>
-    <string name="starts">Alkaa:  </string>
-    <string name="courseCode">Kurssin koodi:  </string>
-    <string name="ends">Päättyy:  </string>
-    <string name="visibility">Näkyvyys:  </string>
-    <string name="license">Lisenssi:  </string>
+    <string name="starts">Alkaa: \u0020</string>
+    <string name="courseCode">Kurssin koodi: \u0020</string>
+    <string name="ends">Päättyy: \u0020</string>
+    <string name="visibility">Näkyvyys: \u0020</string>
+    <string name="license">Lisenssi: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -561,6 +570,8 @@
     <string name="clickToViewSubmission">Verkkosivuston tilannekuva otettiin, kun luovutit tehtävän. Napauta ja pidä kuvaa alla avataksesi tai ladataksesi koko kuvan.</string>
     <string name="urlSubmissionNoPreview">Tämä lähetys oli URL ulkoiselle sivulle. Muista, että tämä sivu on ehkä muuttunut siitä, kun lähetys alunperin tapahtui.</string>
     <string name="contentDescriptionPreviewImage">Lähetetyn url-linkin esikatselu</string>
+
+
     <string name="isNotSupportedFeature">%1$s ei tueta.</string>
     <string name="isNotSupported">Linkkiä ei tueta.</string>
     <string name="openInBrowser">Avaa selaimessa</string>
@@ -577,10 +588,12 @@
     <string name="panda_fact_string">Pandaa koskeva tieto:&#160;</string>
     <string name="remove">Poista</string>
     <string name="founders">Perustajat</string>
+
     <string name="EULA">Käyttöoikeussopimus</string>
     <string name="privacyPolicy">Tietosuojakäytäntö</string>
     <string name="termsOfUse">Käyttöehdot</string>
     <string name="canvasOnGithub">Canvas GitHubissa</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Tehtävän tietovisat</string>
     <string name="practiceQuizzes">Harjoittelutietovisat</string>
@@ -589,9 +602,9 @@
     <string name="quizMatchingDefaultDisplay">[Valitse]</string>
     <string name="choose_answer_below">Valitse vastauksesi alla</string>
     <string name="choose_answers_below">Valitse vastauksesi alla</string>
-
-
     <string name="flag_the_question">Merkitse kysymys</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
@@ -732,7 +745,7 @@
 
     <string name="notification_cat_course_activities">Kurssiaktiviteetit</string>
     <string name="notification_cat_discussions">Keskustelut</string>
-    <string name="notification_cat_conversations">Keskustelut</string>
+    <string name="notification_cat_conversations">Viestit</string>
     <string name="notification_cat_scheduling">Aikatauluttaminen</string>
     <string name="notification_cat_groups">Ryhmät</string>
     <string name="notification_cat_alerts">Hälytykset</string>
@@ -755,7 +768,7 @@
 
     <string name="notification_pref_add_to_conversation">Lisää keskusteluun</string>
     <string name="notification_pref_conversation_message">Keskustelun viesti</string>
-    <string name="notification_pref_conversations_created_by_you">Luomasi keskustelut</string>
+    <string name="notification_pref_conversations_created_by_you">Luomasi viestit</string>
 
     <string name="notification_pref_student_appointment_signups">Opiskelijatapaamisen rekisteröitymiset</string>
     <string name="notification_pref_appointment_signups">Tapaamisen rekisteröitymiset</string>
@@ -846,7 +859,12 @@
     <string name="start">Käynnistä</string>
     <string name="newPushNotifications">%1$s Uudet ilmoitukset</string>
     <string name="like">tykkäys</string>
+    <string name="likeEntryLabel">TYkkäysmerkintä</string>
     <string name="likes">tykkäystä</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s tykkää</item>
+        <item quantity="other"> %s  tykkäystä</item>
+    </plurals>
 
     <string name="color_1">Punainen</string>
     <string name="color_2">Kuuma vaaleanpunainen</string>
@@ -906,6 +924,7 @@
     <string name="editDashboard">Muokkaa koontinäyttöä</string>
     <string name="editDashboardDescriptor">Valitse, mitkä kurssit haluaisit nähdä koontinäytöllä</string>
     <string name="a11y_editYourCourseList">Muokkaa kurssiluetteloa</string>
+
     <string name="dashboard">Koontinäyttö</string>
     <string name="previous">Edellinen</string>
     <string name="pageNum" formatted="false">Sivu %d/%d</string>
@@ -933,8 +952,8 @@
     <string name="tapToViewAnnouncement">Napauta tarkastellaksesi ilmoitusta</string>
     <string name="acceptCourseInvitation">Hyväksy</string>
     <string name="declineCourseInvitation">Kiellä</string>
-
     <string name="outOf">/</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Tähän tiliin ei ole liitetty tiedostoja.</string>
     <string name="noFilesSubtextGroup">Tähän ryhmään ei ole liitetty tiedostoja.</string>
@@ -995,6 +1014,7 @@
     <string name="unableToViewInBrowser">Emme pystyneet löytämään ulkoista sovellusta tämän LTI-työkalun tarkasteluun.</string>
 
     <string name="commentUpload">Kommentin lataus</string>
+
     <string name="frontPage">Etusivu</string>
     <string name="editPage">Muokkaa sivua</string>
     <string name="description">Kuvaus</string>
@@ -1015,6 +1035,7 @@
     <string name="addChildErrorMessage">Parinmuodostus epäonnistui. Varmista, että parinmuodostuskoodisi on oikein ja käyttöajan rajoissa.</string>
     <string name="gradeComplete">Valmis</string>
     <string name="gradeIncomplete">Keskeneräinen</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Lähetysasetukset</string>
     <string name="postGradesTab">Lähetä arvosanoja</string>
@@ -1046,6 +1067,41 @@
     <string name="gradeOverride">Korvaa arvosana</string>
     <string name="currentGrade">Nykyinen arvosana </string>
 
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Valittu pää: %s</string>
+    <string name="content_description_chosen_body">Valittu keho: %s</string>
+    <string name="content_description_chosen_feet">Valitut jalat: %s</string>
+    <string name="content_description_panda_body_1">Violetti sydänmekko vaalenapunaisella saumalla</string>
+    <string name="content_description_panda_body_2">Vihreä tähtimekko sinisellä saumalla</string>
+    <string name="content_description_panda_body_3">Punainen tähtimekko oranssilla saumalla</string>
+    <string name="content_description_panda_body_4">Sininen jakku, punainen kravatti ja harmaat housut</string>
+    <string name="content_description_panda_body_5">Oranssi kauluspaita ja farkut</string>
+    <string name="content_description_panda_body_6">Punainen kauluspaita ja ruskeat housut</string>
+    <string name="content_description_panda_body_7">Keltainen aurinkografiikka T-paita ja harmaat housut</string>
+    <string name="content_description_panda_body_8">Sinivihreä T-paita ja violetit housut</string>
+    <string name="content_description_panda_body_9">Sininen android-kuviollinen T-paita ja vihreät housut</string>
+    <string name="content_description_panda_body_10">Valkoinen instructure-kuviollinen T-paita ja siniset housut</string>
+    <string name="content_description_panda_body_11">Tummanharmaa kolmen tähden T-paita ja sinivihreät housut</string>
+    <string name="content_description_panda_body_12">Purppuranpunainen virkapuku taikasauvalla ja mustat housut</string>
+    <string name="content_description_panda_body_13">Pandan keho</string>
+    <string name="content_description_panda_head_2">Lentäjän aurinkolasit ja huulipuna</string>
+    <string name="content_description_panda_head_3">Meikki ja violetit hiukset</string>
+    <string name="content_description_panda_head_4">Upeat viikset</string>
+    <string name="content_description_panda_head_5">Vihreät bilelasit</string>
+    <string name="content_description_panda_head_6">Ruskeat lasit</string>
+    <string name="content_description_panda_head_7">Kultainen naamio ja huulipuna</string>
+    <string name="content_description_panda_head_8">Lentäjän aurinkolasit</string>
+    <string name="content_description_panda_head_9">Pisamalliset posket</string>
+    <string name="content_description_panda_head_10">Silmälasipäinen velho, jolla on otsassa arpi</string>
+    <string name="content_description_panda_feet_1">Paljaat jalat</string>
+    <string name="content_description_panda_feet_2">Vaaleanpunaiset kengät violeteilla ruseteilla</string>
+    <string name="content_description_panda_feet_3">Siniset kengät vihreillä ruseteilla</string>
+    <string name="content_description_panda_feet_4">Punaiset kengät oransseilla ruseteilla</string>
+    <string name="content_description_panda_feet_5">Punaiset kengät</string>
+    <string name="content_description_choose_head">Valitse pää</string>
+    <string name="content_description_choose_body">Valitse keho</string>
+    <string name="content_description_choose_feet">Valitse jalat</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d tuntia, %2$d minuuttia ja %3$d sekuntia</string>
@@ -1064,7 +1120,6 @@
 
     <string name="addVideoComment">Lisää videon kommentti</string>
     <string name="addAudioComment">Lisää videon kommentti</string>
-
     <string name="audioRecordingError">Ilmeni odottamaton virhe, kun ääntä yritettiin nauhoittaa.</string>
     <string name="videoRecordingError">Ilmeni odottamaton virhe, kun videota yritettiin nauhoittaa.</string>
 

@@ -65,7 +65,7 @@
     <string name="practice_quiz">Практическая контрольная работа</string>
     <string name="graded_survey">Оцененный опрос</string>
     <string name="ungraded_survey">Опрос без оценки</string>
-    <string name="andMore"> и многое другое %d</string>
+    <string name="andMore">\u0020и многое другое %d</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Студент</string>

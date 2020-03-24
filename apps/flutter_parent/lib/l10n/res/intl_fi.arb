@@ -1,0 +1,1558 @@
+﻿{
+  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "alertsLabel": "Hälytykset",
+  "@alertsLabel": {
+    "description"<TAG>The label for the Alerts tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "calendarLabel": "Kalenteri",
+  "@calendarLabel": {
+    "description"<TAG>The label for the Calendar tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "coursesLabel": "Kurssit",
+  "@coursesLabel": {
+    "description"<TAG>The label for the Courses tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Students": "Ei opiskelijoita",
+  "@No Students": {
+    "description"<TAG>Text for when an observer has no students they are observing",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Näytä opiskelijan valintatoiminto napauttamalla",
+  "@Tap to show student selector": {
+    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Muodosta yhteys uuden opiskelijan kanssa napauttamalla",
+  "@Tap to pair with a new student": {
+    "description"<TAG>Semantics label for the add student button in the student selector",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "Valitse tämä opiskelija napauttamalla",
+  "@Tap to select this student": {
+    "description"<TAG>Semantics label on individual students in the student switcher",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Manage Students": "Hallitse opiskelijoita",
+  "@Manage Students": {
+    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Help": "Ohje",
+  "@Help": {
+    "description"<TAG>Label text for the help nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Log Out": "Kirjaudu ulos",
+  "@Log Out": {
+    "description"<TAG>Label text for the Log Out nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Switch Users": "Vaihda käyttäjiä",
+  "@Switch Users": {
+    "description"<TAG>Label text for the Switch Users nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "appVersion": "v. <bpt>{version}</bpt>",
+  "@appVersion": {
+    "description"<TAG>App version shown in the navigation drawer",
+    "type"<TAG>text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Haluatko varmasti kirjautua ulos?",
+  "@Are you sure you want to log out?": {
+    "description"<TAG>Confirmation message displayed when the user tries to log out",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Previous Logins": "Edelliset kirjautumiset",
+  "@Previous Logins": {
+    "description"<TAG>Label for the list of previous user logins",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas-logo",
+  "@canvasLogoLabel": {
+    "description"<TAG>The semantics label for the Canvas logo",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "findSchool": "Etsi koulu",
+  "@findSchool": {
+    "description"<TAG>Text for the find-my-school button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Kirjoita koulun nimi tai alue...",
+  "@domainSearchInputHint": {
+    "description"<TAG>Input hint for the text box on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "noDomainResults": "Ei löydy kouluja, jotka täsmäävät haun \"<bpt>{query}</bpt>\" kanssa",
+  "@noDomainResults": {
+    "description"<TAG>Message shown to users when the domain search query did not return any results",
+    "type"<TAG>text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Miten löydän kouluni tai alueeni?",
+  "@domainSearchHelpLabel": {
+    "description"<TAG>Label for the help button on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas-oppaat",
+  "@canvasGuides": {
+    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas-tuki",
+  "@canvasSupport": {
+    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Yritä etsiä sen koulun tai alueen nimeä, jolle yrität mennä, kuten “Smithin yksityiskoulu” tai “Smithin kunnan koulut”. Voit myös syöttää Canvasin verkko-osoitteen suoraan, kuten “smith.instructure.com”.\n\nLisätietoja laitoksesi Canvas-tilin etsimisestä löytyy seuraavasta <bpt>{canvasGuides}</bpt>, ota yhteyttä <bpt>{canvasSupport}</bpt>, tai pyydä apua koulustasi.",
+  "@domainSearchHelpBody": {
+    "description"<TAG>The body text shown in the help dialog on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Voi ei!",
+  "@Uh oh!": {
+    "description"<TAG>Title of the screen that shows when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Emme ole varmoja, mitä tapahtui, mutta se ei ollut hyvä. Ota meihin yhteyttä, jos tätä tapahtuu edelleen.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description"<TAG>Message shown when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Contact Support": "Ota yhteyttä tukeen",
+  "@Contact Support": {
+    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "View error details": "Näytä virhetiedot",
+  "@View error details": {
+    "description"<TAG>Label for the button that allowed users to view crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Restart app": "Käynnistä sovellus uudelleen",
+  "@Restart app": {
+    "description"<TAG>Label for the button that will restart the entire application",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Application version": "Sovelluksen versio",
+  "@Application version": {
+    "description"<TAG>Label for the application version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device model": "Laitteen malli",
+  "@Device model": {
+    "description"<TAG>Label for the device model displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Android OS version": "Android-käyttöjärjestelmän versio",
+  "@Android OS version": {
+    "description"<TAG>Label for the Android operating system version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Full error message": "Koko virhesanoma",
+  "@Full error message": {
+    "description"<TAG>Label for the full error message displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox": "Tulevien laatikko",
+  "@Inbox": {
+    "description"<TAG>Title for the Inbox screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "Tulevien laatikon latauksessa ilmeni virhe.",
+  "@There was an error loading your inbox messages.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Subject": "Ei aihetta",
+  "@No Subject": {
+    "description"<TAG>Title used for inbox messages that have no subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Ei voida noutaa kursseja. Tarkasta yhteytesi ja yritä uudelleen.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description"<TAG>Message shown when an error occured while loading courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "Valitse kurssi, jolle lähetetään viesti",
+  "@Choose a course to message": {
+    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "Saapuvia posteja nolla!",
+  "@Inbox Zero": {
+    "description"<TAG>Title of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Olet ajan tasalla!",
+  "@You’re all caught up!": {
+    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "Tämän kurssin vastaanottajien lataamisessa ilmeni virhe",
+  "@There was an error loading recipients for this course": {
+    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Viestin lähetys ei onnistunut. Tarkasta verkkoyhteys ja yritä uudelleen.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description"<TAG>Message show when there was an error creating or sending a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "Tallentamattomat muutokset",
+  "@Unsaved changes": {
+    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Haluatko varmasti sulkea tämän sivun? Lähettämätön viestisi menetetään.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "New message": "Uusi viesti",
+  "@New message": {
+    "description"<TAG>Title of the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add attachment": "Lisää liite",
+  "@Add attachment": {
+    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send message": "Lähetä viesti",
+  "@Send message": {
+    "description"<TAG>Tooltip for the send-message button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Select recipients": "Valitse vastaanottajat",
+  "@Select recipients": {
+    "description"<TAG>Tooltip for the button that allows users to select message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No recipients selected": "Vastaanottajia ei valittu",
+  "@No recipients selected": {
+    "description"<TAG>Hint displayed when the user has not selected any message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message subject": "Viestin otsikko",
+  "@Message subject": {
+    "description"<TAG>Hint text displayed in the input field for the message subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message": "Viesti",
+  "@Message": {
+    "description"<TAG>Hint text displayed in the input field for the message body",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Recipients": "Vastaanottajat",
+  "@Recipients": {
+    "description"<TAG>Label for message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "@plusRecipientCount": {
+    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Epäonnistui. Asetukset napauttamalla.",
+  "@Failed. Tap for options.": {
+    "description"<TAG>Short message shown on a message attachment when uploading has failed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "courseForWhom": "<bpt>{studentShortName}</bpt>",
+  "@courseForWhom": {
+    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Koskee: <bpt>{studentName}</bpt>, <bpt>{linkUrl}</bpt>",
+  "@messageLinkPostscript": {
+    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "Tämän keskustelun latauksessa ilmeni virhe",
+  "@There was an error loading this conversation": {
+    "description"<TAG>Message shown when a conversation fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply": "Vastaus",
+  "@Reply": {
+    "description"<TAG>Button label for replying to a conversation",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply All": "Vastaa kaikille",
+  "@Reply All": {
+    "description"<TAG>Button label for replying to all conversation participants",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unknown User": "Tuntematon käyttäjä",
+  "@Unknown User": {
+    "description"<TAG>Label used where the user name is not known",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "me": "minä",
+  "@me": {
+    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "<bpt>{authorName}</bpt> - <bpt>{recipientName}</bpt>",
+  "@authorToRecipient": {
+    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> 1 muu<bpt>}other{{authorName}</bpt> - <bpt>{howMany}</bpt> muuta<bpt>}}</bpt>",
+  "@authorToNOthers": {
+    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> <bpt>{recipientName}</bpt> ja 1 muu<bpt>}other{{authorName}</bpt> <bpt>{recipientName}</bpt> ja <bpt>{howMany}</bpt> muuta<bpt>}}</bpt>",
+  "@authorToRecipientAndNOthers": {
+    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Lataa",
+  "@Download": {
+    "description"<TAG>Label for the button that will begin downloading a file",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Open with another app": "Avaa toisella sovelluksella",
+  "@Open with another app": {
+    "description"<TAG>Label for the button that will allow users to open a file with another app",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "Ei ole asennettuna sovelluksia, joilla tämä tiedosto voidaan avata",
+  "@There are no installed applications that can open this file": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsupported File": "Tukematon tiedosto",
+  "@Unsupported File": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Tätä tiedostoa ei tueta eikä sitä voida tarkastella sovelluksen läpi",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Tätä mediatiedostoa ei voida toistaa",
+  "@Unable to play this media file": {
+    "description"<TAG>Message shown when audio or video media could not be played",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "Tätä kuvaa ei voida ladata",
+  "@Unable to load this image": {
+    "description"<TAG>Message shown when an image file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "Tämän tiedoston latauksessa ilmeni virhe",
+  "@There was an error loading this file": {
+    "description"<TAG>Message shown when a file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Courses": "Ei kursseja",
+  "@No Courses": {
+    "description"<TAG>Title for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Tämän opiskelijan kursseja ei ehkä ole vielä julkaistu.",
+  "@Your student’s courses might not be published yet.": {
+    "description"<TAG>Message for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "Opiskelijasi kurssien latauksessa ilmeni virhe.",
+  "@There was an error loading your your student’s courses.": {
+    "description"<TAG>Message displayed when the list of student courses could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Grade": "Ei arvosanaa",
+  "@No Grade": {
+    "description"<TAG>Message shown when there is currently no grade available for a course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter by": "Suodatusperuste",
+  "@Filter by": {
+    "description"<TAG>Title for list of terms to filter grades by",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grades": "Arvosanat",
+  "@Grades": {
+    "description"<TAG>Label for the \"Grades\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Syllabus": "Opinto-ohjelma",
+  "@Syllabus": {
+    "description"<TAG>Label for the \"Syllabus\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Front Page": "Etusivu",
+  "@Front Page": {
+    "description"<TAG>Label for the \"Front Page\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Summary": "Yhteenveto",
+  "@Summary": {
+    "description"<TAG>Label for the \"Summary\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "Lähetä viesti tästä kurssista",
+  "@Send a message about this course": {
+    "description"<TAG>Accessibility hint for the course messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Total Grade": "Kokonaisarvosana",
+  "@Total Grade": {
+    "description"<TAG>Label for the total grade in the course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Graded": "Arvosteltu",
+  "@Graded": {
+    "description"<TAG>Label for assignments that have been graded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Submitted": "Lähetetty",
+  "@Submitted": {
+    "description"<TAG>Label for assignments that have been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not Submitted": "Ei lähetetty",
+  "@Not Submitted": {
+    "description"<TAG>Label for assignments that have not been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Late": "Myöhään",
+  "@Late": {
+    "description"<TAG>Label for assignments that have been marked late or submitted late",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Missing": "Puuttuu",
+  "@Missing": {
+    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description"<TAG>Value representing no score for student submission",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "Kaikki arvosanojen antojaksot",
+  "@All Grading Periods": {
+    "description"<TAG>Label for selecting all grading periods",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Assignments": "Ei tehtäviä",
+  "@No Assignments": {
+    "description"<TAG>Title for the no assignments message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Näyttää siltä kuin tehtäviä ei vielä olisi luotu tässä tilassa.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description"<TAG>Message for no assignments",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "Tämän kurssin yhteenvetotietojen lataamisessa ilmeni virhe.",
+  "@There was an error loading the summary details for this course.": {
+    "description"<TAG>Message shown when the course summary could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Summary": "Ei yhteenvetoa",
+  "@No Summary": {
+    "description"<TAG>Title displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Kurssilla ei ole vielä tehtäviä tai kalenterin tehtäviä.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description"<TAG>Message displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt>/<bpt>{pointsPossible}</bpt>",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "<bpt>{score}</bpt>/<bpt>{pointsPossible}</bpt> pistettä",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Koskee: <bpt>{studentName}</bpt>, Arvosanat",
+  "@gradesSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Koskee: <bpt>{studentName}</bpt>, Opinto-ohjelma",
+  "@syllabusSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Koskee: <bpt>{studentName}</bpt>, Etusivu",
+  "@frontPageSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Koskee: <bpt>{studentName}</bpt>, Tehtävä - <bpt>{assignmentName}</bpt>",
+  "@assignmentSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Koskee: <bpt>{studentName}</bpt>, Tapahtuma - <bpt>{eventTitle}</bpt>",
+  "@eventSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "Sivutietoja ei ole saatavilla.",
+  "@There is no page information available.": {
+    "description"<TAG>Description for when no page information is available",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment Details": "Tehtävän tiedot",
+  "@Assignment Details": {
+    "description"<TAG>Title for the page that shows details for an assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "<bpt>{points}</bpt> pistettä",
+  "@assignmentTotalPoints": {
+    "description"<TAG>Label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> pistettä",
+  "@assignmentTotalPointsAccessible": {
+    "description"<TAG>Screen reader label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Määräpäivä",
+  "@Due": {
+    "description"<TAG>Label for an assignment due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade": "Arvosana",
+  "@Grade": {
+    "description"<TAG>Label for the section that displays an assignment's grade",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locked": "Lukittu",
+  "@Locked": {
+    "description"<TAG>Label for when an assignment is locked",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Tehtävä on lukittu moduulilla \"<bpt>{moduleName}</bpt>\".",
+  "@assignmentLockedModule": {
+    "description"<TAG>The locked description when an assignment is locked by a module",
+    "type"<TAG>text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Muistuta minua",
+  "@Remind Me": {
+    "description"<TAG>Label for the row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "Aseta muistuttimen kytkin",
+  "@Set reminder switch": {
+    "description"<TAG>Label for the switch to set a reminder",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Määritä päivämäärä ja aika, jolloin sinulle ilmoitetaan tästä määrätystä tehtävästä.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description"<TAG>Description for row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Saat ilmoituksen tästä tehtävästä...",
+  "@You will be notified about this assignment on…": {
+    "description"<TAG>Description for when a reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Description": "Kuvaus",
+  "@Description": {
+    "description"<TAG>Label for the description of the assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Instructions": "Rubriikki",
+  "@Instructions": {
+    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No description": "Ei kuvausta",
+  "@No description": {
+    "description"<TAG>Message used when the assignment has no description",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Lähetä viesti tästä tehtävästä",
+  "@Send a message about this assignment": {
+    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Tätä sovellusta ei ole valtuutettu käyttöön.",
+  "@This app is not authorized for use.": {
+    "description"<TAG>The error shown when the app being used is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "Syöttämääsi palvelinta ei ole valtuutettu tälle sovellukselle.",
+  "@The server you entered is not authorized for this app.": {
+    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "Tämän sovelluksen käyttäjän edustajalle ei ole annettu valtuutuksia.",
+  "@The user agent for this app is not authorized.": {
+    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "Emme voineet vahvistaa tämän sovelluksen kanssa käytettävää palvelinta.",
+  "@We were unable to verify the server for use with this app.": {
+    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reminders": "Muistutukset",
+  "@Reminders": {
+    "description"<TAG>Name of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Muistutusilmoitukset tehtävistä ja kalenteritapahtumista",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description"<TAG>Description of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not a parent?": "Et ole vanhempi?",
+  "@Not a parent?": {
+    "description"<TAG>Title for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "Emme löytäneet opiskelijoita, jotka liittyisivät tähän tiliin",
+  "@We couldn't find any students associated with this account": {
+    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Oletko opiskelija vai opettaja?",
+  "@Are you a student or teacher?": {
+    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Return to Login": "Palaa kirjautumiseen",
+  "@Return to Login": {
+    "description"<TAG>Label for the button that returns the user to the login screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "STUDENT": "OPISKELIJA",
+  "@STUDENT": {
+    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TEACHER": "OPETTAJA",
+  "@TEACHER": {
+    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas-opiskelija",
+  "@Canvas Student": {
+    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas-opettaja",
+  "@Canvas Teacher": {
+    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Alerts": "Ei hälytyksiä",
+  "@No Alerts": {
+    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Ei ole vielä mitään ilmoitettavaa.",
+  "@There’s nothing to be notified of yet.": {
+    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcement": "Kurssin ilmoitus",
+  "@Course Announcement": {
+    "description"<TAG>Title for alerts when there is a course announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "Laitoksen ilmoitus",
+  "@Institution Announcement": {
+    "description"<TAG>Title for alerts when there is an institution announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Tehtävän arvosana yllä <bpt>{threshold}</bpt>",
+  "@assignmentGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Tehtävän arvosana alla <bpt>{threshold}</bpt>",
+  "@assignmentGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Kurssin arvosana yllä <bpt>{threshold}</bpt>",
+  "@courseGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when a course grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Kurssin arvosana alla <bpt>{threshold}</bpt>",
+  "@courseGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when a course grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Asetukset",
+  "@Settings": {
+    "description"<TAG>Title for the settings screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Theme": "Teema",
+  "@Theme": {
+    "description"<TAG>Label for the light/dark theme section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Dark Mode": "Tumma tila",
+  "@Dark Mode": {
+    "description"<TAG>Label for the button that enables dark mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Light Mode": "Vaalea tila",
+  "@Light Mode": {
+    "description"<TAG>Label for the button that enables light mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Korkean kontrastin tila",
+  "@High Contrast Mode": {
+    "description"<TAG>Label for the switch that toggles high contrast mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Appearance": "Ulkoasu",
+  "@Appearance": {
+    "description"<TAG>Label for the appearance section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Lähetetty onnistuneesti!",
+  "@Successfully submitted!": {
+    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Tämä tehtävä lähetettiin <bpt>{date}</bpt> <bpt>{time}</bpt> ja odottaa arvosanan antoa",
+  "@submissionStatusSuccessSubtitle": {
+    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>/1 piste<bpt>}other{</bpt>/<bpt>{points}</bpt> pistettä<bpt>}}</bpt>",
+  "@outOfPoints": {
+    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Annettu anteeksi",
+  "@Excused": {
+    "description"<TAG>Grading status for an assignment marked as excused",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Complete": "Valmis",
+  "@Complete": {
+    "description"<TAG>Grading status for an assignment marked as complete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Incomplete": "Keskeneräinen",
+  "@Incomplete": {
+    "description"<TAG>Grading status for an assignment marked as incomplete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "minus": "miinus",
+  "@minus": {
+    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "latePenalty": "Rangaistus myöhästymisestä (-<bpt>{pointsLost}</bpt>)",
+  "@latePenalty": {
+    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Lopullinen arvosana: <bpt>{grade}</bpt>",
+  "@finalGrade": {
+    "description"<TAG>Text that displays the final grade of an assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Hälytykse asetukset",
+  "@Alert Settings": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Alert me when…": "Hälytä minua, kun...",
+  "@Alert me when…": {
+    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade below": "Kurssin arvosana alapuolella",
+  "@Course grade below": {
+    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade above": "Kurssin arvosana yläpuolella",
+  "@Course grade above": {
+    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment missing": "Tehtävä puuttuu",
+  "@Assignment missing": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "Tehtävän arvosana alla",
+  "@Assignment grade below": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "Tehtävän arvosana yllä",
+  "@Assignment grade above": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcements": "Kurssin ilmoitukset",
+  "@Course Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "Laitoksen ilmoitukset",
+  "@Institution Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Never": "Ei koskaan",
+  "@Never": {
+    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade percentage": "Arvosanan prosenttiosuus",
+  "@Grade percentage": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "Opiskelijahälytysten latauksessa ilmeni virhe.",
+  "@There was an error loading your student's alerts.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Must be below 100": "Täytyy olla alle 100",
+  "@Must be below 100": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Täytyy olla alle <bpt>{percentage}</bpt>",
+  "@mustBeBelowN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Täytyy olla yli <bpt>{percentage}</bpt>",
+  "@mustBeAboveN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "Opettaja",
+  "@Teacher": {
+    "description"<TAG>Label for the Teacher enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Student": "Opiskelija",
+  "@Student": {
+    "description"<TAG>Label for the Student enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TA": "Apuopettaja",
+  "@TA": {
+    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Observer": "Havainnoija",
+  "@Observer": {
+    "description"<TAG>Label for the Observer enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Use Camera": "Käytä kameraa",
+  "@Use Camera": {
+    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Upload File": "Lataa tiedosto",
+  "@Upload File": {
+    "description"<TAG>Label for the action item that lets the user upload a file from their device",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Valitse galleriasta",
+  "@Choose from Gallery": {
+    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Preparing…": "Valmistellaan...",
+  "@Preparing…": {
+    "description"<TAG>Message shown while a file is being prepared to attach to a message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add student with…": "Lisää opiskelija, jolla on...",
+  "@Add student with…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add Student": "Lisää opiskelija",
+  "@Add Student": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "Et tarkkaile yhtään opiskelijaa.",
+  "@You are not observing any students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "Opiskelijoidesi latauksessa ilmeni virhe.",
+  "@There was an error loading your students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Pairing Code": "Parinmuodostuskoodi",
+  "@Pairing Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Kirjoita opiskelijan parinmuodostuskoodi, joka on toimitettu sinulle. Jos parinmuodostuskoodi ei toimi, se saattaa olla vanhentunut",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Koodisi on virheellinen tai vanhentunut.",
+  "@Your code is incorrect or expired.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "QR Code": "Viivakoodi",
+  "@QR Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add new student": "Lisää uusi opiskelija",
+  "@Add new student": {
+    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Event": "Tapahtuma",
+  "@Event": {
+    "description"<TAG>Title for the event details screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Date": "Päivämäärä",
+  "@Date": {
+    "description"<TAG>Label for the event date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Location": "Sijainti",
+  "@Location": {
+    "description"<TAG>Label for the location information",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Location Specified": "Sijaintia ei ole määritetty",
+  "@No Location Specified": {
+    "description"<TAG>Description for events that do not have a location",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "eventTime": "<bpt>{startAt}</bpt> - <bpt>{endAt}</bpt>",
+  "@eventTime": {
+    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type"<TAG>text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Määritä päivämäärä ja aika, jolloin sinulle ilmoitetaan tästä tapahtumasta.",
+  "@Set a date and time to be notified of this event.": {
+    "description"<TAG>Description for row to set event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Saat ilmoituksen tästä tapahtumasta...",
+  "@You will be notified about this event on…": {
+    "description"<TAG>Description for when an event reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "Etsi Canvas-oppaita",
+  "@Search the Canvas Guides": {
+    "description"<TAG>Label for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "Etsi vastaukset yleisiin kysymyksiin",
+  "@Find answers to common questions": {
+    "description"<TAG>Description for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report a Problem": "Raportoi ongelma",
+  "@Report a Problem": {
+    "description"<TAG>Label for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "Jos sovelluksen toiminnassa on häiriöitä, kerro meille",
+  "@If the app misbehaves, let us know": {
+    "description"<TAG>Description for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request a Feature": "Pyydä ominaisuus",
+  "@Request a Feature": {
+    "description"<TAG>Label for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "Onko sinulla idea sovelluksen parantamiseksi?",
+  "@Have an idea to improve the app?": {
+    "description"<TAG>Description for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Jaa rakkautesi sovellusta kohtaan",
+  "@Share Your Love for the App": {
+    "description"<TAG>Label for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Kerro meille sovelluksen suosikkiosista",
+  "@Tell us about your favorite parts of the app": {
+    "description"<TAG>Description for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Legal": "Lakitiedot",
+  "@Legal": {
+    "description"<TAG>Label for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Tietosuojakäytäntö, käyttöehdot, avoin lähde",
+  "@Privacy policy, terms of use, open source": {
+    "description"<TAG>Description for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Idea Canvas Parent App -sovellukselle [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description"<TAG>The subject for the email to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "Seuraavat tiedot auttavat meitä ymmärtämään ideasi paremmin:",
+  "@The following information will help us better understand your idea:": {
+    "description"<TAG>The header for the users information that is attached to a feature request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Domain:": "Verkkotunnus:",
+  "@Domain:": {
+    "description"<TAG>The label for the Canvas domain of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "User ID:": "Käyttäjätunnus:",
+  "@User ID:": {
+    "description"<TAG>The label for the Canvas user ID of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email:": "Sähköposti:",
+  "@Email:": {
+    "description"<TAG>The label for the eamil of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locale:": "Kielialue:",
+  "@Locale:": {
+    "description"<TAG>The label for the locale of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device": "Laite",
+  "@Device": {
+    "description"<TAG>Label used for device manufacturer/model in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "OS Version": "Käyttöjärjestelmäversio",
+  "@OS Version": {
+    "description"<TAG>Label used for device operating system version in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Version Number": "Version numero",
+  "@Version Number": {
+    "description"<TAG>Label used for the app version number in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report A Problem": "Raportoi ongelma",
+  "@Report A Problem": {
+    "description"<TAG>Title used for generic dialog to report problems",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Subject": "Aihe",
+  "@Subject": {
+    "description"<TAG>Label used for Subject text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A subject is required.": "Vaaditaan aihe.",
+  "@A subject is required.": {
+    "description"<TAG>Error shown when the subject field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email Address": "Sähköpostiosoite",
+  "@Email Address": {
+    "description"<TAG>Label used for Email Address text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An email address is required.": "Sähköpostiosoite vaaditaan.",
+  "@An email address is required.": {
+    "description"<TAG>Error shown when the email field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A description is required.": "Kuvaus vaaditaan.",
+  "@A description is required.": {
+    "description"<TAG>Error shown when the description field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Kuinka tämä vaikuttaa sinuun?",
+  "@How is this affecting you?": {
+    "description"<TAG>Label used for the dropdown to select how severe the issue is",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "send": "lähettää",
+  "@send": {
+    "description"<TAG>Label used for send button when reporting a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Vain satunnainen kysymys, kommentti, idea, ehdotus...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Tarvitsen apua, mutta tämä ei ele kiireellistä.",
+  "@I need some help but it's not urgent.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Jotakin on rikki, mutta löydän tavan saada tehdyksi, mitä minun pitää saada tehdyksi.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "En saa asioita tehtyä, ennen kuin kuulen sinusta.",
+  "@I can't get things done until I hear back from you.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "ERITTÄIN KIIREELLINEN HÄTÄTAPAUS!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Cancel": "Peruuta",
+  "@Cancel": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "next": "Seuraava",
+  "@next": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Yes": "Kyllä",
+  "@Yes": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No": "Ei",
+  "@No": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Retry": "Yritä uudelleen",
+  "@Retry": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Delete": "Poista",
+  "@Delete": {
+    "description"<TAG>Label used for general delete/remove actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Done": "Valmis",
+  "@Done": {
+    "description"<TAG>Label for general done/finished actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "expanded": "laajennettu",
+  "@expanded": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "collapsed": "kutistettu",
+  "@collapsed": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "Ilmeni odottamaton virhe",
+  "@An unexpected error occurred": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "dateAtTime": "<bpt>{date}</bpt> kohteessa <bpt>{time}</bpt>",
+  "@dateAtTime": {
+    "description"<TAG>The string to format dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Määräpäivä <bpt>{date}</bpt> kohteessa <bpt>{time}</bpt>",
+  "@dueDateAtTime": {
+    "description"<TAG>The string to format due dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Ei määräpäivää",
+  "@No Due Date": {
+    "description"<TAG>Label for assignments that do not have a due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter": "Suodatin",
+  "@Filter": {
+    "description"<TAG>Label for buttons to filter what items are visible",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unread": "lukematon",
+  "@unread": {
+    "description"<TAG>Label for things that are marked as unread",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unreadCount": "<bpt>{count}</bpt> lukematon",
+  "@unreadCount": {
+    "description"<TAG>Formatted string for when there are a number of unread items",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "@badgeNumberPlus": {
+    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "Tämän ilmoituksen latauksessa ilmeni virhe",
+  "@There was an error loading this announcement": {
+    "description"<TAG>Message shown when an announcement detail screen fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Network error": "Verkkovirhe.",
+  "@Network error": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Under Construction": "Rakenteilla",
+  "@Under Construction": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Rakennamme tätä ominaisuutta tarkastelun käytännöllisyyden vuoksi.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Pyydä sisäänkirjautumisohje -painike",
+  "@Request Login Help Button": {
+    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help": "Pyydä sisäänkirjautumisohje",
+  "@Request Login Help": {
+    "description"<TAG>Title of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Sisäänkirjautumisessani on ongelma",
+  "@I'm having trouble logging in": {
+    "description"<TAG>Subject of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  }
+}

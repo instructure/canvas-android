@@ -65,7 +65,7 @@
     <string name="practice_quiz">Mahi Quiz</string>
     <string name="graded_survey">Whakatau Rangahau</string>
     <string name="ungraded_survey">Rangahau kaore i kōekehia</string>
-    <string name="andMore"> me %d nui atu</string>
+    <string name="andMore">\u0020me %d nui atu</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Ākonga</string>

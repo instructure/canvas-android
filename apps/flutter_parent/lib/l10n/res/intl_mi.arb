@@ -1,0 +1,1558 @@
+﻿{
+  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "alertsLabel": "He matohi",
+  "@alertsLabel": {
+    "description"<TAG>The label for the Alerts tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "calendarLabel": "Maramataka",
+  "@calendarLabel": {
+    "description"<TAG>The label for the Calendar tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "coursesLabel": "Ngā Akoranga",
+  "@coursesLabel": {
+    "description"<TAG>The label for the Courses tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Students": "Kāore he ākonga",
+  "@No Students": {
+    "description"<TAG>Text for when an observer has no students they are observing",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Pātō ki te whakātu te kaitīpako o te ākonga",
+  "@Tap to show student selector": {
+    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Pātō ki te hono me tētahi ākonga hou",
+  "@Tap to pair with a new student": {
+    "description"<TAG>Semantics label for the add student button in the student selector",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "Pātō ki te tīpako i tēnei ākonga",
+  "@Tap to select this student": {
+    "description"<TAG>Semantics label on individual students in the student switcher",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Manage Students": "Whakahaere ngā ākonga",
+  "@Manage Students": {
+    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Help": "Āwhina",
+  "@Help": {
+    "description"<TAG>Label text for the help nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Log Out": "Takiputa",
+  "@Log Out": {
+    "description"<TAG>Label text for the Log Out nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Switch Users": "Whakakā ngā Kaiwhakamahi",
+  "@Switch Users": {
+    "description"<TAG>Label text for the Switch Users nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "appVersion": "v. <bpt>{version}</bpt>",
+  "@appVersion": {
+    "description"<TAG>App version shown in the navigation drawer",
+    "type"<TAG>text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Kei te tino hiahia koe ki te takiuru atu?",
+  "@Are you sure you want to log out?": {
+    "description"<TAG>Confirmation message displayed when the user tries to log out",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Previous Logins": "Ngā takiurunga o mua",
+  "@Previous Logins": {
+    "description"<TAG>Label for the list of previous user logins",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas moko",
+  "@canvasLogoLabel": {
+    "description"<TAG>The semantics label for the Canvas logo",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "findSchool": "Kimihia taku kura",
+  "@findSchool": {
+    "description"<TAG>Text for the find-my-school button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Whakauru kura ingoa rohe rānei",
+  "@domainSearchInputHint": {
+    "description"<TAG>Input hint for the text box on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "noDomainResults": "Kaore e taea te kitea ngā kura ōrite \"<bpt>{query}</bpt>\"",
+  "@noDomainResults": {
+    "description"<TAG>Message shown to users when the domain search query did not return any results",
+    "type"<TAG>text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Me pehea e kitea ai e ahau taku kura rohe rānei?",
+  "@domainSearchHelpLabel": {
+    "description"<TAG>Label for the help button on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas Kaiārahi",
+  "@canvasGuides": {
+    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas Tautoko",
+  "@canvasSupport": {
+    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Ngana ki te rapu haere te ingoa o te kura, rohe rānei e hiahia ana koe ki te whakauru, “Smith Kura Tūmataiti” “Smith Kura Rohe” rānei. Ka taea e koe te whwkauru he Canvas rohe hāngai tonu pēnei “smith.instructure.com”.\n\nMō ētahi atu pūrongo hei rapu i tō whakanōhanga pūkete Canvas, ka taea e koe te haere ki te <bpt>{canvasGuides}</bpt> whakapā atu kī <bpt>{canvasSupport}</bpt> are whakapā ki te kura hei āwhina.",
+  "@domainSearchHelpBody": {
+    "description"<TAG>The body text shown in the help dialog on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Aue!",
+  "@Uh oh!": {
+    "description"<TAG>Title of the screen that shows when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Kaore mātou i te tino mōhio he aha te mahi, ngari kaore i te pai. Whakapā mai ki a mātou mehemea ka mahi pēnei tonu tēnei.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description"<TAG>Message shown when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Contact Support": "Tautoko Whakapā",
+  "@Contact Support": {
+    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "View error details": "Tirohia ngā hapa taipitopito",
+  "@View error details": {
+    "description"<TAG>Label for the button that allowed users to view crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Restart app": "Whakamahi anō te taupanga",
+  "@Restart app": {
+    "description"<TAG>Label for the button that will restart the entire application",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Application version": "Taupānga whakāturanga",
+  "@Application version": {
+    "description"<TAG>Label for the application version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device model": "Pūrere tauira",
+  "@Device model": {
+    "description"<TAG>Label for the device model displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Android OS version": "Android OS Putanga",
+  "@Android OS version": {
+    "description"<TAG>Label for the Android operating system version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Full error message": "Nui karere Hapa",
+  "@Full error message": {
+    "description"<TAG>Label for the full error message displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox": "Pouakauru",
+  "@Inbox": {
+    "description"<TAG>Title for the Inbox screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "He hapa i te wā e uta ana tō karere pouaka whakauru.",
+  "@There was an error loading your inbox messages.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Subject": "Kāore he Kaupapa",
+  "@No Subject": {
+    "description"<TAG>Title used for inbox messages that have no subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Kaore e taea te tiki i ngā akoranga. Tēnā koa tirohia tō hononga ana ka tarai anō.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description"<TAG>Message shown when an error occured while loading courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "Kōwhiri he akoranga hei karare",
+  "@Choose a course to message": {
+    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "Pouakaroto Kore",
+  "@Inbox Zero": {
+    "description"<TAG>Title of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Kua mau katoa koe!",
+  "@You’re all caught up!": {
+    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "He hapa i te wā e uta ana i ngā kaiwhiwhi mo tēnei akoranga",
+  "@There was an error loading recipients for this course": {
+    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Kaore e taea tuku Karere. Tirohia tō hononga ana ka ngana anō.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description"<TAG>Message show when there was an error creating or sending a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "Ngā whakarerekētanga kaore i tiakina",
+  "@Unsaved changes": {
+    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Kei te tino hiahia koe ki te kati i tēnei whārangi? Ka ngāro tō karere kaore anō nei i tukuna.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "New message": "Karere hōu",
+  "@New message": {
+    "description"<TAG>Title of the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add attachment": "Tāpiri āpitihanga",
+  "@Add attachment": {
+    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send message": "Tuku karere",
+  "@Send message": {
+    "description"<TAG>Tooltip for the send-message button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Select recipients": "Tīpako ngā kaiwhiwhi",
+  "@Select recipients": {
+    "description"<TAG>Tooltip for the button that allows users to select message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No recipients selected": "Kaore ngā kaiwhiwhi i tīpakohia",
+  "@No recipients selected": {
+    "description"<TAG>Hint displayed when the user has not selected any message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message subject": "Kaupapa karere",
+  "@Message subject": {
+    "description"<TAG>Hint text displayed in the input field for the message subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message": "Karere",
+  "@Message": {
+    "description"<TAG>Hint text displayed in the input field for the message body",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Recipients": "Ngā Kaiwhiwhi",
+  "@Recipients": {
+    "description"<TAG>Label for message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "@plusRecipientCount": {
+    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "I hapa. Pātō mo ngā kōwhiringa.",
+  "@Failed. Tap for options.": {
+    "description"<TAG>Short message shown on a message attachment when uploading has failed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "courseForWhom": "mo <bpt>{studentShortName}</bpt>",
+  "@courseForWhom": {
+    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "E pā ana: <bpt>{studentName}</bpt>, <bpt>{linkUrl}</bpt>",
+  "@messageLinkPostscript": {
+    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "He hapa i te wā e uta ana i tēnei kōrerorero",
+  "@There was an error loading this conversation": {
+    "description"<TAG>Message shown when a conversation fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply": "Whakautu",
+  "@Reply": {
+    "description"<TAG>Button label for replying to a conversation",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply All": "Whakautu ki te katoa",
+  "@Reply All": {
+    "description"<TAG>Button label for replying to all conversation participants",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unknown User": "Kaiwhakamahi kaore e mōhiotia",
+  "@Unknown User": {
+    "description"<TAG>Label used where the user name is not known",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "me": "ahau",
+  "@me": {
+    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "<bpt>{authorName}</bpt> ki te <bpt>{recipientName}</bpt>",
+  "@authorToRecipient": {
+    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> ki 1 tētahi atu<bpt>}other{{authorName}</bpt> kī <bpt>{howMany}</bpt> ētahi atu<bpt>}}</bpt>",
+  "@authorToNOthers": {
+    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> kī <bpt>{recipientName}</bpt> & kotahi atu<bpt>}other{{authorName}</bpt> kī <bpt>{recipientName}</bpt> & <bpt>{howMany}</bpt> ētahi atu<bpt>}}</bpt>",
+  "@authorToRecipientAndNOthers": {
+    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Tikiake",
+  "@Download": {
+    "description"<TAG>Label for the button that will begin downloading a file",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Open with another app": "Tuwhera me tētahi atu taupānga",
+  "@Open with another app": {
+    "description"<TAG>Label for the button that will allow users to open a file with another app",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "Kaore he taupānga kua whakaurutia ka taea te huaki i tēnei kōnae",
+  "@There are no installed applications that can open this file": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsupported File": "Kaore e tautokotia kōnae",
+  "@Unsupported File": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Kaore tēnei konae i te tautokotia ana kaore e taea te kitea ma te taupānga",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Kaore e taea te whakamahi i tēnei kōnae Pāpāho",
+  "@Unable to play this media file": {
+    "description"<TAG>Message shown when audio or video media could not be played",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "Kaore e taea te uta tēnei āhua",
+  "@Unable to load this image": {
+    "description"<TAG>Message shown when an image file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "He hapa i te wā e uta ana i tēnei kōnae",
+  "@There was an error loading this file": {
+    "description"<TAG>Message shown when a file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Courses": "Kāore he Akoranga",
+  "@No Courses": {
+    "description"<TAG>Title for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Kaore e pānuitia ō ākonga akoranga i tēnei wā.",
+  "@Your student’s courses might not be published yet.": {
+    "description"<TAG>Message for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "He hapa i te wā e uta ana i tō ākonga akoranga.",
+  "@There was an error loading your your student’s courses.": {
+    "description"<TAG>Message displayed when the list of student courses could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Grade": "Kaore he Kōeke",
+  "@No Grade": {
+    "description"<TAG>Message shown when there is currently no grade available for a course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter by": "Tātari mā",
+  "@Filter by": {
+    "description"<TAG>Title for list of terms to filter grades by",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grades": "Ngā Kōeke",
+  "@Grades": {
+    "description"<TAG>Label for the \"Grades\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Syllabus": "Marautanga",
+  "@Syllabus": {
+    "description"<TAG>Label for the \"Syllabus\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Front Page": "Whārangi mua",
+  "@Front Page": {
+    "description"<TAG>Label for the \"Front Page\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Summary": "Whakarāpopototanga",
+  "@Summary": {
+    "description"<TAG>Label for the \"Summary\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "Tukuna he karere mō tēnei akoranga",
+  "@Send a message about this course": {
+    "description"<TAG>Accessibility hint for the course messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Total Grade": "Kōeke Tapeke",
+  "@Total Grade": {
+    "description"<TAG>Label for the total grade in the course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Graded": "Kōekehia",
+  "@Graded": {
+    "description"<TAG>Label for assignments that have been graded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Submitted": "Kua Tukuna",
+  "@Submitted": {
+    "description"<TAG>Label for assignments that have been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not Submitted": "E Kore E Tukua",
+  "@Not Submitted": {
+    "description"<TAG>Label for assignments that have not been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Late": "Tūreiti",
+  "@Late": {
+    "description"<TAG>Label for assignments that have been marked late or submitted late",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Missing": "Ngaro",
+  "@Missing": {
+    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description"<TAG>Value representing no score for student submission",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "Takiwā kōeke katoa",
+  "@All Grading Periods": {
+    "description"<TAG>Label for selecting all grading periods",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Assignments": "Kaore ngā whakataunga",
+  "@No Assignments": {
+    "description"<TAG>Title for the no assignments message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Ko te āhua nei kaore ngā whakataunga i hāngaia i roto i tēnei wāhi.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description"<TAG>Message for no assignments",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "He hapa i te wā e uta ana i ngā taipitopito whakarāpopotanga mo tēnei akoranga.",
+  "@There was an error loading the summary details for this course.": {
+    "description"<TAG>Message shown when the course summary could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Summary": "Kaore he Whakarāpopototanga",
+  "@No Summary": {
+    "description"<TAG>Title displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Kaore he whakataunga mo tēnei akoranga  ara maramataka tauwhainga rānei i tēnei wā.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description"<TAG>Message displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt> / <bpt>{pointsPossible}</bpt>",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "<bpt>{score}</bpt> waho ō <bpt>{pointsPossible}</bpt> ngā koinga",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "E pā ana: <bpt>{studentName}</bpt>, Ngā Kōeke",
+  "@gradesSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "E pā ana: <bpt>{studentName}</bpt>, Marautanga",
+  "@syllabusSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "E pā ana: <bpt>{studentName}</bpt>, Whārangi Mua",
+  "@frontPageSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "E pā ana: <bpt>{studentName}</bpt>, Whakataunga: <bpt>{assignmentName}</bpt>",
+  "@assignmentSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "E pā ana: <bpt>{studentName}</bpt>, Tawhainga: <bpt>{eventTitle}</bpt>",
+  "@eventSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "Kāore he mōhiohio whārangi e wātea ana.",
+  "@There is no page information available.": {
+    "description"<TAG>Description for when no page information is available",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment Details": "Taipitopito whakataunga",
+  "@Assignment Details": {
+    "description"<TAG>Title for the page that shows details for an assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "<bpt>{points}</bpt> ngā koinga",
+  "@assignmentTotalPoints": {
+    "description"<TAG>Label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> ngā koinga",
+  "@assignmentTotalPointsAccessible": {
+    "description"<TAG>Screen reader label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "E tika ana",
+  "@Due": {
+    "description"<TAG>Label for an assignment due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade": "Kōeke",
+  "@Grade": {
+    "description"<TAG>Label for the section that displays an assignment's grade",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locked": "Kua rakaina",
+  "@Locked": {
+    "description"<TAG>Label for when an assignment is locked",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Kua rakaina tō whakataunga e te kōwai \"<bpt>{moduleName}</bpt>\"",
+  "@assignmentLockedModule": {
+    "description"<TAG>The locked description when an assignment is locked by a module",
+    "type"<TAG>text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Whakamaumahara mai ki au",
+  "@Remind Me": {
+    "description"<TAG>Label for the row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "Whakatakotoria takahuri whakamaumahara",
+  "@Set reminder switch": {
+    "description"<TAG>Label for the switch to set a reminder",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Whakatau he rā me te wā hei whakamōhiotia mo tēnei whakataunga ake.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description"<TAG>Description for row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Ka whakamōhiotia koe mo tēnei whakataunga i runga i...",
+  "@You will be notified about this assignment on…": {
+    "description"<TAG>Description for when a reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Description": "Whakāhuatanga",
+  "@Description": {
+    "description"<TAG>Label for the description of the assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Instructions": "Ngā Tohutohu",
+  "@Instructions": {
+    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No description": "Kāore he whakaahuatanga",
+  "@No description": {
+    "description"<TAG>Message used when the assignment has no description",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Tukuna he karere mō tēnei whakataunga",
+  "@Send a message about this assignment": {
+    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Kaore e mana tēnei taupānga ki te whakamahi.",
+  "@This app is not authorized for use.": {
+    "description"<TAG>The error shown when the app being used is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "E kore te tūmau kua whakauru koe te mana mo tenei taupānga.",
+  "@The server you entered is not authorized for this app.": {
+    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "Te kaihoko kaiwhakamahi mo tenei taupānga kaore i manatia.",
+  "@The user agent for this app is not authorized.": {
+    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "I taea e mātou ki te manatoko i te tūmau mō te whakamahi ki tenei taupānga matou.",
+  "@We were unable to verify the server for use with this app.": {
+    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reminders": "Ngā Whakamaumahara",
+  "@Reminders": {
+    "description"<TAG>Name of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Ngā whakamōhiotanga mo ngā whakataunga me ngā tauwhāinga māramataka",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description"<TAG>Description of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not a parent?": "Kaore i te matua?",
+  "@Not a parent?": {
+    "description"<TAG>Title for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "Kaore i kitea e mātou ngā ākonga e hono ana ki tēnei pūkete",
+  "@We couldn't find any students associated with this account": {
+    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "He ākonga he kaiako rānei koe?",
+  "@Are you a student or teacher?": {
+    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Ko tētahi atu o a mātou taupānga pea he pai ake te uru. Pātō kotahi ki te toro atu ki te Toa Tākaro.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Return to Login": "Hoki ki te takiuru",
+  "@Return to Login": {
+    "description"<TAG>Label for the button that returns the user to the login screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "STUDENT": "ĀKONGA",
+  "@STUDENT": {
+    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TEACHER": "KAIAKO",
+  "@TEACHER": {
+    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas Ākonga",
+  "@Canvas Student": {
+    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas Kaiako",
+  "@Canvas Teacher": {
+    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Alerts": "Kaore he whakamataara",
+  "@No Alerts": {
+    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Kaore he mea hei whakamōhio i tēnei wā.",
+  "@There’s nothing to be notified of yet.": {
+    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcement": "Akoranga Pānuitanga",
+  "@Course Announcement": {
+    "description"<TAG>Title for alerts when there is a course announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "Panuitanga o te Whakanōhanga",
+  "@Institution Announcement": {
+    "description"<TAG>Title for alerts when there is an institution announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Kōeke Whakataunga Runga <bpt>{threshold}</bpt>",
+  "@assignmentGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Kōeke Whakataunga Raro <bpt>{threshold}</bpt>",
+  "@assignmentGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Kōeke Akoranga Runga <bpt>{threshold}</bpt>",
+  "@courseGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when a course grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Kōeke Akoranga Raro <bpt>{threshold}</bpt>",
+  "@courseGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when a course grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Ngā Tautuhinga",
+  "@Settings": {
+    "description"<TAG>Title for the settings screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Theme": "Kaupapa",
+  "@Theme": {
+    "description"<TAG>Label for the light/dark theme section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Dark Mode": "Aratau Pouri",
+  "@Dark Mode": {
+    "description"<TAG>Label for the button that enables dark mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Light Mode": "Aratau Mārama",
+  "@Light Mode": {
+    "description"<TAG>Label for the button that enables light mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Pūrata nui Aratau",
+  "@High Contrast Mode": {
+    "description"<TAG>Label for the switch that toggles high contrast mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Appearance": "Āhua",
+  "@Appearance": {
+    "description"<TAG>Label for the appearance section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Oti pai te tuku!",
+  "@Successfully submitted!": {
+    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "I tukuna tēnei whakataunga i runga i <bpt>{date}</bpt> kī <bpt>{time}</bpt> ana kei te tatari ki te kōeketia",
+  "@submissionStatusSuccessSubtitle": {
+    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>I waho i te 1 koinga<bpt>}other{</bpt>I waho i te <bpt>{points}</bpt> ngā kōinga<bpt>}}</bpt>",
+  "@outOfPoints": {
+    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Whakawātea",
+  "@Excused": {
+    "description"<TAG>Grading status for an assignment marked as excused",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Complete": "Oti",
+  "@Complete": {
+    "description"<TAG>Grading status for an assignment marked as complete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Incomplete": "Kaore i te oti",
+  "@Incomplete": {
+    "description"<TAG>Grading status for an assignment marked as incomplete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "minus": "tango",
+  "@minus": {
+    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "latePenalty": "Whiu tōmuri (-<bpt>{pointsLost}</bpt>)",
+  "@latePenalty": {
+    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Kōeke whakamutunga: <bpt>{grade}</bpt>",
+  "@finalGrade": {
+    "description"<TAG>Text that displays the final grade of an assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Matohi Tautuhinga",
+  "@Alert Settings": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Alert me when…": "Matohi ahau ina...",
+  "@Alert me when…": {
+    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade below": "Kōeke akoranga i raro",
+  "@Course grade below": {
+    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade above": "Kōeke akoranga i runga",
+  "@Course grade above": {
+    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment missing": "E ngaro ana whakataunga",
+  "@Assignment missing": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "Kōeke whakataunga raro",
+  "@Assignment grade below": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "Kōeke whakataunga runga",
+  "@Assignment grade above": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcements": "Pānuitanga Akoranga",
+  "@Course Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "Whaaknōhanga pānutianga",
+  "@Institution Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Never": "Kaua rawa",
+  "@Never": {
+    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade percentage": "Kōeke pai hēneti",
+  "@Grade percentage": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "He hapa i te wā e uta ana ngā matohi a tō ākonga.",
+  "@There was an error loading your student's alerts.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Must be below 100": "Me raro iho i te 100",
+  "@Must be below 100": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Me raro iho <bpt>{percentage}</bpt>",
+  "@mustBeBelowN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Me runga ake <bpt>{percentage}</bpt>",
+  "@mustBeAboveN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "Kaiako",
+  "@Teacher": {
+    "description"<TAG>Label for the Teacher enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Student": "Ākonga",
+  "@Student": {
+    "description"<TAG>Label for the Student enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TA": "TA",
+  "@TA": {
+    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Observer": "Kaimātakitaki",
+  "@Observer": {
+    "description"<TAG>Label for the Observer enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Use Camera": "Whakamahi te Kāmera",
+  "@Use Camera": {
+    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Upload File": "Tukuake Kōnae",
+  "@Upload File": {
+    "description"<TAG>Label for the action item that lets the user upload a file from their device",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Kōwhiri mai i te Taiwhanga",
+  "@Choose from Gallery": {
+    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Preparing…": "E whakareri ana...",
+  "@Preparing…": {
+    "description"<TAG>Message shown while a file is being prepared to attach to a message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add student with…": "Tapiri ākonga me...",
+  "@Add student with…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add Student": "Tapiri Ākonga",
+  "@Add Student": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "Kaore koe e tirotiro ana ētahi ākonga.",
+  "@You are not observing any students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "He hapa i te wā e uta ana i ō ākonga.",
+  "@There was an error loading your students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Pairing Code": "Waihere Hono",
+  "@Pairing Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Whakauru te ākonga waihere hono kua tukuna atu ki a koe. Mehema kaore te waihere hono e mahi; kua pau pea te wā",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Kei te hē kua pau rānei tō waihere.",
+  "@Your code is incorrect or expired.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "QR Code": "QR Waehere",
+  "@QR Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add new student": "Tāpiri ākonga hou",
+  "@Add new student": {
+    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Event": "Tauwhāinga",
+  "@Event": {
+    "description"<TAG>Title for the event details screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Date": "Rā",
+  "@Date": {
+    "description"<TAG>Label for the event date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Location": "Wāhi",
+  "@Location": {
+    "description"<TAG>Label for the location information",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Location Specified": "Tauwhāititia Kāore he Wāhi",
+  "@No Location Specified": {
+    "description"<TAG>Description for events that do not have a location",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "eventTime": "<bpt>{startAt}</bpt> - <bpt>{endAt}</bpt>",
+  "@eventTime": {
+    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type"<TAG>text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Whakatau he rā me te wā hei whakamōhiotia mo tēnei tauwhainga.",
+  "@Set a date and time to be notified of this event.": {
+    "description"<TAG>Description for row to set event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Ka whakamōhiotia koe mo tēnei tauwhainga i runga i...",
+  "@You will be notified about this event on…": {
+    "description"<TAG>Description for when an event reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "Rapu nga Kaiarahi Canvas",
+  "@Search the Canvas Guides": {
+    "description"<TAG>Label for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "Kimihia whakautu ki ngā pātai noa",
+  "@Find answers to common questions": {
+    "description"<TAG>Description for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report a Problem": "Pūrongo i te Raruraru",
+  "@Report a Problem": {
+    "description"<TAG>Label for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "Ki te hape te taupānga, whakamōhio mai ki ā mātou",
+  "@If the app misbehaves, let us know": {
+    "description"<TAG>Description for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request a Feature": "Tono he Āhuatanga",
+  "@Request a Feature": {
+    "description"<TAG>Label for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "He whakāro ki te whakapai ake i te taupānga?",
+  "@Have an idea to improve the app?": {
+    "description"<TAG>Description for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Tuari Tō Aroha mō te Taupānga",
+  "@Share Your Love for the App": {
+    "description"<TAG>Label for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Korerotia mai ki a matou ngā wahi tino makau o te taupānga ki a koe",
+  "@Tell us about your favorite parts of the app": {
+    "description"<TAG>Description for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Legal": "Ture",
+  "@Legal": {
+    "description"<TAG>Label for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Kaupapahere tūmataitinga, tikanga whakamahi, puna tuwhera",
+  "@Privacy policy, terms of use, open source": {
+    "description"<TAG>Description for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Whakaaro mō te Taupānga Canvas Matua [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description"<TAG>The subject for the email to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "Ka awhinatia mātou ki te mōhio i tō whakāro i ngā mōhiohio e whai ake nei:",
+  "@The following information will help us better understand your idea:": {
+    "description"<TAG>The header for the users information that is attached to a feature request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Domain:": "Rohe:",
+  "@Domain:": {
+    "description"<TAG>The label for the Canvas domain of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "User ID:": "ID Kaiwhakamahi:",
+  "@User ID:": {
+    "description"<TAG>The label for the Canvas user ID of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email:": "Īmēra:",
+  "@Email:": {
+    "description"<TAG>The label for the eamil of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locale:": "Tauwāhi:",
+  "@Locale:": {
+    "description"<TAG>The label for the locale of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device": "Pūrere",
+  "@Device": {
+    "description"<TAG>Label used for device manufacturer/model in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "OS Version": "OS Putanga",
+  "@OS Version": {
+    "description"<TAG>Label used for device operating system version in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Version Number": "Whakāturanga Tau",
+  "@Version Number": {
+    "description"<TAG>Label used for the app version number in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report A Problem": "Pūrongo te raruraru",
+  "@Report A Problem": {
+    "description"<TAG>Title used for generic dialog to report problems",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Subject": "Kaupapa",
+  "@Subject": {
+    "description"<TAG>Label used for Subject text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A subject is required.": "He kaupapa e hiahiatia ana.",
+  "@A subject is required.": {
+    "description"<TAG>Error shown when the subject field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email Address": "Īmēra Wāhitau",
+  "@Email Address": {
+    "description"<TAG>Label used for Email Address text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An email address is required.": "He whakaaturanga e hiahiatia ana.",
+  "@An email address is required.": {
+    "description"<TAG>Error shown when the email field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A description is required.": "E hiahia ana he whakāturanga.",
+  "@A description is required.": {
+    "description"<TAG>Error shown when the description field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Kia pehea e pa ana tenei ki a koe?",
+  "@How is this affecting you?": {
+    "description"<TAG>Label used for the dropdown to select how severe the issue is",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "send": "tukua",
+  "@send": {
+    "description"<TAG>Label used for send button when reporting a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "He pātai tüao, kōrero, whakāro, whakāro pūaki...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "E hiahia ana ahau ētahi awhina ēngari e kore te kōhukihuki.",
+  "@I need some help but it's not urgent.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Kua pakaru tētahi mea ēngari ka taea e ahau te mahi a tawhio noa ki a oti ai ngā mea e hiahia ana ahau.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "Kaore e taea e ahau te whakaoti ki a hoki rongo rānō ahau mai ia koe.",
+  "@I can't get things done until I hear back from you.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "TINO URUPARE NUI!!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Cancel": "Whakakore",
+  "@Cancel": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "next": "E haere ake nei",
+  "@next": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "ok": "Ae",
+  "@ok": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Yes": "Ae",
+  "@Yes": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No": "Kahore",
+  "@No": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Retry": "Ngana anō",
+  "@Retry": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Delete": "Muku",
+  "@Delete": {
+    "description"<TAG>Label used for general delete/remove actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Done": "Kua mahia",
+  "@Done": {
+    "description"<TAG>Label for general done/finished actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "expanded": "whakawhānui",
+  "@expanded": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "collapsed": "hinga",
+  "@collapsed": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "He hapa ohorere i puta",
+  "@An unexpected error occurred": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "dateAtTime": "<bpt>{date}</bpt> ī <bpt>{time}</bpt>",
+  "@dateAtTime": {
+    "description"<TAG>The string to format dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Rā tika <bpt>{date}</bpt> ī <bpt>{time}</bpt>",
+  "@dueDateAtTime": {
+    "description"<TAG>The string to format due dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Kaore He Rā Tika",
+  "@No Due Date": {
+    "description"<TAG>Label for assignments that do not have a due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter": "Tātari",
+  "@Filter": {
+    "description"<TAG>Label for buttons to filter what items are visible",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unread": "kaore i pānuitia",
+  "@unread": {
+    "description"<TAG>Label for things that are marked as unread",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unreadCount": "<bpt>{count}</bpt> kaore i pānuihia",
+  "@unreadCount": {
+    "description"<TAG>Formatted string for when there are a number of unread items",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "@badgeNumberPlus": {
+    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "He hapa i te wā e uta ana i tēnei pānui",
+  "@There was an error loading this announcement": {
+    "description"<TAG>Message shown when an announcement detail screen fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Network error": "Hapa whatunga",
+  "@Network error": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Under Construction": "Kei raro i te hanga",
+  "@Under Construction": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Kei te hanga mātou i tēnei āhuatanga kia pai ai tō mātakitaki.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Tonoa Takiuru Awhina Pātene",
+  "@Request Login Help Button": {
+    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help": "Tonoa Takiuru Awhina",
+  "@Request Login Help": {
+    "description"<TAG>Title of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Kei te raru ahau ki te takiuru",
+  "@I'm having trouble logging in": {
+    "description"<TAG>Subject of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  }
+}

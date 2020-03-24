@@ -169,7 +169,7 @@
     <string name="kilometers">km</string>
 
     <string name="grade">Omdöme:</string>
-    <string name="notGraded">Har inte bedömts ännu</string>
+    <string name="notGraded">Inte har bedömts ännu</string>
     <string name="missing">Saknas</string>
     <string name="submitted">Inskickad</string>
     <string name="in_class">Närvarande</string>

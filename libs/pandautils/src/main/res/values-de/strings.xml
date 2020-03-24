@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Die Datei steht nur zum Download bereit. Bitte versuchen Sie es erneut.</string>
     <string name="filePermissionDenied">Die Datei kann ohne Berechtigung nicht heruntergeladen werden.</string>
     <string name="pleaseTryAgain">Berechtigung erteilt, bitte erneut versuchen.</string>
-    <string name="pickVideo">Wählen Sie ein Video aus.</string>
-
+    <string name="pickFile">Wählen Sie eine Datei aus</string>
     <string name="assignmentSubmissionUpload">Abgabe für %s hochladen</string>
     <string name="assignmentSubmissionError">Abgabe für %s fehlgeschlagen</string>
     <string name="assignmentSubmissionComplete">%s erfolgreich abgegeben</string>

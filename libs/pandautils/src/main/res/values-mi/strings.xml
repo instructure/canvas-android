@@ -95,8 +95,7 @@
     <string name="filePermissionGranted">Kōnae he rite ki te tikiake, tēnā koa ngana anō.</string>
     <string name="filePermissionDenied">e kore e taea te tikiake i te kōnae i waho te tuku whakāetanga.</string>
     <string name="pleaseTryAgain">Kua whakāetia, tēnā koa ngana anō</string>
-    <string name="pickVideo">Tīpako he Ataata</string>
-
+    <string name="pickFile">Tīpako he kōnae</string>
     <string name="assignmentSubmissionUpload">Kaweake ana nghā whakamōhitanga mo %s</string>
     <string name="assignmentSubmissionError">I hapa te tapaetanga mo %s</string>
     <string name="assignmentSubmissionComplete">I pai te tuku %s</string>

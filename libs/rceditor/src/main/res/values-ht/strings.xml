@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Mesaj</string>
     <string name="rce_empty_description">Ajoute deskripsyon</string>
     <string name="rce_scrollInstructions">Woule ou tout enstriman modifikasyon yo</string>
+    <string name="rce_emptyUrlError">URL la pa dwe vid</string>
+    <string name="rce_httpNotAllowed">Sèlman URL ki https ki akseptab</string>
 </resources>

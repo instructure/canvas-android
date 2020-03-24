@@ -65,7 +65,7 @@
     <string name="practice_quiz">Test próbny</string>
     <string name="graded_survey">Oceniona ankieta</string>
     <string name="ungraded_survey">Ankieta bez oceny</string>
-    <string name="andMore"> i %d więcej</string>
+    <string name="andMore">\u0020i %d więcej</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Uczestnik</string>

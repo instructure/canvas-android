@@ -65,7 +65,7 @@
     <string name="practice_quiz">Vadi kviz</string>
     <string name="graded_survey">Ocenjena anketa</string>
     <string name="ungraded_survey">Neocenjena anketa</string>
-    <string name="andMore"> in %d več</string>
+    <string name="andMore">\u0020in %d več</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Študent</string>

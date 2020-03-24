@@ -427,12 +427,12 @@
     <string name="filter_submissions">Filtrera inlämningar</string>
     <string name="all_submissions">Alla inlämningar</string>
     <string name="submitted_late">Sent inskickad</string>
-    <string name="havent_submitted_yet">Har inte skickats in ännu</string>
+    <string name="havent_submitted_yet">Inte har skickat in ännu</string>
     <string name="havent_been_graded">Har inte blivit bedömd</string>
-    <string name="scored_less_than">Fick lägre poäng än&#8230;</string>
-    <string name="scored_more_than">Fick högre poäng än&#8230;</string>
-    <string name="scored_less_than_value">Fick lägre poäng än %s</string>
-    <string name="scored_more_than_value">Fick högre poäng än %s</string>
+    <string name="scored_less_than">Fick sämre resultat än&#8230;</string>
+    <string name="scored_more_than">Fick bättre resultat än&#8230;</string>
+    <string name="scored_less_than_value">Fick sämre resultat än %s</string>
+    <string name="scored_more_than_value">Fick bättre resultat än %s</string>
     <string name="add_comment">Lägg till kommentar</string>
     <string name="editComment">Redigera kommentar</string>
     <string name="deleteComment">Ta bort kommentar</string>
@@ -444,7 +444,7 @@
     <string name="success_saving_rubric_assessment">Matrisbedömning sparad</string>
     <string name="error_saving_rubric_assessment">Ett fel uppstod när matrisbedömningen skulle sparas. Försök igen.</string>
     <string name="rubric_assessment_score_out_of_total">%1$s av %2$s</string>
-    <string name="criterion_rating_customize_score">Anpassad poäng</string>
+    <string name="criterion_rating_customize_score">Anpassat resultat</string>
     <string name="edit_criterion_comment">Redigera kriterium för kommentar</string>
     <string name="sendMessageToHint">Meddelande %s</string>
     <string name="save_comment">Spara kommentar</string>
@@ -452,7 +452,7 @@
     <string name="skip">Hoppa över</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
-    <string name="rating_button_content_description_custom">Anpassad poäng %1$s</string>
+    <string name="rating_button_content_description_custom">Anpassat resultat %1$s</string>
 
     <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
     <string name="rating_button_content_description">"%1$s, %2$s</string>
