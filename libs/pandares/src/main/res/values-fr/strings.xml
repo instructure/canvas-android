@@ -52,7 +52,7 @@
     <string name="allowedFileTypes">Types de fichiers autorisés</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
 
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
 
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">L’envoi d\'un ou plusieurs fichiers a échoué. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
@@ -68,7 +68,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URLs utilisant « http:// »</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Entrez une URL ici pour votre soumission</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer de l’audio</string>
 
     <string name="recordVideo">Enregistrer la vidéo</string>
@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Ce devoir est excusé ; il ne sera pas compté dans le calcul total</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Points </string>
+    <string name="points">Points\u0020</string>
     <string name="save">Enregistrer</string>
     <string name="cancel">Annuler</string>
     <!-- Discussions -->
     <string name="forbidden">Les réponses ne sont visibles que pour ceux qui ont publié au moins une réponse.</string>
 
+    <string name="fileCurrentlyLocked">Ce fichier est actuellement verrouillé</string>
     <!-- Events -->
     <string name="Starts">Démarre</string>
     <string name="Ends">Prend fin</string>
@@ -330,7 +331,7 @@
     <string name="with">avec</string>
     <string name="starConversation">Marquer la conversation d\'une étoile</string>
     <string name="deleteConversation">Supprimer la conversation</string>
-    <string name="sharedWith">Partagé avec  </string>
+    <string name="sharedWith">Partagé avec \u0020</string>
     <string name="sharedWithYou">Partagé avec vous</string>
     <string name="inboxEmptyMessage">Appuyez sur le \"+\" pour créer une nouvelle conversation.</string>
     <string name="inboxAllMessages">Tous</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Disponible en privé</string>
     <string name="publiclyAvailable">Disponible publiquement</string>
-    <string name="starts">Démarre le :  </string>
-    <string name="courseCode">Code de cours :  </string>
-    <string name="ends">Se termine :  </string>
-    <string name="visibility">Visibilité :  </string>
-    <string name="license">Licence :  </string>
+    <string name="starts">Démarre le : \u0020</string>
+    <string name="courseCode">Code de cours : \u0020</string>
+    <string name="ends">Se termine : \u0020</string>
+    <string name="visibility">Visibilité : \u0020</string>
+    <string name="license">Licence : \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Commencer</string>
     <string name="newPushNotifications">%1$s nouvelles notifications</string>
     <string name="like">mention "J\'aime"</string>
+    <string name="likeEntryLabel">Aimer l’entrée</string>
     <string name="likes">mentions "J\'aime"</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
     <string name="color_1">Rouge</string>
     <string name="color_2">Rose vif</string>
     <string name="color_3">Lavande</string>
@@ -940,7 +946,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Ce travail n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Ce travail n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>O</item>
@@ -1047,6 +1053,41 @@
     <string name="gradeOverride">Remplacement de la note</string>
     <string name="currentGrade">Note actuelle</string>
 
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Tête sélectionnée : %s</string>
+    <string name="content_description_chosen_body">Corps sélectionné : %s</string>
+    <string name="content_description_chosen_feet">Pieds sélectionnés : %s</string>
+    <string name="content_description_panda_body_1">Robe à cœurs violets avec ornements roses</string>
+    <string name="content_description_panda_body_2">Robe à étoiles vertes avec ornements bleus</string>
+    <string name="content_description_panda_body_3">Robe à étoiles rouges avec ornements orange</string>
+    <string name="content_description_panda_body_4">Veston bleu, nœud papillon rouge et pantalon gris</string>
+    <string name="content_description_panda_body_5">Chemise orange à boutons et jean</string>
+    <string name="content_description_panda_body_6">Chemise rouge à boutons et pantalon marron</string>
+    <string name="content_description_panda_body_7">T-shirt à motifs de soleil jaune et pantalon gris</string>
+    <string name="content_description_panda_body_8">T-shirt bleu sarcelle à motif de basketball et pantalon violet</string>
+    <string name="content_description_panda_body_9">T-shirt bleu à motif d\'androïdes et pantalon vert</string>
+    <string name="content_description_panda_body_10">T-shirt blanc à motif Instructure et pantalon bleu</string>
+    <string name="content_description_panda_body_11">T-shirt gris foncé à trois étoiles et pantalon bleu sarcelle</string>
+    <string name="content_description_panda_body_12">Uniforme de sorcier bordeaux avec baguette magique et pantalon noir</string>
+    <string name="content_description_panda_body_13">Buste de panda</string>
+    <string name="content_description_panda_head_2">Lunettes d\'aviation forme goutte et rouge à lèvres</string>
+    <string name="content_description_panda_head_3">Maquillage et nœud violet dans les cheveux</string>
+    <string name="content_description_panda_head_4">Moustache fantaisie</string>
+    <string name="content_description_panda_head_5">Lunettes fantaisie vertes</string>
+    <string name="content_description_panda_head_6">Lunettes sérieuses marron</string>
+    <string name="content_description_panda_head_7">Masque de carnaval doré et rouge à lèvres</string>
+    <string name="content_description_panda_head_8">Lunettes d\'aviation forme goutte</string>
+    <string name="content_description_panda_head_9">Taches de rousseur</string>
+    <string name="content_description_panda_head_10">Sorcier à lunettes et cicatrice sur le front</string>
+    <string name="content_description_panda_feet_1">Pieds nus</string>
+    <string name="content_description_panda_feet_2">Chaussures roses à nœuds violets</string>
+    <string name="content_description_panda_feet_3">Chaussures bleues à nœuds verts</string>
+    <string name="content_description_panda_feet_4">Chaussures rouges à nœuds oranges</string>
+    <string name="content_description_panda_feet_5">Chaussures rouges</string>
+    <string name="content_description_choose_head">Choisir une tête</string>
+    <string name="content_description_choose_body">Choisir un corps</string>
+    <string name="content_description_choose_feet">Choisir des pieds</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d heures, %2$d minutes et %3$d secondes</string>
@@ -1060,7 +1101,7 @@
     <string name="closeRecordingView">Fermer la vue enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d\'afficher le replay.</string>
+    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d&apos;afficher le replay.</string>
     <string name="errorSubmittingMediaComment">Une erreur est survenue lors de la tentative de soumettre votre commentaire au format média.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>

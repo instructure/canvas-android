@@ -67,4 +67,6 @@
     <string name="rce_empty_message">訊息</string>
     <string name="rce_empty_description">添加描述</string>
     <string name="rce_scrollInstructions">滾動查看所有編輯工具</string>
+    <string name="rce_emptyUrlError">URL 不可空白</string>
+    <string name="rce_httpNotAllowed">僅接受 https url</string>
 </resources>

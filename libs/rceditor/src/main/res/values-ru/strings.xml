@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Сообщение</string>
     <string name="rce_empty_description">Добавить описание</string>
     <string name="rce_scrollInstructions">Просмотр всех инструментов для редактирования</string>
+    <string name="rce_emptyUrlError">Поле URL должно быть заполнено</string>
+    <string name="rce_httpNotAllowed">Принимается только адреса URL в формате https</string>
 </resources>

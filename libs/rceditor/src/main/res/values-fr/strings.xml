@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Message</string>
     <string name="rce_empty_description">Ajouter une description</string>
     <string name="rce_scrollInstructions">Faire défiler pour voir tous les outils d\'édition</string>
+    <string name="rce_emptyUrlError">L’url ne peut être laissée vide</string>
+    <string name="rce_httpNotAllowed">Seules les url en https sont acceptées</string>
 </resources>

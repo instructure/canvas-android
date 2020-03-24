@@ -1,0 +1,1558 @@
+﻿{
+  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "alertsLabel": "提醒",
+  "@alertsLabel": {
+    "description"<TAG>The label for the Alerts tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "calendarLabel": "行事曆",
+  "@calendarLabel": {
+    "description"<TAG>The label for the Calendar tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "coursesLabel": "課程",
+  "@coursesLabel": {
+    "description"<TAG>The label for the Courses tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Students": "無學生",
+  "@No Students": {
+    "description"<TAG>Text for when an observer has no students they are observing",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "點選以顯示學生選擇器",
+  "@Tap to show student selector": {
+    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "點選以和新學生配對",
+  "@Tap to pair with a new student": {
+    "description"<TAG>Semantics label for the add student button in the student selector",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "點選以選擇此學生",
+  "@Tap to select this student": {
+    "description"<TAG>Semantics label on individual students in the student switcher",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Manage Students": "管理學生",
+  "@Manage Students": {
+    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Help": "支援",
+  "@Help": {
+    "description"<TAG>Label text for the help nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Log Out": "登出",
+  "@Log Out": {
+    "description"<TAG>Label text for the Log Out nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Switch Users": "切換使用者",
+  "@Switch Users": {
+    "description"<TAG>Label text for the Switch Users nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "appVersion": "v. <bpt>{version}</bpt>",
+  "@appVersion": {
+    "description"<TAG>App version shown in the navigation drawer",
+    "type"<TAG>text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "是否確定登出？",
+  "@Are you sure you want to log out?": {
+    "description"<TAG>Confirmation message displayed when the user tries to log out",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Previous Logins": "先前登入",
+  "@Previous Logins": {
+    "description"<TAG>Label for the list of previous user logins",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas 標誌",
+  "@canvasLogoLabel": {
+    "description"<TAG>The semantics label for the Canvas logo",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "findSchool": "尋找學校",
+  "@findSchool": {
+    "description"<TAG>Text for the find-my-school button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "輸入學校名稱或地區…",
+  "@domainSearchInputHint": {
+    "description"<TAG>Input hint for the text box on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "noDomainResults": "找不到符合 \"<bpt>{query}</bpt>\” 的學校",
+  "@noDomainResults": {
+    "description"<TAG>Message shown to users when the domain search query did not return any results",
+    "type"<TAG>text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "如何找到我的學校？",
+  "@domainSearchHelpLabel": {
+    "description"<TAG>Label for the help button on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas 指南",
+  "@canvasGuides": {
+    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas 支援",
+  "@canvasSupport": {
+    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "嘗試搜尋您試著存取的學校或地區的名稱，例如“Smith Private School”或“Smith County Schools”。您也可以直接輸入 Canvas 網域，例如“smith.instructure.com”。\n\n如需更多有關尋找您的機構的 Canvas 帳戶的資訊，您可以瀏覽 <bpt>{canvasGuides}</bpt>、連線到 <bpt>{canvasSupport}</bpt> 或聯絡您的學校尋求協助。",
+  "@domainSearchHelpBody": {
+    "description"<TAG>The body text shown in the help dialog on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "噢！",
+  "@Uh oh!": {
+    "description"<TAG>Title of the screen that shows when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "不確定發生什麼事，但不是好事。如果持續發生，請聯絡我們。",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description"<TAG>Message shown when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Contact Support": "聯絡支援",
+  "@Contact Support": {
+    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "View error details": "檢視錯誤詳細資料",
+  "@View error details": {
+    "description"<TAG>Label for the button that allowed users to view crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Restart app": "重新啟動應用程式",
+  "@Restart app": {
+    "description"<TAG>Label for the button that will restart the entire application",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Application version": "應用程式版本",
+  "@Application version": {
+    "description"<TAG>Label for the application version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device model": "裝置機型",
+  "@Device model": {
+    "description"<TAG>Label for the device model displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Android OS version": "Android 作業系統版本",
+  "@Android OS version": {
+    "description"<TAG>Label for the Android operating system version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Full error message": "完整錯誤訊息",
+  "@Full error message": {
+    "description"<TAG>Label for the full error message displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox": "收件匣",
+  "@Inbox": {
+    "description"<TAG>Title for the Inbox screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "載入您的收件匣訊息時發生錯誤。",
+  "@There was an error loading your inbox messages.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Subject": "無主題",
+  "@No Subject": {
+    "description"<TAG>Title used for inbox messages that have no subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "無法取得課程。請檢查您的連接然後重試。",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description"<TAG>Message shown when an error occured while loading courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "選擇課程以傳送訊息",
+  "@Choose a course to message": {
+    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "收件匣無訊息",
+  "@Inbox Zero": {
+    "description"<TAG>Title of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "您已讀完所有新訊息！",
+  "@You’re all caught up!": {
+    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "載入此課程的收件人時發生錯誤",
+  "@There was an error loading recipients for this course": {
+    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "無法傳送訊息。請檢查您的連線，然後再試一次。",
+  "@Unable to send message. Check your connection and try again.": {
+    "description"<TAG>Message show when there was an error creating or sending a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "未儲存的變更",
+  "@Unsaved changes": {
+    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "是否確定要關閉此頁面？將遺失未傳送的訊息。",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "New message": "新訊息",
+  "@New message": {
+    "description"<TAG>Title of the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add attachment": "添加附件",
+  "@Add attachment": {
+    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send message": "傳送訊息",
+  "@Send message": {
+    "description"<TAG>Tooltip for the send-message button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Select recipients": "選擇收件人",
+  "@Select recipients": {
+    "description"<TAG>Tooltip for the button that allows users to select message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No recipients selected": "未選擇收件人",
+  "@No recipients selected": {
+    "description"<TAG>Hint displayed when the user has not selected any message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message subject": "訊息主題",
+  "@Message subject": {
+    "description"<TAG>Hint text displayed in the input field for the message subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message": "訊息",
+  "@Message": {
+    "description"<TAG>Hint text displayed in the input field for the message body",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Recipients": "收件人",
+  "@Recipients": {
+    "description"<TAG>Label for message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "@plusRecipientCount": {
+    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "失敗。點選選項。",
+  "@Failed. Tap for options.": {
+    "description"<TAG>Short message shown on a message attachment when uploading has failed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "courseForWhom": "針對 <bpt>{studentShortName}</bpt>",
+  "@courseForWhom": {
+    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "關於：<bpt>{studentName}</bpt>，<bpt>{linkUrl}</bpt>",
+  "@messageLinkPostscript": {
+    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "載入此交談時發生錯誤",
+  "@There was an error loading this conversation": {
+    "description"<TAG>Message shown when a conversation fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply": "回覆",
+  "@Reply": {
+    "description"<TAG>Button label for replying to a conversation",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply All": "全部回覆",
+  "@Reply All": {
+    "description"<TAG>Button label for replying to all conversation participants",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unknown User": "未知使用者",
+  "@Unknown User": {
+    "description"<TAG>Label used where the user name is not known",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "me": "我",
+  "@me": {
+    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "<bpt>{authorName}</bpt> 至 <bpt>{recipientName}</bpt>",
+  "@authorToRecipient": {
+    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> 到 1 個其他<bpt>}other{{authorName}</bpt> 到 <bpt>{howMany}</bpt> 其他<bpt>}}</bpt>",
+  "@authorToNOthers": {
+    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> 到 <bpt>{recipientName}</bpt> 和 1 個其他<bpt>}other{{authorName}</bpt> 到 <bpt>{recipientName}</bpt> 和 <bpt>{howMany}</bpt> 其他<bpt>}}</bpt>",
+  "@authorToRecipientAndNOthers": {
+    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "下載",
+  "@Download": {
+    "description"<TAG>Label for the button that will begin downloading a file",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Open with another app": "使用其他應用程式開啟",
+  "@Open with another app": {
+    "description"<TAG>Label for the button that will allow users to open a file with another app",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "未安裝可開啟此檔案的應用程式",
+  "@There are no installed applications that can open this file": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsupported File": "不支援的檔案",
+  "@Unsupported File": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "不支援此檔案，而且無法透過應用程式檢視",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "無法播放此媒體檔案",
+  "@Unable to play this media file": {
+    "description"<TAG>Message shown when audio or video media could not be played",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "無法載入此影像",
+  "@Unable to load this image": {
+    "description"<TAG>Message shown when an image file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "載入此檔案時發生錯誤",
+  "@There was an error loading this file": {
+    "description"<TAG>Message shown when a file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Courses": "無課程",
+  "@No Courses": {
+    "description"<TAG>Title for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "您的學生的課程可能尚未發佈。",
+  "@Your student’s courses might not be published yet.": {
+    "description"<TAG>Message for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "載入您的學生的課程時發生錯誤。",
+  "@There was an error loading your your student’s courses.": {
+    "description"<TAG>Message displayed when the list of student courses could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Grade": "無評分",
+  "@No Grade": {
+    "description"<TAG>Message shown when there is currently no grade available for a course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter by": "篩選條件",
+  "@Filter by": {
+    "description"<TAG>Title for list of terms to filter grades by",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grades": "成績",
+  "@Grades": {
+    "description"<TAG>Label for the \"Grades\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Syllabus": "課程大綱",
+  "@Syllabus": {
+    "description"<TAG>Label for the \"Syllabus\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Front Page": "首頁",
+  "@Front Page": {
+    "description"<TAG>Label for the \"Front Page\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Summary": "摘要",
+  "@Summary": {
+    "description"<TAG>Label for the \"Summary\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "傳送與此學生有關的訊息",
+  "@Send a message about this course": {
+    "description"<TAG>Accessibility hint for the course messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Total Grade": "總評級",
+  "@Total Grade": {
+    "description"<TAG>Label for the total grade in the course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Graded": "已評分",
+  "@Graded": {
+    "description"<TAG>Label for assignments that have been graded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Submitted": "已提交",
+  "@Submitted": {
+    "description"<TAG>Label for assignments that have been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not Submitted": "未提交",
+  "@Not Submitted": {
+    "description"<TAG>Label for assignments that have not been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Late": "逾期",
+  "@Late": {
+    "description"<TAG>Label for assignments that have been marked late or submitted late",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Missing": "缺失",
+  "@Missing": {
+    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description"<TAG>Value representing no score for student submission",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "所有評分期",
+  "@All Grading Periods": {
+    "description"<TAG>Label for selecting all grading periods",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Assignments": "無作業",
+  "@No Assignments": {
+    "description"<TAG>Title for the no assignments message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "此空間中尚未建立任何作業。",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description"<TAG>Message for no assignments",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "載入此課程的摘要詳細資料時發生錯誤。",
+  "@There was an error loading the summary details for this course.": {
+    "description"<TAG>Message shown when the course summary could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Summary": "無摘要",
+  "@No Summary": {
+    "description"<TAG>Title displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "此課程還沒有任何作業列表或行事曆。",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description"<TAG>Message displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt> / <bpt>{pointsPossible}</bpt>",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "得分為 <bpt>{score}</bpt>，滿分為 <bpt>{pointsPossible}</bpt>",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "關於：<bpt>{studentName}</bpt>，成績",
+  "@gradesSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "關於：<bpt>{studentName}</bpt>，課程大綱",
+  "@syllabusSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "關於：<bpt>{studentName}</bpt>，封面頁",
+  "@frontPageSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "關於：<bpt>{studentName}</bpt>，作業 - <bpt>{assignmentName}</bpt>",
+  "@assignmentSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "關於：<bpt>{studentName}</bpt>，活動 - <bpt>{eventTitle}</bpt>",
+  "@eventSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "沒有可用的頁面資訊。",
+  "@There is no page information available.": {
+    "description"<TAG>Description for when no page information is available",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment Details": "作業詳細資料",
+  "@Assignment Details": {
+    "description"<TAG>Title for the page that shows details for an assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "<bpt>{points}</bpt> 分",
+  "@assignmentTotalPoints": {
+    "description"<TAG>Label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> 分",
+  "@assignmentTotalPointsAccessible": {
+    "description"<TAG>Screen reader label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "截止",
+  "@Due": {
+    "description"<TAG>Label for an assignment due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade": "評分",
+  "@Grade": {
+    "description"<TAG>Label for the section that displays an assignment's grade",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locked": "已鎖定",
+  "@Locked": {
+    "description"<TAG>Label for when an assignment is locked",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "此作業由單元 \"<bpt>{moduleName}</bpt>\”鎖定。",
+  "@assignmentLockedModule": {
+    "description"<TAG>The locked description when an assignment is locked by a module",
+    "type"<TAG>text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "提醒我",
+  "@Remind Me": {
+    "description"<TAG>Label for the row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "設定提醒開關",
+  "@Set reminder switch": {
+    "description"<TAG>Label for the switch to set a reminder",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "設定通知此指定作業的日期和時間。",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description"<TAG>Description for row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "將在以下時間通知您關於此作業…",
+  "@You will be notified about this assignment on…": {
+    "description"<TAG>Description for when a reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Description": "描述",
+  "@Description": {
+    "description"<TAG>Label for the description of the assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Instructions": "教學",
+  "@Instructions": {
+    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No description": "沒有說明",
+  "@No description": {
+    "description"<TAG>Message used when the assignment has no description",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "傳送與此作業有關的訊息",
+  "@Send a message about this assignment": {
+    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "該 app 程式未獲得使用權限。",
+  "@This app is not authorized for use.": {
+    "description"<TAG>The error shown when the app being used is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "您輸入的伺服器未獲得使用該應用程式的授權。",
+  "@The server you entered is not authorized for this app.": {
+    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "該應用程式的使用者代理未獲得授權。",
+  "@The user agent for this app is not authorized.": {
+    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "無法確認此應用程式使用的伺服器。",
+  "@We were unable to verify the server for use with this app.": {
+    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reminders": "提醒",
+  "@Reminders": {
+    "description"<TAG>Name of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "與作業和行事曆活動有關的提醒通知",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description"<TAG>Description of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not a parent?": "不是父母？",
+  "@Not a parent?": {
+    "description"<TAG>Title for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "我們找不到與此帳戶有關的任何學生",
+  "@We couldn't find any students associated with this account": {
+    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "您是學生或教師？",
+  "@Are you a student or teacher?": {
+    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "我們其他應用程式可能更適合您。按一查看 Play Store。",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Return to Login": "返回登入頁面",
+  "@Return to Login": {
+    "description"<TAG>Label for the button that returns the user to the login screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "STUDENT": "學生",
+  "@STUDENT": {
+    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TEACHER": "教師",
+  "@TEACHER": {
+    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas Student",
+  "@Canvas Student": {
+    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas Teacher",
+  "@Canvas Teacher": {
+    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Alerts": "無提醒",
+  "@No Alerts": {
+    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "尚未有任何通知。尚未有任何通知。",
+  "@There’s nothing to be notified of yet.": {
+    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcement": "課程通告",
+  "@Course Announcement": {
+    "description"<TAG>Title for alerts when there is a course announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "機構通告",
+  "@Institution Announcement": {
+    "description"<TAG>Title for alerts when there is an institution announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "作業評分高於 <bpt>{threshold}</bpt>",
+  "@assignmentGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "作業評分低於 <bpt>{threshold}</bpt>",
+  "@assignmentGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "課程評分高於 <bpt>{threshold}</bpt>",
+  "@courseGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when a course grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "課程評分低於 <bpt>{threshold}</bpt>",
+  "@courseGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when a course grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "設定",
+  "@Settings": {
+    "description"<TAG>Title for the settings screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Theme": "主題",
+  "@Theme": {
+    "description"<TAG>Label for the light/dark theme section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Dark Mode": "暗色模式",
+  "@Dark Mode": {
+    "description"<TAG>Label for the button that enables dark mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Light Mode": "淡色模式",
+  "@Light Mode": {
+    "description"<TAG>Label for the button that enables light mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "高對比模式",
+  "@High Contrast Mode": {
+    "description"<TAG>Label for the switch that toggles high contrast mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Appearance": "外觀",
+  "@Appearance": {
+    "description"<TAG>Label for the appearance section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "成功提交！",
+  "@Successfully submitted!": {
+    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "此作業在 <bpt>{date}</bpt> 的 <bpt>{time}</bpt> 上已提交，並且正在等待評分",
+  "@submissionStatusSuccessSubtitle": {
+    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>滿分為 1 分<bpt>}other{</bpt>滿分為 <bpt>{points}</bpt> 分<bpt>}}</bpt>",
+  "@outOfPoints": {
+    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "已免除",
+  "@Excused": {
+    "description"<TAG>Grading status for an assignment marked as excused",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Complete": "完成",
+  "@Complete": {
+    "description"<TAG>Grading status for an assignment marked as complete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Incomplete": "未完成",
+  "@Incomplete": {
+    "description"<TAG>Grading status for an assignment marked as incomplete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "minus": "減",
+  "@minus": {
+    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "latePenalty": "逾期懲罰 (-<bpt>{pointsLost}</bpt>)",
+  "@latePenalty": {
+    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "最終評分：<bpt>{grade}</bpt>",
+  "@finalGrade": {
+    "description"<TAG>Text that displays the final grade of an assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "提醒設定",
+  "@Alert Settings": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Alert me when…": "在下列情形時提醒我...",
+  "@Alert me when…": {
+    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade below": "課程評分低於",
+  "@Course grade below": {
+    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade above": "課程評分高於",
+  "@Course grade above": {
+    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment missing": "缺少作業",
+  "@Assignment missing": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "作業評分低於",
+  "@Assignment grade below": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "作業評分高於",
+  "@Assignment grade above": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcements": "課程通告",
+  "@Course Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "機構的告",
+  "@Institution Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Never": "永不",
+  "@Never": {
+    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade percentage": "評分百分比",
+  "@Grade percentage": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "載入您的學生的提醒時發生錯誤。",
+  "@There was an error loading your student's alerts.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Must be below 100": "必須低於 100",
+  "@Must be below 100": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "必須低於 <bpt>{percentage}</bpt>",
+  "@mustBeBelowN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "必須高於 <bpt>{percentage}</bpt>",
+  "@mustBeAboveN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "教師",
+  "@Teacher": {
+    "description"<TAG>Label for the Teacher enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Student": "學生",
+  "@Student": {
+    "description"<TAG>Label for the Student enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TA": "助教",
+  "@TA": {
+    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Observer": "觀察者",
+  "@Observer": {
+    "description"<TAG>Label for the Observer enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Use Camera": "使用攝像頭",
+  "@Use Camera": {
+    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Upload File": "上傳檔案",
+  "@Upload File": {
+    "description"<TAG>Label for the action item that lets the user upload a file from their device",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "從圖片庫中選擇",
+  "@Choose from Gallery": {
+    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Preparing…": "準備中…",
+  "@Preparing…": {
+    "description"<TAG>Message shown while a file is being prepared to attach to a message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add student with…": "添加學生…",
+  "@Add student with…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add Student": "添加學生",
+  "@Add Student": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "您未正在觀察任何學生。",
+  "@You are not observing any students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "載入您的學生時發生錯誤。",
+  "@There was an error loading your students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Pairing Code": "配對代碼",
+  "@Pairing Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "輸入已提供給您的學生配對代碼。如果配對代碼無效，可能是已到期",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "您的代碼錯誤或到期。",
+  "@Your code is incorrect or expired.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "QR Code": "二維碼",
+  "@QR Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add new student": "添加新學生",
+  "@Add new student": {
+    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Event": "活動",
+  "@Event": {
+    "description"<TAG>Title for the event details screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Date": "日期",
+  "@Date": {
+    "description"<TAG>Label for the event date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Location": "位置",
+  "@Location": {
+    "description"<TAG>Label for the location information",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Location Specified": "無指定的地點",
+  "@No Location Specified": {
+    "description"<TAG>Description for events that do not have a location",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "eventTime": "<bpt>{startAt}</bpt> - <bpt>{endAt}</bpt>",
+  "@eventTime": {
+    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type"<TAG>text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "設定通知此活動的日期和時間。",
+  "@Set a date and time to be notified of this event.": {
+    "description"<TAG>Description for row to set event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "將在以下時間通知您關於此沽動…",
+  "@You will be notified about this event on…": {
+    "description"<TAG>Description for when an event reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "搜尋 Canvas 指南",
+  "@Search the Canvas Guides": {
+    "description"<TAG>Label for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "找出常見問題的答案",
+  "@Find answers to common questions": {
+    "description"<TAG>Description for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report a Problem": "報告問題",
+  "@Report a Problem": {
+    "description"<TAG>Label for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "如果應用程式運作不良，請告知我們",
+  "@If the app misbehaves, let us know": {
+    "description"<TAG>Description for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request a Feature": "請求功能",
+  "@Request a Feature": {
+    "description"<TAG>Label for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "您有能支援改進應用程式的好點子？",
+  "@Have an idea to improve the app?": {
+    "description"<TAG>Description for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "分享您對於本應用程式的喜愛",
+  "@Share Your Love for the App": {
+    "description"<TAG>Label for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "告訴我們本應用程式最讓您滿意之處",
+  "@Tell us about your favorite parts of the app": {
+    "description"<TAG>Description for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Legal": "法律事務",
+  "@Legal": {
+    "description"<TAG>Label for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "隱私政策，使用條款，開放源碼",
+  "@Privacy policy, terms of use, open source": {
+    "description"<TAG>Description for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "關於 Canvas Parent 程式 [Android] 的想法",
+  "@Idea for Canvas Parent App [Android]": {
+    "description"<TAG>The subject for the email to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "下列資訊能幫我們好好理解您的想法：",
+  "@The following information will help us better understand your idea:": {
+    "description"<TAG>The header for the users information that is attached to a feature request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Domain:": "網域：",
+  "@Domain:": {
+    "description"<TAG>The label for the Canvas domain of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "User ID:": "使用者 ID：",
+  "@User ID:": {
+    "description"<TAG>The label for the Canvas user ID of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email:": "電郵地址：",
+  "@Email:": {
+    "description"<TAG>The label for the eamil of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locale:": "位置：",
+  "@Locale:": {
+    "description"<TAG>The label for the locale of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device": "設備",
+  "@Device": {
+    "description"<TAG>Label used for device manufacturer/model in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "OS Version": "OS 版本",
+  "@OS Version": {
+    "description"<TAG>Label used for device operating system version in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Version Number": "版本編號",
+  "@Version Number": {
+    "description"<TAG>Label used for the app version number in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report A Problem": "報告問題",
+  "@Report A Problem": {
+    "description"<TAG>Title used for generic dialog to report problems",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Subject": "主題",
+  "@Subject": {
+    "description"<TAG>Label used for Subject text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A subject is required.": "主題必填。",
+  "@A subject is required.": {
+    "description"<TAG>Error shown when the subject field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email Address": "電郵地址",
+  "@Email Address": {
+    "description"<TAG>Label used for Email Address text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An email address is required.": "電郵地址必填。",
+  "@An email address is required.": {
+    "description"<TAG>Error shown when the email field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A description is required.": "描述必填。",
+  "@A description is required.": {
+    "description"<TAG>Error shown when the description field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "問題對您造成什麼影響？",
+  "@How is this affecting you?": {
+    "description"<TAG>Label used for the dropdown to select how severe the issue is",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "send": "傳送",
+  "@send": {
+    "description"<TAG>Label used for send button when reporting a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "只是隨意提問、評論、想法、建議……",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "我需要支援，但並不緊迫。",
+  "@I need some help but it's not urgent.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "有些地方出現了問題，但我能繞過問題實現我的目的。",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "在收到您的回覆之前，我無法處理。",
+  "@I can't get things done until I hear back from you.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "極其重要的緊急情況！！",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Cancel": "取消",
+  "@Cancel": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "next": "下一個",
+  "@next": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "ok": "確定",
+  "@ok": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Yes": "是",
+  "@Yes": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No": "否",
+  "@No": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Retry": "重試",
+  "@Retry": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Delete": "刪除",
+  "@Delete": {
+    "description"<TAG>Label used for general delete/remove actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Done": "已完成",
+  "@Done": {
+    "description"<TAG>Label for general done/finished actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "expanded": "展開",
+  "@expanded": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "collapsed": "收起",
+  "@collapsed": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "出現意外錯誤",
+  "@An unexpected error occurred": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "dateAtTime": "日期 <bpt>{date}</bpt>，時間 <bpt>{time}</bpt>",
+  "@dateAtTime": {
+    "description"<TAG>The string to format dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "截止於 <bpt>{date}</bpt> 的 <bpt>{time}</bpt>",
+  "@dueDateAtTime": {
+    "description"<TAG>The string to format due dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "無截止日期",
+  "@No Due Date": {
+    "description"<TAG>Label for assignments that do not have a due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter": "篩選器",
+  "@Filter": {
+    "description"<TAG>Label for buttons to filter what items are visible",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unread": "未讀",
+  "@unread": {
+    "description"<TAG>Label for things that are marked as unread",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unreadCount": "<bpt>{count}</bpt> 則未讀",
+  "@unreadCount": {
+    "description"<TAG>Formatted string for when there are a number of unread items",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "@badgeNumberPlus": {
+    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "載入此通告時發生錯誤",
+  "@There was an error loading this announcement": {
+    "description"<TAG>Message shown when an announcement detail screen fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Network error": "網路錯誤",
+  "@Network error": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Under Construction": "建構中",
+  "@Under Construction": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "我們目前正在建立讓您開心檢視的功能。",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "請求登入支援按鈕",
+  "@Request Login Help Button": {
+    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help": "請求登入支援",
+  "@Request Login Help": {
+    "description"<TAG>Title of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "我登入時發生問題",
+  "@I'm having trouble logging in": {
+    "description"<TAG>Subject of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  }
+}

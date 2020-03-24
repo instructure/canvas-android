@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Hætta við</string>
+    <string name="rce_contentDescription_redo">Endurtaka</string>
+    <string name="rce_contentDescription_bold">Snið breiðletrað</string>
+    <string name="rce_contentDescription_italic">Snið skáletrað</string>
+    <string name="rce_contentDescription_strikethrough">Gegnumstrikað</string>
+    <string name="rce_contentDescription_underline">Undirstrikað</string>
+    <string name="rce_contentDescription_format_text_color">Breyta textalit</string>
+    <string name="rce_contentDescription_border_color">Breyta lit textaramma</string>
+    <string name="rce_contentDescription_indent_increase">Auka inndrátt</string>
+    <string name="rce_contentDescription_indent_decrease">Minnka inndrátt</string>
+    <string name="rce_contentDescription_align_left">Vinstrijafna</string>
+    <string name="rce_contentDescription_align_right">Hægrijafna</string>
+    <string name="rce_contentDescription_align_center">Miðjujafna</string>
+    <string name="rce_contentDescription_insert_bullets">Setja inn áherslumerktan lista</string>
+    <string name="rce_contentDescription_insert_numbers">Setja inn númeraðan lista</string>
+    <string name="rce_contentDescription_insert_photo">Setja inn ljósmynd</string>
+    <string name="rce_contentDescription_upload_photo">Hlaða ljósmynd upp frá tæki</string>
+    <string name="rce_contentDescription_insert_link">Setja inn tengil</string>
+    <string name="rce_contentDescription_block_quote">Loka á tilvitnun</string>
+
+    <string name="rce_contentDescription_color_none">Litur enginn</string>
+    <string name="rce_contentDescription_color_white">Litur hvítur</string>
+    <string name="rce_contentDescription_color_black">Litur svartur</string>
+    <string name="rce_contentDescription_color_blue">Litur blár</string>
+    <string name="rce_contentDescription_color_red">Litur rauður</string>
+    <string name="rce_contentDescription_color_green">Litur grænn</string>
+    <string name="rce_contentDescription_color_gray">Litur grár</string>
+    <string name="rce_contentDescription_color_magenta">Litur blárauður</string>
+    <string name="rce_contentDescription_color_cyan">Litur blágrænn</string>
+    <string name="rce_contentDescription_color_orange">Litur appelsínugulur</string>
+    <string name="rce_contentDescription_color_yellow">Litur gulur</string>
+    <string name="rce_contentDescription_color_purple">Litur fjólublár</string>
+
+    <string name="rce_editTextUrlHint">Tengill</string>
+    <string name="rce_editTextALTHint">Texti</string>
+    <string name="rce_dialogDone">Lokið</string>
+    <string name="rce_dialogCancel">Hætta við</string>
+    <string name="rce_insertLink">Setja inn tengil</string>
+    <string name="rce_insertImage">Setja inn mynd</string>
+    <string name="rce_uploadImage">Hleð upp mynd</string>
+
+    <string name="rce_done">Lokið</string>
+    <string name="rce_cancel">Hætta við</string>
+    <string name="rce_exit">Hætta</string>
+    <string name="rce_dialog_exit_title">Fara úr breytingu verkefnis?</string>
+    <string name="rce_dialog_exit_message">Viltu örugglega fara út? Hverskonar óvistuð gögn munu tapast.</string>
+    <string name="rce_empty_message">Skilaboð</string>
+    <string name="rce_empty_description">Bæta við lýsingu</string>
+    <string name="rce_scrollInstructions">Skruna fyrir öll breytingartæki</string>
+    <string name="rce_emptyUrlError">Vefslóð má ekki vera auð</string>
+    <string name="rce_httpNotAllowed">Aðeins https vefslóðir eru samþykktar</string>
+</resources>

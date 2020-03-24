@@ -182,12 +182,13 @@
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Points </string>
+    <string name="points">Points\u0020</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
 
+    <string name="fileCurrentlyLocked">This file is currently locked</string>
     <!-- Events -->
     <string name="Starts">Starts</string>
     <string name="Ends">Ends</string>
@@ -330,7 +331,7 @@
     <string name="with">with</string>
     <string name="starConversation">Star conversation</string>
     <string name="deleteConversation">Delete conversation</string>
-    <string name="sharedWith">Shared with  </string>
+    <string name="sharedWith">Shared with \u0020</string>
     <string name="sharedWithYou">Shared with you</string>
     <string name="inboxEmptyMessage">Tap the \"+\" to create a new conversation.</string>
     <string name="inboxAllMessages">All</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privately available</string>
     <string name="publiclyAvailable">Publicly available</string>
-    <string name="starts">Starts:  </string>
-    <string name="courseCode">Course code:  </string>
-    <string name="ends">Ends:  </string>
-    <string name="visibility">Visibility:  </string>
-    <string name="license">License:  </string>
+    <string name="starts">Starts: \u0020</string>
+    <string name="courseCode">Course code: \u0020</string>
+    <string name="ends">Ends: \u0020</string>
+    <string name="visibility">Visibility: \u0020</string>
+    <string name="license">License: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Start</string>
     <string name="newPushNotifications">%1$s New notifications</string>
     <string name="like">like</string>
+    <string name="likeEntryLabel">Like Entry</string>
     <string name="likes">likes</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
     <string name="color_3">Lavender</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Chosen head: %s</string>
+    <string name="content_description_chosen_body">Chosen body: %s</string>
+    <string name="content_description_chosen_feet">Chosen feet: %s</string>
+    <string name="content_description_panda_body_1">Purple heart dress with pink trim</string>
+    <string name="content_description_panda_body_2">Green star dress with blue trim</string>
+    <string name="content_description_panda_body_3">Red star dress with orange trim</string>
+    <string name="content_description_panda_body_4">Blue blazer, red bow-tie, and grey trousers</string>
+    <string name="content_description_panda_body_5">Orange button-up and jeans</string>
+    <string name="content_description_panda_body_6">Red button-up and brown trousers</string>
+    <string name="content_description_panda_body_7">Yellow sun graphic t-shirt and grey trousers</string>
+    <string name="content_description_panda_body_8">Teal basketball graphic t-shirt and purple trousers</string>
+    <string name="content_description_panda_body_9">Blue android graphic t-shirt and green trousers</string>
+    <string name="content_description_panda_body_10">White instructure graphic t-shirt and blue trousers</string>
+    <string name="content_description_panda_body_11">Dark grey three-star t-shirt and teal trousers</string>
+    <string name="content_description_panda_body_12">Burgundy wizard uniform with magic wand and black trousers</string>
+    <string name="content_description_panda_body_13">Bare panda torso</string>
+    <string name="content_description_panda_head_2">Teardrop aviator sunglasses and lipstick</string>
+    <string name="content_description_panda_head_3">Makeup and purple hair bow</string>
+    <string name="content_description_panda_head_4">Fancy moustache</string>
+    <string name="content_description_panda_head_5">Green party glasses</string>
+    <string name="content_description_panda_head_6">Brown spectacles</string>
+    <string name="content_description_panda_head_7">Golden masquerade mask and lipstick</string>
+    <string name="content_description_panda_head_8">Teardrop aviator sunglasses</string>
+    <string name="content_description_panda_head_9">Freckled cheeks</string>
+    <string name="content_description_panda_head_10">Bespectacled, forehead-scarred wizard</string>
+    <string name="content_description_panda_feet_1">Bare feet</string>
+    <string name="content_description_panda_feet_2">Pink shoes with purple bows</string>
+    <string name="content_description_panda_feet_3">Blue shoes with green bows</string>
+    <string name="content_description_panda_feet_4">Red shoes with orange bows</string>
+    <string name="content_description_panda_feet_5">Red shoes</string>
+    <string name="content_description_choose_head">Choose head</string>
+    <string name="content_description_choose_body">Choose body</string>
+    <string name="content_description_choose_feet">Choose feet</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

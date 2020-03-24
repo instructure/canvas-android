@@ -181,12 +181,13 @@
     <string name="excusedAssignment">該作業已被免除，不予計入總評分</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">分數</string>
+    <string name="points">分數\u0020</string>
     <string name="save">儲存</string>
     <string name="cancel">取消</string>
     <!-- Discussions -->
     <string name="forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
 
+    <string name="fileCurrentlyLocked">此檔案目前已鎖定</string>
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">結束</string>
@@ -326,7 +327,7 @@
     <string name="with">與</string>
     <string name="starConversation">開始交談</string>
     <string name="deleteConversation">刪除交談</string>
-    <string name="sharedWith">分享給</string>
+    <string name="sharedWith">分享給 \u0020</string>
     <string name="sharedWithYou">分享給你</string>
     <string name="inboxEmptyMessage">按下 \"+\" 創建新交談。</string>
     <string name="inboxAllMessages">全部</string>
@@ -538,11 +539,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">私密可用</string>
     <string name="publiclyAvailable">公開可見</string>
-    <string name="starts">開始：</string>
-    <string name="courseCode">課程代碼：</string>
-    <string name="ends">結束：</string>
-    <string name="visibility">可見性：</string>
-    <string name="license">許可：</string>
+    <string name="starts">開始： \u0020</string>
+    <string name="courseCode">課程代碼： \u0020</string>
+    <string name="ends">結束： \u0020</string>
+    <string name="visibility">可見性： \u0020</string>
+    <string name="license">許可： \u0020</string>
 
 
     <!-- Navigation String -->
@@ -838,8 +839,12 @@
     <string name="start">開始</string>
     <string name="newPushNotifications">%1$s 個新通知</string>
     <string name="like">贊</string>
+    <string name="likeEntryLabel">「讚好」條目</string>
     <string name="likes">贊</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="other">%s 讚好</item>
+    </plurals>
     <string name="color_1">紅色</string>
     <string name="color_2">亮粉色</string>
     <string name="color_3">薰衣草色</string>
@@ -1033,6 +1038,41 @@
     <string name="gradeAfterPosting">公佈後評分</string>
     <string name="gradeOverride">評分重寫</string>
     <string name="currentGrade">目前評分</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">選擇的頁首：%s</string>
+    <string name="content_description_chosen_body">選擇的正文：%s</string>
+    <string name="content_description_chosen_feet">選擇的頁尾：%s</string>
+    <string name="content_description_panda_body_1">有粉色飾邊的紫心洋裝</string>
+    <string name="content_description_panda_body_2">有藍色飾邊的綠星洋裝</string>
+    <string name="content_description_panda_body_3">有橙色飾邊的紅星洋裝</string>
+    <string name="content_description_panda_body_4">藍色西裝外套、紅色蝴蝶結和灰色褲子</string>
+    <string name="content_description_panda_body_5">橙色休閒襯衫和牛仔褲</string>
+    <string name="content_description_panda_body_6">紅色休閒襯衫和棕色褲子</string>
+    <string name="content_description_panda_body_7">黃色太陽圖案 T 恤和灰色褲子</string>
+    <string name="content_description_panda_body_8">藍綠色籃球圖案 T 恤和紫色褲子</string>
+    <string name="content_description_panda_body_9">藍色安卓圖案 T 恤和綠色褲子</string>
+    <string name="content_description_panda_body_10">白色 Instructure 圖案 T 恤和藍色褲子</string>
+    <string name="content_description_panda_body_11">深灰色三星 T 恤和藍綠色褲子</string>
+    <string name="content_description_panda_body_12">紫紅色巫師制服與魔法權杖和黑色褲子</string>
+    <string name="content_description_panda_body_13">裸熊貓軀體</string>
+    <string name="content_description_panda_head_2">淚滴型飛行員太陽眼鏡和口紅</string>
+    <string name="content_description_panda_head_3">化妝和紫色頭髮蝴蝶結</string>
+    <string name="content_description_panda_head_4">好看的八字鬍</string>
+    <string name="content_description_panda_head_5">綠色派對眼鏡</string>
+    <string name="content_description_panda_head_6">棕色眼鏡</string>
+    <string name="content_description_panda_head_7">金色化妝舞會面具和口紅</string>
+    <string name="content_description_panda_head_8">淚滴型飛行員太陽眼鏡</string>
+    <string name="content_description_panda_head_9">有雀斑的臉頰</string>
+    <string name="content_description_panda_head_10">戴眼鏡、額頭有疤痕的巫師</string>
+    <string name="content_description_panda_feet_1">裸足</string>
+    <string name="content_description_panda_feet_2">有紫色蝴蝶結的粉色鞋子</string>
+    <string name="content_description_panda_feet_3">有綠色蝴蝶結的藍色鞋子</string>
+    <string name="content_description_panda_feet_4">有橙色蝴蝶結的紅色鞋子</string>
+    <string name="content_description_panda_feet_5">紅色鞋子</string>
+    <string name="content_description_choose_head">選擇的頁首</string>
+    <string name="content_description_choose_body">選擇的正文</string>
+    <string name="content_description_choose_feet">選擇的頁尾</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

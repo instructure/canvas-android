@@ -52,8 +52,7 @@
     <string name="allowedFileTypes">Tillåtna filtyper</string>
     <string name="resubmitAssignment">Skicka uppgift igen</string>
     <string name="launchExternalTool">Starta externt verktyg</string>
-    <string name="preview">Förhandsvisa</string>
-
+    <string name="preview">Förhandsgranska</string>
     <string name="submissionUploadFailedMessage">En eller fler filer laddades inte upp. Kontrollera din internetanslutning och försök lämna in igen.</string>
     <string name="submissionUploadByteProgress">%1$s av %2$s</string>
     <string name="submissionSuccessTitle">Inlämningen slutfördes!</string>
@@ -63,19 +62,19 @@
     <string name="submissionDeleted">Inlämningen borttagen</string>
     <string name="missingSubmissionLabel">Saknas</string>
     <string name="gradedSubmissionLabel">Har bedömts</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Ingen förhandsgranskning är tillgänglig för URL:er som använder \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Ange en giltig URL</string>
     <string name="enterAUrlHereForYourSubmission">Ange en URL här för din inlämning</string>
     <string name="addFileFabContentDesc">Visa alternativ för Lägg till fil</string>
     <string name="recordAudio">Spela in ljud</string>
-
     <string name="recordVideo">Spela in video</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
-
     <string name="textSubmissionFailureMessage">Något gick fel vid uppladdning av inlämningen. Lämna in igen.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Inskickning</string>
     <string name="submissionVersions">Inskickningsversioner</string>
@@ -91,19 +90,19 @@
     <string name="submissionDetailsAssignmentLocked">Uppgift låst</string>
     <string name="webPreview">Förhandsgranskning av angiven URL</string>
     <string name="websiteUrl">Webbplatsens URL</string>
-
     <string name="noneContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="onPaperContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="noOnlineSubmissions">Inga onlineinlämningar</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
     <string name="gradeExcused">Ursäktad</string>
     <string name="finalGradeFormatted">Slutbedömning: %s</string>
-
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
     <string name="enterWhatIfScore">Ange Vad om-resultat</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Anpassat resultat</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
@@ -127,6 +126,7 @@
     <string name="commentSubmissionTypeMediaFile">Mediafil</string>
     <string name="commentSubmissionTypeAudio">Ljud</string>
     <string name="commentSubmissionTypeVideo">Video</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -185,13 +185,16 @@
     <string name="noAssignmentsInGroup">Inga uppgifter i den här gruppen</string>
     <string name="excusedAssignment">Den här uppgiften är ursäktad och kommer inte räknas in i den totala uträkningen</string>
     <string name="excused">EX</string>
+
     <!-- Assignment editing -->
-    <string name="points">Poäng </string>
+    <string name="points">Poäng\u0020</string>
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
+
     <!-- Discussions -->
     <string name="forbidden">Svaren är endast synliga för de som har publicerat minst ett svar.</string>
 
+    <string name="fileCurrentlyLocked">Den här filen är för närvarande låst</string>
     <!-- Events -->
     <string name="Starts">Börjar</string>
     <string name="Ends">Slutar</string>
@@ -210,7 +213,6 @@
     <string name="whatIfDialogText">Tänk om-resultat</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poäng, %3$s</string>
-
     <string name="inbox">Inkorg</string>
     <string name="unread">Olästa</string>
     <string name="archived">Arkiverade</string>
@@ -333,7 +335,7 @@
     <string name="with">med</string>
     <string name="starConversation">Stjärnmarkera konversation</string>
     <string name="deleteConversation">Ta bort konversation</string>
-    <string name="sharedWith">Delad med  </string>
+    <string name="sharedWith">Delad med \u0020</string>
     <string name="sharedWithYou">Delad med dig</string>
     <string name="inboxEmptyMessage">Tryck på \"+\" för att skapa en ny konversation.</string>
     <string name="inboxAllMessages">Alla</string>
@@ -418,6 +420,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Borttagen</string>
+
     <string name="contentDescriptionFiles">Filikon</string>
 
     <string name="loadingCanvas">Läser in Canvas-innehåll&#8230;</string>
@@ -441,6 +444,7 @@
     <string name="emptyId">ID kan inte lämnas tomt</string>
 
     <string name="goToQuiz">Gå till quiz</string>
+
     <string name="quizzes">Quiz</string>
 
     <string name="lastDiscussionPost">Senaste inlägg</string>
@@ -518,9 +522,9 @@
     <string name="oneFileOnly">Denna inskickning accepterar endast en filuppladdning</string>
     <string name="websiteEntry">Lägg till webbplatsinlägg</string>
     <string name="mediaRecordingEntry">Mediainspelningar</string>
-
-
     <string name="submit">Skicka</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Osparat arbete</string>
     <string name="informationLost">Osparad information kommer att förloras. Vill du fortsätta?</string>
@@ -536,6 +540,7 @@
     <string name="next">Nästa</string>
     <string name="turnedIn">Inlämnad:&#160;</string>
     <string name="addComment">Lägg till en kommentar&#8230;</string>
+
     <string name="home">Startsida</string>
     <string name="Notifications">Aviseringar</string>
 
@@ -547,11 +552,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privat tillgänglig</string>
     <string name="publiclyAvailable">Offentligt tillgänglig</string>
-    <string name="starts">Startar:  </string>
-    <string name="courseCode">Kurskod:  </string>
-    <string name="ends">Slutar:  </string>
-    <string name="visibility">Synlighet:  </string>
-    <string name="license">Licens:  </string>
+    <string name="starts">Startar: \u0020</string>
+    <string name="courseCode">Kurskod: \u0020</string>
+    <string name="ends">Slutar: \u0020</string>
+    <string name="visibility">Synlighet: \u0020</string>
+    <string name="license">Licens: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -565,6 +570,8 @@
     <string name="clickToViewSubmission">En ögonblicksbild av webbplatsen togs när du lämnade in den. Tryck och håll på bilden nedan för att öppna eller ladda ner hela bilden.</string>
     <string name="urlSubmissionNoPreview">Den här inskickningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
     <string name="contentDescriptionPreviewImage">Förhandsvisning av den skickade URL:en</string>
+
+
     <string name="isNotSupportedFeature">%1$s stöds inte.</string>
     <string name="isNotSupported">Länken stöds inte.</string>
     <string name="openInBrowser">Öppna i webbläsare</string>
@@ -581,10 +588,12 @@
     <string name="panda_fact_string">Panda-fakta:&#160;</string>
     <string name="remove">Ta bort</string>
     <string name="founders">Grundare</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Integritetspolicy</string>
     <string name="termsOfUse">Användningsvillkor</string>
     <string name="canvasOnGithub">Canvas på GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Uppgiftsquiz</string>
     <string name="practiceQuizzes">Övningsquiz</string>
@@ -593,9 +602,9 @@
     <string name="quizMatchingDefaultDisplay">[Välj]</string>
     <string name="choose_answer_below">Välj ditt svar nedan</string>
     <string name="choose_answers_below">Välj dina svar nedan</string>
-
-
     <string name="flag_the_question">Flagga frågan</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
     <string name="gradesWidgetTitle">Omdömen</string>
@@ -850,7 +859,12 @@
     <string name="start">Starta</string>
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
+    <string name="likeEntryLabel">Gilla post</string>
     <string name="likes">gilla-markeringar</string>
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s gilla-markering</item>
+        <item quantity="other">%s gilla-markeringar</item>
+    </plurals>
 
     <string name="color_1">Röd</string>
     <string name="color_2">Klarrosa</string>
@@ -1000,6 +1014,7 @@
     <string name="unableToViewInBrowser">Vi kunde inte hitta någon extern app för visning av det här LTI-verktyget.</string>
 
     <string name="commentUpload">Ladda upp kommentar</string>
+
     <string name="frontPage">Förstasidan</string>
     <string name="editPage">Redigera sidan</string>
     <string name="description">Beskrivning</string>
@@ -1052,6 +1067,41 @@
     <string name="gradeOverride">Åsidosättning av omdöme</string>
     <string name="currentGrade">Aktuell omdöme</string>
 
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Vald rubrik: %s</string>
+    <string name="content_description_chosen_body">Vald brödtext: %s</string>
+    <string name="content_description_chosen_feet">Vald fotnot: %s</string>
+    <string name="content_description_panda_body_1">Lila hjärtklänning med rosa fåll</string>
+    <string name="content_description_panda_body_2">Grön stjärnklänning med blå fåll</string>
+    <string name="content_description_panda_body_3">Röd stjärnklänning med orange fåll</string>
+    <string name="content_description_panda_body_4">Blå blazer, röd fluga och gråa byxor</string>
+    <string name="content_description_panda_body_5">Orange skjorta med knappar och jeans</string>
+    <string name="content_description_panda_body_6">Röd skjorta med knappar och bruna byxor</string>
+    <string name="content_description_panda_body_7">T-shirt med gul sol och gråa byxor</string>
+    <string name="content_description_panda_body_8">Blågrön t-shirt med basketbolltryck och lila byxor</string>
+    <string name="content_description_panda_body_9">Blå t-shirt med android-tryck och gröna byxor</string>
+    <string name="content_description_panda_body_10">Vit t-shirt med Instructure-tryck och blåa byxor</string>
+    <string name="content_description_panda_body_11">Mörkgrå t-shirt med 3-stjärnstryck och blågröna byxor</string>
+    <string name="content_description_panda_body_12">Vinröd trollkarlsdräkt med magiskt trollspö och svarta byxor</string>
+    <string name="content_description_panda_body_13">Panda-torso</string>
+    <string name="content_description_panda_head_2">Pilotsolglasögon och läppstift</string>
+    <string name="content_description_panda_head_3">Smink och lila hårrosett</string>
+    <string name="content_description_panda_head_4">Stiligt mustasch</string>
+    <string name="content_description_panda_head_5">Gröna partybrillor</string>
+    <string name="content_description_panda_head_6">Bruna glasögon</string>
+    <string name="content_description_panda_head_7">Guldfärgad maskeradmask och läppstift</string>
+    <string name="content_description_panda_head_8">Pilotsolglasögon</string>
+    <string name="content_description_panda_head_9">Fräkniga kinder</string>
+    <string name="content_description_panda_head_10">Glasögonprydd och ärrig trollkarl</string>
+    <string name="content_description_panda_feet_1">Barfota</string>
+    <string name="content_description_panda_feet_2">Rosa skor med lila rosetter</string>
+    <string name="content_description_panda_feet_3">Blå skor med gröna rosetter</string>
+    <string name="content_description_panda_feet_4">Röda skor med orangea rosetter</string>
+    <string name="content_description_panda_feet_5">Röda skor</string>
+    <string name="content_description_choose_head">Välj huvud</string>
+    <string name="content_description_choose_body">Välj kropp</string>
+    <string name="content_description_choose_feet">Välj fötter</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d timmar, %2$d minuter och %3$d sekunder</string>
@@ -1070,7 +1120,6 @@
 
     <string name="addVideoComment">Lägg till videokommentar</string>
     <string name="addAudioComment">Lägg till ljudkommentar</string>
-
     <string name="audioRecordingError">Ett oväntat fel inträffade under ljudinspelningen.</string>
     <string name="videoRecordingError">Ett oväntat fel inträffade under videoinspelningen.</string>
 
@@ -1089,5 +1138,4 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
-
 </resources>

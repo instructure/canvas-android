@@ -97,7 +97,7 @@
     <string name="filePermissionGranted">Arquivo agora está pronto para baixar, por favor tente novamente.</string>
     <string name="filePermissionDenied">Arquivo não pode ser baixado sem conceder permissão.</string>
     <string name="pleaseTryAgain">Permissão concedida, tente novamente.</string>
-    <string name="pickVideo">Selecionar um vídeo</string>
+    <string name="pickFile">Selecionar um arquivo</string>
     <string name="assignmentSubmissionUpload">Carregando envio para %s</string>
     <string name="assignmentSubmissionError">Falha do envio para %s</string>
     <string name="assignmentSubmissionComplete">Enviado com sucesso %s</string>

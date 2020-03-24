@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Wiadomość</string>
     <string name="rce_empty_description">Dodaj opis</string>
     <string name="rce_scrollInstructions">Przewiń, aby wyświetlić narzędzia edycji</string>
+    <string name="rce_emptyUrlError">Pole adresu URL nie może być puste</string>
+    <string name="rce_httpNotAllowed">Obsługiwane są tylko adresy HTTPS</string>
 </resources>

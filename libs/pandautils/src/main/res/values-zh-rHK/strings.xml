@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">檔案已準備好下載，請再試一次。</string>
     <string name="filePermissionDenied">檔案未經授權，不可被下載。</string>
     <string name="pleaseTryAgain">權限授予，請重試。</string>
-    <string name="pickVideo">選取視頻</string>
-
+    <string name="pickFile">選取檔案</string>
     <string name="assignmentSubmissionUpload">上傳 %s 的提交項目</string>
     <string name="assignmentSubmissionError">%s 的提交項目提交失敗</string>
     <string name="assignmentSubmissionComplete">成功提交 %s</string>

@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">文件现在准备下载，请再次尝试。</string>
     <string name="filePermissionDenied">没有授予权限的文件不可以被下载。</string>
     <string name="pleaseTryAgain">已授予权限，请重试。</string>
-    <string name="pickVideo">选择视频</string>
-
+    <string name="pickFile">选择一个文件</string>
     <string name="assignmentSubmissionUpload">正在为%s上传提交项</string>
     <string name="assignmentSubmissionError">为%s提交失败</string>
     <string name="assignmentSubmissionComplete">已成功提交%s</string>

@@ -1,0 +1,1558 @@
+﻿{
+  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "alertsLabel": "Alertas",
+  "@alertsLabel": {
+    "description"<TAG>The label for the Alerts tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "calendarLabel": "Calendario",
+  "@calendarLabel": {
+    "description"<TAG>The label for the Calendar tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "coursesLabel": "Cursos",
+  "@coursesLabel": {
+    "description"<TAG>The label for the Courses tab",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Students": "No hay estudiantes",
+  "@No Students": {
+    "description"<TAG>Text for when an observer has no students they are observing",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Pulse para ver el selector de estudiantes",
+  "@Tap to show student selector": {
+    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Pulse para emparejar con un nuevo estudiante",
+  "@Tap to pair with a new student": {
+    "description"<TAG>Semantics label for the add student button in the student selector",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "Pulse para seleccionar este estudiante",
+  "@Tap to select this student": {
+    "description"<TAG>Semantics label on individual students in the student switcher",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Manage Students": "Administrar estudiantes",
+  "@Manage Students": {
+    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Help": "Ayuda",
+  "@Help": {
+    "description"<TAG>Label text for the help nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Log Out": "Cerrar sesión",
+  "@Log Out": {
+    "description"<TAG>Label text for the Log Out nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Switch Users": "Intercambiar usuarios",
+  "@Switch Users": {
+    "description"<TAG>Label text for the Switch Users nav drawer button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "appVersion": "v. <bpt>{version}</bpt>",
+  "@appVersion": {
+    "description"<TAG>App version shown in the navigation drawer",
+    "type"<TAG>text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "¿Está seguro de que desea salir?",
+  "@Are you sure you want to log out?": {
+    "description"<TAG>Confirmation message displayed when the user tries to log out",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Previous Logins": "Inicios de sesión anteriores",
+  "@Previous Logins": {
+    "description"<TAG>Label for the list of previous user logins",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Logotipo de Canvas",
+  "@canvasLogoLabel": {
+    "description"<TAG>The semantics label for the Canvas logo",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "findSchool": "Buscar escuela",
+  "@findSchool": {
+    "description"<TAG>Text for the find-my-school button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Ingresar el nombre de la escuela o el distrito...",
+  "@domainSearchInputHint": {
+    "description"<TAG>Input hint for the text box on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "noDomainResults": "No se pudieron encontrar escuelas que coincidan con \"<bpt>{query}</bpt>\".",
+  "@noDomainResults": {
+    "description"<TAG>Message shown to users when the domain search query did not return any results",
+    "type"<TAG>text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "¿Cómo encuentro mi escuela o distrito?",
+  "@domainSearchHelpLabel": {
+    "description"<TAG>Label for the help button on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Guías de Canvas",
+  "@canvasGuides": {
+    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Soporte técnico de Canvas",
+  "@canvasSupport": {
+    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Intente buscar el nombre de la escuela o el distrito al que intenta acceder, como “Smith Private School” o “Smith County Schools”. También puede ingresar directamente a un dominio de Canvas, como “smith.instructure.com”.\n\nA fin de obtener más información sobre cómo encontrar la cuenta de Canvas de su institución, puede visitar <bpt>{canvasGuides}</bpt>, comunicarse con <bpt>{canvasSupport}</bpt> o ponerse en contacto con su escuela para recibir asistencia.",
+  "@domainSearchHelpBody": {
+    "description"<TAG>The body text shown in the help dialog on the domain search screen",
+    "type"<TAG>text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "¡Ay, no!",
+  "@Uh oh!": {
+    "description"<TAG>Title of the screen that shows when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "No sabemos bien qué sucedió, pero no fue bueno. Comuníquese con nosotros si esto sigue sucediendo.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description"<TAG>Message shown when a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Contact Support": "Póngase en contacto con el Soporte técnico",
+  "@Contact Support": {
+    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "View error details": "Ver detalles del error",
+  "@View error details": {
+    "description"<TAG>Label for the button that allowed users to view crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Restart app": "Reiniciar aplicación",
+  "@Restart app": {
+    "description"<TAG>Label for the button that will restart the entire application",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Application version": "Versión de la aplicación",
+  "@Application version": {
+    "description"<TAG>Label for the application version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device model": "Modelo del dispositivo",
+  "@Device model": {
+    "description"<TAG>Label for the device model displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Android OS version": "Versión del SO de Android",
+  "@Android OS version": {
+    "description"<TAG>Label for the Android operating system version displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Full error message": "Mensaje de error completo",
+  "@Full error message": {
+    "description"<TAG>Label for the full error message displayed in the crash details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox": "Buzón de entrada",
+  "@Inbox": {
+    "description"<TAG>Title for the Inbox screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "Hubo un error al cargar sus mensajes del buzón de entrada.",
+  "@There was an error loading your inbox messages.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Subject": "Sin asunto",
+  "@No Subject": {
+    "description"<TAG>Title used for inbox messages that have no subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "No se pueden recuperar los cursos. Compruebe su conexión y vuelva a intentarlo.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description"<TAG>Message shown when an error occured while loading courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "Elija un curso para enviar un mensaje",
+  "@Choose a course to message": {
+    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "Buzón de entrada vacío",
+  "@Inbox Zero": {
+    "description"<TAG>Title of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "¡Ya está al día!",
+  "@You’re all caught up!": {
+    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "Hubo un error al cargar los destinatarios de este curso",
+  "@There was an error loading recipients for this course": {
+    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "No se puede enviar el mensaje. Compruebe su conexión y vuelva a intentarlo.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description"<TAG>Message show when there was an error creating or sending a new message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "Cambios no guardados",
+  "@Unsaved changes": {
+    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "¿Está seguro de que desea cerrar esta página? Su mensaje no enviado se perderá.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "New message": "Nuevo mensaje",
+  "@New message": {
+    "description"<TAG>Title of the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add attachment": "Agregar adjunto",
+  "@Add attachment": {
+    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send message": "Enviar mensaje",
+  "@Send message": {
+    "description"<TAG>Tooltip for the send-message button in the new-message screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Select recipients": "Seleccionar destinatarios",
+  "@Select recipients": {
+    "description"<TAG>Tooltip for the button that allows users to select message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No recipients selected": "No seleccionó ningún destinatario",
+  "@No recipients selected": {
+    "description"<TAG>Hint displayed when the user has not selected any message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message subject": "Asunto del mensaje",
+  "@Message subject": {
+    "description"<TAG>Hint text displayed in the input field for the message subject",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Message": "Mensaje",
+  "@Message": {
+    "description"<TAG>Hint text displayed in the input field for the message body",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Recipients": "Destinatarios",
+  "@Recipients": {
+    "description"<TAG>Label for message recipients",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "@plusRecipientCount": {
+    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Se produjo un error. Pulse para ver las opciones.",
+  "@Failed. Tap for options.": {
+    "description"<TAG>Short message shown on a message attachment when uploading has failed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "courseForWhom": "para <bpt>{studentShortName}</bpt>",
+  "@courseForWhom": {
+    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Asunto: <bpt>{studentName}</bpt>, <bpt>{linkUrl}</bpt>",
+  "@messageLinkPostscript": {
+    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "Hubo un error al cargar esta conversación",
+  "@There was an error loading this conversation": {
+    "description"<TAG>Message shown when a conversation fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply": "Responder",
+  "@Reply": {
+    "description"<TAG>Button label for replying to a conversation",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reply All": "Responder a todos",
+  "@Reply All": {
+    "description"<TAG>Button label for replying to all conversation participants",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unknown User": "Usuario desconocido",
+  "@Unknown User": {
+    "description"<TAG>Label used where the user name is not known",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "me": "yo",
+  "@me": {
+    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "<bpt>{authorName}</bpt> a <bpt>{recipientName}</bpt>",
+  "@authorToRecipient": {
+    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> para 1 otro<bpt>}other{{authorName}</bpt> para <bpt>{howMany}</bpt> otros<bpt>}}</bpt>",
+  "@authorToNOthers": {
+    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> para <bpt>{recipientName}</bpt> y 1 otro<bpt>}other{{authorName}</bpt> para <bpt>{recipientName}</bpt> y <bpt>{howMany}</bpt> otros<bpt>}}</bpt>",
+  "@authorToRecipientAndNOthers": {
+    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type"<TAG>text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Descargar",
+  "@Download": {
+    "description"<TAG>Label for the button that will begin downloading a file",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Open with another app": "Abrir con otra aplicación",
+  "@Open with another app": {
+    "description"<TAG>Label for the button that will allow users to open a file with another app",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "No hay aplicaciones instaladas que puedan abrir este archivo",
+  "@There are no installed applications that can open this file": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unsupported File": "Archivo no admitido",
+  "@Unsupported File": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Este archivo no está admitido y no se puede ver con la aplicación",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "No se puede reproducir este archivo multimedia",
+  "@Unable to play this media file": {
+    "description"<TAG>Message shown when audio or video media could not be played",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "No se puede cargar esta imagen",
+  "@Unable to load this image": {
+    "description"<TAG>Message shown when an image file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "Hubo un error al cargar este archivo",
+  "@There was an error loading this file": {
+    "description"<TAG>Message shown when a file could not be loaded or displayed",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Courses": "Sin cursos",
+  "@No Courses": {
+    "description"<TAG>Title for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Es posible que los cursos de sus estudiantes aún no estén publicados.",
+  "@Your student’s courses might not be published yet.": {
+    "description"<TAG>Message for having no courses",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "Hubo un error al cargar los cursos de sus estudiantes.",
+  "@There was an error loading your your student’s courses.": {
+    "description"<TAG>Message displayed when the list of student courses could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Grade": "Sin calificación",
+  "@No Grade": {
+    "description"<TAG>Message shown when there is currently no grade available for a course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter by": "Filtrar por",
+  "@Filter by": {
+    "description"<TAG>Title for list of terms to filter grades by",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grades": "Calificaciones",
+  "@Grades": {
+    "description"<TAG>Label for the \"Grades\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Syllabus": "Programa del curso",
+  "@Syllabus": {
+    "description"<TAG>Label for the \"Syllabus\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Front Page": "Página de inicio",
+  "@Front Page": {
+    "description"<TAG>Label for the \"Front Page\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Summary": "Resumen",
+  "@Summary": {
+    "description"<TAG>Label for the \"Summary\" tab in course details",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "Enviar un mensaje acerca de este curso",
+  "@Send a message about this course": {
+    "description"<TAG>Accessibility hint for the course messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Total Grade": "Calificación total",
+  "@Total Grade": {
+    "description"<TAG>Label for the total grade in the course",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Graded": "Calificado",
+  "@Graded": {
+    "description"<TAG>Label for assignments that have been graded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Submitted": "Entregado",
+  "@Submitted": {
+    "description"<TAG>Label for assignments that have been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not Submitted": "No entregado",
+  "@Not Submitted": {
+    "description"<TAG>Label for assignments that have not been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Late": "Atrasado",
+  "@Late": {
+    "description"<TAG>Label for assignments that have been marked late or submitted late",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Missing": "Faltante",
+  "@Missing": {
+    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description"<TAG>Value representing no score for student submission",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "Todos los períodos de calificación",
+  "@All Grading Periods": {
+    "description"<TAG>Label for selecting all grading periods",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Assignments": "No hay tareas",
+  "@No Assignments": {
+    "description"<TAG>Title for the no assignments message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Parece que aún no se han creado tareas en este espacio.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description"<TAG>Message for no assignments",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "Hubo un error al cargar los detalles del resumen de este curso.",
+  "@There was an error loading the summary details for this course.": {
+    "description"<TAG>Message shown when the course summary could not be loaded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Summary": "Sin resumen",
+  "@No Summary": {
+    "description"<TAG>Title displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Este curso aún no tiene ninguna tarea ni eventos en el calendario.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description"<TAG>Message displayed when there are no items in the course summary",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt> / <bpt>{pointsPossible}</bpt>",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "<bpt>{score}</bpt> de <bpt>{pointsPossible}</bpt> puntos",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description"<TAG>Formatted string for a student score out of the points possible",
+    "type"<TAG>text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Asunto: <bpt>{studentName}</bpt>, Calificaciones",
+  "@gradesSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Asunto: <bpt>{studentName}</bpt>, Programa del curso",
+  "@syllabusSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Asunto: <bpt>{studentName}</bpt>, Página de inicio",
+  "@frontPageSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Asunto: <bpt>{studentName}</bpt>, Tarea: <bpt>{assignmentName}</bpt>",
+  "@assignmentSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Asunto: <bpt>{studentName}</bpt>, Evento: <bpt>{eventTitle}</bpt>",
+  "@eventSubjectMessage": {
+    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
+    "type"<TAG>text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "No hay información disponible de la página.",
+  "@There is no page information available.": {
+    "description"<TAG>Description for when no page information is available",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment Details": "Detalles de la tarea",
+  "@Assignment Details": {
+    "description"<TAG>Title for the page that shows details for an assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "<bpt>{points}</bpt> ptos.",
+  "@assignmentTotalPoints": {
+    "description"<TAG>Label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> puntos",
+  "@assignmentTotalPointsAccessible": {
+    "description"<TAG>Screen reader label used for the total points the assignment is worth",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Fecha límite",
+  "@Due": {
+    "description"<TAG>Label for an assignment due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade": "Calificación",
+  "@Grade": {
+    "description"<TAG>Label for the section that displays an assignment's grade",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locked": "Bloqueado",
+  "@Locked": {
+    "description"<TAG>Label for when an assignment is locked",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Esta tarea está bloqueada por el módulo \"<bpt>{moduleName}</bpt>\".",
+  "@assignmentLockedModule": {
+    "description"<TAG>The locked description when an assignment is locked by a module",
+    "type"<TAG>text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Recordármelo",
+  "@Remind Me": {
+    "description"<TAG>Label for the row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "Establecer botón de recordatorios",
+  "@Set reminder switch": {
+    "description"<TAG>Label for the switch to set a reminder",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Establecer una fecha y un horario para que se me notifique esta tarea específica.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description"<TAG>Description for row to set reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Se le notificará acerca de esta tarea el...",
+  "@You will be notified about this assignment on…": {
+    "description"<TAG>Description for when a reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Description": "Descripción",
+  "@Description": {
+    "description"<TAG>Label for the description of the assignment",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Instructions": "Instrucciones",
+  "@Instructions": {
+    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No description": "Sin descripción",
+  "@No description": {
+    "description"<TAG>Message used when the assignment has no description",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Enviar un mensaje acerca de esta tarea",
+  "@Send a message about this assignment": {
+    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Esta aplicación no está autorizada para usarse.",
+  "@This app is not authorized for use.": {
+    "description"<TAG>The error shown when the app being used is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "El servidor ingresado no está autorizado para esta aplicación.",
+  "@The server you entered is not authorized for this app.": {
+    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "El agente de usuario de esta aplicación no está autorizado.",
+  "@The user agent for this app is not authorized.": {
+    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "No pudimos verificar el servidor para su uso con esta aplicación.",
+  "@We were unable to verify the server for use with this app.": {
+    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Reminders": "Recordatorios",
+  "@Reminders": {
+    "description"<TAG>Name of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Notificaciones de recordatorios de tareas y eventos en el calendario",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description"<TAG>Description of the system notification channel for assignment and event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Not a parent?": "¿No es padre?",
+  "@Not a parent?": {
+    "description"<TAG>Title for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "No pudimos encontrar ningún estudiante relacionado con esta cuenta",
+  "@We couldn't find any students associated with this account": {
+    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "¿Es estudiante o profesor?",
+  "@Are you a student or teacher?": {
+    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Una de nuestras otras aplicaciones podría ser más adecuada. Toque una para visitar la Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Return to Login": "Volver al inicio de sesión",
+  "@Return to Login": {
+    "description"<TAG>Label for the button that returns the user to the login screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "STUDENT": "ESTUDIANTE",
+  "@STUDENT": {
+    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TEACHER": "PROFESOR",
+  "@TEACHER": {
+    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Estudiante de Canvas",
+  "@Canvas Student": {
+    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas Teacher",
+  "@Canvas Teacher": {
+    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Alerts": "Sin alertas",
+  "@No Alerts": {
+    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Aún no hay ninguna notificación.",
+  "@There’s nothing to be notified of yet.": {
+    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcement": "Anuncio del curso",
+  "@Course Announcement": {
+    "description"<TAG>Title for alerts when there is a course announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "Anuncio de la institución",
+  "@Institution Announcement": {
+    "description"<TAG>Title for alerts when there is an institution announcement",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Calificación de la tarea superior a <bpt>{threshold}</bpt>",
+  "@assignmentGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Calificación de la tarea inferior a <bpt>{threshold}</bpt>",
+  "@assignmentGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Calificación del curso superior a <bpt>{threshold}</bpt>",
+  "@courseGradeAboveThreshold": {
+    "description"<TAG>Title for alerts when a course grade is above the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Calificación del curso inferior a <bpt>{threshold}</bpt>",
+  "@courseGradeBelowThreshold": {
+    "description"<TAG>Title for alerts when a course grade is below the threshold value",
+    "type"<TAG>text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Configuraciones",
+  "@Settings": {
+    "description"<TAG>Title for the settings screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Theme": "Tema",
+  "@Theme": {
+    "description"<TAG>Label for the light/dark theme section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Dark Mode": "Modo oscuro",
+  "@Dark Mode": {
+    "description"<TAG>Label for the button that enables dark mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Light Mode": "Modo claro",
+  "@Light Mode": {
+    "description"<TAG>Label for the button that enables light mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Modo de alto contraste",
+  "@High Contrast Mode": {
+    "description"<TAG>Label for the switch that toggles high contrast mode",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Appearance": "Apariencia",
+  "@Appearance": {
+    "description"<TAG>Label for the appearance section in the settings page",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "¡Enviada correctamente!",
+  "@Successfully submitted!": {
+    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Esta tarea se envió el <bpt>{date}</bpt> a las <bpt>{time}</bpt> y está a la espera de su calificación",
+  "@submissionStatusSuccessSubtitle": {
+    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>De 1 punto<bpt>}other{</bpt>De <bpt>{points}</bpt> puntos<bpt>}}</bpt>",
+  "@outOfPoints": {
+    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
+    "type"<TAG>text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Justificado",
+  "@Excused": {
+    "description"<TAG>Grading status for an assignment marked as excused",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Complete": "Completa",
+  "@Complete": {
+    "description"<TAG>Grading status for an assignment marked as complete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Incomplete": "Incompleta",
+  "@Incomplete": {
+    "description"<TAG>Grading status for an assignment marked as incomplete",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "minus": "menos",
+  "@minus": {
+    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "latePenalty": "Sanción por presentación con atraso (-<bpt>{pointsLost}</bpt>)",
+  "@latePenalty": {
+    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Calificación final: <bpt>{grade}</bpt>",
+  "@finalGrade": {
+    "description"<TAG>Text that displays the final grade of an assignment",
+    "type"<TAG>text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Configuraciones de alertas",
+  "@Alert Settings": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Alert me when…": "Enviarme una alerta cuando...",
+  "@Alert me when…": {
+    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade below": "Calificación del curso inferior a",
+  "@Course grade below": {
+    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course grade above": "Calificación del curso superior a",
+  "@Course grade above": {
+    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment missing": "Tarea faltante",
+  "@Assignment missing": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "Calificación de la tarea inferior a",
+  "@Assignment grade below": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "Calificación de la tarea superior a",
+  "@Assignment grade above": {
+    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Course Announcements": "Anuncios del curso",
+  "@Course Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "Anuncios de la institución",
+  "@Institution Announcements": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Never": "Nunca",
+  "@Never": {
+    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Grade percentage": "Porcentaje de calificación",
+  "@Grade percentage": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "Hubo un error al cargar las alertas de sus estudiantes.",
+  "@There was an error loading your student's alerts.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Must be below 100": "Debe ser inferior a 100",
+  "@Must be below 100": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Debe ser inferior a <bpt>{percentage}</bpt>",
+  "@mustBeBelowN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Debe ser superior a <bpt>{percentage}</bpt>",
+  "@mustBeAboveN": {
+    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
+    "type"<TAG>text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "Profesor",
+  "@Teacher": {
+    "description"<TAG>Label for the Teacher enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Student": "Estudiante",
+  "@Student": {
+    "description"<TAG>Label for the Student enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "TA": "Profesor asistente",
+  "@TA": {
+    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Observer": "Observador",
+  "@Observer": {
+    "description"<TAG>Label for the Observer enrollment type",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Use Camera": "Usar cámara",
+  "@Use Camera": {
+    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Upload File": "Cargar archivo",
+  "@Upload File": {
+    "description"<TAG>Label for the action item that lets the user upload a file from their device",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Elegir de la galería",
+  "@Choose from Gallery": {
+    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Preparing…": "En preparación...",
+  "@Preparing…": {
+    "description"<TAG>Message shown while a file is being prepared to attach to a message",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add student with…": "Agregar estudiante con...",
+  "@Add student with…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add Student": "Agregar estudiante",
+  "@Add Student": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "No está observando a ningún estudiante.",
+  "@You are not observing any students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "Hubo un error al cargar sus estudiantes.",
+  "@There was an error loading your students.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Pairing Code": "Código de emparejamiento",
+  "@Pairing Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Ingrese el código de emparejamiento de estudiantes que se le proporcionó. Si el código de emparejamiento no funciona, es posible que haya caducado",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Su código es incorrecto o ha caducado.",
+  "@Your code is incorrect or expired.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "QR Code": "Código QR",
+  "@QR Code": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Add new student": "Agregar nuevo estudiante",
+  "@Add new student": {
+    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Event": "Evento",
+  "@Event": {
+    "description"<TAG>Title for the event details screen",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Date": "Fecha",
+  "@Date": {
+    "description"<TAG>Label for the event date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Location": "Ubicación",
+  "@Location": {
+    "description"<TAG>Label for the location information",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No Location Specified": "Sin ubicación especificada",
+  "@No Location Specified": {
+    "description"<TAG>Description for events that do not have a location",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "eventTime": "<bpt>{startAt}</bpt> - <bpt>{endAt}</bpt>",
+  "@eventTime": {
+    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type"<TAG>text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Establecer una fecha y un horario para que se me notifique este evento.",
+  "@Set a date and time to be notified of this event.": {
+    "description"<TAG>Description for row to set event reminders",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Se le notificará acerca de este evento el...",
+  "@You will be notified about this event on…": {
+    "description"<TAG>Description for when an event reminder is set",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "Busque en las Guías de Canvas",
+  "@Search the Canvas Guides": {
+    "description"<TAG>Label for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "Encontrar respuestas a preguntas comunes",
+  "@Find answers to common questions": {
+    "description"<TAG>Description for option to search the Canvas Guides",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report a Problem": "Reportar un problema",
+  "@Report a Problem": {
+    "description"<TAG>Label for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "Háganos saber si la aplicación no se comporta",
+  "@If the app misbehaves, let us know": {
+    "description"<TAG>Description for option to report a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request a Feature": "Solicitar una funcionalidad",
+  "@Request a Feature": {
+    "description"<TAG>Label for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "¿Tiene una idea para mejorar la aplicación?",
+  "@Have an idea to improve the app?": {
+    "description"<TAG>Description for option to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Comparta su amor por la aplicación",
+  "@Share Your Love for the App": {
+    "description"<TAG>Label for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Cuéntenos sobre sus partes favoritas de la aplicación",
+  "@Tell us about your favorite parts of the app": {
+    "description"<TAG>Description for option to open the app store",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Legal": "Legal",
+  "@Legal": {
+    "description"<TAG>Label for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Política de privacidad, términos de uso, código abierto",
+  "@Privacy policy, terms of use, open source": {
+    "description"<TAG>Description for legal information option",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Ideas para la aplicación de Canvas Parent [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description"<TAG>The subject for the email to request a feature",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "La siguiente información nos ayudará a comprender mejor su idea:",
+  "@The following information will help us better understand your idea:": {
+    "description"<TAG>The header for the users information that is attached to a feature request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Domain:": "Dominio:",
+  "@Domain:": {
+    "description"<TAG>The label for the Canvas domain of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "User ID:": "Identificación del usuario:",
+  "@User ID:": {
+    "description"<TAG>The label for the Canvas user ID of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email:": "Correo electrónico:",
+  "@Email:": {
+    "description"<TAG>The label for the eamil of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Locale:": "Lugar:",
+  "@Locale:": {
+    "description"<TAG>The label for the locale of the logged in user",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Device": "Dispositivo",
+  "@Device": {
+    "description"<TAG>Label used for device manufacturer/model in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "OS Version": "Versión del SO",
+  "@OS Version": {
+    "description"<TAG>Label used for device operating system version in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Version Number": "Número de versión",
+  "@Version Number": {
+    "description"<TAG>Label used for the app version number in the error report",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Report A Problem": "Reportar un problema",
+  "@Report A Problem": {
+    "description"<TAG>Title used for generic dialog to report problems",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Subject": "Asunto",
+  "@Subject": {
+    "description"<TAG>Label used for Subject text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A subject is required.": "El asunto es obligatorio.",
+  "@A subject is required.": {
+    "description"<TAG>Error shown when the subject field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Email Address": "Dirección de correo electrónico",
+  "@Email Address": {
+    "description"<TAG>Label used for Email Address text field",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An email address is required.": "La dirección de correo electrónico es obligatoria.",
+  "@An email address is required.": {
+    "description"<TAG>Error shown when the email field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "A description is required.": "La descripción es obligatoria.",
+  "@A description is required.": {
+    "description"<TAG>Error shown when the description field is empty",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "¿Cómo le afecta esto?",
+  "@How is this affecting you?": {
+    "description"<TAG>Label used for the dropdown to select how severe the issue is",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "send": "enviar",
+  "@send": {
+    "description"<TAG>Label used for send button when reporting a problem",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Sólo una pregunta, comentario, idea, sugerencia casual...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Necesito un poco de ayuda, pero no es urgente.",
+  "@I need some help but it's not urgent.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Algo no funciona pero puedo trabajar sin ello para terminar lo que necesito.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "No puedo terminar mis asuntos hasta que reciba una respuesta suya.",
+  "@I can't get things done until I hear back from you.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "EMERGENCIA CRÍTICA",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Cancel": "Cancelar",
+  "@Cancel": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "next": "Siguiente",
+  "@next": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "ok": "Aceptar",
+  "@ok": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Yes": "Sí",
+  "@Yes": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "No": "No",
+  "@No": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Retry": "Reintentar",
+  "@Retry": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Delete": "Eliminar",
+  "@Delete": {
+    "description"<TAG>Label used for general delete/remove actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Done": "Listo",
+  "@Done": {
+    "description"<TAG>Label for general done/finished actions",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "expanded": "expandido",
+  "@expanded": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "collapsed": "colapsado",
+  "@collapsed": {
+    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "Ha ocurrido un error inesperado",
+  "@An unexpected error occurred": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "dateAtTime": "<bpt>{date}</bpt> a las <bpt>{time}</bpt>",
+  "@dateAtTime": {
+    "description"<TAG>The string to format dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Fecha límite el <bpt>{date}</bpt> a las <bpt>{time}</bpt>",
+  "@dueDateAtTime": {
+    "description"<TAG>The string to format due dates",
+    "type"<TAG>text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "No hay fecha de entrega",
+  "@No Due Date": {
+    "description"<TAG>Label for assignments that do not have a due date",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Filter": "Filtrar",
+  "@Filter": {
+    "description"<TAG>Label for buttons to filter what items are visible",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unread": "no leído",
+  "@unread": {
+    "description"<TAG>Label for things that are marked as unread",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "unreadCount": "<bpt>{count}</bpt> no leído",
+  "@unreadCount": {
+    "description"<TAG>Formatted string for when there are a number of unread items",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "@badgeNumberPlus": {
+    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type"<TAG>text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "Hubo un error al cargar este anuncio",
+  "@There was an error loading this announcement": {
+    "description"<TAG>Message shown when an announcement detail screen fails to load",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Network error": "Error de red",
+  "@Network error": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Under Construction": "En construcción",
+  "@Under Construction": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Actualmente estamos desarrollando esta función para que pueda disfrutarla.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Botón Solicitar ayuda para iniciar sesión",
+  "@Request Login Help Button": {
+    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "Request Login Help": "Solicitar ayuda para iniciar sesión",
+  "@Request Login Help": {
+    "description"<TAG>Title of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Tengo problemas para iniciar sesión",
+  "@I'm having trouble logging in": {
+    "description"<TAG>Subject of help dialog for a login help request",
+    "type"<TAG>text",
+    "placeholders": {}
+  }
+}

@@ -65,7 +65,7 @@
     <string name="practice_quiz">Cwis Ymarfer</string>
     <string name="graded_survey">Arolwg wedi’i Raddio</string>
     <string name="ungraded_survey">Arolwg heb ei Raddio</string>
-    <string name="andMore"> a %d yn fwy</string>
+    <string name="andMore">\u0020a %d yn fwy</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Myfyriwr</string>

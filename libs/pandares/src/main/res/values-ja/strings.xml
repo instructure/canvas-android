@@ -181,12 +181,13 @@
     <string name="excusedAssignment">この課題は免除され、合計計算では考慮されません</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">ポイント</string>
+    <string name="points">ポイント\u0020</string>
     <string name="save">保存</string>
     <string name="cancel">キャンセル</string>
     <!-- Discussions -->
     <string name="forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
 
+    <string name="fileCurrentlyLocked">このファイルは現在ロックされています</string>
     <!-- Events -->
     <string name="Starts">開始</string>
     <string name="Ends">終了</string>
@@ -326,7 +327,7 @@
     <string name="with">と</string>
     <string name="starConversation">スターの会話</string>
     <string name="deleteConversation">会話を消去する</string>
-    <string name="sharedWith">共有された</string>
+    <string name="sharedWith">共有された \u0020</string>
     <string name="sharedWithYou">あなたと共有</string>
     <string name="inboxEmptyMessage">\"+\"  をタップして新しい会話を作成する。</string>
     <string name="inboxAllMessages">すべて</string>
@@ -507,11 +508,11 @@
     <string name="textEntry">テキストエントリ</string>
     <string name="onlineURL">オンラインURL</string>
     <string name="oneFileOnly">この提出は、1個のファイルのアップロードしか受け付けません</string>
-
-
     <string name="websiteEntry">ウェブサイトエントリの追加</string>
     <string name="mediaRecordingEntry">メディアの記録</string>
     <string name="submit">提出</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">保存されていない進展</string>
     <string name="informationLost">保存されていない情報は失われます。続けますか?</string>
@@ -527,6 +528,7 @@
     <string name="next">次</string>
     <string name="turnedIn">&#160;に提出</string>
     <string name="addComment">コメント&#8230;を追加</string>
+
     <string name="home">ホーム</string>
     <string name="Notifications">通知</string>
 
@@ -538,11 +540,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">個人的に利用出来ます</string>
     <string name="publiclyAvailable">一般に利用出来ます</string>
-    <string name="starts">開始：</string>
-    <string name="courseCode">コースコード：</string>
-    <string name="ends">終了：</string>
-    <string name="visibility">ビジビリティ：</string>
-    <string name="license">ライセンス：</string>
+    <string name="starts">開始： \u0020</string>
+    <string name="courseCode">コースコード： \u0020</string>
+    <string name="ends">終了： \u0020</string>
+    <string name="visibility">ビジビリティ： \u0020</string>
+    <string name="license">ライセンス： \u0020</string>
 
 
     <!-- Navigation String -->
@@ -556,6 +558,8 @@
     <string name="clickToViewSubmission">それを提出した際に、ウェブサイトのスナップショットは撮られます。下の画像をタップ、ホールドして開く、またはフル画像をダウンロードしてください。</string>
     <string name="urlSubmissionNoPreview">この提出物は、外部ページへの URL でした。このページは、最初に提出されたときから、変更されている可能性がありますので注意してください。</string>
     <string name="contentDescriptionPreviewImage">提出されたURIをプレビューする</string>
+
+
     <string name="isNotSupportedFeature">%1$s はサポートされていません。</string>
     <string name="isNotSupported">そのリンクはサポートされていません。</string>
     <string name="openInBrowser">ブラウザで開く</string>
@@ -572,10 +576,12 @@
     <string name="panda_fact_string">Panda ファクト：&#160;</string>
     <string name="remove">削除</string>
     <string name="founders">創立者</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="termsOfUse">利用規約</string>
     <string name="canvasOnGithub">GitHubのキャンバス</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">課題クイズ</string>
     <string name="practiceQuizzes">練習クイズ</string>
@@ -584,9 +590,9 @@
     <string name="quizMatchingDefaultDisplay">[選択する]</string>
     <string name="choose_answer_below">下の回答を選択してください</string>
     <string name="choose_answers_below">下の回答を選択してください</string>
-
-
     <string name="flag_the_question">質問にフラグを立てる</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
     <string name="gradesWidgetTitle">成績</string>
@@ -838,7 +844,11 @@
     <string name="start">開始</string>
     <string name="newPushNotifications">%1$s 新規通知</string>
     <string name="like">いいね</string>
+    <string name="likeEntryLabel">いいねのエントリー</string>
     <string name="likes">いいね</string>
+    <plurals name="likeCountLabel">
+        <item quantity="other">%s いいね</item>
+    </plurals>
 
     <string name="color_1">レッド</string>
     <string name="color_2">ホットピンク</string>
@@ -898,6 +908,7 @@
     <string name="editDashboard">ダッシュボードの編集</string>
     <string name="editDashboardDescriptor">ダッシュボードでどのコースをみるかを選択する</string>
     <string name="a11y_editYourCourseList">コースリストを編集する</string>
+
     <string name="dashboard">ダッシュボード</string>
     <string name="previous">前</string>
     <string name="pageNum" formatted="false">ページ %d / %d</string>
@@ -925,8 +936,8 @@
     <string name="tapToViewAnnouncement">タップしてアナウンスメントを表示する。</string>
     <string name="acceptCourseInvitation">受諾</string>
     <string name="declineCourseInvitation">辞退する</string>
-
     <string name="outOf">中</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">このコースに関連付けられたファイルはありません。</string>
     <string name="noFilesSubtextGroup">このグループに関連付けられたファイルはありません。</string>
@@ -985,6 +996,7 @@
     <string name="unableToViewInBrowser">このLTIツールを表示する外部アプリを見つけられません。</string>
 
     <string name="commentUpload">コメントをアップロード</string>
+
     <string name="frontPage">フロントページ</string>
     <string name="editPage">ページを編集</string>
     <string name="description">説明</string>
@@ -1005,6 +1017,7 @@
     <string name="addChildErrorMessage">ペアリングに失敗しました。ペアリングコードが正しいこと、使用期限内であることを確認してください。</string>
     <string name="gradeComplete">完了</string>
     <string name="gradeIncomplete">不完全</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">掲示設定</string>
     <string name="postGradesTab">成績表の掲示</string>
@@ -1034,6 +1047,41 @@
     <string name="gradeOverride">成績上書き</string>
     <string name="currentGrade">現在の成績 </string>
 
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">選択した頭部：%s</string>
+    <string name="content_description_chosen_body">選択したボディ：%s</string>
+    <string name="content_description_chosen_feet">選択した足：%s</string>
+    <string name="content_description_panda_body_1">ピンクのトリム付きパープルのハート柄ドレス</string>
+    <string name="content_description_panda_body_2">青いトリム付き緑の星柄ドレス</string>
+    <string name="content_description_panda_body_3">オレンジのトリム付き赤い星柄ドレス</string>
+    <string name="content_description_panda_body_4">青いブレザー、赤い蝶ネクタイ、グレーのズボン</string>
+    <string name="content_description_panda_body_5">オレンジ色のボタンアップシャツとジーンズ</string>
+    <string name="content_description_panda_body_6">赤いボタンアップシャツと茶色のズボン</string>
+    <string name="content_description_panda_body_7">黄色の太陽のグラフィックTシャツとグレーのズボン</string>
+    <string name="content_description_panda_body_8">ティール色のバスケットボールグラフィックTシャツと紫のズボン</string>
+    <string name="content_description_panda_body_9">青いアンドロイドのグラフィックTシャツと緑のズボン</string>
+    <string name="content_description_panda_body_10">白い構造のグラフィックTシャツと青いズボン</string>
+    <string name="content_description_panda_body_11">ダークグレーの3つ星Tシャツとティール色のズボン</string>
+    <string name="content_description_panda_body_12">魔法の杖と黒のズボンを合わせたバーガンディ色の魔法使いのコスチューム</string>
+    <string name="content_description_panda_body_13">（裸の）パンダの胴体</string>
+    <string name="content_description_panda_head_2">ティアドロップ型のアビエイターサングラスと口紅</string>
+    <string name="content_description_panda_head_3">化粧と紫のヘアリボン</string>
+    <string name="content_description_panda_head_4">お洒落な口ひげ</string>
+    <string name="content_description_panda_head_5">緑のパーティー用メガネ</string>
+    <string name="content_description_panda_head_6">茶色のメガネ</string>
+    <string name="content_description_panda_head_7">黄金の仮面舞踏会用マスクと口紅</string>
+    <string name="content_description_panda_head_8">ティアドロップ型アビエイターサングラス</string>
+    <string name="content_description_panda_head_9">頬にそばかす</string>
+    <string name="content_description_panda_head_10">眼鏡をかけて、額を傷がある魔法使い</string>
+    <string name="content_description_panda_feet_1">素足</string>
+    <string name="content_description_panda_feet_2">紫のリボンとピンクの靴</string>
+    <string name="content_description_panda_feet_3">緑のリゴンと青い靴</string>
+    <string name="content_description_panda_feet_4">オレンジ色のリボンと赤い靴</string>
+    <string name="content_description_panda_feet_5">赤い靴</string>
+    <string name="content_description_choose_head">頭を選ぶ</string>
+    <string name="content_description_choose_body">ボディを選ぶ</string>
+    <string name="content_description_choose_feet">足を選ぶ</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">0:00:00</string>
     <string name="recordingTimerContentDescription">%1$d 時間、%2$d 分、および %3$d 秒</string>
@@ -1052,7 +1100,6 @@
 
     <string name="addVideoComment">動画コメントを追加</string>
     <string name="addAudioComment">音声コメントを追加</string>
-
     <string name="audioRecordingError">オーディオの記録中に不測のエラーが発生しました。</string>
     <string name="videoRecordingError">映像の録画中に不測のエラーが発生しました。</string>
 

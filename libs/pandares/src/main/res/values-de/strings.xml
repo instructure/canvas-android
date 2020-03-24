@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Diese Aufgabe ist entschuldigt und fließt nicht in die Gesamtpunktzahl ein.</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Punkte </string>
+    <string name="points">Punkte\u0020</string>
     <string name="save">Speichern</string>
     <string name="cancel">Abbrechen</string>
     <!-- Discussions -->
     <string name="forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
 
+    <string name="fileCurrentlyLocked">Diese Datei ist derzeit gesperrt</string>
     <!-- Events -->
     <string name="Starts">Beginnt</string>
     <string name="Ends">Endet</string>
@@ -330,7 +331,7 @@
     <string name="with">mit</string>
     <string name="starConversation">Sterne-Konversation</string>
     <string name="deleteConversation">Konversation löschen</string>
-    <string name="sharedWith">Geteilt mit  </string>
+    <string name="sharedWith">Geteilt mit \u0020</string>
     <string name="sharedWithYou">Mit Ihnen geteilt</string>
     <string name="inboxEmptyMessage">Tippen Sie auf das \" und \", um eine neue Konversation zu erstellen.</string>
     <string name="inboxAllMessages">Alle</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privat verfügbar</string>
     <string name="publiclyAvailable">Öffentlich verfügbar</string>
-    <string name="starts">Beginnt:  </string>
-    <string name="courseCode">Kurscode:  </string>
-    <string name="ends">Endet:  </string>
-    <string name="visibility">Sichtbarkeit:  </string>
-    <string name="license">Lizenz:  </string>
+    <string name="starts">Beginnt: \u0020</string>
+    <string name="courseCode">Kurscode: \u0020</string>
+    <string name="ends">Endet: \u0020</string>
+    <string name="visibility">Sichtbarkeit: \u0020</string>
+    <string name="license">Lizenz: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Starten</string>
     <string name="newPushNotifications">%1$s neue Benachrichtigungen</string>
     <string name="like">Like</string>
+    <string name="likeEntryLabel">Like-Eintrag</string>
     <string name="likes">Likes</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s Like</item>
+        <item quantity="other">%s Likes</item>
+    </plurals>
     <string name="color_1">Rot</string>
     <string name="color_2">Pink</string>
     <string name="color_3">Lila</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Note nach Posting</string>
     <string name="gradeOverride">Note außer Kraft setzen</string>
     <string name="currentGrade">Aktuelle Note</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Gewählte Kopfzeile: %s</string>
+    <string name="content_description_chosen_body">Gewählter Text: %s</string>
+    <string name="content_description_chosen_feet">Gewählte Fußzeile: %s</string>
+    <string name="content_description_panda_body_1">Lila Kleid mit rosa Borte</string>
+    <string name="content_description_panda_body_2">Green-Star-Kleid mit blauer Borte</string>
+    <string name="content_description_panda_body_3">Red-Star-Kleid mit orangener Borte</string>
+    <string name="content_description_panda_body_4">Blauer Blazer, rote Krawatte und graue Hosen</string>
+    <string name="content_description_panda_body_5">Orangenes Oberhemd und Jeans</string>
+    <string name="content_description_panda_body_6">Rotes Oberhemd und braune Hosen</string>
+    <string name="content_description_panda_body_7">Gelbes T-Shirt mit Sonne und graue Hosen</string>
+    <string name="content_description_panda_body_8">Türkisfarbenes Basketball-T-Shirt und lila Hosen</string>
+    <string name="content_description_panda_body_9">Blaues Android-T-Shirt und grüne Hosen</string>
+    <string name="content_description_panda_body_10">Weißes Instructure-T-Shirt und blaue Hosen</string>
+    <string name="content_description_panda_body_11">Dunkelgraues 3-Star-T-Shirt und türkisfarbene Hosen</string>
+    <string name="content_description_panda_body_12">Dunkelrote Zaubererverkleidung mit Zauberstab und schwarzen Hosen</string>
+    <string name="content_description_panda_body_13">Nackter Pandaoberkörper</string>
+    <string name="content_description_panda_head_2">Pilotenbrille und Lippenstift</string>
+    <string name="content_description_panda_head_3">Make-up und lila Haarschleife</string>
+    <string name="content_description_panda_head_4">Extravaganter Schnurrbart</string>
+    <string name="content_description_panda_head_5">Grüne Partygläser</string>
+    <string name="content_description_panda_head_6">Braune Brille</string>
+    <string name="content_description_panda_head_7">Golden Maske und Lippenstift</string>
+    <string name="content_description_panda_head_8">Pilotenbrille</string>
+    <string name="content_description_panda_head_9">Sommersprossige Wangen</string>
+    <string name="content_description_panda_head_10">Bebrillter Zauberer mit Stirnnarbe</string>
+    <string name="content_description_panda_feet_1">Nackte Füße</string>
+    <string name="content_description_panda_feet_2">Rosa Schuhe mit violetten Schleifen</string>
+    <string name="content_description_panda_feet_3">Blaue Schuhe mit grünen Schleifen</string>
+    <string name="content_description_panda_feet_4">Rote Schuhe mit orangenen Schleifen</string>
+    <string name="content_description_panda_feet_5">Rote Schuhe</string>
+    <string name="content_description_choose_head">Kopfzeile auswählen</string>
+    <string name="content_description_choose_body">Text auswählen</string>
+    <string name="content_description_choose_feet">Fußzeile auswählen</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

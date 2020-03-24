@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Ångra</string>
     <string name="rce_contentDescription_redo">Göra om</string>
     <string name="rce_contentDescription_bold">Formatera fetstil</string>
@@ -66,4 +67,6 @@
     <string name="rce_empty_message">Meddelande</string>
     <string name="rce_empty_description">Lägg till beskrivning</string>
     <string name="rce_scrollInstructions">Rulla för alla redigeringsverktyg</string>
+    <string name="rce_emptyUrlError">URL får inte vara tom</string>
+    <string name="rce_httpNotAllowed">Endast HTTP-URL:er är godkända</string>
 </resources>

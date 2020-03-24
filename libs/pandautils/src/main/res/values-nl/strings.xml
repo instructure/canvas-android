@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Bestand is nu klaar om te downloaden, probeer het nogmaals.</string>
     <string name="filePermissionDenied">Het bestand kan niet gedownload worden zonder verleende toestemming.</string>
     <string name="pleaseTryAgain">Toestemming verleend, probeer het opnieuw.</string>
-    <string name="pickVideo">Selecteer een video</string>
-
+    <string name="pickFile">Een bestand selecteren</string>
     <string name="assignmentSubmissionUpload">Bezig met uploaden van inlevering voor %s</string>
     <string name="assignmentSubmissionError">Inlevering mislukt voor %s</string>
     <string name="assignmentSubmissionComplete">Inlevering van %s is gelukt</string>

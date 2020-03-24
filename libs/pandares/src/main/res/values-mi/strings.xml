@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Tukua tēnei whakataunga a kore e whakārohia i roto i te tātai katoa</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Ngā Koinga </string>
+    <string name="points">Ngā Koinga\u0020</string>
     <string name="save">Tiaki</string>
     <string name="cancel">Whakakore</string>
     <!-- Discussions -->
     <string name="forbidden">He kitea anake ki te hunga e kua whakairi i te iti rawa tētahi whakautu whakautu.</string>
 
+    <string name="fileCurrentlyLocked">Kei te rakaina tēnei kōnae i tēnei wā.</string>
     <!-- Events -->
     <string name="Starts">Tīmata</string>
     <string name="Ends">pito</string>
@@ -330,7 +331,7 @@
     <string name="with">ki</string>
     <string name="starConversation">Kōrerorero Whetu</string>
     <string name="deleteConversation">Mukua Kōrerorero</string>
-    <string name="sharedWith">Tuari kī </string>
+    <string name="sharedWith">Tuari kī\u0020</string>
     <string name="sharedWithYou">Tuari ki a koe</string>
     <string name="inboxEmptyMessage">Pātō te \"+\" ki te hanga kōrero hou.</string>
     <string name="inboxAllMessages">Ngā karere katoa</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Tūmataiti wātea</string>
     <string name="publiclyAvailable">Tūmatanui wātea</string>
-    <string name="starts">Tīmata: </string>
-    <string name="courseCode">Akoranga Waehere: </string>
-    <string name="ends">Mutunga: </string>
-    <string name="visibility">Kitea: </string>
-    <string name="license">Raihana: </string>
+    <string name="starts">Tīmata:\u0020</string>
+    <string name="courseCode">Akoranga Waehere:\u0020</string>
+    <string name="ends">Mutunga:\u0020</string>
+    <string name="visibility">Kitea:\u0020</string>
+    <string name="license">Raihana:\u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Tīmata</string>
     <string name="newPushNotifications">%1$s Whakamōhiotanga Whakahou</string>
     <string name="like">rite</string>
+    <string name="likeEntryLabel">Pirangi Whakauru</string>
     <string name="likes">ngā rite</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s pīrangi</item>
+        <item quantity="other">%s ngā pirangi</item>
+    </plurals>
     <string name="color_1">whero</string>
     <string name="color_2">māwhero wera</string>
     <string name="color_3">āhua waiporoporo</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Te kōeke i muri o te whakairi</string>
     <string name="gradeOverride">Whakakorenga kōeke</string>
     <string name="currentGrade">Kōeke ō naian</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
+    <string name="content_description_chosen_body">Tinana i tohua: %s</string>
+    <string name="content_description_chosen_feet">Waewae i tohua: %s</string>
+    <string name="content_description_panda_body_1">Waiporoporo manawa kākahu me te tapatapahi māwhero</string>
+    <string name="content_description_panda_body_2">Kākariki whetu kākahu me te tapatapahi kahurangi</string>
+    <string name="content_description_panda_body_3">Whero whetu kākahu me te tapatapahi ārani</string>
+    <string name="content_description_panda_body_4">Kahurangi koti, whero herehere tai, me ng tarau hina</string>
+    <string name="content_description_panda_body_5">Ārani pātenetia me ngā hāmene</string>
+    <string name="content_description_panda_body_6">Whero pātenetia me ngā tarau parauri</string>
+    <string name="content_description_panda_body_7">Rā kōwhai whakairoiro t-hāte me ngā tarau hina</string>
+    <string name="content_description_panda_body_8">Hakarua poitūkohu whakairoiro t-hāte me ngā tarau waiporoporo</string>
+    <string name="content_description_panda_body_9">Kahurangi android whakairoiro t- hāte me ngā tarau kakariki</string>
+    <string name="content_description_panda_body_10">Mā whakaako whakairoiro t-hāte me ngā tarau kahurangi</string>
+    <string name="content_description_panda_body_11">Hina pouri toru whetu t- hāte me ngā tarau hakarua</string>
+    <string name="content_description_panda_body_12">Whakaahuru ruānuku kākahu me te mahi atua tawahi me ngā tarau pango</string>
+    <string name="content_description_panda_body_13">Mārakerake panda tinana</string>
+    <string name="content_description_panda_head_2">Roimata taka kairere mōhiti me te kara ngutu</string>
+    <string name="content_description_panda_head_3">Whakapai kanohi me te herehere makawe waiporoporo</string>
+    <string name="content_description_panda_head_4">Whakatete pāhau</string>
+    <string name="content_description_panda_head_5">Kākariki pāti karaihe</string>
+    <string name="content_description_panda_head_6">Mōhiti parauri</string>
+    <string name="content_description_panda_head_7">Koura whakāhua huna kanohi me te kara ngutu</string>
+    <string name="content_description_panda_head_8">Roimata taka kairere mōhiti mo te rā</string>
+    <string name="content_description_panda_head_9">Porehu pāpāringa</string>
+    <string name="content_description_panda_head_10">Mōhititia, rae rarapa ruānuku</string>
+    <string name="content_description_panda_feet_1">Mārakerake waewae</string>
+    <string name="content_description_panda_feet_2">Ngā hū māwhero me ngā herehere waiporoporo</string>
+    <string name="content_description_panda_feet_3">Ngā hū kahurangi me ngā herehere kakariki</string>
+    <string name="content_description_panda_feet_4">Ngā hū whero me ngā herehere ārani</string>
+    <string name="content_description_panda_feet_5">Ngā hū whero</string>
+    <string name="content_description_choose_head">Whiriwhiri māhunga</string>
+    <string name="content_description_choose_body">Whiriwhiri tinana</string>
+    <string name="content_description_choose_feet">Whiriwhiri waewae</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
