@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
@@ -374,6 +375,8 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
+    locator<Analytics>()
+        .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 

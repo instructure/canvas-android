@@ -15,8 +15,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class QuickNav {
@@ -57,7 +57,9 @@ class QuickNav {
   }
 
   void _logShow(Widget widget) {
-    final message = 'Pushing widget: ${widget.runtimeType.toString()}';
-    locator<Logger>().log(message);
+    final widgetName = widget.runtimeType.toString();
+    final message = 'Pushing widget: $widgetName';
+    locator<Analytics>().logMessage(message);
+    locator<Analytics>().setCurrentScreen(widgetName);
   }
 }

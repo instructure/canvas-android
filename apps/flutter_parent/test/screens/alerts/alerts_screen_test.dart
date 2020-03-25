@@ -32,7 +32,6 @@ import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,7 +62,6 @@ void main() {
     locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
     locator.registerLazySingleton<AlertCountNotifier>(() => alertNotifier);
     locator.registerFactory<QuickNav>(() => mockNav);
-    locator.registerLazySingleton<Logger>(() => Logger());
   });
 
   setUp(() {

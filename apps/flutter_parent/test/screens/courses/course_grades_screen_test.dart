@@ -36,7 +36,6 @@ import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart
 import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -62,7 +61,6 @@ void main() {
     locator.registerFactory<CourseDetailsInteractor>(() => interactor);
     locator.registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor());
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    locator.registerLazySingleton<Logger>(() => Logger());
   });
 
   setUp(() {

@@ -14,7 +14,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
 import 'package:mockito/mockito.dart';
@@ -25,21 +27,26 @@ import '../utils/test_app.dart';
 
 void main() {
   final login = Login((b) => b
+    ..domain = 'domain'
+    ..user = User((b) => b..id = '123').toBuilder()
     ..clientSecret = 'client_secret'
     ..clientId = 'client_id');
 
   final dio = _MockDio();
   final authApi = _MockAuthApi();
+  final analytics = _MockAnalytics();
 
   final interceptor = AuthenticationInterceptor(dio);
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<AuthApi>(() => authApi);
+    locator.registerLazySingleton<Analytics>(() => analytics);
   });
 
   setUp(() {
     reset(dio);
     reset(authApi);
+    reset(analytics);
   });
 
   test('returns error if response code is not 401', () async {
@@ -59,7 +66,7 @@ void main() {
   });
 
   test('returns error if headers have the retry header', () async {
-    await setupPlatformChannels();
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
     final error = DioError(
       request: RequestOptions(headers: {'mobile_refresh': 'mobile_refresh'}),
       response: Response(statusCode: 401),
@@ -67,7 +74,10 @@ void main() {
 
     // Test the error response
     expect(await interceptor.onError(error), error);
-    // TODO: verify log event called
+    verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE, extras: {
+      AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
+      AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
+    })).called(1);
   });
 
   test('returns error if login is null', () async {
@@ -76,7 +86,10 @@ void main() {
 
     // Test the error response
     expect(await interceptor.onError(error), error);
-    // TODO: verify log event called
+    verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
+      AnalyticsParamConstants.DOMAIN_PARAM: null,
+      AnalyticsParamConstants.USER_CONTEXT_ID: null,
+    })).called(1);
   });
 
   test('returns error if login client id is null', () async {
@@ -85,7 +98,10 @@ void main() {
 
     // Test the error response
     expect(await interceptor.onError(error), error);
-    // TODO: verify log event called
+    verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
+      AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
+      AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
+    })).called(1);
   });
 
   test('returns error if login client secret is null', () async {
@@ -94,7 +110,10 @@ void main() {
 
     // Test the error response
     expect(await interceptor.onError(error), error);
-    // TODO: verify log event called
+    verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_NO_SECRET, extras: {
+      AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
+      AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
+    })).called(1);
   });
 
   test('returns error if the refresh api call failed', () async {
@@ -106,7 +125,10 @@ void main() {
     // Test the error response
     expect(await interceptor.onError(error), error);
 
-    // TODO: verify log event called
+    verify(analytics.logEvent(AnalyticsEventConstants.TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID, extras: {
+      AnalyticsParamConstants.DOMAIN_PARAM: login.domain,
+      AnalyticsParamConstants.USER_CONTEXT_ID: 'user_${login.user.id}',
+    })).called(1);
     verify(authApi.refreshToken()).called(1);
   });
 
@@ -128,14 +150,16 @@ void main() {
     // Do the onError call
     expect(await interceptor.onError(error), expectedAnswer);
 
-    // TODO: verify log event called
     verify(authApi.refreshToken()).called(1);
     final actualOptions = verify(dio.request(path, options: captureAnyNamed('options'))).captured[0] as RequestOptions;
     expect(actualOptions.headers, expectedOptions.headers);
     expect(ApiPrefs.getCurrentLogin().accessToken, tokens.accessToken);
+    verifyNever(analytics.logEvent(any, extras: anyNamed('extras')));
   });
 }
 
 class _MockDio extends Mock implements Dio {}
 
 class _MockAuthApi extends Mock implements AuthApi {}
+
+class _MockAnalytics extends Mock implements Analytics {}

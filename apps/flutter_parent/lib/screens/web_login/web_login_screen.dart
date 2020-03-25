@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -113,10 +114,18 @@ class WebLoginScreen extends StatelessWidget {
       var url = request.url;
       String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
+        locator<Analytics>().logEvent(
+          AnalyticsEventConstants.LOGIN_SUCCESS,
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+        );
         locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
       });
       return NavigationDecision.prevent;
     } else if (request.url.contains(errorUrl)) {
+      locator<Analytics>().logEvent(
+        AnalyticsEventConstants.LOGIN_FAILURE,
+        extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+      );
       return NavigationDecision.prevent;
     } else {
       return NavigationDecision.navigate;

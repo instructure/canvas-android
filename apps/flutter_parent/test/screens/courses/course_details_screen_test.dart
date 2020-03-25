@@ -30,10 +30,8 @@ import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.da
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
@@ -48,22 +46,23 @@ void main() {
     ..id = studentId
     ..name = studentName);
 
-  _setupLocator({CourseDetailsInteractor interactor, CreateConversationInteractor convoInteractor}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+  final courseInteractor = _MockCourseDetailsInteractor();
+  final convoInteractor = _MockCreateConversationInteractor();
 
-    _locator.registerFactory<CourseDetailsInteractor>(() => interactor ?? _MockCourseDetailsInteractor());
-    _locator
-        .registerFactory<CreateConversationInteractor>(() => convoInteractor ?? _MockCreateConversationInteractor());
+  setupTestLocator((_locator) {
+    _locator.registerFactory<CourseDetailsInteractor>(() => courseInteractor);
+    _locator.registerFactory<CreateConversationInteractor>(() => convoInteractor);
     _locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
 
     _locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    _locator.registerLazySingleton<Logger>(() => Logger());
-  }
+  });
 
   setUp(() async {
     await setupPlatformChannels(
         config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+
+    reset(courseInteractor);
+    reset(convoInteractor);
   });
 
   tearDown(() {
@@ -71,7 +70,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows loading', (tester) async {
-    _setupLocator();
     await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump();
 
@@ -79,9 +77,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error and can refresh', (tester) async {
-    final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.error('This is an error'));
-    _setupLocator(interactor: interactor);
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.error('This is an error'));
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
@@ -98,14 +94,13 @@ void main() {
     await tester.drag(matchedWidget, const Offset(0, 200));
     await tester.pumpAndSettle(); // Loading indicator takes a lot of frames, pump and settle to wait
 
-    verify(interactor.loadCourse(courseId)).called(2); // Once for initial load, another for the refresh
+    verify(courseInteractor.loadCourse(courseId)).called(2); // Once for initial load, another for the refresh
   });
 
   testWidgetsWithAccessibilityChecks('Shows course name when given a course', (tester) async {
     final course = Course((b) => b
       ..id = courseId
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pumpAndSettle(); // Widget creation
@@ -117,9 +112,7 @@ void main() {
     final course = Course((b) => b
       ..id = courseId
       ..name = 'Course Name');
-    final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    _setupLocator(interactor: interactor);
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
@@ -134,7 +127,6 @@ void main() {
       ..syllabusBody = 'body'
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
@@ -152,7 +144,6 @@ void main() {
       ..id = courseId
       ..homePage = HomePage.wiki
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
@@ -165,8 +156,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows no tabs when no syllabus and no front page', (tester) async {
-    _setupLocator();
-
     await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
@@ -186,7 +175,6 @@ void main() {
       ..syllabusBody = 'hi'
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
@@ -204,7 +192,6 @@ void main() {
       ..syllabusBody = 'hi'
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),
@@ -221,14 +208,12 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Clicking front page tab shows the front page screen', (tester) async {
-    final interactor = _MockCourseDetailsInteractor();
     final course = Course((b) => b
       ..id = courseId
       ..homePage = HomePage.wiki
       ..name = 'Course Name');
-    _setupLocator(interactor: interactor);
 
-    when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
+    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),
@@ -250,7 +235,6 @@ void main() {
       ..syllabusBody = 'hi'
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
-    _setupLocator();
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),
@@ -271,12 +255,8 @@ void main() {
       ..name = 'Course Name'
       ..courseCode = '1234');
 
-    final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-
-    final convoInteractor = _MockCreateConversationInteractor();
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
-    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 
     String studentName = 'Panda';
 
@@ -308,12 +288,8 @@ void main() {
       ..homePage = HomePage.syllabus
       ..syllabusBody = 'test');
 
-    final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-
-    final convoInteractor = _MockCreateConversationInteractor();
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
-    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 
     String studentName = 'Panda';
 
@@ -349,14 +325,9 @@ void main() {
       ..courseCode = '1234'
       ..homePage = HomePage.wiki);
 
-    final interactor = _MockCourseDetailsInteractor();
-    when(interactor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    when(interactor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
-
-    final convoInteractor = _MockCreateConversationInteractor();
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
+    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
-
-    _setupLocator(interactor: interactor, convoInteractor: convoInteractor);
 
     String studentName = 'Panda';
 

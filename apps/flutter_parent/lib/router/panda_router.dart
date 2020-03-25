@@ -19,6 +19,7 @@ import 'dart:core';
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -38,7 +39,6 @@ import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
@@ -57,32 +57,52 @@ class PandaRouter {
 
   static String assignmentDetails(String courseId, String assignmentId) =>
       '/courses/$courseId/assignments/$assignmentId';
+
   static String conversations() => '/conversations';
+
   static String courseAnnouncementDetails(String courseId, String announcementId) =>
       '/courses/$courseId/discussion_topics/$announcementId';
+
   static String courseDetails(String courseId) => '/courses/$courseId';
+
   static String dashboard() => '/dashboard';
+
   static String discussionDetails(String courseId, String topicId) => courseAnnouncementDetails(courseId, topicId);
+
   static String domainSearch() => '/domainSearch';
+
   static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
+
   static String help() => '/help';
+
   static String institutionAnnouncementDetails(String accountNotificationId) =>
       '/account_notifications/$accountNotificationId';
+
   static String legal() => '/legal';
+
   static String login() => '/login';
   static final String _loginWeb = '/loginWeb';
+
   static String loginWeb(String domain, {String authenticationProvider = null}) =>
       '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider';
+
   static String manageStudents() => '/manage_students';
+
   static String notParent() => '/not_parent';
+
   static String quizAssignmentDetails(String courseId, String quizId) => assignmentDetails(courseId, quizId);
   static final String _rootWithExternalUrl = '/external';
   static final String _routerError = '/error';
+
   static String _routerErrorRoute(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+
   static String rootSplash() => '/';
   static final String _simpleWebView = '/internal';
+
   static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+
   static String settings() => '/settings';
+
   static String termsOfUse() => '/terms_of_use';
 
   static void init() {
@@ -121,128 +141,102 @@ class PandaRouter {
 
   // Handlers
   static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = SplashScreen();
-    _logRoute(params, widget);
-    return widget;
+    return SplashScreen();
   });
 
   static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = ConversationListScreen();
-    _logRoute(params, widget);
-    return widget;
+    return ConversationListScreen();
   });
 
   static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = DashboardScreen();
-    _logRoute(params, widget);
-    return widget;
+    return DashboardScreen();
   });
 
   static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = LoginLandingScreen();
-    _logRoute(params, widget);
-    return widget;
+    return LoginLandingScreen();
   });
 
   static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
-    var widget = (authProvider == null || authProvider == 'null')
+    return (authProvider == null || authProvider == 'null')
         ? WebLoginScreen(params[_RouterKeys.domain][0])
         : WebLoginScreen(
             params[_RouterKeys.domain][0],
             authenticationProvider: authProvider,
           );
-    _logRoute(params, widget);
-    return widget;
   });
 
   static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = DomainSearchScreen();
-    _logRoute(params, widget);
-    return widget;
+    return DomainSearchScreen();
   });
 
   static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = NotAParentScreen();
-    _logRoute(params, widget);
-    return widget;
+    return NotAParentScreen();
   });
 
   static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = CourseDetailsScreen(params[_RouterKeys.courseId][0]);
-    _logRoute(params, widget);
-    return widget;
+    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
   });
 
   static Handler _assignmentDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = AssignmentDetailsScreen(
+    return AssignmentDetailsScreen(
       courseId: params[_RouterKeys.courseId][0],
       assignmentId: params[_RouterKeys.assignmentId][0],
     );
-    _logRoute(params, widget);
-    return widget;
   });
 
   static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget =
-        EventDetailsScreen.withId(eventId: params[_RouterKeys.eventId][0], courseId: params[_RouterKeys.courseId][0]);
-    _logRoute(params, widget);
-    return widget;
+    return EventDetailsScreen.withId(
+      eventId: params[_RouterKeys.eventId][0],
+      courseId: params[_RouterKeys.courseId][0],
+    );
   });
 
   static Handler _helpHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = HelpScreen();
-    _logRoute(params, widget);
-    return widget;
+    return HelpScreen();
   });
 
   static Handler _legalHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = LegalScreen();
-    _logRoute(params, widget);
-    return widget;
+    return LegalScreen();
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = TermsOfUseScreen();
-    _logRoute(params, widget);
-    return widget;
+    return TermsOfUseScreen();
   });
 
   static Handler _settingsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = SettingsScreen();
-    _logRoute(params, widget);
-    return widget;
+    return SettingsScreen();
   });
 
   static Handler _courseAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = AnnouncementDetailScreen(
-        params[_RouterKeys.announcementId][0], AnnouncementType.COURSE, params[_RouterKeys.courseId][0], context);
-    _logRoute(params, widget);
-    return widget;
+    return AnnouncementDetailScreen(
+      params[_RouterKeys.announcementId][0],
+      AnnouncementType.COURSE,
+      params[_RouterKeys.courseId][0],
+      context,
+    );
   });
 
   static Handler _institutionAnnouncementDetailsHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var widget = AnnouncementDetailScreen(
-        params[_RouterKeys.accountNotificationId][0], AnnouncementType.INSTITUTION, '', context);
-    _logRoute(params, widget);
-    return widget;
+    return AnnouncementDetailScreen(
+      params[_RouterKeys.accountNotificationId][0],
+      AnnouncementType.INSTITUTION,
+      '',
+      context,
+    );
   });
 
   static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
-    var widget = RouterErrorScreen(url);
-    _logRoute(params, widget);
-    return widget;
+    return RouterErrorScreen(url);
   });
 
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
-    var widget = SimpleWebViewScreen(url, url);
-    _logRoute(params, widget);
-    return widget;
+    return SimpleWebViewScreen(url, url);
   });
 
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
@@ -251,7 +245,7 @@ class PandaRouter {
     final link = params[_RouterKeys.url][0];
     final urlRouteWrapper = getRouteWrapper(link);
 
-    locator<Logger>().log('Attempting to route EXTERNAL url: $link');
+    locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
 
     // We only care about valid app routes if they are already signed in
     if (urlRouteWrapper.appRouteMatch != null && ApiPrefs.isLoggedIn()) {
@@ -273,7 +267,7 @@ class PandaRouter {
   static Future<void> routeInternally(BuildContext context, String link) async {
     final urlRouteWrapper = getRouteWrapper(link);
 
-    locator<Logger>().log('Attempting to route INTERNAL url: $link');
+    locator<Analytics>().logMessage('Attempting to route INTERNAL url: $link');
 
     // Check to see if the route can be handled internally, isn't to root, and matches our current domain
     if (urlRouteWrapper.appRouteMatch != null) {
@@ -315,12 +309,6 @@ class PandaRouter {
     // Check to see if the route can be handled internally, isn't to root, and matches our current domain
     return _UrlRouteWrapper(
         path, currentDomain == null ? true : currentDomain.contains(uri.host), path == '/' ? null : match);
-  }
-
-  static void _logRoute(Map<String, List<String>> params, Widget widget) {
-    final message =
-        'Pushing widget: ${widget.runtimeType.toString()} ${params.isNotEmpty ? 'with params: $params' : ''}';
-    locator<Logger>().log(message);
   }
 }
 

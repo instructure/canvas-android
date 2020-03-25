@@ -19,11 +19,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -33,16 +33,21 @@ import '../../utils/test_app.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
+  final analytics = _MockAnalytics();
 
   _setupLocator(MockInteractor interactor, {WebLoginInteractor webInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerLazySingleton(() => QuickNav());
-    _locator.registerLazySingleton<Logger>(() => Logger());
+    _locator.registerLazySingleton<Analytics>(() => analytics);
 
     _locator.registerFactory<DomainSearchInteractor>(() => interactor);
     _locator.registerFactory<WebLoginInteractor>(() => webInteractor ?? _MockWebLoginInteractor());
   }
+
+  setUp(() {
+    reset(analytics);
+  });
 
   testWidgets('default state', (tester) async {
     _setupLocator(MockInteractor());
@@ -243,6 +248,7 @@ void main() {
 
     // Make sure alert dialog is showing
     expect(find.byType(AlertDialog), findsOneWidget);
+    verify(analytics.logEvent(AnalyticsEventConstants.HELP_DOMAIN_SEARCH));
 
     // Tap the Ok button
     await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('OK')));
@@ -378,3 +384,5 @@ void main() {
 class MockInteractor extends Mock implements DomainSearchInteractor {}
 
 class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
+
+class _MockAnalytics extends Mock implements Analytics {}

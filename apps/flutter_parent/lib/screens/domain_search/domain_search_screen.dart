@@ -16,6 +16,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -212,6 +213,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
     var canvasSupportText = L10n(context).canvasSupport;
     var body = L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
 
+    locator<Analytics>().logEvent(AnalyticsEventConstants.HELP_DOMAIN_SEARCH);
     showDialog(
         context: context,
         builder: (context) {
