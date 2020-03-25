@@ -39,7 +39,6 @@ import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.*
-import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
