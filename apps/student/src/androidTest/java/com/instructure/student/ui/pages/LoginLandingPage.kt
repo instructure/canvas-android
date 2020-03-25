@@ -32,12 +32,12 @@ class LoginLandingPage : BasePage() {
     private val findMySchoolButton by OnViewWithId(R.id.findMySchool)
     private val canvasNetworkTextView by OnViewWithId(R.id.canvasNetwork)
     private val previousLoginWrapper by OnViewWithId(R.id.previousLoginWrapper, autoAssert = false)
-    private val previousLoginTitleText by  OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
-    private val previousLoginDivider by  OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
-    private val previousLoginRecyclerView by  OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
+    private val previousLoginTitleText by OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
+    private val previousLoginDivider by OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
+    private val previousLoginRecyclerView by OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
     private val canvasWordmarkView by OnViewWithId(R.id.canvasWordmark, autoAssert = false)
     private val appDescriptionTypeTextView by OnViewWithId(R.id.appDescriptionType, autoAssert = false)
-    private val qrCodeButton by OnViewWithId(R.id.qrLogin, autoAssert = true)
+    private val qrCodeButton by OnViewWithId(R.id.qrLogin, autoAssert = false)
 
     fun clickFindMySchoolButton() {
         findMySchoolButton.click()
