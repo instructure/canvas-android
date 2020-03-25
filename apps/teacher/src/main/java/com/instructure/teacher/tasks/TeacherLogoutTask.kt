@@ -24,7 +24,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.utils.TeacherPrefs
 
-class TeacherLogoutTask(type: Type) : LogoutTask(type) {
+class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         TeacherPrefs.clearPrefs()
@@ -34,7 +34,9 @@ class TeacherLogoutTask(type: Type) : LogoutTask(type) {
         return LoginActivity.createIntent(context)
     }
 
-    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? = null
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? {
+        return LoginActivity.createIntent(context, uri)
+    }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }

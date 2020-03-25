@@ -23,25 +23,28 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.loginapi.login.api.MobileVerifyAPI
 import com.instructure.loginapi.login.model.DomainVerificationResult
 import com.instructure.loginapi.login.model.SignedInUser
-import com.instructure.loginapi.login.tasks.LogoutTask
 
 object QRLogin {
 
     private const val QR_DOMAIN = "domain"
-    private const val QR_AUTH_CODE = "code_android"
+    private const val QR_AUTH_CODE_STUDENT = "code_android"
+    private const val QR_AUTH_CODE_TEACHER = "code_android_teacher"
     private const val QR_HOST = "sso.canvaslms.com"
     private const val QR_HOST_BETA = "sso.beta.canvaslms.com"
     private const val QR_HOST_TEST = "sso.test.canvaslms.com"
 
     // Returns True if Masquerading, false otherwise
-    suspend fun performSSOLogin(data: Uri, context: Context): OAuthTokenResponse {
+    suspend fun performSSOLogin(data: Uri, context: Context, isTeacher: Boolean = false): OAuthTokenResponse {
         val domain = data.getQueryParameter(QR_DOMAIN)
-        val code = data.getQueryParameter(QR_AUTH_CODE)
+        val code = if(isTeacher) {
+            data.getQueryParameter(QR_AUTH_CODE_TEACHER)
+        } else {
+            data.getQueryParameter(QR_AUTH_CODE_STUDENT)
+        }
 
         val domainVerificationResult = awaitApi<DomainVerificationResult?> {
             MobileVerifyAPI.mobileVerify(domain, it)
@@ -101,11 +104,12 @@ object QRLogin {
     }
 
     @JvmStatic
-    fun verifySSOLoginUri(uri: Uri?): Boolean {
+    fun verifySSOLoginUri(uri: Uri?, isTeacher: Boolean = false): Boolean {
         if (uri == null) return false
+        val codeParam = if(isTeacher) QR_AUTH_CODE_TEACHER else QR_AUTH_CODE_STUDENT
         val hostList = listOf(QR_HOST, QR_HOST_BETA, QR_HOST_TEST)
         return hostList.contains(uri.host.orEmpty())
                 && uri.queryParameterNames.contains(QR_DOMAIN)
-                && uri.queryParameterNames.contains(QR_AUTH_CODE)
+                && uri.queryParameterNames.contains(codeParam)
     }
 }

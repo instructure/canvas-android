@@ -35,7 +35,9 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return SplashActivity.createIntent(this, null)
     }
 
-    override fun loginWithQRIntent(): Intent? = null
+    override fun loginWithQRIntent(): Intent = Intent(this, TeacherLoginWithQRActivity::class.java)
+
+    override fun loginWithQRCodeEnabled(): Boolean = true
 
     override fun beginFindSchoolFlow(): Intent = FindSchoolActivity.createIntent(this)
 

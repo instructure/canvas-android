@@ -23,18 +23,29 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.fragment.app.FragmentActivity
 import android.view.Window
+import android.widget.Toast
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
+import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.loginapi.login.util.QRLogin
+import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.services.FileDownloadService
+import com.instructure.teacher.tasks.TeacherLogoutTask
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 class RouteValidatorActivity : FragmentActivity() {
+
+    private var qrSignInJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -55,6 +66,52 @@ class RouteValidatorActivity : FragmentActivity() {
         val domain = ApiPrefs.domain
 
         // TODO - Add support for QR login here
+        val qrLoginEnabled = RemoteConfigUtils.getString(
+                RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
+                ?: false
+        if(verifySSOLoginUri(data, true)) { // TODO - add qrLoginEnabled
+            // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
+            qrSignInJob = tryWeave {
+                if(isSignedIn) { // If the user is already signed in, use the QR Switch
+                    TeacherLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                    finish()
+                    return@tryWeave
+                }
+
+                val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
+
+                // Add delay for animation and launch Navigation Activity
+//                delay(700)
+
+                // If we have a real user, this is a QR code from a masquerading web user
+                val intent = if(tokenResponse.realUser != null && tokenResponse.user != null) {
+                    // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
+                    ApiPrefs.isMasqueradingFromQRCode = true
+                    ApiPrefs.isMasquerading = true // Don't want push notifs getting registered by the below create intent call
+                    val extras = Bundle()
+                    extras.putLong(Const.QR_CODE_MASQUERADE_ID, tokenResponse.user!!.id)
+                    LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, extras)
+                } else {
+                    logQREvent(ApiPrefs.domain, true)
+                    LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, null)
+                }
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
+            } catch {
+                // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
+                if(!isSignedIn) {
+                    ApiPrefs.clearAllData()
+                }
+
+                // Log the analytics
+                logQREvent(ApiPrefs.domain, false)
+
+                Toast.makeText(this@RouteValidatorActivity, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
 
         if (!isSignedIn) {
             val intent = if (host.isNotBlank()) {
@@ -88,6 +145,17 @@ class RouteValidatorActivity : FragmentActivity() {
 
                 finish()
             }, 1000)
+        }
+    }
+
+    private fun logQREvent(domain: String, isSuccess: Boolean) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
+        }
+        if(isSuccess) {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
+        } else {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
         }
     }
 
