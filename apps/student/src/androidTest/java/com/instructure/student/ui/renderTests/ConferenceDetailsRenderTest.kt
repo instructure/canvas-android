@@ -20,6 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsViewState
@@ -32,6 +33,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ConferenceDetailsRenderTest : StudentRenderTest() {
     private val canvasContext: CanvasContext = Course(id = 123L, name = "Test Course")
+    private val canvasContextGroup: CanvasContext = Group(id = 1337L, name = "Test Group")
 
     private lateinit var baseState: ConferenceDetailsViewState
     private lateinit var baseRecordingState: ConferenceRecordingViewState
@@ -181,6 +183,133 @@ class ConferenceDetailsRenderTest : StudentRenderTest() {
         loadPageWithViewState(state, canvasContext)
         conferenceDetailsRenderPage.assertDisplaysRecording(recordingState)
     }
+
+
+    @Test
+    fun displaysToolbarItemsWithGroup() {
+        val state = baseState
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysToolbarTitle("Conference Details")
+        conferenceDetailsRenderPage.assertDisplaysToolbarSubtitle(canvasContextGroup.name!!)
+    }
+
+    @Test
+    fun displaysRefreshingStateWithGroup() {
+        val state = baseState.copy(isLoading = true)
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertRefreshing(true)
+    }
+
+    @Test
+    fun displaysJoinableStateWithGroup() {
+        val state = baseState.copy(
+                isJoining = false,
+                showJoinContainer = true
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysJoinable()
+    }
+
+    @Test
+    fun displaysJoiningStateWithGroup() {
+        // Skip on API < 24 (known issue with progress bars)
+        if(Build.VERSION.SDK_INT < 24) return
+
+        val state = baseState.copy(
+                isJoining = true,
+                showJoinContainer = true
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysJoining()
+    }
+
+    @Test
+    fun displaysInProgressIndicatorWithGroup() {
+        val state = baseState.copy(
+                isJoining = false,
+                showJoinContainer = true
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysInProgressIndicator(shouldDisplay = true)
+    }
+
+    @Test
+    fun hidesInProgressIndicatorWithGroup() {
+        val state = baseState.copy(
+                isJoining = false,
+                showJoinContainer = false
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysInProgressIndicator(shouldDisplay = false)
+    }
+
+    @Test
+    fun displaysConferenceTitleWithGroup() {
+        val state = baseState.copy(title = "Test Title")
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysTitle(state.title)
+    }
+
+    @Test
+    fun displaysConferenceStatusWithGroup() {
+        val state = baseState.copy(status = "Test Status")
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysStatus(state.status)
+    }
+
+    @Test
+    fun displaysConferenceDescriptionWithGroup() {
+        val state = baseState.copy(description = "Test Description")
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysDescription(state.description)
+    }
+
+    @Test
+    fun displaysRecordingSectionWithGroup() {
+        loadPageWithViewState(baseState, canvasContextGroup)
+        conferenceDetailsRenderPage.assertDisplaysRecordingSection(shouldDisplay = true)
+    }
+
+    @Test
+    fun hidesRecordingSectionWithGroup() {
+        val state = baseState.copy(
+                showRecordingSection = false,
+                recordings = emptyList()
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+        conferenceDetailsRenderPage.assertDisplaysRecordingSection(shouldDisplay = false)
+    }
+
+    @Test
+    fun displaysRecordingWithGroup() {
+        loadPageWithViewState(baseState, canvasContextGroup)
+        conferenceDetailsRenderPage.assertDisplaysRecording(baseRecordingState)
+    }
+
+    @Test
+    fun displaysLaunchingRecordingWithGroup() {
+        // Skip on API < 24 (known issue with progress bars)
+        if(Build.VERSION.SDK_INT < 24) return
+
+        val recordingState = baseRecordingState.copy(
+                isLaunching = true
+        )
+        val state = baseState.copy(
+                recordings = listOf(recordingState)
+        )
+        loadPageWithViewState(state, canvasContextGroup)
+        conferenceDetailsRenderPage.assertDisplaysRecording(recordingState)
+    }
+
 
     private fun loadPageWithViewState(state: ConferenceDetailsViewState, canvasContext: CanvasContext) {
         val emptyEffectRunner = object : WorkRunner {
