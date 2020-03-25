@@ -226,7 +226,7 @@ void main() {
     expect(ApiPrefs.effectiveLocale(), Locale(user.locale, user.locale));
   });
 
-  test('effectiveLocale returns the users locale if effective locale is null', () async {
+  test('effectiveLocale returns the users effective locale without inst if script is longer than 5', () async {
     final login = Login();
     await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
@@ -237,6 +237,19 @@ void main() {
 
     expect(
         ApiPrefs.effectiveLocale(), Locale.fromSubtags(languageCode: 'en', countryCode: 'AU', scriptCode: 'unimelb'));
+  });
+
+  test('effectiveLocale returns the users effective locale with inst if script is less than 5', () async {
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-GB-x-ukhe');
+
+    await ApiPrefs.setUser(user);
+
+    expect(
+        ApiPrefs.effectiveLocale(), Locale.fromSubtags(languageCode: 'en', countryCode: 'GB', scriptCode: 'instukhe'));
   });
 
   test('getUser throws error if not initialized', () {

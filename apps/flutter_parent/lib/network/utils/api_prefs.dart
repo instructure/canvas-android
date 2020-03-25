@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -179,7 +180,9 @@ class ApiPrefs {
     } else {
       return Locale.fromSubtags(
         languageCode: localeParts.first,
-        scriptCode: userLocale[1].length < 5 ? 'inst${userLocale[1]}' : userLocale[1].substring(0, 8),
+        scriptCode: userLocale[1].length < 5
+            ? 'inst${userLocale[1]}'
+            : userLocale[1].substring(0, min(8, userLocale[1].length)),
         countryCode: localeParts.last,
       );
     }
