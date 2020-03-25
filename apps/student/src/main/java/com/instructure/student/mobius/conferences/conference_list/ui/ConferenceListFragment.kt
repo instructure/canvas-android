@@ -36,7 +36,7 @@ import com.instructure.student.mobius.conferences.conference_list.ConferenceList
 class ConferenceListFragment :
     MobiusFragment<ConferenceListModel, ConferenceListEvent, ConferenceListEffect, ConferenceListView, ConferenceListViewState>() {
 
-    val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
     override fun makeUpdate() =
         ConferenceListUpdate()

@@ -20,7 +20,6 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
@@ -32,7 +31,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ConferenceListRenderTest : StudentRenderTest() {
     private val canvasContext: CanvasContext = Course(id = 123L, name = "Test Course")
-    private val canvasContextGroup: CanvasContext = Group(id = 1337L, name = "Test Group")
 
     @Test
     fun displaysToolbarItems() {
@@ -115,87 +113,6 @@ class ConferenceListRenderTest : StudentRenderTest() {
         )
         val state = ConferenceListViewState.Loaded(false, itemStates)
         loadPageWithViewState(state, canvasContext)
-
-        conferenceListRenderPage.assertDisplaysListItems(itemStates)
-    }
-
-
-    @Test
-    fun displaysToolbarItemsWithGroup() {
-        val state = ConferenceListViewState.Loaded(isLaunchingInBrowser = false, itemStates =  emptyList())
-        loadPageWithViewState(state, canvasContextGroup)
-        conferenceListRenderPage.assertDisplaysToolbarTitle("Conferences")
-        conferenceListRenderPage.assertDisplaysToolbarSubtitle(canvasContextGroup.name!!)
-        conferenceListRenderPage.assertDisplaysLaunching(false)
-    }
-
-    @Test
-    fun displaysLoadingStateWithGroup() {
-        val state = ConferenceListViewState.Loading(isLaunchingInBrowser = false)
-        loadPageWithViewState(state, canvasContextGroup)
-        conferenceListRenderPage.assertLoading(true)
-    }
-
-    @Test
-    fun displaysLaunchingInBrowserStateWithGroup() {
-        // Skip on API < 24 (known issue with progress bars)
-        if(Build.VERSION.SDK_INT < 24) return
-
-        val state = ConferenceListViewState.Loaded(isLaunchingInBrowser = true, itemStates =  emptyList())
-        loadPageWithViewState(state, canvasContextGroup)
-        conferenceListRenderPage.assertDisplaysLaunching(true)
-    }
-
-    @Test
-    fun displaysErrorStateWithGroup() {
-        val state = ConferenceListViewState.Loaded(false, listOf(ConferenceListItemViewState.Error))
-        loadPageWithViewState(state, canvasContextGroup)
-        conferenceListRenderPage.assertDisplaysError()
-    }
-
-    @Test
-    fun displaysEmptyStateWithGroup() {
-        val state = ConferenceListViewState.Loaded(false, listOf(ConferenceListItemViewState.Empty))
-        loadPageWithViewState(state, canvasContextGroup)
-        conferenceListRenderPage.assertDisplaysEmptyView()
-    }
-
-    @Test
-    fun displaysListItemsWithGroup() {
-        val tint = Color.BLUE
-        val itemStates = listOf(
-                ConferenceListItemViewState.ConferenceHeader("Header 1"),
-                ConferenceListItemViewState.ConferenceItem(
-                        tint = tint,
-                        title = "Conference 1",
-                        subtitle = "Conference 1 Description",
-                        label = "In Progress",
-                        labelTint = tint,
-                        conferenceId = 0,
-                        isJoinable = false
-                ),
-                ConferenceListItemViewState.ConferenceItem(
-                        tint = tint,
-                        title = "Conference 2",
-                        subtitle = "Conference 2 Description",
-                        label = "Not Started",
-                        labelTint = tint,
-                        conferenceId = 0,
-                        isJoinable = false
-                ),
-                ConferenceListItemViewState.ConferenceHeader("Header 2"),
-                ConferenceListItemViewState.ConferenceItem(
-                        tint = tint,
-                        title = "Conference 3",
-                        subtitle = "Conference 3 Description",
-                        label = "Concluded",
-                        labelTint = tint,
-                        conferenceId = 0,
-                        isJoinable = false
-                )
-        )
-        val state = ConferenceListViewState.Loaded(false, itemStates)
-        loadPageWithViewState(state, canvasContextGroup)
 
         conferenceListRenderPage.assertDisplaysListItems(itemStates)
     }
