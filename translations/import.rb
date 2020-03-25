@@ -67,8 +67,11 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
       language = language
         .sub('-x-', "-inst")
         .sub(/\-inst(\w{5,})/, '-\1')
-        .gsub('-', '+')
-        .prepend('b+')
+
+        # Android specific naming convention
+        if file.end_with?('.xml')
+            language = language.gsub('-', '+').prepend('b+')
+        end
     else
       language = language.gsub('-', '-r')
     end
@@ -85,7 +88,7 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
 
     # Preserve arb file extensions (flutter also names resources slightly different)
     if file.end_with?('.arb')
-      language = language.gsub('-', '_')
+      language = language.gsub('-', '_') # Flutter specific naming convention
       destination = File.join(res_dir, "intl_#{language}.arb")
     else
       destination = File.join(res_dir, "values-#{language}", 'strings.xml')

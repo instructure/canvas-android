@@ -17,5 +17,6 @@ import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class UserApi {
-  static Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true).get('users/self/profile'));
+  static Future<User> getSelf() =>
+      fetch(canvasDio(forceDeviceLanguage: true, forceRefresh: true).get('users/self/profile'));
 }
