@@ -32,7 +32,7 @@ import com.instructure.student.mobius.conferences.conference_details.*
 class ConferenceDetailsFragment :
     MobiusFragment<ConferenceDetailsModel, ConferenceDetailsEvent, ConferenceDetailsEffect, ConferenceDetailsView, ConferenceDetailsViewState>() {
 
-    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+    val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     val conference by ParcelableArg<Conference>(key = Const.CONFERENCE)
 

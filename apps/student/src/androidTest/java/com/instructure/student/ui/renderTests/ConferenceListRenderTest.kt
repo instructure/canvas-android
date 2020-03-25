@@ -20,6 +20,7 @@ import android.os.Build
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
@@ -31,6 +32,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ConferenceListRenderTest : StudentRenderTest() {
     private val canvasContext: CanvasContext = Course(id = 123L, name = "Test Course")
+    private val canvasContextGroup: CanvasContext = Group(id = 1337L, name = "Test Group")
 
     @Test
     fun displaysToolbarItems() {
@@ -115,6 +117,16 @@ class ConferenceListRenderTest : StudentRenderTest() {
         loadPageWithViewState(state, canvasContext)
 
         conferenceListRenderPage.assertDisplaysListItems(itemStates)
+    }
+
+
+    @Test
+    fun displaysToolbarItemsWithGroup() {
+        val state = ConferenceListViewState.Loaded(isLaunchingInBrowser = false, itemStates =  emptyList())
+        loadPageWithViewState(state, canvasContextGroup)
+        conferenceListRenderPage.assertDisplaysToolbarTitle("Conferences")
+        conferenceListRenderPage.assertDisplaysToolbarSubtitle(canvasContextGroup.name!!)
+        conferenceListRenderPage.assertDisplaysLaunching(false)
     }
 
     private fun loadPageWithViewState(state: ConferenceListViewState, canvasContext: CanvasContext) {
