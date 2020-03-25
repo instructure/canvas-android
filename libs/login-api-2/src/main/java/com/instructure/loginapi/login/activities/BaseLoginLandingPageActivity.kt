@@ -39,6 +39,7 @@ import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.*
+import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
@@ -129,7 +130,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
         val qrLoginEnabled = RemoteConfigUtils.getString(
                 RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
-                ?: false
+                ?: BuildConfig.IS_TESTING
         if(loginWithQRCodeEnabled() && qrLoginEnabled) {
             qrLogin.setVisible()
             qrDivider.setVisible()

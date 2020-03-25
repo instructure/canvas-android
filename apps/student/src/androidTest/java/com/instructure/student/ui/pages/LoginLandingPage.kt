@@ -17,6 +17,8 @@
 package com.instructure.student.ui.pages
 
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -32,12 +34,12 @@ class LoginLandingPage : BasePage() {
     private val findMySchoolButton by OnViewWithId(R.id.findMySchool)
     private val canvasNetworkTextView by OnViewWithId(R.id.canvasNetwork)
     private val previousLoginWrapper by OnViewWithId(R.id.previousLoginWrapper, autoAssert = false)
-    private val previousLoginTitleText by  OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
-    private val previousLoginDivider by  OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
-    private val previousLoginRecyclerView by  OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
+    private val previousLoginTitleText by OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
+    private val previousLoginDivider by OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
+    private val previousLoginRecyclerView by OnViewWithId(R.id.previousLoginRecyclerView, autoAssert = false)
     private val canvasWordmarkView by OnViewWithId(R.id.canvasWordmark, autoAssert = false)
     private val appDescriptionTypeTextView by OnViewWithId(R.id.appDescriptionType, autoAssert = false)
-    private val qrCodeButton by OnViewWithId(R.id.qrLogin, autoAssert = true)
+g    private val qrCodeButton by OnViewWithId(R.id.qrLogin, autoAssert = true)
 
     fun clickFindMySchoolButton() {
         findMySchoolButton.click()
