@@ -32,7 +32,7 @@ import org.junit.Test
 class SubmissionsApiPactTests : ApiPactTestBase() {
 
     // Common logic
-    private fun createService(pathPrefix: String = "/api/v1/") : SubmissionAPI.SubmissionInterface {
+    private fun createService(pathPrefix: String = "/api/v1/"): SubmissionAPI.SubmissionInterface {
         val client = getClient(pathPrefix = pathPrefix)
         return client.create(SubmissionAPI.SubmissionInterface::class.java)
     }
@@ -45,12 +45,12 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     val getTextSubmissionPath = "/api/v1/courses/3/assignments/1/submissions/8"
     val getTextSubmissionFieldInfo = PactSubmissionFieldConfig
             .fromQuery(getTextSubmissionQuery) // submissionType?
-    val getTextSubmissionResponseBody =  LambdaDsl.newJsonBody { obj ->
+    val getTextSubmissionResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateSubmissionFields(getTextSubmissionFieldInfo)
     }.build()
 
     @Pact(consumer = "android")
-    fun getTextSubmissionPact(builder: PactDslWithProvider) : RequestResponsePact {
+    fun getTextSubmissionPact(builder: PactDslWithProvider): RequestResponsePact {
         return builder
                 .given("mobile 3 assignments, 3 submissions")
 
@@ -93,12 +93,12 @@ class SubmissionsApiPactTests : ApiPactTestBase() {
     val getAttachmentSubmissionPath = "/api/v1/courses/3/assignments/2/submissions/8"
     val getAttachmentSubmissionFieldInfo = PactSubmissionFieldConfig
             .fromQuery(getAttachmentSubmissionQuery, Assignment.SubmissionType.ONLINE_UPLOAD)
-    val getAttachmentSubmissionResponseBody =  LambdaDsl.newJsonBody { obj ->
+    val getAttachmentSubmissionResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateSubmissionFields(getAttachmentSubmissionFieldInfo)
     }.build()
 
     @Pact(consumer = "android")
-    fun getAttachmentSubmissionPact(builder: PactDslWithProvider) : RequestResponsePact {
+    fun getAttachmentSubmissionPact(builder: PactDslWithProvider): RequestResponsePact {
         return builder
                 .given("mobile 3 assignments, 3 submissions")
 

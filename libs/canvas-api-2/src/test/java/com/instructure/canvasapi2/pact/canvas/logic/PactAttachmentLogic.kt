@@ -32,7 +32,7 @@ fun LambdaDslObject.populateAttachmentFields(): LambdaDslObject {
             .stringMatcher("created_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .id("size") // long whole number
 
-    return this;
+    return this
 }
 
 fun assertAttachmentPopulated(description: String, attachment: Attachment) {

@@ -24,7 +24,7 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 
-fun LambdaDslObject.populateRubricSettingsFields() : LambdaDslObject {
+fun LambdaDslObject.populateRubricSettingsFields(): LambdaDslObject {
     this
             .id("id")
             .numberType("points_possible")
@@ -40,7 +40,7 @@ fun LambdaDslObject.populateRubricSettingsFields() : LambdaDslObject {
     //.booleanType("public")
     //.booleanType("read_only")
 
-    return this;
+    return this
 }
 
 fun assertRubricSettingsPopulated(description: String, settings: RubricSettings) {
@@ -52,14 +52,14 @@ fun assertRubricSettingsPopulated(description: String, settings: RubricSettings)
     assertNotNull("$description + hidePoints", settings.hidePoints);
 }
 
-fun LambdaDslObject.populateRubricCriterionRatingFields() : LambdaDslObject {
+fun LambdaDslObject.populateRubricCriterionRatingFields(): LambdaDslObject {
 
     this
             .stringType("id")
             .stringType("description")
             .stringType("long_description")
             .numberType("points")
-    return this;
+    return this
 }
 
 fun assertRubricCriterionRatingPopulated(description: String, rating: RubricCriterionRating) {
@@ -69,8 +69,7 @@ fun assertRubricCriterionRatingPopulated(description: String, rating: RubricCrit
     assertNotNull("$description + points", rating.points);
 }
 
-fun LambdaDslObject.populateRubricCriterionFields() : LambdaDslObject
-{
+fun LambdaDslObject.populateRubricCriterionFields(): LambdaDslObject {
     this
             .stringType("id")
             .stringType("description")
@@ -80,9 +79,9 @@ fun LambdaDslObject.populateRubricCriterionFields() : LambdaDslObject
                 obj.populateRubricCriterionRatingFields()
             }
             .booleanType("criterion_use_range")
-            //.booleanType("ignore_for_scoring") // Not supported by API?
+    //.booleanType("ignore_for_scoring") // Not supported by API?
 
-    return this;
+    return this
 }
 
 fun assertRubricCriterionPopulated(description: String, criterion: RubricCriterion) {

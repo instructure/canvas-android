@@ -23,7 +23,7 @@ import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 
-fun LambdaDslObject.populateSubmissionCommentFields() : LambdaDslObject {
+fun LambdaDslObject.populateSubmissionCommentFields(): LambdaDslObject {
     this
             .id("id")
             .id("author_id")
@@ -60,20 +60,20 @@ fun assertSubmissionCommentPopulated(description: String, submissionComment: Sub
 }
 
 data class PactSubmissionFieldConfig(
-        val includeSubmissionHistory : Boolean = false,
-        val includeSubmissionComments : Boolean = false,
-        val includeRubricAssessment : Boolean = false,
-        val includeAssignment : Boolean = false,
-        val includeVisibility : Boolean = false,
-        val includeCourse : Boolean = false, // Unused -- we don't track course in submission
-        val includeUser : Boolean = false,
-        val includeGroup : Boolean = false,
+        val includeSubmissionHistory: Boolean = false,
+        val includeSubmissionComments: Boolean = false,
+        val includeRubricAssessment: Boolean = false,
+        val includeAssignment: Boolean = false,
+        val includeVisibility: Boolean = false,
+        val includeCourse: Boolean = false, // Unused -- we don't track course in submission
+        val includeUser: Boolean = false,
+        val includeGroup: Boolean = false,
         val submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 ) {
     companion object {
         fun fromQuery(
                 query: String,
-                submissionType : Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+                submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         ): PactSubmissionFieldConfig {
             return PactSubmissionFieldConfig(
                     includeSubmissionHistory = query.contains("=submission_history"),
@@ -92,7 +92,7 @@ data class PactSubmissionFieldConfig(
 
 fun LambdaDslObject.populateSubmissionFields(
         fieldConfig: PactSubmissionFieldConfig = PactSubmissionFieldConfig()
-) : LambdaDslObject {
+): LambdaDslObject {
     this
             .id("id")
             .stringType("grade")
@@ -103,7 +103,7 @@ fun LambdaDslObject.populateSubmissionFields(
             // media_content_type, media_comment_url, media_comment_display not supported by API?
             .booleanType("grade_matches_current_submission")
             .stringMatcher("workflow_state", "submitted|unsubmitted|graded|pending_review", "unsubmitted")
-            .stringMatcher("submission_type","online_text_entry|online_url|online_upload|media_recording|basic_lti_launch", "online_text_entry")
+            .stringMatcher("submission_type", "online_text_entry|online_url|online_upload|media_recording|basic_lti_launch", "online_text_entry")
             .stringType("preview_url")
             .booleanType("late")
             .booleanType("excused")
@@ -118,7 +118,7 @@ fun LambdaDslObject.populateSubmissionFields(
             .stringType("entered_grade") // supported?
             .stringMatcher("posted_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
 
-    if(fieldConfig.includeGroup) {
+    if (fieldConfig.includeGroup) {
         this.`object`("group") { obj ->
             obj.id("id")
             obj.stringType("name")
@@ -126,15 +126,16 @@ fun LambdaDslObject.populateSubmissionFields(
         }
     }
 
-    if(fieldConfig.includeSubmissionComments) {
-        this.array("submission_comments") { array -> // Assume a single submission comment
+    if (fieldConfig.includeSubmissionComments) {
+        this.array("submission_comments") { array ->
+            // Assume a single submission comment
             array.`object`() { obj ->
                 obj.populateSubmissionCommentFields()
             }
         }
     }
 
-    if(fieldConfig.includeSubmissionHistory) {
+    if (fieldConfig.includeSubmissionHistory) {
         this.minArrayLike("submission_history", 1) { obj ->
             obj.populateSubmissionFields(PactSubmissionFieldConfig(submissionType = fieldConfig.submissionType))
         }
@@ -162,25 +163,25 @@ fun LambdaDslObject.populateSubmissionFields(
 //        }
 //    }
 
-    if(fieldConfig.includeAssignment) {
-        this.`object`("assignment") { obj -> // optional
+    if (fieldConfig.includeAssignment) {
+        this.`object`("assignment") { obj ->
+            // optional
             obj.populateAssignmentFields()
         }
     }
 
-    if(fieldConfig.includeUser) {
-        this.`object`("user") { obj -> // optional
+    if (fieldConfig.includeUser) {
+        this.`object`("user") { obj ->
+            // optional
             obj.populateUserFields()
         }
     }
 
-    if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
+    if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
         this.stringType("body")
-    }
-    else if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_URL) {
+    } else if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_URL) {
         this.stringType("url")
-    }
-    else if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
+    } else if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
         this.array("attachments") { arr ->
             arr.`object`() { obj ->
                 obj.populateAttachmentFields()
@@ -216,13 +217,13 @@ fun assertSubmissionPopulated(
     assertNotNull("$description + enteredGrade", submission.enteredGrade)
     assertNotNull("$description + postedAt", submission.postedAt)
 
-    if(fieldConfig.includeGroup) {
+    if (fieldConfig.includeGroup) {
         assertNotNull("$description + group", submission.group)
         assertNotNull("$description + group.id", submission.group!!.id)
         assertNotNull("$description + group.name", submission.group!!.name)
     }
 
-    if(fieldConfig.includeSubmissionComments) {
+    if (fieldConfig.includeSubmissionComments) {
         assertNotNull("$description + submissionComments", submission.submissionComments)
         assertTrue(
                 "$description + submissionComments should have at least one comment",
@@ -232,7 +233,7 @@ fun assertSubmissionPopulated(
         }
     }
 
-    if(fieldConfig.includeSubmissionHistory) {
+    if (fieldConfig.includeSubmissionHistory) {
         assertNotNull("$description + submissionHistory", submission.submissionHistory)
         assertTrue(
                 "$description + submissionHistory should have at least one element",
@@ -245,27 +246,25 @@ fun assertSubmissionPopulated(
         }
     }
 
-    if(fieldConfig.includeRubricAssessment) {
+    if (fieldConfig.includeRubricAssessment) {
         // TODO: rubric_assessment?
     }
 
-    if(fieldConfig.includeAssignment) {
+    if (fieldConfig.includeAssignment) {
         assertNotNull("$description + assignment", submission.assignment)
         assertAssignmentPopulated("$description + assignment", submission.assignment!!)
     }
 
-    if(fieldConfig.includeUser) {
+    if (fieldConfig.includeUser) {
         assertNotNull("$description + user", submission.user)
         assertUserPopulated("$description + user", submission.user!!)
     }
 
-    if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
+    if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
         assertNotNull("$description + body", submission.body!!)
-    }
-    else if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_URL) {
+    } else if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_URL) {
         assertNotNull("$description + url", submission.url!!)
-    }
-    else if(fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
+    } else if (fieldConfig.submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
         assertNotNull("$description + attachments", submission.attachments)
         assertTrue(
                 "$description + attachments should have at least one element",

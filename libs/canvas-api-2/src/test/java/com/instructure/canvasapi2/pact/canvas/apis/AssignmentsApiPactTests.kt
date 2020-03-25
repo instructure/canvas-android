@@ -31,7 +31,7 @@ import org.junit.Test
 class AssignmentsApiPactTests : ApiPactTestBase() {
 
     // Common logic
-    private fun createService(caller: String = DEFAULT_MOBILE_STUDENT) : AssignmentAPI.AssignmentInterface {
+    private fun createService(caller: String = DEFAULT_MOBILE_STUDENT): AssignmentAPI.AssignmentInterface {
         val client = getClient(caller = caller)
         return client.create(AssignmentAPI.AssignmentInterface::class.java)
     }
@@ -47,12 +47,12 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
             PactAssignmentFieldConfig
                     .fromQueryString(query = getStudentAssignmentQuery)
                     .copy(includeOverrides = false, role = "student")
-    val getStudentAssignmentResponseBody =  LambdaDsl.newJsonBody {  obj ->
+    val getStudentAssignmentResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateAssignmentFields(getStudentAssignmentFieldInfo)
     }.build()
 
     @Pact(consumer = "android")
-    fun getStudentAssignmentPact(builder: PactDslWithProvider) : RequestResponsePact {
+    fun getStudentAssignmentPact(builder: PactDslWithProvider): RequestResponsePact {
         return builder
                 .given("mobile 3 assignments, 3 submissions")
 
@@ -98,12 +98,12 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
             PactAssignmentFieldConfig
                     .fromQueryString(query = getTeacherAssignmentQuery)
                     .copy(includeSubmission = false, role = "teacher")
-    val getTeacherAssignmentResponseBody =  LambdaDsl.newJsonBody {  obj ->
+    val getTeacherAssignmentResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateAssignmentFields(getTeacherAssignmentFieldInfo)
     }.build()
 
     @Pact(consumer = "android")
-    fun getTeacherAssignmentPact(builder: PactDslWithProvider) : RequestResponsePact {
+    fun getTeacherAssignmentPact(builder: PactDslWithProvider): RequestResponsePact {
         return builder
                 .given("mobile 3 assignments, 3 submissions")
 

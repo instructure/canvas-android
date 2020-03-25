@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.Author
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert
 
-fun LambdaDslObject.populateAuthorFields() : LambdaDslObject {
+fun LambdaDslObject.populateAuthorFields(): LambdaDslObject {
     this
             .id("id")
             .stringType("display_name")
