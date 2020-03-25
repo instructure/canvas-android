@@ -24,6 +24,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
@@ -55,8 +56,12 @@ class PandaRouter {
 
   static bool _isInitialized = false;
 
+  static final String alerts = '/alerts';
+
   static String assignmentDetails(String courseId, String assignmentId) =>
       '/courses/$courseId/assignments/$assignmentId';
+
+  static final String calendar = '/calendar';
 
   static String conversations() => '/conversations';
 
@@ -64,6 +69,8 @@ class PandaRouter {
       '/courses/$courseId/discussion_topics/$announcementId';
 
   static String courseDetails(String courseId) => '/courses/$courseId';
+
+  static String courses() => '/courses';
 
   static String dashboard() => '/dashboard';
 
@@ -81,6 +88,7 @@ class PandaRouter {
   static String legal() => '/legal';
 
   static String login() => '/login';
+
   static final String _loginWeb = '/loginWeb';
 
   static String loginWeb(String domain, {String authenticationProvider = null}) =>
@@ -91,12 +99,15 @@ class PandaRouter {
   static String notParent() => '/not_parent';
 
   static String quizAssignmentDetails(String courseId, String quizId) => assignmentDetails(courseId, quizId);
-  static final String _rootWithExternalUrl = '/external';
+
+  static final String _rootWithExternalUrl = 'external';
+
   static final String _routerError = '/error';
 
   static String _routerErrorRoute(String url) => '/error?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
 
   static String rootSplash() => '/';
+
   static final String _simpleWebView = '/internal';
 
   static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
@@ -108,31 +119,34 @@ class PandaRouter {
   static void init() {
     if (!_isInitialized) {
       _isInitialized = true;
-      router.define(rootSplash(), handler: _rootSplashHandler);
       router.define(conversations(), handler: _conversationsHandler);
       router.define(dashboard(), handler: _dashboardHandler);
-      router.define(login(), handler: _loginHandler);
-      router.define(_loginWeb, handler: _loginWebHandler);
       router.define(domainSearch(), handler: _domainSearchHandler);
+      router.define(_loginWeb, handler: _loginWebHandler);
+      router.define(login(), handler: _loginHandler);
       router.define(notParent(), handler: _notParentHandler);
+      router.define(rootSplash(), handler: _rootSplashHandler);
 
       // INTERNAL
-      router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
+      router.define(alerts, handler: _alertHandler);
       router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
           handler: _assignmentDetailsHandler);
-      router.define(quizAssignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.quizId}'),
-          handler: _assignmentDetailsHandler);
-      router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
-      router.define(help(), handler: _helpHandler);
-      router.define(legal(), handler: _legalHandler);
-      router.define(termsOfUse(), handler: _termsOfUseHandler);
-      router.define(settings(), handler: _settingsHandler);
+      router.define(calendar, handler: _calendarHandler);
       router.define(courseAnnouncementDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.announcementId}'),
           handler: _courseAnnouncementDetailsHandler);
+      router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
+      router.define(courses(), handler: _coursesHandler);
+      router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
+      router.define(help(), handler: _helpHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
-      router.define(_simpleWebView, handler: _simpleWebViewHandler);
+      router.define(legal(), handler: _legalHandler);
+      router.define(quizAssignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.quizId}'),
+          handler: _assignmentDetailsHandler);
       router.define(_routerError, handler: _routerErrorHandler);
+      router.define(_simpleWebView, handler: _simpleWebViewHandler);
+      router.define(settings(), handler: _settingsHandler);
+      router.define(termsOfUse(), handler: _termsOfUseHandler);
 
       // EXTERNAL
       router.define(_rootWithExternalUrl, handler: _rootWithExternalUrlHandler);
@@ -140,42 +154,10 @@ class PandaRouter {
   }
 
   // Handlers
-  static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return SplashScreen();
-  });
-
-  static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return ConversationListScreen();
-  });
-
-  static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return DashboardScreen();
-  });
-
-  static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return LoginLandingScreen();
-  });
-
-  static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
-    return (authProvider == null || authProvider == 'null')
-        ? WebLoginScreen(params[_RouterKeys.domain][0])
-        : WebLoginScreen(
-            params[_RouterKeys.domain][0],
-            authenticationProvider: authProvider,
-          );
-  });
-
-  static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return DomainSearchScreen();
-  });
-
-  static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return NotAParentScreen();
-  });
-
-  static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
+  static Handler _alertHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return DashboardScreen(
+      startingPage: DashboardContentScreens.Alerts,
+    );
   });
 
   static Handler _assignmentDetailsHandler =
@@ -184,6 +166,48 @@ class PandaRouter {
       courseId: params[_RouterKeys.courseId][0],
       assignmentId: params[_RouterKeys.assignmentId][0],
     );
+  });
+
+  static Handler _calendarHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    var calendarParams = {
+      'startDate': DateTime.tryParse(params[_RouterKeys.calendarStart]?.elementAt(0) ?? '') ?? DateTime.now(),
+      'startView': params[_RouterKeys.calendarView]?.elementAt(0) == 'month' ? CalendarView.Month : CalendarView.Week,
+    };
+
+    var widget = DashboardScreen(
+      startingPage: DashboardContentScreens.Calendar,
+      deepLinkParams: calendarParams,
+    );
+
+    return widget;
+  });
+
+  static Handler _conversationsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return ConversationListScreen();
+  });
+
+  static Handler _courseAnnouncementDetailsHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AnnouncementDetailScreen(
+        params[_RouterKeys.announcementId][0], AnnouncementType.COURSE, params[_RouterKeys.courseId][0], context);
+  });
+
+  static Handler _courseDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
+  });
+
+  static Handler _coursesHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return DashboardScreen(
+      startingPage: DashboardContentScreens.Courses,
+    );
+  });
+
+  static Handler _dashboardHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return DashboardScreen();
+  });
+
+  static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return DomainSearchScreen();
   });
 
   static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -197,36 +221,37 @@ class PandaRouter {
     return HelpScreen();
   });
 
+  static Handler _institutionAnnouncementDetailsHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return AnnouncementDetailScreen(
+        params[_RouterKeys.accountNotificationId][0], AnnouncementType.INSTITUTION, '', context);
+  });
+
   static Handler _legalHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return LegalScreen();
   });
 
-  static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return TermsOfUseScreen();
+  static Handler _loginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return LoginLandingScreen();
   });
 
-  static Handler _settingsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return SettingsScreen();
+  static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    var authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
+    var widget = (authProvider == null || authProvider == 'null')
+        ? WebLoginScreen(params[_RouterKeys.domain][0])
+        : WebLoginScreen(
+            params[_RouterKeys.domain][0],
+            authenticationProvider: authProvider,
+          );
+    return widget;
   });
 
-  static Handler _courseAnnouncementDetailsHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AnnouncementDetailScreen(
-      params[_RouterKeys.announcementId][0],
-      AnnouncementType.COURSE,
-      params[_RouterKeys.courseId][0],
-      context,
-    );
+  static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return NotAParentScreen();
   });
 
-  static Handler _institutionAnnouncementDetailsHandler =
-      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return AnnouncementDetailScreen(
-      params[_RouterKeys.accountNotificationId][0],
-      AnnouncementType.INSTITUTION,
-      '',
-      context,
-    );
+  static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return SplashScreen();
   });
 
   static Handler _routerErrorHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -234,9 +259,17 @@ class PandaRouter {
     return RouterErrorScreen(url);
   });
 
+  static Handler _settingsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return SettingsScreen();
+  });
+
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
     return SimpleWebViewScreen(url, url);
+  });
+
+  static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return TermsOfUseScreen();
   });
 
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
@@ -250,9 +283,15 @@ class PandaRouter {
     // We only care about valid app routes if they are already signed in
     if (urlRouteWrapper.appRouteMatch != null && ApiPrefs.isLoggedIn()) {
       if (urlRouteWrapper.validHost) {
+        Map<String, List<String>> params = {};
+        // Add any fragment parameters, e.g. '/...#view=month&start=12-12-2020'
+        var frags = Uri.parse(link).fragment;
+        Uri.splitQueryString(frags).forEach((k, v) => params[k] = [v]);
+
+        params.addAll(urlRouteWrapper.appRouteMatch.parameters);
+
         // If its a link we can handle natively and within our domain, route
-        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
-            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+        return (urlRouteWrapper.appRouteMatch.route.handler as Handler).handlerFunc(context, params);
       } else {
         // Otherwise, we want to route to the error page if they are already logged in
         return _routerErrorHandler.handlerFunc(context, params);
@@ -318,6 +357,8 @@ class _RouterKeys {
   static final announcementId = 'announcementId';
   static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
+  static final calendarStart = 'view_start';
+  static final calendarView = 'view_name';
   static final courseId = 'courseId';
   static final domain = 'domain';
   static final eventId = 'eventId';

@@ -54,6 +54,23 @@ void main() {
     expect(find.byType(CalendarMonth), findsNothing);
   });
 
+  testWidgetsWithAccessibilityChecks('Displays month view when passed in', (tester) async {
+    await tester.pumpWidget(
+      TestApp(
+        CalendarWidget(
+          dayBuilder: (_, __) => Container(),
+          fetcher: _FakeFetcher(),
+          startingView: CalendarView.Month,
+        ),
+        highContrast: true,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(CalendarWeek), findsNWidgets(5));
+    expect(find.byType(CalendarMonth), findsOneWidget);
+  });
+
   group('Month Expand/Collapse', () {
     testWidgetsWithAccessibilityChecks('Expand button expands and collapses month', (tester) async {
       final calendar = CalendarWidget(

@@ -238,6 +238,24 @@ void main() {
 
       expect(widget, isA<SimpleWebViewScreen>());
     });
+
+    test('calendar returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.calendar, extraParams: {
+        'view_start': ['12-12-2020'],
+        'view_name': ['month']
+      });
+      expect(widget, isA<DashboardScreen>());
+    });
+
+    test('courses returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.courses());
+      expect(widget, isA<DashboardScreen>());
+    });
+
+    test('alerts returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.alerts);
+      expect(widget, isA<DashboardScreen>());
+    });
   });
 
   group('external url handler', () {
@@ -390,12 +408,6 @@ void main() {
       verify(_mockSnackbar.showSnackBar(any, 'An error occurred when trying to display this link'));
     });
 
-//     Todo once MBL-13924 is done
-//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
-//    });
-  });
-
-  group('internal url handler', () {
     test('returns valid UrlRouteWrapper', () {
       final path = '/courses/1567973';
       final url = '$_domain$path';
@@ -425,18 +437,26 @@ void main() {
       assert(routeWrapper.validHost == true);
       assert(routeWrapper.appRouteMatch == null);
     });
+
+//     Todo once MBL-13924 is done
+//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
+//    });
   });
 }
 
-String _rootWithUrl(String url) => '/external?url=${Uri.encodeQueryComponent(url)}';
+String _rootWithUrl(String url) => 'external?url=${Uri.encodeQueryComponent(url)}';
 
 String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(url)}';
 
 String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
-Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
+Widget _getWidgetFromRoute(String route, {int logCount = 1, Map<String, List<String>> extraParams}) {
   final match = PandaRouter.router.match(route);
-  return (match.route.handler as Handler).handlerFunc(null, match.parameters);
+
+  if (extraParams != null) match.parameters.addAll(extraParams);
+  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
+
+  return widget;
 }
 
 class _MockAnalytics extends Mock implements Analytics {}
