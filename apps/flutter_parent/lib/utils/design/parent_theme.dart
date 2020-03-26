@@ -203,6 +203,7 @@ class _ParentThemeState extends State<ParentTheme> {
       toggleableActiveColor: swatch[500],
       textSelectionHandleColor: swatch[300],
       scaffoldBackgroundColor: isDarkMode ? Colors.black : Colors.white,
+      canvasColor: isDarkMode ? Colors.black : Colors.white,
       accentColorBrightness: isDarkMode ? Brightness.light : Brightness.dark,
       textTheme: textTheme,
       primaryTextTheme: isDarkMode ? textTheme : _buildTextTheme(Colors.white, fadeColor: Colors.white70),

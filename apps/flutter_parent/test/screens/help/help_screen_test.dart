@@ -121,7 +121,7 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Report a Problem'));

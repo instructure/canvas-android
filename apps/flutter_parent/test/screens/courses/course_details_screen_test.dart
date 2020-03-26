@@ -238,7 +238,6 @@ void main() {
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),
-      highContrast: true,
     ));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved

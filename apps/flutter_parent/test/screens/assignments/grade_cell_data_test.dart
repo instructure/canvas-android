@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/grade_cell_data.dart';
 import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 
@@ -147,7 +148,7 @@ void main() {
       ..grade = 'incomplete'
       ..score = 0.0);
     var expected = baseGradedState.rebuild((b) => b
-      ..accentColor = Color(0xFF8B969E)
+      ..accentColor = ParentColors.ash
       ..graphPercent = 1.0
       ..showIncompleteIcon = true
       ..grade = 'Incomplete');

@@ -103,7 +103,7 @@ void main() {
     when(interactor.loadAssignmentGroups(_courseId, _studentId, null))
         .thenAnswer((_) async => Future<List<AssignmentGroup>>.error('Error getting assignment groups'));
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -120,7 +120,7 @@ void main() {
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, any, forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) async => Future<List<Enrollment>>.error('Error getting term enrollment'));
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -159,7 +159,7 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -189,7 +189,7 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList<GradingPeriod>.of([]).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -218,7 +218,7 @@ void main() {
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -250,7 +250,7 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -273,7 +273,7 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -305,7 +305,7 @@ void main() {
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -332,7 +332,7 @@ void main() {
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -355,7 +355,7 @@ void main() {
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -377,7 +377,7 @@ void main() {
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -407,7 +407,7 @@ void main() {
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null))
           .thenAnswer((_) async => [enrollment]);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -445,7 +445,7 @@ void main() {
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -484,7 +484,7 @@ void main() {
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -525,7 +525,7 @@ void main() {
           (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of([gradingPeriod]).toBuilder()));
       when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => null);
 
-      await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+      await tester.pumpWidget(_testableWidget(model));
       await tester.pump(); // Build the widget
       await tester.pump(); // Let the future finish
 
@@ -546,7 +546,7 @@ void main() {
         (_) async => GradingPeriodResponse((b) => b..gradingPeriods = BuiltList.of(List<GradingPeriod>()).toBuilder()));
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -572,7 +572,7 @@ void main() {
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
     model.course = _mockCourse();
 
-    await tester.pumpWidget(_testableWidget(model, highContrastMode: true));
+    await tester.pumpWidget(_testableWidget(model));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 
@@ -682,13 +682,11 @@ Submission _mockSubmission({String assignmentId = '', String grade, bool isLate,
     ..isLate = isLate ?? false);
 }
 
-Widget _testableWidget(CourseDetailsModel model,
-    {bool highContrastMode = false, PlatformConfig platformConfig = const PlatformConfig()}) {
+Widget _testableWidget(CourseDetailsModel model, {PlatformConfig platformConfig = const PlatformConfig()}) {
   return TestApp(
     Scaffold(
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseGradesScreen()),
     ),
-    highContrast: highContrastMode,
     platformConfig: platformConfig,
   );
 }

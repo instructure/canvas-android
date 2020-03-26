@@ -68,7 +68,6 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         builder: (context) => FutureBuilder(
           future: _conversationFuture,
           builder: (BuildContext context, AsyncSnapshot<Conversation> snapshot) => Scaffold(
-            backgroundColor: ParentTheme.of(context).nearSurfaceColor,
             appBar: _appBar(context),
             body: _body(context, snapshot),
             floatingActionButton: _fab(context, snapshot),
@@ -146,21 +145,24 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
   }
 
   Widget _successState(BuildContext context, Conversation conversation) {
-    return RefreshIndicator(
-      onRefresh: () {
-        setState(() {
-          _conversationFuture = _interactor.getConversation(widget.conversationId);
-        });
-        return _conversationFuture.catchError((_) {});
-      },
-      child: ListView.separated(
-        padding: EdgeInsets.only(bottom: 84), // Bottom padding so FAB doesn't obscure messages
-        itemCount: conversation.messages?.length ?? 0,
-        separatorBuilder: (context, index) => SizedBox(height: 12),
-        itemBuilder: (context, index) {
-          var message = conversation.messages[index];
-          return _message(context, conversation, message);
+    return Container(
+      color: ParentTheme.of(context).nearSurfaceColor,
+      child: RefreshIndicator(
+        onRefresh: () {
+          setState(() {
+            _conversationFuture = _interactor.getConversation(widget.conversationId);
+          });
+          return _conversationFuture.catchError((_) {});
         },
+        child: ListView.separated(
+          padding: EdgeInsets.only(bottom: 84), // Bottom padding so FAB doesn't obscure messages
+          itemCount: conversation.messages?.length ?? 0,
+          separatorBuilder: (context, index) => SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            var message = conversation.messages[index];
+            return _message(context, conversation, message);
+          },
+        ),
       ),
     );
   }

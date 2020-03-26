@@ -27,7 +27,7 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   testWidgetsWithAccessibilityChecks('Displays panda, text, and buttons', (tester) async {
-    await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
 
     expect(find.byType(SvgPicture), findsOneWidget); // Panda image
@@ -38,7 +38,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Expands to show app options', (tester) async {
-    await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
 
     // Tap 'Are you a student or teacher?' button and wait for options to animate open
@@ -55,7 +55,7 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
 
     // Tap 'Are you a student or teacher?' button and wait for options to animate open
@@ -84,7 +84,7 @@ void main() {
     var mockLauncher = _MockUrlLauncherPlatform();
     UrlLauncherPlatform.instance = mockLauncher;
 
-    await tester.pumpWidget(TestApp(NotAParentScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
 
     // Tap 'Are you a student or teacher?' button and wait for options to animate open

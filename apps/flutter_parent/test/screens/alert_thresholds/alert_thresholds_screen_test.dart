@@ -272,7 +272,6 @@ void _setupScreen(WidgetTester tester, [User student]) async {
   var user = student ?? CanvasModelTestUtils.mockUser();
   var screen = TestApp(
     AlertThresholdsScreen(user),
-    highContrast: true,
     darkMode: true,
   );
 

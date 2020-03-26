@@ -51,7 +51,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -83,7 +82,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -124,7 +122,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -156,7 +153,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -197,7 +193,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -230,7 +225,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -263,7 +257,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -292,7 +285,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -321,7 +313,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -359,7 +350,6 @@ void main() {
         TestApp(
           SingleChildScrollView(
               child: MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId)),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -387,7 +377,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -418,7 +407,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -455,7 +443,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -497,7 +484,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -541,7 +527,6 @@ void main() {
               actual = attachment;
             },
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -584,7 +569,6 @@ void main() {
               actual = attachment;
             },
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();

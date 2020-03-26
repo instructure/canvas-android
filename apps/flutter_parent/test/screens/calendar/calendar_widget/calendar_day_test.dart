@@ -192,7 +192,6 @@ Widget _appWithFetcher(Widget child, {PlannerFetcher fetcher}) {
       create: (BuildContext context) => fetcher ?? _FakeFetcher(),
       child: child,
     ),
-    highContrast: true,
   );
 }
 
