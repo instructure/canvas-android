@@ -34,9 +34,15 @@ import java.io.IOException
 
 object MasqueradeHelper {
 
+    var masqueradeLogoutTask: Runnable? = null
+
     @JvmStatic
     @JvmOverloads
     fun <ACTIVITY : Activity> stopMasquerading(startingClass: Class<ACTIVITY>? = null) {
+        if (ApiPrefs.isMasqueradingFromQRCode && masqueradeLogoutTask != null) {
+            masqueradeLogoutTask?.run()
+            return
+        }
         ApiPrefs.isMasquerading = false
         ApiPrefs.masqueradeId = -1L
         ApiPrefs.domain = ApiPrefs.originalDomain

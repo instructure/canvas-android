@@ -65,7 +65,7 @@
     <string name="practice_quiz">Practice quiz</string>
     <string name="graded_survey">Graded survey</string>
     <string name="ungraded_survey">Ungraded survey</string>
-    <string name="andMore"> and %d more</string>
+    <string name="andMore">\u0020and %d more</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Student</string>

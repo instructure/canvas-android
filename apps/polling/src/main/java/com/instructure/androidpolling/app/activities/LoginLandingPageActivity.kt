@@ -29,6 +29,8 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent = StartingActivity.createIntent(applicationContext)
 
+    override fun loginWithQRIntent(): Intent?  = null
+
     override fun beginFindSchoolFlow(): Intent = FindSchoolActivity.createIntent(this)
 
     override fun beginCanvasNetworkFlow(url: String): Intent = SignInActivity.createIntent(this, AccountDomain(url))

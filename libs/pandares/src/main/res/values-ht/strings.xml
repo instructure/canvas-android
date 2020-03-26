@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Pwen </string>
+    <string name="points">Pwen\u0020</string>
     <string name="save">Anrejistre</string>
     <string name="cancel">Anile</string>
     <!-- Discussions -->
     <string name="forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
 
+    <string name="fileCurrentlyLocked">Fichye sa a bloke pou kounye a</string>
     <!-- Events -->
     <string name="Starts">Kòmanse</string>
     <string name="Ends">Fini</string>
@@ -330,7 +331,7 @@
     <string name="with">avèk</string>
     <string name="starConversation">Kòmanse Konvèsasyon</string>
     <string name="deleteConversation">Efase Konvèsasyon</string>
-    <string name="sharedWith">Pataje ak  </string>
+    <string name="sharedWith">Pataje ak \u0020</string>
     <string name="sharedWithYou">Pataje avèk ou</string>
     <string name="inboxEmptyMessage">Tape sou \"+\" pou kreye yon nouvo konvèsasyon.</string>
     <string name="inboxAllMessages">Tout</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Disponib an sekrè</string>
     <string name="publiclyAvailable">Disponib piblikman</string>
-    <string name="starts">Kòmansman:  </string>
-    <string name="courseCode">Kòd Kou:  </string>
-    <string name="ends">Fen:  </string>
-    <string name="visibility">Vizibilite:  </string>
-    <string name="license">Lisans:  </string>
+    <string name="starts">Kòmansman: \u0020</string>
+    <string name="courseCode">Kòd Kou: \u0020</string>
+    <string name="ends">Fen: \u0020</string>
+    <string name="visibility">Vizibilite: \u0020</string>
+    <string name="license">Lisans: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Kòmanse</string>
     <string name="newPushNotifications">%1$s Nouvo Avètisman</string>
     <string name="like">jèm</string>
+    <string name="likeEntryLabel">Like Antre</string>
     <string name="likes">jèm</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
     <string name="color_1">Wouj</string>
     <string name="color_2">Woz</string>
     <string name="color_3">Lavand</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Nòt aprè piblikasyon</string>
     <string name="gradeOverride">Ranplasman nòt</string>
     <string name="currentGrade">Nòt aktyèl</string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Antèt chwazi: %s</string>
+    <string name="content_description_chosen_body">Kò chwazi: %s</string>
+    <string name="content_description_chosen_feet">Pye chwazi: %s</string>
+    <string name="content_description_panda_body_1">Wòb a kè vyolèt ak kontou an woz</string>
+    <string name="content_description_panda_body_2">Wòb etwal vèt ak kontou an ble</string>
+    <string name="content_description_panda_body_3">Wòb etwal wouj ak kontou an oranj</string>
+    <string name="content_description_panda_body_4">Vès ble, brezo wouj ak pantalon gri</string>
+    <string name="content_description_panda_body_5">Chemiz oranj ak bouton nan kou ak djin</string>
+    <string name="content_description_panda_body_6">Chemiz wouj ak bouton nan kou epi pantalon nwa</string>
+    <string name="content_description_panda_body_7">Mayo jòn ak desen solèy epi pantaon gri</string>
+    <string name="content_description_panda_body_8">Mayo ble vèt ak desen baskètbòl epi pantalon vyolèt</string>
+    <string name="content_description_panda_body_9">Mayo ble ak desen android epi pantalon vèt</string>
+    <string name="content_description_panda_body_10">Mayo blan ak desen instructure epi pantaolon ble</string>
+    <string name="content_description_panda_body_11">Mayo a twa zetwal gri fonse epi pantalon ble vèt</string>
+    <string name="content_description_panda_body_12">Inifòm majisyen Bourgogne ak bagèt majik epi pantalon nwa</string>
+    <string name="content_description_panda_body_13">Tòs ni</string>
+    <string name="content_description_panda_head_2">Linèt solèy avyatè ak fa</string>
+    <string name="content_description_panda_head_3">Makiyaj ak ne vyolèt pou cheve</string>
+    <string name="content_description_panda_head_4">Moustach fantezi</string>
+    <string name="content_description_panda_head_5">Linèt vèt pou fèt</string>
+    <string name="content_description_panda_head_6">Linèt mawon</string>
+    <string name="content_description_panda_head_7">Mask ak fa Golden masquerade</string>
+    <string name="content_description_panda_head_8">Linèt avyatè</string>
+    <string name="content_description_panda_head_9">Tach nan machwè</string>
+    <string name="content_description_panda_head_10">Majisyen a linèt epi sikatris nan fwon</string>
+    <string name="content_description_panda_feet_1">San sapat</string>
+    <string name="content_description_panda_feet_2">Soulye woz ak ne vyolèt</string>
+    <string name="content_description_panda_feet_3">Soulye ble ak ne vèt</string>
+    <string name="content_description_panda_feet_4">Soulye wouj ak ne oranj</string>
+    <string name="content_description_panda_feet_5">Soulye wouj</string>
+    <string name="content_description_choose_head">Chwazi antèt</string>
+    <string name="content_description_choose_body">Chwazi kò</string>
+    <string name="content_description_choose_feet">Chwazi pye</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

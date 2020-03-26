@@ -65,7 +65,7 @@
     <string name="practice_quiz">أداء الاختبار الموجز</string>
     <string name="graded_survey">استطلاع تم تقييم درجاته</string>
     <string name="ungraded_survey">استطلاع لم يتم تقييم درجاته</string>
-    <string name="andMore"> و %d أكثر</string>
+    <string name="andMore">\u0020و %d أكثر</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">الطالب</string>

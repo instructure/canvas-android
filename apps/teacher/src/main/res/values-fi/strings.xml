@@ -18,7 +18,7 @@
 
     <string name="settings_name">Asetukset</string>
     <string name="tab_week">Viikko</string>
-    <string name="tab_inbox">Tulevien laatikko</string>
+    <string name="tab_inbox">Saapuneet</string>
     <string name="tab_details">Lisätiedot</string>
     <string name="tab_questions">Kysymykset</string>
     <string name="tab_submissions">Lähetykset</string>
@@ -79,7 +79,7 @@
     <string name="course_spinner_title">Kurssi:</string>
     <string name="reply_to_message">Vastaus</string>
     <string name="forward_message">Lähetä viesti eteenpäin</string>
-    <string name="label_to">Johonkin</string>
+    <string name="label_to">Vastaanottaja</string>
     <string name="label_course">Kurssi</string>
     <string name="label_subject">Aihe</string>
 
@@ -257,7 +257,7 @@
     </string-array>
 
     <string name="content_description_course_tab">Kurssin välilehti</string>
-    <string name="content_description_inbox_tab">Tulevien laatikko -välilehti</string>
+    <string name="content_description_inbox_tab">Saapuneet -välilehti</string>
     <string name="content_description_profile_tab">Profiili-välilehti</string>
     <string name="close">Sulje</string>
     <string name="no_course_selected">Valitse kurssi</string>
@@ -281,9 +281,9 @@
     <string name="file_upload_not_supported">Tiedostojen lataus valittuun tehtävään ei onnistunut.</string>
     <string name="one_or_more_extension_not_allowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
 
-    <string name="inbox_all">Tulevien laatikko</string>
+    <string name="inbox_all">Saapuneet</string>
     <string name="inbox_unread">Lukematon</string>
-    <string name="inbox_starred">Merkitty tähdellä</string>
+    <string name="inbox_starred">Tähdellä merkityt</string>
     <string name="inbox_sent">Lähetetty</string>
     <string name="inbox_archived">Arkistoitu</string>
     <string name="inbox_all_messages">Kaikki</string>
@@ -356,7 +356,7 @@
     <string name="customize_grade">Mukautettu arvosana</string>
     <string name="out_of_points">/%1$s</string>
     <string name="gpa">GPA</string>
-    <string name="letter_grade">Kirjeen arvosana</string>
+    <string name="letter_grade">Kirjainarvosana</string>
     <string name="excuse_student">Anna opiskelijalle anteeksi</string>
     <string name="excuseGroup">Anna ryhmälle anteeksi</string>
     <string name="complete_grade">Valmis</string>

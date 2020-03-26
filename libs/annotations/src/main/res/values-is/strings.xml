@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">Inntakstexti</string>
+    <string name="cancel">Hætta við</string>
+    <string name="comment">Athugasemd</string>
+    <string name="skip">Sleppa</string>
+    <string name="comments">Athugasemdir</string>
+    <string name="error_loading_submission">Það kom upp vandamál við að hlaða inn þessum skilum.</string>
+    <string name="retry">Reyna aftur</string>
+    <string name="annotationErrorOccurred">Óvænt villa við hleðslu á textaskýringum.</string>
+    <string name="annotationError">Textaskýringavilla</string>
+    <string name="annotationDialogMessage">Textaskýringum var eytt frá öðrum uppruna.</string>
+    <string name="errorSendingMessage">Ekki var hægt að senda þessi skilaboð. Smelltu til að reyna aftur.</string>
+    <string name="addAnnotationComment">Bæta við athugasemd</string>
+    <string name="editComment">Breyta athugasemd</string>
+    <string name="deleteComment">Eyða athugasemd</string>
+    <string name="deleteAnnotation">Eyða textaskýringu</string>
+    <string name="deleteCommentConfirmation">Viltu örugglega eyða þessari athugasemd?</string>
+    <string name="deleteHeadCommentConfirmation">Ef þessari athugasemd er eytt verður öllum athugasemdum sem tengjast þessari textaskýringu eytt. Viltu örugglega gera þetta?</string>
+    <string name="sendingSimple">Sendi</string>
+    <string name="pspdf__annotation_type_stamp">Litur glósu</string>
+    <string name="removedComment">Fjarlægt %1$s af %2$s</string>
+
+</resources>

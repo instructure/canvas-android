@@ -1,0 +1,229 @@
+﻿<!--
+  ~ Copyright (C) 2016 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string name="action_settings">Stillingar</string>
+    <string name="canvasLogo">Canvas myndmerki</string>
+    <string name="email">Netfang</string>
+    <string name="emailAddress">Netfang</string>
+    <string name="parent_email">Netfang foreldris</string>
+    <string name="firstName">Fornafn</string>
+    <string name="lastName">Eftirnafn</string>
+    <string name="password">Lykilorð</string>
+    <string name="log_in">Innskráning</string>
+    <string name="createAccount">Stofna reikning</string>
+    <string name="create">Stofna</string>
+    <string name="forgotPassword">Gleymt aðgangsorð?</string>
+    <string name="forgotPasswordWithoutQuestion">Gleymt aðgangsorð</string>
+    <string name="enterAccountEmailHint">Netfang reiknings</string>
+    <string name="requestPassword">Biðja um aðgangsorð</string>
+    <string name="resetPassword">Endurstilla aðgangsorð</string>
+    <string name="requestPasswordHelpText">Við sendum þér endurstillingarbeiðni í tölvupósti.</string>
+    <string name="requestPasswordSuccess">Aðgangsorð þitt var endurstillt.</string>
+    <string name="fullName">Fullt nafn</string>
+    <string name="passwordsDoNotMatch">Aðgangsorð eru ekki eins.</string>
+    <string name="passwordsCannotBeBlank">Aðgangsorð má ekki vera tómt.</string>
+    <string name="passwordResetFailed">Við gátum ekki endurstillt aðgangsorð þitt núna.</string>
+    <string name="invalidEmail">Ógilt netfang. Reyndu aftur.</string>
+    <string name="next">Næsti</string>
+    <string name="createAccountMessage">Tölvupóstur verður sendur í netfangið sem þú gafst upp til að ljúka skráningu.</string>
+    <string name="accountCreationSuccess">Stofnun reiknings tókst. Athugaðu innhólfið þitt til að ljúka skráningu.</string>
+    <string name="errorOccurred">Óvænt villa kom upp. Vinsamlegast reynið aftur.</string>
+    <string name="unknownDevice">Óþekkt tæki</string>
+    <string name="addStudent">Bæta við nemanda</string>
+    <string name="school">Skóli</string>
+    <string name="finish">Ljúka</string>
+    <string name="close">Loka</string>
+    <string name="noStudents">Engir nemendur tiltækir. Til að bæta við nemendum skaltu smella á punktana þrjá í valmyndinni hér að ofan.</string>
+    <string name="noStudentsView">Það eru engar nemendur tengdir við reikninginn þinn.</string>
+    <string name="noCourses">Þessi nemandi hefur engin tiltæk námskeið.</string>
+    <string name="noAvailableCourses">Engin námskeið</string>
+    <string name="coursesMayNotBePublished">Námskeið þessa nemanda eru ef til vill ekki birt enn.</string>
+    <string name="noAlerts">Þessi nemandi hefur engar viðvaranir til að skoða.</string>
+    <string name="noItemsToDisplayShort">Engin atriði</string>
+    <string name="emailsSentTo">Tölvupóstar sendir til:</string>
+    <string name="logged_in_as">Skráð(ur) inn sem:</string>
+    <string name="notifyWhen">Vara mig við þegar</string>
+    <string name="gradeAbove">Námskeiðseinkunn fyrir ofan</string>
+    <string name="gradeBelow">Námskeiðseinkunn fyrir neðan</string>
+    <string name="assignmentMissing">Verkefni vantar</string>
+    <string name="teacherAnnouncements">Tilkynningar námskeiðs</string>
+    <string name="institutionAnnouncements">Stofnana tilkynningar</string>
+    <string name="assignmentGradeAbove">Verkefnaeinkunn fyrir ofan</string>
+    <string name="assignmentGradeBelow">Verkefnaeinkunn fyrir neðan</string>
+    <string name="never">Aldrei</string>
+    <string name="save">Vista</string>
+    <string name="enterThreshold">Settu inn prósentu</string>
+    <string name="setGradeValueMessage">Stilltu inn einkunnagildi sem þú vilt fá tilkynningu fyrir</string>
+    <string name="removeStudent">Fjarlægja nemanda</string>
+    <string name="removingStudent">Fjarlægi nemanda</string>
+    <string name="studentRemoved">Nemandi var fjarlægður</string>
+    <string name="studentAdded">Nemanda var bætt við</string>
+    <string name="courses">Námskeið</string>
+    <string name="week">Vika</string>
+    <string name="alerts">Viðvaranir</string>
+    <string name="alert">Viðvörun</string>
+    <string name="weekEmptyView">Engin verkefni eða viðburðir þessa vikuna!</string>
+    <string name="toolbar_close">Loka verkefnaslá</string>
+    <string name="syllabus">Kennsluáætlun</string>
+    <string name="emptySyllabus">Þetta námskeið er ekki með kennsluáætlun.</string>
+    <string name="noLocation">Engin staðsetning tiltekin</string>
+    <string name="previousAlerts">Fyrri viðvaranir</string>
+    <string name="currentAlerts">Núverandi viðvaranir</string>
+    <string name="badDomainError">Ógilt lén. Reyndu aftur.</string>
+    <string name="unauthorized">Þú hefur ekki aðgangsheimild að þessum upplýsingum.</string>
+    <string name="revokedTokenErrorContent">Þú hefur ekki aðgangsheimild að upplýsingum %1$s. Þú getur gefið nemanda leyfi aftur úr stillingavalmyndinni.</string>
+    <string name="revokedTokenErrorTitle">Aðgangsmerki afturkölluð</string>
+    <string name="featureFlagDisabledError">Þessi stofnun hefur ekki virkjað aðgang að Canvas Foreldra farsímaappinu.</string>
+
+    <!-- Help strings -->
+    <string name="askInstructor">Spurðu kennarann þinn</string>
+    <string name="askInstructorDetails">Spurningar eru lagðar fyrir kennarann þinn</string>
+    <string name="searchGuides">Leita í leiðbeiningum Canvas</string>
+    <string name="canvasGuides">Canvas leiðarvísar</string>
+    <string name="searchGuidesDetails">Finna svör við algengum spurningum</string>
+    <string name="reportProblem">Tilkynna vandamál</string>
+    <string name="reportProblemDetails">Ef appið hegðar sér illa skaltu láta okkur vita</string>
+    <string name="requestFeature">Biðja um eiginleika</string>
+    <string name="requestFeatureDetails">Ertu með hugmynd um hvernig bæta má appið?</string>
+    <string name="shareYourLove">Deildu ást þinni á appinu</string>
+    <string name="shareYourLoveDetails">Segðu okkur um uppáhalds hluta þína í appinu</string>
+    <string name="sendFeedback">Senda endurgjöf</string>
+    <string name="sendMail">Senda tölvupóst&#8230;</string>
+    <string name="help_domain">Lén:</string>
+    <string name="help_versionNum">Útgáfa:</string>
+    <string name="help_userId">Auðkenni notanda:</string>
+    <string name="help_email">Netfang:</string>
+    <string name="help_locale">Staður:</string>
+    <string name="installDate">Dagsetning uppsetningar:</string>
+    <string name="icon">Tákn</string>
+    <string name="due">Skil:</string>
+    <string name="no_due_date">Enginn skiladagur</string>
+    <string name="tapToSet">Smelltu til að stilla inn</string>
+    <string name="alarmNotSet">Ekki var hægt að stilla vekjara. Reyndu aftur.</string>
+    <string name="could_not_route_course">Innritun í námskeið fannst ekki.</string>
+    <string name="could_not_route_assignment">Verkefni fannst ekki.</string>
+    <string name="could_not_route_announcement">Tilkynningin fannst ekki.</string>
+    <string name="could_not_route_event">Viðburðurinn fannst ekki.</string>
+    <string name="could_not_route_account_notifications">Tilkynningin fannst ekki.</string>
+    <string name="email_already_exists">Notandi með þetta netfang er þegar til.</string>
+    <string name="password_reset_success">Þér verður sendur tölvupóstur með upplýsingum til að endurstilla aðgangsorðið þitt.</string>
+    <string name="password_reset_no_user">Enginn notandi með þetta netfang fannst.</string>
+    <string name="reset_password">Endurstilla aðgangsorð</string>
+    <string name="location">Staðsetning</string>
+    <string name="time">Tími</string>
+    <string name="student_avatar">Nemanda gengill</string>
+    <string name="previous">Fyrri</string>
+    <string name="empty_view">Skjár sem er sýndur þegar ekkert efni finnst</string>
+    <string name="tab_icon">Tákn fyrir ofan flipann</string>
+    <string name="add_student_icon">Tákn til að bæta við nemanda</string>
+    <string name="canvas_logo">Canvas myndmerki</string>
+    <string name="course_threshold_grade_above_invalid">Þessi þröskuldur verður að vera fyrir ofan neðri þröskuld námskeiðs.</string>
+    <string name="course_threshold_grade_below_invalid">Þessi þröskuldur verður að vera fyrir neðan efri þröskuld námskeiðs.</string>
+    <string name="assignment_threshold_grade_above_invalid">Þessi þröskuldur verður að vera fyrir ofan neðri þröskuld verkefnis.</string>
+    <string name="assignment_threshold_grade_below_invalid">Þessi þröskuldur verður að vera fyrir ofan neðri þröskuld námskeiðs.</string>
+    <string name="set_reminder">Stilla inn áminningu</string>
+    <string name="enter_student_institution">Settu inn stofnun nemanda</string>
+    <string name="enter_student_login">Settu inn innskráningu og aðgangsorð nemanda</string>
+    <string name="access_not_enabled">Þessi stofnun hefur ekki virkjað aðgang að Canvas Foreldra farsímaappinu.</string>
+    <string name="dismiss">Sleppa</string>
+    <string name="invalid_username_password">Þessi samsetning netfangs og aðgangsorðs er ógild.</string>
+    <string name="opening">Op&#8230;</string>
+    <string name="locked_assignment_desc">Þetta verkefni er hluti af einingunni %s og hefur enn ekki verið opnað.</string>
+    <string name="locked_assignment_desc_line2">Upplýsingar um aflæsingu á þessu efni eru á einingasíðu námskeiðsins.</string>
+    <string name="locked_assignment_not_module">Þetta verkefni er læst.</string>
+    <string name="no_description">Það eru engin lýsing fyrir þetta verkefni</string>
+    <string name="cannot_view_file">Þessa skrá er ekki hægt að skoða í appinu. Skoðaðu í vafra.</string>
+    <string name="calendar_event">Dagatalsviðburður</string>
+    <string name="set_reminder_toggle">Stilla inn áminningarrofa</string>
+    <string name="or">eða</string>
+    <string name="canvas_login_text">Skráðu þig inn með Canvas</string>
+    <string name="dateRangeContentDescription">Dagsetningasvið frá %1$s til %2$s</string>
+
+    <string name="privacyPolicy">Persónuverndarstefna</string>
+    <string name="EULA">EULA</string>
+    <string name="termsOfUse">Notandaskilmálar</string>
+
+    <!-- Feature Request -->
+    <string name="featureSubject">Hugmynd að Canvas foreldraappi [Android]</string>
+    <string name="understandRequest">Eftirfarandi upplýsingar munu hjálpa okkur að skilja hugmynd þína betur:</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 míla (1,6 km)</string>
+    <string name="oneMile">1 míla (1,6 km)</string>
+    <string name="miles">mílur</string>
+    <string name="kilometers">km</string>
+
+    <string name="grade">Einkunn:</string>
+    <string name="notGraded">Ekki metið enn</string>
+    <string name="missing">Vantar</string>
+    <string name="submitted">Skilað</string>
+    <string name="in_class">í bekknum</string>
+    <string name="excused">Undanþegið</string>
+    <string name="late">Seint</string>
+    <string name="greaterThan9">9+</string>
+
+    <string name="onlyCanvasObservers">Aðeins Canvas áhorfendur geta staðfest í Canvas foreldrar.</string>
+    <string name="unableToAddStudentError">Við getum ekki bætt nemandanum við í augnablikinu.</string>
+
+    <string name="unitedStates">Bandaríki Norður-Ameríku</string>
+    <string name="theUnitedStates">Bandaríki Norður-Ameríku</string>
+    <string name="canada">Kanada</string>
+    <string name="ireland">Írland</string>
+    <string name="australia">Ástralía</string>
+    <string name="germany">Þýskaland</string>
+    <string name="singapore">Singapúr</string>
+    <array name="regions">
+        <item name="unitedStates">@string/unitedStates</item>
+        <item name="canada">@string/canada</item>
+        <item name="ireland">@string/ireland</item>
+        <item name="australia">@string/australia</item>
+        <item name="germany">@string/germany</item>
+        <item name="singapore">@string/singapore</item>
+    </array>
+    <string name="selectChildRegion">Veldu svæði nemanda</string>
+    <string name="selectRegion">Svæðisval</string>
+    <string name="unauthorizedRegion">Óleyfilegt svæði</string>
+    <string name="mismatchedRegionMessage">Þessi stofnun er staðsett fyrir utan valið svæði. Til að bæta nemanda við þessa stofnun skaltu nota „Svæðisval“ valkostinn á innskráningarsíðunni til að búa til reikning á svæðinu %1$s.</string>
+
+    <string name="notification_channel_name">Almennar tilkynningar</string>
+    <string name="notification_channel_description">Tilkynningar fyrir áminningar og mikilvægar upplýsingar um nemandann.</string>
+
+    <string name="whatsYourStudentsSchoolName">Settu inn nafn skóla nemandans</string>
+    <string name="findYourStudentsSchoolHint">Finndu skóla eða umdæmi nemandans</string>
+    <string name="noGradeText">Engin einkunn</string>
+    <string name="locked">Læst</string>
+    <string name="changeUser">Breyta notanda</string>
+    <string name="manageChildren">Utanumhald með börnum</string>
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">Opnaðu yfirlitsskúffu</string>
+    <string name="navigation_drawer_close">Lokaðu yfirlitsskúffu</string>
+    <string name="version" formatted="false">Útgáfa %s</string>
+    <string name="not_a_parent_title">Ekki foreldri?</string>
+    <string name="not_a_parent_subtitle">Eitthvað að hinum öppunum okkar gæti hentað betur. Smelltu á eitt þeirra til að fara í Play Store.</string>
+    <string name="tryLoginAgain">Reyndu að skrá þig inn aftur.</string>
+    <string name="legalDetails">Persónuverndarstefna, notkunarskilmálar, opinn hugbúnaður</string>
+    <string name="assignmentGrade">Einkunn verkefnis</string>
+    <string name="courseGrade">Einkunn námskeiðs</string>
+    <string name="courseAnnouncement">Tilkynning námskeiðs</string>
+    <string name="institutionAnnouncement">Stofnana tilkynning</string>
+    <string name="institutionAnnouncementUnavailable">Þessi tilkynning er útrunnin.</string>
+    <string name="previousWeekBtn">fyrri vika hnappur</string>
+    <string name="nextWeekBtn">næsta vika hnappur</string>
+    <string name="filesNotSupported">Skrár eru ekki studdar í augnablikinu</string>
+</resources>

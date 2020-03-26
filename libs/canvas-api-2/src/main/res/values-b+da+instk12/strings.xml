@@ -61,7 +61,7 @@
     <string name="practice_quiz">Øvelsesquiz</string>
     <string name="graded_survey">Bedømt spørgeundersøgelse</string>
     <string name="ungraded_survey">Ikke bedømt spørgeundersøgelse</string>
-    <string name="andMore"> og %d flere</string>
+    <string name="andMore">\u0020og %d flere</string>
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Elev</string>
     <string name="enrollmentTypeTeacher">Lærer</string>

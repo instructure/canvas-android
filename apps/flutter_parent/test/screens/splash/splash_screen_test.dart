@@ -26,7 +26,6 @@ import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -64,7 +63,6 @@ void main() {
     var interactor = _MockInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<Logger>(() => Logger());
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
@@ -84,7 +82,6 @@ void main() {
     var interactor = _MockInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<Logger>(() => Logger());
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
@@ -129,7 +126,6 @@ void main() {
     var mockNav = _MockNav();
     setupTestLocator((locator) {
       locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<Logger>(() => Logger());
       locator.registerLazySingleton<QuickNav>(() => mockNav);
     });
 

@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics_observer.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
@@ -57,6 +58,7 @@ class _ParentAppState extends State<ParentApp> {
           supportedLocales: AppLocalizations.delegate.supportedLocales,
           localeResolutionCallback: _localeCallback(),
           theme: themeData,
+          navigatorObservers: [AnalyticsObserver()],
           onGenerateRoute: PandaRouter.router.generator,
         ),
       ),

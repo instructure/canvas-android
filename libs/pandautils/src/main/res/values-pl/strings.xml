@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Plik jest gotowy do pobrania, prosimy spróbować ponownie.</string>
     <string name="filePermissionDenied">Ten plik nie może być pobrany bez udzielonej zgody.</string>
     <string name="pleaseTryAgain">Udzielono zezwolenia, spróbuj ponownie.</string>
-    <string name="pickVideo">Wybierz film</string>
-
+    <string name="pickFile">Wybierz plik</string>
     <string name="assignmentSubmissionUpload">Przesyłanie plików dla %s</string>
     <string name="assignmentSubmissionError">Nie udało się przesłać plików dla %s</string>
     <string name="assignmentSubmissionComplete">Przesłano pomyślnie %s</string>

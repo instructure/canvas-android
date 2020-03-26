@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -33,7 +34,6 @@ import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -236,7 +236,6 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger())
         ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
@@ -258,7 +257,6 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger())
         ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
@@ -284,7 +282,6 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger())
         ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
@@ -314,7 +311,7 @@ void main() {
 
       final _mockLauncher = _MockUrlLauncherPlatform();
       final _mockWebContentInteractor = _MockWebContentInteractor();
-      final _logger = _MockLogger();
+      final _analytics = _MockAnalytics();
 
       when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
       when(_mockLauncher.launch(
@@ -331,7 +328,7 @@ void main() {
       UrlLauncherPlatform.instance = _mockLauncher;
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => _logger)
+        ..registerLazySingleton<Analytics>(() => _analytics)
         ..registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor));
 
       await tester.pumpWidget(TestApp(
@@ -348,7 +345,7 @@ void main() {
       await tester.tap(find.text('Tap me'));
       await tester.pump();
 
-      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
       verify(_mockLauncher.launch(
         url,
         useSafariVC: anyNamed('useSafariVC'),
@@ -366,7 +363,6 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger())
         ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
@@ -388,7 +384,6 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerLazySingleton<Logger>(() => Logger())
         ..registerFactory<EventDetailsInteractor>(() => _MockEventDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
@@ -440,4 +435,4 @@ class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin impl
 
 class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
 
-class _MockLogger extends Mock implements Logger {}
+class _MockAnalytics extends Mock implements Analytics {}

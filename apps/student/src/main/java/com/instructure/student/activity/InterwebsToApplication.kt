@@ -21,19 +21,25 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
+import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.util.Analytics
+import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.Job
@@ -74,9 +80,58 @@ class InterwebsToApplication : AppCompatActivity() {
             LoggingUtility.Log(this@InterwebsToApplication, Log.WARN, data.toString())
 
             val token = ApiPrefs.getValidToken()
-
             val signedIn = token.isNotEmpty()
             val domain = ApiPrefs.domain
+
+            val qrLoginEnabled = RemoteConfigUtils.getString(
+                    RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
+                    ?: false
+            if (verifySSOLoginUri(data) && qrLoginEnabled) {
+                // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
+                try {
+                    if(signedIn) { // If the user is already signed in, use the QR Switch
+                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                        finish()
+                        return@tryWeave
+                    }
+
+                    val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
+
+
+                    // Add delay for animation and launch Navigation Activity
+                    delay(700)
+
+                    // If we have a real user, this is a QR code from a masquerading web user
+                    val intent = if(tokenResponse.realUser != null && tokenResponse.user != null) {
+                        // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
+                        ApiPrefs.isMasqueradingFromQRCode = true
+                        NavigationActivity.createIntent(this@InterwebsToApplication, tokenResponse.user!!.id)
+                    } else {
+                        // Log the analytics - only for real logins, not masquerading
+                        logQREvent(ApiPrefs.domain, true)
+                        Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
+                    }
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                    return@tryWeave
+                } catch (e: Throwable) {
+                    // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
+                    if(!signedIn) {
+                        ApiPrefs.clearAllData()
+                    }
+
+                    // Log the analytics
+                    logQREvent(ApiPrefs.domain, false)
+
+                    Toast.makeText(this@InterwebsToApplication, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
+                    finish()
+                    return@tryWeave
+                }
+            }
+
+
             if (!signedIn) {
                 delay(700)
                 val intent = if (host.isNotBlank()) {
@@ -102,8 +157,20 @@ class InterwebsToApplication : AppCompatActivity() {
                 delay(700)
                 RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
             }
+
         } catch {
             finish()
+        }
+    }
+
+    private fun logQREvent(domain: String, isSuccess: Boolean) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
+        }
+        if(isSuccess) {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
+        } else {
+            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
         }
     }
 

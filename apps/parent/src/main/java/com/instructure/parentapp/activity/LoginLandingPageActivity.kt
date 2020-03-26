@@ -67,6 +67,8 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return "https://s3.amazonaws.com/tr-learncanvas/docs/WhatsNewCanvasParent.pdf"
     }
 
+    override fun loginWithQRIntent(): Intent? = null
+
     companion object {
         fun createIntent(context: Context): Intent {
             return Intent(context, LoginLandingPageActivity::class.java)

@@ -65,7 +65,7 @@
     <string name="practice_quiz">Teste prático</string>
     <string name="graded_survey">Questionário avaliado</string>
     <string name="ungraded_survey">Questionário sem avaliação</string>
-    <string name="andMore"> e %d mais</string>
+    <string name="andMore">\u0020e %d mais</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Aluno</string>

@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Le fichier est maintenant prêt au téléchargement, veuillez réessayer.</string>
     <string name="filePermissionDenied">Le fichier ne peut être téléchargé sans en avoir donné l\'autorisation.</string>
     <string name="pleaseTryAgain">Permission accordée, veuillez réessayer.</string>
-    <string name="pickVideo">Sélectionner une vidéo</string>
-
+    <string name="pickFile">Sélectionner un fichier</string>
     <string name="assignmentSubmissionUpload">Téléversement de l’envoi pour %s</string>
     <string name="assignmentSubmissionError">Échec de l’envoi pour %s</string>
     <string name="assignmentSubmissionComplete">%s envoyé avec succès!</string>

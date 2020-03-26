@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Bericht</string>
     <string name="rce_empty_description">Beschrijving toevoegen</string>
     <string name="rce_scrollInstructions">Scrollen voor alle bewerkingstools</string>
+    <string name="rce_emptyUrlError">URL kan niet leeg zijn</string>
+    <string name="rce_httpNotAllowed">Alleen https-URL\'s worden geaccepteerd</string>
 </resources>

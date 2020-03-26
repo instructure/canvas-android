@@ -83,8 +83,8 @@
     <string name="submitAssignment">Lähetä tehtävä</string>
     <string name="assignmentHeader">Tehtävä:</string>
     <string name="submittingAssignment">Lähetetään tehtävä&#8230;</string>
-    <string name="conversations">Keskustelut </string>
-    <string name="inbox">Tulevien laatikko </string>
+    <string name="conversations">Viestit </string>
+    <string name="inbox">Saapuneet </string>
     <string name="divider">Jakaja</string>
     <string name="legal">Lakitiedot</string>
     <string name="completeHomework">TEE kotitehtäväsi</string>
@@ -95,8 +95,7 @@
     <string name="filePermissionGranted">Tiedosto on nyt valmis ladattavaksi, yritä uudelleen.</string>
     <string name="filePermissionDenied">Tiedostoa ei voi ladata ilman käyttöoikeuksien myöntämistä.</string>
     <string name="pleaseTryAgain">Käyttöoikeudet myönnetty, yritä uudelleen.</string>
-    <string name="pickVideo">Valitse video</string>
-
+    <string name="pickFile">Valitse tiedosto</string>
     <string name="assignmentSubmissionUpload">Ladataan lähetystä kohteelle %s</string>
     <string name="assignmentSubmissionError">Lähetys epäonnistui kohteelle %s</string>
     <string name="assignmentSubmissionComplete">Lähetetty onnistuneesti %s</string>
@@ -192,9 +191,9 @@
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
 
-    <string name="inbox_all">Tulevien laatikko</string>
+    <string name="inbox_all">Saapuneet</string>
     <string name="inbox_unread">Lukematon</string>
-    <string name="inbox_starred">Merkitty tähdellä</string>
+    <string name="inbox_starred">Tähdellä merkityt</string>
     <string name="inbox_sent">Lähetetty</string>
     <string name="inbox_archived">Arkistoitu</string>
 

@@ -15,6 +15,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -33,7 +34,6 @@ import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -46,7 +46,7 @@ import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
-final _logger = _MockLogger();
+final _analytics = _MockAnalytics();
 
 void main() {
   final String _domain = 'https://test.instructure.com';
@@ -61,19 +61,19 @@ void main() {
   final _mockLauncher = _MockUrlLauncherPlatform();
 
   setUpAll(() async {
-    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
     PandaRouter.init();
     UrlLauncherPlatform.instance = _mockLauncher;
     setupTestLocator((locator) {
-      locator.registerLazySingleton<Logger>(() => _logger);
+      locator.registerLazySingleton<Analytics>(() => _analytics);
       locator.registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor);
       locator.registerLazySingleton<QuickNav>(() => _mockNav);
       locator.registerLazySingleton<FlutterSnackbarVeneer>(() => _mockSnackbar);
     });
   });
 
-  setUp(() {
-    reset(_logger);
+  setUp(() async {
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
+    reset(_analytics);
     reset(_mockLauncher);
     reset(_mockNav);
     reset(_mockSnackbar);
@@ -335,7 +335,7 @@ void main() {
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
-      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
       verify(_mockNav.pushRoute(any, PandaRouter.assignmentDetails(courseId, assignmentId)));
     });
 
@@ -344,9 +344,10 @@ void main() {
       final courseId = '123';
       final assignmentId = '321';
       final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
-      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
+      await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url),
+          config: PlatformConfig(initLoggedInUser: login));
 
-      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
       verify(_mockNav.pushRoute(any, _routerErrorRoute(url)));
     });
 
@@ -367,7 +368,7 @@ void main() {
 
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
-      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
       verify(_mockLauncher.launch(
         url,
         useSafariVC: anyNamed('useSafariVC'),
@@ -385,7 +386,7 @@ void main() {
 
       await TestApp.showWidgetFromTap(tester, (context) => PandaRouter.routeInternally(context, url));
 
-      verify(_logger.log('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
       verify(_mockSnackbar.showSnackBar(any, 'An error occurred when trying to display this link'));
     });
 
@@ -428,23 +429,17 @@ void main() {
 }
 
 String _rootWithUrl(String url) => '/external?url=${Uri.encodeQueryComponent(url)}';
+
 String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(url)}';
+
 String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
 Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
   final match = PandaRouter.router.match(route);
-  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
-
-  if (logCount > 0) {
-    verify(_logger.log(any)).called(logCount);
-  } else {
-    verifyNever(_logger.log(any));
-  }
-
-  return widget;
+  return (match.route.handler as Handler).handlerFunc(null, match.parameters);
 }
 
-class _MockLogger extends Mock implements Logger {}
+class _MockAnalytics extends Mock implements Analytics {}
 
 class _MockNav extends Mock implements QuickNav {}
 

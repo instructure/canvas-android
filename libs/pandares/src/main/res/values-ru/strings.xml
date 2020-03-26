@@ -53,9 +53,7 @@
     <string name="notSubmitted">Не отправлено</string>
     <string name="allowedFileTypes">Разрешенные типы файлов</string>
     <string name="resubmitAssignment">Повторная отправка задания</string>
-
     <string name="launchExternalTool">Запуск внешнего инструмента</string>
-
     <string name="preview">Предпросмотр</string>
     <string name="submissionUploadFailedMessage">Не удалось загрузить один или несколько файлов. Проверьте подключение к Интернету и повторите отправку.</string>
     <string name="submissionUploadByteProgress">%1$s из %2$s</string>
@@ -66,18 +64,19 @@
     <string name="submissionDeleted">Отправка удалена</string>
     <string name="missingSubmissionLabel">Отсутствует</string>
     <string name="gradedSubmissionLabel">С оценкой</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">Предпросмотр для URL-адресов с использованием \'http://\' недоступен</string>
     <string name="submissionUrlNotAUrlError">Введите действительный URL-адрес</string>
     <string name="enterAUrlHereForYourSubmission">Введите здесь URL-адрес для отправки</string>
     <string name="addFileFabContentDesc">Показать параметры добавления файла</string>
     <string name="recordAudio">Записать аудио</string>
-
     <string name="recordVideo">Записать видео</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Запись&#8230;</string>
     <string name="textSubmissionFailureMessage">Произошла ошибка при загрузке предоставляемых данных. Отправьте еще раз.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Отправка</string>
     <string name="submissionVersions">Версии отправки</string>
@@ -96,6 +95,7 @@
     <string name="noneContentMessage">Это задание не допускает отправку данных онлайн</string>
     <string name="onPaperContentMessage">Это задание не допускает отправку данных онлайн</string>
     <string name="noOnlineSubmissions">Отправка данных онлайн невозможна</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Из %s баллов</string>
     <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
@@ -104,10 +104,12 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s из %2$s баллов</string>
     <string name="enterWhatIfScore">Ввести оценку «что, если»</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
     <string name="rubricViewLongDescription">Просмотреть длинное описание</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Загрузка файла %1$d из %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Загрузка комментария для %s</string>
@@ -126,6 +128,7 @@
     <string name="commentSubmissionTypeMediaFile">Медиафайл</string>
     <string name="commentSubmissionTypeAudio">Аудио</string>
     <string name="commentSubmissionTypeVideo">Видео</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Версия:</string>
 
@@ -168,7 +171,6 @@
     <string name="future">Будущее</string>
     <string name="next7Days">Следующие 7 дней</string>
     <string name="days">Дней</string>
-
     <string name="submissionDetailsDueTodayAt">Срок – сегодня в %s</string>
     <string name="submissionDetailsDueTomorrowAt">Срок – завтра в %s</string>
     <string name="submissionDetailsDueYesterdayAt">Срок – вчера в %s</string>
@@ -176,6 +178,8 @@
     <string name="submissionDetailsDueAt">Срок выполнения %1$s в %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">до обеда</string>
     <string name="lowercasePM">после обеда</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Заблокировано</string>
     <string name="assignments">Задания</string>
@@ -183,13 +187,16 @@
     <string name="noAssignmentsInGroup">Нет Заданий в этой группе</string>
     <string name="excusedAssignment">Данное задание не обязательно и не будет учитываться в общем подсчете</string>
     <string name="excused">EX</string>
+
     <!-- Assignment editing -->
-    <string name="points">Баллы </string>
+    <string name="points">Баллы\u0020</string>
     <string name="save">Сохранить</string>
     <string name="cancel">Отменить</string>
+
     <!-- Discussions -->
     <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
 
+    <string name="fileCurrentlyLocked">Файл в настоящее время заблокирован</string>
     <!-- Events -->
     <string name="Starts">Начинается</string>
     <string name="Ends">Заканчивается</string>
@@ -208,8 +215,6 @@
     <string name="whatIfDialogText">Возможная оценка</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s из %2$s баллов, %3$s</string>
-
-
     <string name="inbox">Входящие</string>
     <string name="unread">Не прочитано</string>
     <string name="archived">Архивировано</string>
@@ -338,7 +343,7 @@
     <string name="with">с</string>
     <string name="starConversation">Начать разговор</string>
     <string name="deleteConversation">Удалить разговор</string>
-    <string name="sharedWith">Разделено с  </string>
+    <string name="sharedWith">Разделено с \u0020</string>
     <string name="sharedWithYou">Общее с вами</string>
     <string name="inboxEmptyMessage">Нажмите на \"+\" для создания нового разговора.</string>
     <string name="inboxAllMessages">Все</string>
@@ -399,8 +404,8 @@
     <string name="students">Студенты</string>
     <string name="observers">Наблюдатели</string>
     <string name="syllabusMissing">Описание курса не было добавлено.</string>
-
     <string name="syllabusEventsError">Произошла ошибка при загрузке ваших модулей.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Выберите получателя (ей)</string>
     <string name="messageHasNoRecipients">У этого сообщения в настоящее время нет получателей.</string>
@@ -427,6 +432,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Удалено</string>
+
     <string name="contentDescriptionFiles">Иконка файла</string>
 
     <string name="loadingCanvas">Загрузка контента Canvas&#8230;</string>
@@ -450,6 +456,7 @@
     <string name="emptyId">ID не может быть пустым</string>
 
     <string name="goToQuiz">Перейти к тестовому заданию</string>
+
     <string name="quizzes">Тесты</string>
 
     <string name="lastDiscussionPost">Последний пост</string>
@@ -508,8 +515,8 @@
     <string name="goToModules">Перейти к Модулям</string>
     <string name="markDone">Отметить как выполненное</string>
     <string name="moduleItemNotFound">Элемент модуля не найден</string>
-
     <string name="errorLoadingModules">Произошла ошибка при загрузке ваших модулей.</string>
+
     <string name="help">Справка</string>
     <string name="instructor_question">Вопрос Учителя</string>
     <string name="link">Ссылка</string>
@@ -525,11 +532,11 @@
     <string name="textEntry">Ввод текста</string>
     <string name="onlineURL">URL-адрес в Интернете</string>
     <string name="oneFileOnly">В данном случае допускается отправка только одного файла</string>
-
-
     <string name="websiteEntry">Добавить элемент веб-сайта</string>
     <string name="mediaRecordingEntry">Записи мультимедийных данных</string>
     <string name="submit">Отправить</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Несохраненный прогресс</string>
     <string name="informationLost">Несохраненные данные будут утеряны. Продолжить?</string>
@@ -545,6 +552,7 @@
     <string name="next">Далее</string>
     <string name="turnedIn">Включено:&#160;</string>
     <string name="addComment">Добавить комментарий&#8230;</string>
+
     <string name="home">Начальная страница</string>
     <string name="Notifications">Уведомления</string>
 
@@ -556,11 +564,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Доступно приватно</string>
     <string name="publiclyAvailable">Доступно публично</string>
-    <string name="starts">Начинается:  </string>
-    <string name="courseCode">Код курса:  </string>
-    <string name="ends">Заканчивается:  </string>
-    <string name="visibility">Видимость:  </string>
-    <string name="license">Лицензия:  </string>
+    <string name="starts">Начинается: \u0020</string>
+    <string name="courseCode">Код курса: \u0020</string>
+    <string name="ends">Заканчивается: \u0020</string>
+    <string name="visibility">Видимость: \u0020</string>
+    <string name="license">Лицензия: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -574,6 +582,8 @@
     <string name="clickToViewSubmission">Образ экрана веб-сайта был сделан при его включении. Нажмите и удерживайте изображение ниже, чтобы открыть или загрузить полное изображение.</string>
     <string name="urlSubmissionNoPreview">Эта отправка была URL-адресом на внешнюю страницу. Имейте в виду, что после первоначальной отправки эта страница могла измениться.</string>
     <string name="contentDescriptionPreviewImage">Предварительный обзор представленного URL</string>
+
+
     <string name="isNotSupportedFeature">%1$s не поддерживаются.</string>
     <string name="isNotSupported">Ссылка не поддерживается.</string>
     <string name="openInBrowser">Открыть в браузере</string>
@@ -590,10 +600,12 @@
     <string name="panda_fact_string">Факты о Панде:&#160;</string>
     <string name="remove">Удалить</string>
     <string name="founders">Создатели</string>
+
     <string name="EULA">Лицензионный договор</string>
     <string name="privacyPolicy">Политика конфиденциальности</string>
     <string name="termsOfUse">Условия использования</string>
     <string name="canvasOnGithub">Canvas на GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Тесты задания</string>
     <string name="practiceQuizzes">Практические тесты</string>
@@ -602,9 +614,9 @@
     <string name="quizMatchingDefaultDisplay">[Выбрать]</string>
     <string name="choose_answer_below">Выберите один из представленных ниже вариантов ответов</string>
     <string name="choose_answers_below">Выберите несколько из представленных ниже вариантов ответов</string>
-
-
     <string name="flag_the_question">Пометить вопрос</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
     <string name="gradesWidgetTitle">Оценки</string>
@@ -835,6 +847,7 @@
         <item quantity="many">Вопросы %d</item>
         <item quantity="other">Вопросы %d</item>
     </plurals>
+
     <plurals name="pointCount">
         <item quantity="one">%s балл</item>
         <item quantity="few">%s баллов</item>
@@ -864,8 +877,15 @@
     <string name="start">Начать</string>
     <string name="newPushNotifications">Новые уведомления %1$s</string>
     <string name="like">нравятся</string>
+    <string name="likeEntryLabel">Добавление лайка</string>
     <string name="likes">нравится</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s лайк</item>
+        <item quantity="few">%s лайка(-ов)</item>
+        <item quantity="many">%s лайка(-ов)</item>
+        <item quantity="other">%s лайка(-ов)</item>
+    </plurals>
     <string name="color_1">Красный</string>
     <string name="color_2">Ярко-розовый</string>
     <string name="color_3">Лавандовый</string>
@@ -924,6 +944,7 @@
     <string name="editDashboard">Редактировать информационную панель</string>
     <string name="editDashboardDescriptor">Выберите, какие курсы вы хотели бы видеть на информационной панели</string>
     <string name="a11y_editYourCourseList">Редактировать свой список курсов</string>
+
     <string name="dashboard">Информационная панель</string>
     <string name="previous">Предыдущий</string>
     <string name="pageNum" formatted="false">Страница %d из %d</string>
@@ -951,8 +972,8 @@
     <string name="tapToViewAnnouncement">Нажать для просмотра объявления</string>
     <string name="acceptCourseInvitation">Принять</string>
     <string name="declineCourseInvitation">Снизить</string>
-
     <string name="outOf">из</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">Отсутствуют файлы, связанные с этим курсом.</string>
     <string name="noFilesSubtextGroup">Отсутствуют файлы, связанные с этой группой.</string>
@@ -1017,6 +1038,7 @@
     <string name="unableToViewInBrowser">Не удалось найти внешнее приложение для открытия этого инструмента LTI.</string>
 
     <string name="commentUpload">Загрузка комментария</string>
+
     <string name="frontPage">Первая страница</string>
     <string name="editPage">Редактировать страницу</string>
     <string name="description">Описание</string>
@@ -1037,6 +1059,7 @@
     <string name="addChildErrorMessage">Не удалось выполнить привязку. Убедитесь в том, что код привязки верен и срок его действия не истек.</string>
     <string name="gradeComplete">Завершить</string>
     <string name="gradeIncomplete">Не завершено</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Опубликовать настройки</string>
     <string name="postGradesTab">Опубликовать оценки</string>
@@ -1072,6 +1095,41 @@
     <string name="gradeOverride">Игнорировать оценку</string>
     <string name="currentGrade">Текущая оценка</string>
 
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Выбранная голова: %s</string>
+    <string name="content_description_chosen_body">Выбранное тело: %s</string>
+    <string name="content_description_chosen_feet">Выбранные ноги: %s</string>
+    <string name="content_description_panda_body_1">Платье в красных сердечках с розовой оторочкой</string>
+    <string name="content_description_panda_body_2">Платье в зеленых звездах с синей оторочкой</string>
+    <string name="content_description_panda_body_3">Платье в красных звездах с оранжевой оторочкой</string>
+    <string name="content_description_panda_body_4">Синий блейзер, красный галстук-бабочка и серые брюки</string>
+    <string name="content_description_panda_body_5">Оранжевая рубашка на пуговицах и джинсы</string>
+    <string name="content_description_panda_body_6">Красная рубашка на пуговицах и коричневые брюки</string>
+    <string name="content_description_panda_body_7">Ярко-желтая футболка с принтом и серые брюки</string>
+    <string name="content_description_panda_body_8">Объемная футболка цвета морской волны с принтом и сиреневые брюки</string>
+    <string name="content_description_panda_body_9">Синяя футболка с антропоморфным принтом и зеленые брюки</string>
+    <string name="content_description_panda_body_10">Белая футболка с принтом-надписью и синие брюки</string>
+    <string name="content_description_panda_body_11">Темно-серая футболка с тремя звездами и брюки цвета морской волны</string>
+    <string name="content_description_panda_body_12">Одеяние мага винного цвета с магическим жезлом и черные брюки</string>
+    <string name="content_description_panda_body_13">Обнаженный торс панды</string>
+    <string name="content_description_panda_head_2">Очки-авиаторы каплевидной формы и губная помада</string>
+    <string name="content_description_panda_head_3">Макияж и сиреневый цвет бант из волос</string>
+    <string name="content_description_panda_head_4">Усы причудливой формы</string>
+    <string name="content_description_panda_head_5">Зеленые очки для вечеринки</string>
+    <string name="content_description_panda_head_6">Коричневые стекла для очков</string>
+    <string name="content_description_panda_head_7">«Золотая» маскарадная маска и губная помада</string>
+    <string name="content_description_panda_head_8">Очки-авиаторы каплевидной формы</string>
+    <string name="content_description_panda_head_9">Веснушчатые щеки</string>
+    <string name="content_description_panda_head_10">Волшебник в очках с шрамами на лбу</string>
+    <string name="content_description_panda_feet_1">Босые ноги</string>
+    <string name="content_description_panda_feet_2">Розовые туфли с сиреневыми носками</string>
+    <string name="content_description_panda_feet_3">Голубые туфли с зелеными носками</string>
+    <string name="content_description_panda_feet_4">Красные туфли с оранжевыми носками</string>
+    <string name="content_description_panda_feet_5">Красные туфли</string>
+    <string name="content_description_choose_head">Выбрать голову</string>
+    <string name="content_description_choose_body">Выбрать тело</string>
+    <string name="content_description_choose_feet">Выбрать ноги</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d часов, %2$d минут и %3$d секунд</string>
@@ -1090,7 +1148,6 @@
 
     <string name="addVideoComment">Добавить видеокомментарий</string>
     <string name="addAudioComment">Добавить аудиокомментарий</string>
-
     <string name="audioRecordingError">Произошла непредвиденная ошибка при попытке записи аудио.</string>
     <string name="videoRecordingError">Произошла непредвиденная ошибка при попытке записи видео.</string>
 

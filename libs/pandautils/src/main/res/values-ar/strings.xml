@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">الملف جاهز الآن للتنزيل، يرجى المحاولة من جديد.</string>
     <string name="filePermissionDenied">لا يمكن تنزيل الملف دون منح الإذن.</string>
     <string name="pleaseTryAgain">تم منح الإذن، الرجاء إعادة المحاولة.</string>
-    <string name="pickVideo">قم بتحديد مقطع فيديو</string>
-
+    <string name="pickFile">تحديد ملف</string>
     <string name="assignmentSubmissionUpload">جاري تحميل الإرسال لـ %s</string>
     <string name="assignmentSubmissionError">الإرسال فشل لـ %s</string>
     <string name="assignmentSubmissionComplete">تم إرسال %s بنجاح</string>

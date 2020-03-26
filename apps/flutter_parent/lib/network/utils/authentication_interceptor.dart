@@ -80,12 +80,12 @@ class AuthenticationInterceptor extends InterceptorsWrapper {
     return result;
   }
 
-  // TODO: Finish implementing with analytics
   _logAuthAnalytics(String eventString) {
-//    final bundle = {
-//      AnalyticsParamConstants.DOMAIN_PARAM: ApiPrefs.domain,
-//      AnalyticsParamConstants.USER_CONTEXT_ID: ApiPrefs.user?.contextId
-//    }
-//    Analytics.logEvent(eventString, bundle)
+    final userId = ApiPrefs.getUser()?.id;
+    final bundle = {
+      AnalyticsParamConstants.DOMAIN_PARAM: ApiPrefs.getDomain(),
+      AnalyticsParamConstants.USER_CONTEXT_ID: userId != null ? 'user_$userId' : null,
+    };
+    locator<Analytics>().logEvent(eventString, extras: bundle);
   }
 }

@@ -186,6 +186,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        if(masqueradingUserId != 0L) {
+            MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
+        }
+
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 
         if (savedInstanceState == null) {
@@ -934,6 +939,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             intent.putExtra(Const.MESSAGE, message)
             intent.putExtra(Const.MESSAGE_TYPE, messageType)
             return intent
+        }
+
+        fun createIntent(context: Context, masqueradingUserId: Long): Intent = createIntent(context).apply {
+            putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
         }
 
         val startActivityClass: Class<out Activity>

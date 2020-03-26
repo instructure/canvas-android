@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Mae’r aseiniad hwn wedi’i esgusodi ac ni fydd yn cael ei ystyried yn y cyfanswm</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Pwynt </string>
+    <string name="points">Pwynt\u0020</string>
     <string name="save">Cadw</string>
     <string name="cancel">Canslo</string>
     <!-- Discussions -->
     <string name="forbidden">Dim ond y rheini sydd wedi cyflwyno o leiaf un ateb sy’n gallu gweld yr atebion.</string>
 
+    <string name="fileCurrentlyLocked">Mae’r ffeil hon wedi’i chloi ar hyn o bryd</string>
     <!-- Events -->
     <string name="Starts">Yn dechrau</string>
     <string name="Ends">Yn gorffen</string>
@@ -330,7 +331,7 @@
     <string name="with">gyda</string>
     <string name="starConversation">Nodi sgwrs â seren</string>
     <string name="deleteConversation">Dileu Sgwrs</string>
-    <string name="sharedWith">Wedi’i rannu  </string>
+    <string name="sharedWith">Wedi’i rannu \u0020</string>
     <string name="sharedWithYou">Wedi’i rannu gyda chi</string>
     <string name="inboxEmptyMessage">Tapiwch y \"+\" i greu sgwrs newydd.</string>
     <string name="inboxAllMessages">Y cyfan</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Ar gael yn breifat</string>
     <string name="publiclyAvailable">Ar gael yn gyhoeddus</string>
-    <string name="starts">Yn dechrau:  </string>
-    <string name="courseCode">Cod y Cwrs:  </string>
-    <string name="ends">Yn gorffen:  </string>
-    <string name="visibility">Gweld:  </string>
-    <string name="license">Trwydded:  </string>
+    <string name="starts">Yn dechrau: \u0020</string>
+    <string name="courseCode">Cod y Cwrs: \u0020</string>
+    <string name="ends">Yn gorffen: \u0020</string>
+    <string name="visibility">Gweld: \u0020</string>
+    <string name="license">Trwydded: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Dechrau</string>
     <string name="newPushNotifications">%1$s Hysbysiadau Newydd</string>
     <string name="like">yn hoffi</string>
+    <string name="likeEntryLabel">Dechrau Cofnod</string>
     <string name="likes">yn hoffi</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s yn hoffi</item>
+        <item quantity="other">%s yn hoffi</item>
+    </plurals>
     <string name="color_1">Coch</string>
     <string name="color_2">Pinc Llachar</string>
     <string name="color_3">Lafant</string>
@@ -940,7 +946,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy’r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Gradd ar ôl postio</string>
     <string name="gradeOverride">Disodli gradd</string>
     <string name="currentGrade">Gradd bresennol </string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Dewis pen: %s</string>
+    <string name="content_description_chosen_body">Dewis corff: %s</string>
+    <string name="content_description_chosen_feet">Dewis traed: %s</string>
+    <string name="content_description_panda_body_1">Ffrog borffor gyda thrim pinc</string>
+    <string name="content_description_panda_body_2">Ffrog werdd gyda thrim glas</string>
+    <string name="content_description_panda_body_3">Ffrog goch gyda thrim oren</string>
+    <string name="content_description_panda_body_4">Blaser las, tei-bô coch, thrywsus llwyd</string>
+    <string name="content_description_panda_body_5">Cryd oren a jîns</string>
+    <string name="content_description_panda_body_6">Cryd coch a thrywsus brown</string>
+    <string name="content_description_panda_body_7">Crys t melyn a thrywsus llwyd</string>
+    <string name="content_description_panda_body_8">Crys t gwyrddlas a thrywsus porffor</string>
+    <string name="content_description_panda_body_9">Crys t glas a thrywsus gwyrdd</string>
+    <string name="content_description_panda_body_10">Crys t gwyn a thrywsus glas</string>
+    <string name="content_description_panda_body_11">Crys t llwyd tywyll a thrywsus gwyrddlas</string>
+    <string name="content_description_panda_body_12">Gwisg dewin lliw gwin gyda hudlath a thrywsus bu</string>
+    <string name="content_description_panda_body_13">Corff panda</string>
+    <string name="content_description_panda_head_2">Sbectol haul \'aviator\' a lipstic</string>
+    <string name="content_description_panda_head_3">Colur a chwlwm gwallt porffor</string>
+    <string name="content_description_panda_head_4">Mwstas ffansi</string>
+    <string name="content_description_panda_head_5">Sbectol barti werdd</string>
+    <string name="content_description_panda_head_6">Sbectol frown</string>
+    <string name="content_description_panda_head_7">Mwgwd aur a lipstic</string>
+    <string name="content_description_panda_head_8">Sbectol haul \'aviator\'</string>
+    <string name="content_description_panda_head_9">Bochau gyda brychni haul</string>
+    <string name="content_description_panda_head_10">Dewin gyda sbectol a chraith ar ei dalcen</string>
+    <string name="content_description_panda_feet_1">Traed noeth</string>
+    <string name="content_description_panda_feet_2">Esgidiau pinc gyda chlymau porffor</string>
+    <string name="content_description_panda_feet_3">Esgidiau glas gyda chlymau gwyrdd</string>
+    <string name="content_description_panda_feet_4">Esgidiau coch gyda chlymau oren</string>
+    <string name="content_description_panda_feet_5">Esgidiau coch</string>
+    <string name="content_description_choose_head">Dewis pen</string>
+    <string name="content_description_choose_body">Dewis corff</string>
+    <string name="content_description_choose_feet">Dewis traed</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

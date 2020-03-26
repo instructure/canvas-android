@@ -96,8 +96,7 @@
     <string name="filePermissionGranted">Filen er nå klar for nedlasting, vennligst forsøk igjen.</string>
     <string name="filePermissionDenied">Filen kan ikke lastes ned uten at det er gitt tillatelse.</string>
     <string name="pleaseTryAgain">Tillatelse gitt, prøv igjen.</string>
-    <string name="pickVideo">Velg en video</string>
-
+    <string name="pickFile">Velg en fil</string>
     <string name="assignmentSubmissionUpload">Last opp innlevering for %s</string>
     <string name="assignmentSubmissionError">Kunne ikke innlevere for %s</string>
     <string name="assignmentSubmissionComplete">Innlevering fullført %s</string>

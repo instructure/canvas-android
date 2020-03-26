@@ -18,7 +18,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -79,7 +78,6 @@ void main() {
     setupPlatformChannels();
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<Logger>(() => Logger());
     });
 
     await tester.pumpWidget(TestApp(

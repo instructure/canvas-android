@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Desfazer</string>
     <string name="rce_contentDescription_redo">Refazer</string>
     <string name="rce_contentDescription_bold">Formatar negrito</string>
@@ -66,4 +67,6 @@
     <string name="rce_empty_message">Mensagem</string>
     <string name="rce_empty_description">Adicionar descrição</string>
     <string name="rce_scrollInstructions">Rolar para todas as ferramentas de edição</string>
+    <string name="rce_emptyUrlError">Url não pode estar em branco</string>
+    <string name="rce_httpNotAllowed">Apenas urls https são aceitas</string>
 </resources>

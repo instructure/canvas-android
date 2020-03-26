@@ -14,12 +14,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -102,7 +102,6 @@ void main() {
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<QuickNav>(() => QuickNav());
-        locator.registerLazySingleton<Logger>(() => Logger());
         locator.registerLazySingleton<ManageStudentsInteractor>(() => _MockManageStudentsInteractor());
       });
 
@@ -116,7 +115,7 @@ void main() {
       await tester.tap(find.byType(RaisedButton));
       await tester.pump();
 
-      // Check for the under construction screen
+      // Check for the screen
       expect(find.byType(AddStudentDialog), findsOneWidget);
     });
   });
@@ -125,13 +124,14 @@ void main() {
     var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
 
     ManageStudentsInteractor interactor = _MockManageStudentsInteractor();
+    final analytics = _MockAnalytics();
 
     when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
 
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<Logger>(() => Logger());
       locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
+      locator.registerLazySingleton<Analytics>(() => analytics);
     });
 
     // Setup the widget
@@ -147,7 +147,7 @@ void main() {
     await tester.tap(find.byType(RaisedButton));
     await tester.pump();
 
-    // Check for the under construction screen
+    // Check for the screen
     expect(find.byType(AddStudentDialog), findsOneWidget);
 
     // Tap on the 'OK' button
@@ -156,6 +156,7 @@ void main() {
 
     // Verify that we called the interactor to get students
     verify(interactor.pairWithStudent((any))).called(1);
+    verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD));
   });
 
   testWidgetsWithAccessibilityChecks('successful pairing calls onAddStudent callback', (tester) async {
@@ -168,7 +169,6 @@ void main() {
 
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<Logger>(() => Logger());
       locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
     });
 
@@ -217,3 +217,5 @@ class SelectedStudentNotifierTestApp extends StatelessWidget {
 }
 
 class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
+
+class _MockAnalytics extends Mock implements Analytics {}

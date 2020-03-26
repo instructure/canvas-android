@@ -31,7 +31,6 @@ import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -59,7 +58,6 @@ void main() {
     locator.registerLazySingleton<PlannerApi>(() => plannerApi);
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    locator.registerLazySingleton<Logger>(() => _MockLogger());
     locator.registerLazySingleton<CalendarFilterListInteractor>(() => filterInteractor);
   });
 
@@ -364,8 +362,6 @@ List<Course> _mockCourses() {
 class _MockPlannerApi extends Mock implements PlannerApi {}
 
 class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class _MockLogger extends Mock implements Logger {}
 
 class _MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
 

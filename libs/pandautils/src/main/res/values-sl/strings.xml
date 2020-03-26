@@ -95,8 +95,7 @@
     <string name="filePermissionGranted">Datoteka je zdaj pripravljena za prenos, poskusite znova.</string>
     <string name="filePermissionDenied">Brez podelitve dovoljenja datoteke ni mogoče prenesti.</string>
     <string name="pleaseTryAgain">Dovoljenje je podeljeno, poskusite znova.</string>
-    <string name="pickVideo">Izberi videoposnetek</string>
-
+    <string name="pickFile">Izberi datoteko</string>
     <string name="assignmentSubmissionUpload">Nalagam oddaje za %s</string>
     <string name="assignmentSubmissionError">Oddaja za %s ni uspela</string>
     <string name="assignmentSubmissionComplete">%s uspešno poslana</string>

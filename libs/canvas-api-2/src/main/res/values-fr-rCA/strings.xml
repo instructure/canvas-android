@@ -65,7 +65,7 @@
     <string name="practice_quiz">Questionnaire d’entraînement</string>
     <string name="graded_survey">Enquête notée</string>
     <string name="ungraded_survey">Enquête non notée</string>
-    <string name="andMore"> et %d plus</string>
+    <string name="andMore">\u0020et %d plus</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Étudiant</string>

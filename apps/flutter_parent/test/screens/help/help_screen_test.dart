@@ -20,12 +20,10 @@ import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/help_links.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,6 +32,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -42,7 +41,6 @@ void main() {
 
   setupTestLocator((locator) {
     locator.registerSingleton<QuickNav>(QuickNav());
-    locator.registerLazySingleton<Logger>(() => Logger());
     locator.registerLazySingleton<AndroidIntentVeneer>(() => _MockAndroidIntentVeneer());
     locator.registerLazySingleton<HelpScreenInteractor>(() => interactor);
   });
@@ -136,16 +134,13 @@ void main() {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(id: 'submit_feature_idea', text: 'Request a Feature')]));
 
-    await setupPlatformChannels();
-
     final user = User((b) => b
       ..id = '123'
       ..primaryEmail = '123@321.com'
       ..effectiveLocale = 'en-jp');
-    final login = Login((b) => b..domain = 'dough main');
-
-    ApiPrefs.switchLogins(login);
-    ApiPrefs.setUser(user);
+    final login = Login((b) => b
+      ..user = user.toBuilder()
+      ..domain = 'dough main');
 
     String emailBody = '' +
         '${l10n.featureRequestHeader}\r\n' +
@@ -155,6 +150,12 @@ void main() {
         '${l10n.versionNumber}: Canvas v1.0.0 (3)\r\n' +
         '${l10n.helpLocale} ${user.effectiveLocale}\r\n' +
         '----------------------------------------------\r\n';
+
+    await tester.pumpWidget(TestApp(
+      HelpScreen(),
+      platformConfig: PlatformConfig(initLoggedInUser: login),
+    ));
+    await tester.pumpAndSettle();
 
     final completer = Completer();
     await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
@@ -170,9 +171,6 @@ void main() {
       completer.complete(); // Finish the completer so the test can finish
       return null;
     });
-
-    await tester.pumpWidget(TestApp(HelpScreen()));
-    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Request a Feature'));
     await tester.pumpAndSettle();

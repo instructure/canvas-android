@@ -54,6 +54,8 @@ class RouteValidatorActivity : FragmentActivity() {
         val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
         val domain = ApiPrefs.domain
 
+        // TODO - Add support for QR login here
+
         if (!isSignedIn) {
             val intent = if (host.isNotBlank()) {
                 SignInActivity.createIntent(this, AccountDomain(host))

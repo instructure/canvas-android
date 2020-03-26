@@ -18,6 +18,7 @@ package com.instructure.teacher.tasks
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.teacher.activities.LoginActivity
@@ -32,6 +33,8 @@ class TeacherLogoutTask(type: Type) : LogoutTask(type) {
     override fun createLoginIntent(context: Context): Intent {
         return LoginActivity.createIntent(context)
     }
+
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? = null
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }

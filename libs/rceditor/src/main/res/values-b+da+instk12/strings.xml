@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Besked</string>
     <string name="rce_empty_description">Tilføj beskrivelse</string>
     <string name="rce_scrollInstructions">Rul for alle redigeringsværktøjer</string>
+    <string name="rce_emptyUrlError">Url kan ikke være tom</string>
+    <string name="rce_httpNotAllowed">Kun https-webadresser accepteres</string>
 </resources>

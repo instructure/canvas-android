@@ -15,17 +15,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -35,12 +35,25 @@ import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  final analytics = _MockAnalytics();
+  final interactor = _MockInteractor();
+
   final login = Login((b) => b
     ..domain = 'domain'
     ..accessToken = 'token'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-  setupLocator();
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    locator.registerLazySingleton<Analytics>(() => analytics);
+
+    locator.registerFactory<DashboardInteractor>(() => interactor);
+    locator.registerFactory<DomainSearchInteractor>(() => null);
+  });
+
+  setUp(() {
+    reset(analytics);
+  });
 
   testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
@@ -144,11 +157,6 @@ void main() {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
     ];
     var interactor = _MockInteractor();
-    setupTestLocator((locator) {
-      locator.registerFactory<DashboardInteractor>(() => interactor);
-      locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<Logger>(() => Logger());
-    });
 
     await tester.pumpWidget(TestApp(LoginLandingScreen(), platformConfig: PlatformConfig(initLoggedInUser: login)));
     await ApiPrefs.saveLogins(logins);
@@ -171,7 +179,10 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
+    verify(analytics.logEvent(any)).called(1);
   });
 }
+
+class _MockAnalytics extends Mock implements Analytics {}
 
 class _MockInteractor extends Mock implements DashboardInteractor {}

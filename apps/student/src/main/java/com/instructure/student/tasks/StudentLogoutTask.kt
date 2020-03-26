@@ -18,6 +18,7 @@ package com.instructure.student.tasks
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.tasks.LogoutTask
@@ -26,7 +27,7 @@ import com.instructure.student.util.StudentPrefs
 import com.instructure.student.view.CanvasRecipientManager
 import com.instructure.student.widget.WidgetUpdater
 
-class StudentLogoutTask(type: Type) : LogoutTask(type) {
+class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         StudentPrefs.safeClearPrefs()
@@ -36,6 +37,10 @@ class StudentLogoutTask(type: Type) : LogoutTask(type) {
 
     override fun createLoginIntent(context: Context): Intent {
         return LoginActivity.createIntent(context)
+    }
+
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? {
+        return LoginActivity.createIntent(context, uri)
     }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {

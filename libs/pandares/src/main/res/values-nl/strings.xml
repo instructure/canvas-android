@@ -182,12 +182,13 @@
     <string name="excusedAssignment">Deze opdracht is verwijderd en wordt niet in overweging genomen voor de totale berekening</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Punten </string>
+    <string name="points">Punten\u0020</string>
     <string name="save">Opslaan</string>
     <string name="cancel">Annuleren</string>
     <!-- Discussions -->
     <string name="forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
 
+    <string name="fileCurrentlyLocked">Dit bestand is momenteel vergrendeld</string>
     <!-- Events -->
     <string name="Starts">Begint op</string>
     <string name="Ends">Eindigt</string>
@@ -330,7 +331,7 @@
     <string name="with">met</string>
     <string name="starConversation">Gesprek met ster aanduiden</string>
     <string name="deleteConversation">Gesprek verwijderen</string>
-    <string name="sharedWith">Gedeeld met  </string>
+    <string name="sharedWith">Gedeeld met \u0020</string>
     <string name="sharedWithYou">Gedeeld met jou</string>
     <string name="inboxEmptyMessage">Tik op de \"+\" om een nieuw gesprek te maken.</string>
     <string name="inboxAllMessages">Alle(s)</string>
@@ -544,11 +545,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privé beschikbaar</string>
     <string name="publiclyAvailable">Openbaar beschikbaar</string>
-    <string name="starts">Start:  </string>
-    <string name="courseCode">Cursus Code:  </string>
-    <string name="ends">Eindigt:  </string>
-    <string name="visibility">Zichtbaarheid:  </string>
-    <string name="license">Licentie:  </string>
+    <string name="starts">Start: \u0020</string>
+    <string name="courseCode">Cursus Code: \u0020</string>
+    <string name="ends">Eindigt: \u0020</string>
+    <string name="visibility">Zichtbaarheid: \u0020</string>
+    <string name="license">Licentie: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -847,8 +848,13 @@
     <string name="start">Starten</string>
     <string name="newPushNotifications">%1$s Nieuwe meldingen</string>
     <string name="like">like</string>
+    <string name="likeEntryLabel">Invoeren van likes</string>
     <string name="likes">likes</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s like</item>
+        <item quantity="other">%s likes</item>
+    </plurals>
     <string name="color_1">Rood</string>
     <string name="color_2">Felroze</string>
     <string name="color_3">Lavendel</string>
@@ -1046,6 +1052,41 @@
     <string name="gradeAfterPosting">Beoordelen na posten</string>
     <string name="gradeOverride">Cijferoverschrijving</string>
     <string name="currentGrade">Huidig cijfer </string>
+
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Gekozen kop: %s</string>
+    <string name="content_description_chosen_body">Gekozen hoofdtekst: %s</string>
+    <string name="content_description_chosen_feet">Gekozen voettekst: %s</string>
+    <string name="content_description_panda_body_1">Jurk met paarse harten en roze versiering</string>
+    <string name="content_description_panda_body_2">Jurk met groene sterren en blauwe versiering</string>
+    <string name="content_description_panda_body_3">Jurk met rode sterren en oranje versiering</string>
+    <string name="content_description_panda_body_4">Blauwe blazer, rode vlinderdas en grijze broek</string>
+    <string name="content_description_panda_body_5">Oranje overhemd en jeans</string>
+    <string name="content_description_panda_body_6">Rood overhemd en bruine broek</string>
+    <string name="content_description_panda_body_7">T-shirt met gele zon en grijze broek</string>
+    <string name="content_description_panda_body_8">T-shirt met groenblauwe basketbal en paarse broek</string>
+    <string name="content_description_panda_body_9">T-shirt met blauwe androïde en groene broek</string>
+    <string name="content_description_panda_body_10">T-shirt met witte Instructure-afbeelding en blauwe broek</string>
+    <string name="content_description_panda_body_11">Donkergrijs T-shirt met drie sterren en groenblauwe broek</string>
+    <string name="content_description_panda_body_12">Bordeauxrood tovenaarsgewaad met toverstok en zwarte broek</string>
+    <string name="content_description_panda_body_13">Pandatorso</string>
+    <string name="content_description_panda_head_2">Teardrop aviator-zonnebril en lippenstift</string>
+    <string name="content_description_panda_head_3">Make-up en paarse haarstrik</string>
+    <string name="content_description_panda_head_4">Nepsnor</string>
+    <string name="content_description_panda_head_5">Groene partybril</string>
+    <string name="content_description_panda_head_6">Bruine bril</string>
+    <string name="content_description_panda_head_7">Gouden gezichtsmasker en lippenstift</string>
+    <string name="content_description_panda_head_8">Teardrop aviator-zonnebril</string>
+    <string name="content_description_panda_head_9">Wangen met sproeten</string>
+    <string name="content_description_panda_head_10">Tovenaar met bril en litteken op voorhoofd</string>
+    <string name="content_description_panda_feet_1">Blote voeten</string>
+    <string name="content_description_panda_feet_2">Roze schoenen met paarse veters</string>
+    <string name="content_description_panda_feet_3">Blauwe schoenen met groene veters</string>
+    <string name="content_description_panda_feet_4">Rode schoenen met oranje veters</string>
+    <string name="content_description_panda_feet_5">Rode schoenen</string>
+    <string name="content_description_choose_head">Kies koptekst</string>
+    <string name="content_description_choose_body">Kies hoofdtekst</string>
+    <string name="content_description_choose_feet">Kies voettekst</string>
 
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>

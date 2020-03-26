@@ -52,7 +52,7 @@
     <string name="allowedFileTypes">Tillåtna filtyper</string>
     <string name="resubmitAssignment">Skicka uppgift igen</string>
     <string name="launchExternalTool">Starta externt verktyg</string>
-    <string name="preview">Förhandsvisa</string>
+    <string name="preview">Förhandsgranska</string>
 
     <string name="submissionUploadFailedMessage">En eller fler filer laddades inte upp. Kontrollera din internetanslutning och försök lämna in igen.</string>
     <string name="submissionUploadByteProgress">%1$s av %2$s</string>
@@ -103,9 +103,9 @@
 
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
-    <string name="enterWhatIfScore">Ange Vad om-poäng</string>
+    <string name="enterWhatIfScore">Ange Vad om-resultat</string>
     <!-- Student rubric tab -->
-    <string name="rubricCustomScore">Anpassad poäng</string>
+    <string name="rubricCustomScore">Anpassat resultat</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
     <string name="rubricViewLongDescription">Visa lång beskrivning</string>
 
@@ -183,15 +183,16 @@
     <string name="assignments">Uppgifter</string>
     <string name="noDescription">Det finns ingen beskrivning för den här uppgiften</string>
     <string name="noAssignmentsInGroup">Inga uppgifter i den här gruppen</string>
-    <string name="excusedAssignment">Den här uppgiften ursäktad och kommer inte räknas in i den totala uträkningen</string>
+    <string name="excusedAssignment">Den här uppgiften är ursäktad och kommer inte räknas in i den totala uträkningen</string>
     <string name="excused">EX</string>
     <!-- Assignment editing -->
-    <string name="points">Poäng </string>
+    <string name="points">Poäng\u0020</string>
     <string name="save">Spara</string>
     <string name="cancel">Avbryt</string>
     <!-- Discussions -->
     <string name="forbidden">Svaren är endast synliga för de som har publicerat minst ett svar.</string>
 
+    <string name="fileCurrentlyLocked">Den här filen är för närvarande låst</string>
     <!-- Events -->
     <string name="Starts">Börjar</string>
     <string name="Ends">Slutar</string>
@@ -206,8 +207,8 @@
     <string name="totalScore">Totalt:</string>
     <string name="noGradeText">Ej tillämpligt</string>
     <string name="checkBoxFinalGradeOption">Baserat på bedömda uppgifter</string>
-    <string name="checkBoxWhatIfGradeOption">Visa tänk om-poäng</string>
-    <string name="whatIfDialogText">Tänk om-poäng</string>
+    <string name="checkBoxWhatIfGradeOption">Visa tänk om-resultat</string>
+    <string name="whatIfDialogText">Tänk om-resultat</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poäng, %3$s</string>
     <string name="inbox">Inkorg</string>
@@ -332,7 +333,7 @@
     <string name="with">med</string>
     <string name="starConversation">Stjärnmarkera konversation</string>
     <string name="deleteConversation">Ta bort konversation</string>
-    <string name="sharedWith">Delad med  </string>
+    <string name="sharedWith">Delad med \u0020</string>
     <string name="sharedWithYou">Delad med dig</string>
     <string name="inboxEmptyMessage">Tryck på \"+\" för att skapa en ny konversation.</string>
     <string name="inboxAllMessages">Alla</string>
@@ -484,7 +485,7 @@
     <string name="moduleItemContribute">Bidra till den här sidan</string>
     <string name="moduleItemContributed">Du har bidragit</string>
     <string name="moduleItemMinScore">Få minst</string>
-    <string name="moduleItemMinScoreMet">Den nedre poänggränsen har uppnåtts</string>
+    <string name="moduleItemMinScoreMet">Den nedre resultatgränsen har uppnåtts</string>
     <string name="prerequisites">Förutsättningar:</string>
     <string name="unlocked">Upplåst:</string>
     <string name="locked">Låst</string>
@@ -546,11 +547,11 @@
     <!-- Course Settings -->
     <string name="privatelyAvailable">Privat tillgänglig</string>
     <string name="publiclyAvailable">Offentligt tillgänglig</string>
-    <string name="starts">Startar:  </string>
-    <string name="courseCode">Kurskod:  </string>
-    <string name="ends">Slutar:  </string>
-    <string name="visibility">Synlighet:  </string>
-    <string name="license">Licens:  </string>
+    <string name="starts">Startar: \u0020</string>
+    <string name="courseCode">Kurskod: \u0020</string>
+    <string name="ends">Slutar: \u0020</string>
+    <string name="visibility">Synlighet: \u0020</string>
+    <string name="license">Licens: \u0020</string>
 
 
     <!-- Navigation String -->
@@ -849,8 +850,13 @@
     <string name="start">Starta</string>
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
+    <string name="likeEntryLabel">Gilla post</string>
     <string name="likes">gilla-markeringar</string>
 
+    <plurals name="likeCountLabel">
+        <item quantity="one">%s gilla-markering</item>
+        <item quantity="other">%s gilla-markeringar</item>
+    </plurals>
     <string name="color_1">Röd</string>
     <string name="color_2">Klarrosa</string>
     <string name="color_3">Lavendel</string>
@@ -1050,6 +1056,41 @@
     <string name="gradeAfterPosting">Bedöm efter publicering</string>
     <string name="gradeOverride">Åsidosättning av omdöme</string>
     <string name="currentGrade">Aktuell omdöme</string>
+    <!-- Panda Avatar Content Descriptions -->
+    <string name="content_description_chosen_head">Vald rubrik: %s</string>
+    <string name="content_description_chosen_body">Vald brödtext: %s</string>
+    <string name="content_description_chosen_feet">Vald fotnot: %s</string>
+    <string name="content_description_panda_body_1">Lila hjärtklänning med rosa fåll</string>
+    <string name="content_description_panda_body_2">Grön stjärnklänning med blå fåll</string>
+    <string name="content_description_panda_body_3">Röd stjärnklänning med orange fåll</string>
+    <string name="content_description_panda_body_4">Blå blazer, röd fluga och gråa byxor</string>
+    <string name="content_description_panda_body_5">Orange skjorta med knappar och jeans</string>
+    <string name="content_description_panda_body_6">Röd skjorta med knappar och bruna byxor</string>
+    <string name="content_description_panda_body_7">T-shirt med gul sol och gråa byxor</string>
+    <string name="content_description_panda_body_8">Blågrön t-shirt med basketbolltryck och lila byxor</string>
+    <string name="content_description_panda_body_9">Blå t-shirt med android-tryck och gröna byxor</string>
+    <string name="content_description_panda_body_10">Vit t-shirt med Instructure-tryck och blåa byxor</string>
+    <string name="content_description_panda_body_11">Mörkgrå t-shirt med 3-stjärnstryck och blågröna byxor</string>
+    <string name="content_description_panda_body_12">Vinröd trollkarlsdräkt med magiskt trollspö och svarta byxor</string>
+    <string name="content_description_panda_body_13">Panda-torso</string>
+    <string name="content_description_panda_head_2">Pilotsolglasögon och läppstift</string>
+    <string name="content_description_panda_head_3">Smink och lila hårrosett</string>
+    <string name="content_description_panda_head_4">Stiligt mustasch</string>
+    <string name="content_description_panda_head_5">Gröna partybrillor</string>
+    <string name="content_description_panda_head_6">Bruna glasögon</string>
+    <string name="content_description_panda_head_7">Guldfärgad maskeradmask och läppstift</string>
+    <string name="content_description_panda_head_8">Pilotsolglasögon</string>
+    <string name="content_description_panda_head_9">Fräkniga kinder</string>
+    <string name="content_description_panda_head_10">Glasögonprydd och ärrig trollkarl</string>
+    <string name="content_description_panda_feet_1">Barfota</string>
+    <string name="content_description_panda_feet_2">Rosa skor med lila rosetter</string>
+    <string name="content_description_panda_feet_3">Blå skor med gröna rosetter</string>
+    <string name="content_description_panda_feet_4">Röda skor med orangea rosetter</string>
+    <string name="content_description_panda_feet_5">Röda skor</string>
+    <string name="content_description_choose_head">Välj huvud</string>
+    <string name="content_description_choose_body">Välj kropp</string>
+    <string name="content_description_choose_feet">Välj fötter</string>
+
     <!-- Floating Recording View Strings -->
     <string name="recordingTimerDefault">00:00:00</string>
     <string name="recordingTimerContentDescription">%1$d timmar, %2$d minuter och %3$d sekunder</string>

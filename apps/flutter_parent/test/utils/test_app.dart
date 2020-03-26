@@ -19,6 +19,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
@@ -53,7 +54,7 @@ class TestApp extends StatefulWidget {
   _TestAppState createState() => _TestAppState();
 
   static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext context),
-      {bool highContrast = false}) async {
+      {bool highContrast = false, PlatformConfig config = const PlatformConfig()}) async {
     await tester.pumpWidget(TestApp(
       Builder(
           builder: (context) => RaisedButton(
@@ -62,6 +63,7 @@ class TestApp extends StatefulWidget {
                 onPressed: () => tapCallback(context),
               )),
       highContrast: highContrast,
+      platformConfig: config,
     ));
     await tester.pumpAndSettle();
 
@@ -132,6 +134,11 @@ class _TestAppState extends State<TestApp> {
 void setupTestLocator(config(GetIt locator)) {
   final locator = GetIt.instance;
   locator.reset();
+  locator.allowReassignment = true; // Allows reassignment by the config block
+
+  // Register things that needed by default
+  locator.registerLazySingleton<Analytics>(() => Analytics());
+
   config(locator);
 }
 
@@ -167,6 +174,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
 
   Future<void> apiPrefsInitFuture;
   if (config.mockPrefs != null) {
+    ApiPrefs.clean();
     SharedPreferences.setMockInitialValues(config.safeMockPrefs);
     apiPrefsInitFuture = ApiPrefs.init();
   }

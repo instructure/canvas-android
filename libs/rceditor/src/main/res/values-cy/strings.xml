@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="rce_contentDescription_undo">Dad-wneud</string>
     <string name="rce_contentDescription_redo">Ailwneud</string>
     <string name="rce_contentDescription_bold">Fformat Trwm</string>
@@ -66,4 +67,6 @@
     <string name="rce_empty_message">Neges</string>
     <string name="rce_empty_description">Ychwanegu disgrifiad</string>
     <string name="rce_scrollInstructions">Sgrolio i weld yr holl adnoddau golygu</string>
+    <string name="rce_emptyUrlError">Does dim modd i’r URL fod yn wag</string>
+    <string name="rce_httpNotAllowed">Dim ond URL https sy’n cael eu derbyn</string>
 </resources>

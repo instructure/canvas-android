@@ -67,4 +67,6 @@
     <string name="rce_empty_message">メッセージ</string>
     <string name="rce_empty_description">説明を追加</string>
     <string name="rce_scrollInstructions">すべての編集ツールにスクロール</string>
+    <string name="rce_emptyUrlError">URL を空にすることはできません</string>
+    <string name="rce_httpNotAllowed">使用できるのは https URL のみです</string>
 </resources>

@@ -44,7 +44,7 @@
     <string name="canvasAPI_none">Ei lähetystä</string>
     <string name="canvasAPI_passFail">Läpäissyt/ei läpäissyt</string>
     <string name="canvasAPI_percent">Prosentti</string>
-    <string name="canvasAPI_letterGrade">Kirjeen arvosana</string>
+    <string name="canvasAPI_letterGrade">Kirjainarvosana</string>
     <string name="canvasAPI_points">Pisteitä</string>
     <string name="canvasAPI_gpaScale">GPA-asteikko</string>
     <string name="canvasAPI_notGraded">Ei arvosteltu</string>
@@ -65,7 +65,7 @@
     <string name="practice_quiz">Harjoittelukysely</string>
     <string name="graded_survey">Arvosteltu tutkimus</string>
     <string name="ungraded_survey">Arvostelematon tutkimus</string>
-    <string name="andMore"> ja %d lisää</string>
+    <string name="andMore">\u0020ja %d lisää</string>
 
     <!-- Enrollment Types -->
     <string name="enrollmentTypeStudent">Opiskelija</string>

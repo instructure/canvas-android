@@ -97,7 +97,7 @@
     <string name="filePermissionGranted">Filerna är nu redo att ladda ned. Försök igen.</string>
     <string name="filePermissionDenied">Filen kan inte laddas ned utan att ge behörighet.</string>
     <string name="pleaseTryAgain">Behörighet beviljades. Försök igen..</string>
-    <string name="pickVideo">Välj en video</string>
+    <string name="pickFile">Välj en fil</string>
     <string name="assignmentSubmissionUpload">Laddar upp inlämning för %s</string>
     <string name="assignmentSubmissionError">Inlämning kunde inte genomföras för %s</string>
     <string name="assignmentSubmissionComplete">%s har skickats in</string>

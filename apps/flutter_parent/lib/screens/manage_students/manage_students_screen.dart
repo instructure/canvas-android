@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -225,6 +226,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
           Navigator.of(context).pop();
           bool studentPaired = await _addStudentDialog(context);
           if (studentPaired) {
+            locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
             _refreshKey.currentState.show();
           }
         });

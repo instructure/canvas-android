@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
-import 'package:flutter_parent/utils/logger.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -29,9 +28,8 @@ void main() {
 
   final l10n = AppLocalizations();
 
-  setupTestLocator((locator) {
-    locator.registerLazySingleton<Logger>(() => Logger());
-  });
+  // Setup locator with defaults
+  setupTestLocator((locator) {});
 
   testWidgetsWithAccessibilityChecks('Displays and closes crash screen when widget crashes', (tester) async {
     await tester.pumpWidget(TestApp(_CrashTestWidget()));
