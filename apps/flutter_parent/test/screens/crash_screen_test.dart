@@ -32,7 +32,7 @@ void main() {
   setupTestLocator((locator) {});
 
   testWidgetsWithAccessibilityChecks('Displays and closes crash screen when widget crashes', (tester) async {
-    await tester.pumpWidget(TestApp(_CrashTestWidget(), highContrast: true));
+    await tester.pumpWidget(TestApp(_CrashTestWidget()));
     await tester.pump();
 
     // Tap test button which should throw an exception
@@ -53,7 +53,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Reset app button clears app state', (tester) async {
-    await tester.pumpWidget(TestApp(_CrashTestWidget(), highContrast: true));
+    await tester.pumpWidget(TestApp(_CrashTestWidget()));
     await tester.pump();
 
     // Tap 'increment' button twice
@@ -83,7 +83,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays core elements', (tester) async {
-    await tester.pumpWidget(TestApp(CrashScreen(_makeError()), highContrast: true));
+    await tester.pumpWidget(TestApp(CrashScreen(_makeError())));
     await tester.pumpAndSettle();
 
     // Panda image
@@ -106,7 +106,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays error info', (tester) async {
-    await tester.pumpWidget(TestApp(CrashScreen(_makeError()), highContrast: true));
+    await tester.pumpWidget(TestApp(CrashScreen(_makeError())));
     await tester.pumpAndSettle();
 
     // Tap 'View error details' button
@@ -139,7 +139,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays full error info', (tester) async {
-    await tester.pumpWidget(TestApp(CrashScreen(_makeError()), highContrast: true));
+    await tester.pumpWidget(TestApp(CrashScreen(_makeError())));
     await tester.pumpAndSettle();
 
     // Tap 'View error details' button

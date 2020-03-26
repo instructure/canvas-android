@@ -48,7 +48,6 @@ void main() {
     return TestApp(
       CreateConversationScreen(course.id, studentId, subject ?? course.name, postscript),
       navigatorObservers: [if (observer != null) observer],
-      highContrast: true,
     );
   }
 
@@ -919,7 +918,6 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
       ),
     ),
     navigatorObservers: [if (observer != null) observer],
-    highContrast: true,
   );
 
   await tester.pumpWidget(app);

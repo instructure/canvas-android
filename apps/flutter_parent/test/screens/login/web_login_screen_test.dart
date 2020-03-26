@@ -93,7 +93,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
       platformConfig: PlatformConfig(initWebview: true),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -112,7 +111,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
       platformConfig: PlatformConfig(initWebview: true),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -131,7 +129,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
       platformConfig: PlatformConfig(initWebview: true),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -150,7 +147,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
       platformConfig: PlatformConfig(initWebview: true),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -168,7 +164,6 @@ void main() {
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
       platformConfig: PlatformConfig(initWebview: true),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 

@@ -41,7 +41,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
         darkMode: true,
       ));
       await tester.pump();
@@ -60,7 +59,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
         darkMode: true,
       ));
       await tester.pump();
@@ -84,7 +82,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
         darkMode: true,
       ));
       await tester.pump();
@@ -106,7 +103,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(selectedCourses),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -123,7 +119,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -140,7 +135,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -158,7 +152,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -182,7 +175,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen({'course_123'}),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -209,7 +201,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(selectedContexts),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -262,7 +253,6 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(selectedContexts),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();

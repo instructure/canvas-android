@@ -83,7 +83,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows the calendar widget', (tester) async {
       _setup();
 
-      await tester.pumpWidget(_testableMaterialWidget(highContrast: true));
+      await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
       when(plannerApi.getUserPlannerItems(any, any, any,
@@ -99,7 +99,7 @@ void main() {
       {
         _setup();
 
-        await tester.pumpWidget(_testableMaterialWidget(highContrast: true));
+        await tester.pumpWidget(_testableMaterialWidget());
         await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
         when(plannerApi.getUserPlannerItems(any, any, any,
@@ -308,8 +308,7 @@ void main() {
   });
 }
 
-Widget _testableMaterialWidget(
-        {Widget widget, highContrast = false, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) =>
+Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) =>
     TestApp(
       ChangeNotifierProvider<SelectedStudentNotifier>(
           create: (context) => notifier ?? SelectedStudentNotifier()
@@ -319,7 +318,6 @@ Widget _testableMaterialWidget(
               return Scaffold(body: widget ?? CalendarScreen());
             },
           )),
-      highContrast: highContrast,
       darkMode: true,
       platformConfig: PlatformConfig(mockPrefs: null),
       navigatorObservers: observer != null ? [observer] : [],

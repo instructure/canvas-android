@@ -50,7 +50,6 @@ void main() {
           create: (_) => fetcher,
           child: CalendarDayPlanner(DateTime.now()),
         ),
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -74,7 +73,6 @@ void main() {
           create: (_) => fetcher,
           child: CalendarDayPlanner(DateTime.now()),
         ),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -103,7 +101,6 @@ void main() {
           create: (_) => fetcher,
           child: CalendarDayPlanner(dateTime),
         ),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -138,7 +135,6 @@ void main() {
           create: (_) => fetcher,
           child: CalendarDayPlanner(dateTime),
         ),
-        highContrast: true,
       ));
       await tester.pump();
       await tester.pump();
@@ -172,7 +168,6 @@ void main() {
           create: (_) => fetcher,
           child: CalendarDayPlanner(dateTime),
         ),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 

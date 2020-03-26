@@ -28,7 +28,7 @@ class ParentColors {
   static const porcelain = Color(0xFFF5F5F5);
 
   /// The core 'faded' color, used for subtitles, inactive icons, etc on either light or dark backgrounds
-  static const ash = Color(0xFF8B969E);
+  static const ash = Color(0xFF6B7780);
 
   /// Another dark color, slightly lighter than licorice
   static const oxford = Color(0xFF394B58);

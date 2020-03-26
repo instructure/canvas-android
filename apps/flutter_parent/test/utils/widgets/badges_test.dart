@@ -40,7 +40,7 @@ void main() {
 
   group('NumberBadge', () {
     testWidgetsWithAccessibilityChecks('shows a number', (tester) async {
-      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: 1)), highContrast: true));
+      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: 1))));
       await tester.pumpAndSettle();
 
       expect(find.text('1'), findsOneWidget);
@@ -49,7 +49,6 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows a number and a plus if less than the max count', (tester) async {
       await tester.pumpWidget(TestApp(
         NumberBadge(options: BadgeOptions(count: 123, maxCount: 99)),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 
@@ -59,7 +58,6 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows a large number when the max count is null', (tester) async {
       await tester.pumpWidget(TestApp(
         NumberBadge(options: BadgeOptions(count: 987654321, maxCount: null)),
-        highContrast: true,
       ));
       await tester.pumpAndSettle();
 
@@ -67,14 +65,14 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows no text when count is zero', (tester) async {
-      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: 0)), highContrast: true));
+      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: 0))));
       await tester.pumpAndSettle();
 
       expect(find.text('0'), findsNothing);
     });
 
     testWidgetsWithAccessibilityChecks('shows no text when count is null', (tester) async {
-      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: null)), highContrast: true));
+      await tester.pumpWidget(TestApp(NumberBadge(options: BadgeOptions(count: null))));
       await tester.pumpAndSettle();
 
       expect(find.text('null'), findsNothing);
@@ -83,7 +81,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('updates text when listenable updates', (tester) async {
       final listenable = ValueNotifier(1);
 
-      await tester.pumpWidget(TestApp(NumberBadge(listenable: listenable), highContrast: true));
+      await tester.pumpWidget(TestApp(NumberBadge(listenable: listenable)));
       await tester.pumpAndSettle();
 
       expect(find.text('1'), findsOneWidget);
@@ -225,7 +223,6 @@ void main() {
       await tester.pumpWidget(TestApp(
         NumberBadge(options: BadgeOptions(count: 1, includeBorder: true, onPrimarySurface: true)),
         darkMode: true,
-        highContrast: true,
       ));
       await tester.pump();
 
@@ -264,7 +261,7 @@ void main() {
       final child = Icon(Icons.error);
       final listenable = ValueNotifier(1);
 
-      await tester.pumpWidget(TestApp(WidgetBadge(child, countListenable: listenable), highContrast: true));
+      await tester.pumpWidget(TestApp(WidgetBadge(child, countListenable: listenable)));
       await tester.pumpAndSettle();
 
       expect(find.byType(NumberBadge), findsOneWidget);
@@ -274,7 +271,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows a number badge with no listenable but has a count', (tester) async {
       final child = Icon(Icons.error);
 
-      await tester.pumpWidget(TestApp(WidgetBadge(child, options: BadgeOptions(count: 1)), highContrast: true));
+      await tester.pumpWidget(TestApp(WidgetBadge(child, options: BadgeOptions(count: 1))));
       await tester.pumpAndSettle();
 
       expect(find.byType(NumberBadge), findsOneWidget);

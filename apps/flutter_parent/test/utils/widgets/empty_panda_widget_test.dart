@@ -139,5 +139,5 @@ void main() {
 }
 
 Widget _testableWidget(EmptyPandaWidget child) {
-  return TestApp(Scaffold(body: child), highContrast: true);
+  return TestApp(Scaffold(body: child));
 }
