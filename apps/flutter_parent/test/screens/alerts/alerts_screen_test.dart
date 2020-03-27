@@ -81,7 +81,7 @@ void main() {
     final response = AnnouncementViewState('hodorTitle', 'hodor Subject', 'hodor Message', DateTime.now(), null);
     when(announcementInteractor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value(response));
 
-    await tester.pumpWidget(_testableWidget(highContrastMode: true));
+    await tester.pumpWidget(_testableWidget());
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(alert.title));
@@ -483,7 +483,7 @@ void main() {
   });
 }
 
-Widget _testableWidget({User student, bool highContrastMode = false}) {
+Widget _testableWidget({User student}) {
   return TestApp(
     ChangeNotifierProvider(
       create: (context) =>
@@ -493,7 +493,6 @@ Widget _testableWidget({User student, bool highContrastMode = false}) {
       }),
     ),
     platformConfig: PlatformConfig(initWebview: true),
-    highContrast: highContrastMode,
   );
 }
 

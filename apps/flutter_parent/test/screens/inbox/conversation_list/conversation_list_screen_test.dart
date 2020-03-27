@@ -73,7 +73,7 @@ void main() {
 
     when(interactor.getConversations()).thenAnswer((_) => Future.error('Error'));
 
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
     // Expect error state
@@ -235,7 +235,7 @@ void main() {
 
     when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
 
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
     var courseCompleter = Completer<List<Course>>();
@@ -295,7 +295,7 @@ void main() {
     when(interactor.getCoursesForCompose()).thenAnswer((_) => completer.future);
     when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
 
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.bySemanticsLabel(l10n.newMessageTitle));
@@ -340,7 +340,7 @@ void main() {
     when(interactor.getConversations()).thenAnswer((_) => Future.error(''));
     when(nav.push(any, any)).thenAnswer((_) => Future.value(true));
 
-    await tester.pumpWidget(TestApp(ConversationListScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(ConversationListScreen()));
     await tester.pumpAndSettle();
 
     var courseCompleter = Completer<List<Course>>();

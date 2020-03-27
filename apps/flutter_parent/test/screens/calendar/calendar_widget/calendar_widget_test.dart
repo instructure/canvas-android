@@ -45,7 +45,6 @@ void main() {
           dayBuilder: (_, __) => Container(),
           fetcher: _FakeFetcher(),
         ),
-        highContrast: true,
       ),
     );
     await tester.pumpAndSettle();
@@ -63,7 +62,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           calendar,
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -93,7 +91,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           calendar,
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -123,7 +120,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           calendar,
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -154,7 +150,6 @@ void main() {
       await tester.pumpWidget(
         TestApp(
           calendar,
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -188,7 +183,6 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -220,7 +214,6 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -258,7 +251,6 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -292,7 +284,6 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -326,7 +317,6 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -365,7 +355,6 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -410,7 +399,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -433,7 +421,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -463,7 +450,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -493,7 +479,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -520,7 +505,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -555,7 +539,6 @@ void main() {
             ),
             data: MediaQueryData(accessibleNavigation: true),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -593,7 +576,6 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -627,7 +609,6 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -666,7 +647,6 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -707,7 +687,6 @@ void main() {
               Expanded(child: calendar),
             ],
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -738,7 +717,6 @@ void main() {
               Expanded(child: calendar),
             ],
           ),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -790,7 +768,6 @@ void main() {
                 );
               },
             ),
-            highContrast: true,
           ),
         );
         await tester.pumpAndSettle();
@@ -825,7 +802,6 @@ void main() {
             fetcher: _FakeFetcher(),
           ),
           locale: Locale('ar'),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -860,7 +836,6 @@ void main() {
             fetcher: _FakeFetcher(),
           ),
           locale: Locale('ar'),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -895,7 +870,6 @@ void main() {
             fetcher: _FakeFetcher(),
           ),
           locale: Locale('ar'),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -936,7 +910,6 @@ void main() {
             fetcher: _FakeFetcher(),
           ),
           locale: Locale('ar'),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();
@@ -983,7 +956,6 @@ void main() {
             fetcher: _FakeFetcher(),
           ),
           locale: Locale('ar'),
-          highContrast: true,
         ),
       );
       await tester.pumpAndSettle();

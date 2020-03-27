@@ -24,7 +24,7 @@ import '../../test_app.dart';
 
 void main() {
   testWidgetsWithAccessibilityChecks('Shows a dialog', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context));
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     expect(find.text(AppLocalizations().reportProblemTitle), findsOneWidget);
@@ -42,15 +42,15 @@ void main() {
     final severity = ErrorReportSeverity.CRITICAL;
 
     await TestApp.showWidgetFromTap(
-        tester,
-        (context) => ErrorReportDialog.asDialog(
-              context,
-              title: title,
-              subject: subject,
-              severity: severity,
-              includeEmail: true,
-            ),
-        highContrast: true);
+      tester,
+      (context) => ErrorReportDialog.asDialog(
+        context,
+        title: title,
+        subject: subject,
+        severity: severity,
+        includeEmail: true,
+      ),
+    );
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     expect(find.text(title), findsOneWidget);
@@ -60,7 +60,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Selecting a severity updates dialog', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context));
 
     // Tap on dropdown to show list
     await tester.tap(find.text(AppLocalizations().errorSeverityComment));
@@ -75,7 +75,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Cancel closes the dialog', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context), highContrast: true);
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context));
 
     await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
     await tester.pumpAndSettle();
@@ -84,8 +84,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Submit validates the dialog and shows errors', (tester) async {
-    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context, includeEmail: true),
-        highContrast: true);
+    await TestApp.showWidgetFromTap(tester, (context) => ErrorReportDialog.asDialog(context, includeEmail: true));
 
     expect(find.text(AppLocalizations().reportProblemSubjectEmpty), findsNothing);
     expect(find.text(AppLocalizations().reportProblemDescriptionEmpty), findsNothing);
@@ -112,7 +111,6 @@ void main() {
     await TestApp.showWidgetFromTap(
       tester,
       (context) => ErrorReportDialog.asDialog(context, includeEmail: true, error: error),
-      highContrast: true,
     );
 
     // Enter in the details

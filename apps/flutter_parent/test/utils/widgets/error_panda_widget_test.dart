@@ -27,7 +27,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows warning icon', (tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -37,7 +36,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows error message with load target', (tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -47,7 +45,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows a retry button', (tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -62,7 +59,6 @@ void main() {
       ErrorPandaWidget(errorString, () {
         called = true;
       }),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 
@@ -77,7 +73,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('Shows a header', (tester) async {
     await tester.pumpWidget(TestApp(
       ErrorPandaWidget(errorString, callback, header: Text('header here')),
-      highContrast: true,
     ));
     await tester.pumpAndSettle();
 

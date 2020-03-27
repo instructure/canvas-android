@@ -105,7 +105,6 @@ void main() {
     await tester.pumpWidget(
       TestApp(
         Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, file) => Container())),
-        highContrast: true,
       ),
     );
     await tester.pumpAndSettle();
@@ -125,7 +124,6 @@ void main() {
     await tester.pumpWidget(
       TestApp(
         Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, file) => Text('success'))),
-        highContrast: true,
       ),
     );
     await tester.pumpAndSettle();
@@ -157,6 +155,7 @@ void main() {
         Builder(
           builder: (context) => Center(
             child: RaisedButton(
+              color: Colors.white,
               onPressed: () => QuickNav().push(
                 context,
                 Material(child: AttachmentFetcher(attachment: Attachment(), builder: (_, __) => Container())),

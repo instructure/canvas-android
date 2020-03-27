@@ -88,7 +88,6 @@ void main() {
 
   Widget _testableMaterialWidget({Login initLogin}) => TestApp(
         Scaffold(body: DashboardScreen()),
-        highContrast: true,
         platformConfig: PlatformConfig(initLoggedInUser: initLogin),
       );
 

@@ -49,7 +49,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays theme viewer button in debug mode', (tester) async {
-    await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
     await ensureVisibleByScrolling(themeViewerButton(), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
     await tester.pumpAndSettle();
@@ -58,7 +58,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Hides theme viewer button in non-debug mode', (tester) async {
     when(interactor.isDebugMode()).thenReturn(false);
-    await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
     expect(themeViewerButton(), findsNothing);
   });
@@ -66,7 +66,7 @@ void main() {
   testWidgetsWithAccessibilityChecks(
     '(In light mode) Dark mode button is enabled, light mode button is disabled',
     (tester) async {
-      await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true));
+      await tester.pumpWidget(TestApp(SettingsScreen()));
       await tester.pumpAndSettle();
 
       InkWell lightMode = tester.widget<InkWell>(lightModeButton());
@@ -80,7 +80,7 @@ void main() {
   testWidgetsWithAccessibilityChecks(
     '(In dark mode) Dark mode button is disabled, light mode button is enabled',
     (tester) async {
-      await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true, darkMode: true));
+      await tester.pumpWidget(TestApp(SettingsScreen(), darkMode: true));
       await tester.pumpAndSettle();
 
       InkWell lightMode = tester.widget<InkWell>(lightModeButton());
@@ -92,7 +92,7 @@ void main() {
   );
 
   testWidgetsWithAccessibilityChecks('Switches to dark mode', (tester) async {
-    await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));
@@ -106,7 +106,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Switches to light mode', (tester) async {
-    await tester.pumpWidget(TestApp(SettingsScreen(), highContrast: true, darkMode: true));
+    await tester.pumpWidget(TestApp(SettingsScreen(), darkMode: true));
     await tester.pumpAndSettle();
 
     var state = tester.state(find.byType(SettingsScreen));

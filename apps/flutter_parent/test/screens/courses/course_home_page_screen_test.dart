@@ -53,7 +53,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
     when(_interactor.loadHomePage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
 
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId), highContrast: true));
+    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
     await tester.pump(); // Wait for future to finish
 

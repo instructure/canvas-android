@@ -81,7 +81,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Does not display login list if there are no previous logins', (tester) async {
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().previousLogins), findsNothing);
@@ -98,7 +98,7 @@ void main() {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
 
@@ -125,7 +125,7 @@ void main() {
         ..user = CanvasModelTestUtils.mockUser(name: 'user 2').toBuilder()),
     ];
 
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
 
@@ -158,8 +158,7 @@ void main() {
     ];
     var interactor = _MockInteractor();
 
-    await tester.pumpWidget(
-        TestApp(LoginLandingScreen(), highContrast: true, platformConfig: PlatformConfig(initLoggedInUser: login)));
+    await tester.pumpWidget(TestApp(LoginLandingScreen(), platformConfig: PlatformConfig(initLoggedInUser: login)));
     await ApiPrefs.saveLogins(logins);
     await tester.pumpAndSettle();
 
@@ -173,7 +172,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping help button shows help dialog', (tester) async {
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), highContrast: true));
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.byIcon(CanvasIconsSolid.question));
