@@ -57,7 +57,33 @@ abstract class User implements Built<User, UserBuilder> {
   @BuiltValueField(wireName: 'effective_locale')
   String get effectiveLocale;
 
+  @nullable
+  UserPermission get permissions;
+
   static void _initializeBuilder(UserBuilder b) => b
     ..id = ''
     ..name = '';
+}
+
+abstract class UserPermission implements Built<UserPermission, UserPermissionBuilder> {
+  @BuiltValueSerializer(serializeNulls: true)
+  static Serializer<UserPermission> get serializer => _$userPermissionSerializer;
+
+  UserPermission._();
+  factory UserPermission([void Function(UserPermissionBuilder) updates]) = _$UserPermission;
+
+  @BuiltValueField(wireName: 'become_user')
+  bool get become_user;
+  @BuiltValueField(wireName: 'can_update_name')
+  bool get canUpdateName;
+  @BuiltValueField(wireName: 'can_update_avatar')
+  bool get canUpdateAvatar;
+  @BuiltValueField(wireName: 'limit_parent_app_web_access')
+  bool get limitParentAppWebAccess;
+
+  static void _initializeBuilder(UserPermissionBuilder b) => b
+    ..become_user = false
+    ..canUpdateName = false
+    ..canUpdateAvatar = false
+    ..limitParentAppWebAccess = false;
 }

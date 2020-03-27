@@ -18,4 +18,6 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class UserApi {
   Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true).get('users/self/profile'));
+
+  Future<User> getSelfPermissions() => fetch(canvasDio(forceRefresh: true).get('users/self'));
 }

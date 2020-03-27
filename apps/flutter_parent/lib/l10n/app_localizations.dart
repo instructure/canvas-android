@@ -1133,6 +1133,7 @@ class AppLocalizations {
         'Missing',
         desc: 'Description for when a student has not turned anything in for an assignment',
       );
+
   String get notGraded => Intl.message(
         'Not Graded',
         desc: 'Description for an assignment has not been graded.',
@@ -1171,6 +1172,11 @@ class AppLocalizations {
   String get launchExternalTool => Intl.message(
         'Launch External Tool',
         desc: 'Button text added to webviews to let users open external tools in their browser',
+      );
+
+  String get webAccessLimitedMessage => Intl.message(
+        'Interactions on this page are limited by your institution.',
+        desc: 'Message describing how the webview has limited access due to an instution setting',
       );
 
   String dateAtTime(String date, String time) => Intl.message(

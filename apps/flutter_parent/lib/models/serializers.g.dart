@@ -74,6 +74,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(UnreadCount.serializer)
       ..add(User.serializer)
       ..add(UserNameData.serializer)
+      ..add(UserPermission.serializer)
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Assignment)]),
           () => new ListBuilder<Assignment>())

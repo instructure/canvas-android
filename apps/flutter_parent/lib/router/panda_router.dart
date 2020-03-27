@@ -111,7 +111,8 @@ class PandaRouter {
 
   static final String _simpleWebView = '/internal';
 
-  static String _simpleWebViewRoute(String url) => '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}';
+  static String simpleWebViewRoute(String url, String infoText) =>
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=$infoText';
 
   static String settings() => '/settings';
 
@@ -268,7 +269,8 @@ class PandaRouter {
 
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
-    return SimpleWebViewScreen(url, url);
+    final infoText = params[_RouterKeys.infoText]?.elementAt(0);
+    return SimpleWebViewScreen(url, url, infoText: infoText);
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -316,22 +318,20 @@ class PandaRouter {
         locator<QuickNav>().pushRoute(context, _routerErrorRoute(link));
       }
     } else {
-      // No native route found, let's launch the url if possible, or show an error toast
-      if (await canLaunch(link)) {
-        String authUrl = await _interactor.getAuthUrl(link);
-        if (limitWebAccess) {
-          // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
-          locator<QuickNav>().pushRoute(context, _simpleWebViewRoute(link));
-        } else {
-          launch(authUrl);
-        }
+      final url = await _interactor.getAuthUrl(link);
+      if (limitWebAccess) {
+        // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
+        locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
+      } else if (await canLaunch(link) ?? false) {
+        // No native route found, let's launch the url if possible, or show an error toast
+        launch(url);
       } else {
         locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);
       }
     }
   }
 
-  static final bool limitWebAccess = false; // TODO - replace after MBL-13924 is implemented
+  static bool get limitWebAccess => ApiPrefs.getUser()?.permissions?.limitParentAppWebAccess ?? false;
 
   /// Simple helper method to determine if the router can handle a url
   /// returns a RouteWrapper
@@ -371,6 +371,7 @@ class _RouterKeys {
   static final eventId = 'eventId';
   static final quizId = 'quizId';
   static final topicId = 'topicId';
+  static final infoText = 'infoText';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
 }
 
