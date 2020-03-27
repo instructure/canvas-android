@@ -59,8 +59,8 @@ Dir.glob("#{import_dir}/*/") do |src_dir|
         if file.end_with?('.xml')
             language = language.gsub('-', '+').prepend('b+')
         end
-    else
-      language = language.gsub('-', '-r')
+    else if file.end_with?('.xml')
+        language = language.gsub('-', '-r') # Android specific naming convention
     end
     if language.eql? 'en'
       puts "Skipping redundant 'en' resource"
