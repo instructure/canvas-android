@@ -93,11 +93,11 @@ void main() {
   }) =>
       TestApp(
         Scaffold(
-            body: DashboardScreen(
-          deepLinkParams: deepLinkParams,
-          startingPage: startingPage,
-        )),
-        highContrast: true,
+          body: DashboardScreen(
+            deepLinkParams: deepLinkParams,
+            startingPage: startingPage,
+          ),
+        ),
         platformConfig: PlatformConfig(initLoggedInUser: initLogin),
       );
 
@@ -591,9 +591,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Widget tree is built, we should have access to what we need to check the state of the expandable widget animation now
-      var slideAnimation = ((studentExpansionState(tester).expansionWidgetKey.currentWidget as SizeTransition)
-              .listenable as CurvedAnimation)
-          .parent;
+      var slideAnimation = ((studentExpansionState(tester).animation));
 
       // Make sure the expansion widget exists and is initially retracted
       expect(find.byType(StudentExpansionWidget), findsOneWidget);
@@ -635,9 +633,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Widget tree is built, we should have access to what we need to check the state of the expandable widget animation now
-      var slideAnimation = ((studentExpansionState(tester).expansionWidgetKey.currentWidget as SizeTransition)
-              .listenable as CurvedAnimation)
-          .parent;
+      var slideAnimation = ((studentExpansionState(tester).animation));
 
       // Make sure the expansion widget exists and is initially retracted
       expect(find.byType(StudentExpansionWidget), findsOneWidget);

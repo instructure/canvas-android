@@ -62,7 +62,7 @@ class CalendarWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  CalendarWidgetState createState() => CalendarWidgetState(startingDate, startingView);
+  CalendarWidgetState createState() => CalendarWidgetState();
 }
 
 @visibleForTesting
@@ -70,12 +70,6 @@ enum CalendarPageChangeBehavior { none, jump, animate }
 
 @visibleForTesting
 class CalendarWidgetState extends State<CalendarWidget> with TickerProviderStateMixin {
-  CalendarWidgetState(this.startingDate, this.startingView);
-
-  // Initial starting date and starting view (month/week). Used for deep linking into the calendar.
-  DateTime startingDate;
-  CalendarView startingView;
-
   // Day, week, and month page indices for 'today'.
   //
   // Rather than track dates from the beginning of time/unix epoch/whatever, they are tracked
@@ -210,7 +204,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     });
 
     if (_canExpandMonth) {
-      if (startingView == CalendarView.Month) {
+      if (widget.startingView == CalendarView.Month) {
         _isMonthExpanded = true;
         _monthExpansionNotifier.value = 1.0;
       } else
@@ -461,7 +455,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     );
   }
 
-//  @visibleForTesting
+  @visibleForTesting
   void selectDay(
     DateTime day, {
     CalendarPageChangeBehavior dayPagerBehavior: CalendarPageChangeBehavior.jump,

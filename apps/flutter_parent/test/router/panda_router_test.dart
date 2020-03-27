@@ -244,16 +244,19 @@ void main() {
         'view_start': ['12-12-2020'],
         'view_name': ['month']
       });
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Calendar);
       expect(widget, isA<DashboardScreen>());
     });
 
     test('courses returns Dashboard screen', () {
       final widget = _getWidgetFromRoute(PandaRouter.courses());
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Courses);
       expect(widget, isA<DashboardScreen>());
     });
 
     test('alerts returns Dashboard screen', () {
       final widget = _getWidgetFromRoute(PandaRouter.alerts);
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Alerts);
       expect(widget, isA<DashboardScreen>());
     });
   });
@@ -263,7 +266,6 @@ void main() {
       final url = 'https://test.instructure.com/not-supported';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for splash handler
       );
 
       expect(widget, isA<SplashScreen>());
@@ -273,7 +275,6 @@ void main() {
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -283,7 +284,6 @@ void main() {
       final url = 'http://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -293,7 +293,6 @@ void main() {
       final url = 'canvas-parent://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -303,7 +302,6 @@ void main() {
       final url = 'canvas-courses://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -313,7 +311,6 @@ void main() {
       final url = 'https://test.instructure.com/courses/123';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for course details handler
       );
 
       expect(widget, isA<CourseDetailsScreen>());
@@ -325,7 +322,6 @@ void main() {
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for assignment details handler
       ) as AssignmentDetailsScreen;
 
       expect(widget, isA<AssignmentDetailsScreen>());
@@ -339,7 +335,6 @@ void main() {
       final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2,
       ) as RouterErrorScreen;
 
       expect(widget, isA<RouterErrorScreen>());
@@ -450,7 +445,7 @@ String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(u
 
 String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
-Widget _getWidgetFromRoute(String route, {int logCount = 1, Map<String, List<String>> extraParams}) {
+Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}) {
   final match = PandaRouter.router.match(route);
 
   if (extraParams != null) match.parameters.addAll(extraParams);

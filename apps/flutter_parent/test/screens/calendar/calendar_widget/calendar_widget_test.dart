@@ -61,7 +61,6 @@ void main() {
           fetcher: _FakeFetcher(),
           startingView: CalendarView.Month,
         ),
-        highContrast: true,
       ),
     );
     await tester.pumpAndSettle();

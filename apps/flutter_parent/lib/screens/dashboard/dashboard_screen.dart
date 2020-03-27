@@ -356,11 +356,13 @@ class DashboardState extends State<DashboardScreen> {
       case DashboardContentScreens.Calendar:
         _page = CalendarScreen(
           startDate: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey('startDate') ? currentDeepLinkParams['startDate'] as DateTime : null)
+              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
+                  ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
+                  : null)
               : null,
           startView: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey('startView')
-                  ? currentDeepLinkParams['startView'] as CalendarView
+              ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
+                  ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
                   : null)
               : null,
         );

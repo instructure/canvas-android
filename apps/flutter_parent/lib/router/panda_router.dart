@@ -24,6 +24,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
@@ -170,8 +171,10 @@ class PandaRouter {
 
   static Handler _calendarHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var calendarParams = {
-      'startDate': DateTime.tryParse(params[_RouterKeys.calendarStart]?.elementAt(0) ?? '') ?? DateTime.now(),
-      'startView': params[_RouterKeys.calendarView]?.elementAt(0) == 'month' ? CalendarView.Month : CalendarView.Week,
+      CalendarScreen.startDateKey:
+          DateTime.tryParse(params[_RouterKeys.calendarStart]?.elementAt(0) ?? '') ?? DateTime.now(),
+      CalendarScreen.startViewKey:
+          params[_RouterKeys.calendarView]?.elementAt(0) == 'month' ? CalendarView.Month : CalendarView.Week,
     };
 
     var widget = DashboardScreen(
@@ -276,6 +279,7 @@ class PandaRouter {
   static Handler _rootWithExternalUrlHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final link = params[_RouterKeys.url][0];
+
     final urlRouteWrapper = getRouteWrapper(link);
 
     locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
@@ -283,15 +287,9 @@ class PandaRouter {
     // We only care about valid app routes if they are already signed in
     if (urlRouteWrapper.appRouteMatch != null && ApiPrefs.isLoggedIn()) {
       if (urlRouteWrapper.validHost) {
-        Map<String, List<String>> params = {};
-        // Add any fragment parameters, e.g. '/...#view=month&start=12-12-2020'
-        var frags = Uri.parse(link).fragment;
-        Uri.splitQueryString(frags).forEach((k, v) => params[k] = [v]);
-
-        params.addAll(urlRouteWrapper.appRouteMatch.parameters);
-
         // If its a link we can handle natively and within our domain, route
-        return (urlRouteWrapper.appRouteMatch.route.handler as Handler).handlerFunc(context, params);
+        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
+            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
       } else {
         // Otherwise, we want to route to the error page if they are already logged in
         return _routerErrorHandler.handlerFunc(context, params);
@@ -341,10 +339,19 @@ class PandaRouter {
   static _UrlRouteWrapper getRouteWrapper(String link) {
     Uri uri = Uri.parse(link);
 
+    // Add any fragment parameters, e.g. '/...#view_name=month&view_start=12-12-2020' as query params to the uri
+    var frags = Uri.parse(link).fragment;
+
+    uri = uri.replace(
+      queryParameters: Uri.splitQueryString(frags)..addAll(uri.queryParameters),
+      fragment: '', // Remove the fragment
+    );
+
     // Determine if we can handle the url natively
-    final path = '/${uri.pathSegments.join('/')}';
+    final path = '/${uri.pathSegments.join('/')}${uri.query.isNotEmpty ? '?${uri.query}' : ''}';
     final match = router.match(path);
     final currentDomain = ApiPrefs.getDomain();
+
     // Check to see if the route can be handled internally, isn't to root, and matches our current domain
     return _UrlRouteWrapper(
         path, currentDomain == null ? true : currentDomain.contains(uri.host), path == '/' ? null : match);

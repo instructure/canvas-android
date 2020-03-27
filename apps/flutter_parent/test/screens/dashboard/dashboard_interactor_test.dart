@@ -51,8 +51,8 @@ void main() {
 
     // Setup ApiPrefs
     final login = Login((b) => b..user = initialUser.toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
+    await setupPlatformChannels(
+        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
 
     var interactor = DashboardInteractor();
     interactor.getSelf();

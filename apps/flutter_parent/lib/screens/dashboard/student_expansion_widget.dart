@@ -25,7 +25,6 @@ class StudentExpansionWidget extends StatefulWidget {
 }
 
 class StudentExpansionWidgetState extends State<StudentExpansionWidget> with SingleTickerProviderStateMixin {
-  GlobalKey<StudentExpansionWidgetState> expansionWidgetKey = GlobalKey<StudentExpansionWidgetState>();
   AnimationController expandController;
   Animation<double> animation;
 
@@ -39,7 +38,6 @@ class StudentExpansionWidgetState extends State<StudentExpansionWidget> with Sin
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      key: expansionWidgetKey,
       axisAlignment: 1.0,
       sizeFactor: animation,
       child: widget.child,

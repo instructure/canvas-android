@@ -29,6 +29,11 @@ import 'package:provider/provider.dart';
 class CalendarScreen extends StatefulWidget {
   final DateTime startDate;
   final CalendarView startView;
+
+  // Keys for the deep link parameter map passed in via DashboardScreen
+  static final startDateKey = 'startDate';
+  static final startViewKey = 'startView';
+
   CalendarScreen({Key key, this.startDate, this.startView = CalendarView.Week}) : super(key: key);
 
   @override
