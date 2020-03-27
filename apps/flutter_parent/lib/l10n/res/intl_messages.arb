@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "@@last_modified": "2020-03-27T11:03:02.235673",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1311,42 +1311,6 @@
   "You will be notified about this event on…": "You will be notified about this event on…",
   "@You will be notified about this event on…": {
     "description": "Description for when an event reminder is set",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Search the Canvas Guides": "Search the Canvas Guides",
-  "@Search the Canvas Guides": {
-    "description": "Label for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Find answers to common questions": "Find answers to common questions",
-  "@Find answers to common questions": {
-    "description": "Description for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Report a Problem": "Report a Problem",
-  "@Report a Problem": {
-    "description": "Label for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "If the app misbehaves, let us know": "If the app misbehaves, let us know",
-  "@If the app misbehaves, let us know": {
-    "description": "Description for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Request a Feature": "Request a Feature",
-  "@Request a Feature": {
-    "description": "Label for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Have an idea to improve the app?": "Have an idea to improve the app?",
-  "@Have an idea to improve the app?": {
-    "description": "Description for option to request a feature",
     "type": "text",
     "placeholders": {}
   },
