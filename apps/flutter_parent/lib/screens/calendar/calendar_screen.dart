@@ -27,7 +27,14 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CalendarScreen extends StatefulWidget {
-  CalendarScreen({Key key}) : super(key: key);
+  final DateTime startDate;
+  final CalendarView startView;
+
+  // Keys for the deep link parameter map passed in via DashboardScreen
+  static final startDateKey = 'startDate';
+  static final startViewKey = 'startView';
+
+  CalendarScreen({Key key, this.startDate, this.startView = CalendarView.Week}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CalendarScreenState();
@@ -60,6 +67,8 @@ class CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     return CalendarWidget(
       fetcher: _fetcher,
+      startingDate: widget.startDate,
+      startingView: widget.startView,
       onFilterTap: () async {
         Set<String> currentContexts = await _fetcher.getContexts();
         Set<String> updatedContexts = await locator.get<QuickNav>().push(

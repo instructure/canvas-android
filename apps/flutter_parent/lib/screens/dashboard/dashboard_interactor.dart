@@ -29,7 +29,7 @@ class DashboardInteractor {
         return users;
       });
 
-  Future<User> getSelf({app}) async => UserApi.getSelf().then((user) {
+  Future<User> getSelf({app}) async => locator<UserApi>().getSelf().then((user) {
         ApiPrefs.setUser(user, app: app);
         return user;
       });

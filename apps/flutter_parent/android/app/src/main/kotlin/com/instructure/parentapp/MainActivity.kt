@@ -43,8 +43,9 @@ class MainActivity : FlutterActivity() {
         val data = intent.data
         if (intent.action != Intent.ACTION_VIEW || data == null) return
 
-        // NOTE: The `url` query param has to match ParentRouter.dart in the flutter code
-        val route = "/external?url=${Uri.encode(data.toString())}"
+        // NOTE: The `url` query param has to match the result of one of the static string methods in
+        // panda_router.dart in the flutter code
+        val route = "external?url=${Uri.encode(data.toString())}"
         if (newIntent) {
             flutterEngine?.navigationChannel?.pushRoute(route)
         } else {
