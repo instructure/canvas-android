@@ -41,9 +41,12 @@ import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/masquerade/masquerade_screen.dart';
+import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -58,6 +61,7 @@ import '../../utils/network_image_response.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_utils.dart';
+import '../courses/course_summary_screen_test.dart';
 
 void main() {
   mockNetworkImageResponse();
@@ -71,6 +75,7 @@ void main() {
     _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
     _locator.registerFactory<HelpScreenInteractor>(() => MockHelpScreenInteractor());
     _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
+    _locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
     _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
     _locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
     _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
@@ -133,6 +138,86 @@ void main() {
 
       // Will find two, one in the navbar header and one in the student switcher
       expect(find.text('${first.shortName}'), findsNWidgets(2));
+    });
+
+    testWidgetsWithAccessibilityChecks(
+      'Displays empty state when there are no students',
+      (tester) async {
+        var interactor = MockInteractor(generateStudents: false);
+        _setupLocator(interactor: interactor);
+
+        await tester.pumpWidget(_testableMaterialWidget());
+        await tester.pumpAndSettle();
+
+        expect(find.byType(EmptyPandaWidget), findsOneWidget);
+        expect(find.text(l10n.emptyStudentList), findsOneWidget);
+        expect(find.descendant(of: find.byType(AppBar), matching: find.text(l10n.noStudents)), findsOneWidget);
+        expect(
+            find.descendant(of: find.byType(EmptyPandaWidget), matching: find.text(l10n.noStudents)), findsOneWidget);
+      },
+      a11yExclusions: {A11yExclusion.multipleNodesWithSameLabel},
+    );
+
+    testWidgetsWithAccessibilityChecks('Does not display Act As User button if user cannot masquerade', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..canMasquerade = false
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      // Open the drawer
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.actAsUser), findsNothing);
+      expect(find.text(l10n.stopActAsUser), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays Act As User button if user can masquerade', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..canMasquerade = true
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      // Open the drawer
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.actAsUser), findsOneWidget);
+      expect(find.text(l10n.stopActAsUser), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays Stop Acting As User button if user is masquerading', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..canMasquerade = true
+        ..user = CanvasModelTestUtils.mockUser().toBuilder()
+        ..masqueradeDomain = 'masqueradeDomain'
+        ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      // Open the drawer
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      expect(find.text(l10n.actAsUser), findsNothing);
+      expect(find.text(l10n.stopActAsUser), findsOneWidget);
     });
 
     // TODO: Finish when we have specs
@@ -669,6 +754,57 @@ void main() {
 
       // Check that the deep link params are null
       expect(dashboardState(tester).currentDeepLinkParams, null);
+    });
+
+    testWidgetsWithAccessibilityChecks('Tapping Act As User button opens MasqueradeScreen', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..canMasquerade = true
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      // Open the drawer
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      // Tap the 'Act As User' button
+      await tester.tap(find.text(l10n.actAsUser));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(MasqueradeScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Tapping Stop Acting As User button shows confirmation dialog', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..canMasquerade = true
+        ..user = CanvasModelTestUtils.mockUser().toBuilder()
+        ..masqueradeDomain = 'masqueradeDomain'
+        ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(initLogin: login));
+      await tester.pumpAndSettle();
+
+      // Open the drawer
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
+      await tester.pumpAndSettle();
+
+      // Tap the 'Stop Acting As User' button
+      await tester.tap(find.text(l10n.stopActAsUser));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text(l10n.endMasqueradeMessage(login.user.name)), findsOneWidget);
     });
   });
 

@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.view.View;
 import android.webkit.WebStorage;
 import android.webkit.WebViewClient;
+import android.webkit.CookieManager;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -174,6 +175,12 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       case "getTitle":
         getTitle(result);
         break;
+      case "setAcceptThirdPartyCookies":
+        setAcceptThirdPartyCookies(methodCall, result);
+        break;
+      case "setCookie":
+        setCookie(methodCall, result);
+        break;
       default:
         result.notImplemented();
     }
@@ -204,6 +211,21 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     result.success(null);
   }
 
+  private void setAcceptThirdPartyCookies(MethodCall methodCall, Result result) {
+    boolean accept = (boolean) methodCall.arguments;
+    CookieManager cookieManager = CookieManager.getInstance();
+    cookieManager.setAcceptThirdPartyCookies(webView, accept);
+    result.success(null);
+  }
+
+  private void setCookie(MethodCall methodCall, Result result) {
+    Map<String, Object> args = (Map<String, Object>) methodCall.arguments;
+    String url = (String) args.get("url");
+    String value = (String) args.get("value");
+    CookieManager cookieManager = CookieManager.getInstance();
+    cookieManager.setCookie(url, value);
+    result.success(null);
+  }
 
   private void canGoBack(Result result) {
     result.success(webView.canGoBack());

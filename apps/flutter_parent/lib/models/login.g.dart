@@ -46,6 +46,34 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
       result.add(serializers.serialize(object.clientSecret,
           specifiedType: const FullType(String)));
     }
+    result.add('canMasquerade');
+    if (object.canMasquerade == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.canMasquerade,
+          specifiedType: const FullType(bool)));
+    }
+    result.add('masqueradeUser');
+    if (object.masqueradeUser == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.masqueradeUser,
+          specifiedType: const FullType(User)));
+    }
+    result.add('masqueradeDomain');
+    if (object.masqueradeDomain == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.masqueradeDomain,
+          specifiedType: const FullType(String)));
+    }
+    result.add('isMasqueradingFromQRCode');
+    if (object.isMasqueradingFromQRCode == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.isMasqueradingFromQRCode,
+          specifiedType: const FullType(bool)));
+    }
     return result;
   }
 
@@ -89,6 +117,22 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
           result.user.replace(serializers.deserialize(value,
               specifiedType: const FullType(User)) as User);
           break;
+        case 'canMasquerade':
+          result.canMasquerade = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
+        case 'masqueradeUser':
+          result.masqueradeUser.replace(serializers.deserialize(value,
+              specifiedType: const FullType(User)) as User);
+          break;
+        case 'masqueradeDomain':
+          result.masqueradeDomain = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
+        case 'isMasqueradingFromQRCode':
+          result.isMasqueradingFromQRCode = serializers.deserialize(value,
+              specifiedType: const FullType(bool)) as bool;
+          break;
       }
     }
 
@@ -111,6 +155,14 @@ class _$Login extends Login {
   final String refreshToken;
   @override
   final User user;
+  @override
+  final bool canMasquerade;
+  @override
+  final User masqueradeUser;
+  @override
+  final String masqueradeDomain;
+  @override
+  final bool isMasqueradingFromQRCode;
 
   factory _$Login([void Function(LoginBuilder) updates]) =>
       (new LoginBuilder()..update(updates)).build();
@@ -122,7 +174,11 @@ class _$Login extends Login {
       this.clientSecret,
       this.accessToken,
       this.refreshToken,
-      this.user})
+      this.user,
+      this.canMasquerade,
+      this.masqueradeUser,
+      this.masqueradeDomain,
+      this.isMasqueradingFromQRCode})
       : super._() {
     if (uuid == null) {
       throw new BuiltValueNullFieldError('Login', 'uuid');
@@ -158,7 +214,11 @@ class _$Login extends Login {
         clientSecret == other.clientSecret &&
         accessToken == other.accessToken &&
         refreshToken == other.refreshToken &&
-        user == other.user;
+        user == other.user &&
+        canMasquerade == other.canMasquerade &&
+        masqueradeUser == other.masqueradeUser &&
+        masqueradeDomain == other.masqueradeDomain &&
+        isMasqueradingFromQRCode == other.isMasqueradingFromQRCode;
   }
 
   @override
@@ -167,12 +227,22 @@ class _$Login extends Login {
         $jc(
             $jc(
                 $jc(
-                    $jc($jc($jc(0, uuid.hashCode), domain.hashCode),
-                        clientId.hashCode),
-                    clientSecret.hashCode),
-                accessToken.hashCode),
-            refreshToken.hashCode),
-        user.hashCode));
+                    $jc(
+                        $jc(
+                            $jc(
+                                $jc(
+                                    $jc(
+                                        $jc($jc(0, uuid.hashCode),
+                                            domain.hashCode),
+                                        clientId.hashCode),
+                                    clientSecret.hashCode),
+                                accessToken.hashCode),
+                            refreshToken.hashCode),
+                        user.hashCode),
+                    canMasquerade.hashCode),
+                masqueradeUser.hashCode),
+            masqueradeDomain.hashCode),
+        isMasqueradingFromQRCode.hashCode));
   }
 
   @override
@@ -184,7 +254,11 @@ class _$Login extends Login {
           ..add('clientSecret', clientSecret)
           ..add('accessToken', accessToken)
           ..add('refreshToken', refreshToken)
-          ..add('user', user))
+          ..add('user', user)
+          ..add('canMasquerade', canMasquerade)
+          ..add('masqueradeUser', masqueradeUser)
+          ..add('masqueradeDomain', masqueradeDomain)
+          ..add('isMasqueradingFromQRCode', isMasqueradingFromQRCode))
         .toString();
   }
 }
@@ -220,6 +294,27 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
   UserBuilder get user => _$this._user ??= new UserBuilder();
   set user(UserBuilder user) => _$this._user = user;
 
+  bool _canMasquerade;
+  bool get canMasquerade => _$this._canMasquerade;
+  set canMasquerade(bool canMasquerade) =>
+      _$this._canMasquerade = canMasquerade;
+
+  UserBuilder _masqueradeUser;
+  UserBuilder get masqueradeUser =>
+      _$this._masqueradeUser ??= new UserBuilder();
+  set masqueradeUser(UserBuilder masqueradeUser) =>
+      _$this._masqueradeUser = masqueradeUser;
+
+  String _masqueradeDomain;
+  String get masqueradeDomain => _$this._masqueradeDomain;
+  set masqueradeDomain(String masqueradeDomain) =>
+      _$this._masqueradeDomain = masqueradeDomain;
+
+  bool _isMasqueradingFromQRCode;
+  bool get isMasqueradingFromQRCode => _$this._isMasqueradingFromQRCode;
+  set isMasqueradingFromQRCode(bool isMasqueradingFromQRCode) =>
+      _$this._isMasqueradingFromQRCode = isMasqueradingFromQRCode;
+
   LoginBuilder() {
     Login._initializeBuilder(this);
   }
@@ -233,6 +328,10 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
       _accessToken = _$v.accessToken;
       _refreshToken = _$v.refreshToken;
       _user = _$v.user?.toBuilder();
+      _canMasquerade = _$v.canMasquerade;
+      _masqueradeUser = _$v.masqueradeUser?.toBuilder();
+      _masqueradeDomain = _$v.masqueradeDomain;
+      _isMasqueradingFromQRCode = _$v.isMasqueradingFromQRCode;
       _$v = null;
     }
     return this;
@@ -263,12 +362,19 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
               clientSecret: clientSecret,
               accessToken: accessToken,
               refreshToken: refreshToken,
-              user: user.build());
+              user: user.build(),
+              canMasquerade: canMasquerade,
+              masqueradeUser: _masqueradeUser?.build(),
+              masqueradeDomain: masqueradeDomain,
+              isMasqueradingFromQRCode: isMasqueradingFromQRCode);
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'user';
         user.build();
+
+        _$failedField = 'masqueradeUser';
+        _masqueradeUser?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Login', _$failedField, e.toString());

@@ -18,4 +18,9 @@ import 'package:flutter_parent/network/utils/fetch.dart';
 
 class UserApi {
   Future<User> getSelf() => fetch(canvasDio(forceDeviceLanguage: true).get('users/self/profile'));
+
+  Future<User> getUserForDomain(String domain, String userId) async {
+    var dio = DioConfig.canvas().copyWith(baseUrl: '$domain/api/v1/').dio;
+    return fetch(dio.get('users/$userId/profile'));
+  }
 }

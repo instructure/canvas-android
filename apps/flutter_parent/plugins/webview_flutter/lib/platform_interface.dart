@@ -74,6 +74,14 @@ abstract class WebViewPlatformController {
         "WebView loadData is not implemented on the current platform");
   }
 
+  Future<void> setAcceptThirdPartyCookies(bool accept) {
+    throw UnimplementedError("WebView setAcceptThirdPartyCookies is not implemented on the current platform");
+  }
+
+  Future<void> setCookie(String url, String value) {
+    throw UnimplementedError("WebView setCookie is not implemented on the current platform");
+  }
+
   /// Updates the webview settings.
   ///
   /// Any non null field in `settings` will be set as the new setting value.

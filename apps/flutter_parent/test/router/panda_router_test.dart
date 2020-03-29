@@ -22,6 +22,7 @@ import 'package:flutter_parent/screens/announcements/announcement_details_screen
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
+import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
@@ -104,6 +105,19 @@ void main() {
       expect(widget, isA<LoginLandingScreen>());
     });
 
+    test('domainSearch returns DomainSearchScreen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.domainSearch());
+      expect(widget, isA<DomainSearchScreen>());
+    });
+
+    test('domainSearch returns DomainSearchScreen with LoginFlow', () {
+      final flow = LoginFlow.canvas;
+      final widget = _getWidgetFromRoute(PandaRouter.domainSearch(loginFlow: flow));
+
+      expect(widget, isA<DomainSearchScreen>());
+      expect((widget as DomainSearchScreen).loginFlow, flow);
+    });
+
     test('loginWeb returns web login screen', () {
       final domain = 'domain';
       final widget = _getWidgetFromRoute(
@@ -112,6 +126,18 @@ void main() {
 
       expect(widget, isA<WebLoginScreen>());
       expect(widget.domain, domain);
+    });
+
+    test('loginWeb returns web login screen with LoginFlow', () {
+      final domain = 'domain';
+      final flow = LoginFlow.siteAdmin;
+      final widget = _getWidgetFromRoute(
+        PandaRouter.loginWeb(domain, loginFlow: flow),
+      ) as WebLoginScreen;
+
+      expect(widget, isA<WebLoginScreen>());
+      expect(widget.domain, domain);
+      expect(widget.loginFlow, flow);
     });
 
     test('loginWeb returns web login screen with auth provider', () {

@@ -19,6 +19,7 @@ import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
 import 'package:flutter_parent/models/account_notification.dart';
+import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/models/announcement.dart';
@@ -84,6 +85,7 @@ part 'serializers.g.dart';
 /// have it watch for changes and automatically build if you run `flutter pub run build_runner watch`.
 @SerializersFor([
   AccountNotification,
+  AccountPermissions,
   Alert,
   AlertThreshold,
   Announcement,

@@ -22,6 +22,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
@@ -96,6 +97,7 @@ class _TestAppState extends State<TestApp> {
         builder: (context, themeData) => MaterialApp(
           title: 'Canvas Parent',
           locale: _locale,
+          builder: (context, child) => MasqueradeUI(navKey: TestApp.navigatorKey, child: child),
           navigatorKey: TestApp.navigatorKey,
           navigatorObservers: widget.navigatorObservers,
           localizationsDelegates: const [

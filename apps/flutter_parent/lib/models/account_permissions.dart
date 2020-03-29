@@ -14,52 +14,20 @@
 
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
-import 'package:flutter_parent/models/user.dart';
-import 'package:uuid/uuid.dart';
 
-part 'login.g.dart';
+part 'account_permissions.g.dart';
 
 /// To have this built_value be generated, run this command from the project root:
 /// flutter pub run build_runner build --delete-conflicting-outputs
-abstract class Login implements Built<Login, LoginBuilder> {
+abstract class AccountPermissions implements Built<AccountPermissions, AccountPermissionsBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
-  static Serializer<Login> get serializer => _$loginSerializer;
+  static Serializer<AccountPermissions> get serializer => _$accountPermissionsSerializer;
 
-  String get uuid;
+  @BuiltValueField(wireName: 'become_user')
+  bool get becomeUser;
 
-  String get domain;
+  AccountPermissions._();
+  factory AccountPermissions([void Function(AccountPermissionsBuilder) updates]) = _$AccountPermissions;
 
-  @nullable
-  String get clientId;
-
-  @nullable
-  String get clientSecret;
-
-  String get accessToken;
-
-  String get refreshToken;
-
-  User get user;
-
-  @nullable
-  bool get canMasquerade;
-
-  @nullable
-  User get masqueradeUser;
-
-  @nullable
-  String get masqueradeDomain;
-
-  @nullable
-  bool get isMasqueradingFromQRCode;
-
-  Login._();
-  factory Login([void Function(LoginBuilder) updates]) = _$Login;
-
-  static void _initializeBuilder(LoginBuilder b) => b
-    ..uuid = Uuid().v4()
-    ..domain = ''
-    ..accessToken = ''
-    ..refreshToken = ''
-    ..user = User().toBuilder();
+  static void _initializeBuilder(AccountPermissionsBuilder b) => b..becomeUser = false;
 }

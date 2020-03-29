@@ -26,10 +26,13 @@ import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart'
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/masquerade/masquerade_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -238,12 +241,14 @@ class DashboardState extends State<DashboardScreen> {
               Expanded(child: _currentPage())
             ]),
             bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
-              BottomNavigationBar(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                items: _bottomNavigationBarItems(),
-                currentIndex: this._currentIndex.index,
-                onTap: (item) => _handleBottomBarClick(item),
-              ),
+              _students.isEmpty
+                  ? Container()
+                  : BottomNavigationBar(
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      items: _bottomNavigationBarItems(),
+                      currentIndex: this._currentIndex.index,
+                      onTap: (item) => _handleBottomBarClick(item),
+                    ),
             ),
           );
         },
@@ -259,9 +264,11 @@ class DashboardState extends State<DashboardScreen> {
         return Text('');
       } else
         // Done loading: no students returned
-        return Text(
-          L10n(context).noStudents,
-          style: Theme.of(context).primaryTextTheme.title,
+        return Center(
+          child: Text(
+            L10n(context).noStudents,
+            style: Theme.of(context).primaryTextTheme.title,
+          ),
         );
     }
 
@@ -333,6 +340,10 @@ class DashboardState extends State<DashboardScreen> {
         ),
 
         // App version
+        if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
+          _navDrawerActAsUser(),
+        if (ApiPrefs.isMasquerading())
+          _navDrawerStopActingAsUser(),
         _navDrawerAppVersion(),
       ]),
     );
@@ -348,6 +359,14 @@ class DashboardState extends State<DashboardScreen> {
     if (_studentsLoading) {
       // We're still loading students, just show a loading indicator for now
       return LoadingIndicator();
+    }
+
+    if (_students.isEmpty) {
+      return EmptyPandaWidget(
+        svgPath: 'assets/svg/panda-manage-students.svg',
+        title: L10n(context).noStudents,
+        subtitle: L10n(context).emptyStudentList,
+      );
     }
 
     Widget _page;
@@ -403,6 +422,7 @@ class DashboardState extends State<DashboardScreen> {
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
     await ApiPrefs.performLogout(switchingLogins: switchingUsers);
+    MasqueradeUI.of(context).refresh();
     locator<Analytics>()
         .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
@@ -494,6 +514,24 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerSwitchUsers() => ListTile(
         title: Text(L10n(context).switchUsers),
         onTap: () => _performLogOut(context, switchingUsers: true),
+      );
+
+  _navDrawerActAsUser() => ListTile(
+        leading: Icon(CanvasIcons.masquerade),
+        title: Text(L10n(context).actAsUser),
+        onTap: () {
+          Navigator.of(context).pop();
+          locator<QuickNav>().push(context, MasqueradeScreen());
+        },
+      );
+
+  _navDrawerStopActingAsUser() => ListTile(
+        leading: Icon(CanvasIcons.masquerade),
+        title: Text(L10n(context).stopActAsUser),
+        onTap: () {
+          Navigator.of(context).pop();
+          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key);
+        },
       );
 
   _navDrawerAppVersion() => Column(

@@ -16,11 +16,11 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
-import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
+import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -30,7 +30,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  Future<List<User>> _dataFuture;
+  Future<SplashScreenData> _dataFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
   AnimationController _controller;
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _dataFuture = locator<DashboardInteractor>().getStudents(forceRefresh: true);
+    _dataFuture = locator<SplashScreenInteractor>().getData();
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInBack);
     _animation.addListener(_animationListener);
   }
@@ -57,15 +57,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
           future: _dataFuture,
-          builder: (BuildContext context, AsyncSnapshot<List<User>> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<SplashScreenData> snapshot) {
             if (snapshot.hasData) {
-              if (snapshot.data.isEmpty) {
-                // User is not observing any students. Show the not-a-parent screen.
-                _navigate(PandaRouter.notParent());
-              } else {
-                // Proceed with pre-fetched student list
-                // TODO - revert to include pre-fetch later on
+              if (snapshot.data.isObserver || snapshot.data.canMasquerade) {
                 _navigate(PandaRouter.dashboard());
+              } else {
+                // User is not an observer and cannot masquerade. Show the not-a-parent screen.
+                _navigate(PandaRouter.notParent());
               }
             } else if (snapshot.hasError) {
               // On error, proceed without pre-fetched student list
@@ -96,6 +94,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   _navigate(String route) {
+    MasqueradeUI.of(context)?.refresh();
     _route = route;
     _controller.forward(); // Start the animation, we'll navigate when it finishes
   }

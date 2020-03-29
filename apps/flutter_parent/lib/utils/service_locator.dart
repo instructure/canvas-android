@@ -48,7 +48,9 @@ import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
+import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/view_attachment/view_attachment_interactor.dart';
@@ -116,7 +118,9 @@ void setupLocator() {
   locator.registerFactory<EventDetailsInteractor>(() => EventDetailsInteractor());
   locator.registerFactory<HelpScreenInteractor>(() => HelpScreenInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
+  locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
+  locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
   locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());

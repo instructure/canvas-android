@@ -26,13 +26,28 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+enum LoginFlow {
+  normal,
+  canvas,
+  siteAdmin,
+  skipMobileVerify,
+}
+
 class WebLoginScreen extends StatelessWidget {
-  WebLoginScreen(this.domain, {this.user, this.pass, this.authenticationProvider, Key key}) : super(key: key);
+  WebLoginScreen(
+    this.domain, {
+    this.user,
+    this.pass,
+    this.authenticationProvider,
+    this.loginFlow = LoginFlow.normal,
+    Key key,
+  }) : super(key: key);
 
   final String user;
   final String pass;
   final String domain;
   final String authenticationProvider;
+  final LoginFlow loginFlow;
 
   final String successUrl = '/login/oauth2/auth?code=';
   final String errorUrl = '/login/oauth2/auth?error=access_denied';
@@ -91,11 +106,24 @@ class WebLoginScreen extends StatelessWidget {
           });
         }
       },
-      onWebViewCreated: (controller) {
+      onWebViewCreated: (controller) async {
         CookieManager().clearCookies();
         controller.clearCache();
 
-        controller.loadUrl(_buildAuthUrl(verifyResult));
+        var authUrl = _buildAuthUrl(verifyResult);
+
+        if (loginFlow == LoginFlow.siteAdmin) {
+          await controller.setAcceptThirdPartyCookies(true);
+          if (domain.contains('.instructure.com')) {
+            String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
+            await controller.setCookie(domain, cookie);
+            await controller.setCookie('.instructure.com', cookie);
+          } else {
+            await controller.setCookie(domain, 'canvas_sa_delegated=1');
+          }
+        }
+
+        controller.loadUrl(authUrl);
         if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
       },
     );
@@ -150,8 +178,8 @@ class WebLoginScreen extends StatelessWidget {
 
     // TODO: Support skipping mobile verify better
     // forceAuthRedirect || mCanvasLogin == MOBILE_VERIFY_FLOW || domain.contains(".test.")
-    if (domain.contains(".test.")) {
-//      //Skip mobile verify
+    if (domain.contains(".test.") || loginFlow == LoginFlow.skipMobileVerify) {
+      // Skip mobile verify
       redirect = Uri.encodeQueryComponent("urn:ietf:wg:oauth:2.0:oob");
     }
 
@@ -162,6 +190,8 @@ class WebLoginScreen extends StatelessWidget {
     if (authenticationProvider != null && authenticationProvider.length > 0) {
       result = '$result&authentication_provider=${Uri.encodeQueryComponent(authenticationProvider)}';
     }
+
+    if (loginFlow == LoginFlow.canvas) result += '&canvas_login=1';
 
     return result;
   }

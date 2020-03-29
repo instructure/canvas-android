@@ -379,6 +379,33 @@ void main() {
 
     expect(find.byType(WebLoginScreen), findsOneWidget);
   });
+
+  testWidgets('Navigates to Login page with correct LoginFlow', (WidgetTester tester) async {
+    var interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
+          SchoolDomain((sd) => sd
+            ..domain = 'mobileqa.instructure.com'
+            ..name = 'Result')
+        ]));
+    final webInteractor = _MockWebLoginInteractor();
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
+
+    LoginFlow flow = LoginFlow.siteAdmin;
+    await tester.pumpWidget(TestApp(DomainSearchScreen(loginFlow: flow)));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'mobileqa');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.loginFlow, flow);
+  });
 }
 
 class MockInteractor extends Mock implements DomainSearchInteractor {}

@@ -1133,9 +1133,85 @@ class AppLocalizations {
         'Missing',
         desc: 'Description for when a student has not turned anything in for an assignment',
       );
+
   String get notGraded => Intl.message(
         'Not Graded',
         desc: 'Description for an assignment has not been graded.',
+      );
+
+  /// Masquerading
+
+  String get loginFlowNormal => Intl.message(
+        'Login flow: Normal',
+        desc: 'Description for the normal login flow',
+      );
+
+  String get loginFlowCanvas => Intl.message(
+        'Login flow: Canvas',
+        desc: 'Description for the Canvas login flow',
+      );
+
+  String get loginFlowSiteAdmin => Intl.message(
+        'Login flow: Site Admin',
+        desc: 'Description for the Site Admin login flow',
+      );
+
+  String get loginFlowSkipMobileVerify => Intl.message(
+        'Login flow: Skip mobile verify',
+        desc: 'Description for the login flow that skips domain verification for mobile',
+      );
+
+  String get actAsUser => Intl.message(
+        'Act As User',
+        desc: 'Label for the button that allows the user to act (masquerade) as another user',
+      );
+
+  String get stopActAsUser => Intl.message(
+        'Stop Acting as User',
+        desc: 'Label for the button that allows the user to stop acting (masquerading) as another user',
+      );
+
+  String actingAsUser(String userName) => Intl.message(
+        'You are acting as $userName',
+        name: 'actingAsUser',
+        args: [userName],
+        desc: 'Message shown while acting (masquerading) as another user',
+      );
+
+  String get actAsDescription => Intl.message(
+      '"Act as" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.');
+
+  String get domainInputHint => Intl.message('Domain', desc: 'Text field hint for domain url input');
+
+  String get domainInputError => Intl.message(
+        'You must enter a valid domain',
+        desc: 'Message displayed for domain input error',
+      );
+
+  String get userIdInputHint => Intl.message('User ID', desc: 'Text field hint for user ID input');
+
+  String get userIdInputError => Intl.message(
+        'You must enter a user id',
+        desc: 'Message displayed for user Id input error',
+      );
+
+  String get actAsUserError => Intl.message(
+        'There was an error trying to act as this user. Please check the Domain and User ID and try again.',
+      );
+
+  String endMasqueradeMessage(String userName) => Intl.message(
+        'You will stop acting as $userName and return to your original account.',
+        name: 'endMasqueradeMessage',
+        args: [userName],
+        desc: 'Confirmation message displayed when the user wants to stop acting (masquerading) as another user',
+      );
+
+  String endMasqueradeLogoutMessage(String userName) => Intl.message(
+        'You will stop acting as $userName and will be logged out.',
+        name: 'endMasqueradeLogoutMessage',
+        args: [userName],
+        desc:
+            'Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.',
       );
 
   /// Miscellaneous

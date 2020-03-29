@@ -24,6 +24,35 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart' as test_package;
+import 'package:test_api/src/frontend/async_matcher.dart';
+
+/// Exclusions for the [AccessibilityGuideline] checks.
+///
+/// Note that, due to how the built-in guidelines work, it is possible that specifying one or more exclusions can
+/// unintentionally mask additional check failures for the same guideline to which the exclusion applies.
+///
+/// For example, [multipleNodesWithSameLabel] and [minContrastRatio] both apply to the [textContrastGuideline]. If a
+/// widget test that would normally fail, say due to having two nodes with the same semantic label, has the
+/// [multipleNodesWithSameLabel] exclusion applied, any issues with the minimum contrast that would have been caught
+/// *after* the ignored issue will also be ignored.
+enum A11yExclusion {
+  multipleNodesWithSameLabel,
+  minContrastRatio,
+}
+
+extension A11yExclusionExtension on A11yExclusion {
+  String get errorMessageContents {
+    switch (this) {
+      case A11yExclusion.multipleNodesWithSameLabel:
+        return 'Multiple nodes with the same label';
+        break;
+      case A11yExclusion.minContrastRatio:
+        return 'Expected contrast ratio of at least';
+        break;
+    }
+    return null;
+  }
+}
 
 // A testWidgets() wrapper that runs accessibility checks
 @isTest
@@ -34,6 +63,7 @@ void testWidgetsWithAccessibilityChecks(
   test_package.Timeout timeout,
   Duration initialTimeout,
   bool semanticsEnabled = true,
+  Set<A11yExclusion> a11yExclusions = const {},
 }) {
   Map<String, String> envVars = Platform.environment;
 
@@ -54,19 +84,19 @@ void testWidgetsWithAccessibilityChecks(
     await callback(tester);
 
     // Run our accessibility test suite at the end of the test.
-    await runAccessibilityTests(tester);
+    await runAccessibilityTests(tester, a11yExclusions);
 
     handle.dispose();
   }, skip: skip, timeout: timeout, initialTimeout: initialTimeout, semanticsEnabled: semanticsEnabled);
 }
 
 // Break this out into its own method, so that it can be used mid-test.
-Future<void> runAccessibilityTests(WidgetTester tester) async {
-  await expectLater(tester, meetsGuideline(textContrastGuideline));
-  await expectLater(tester, meetsGuideline(labeledTapTargetGuideline));
-  await expectLater(tester, meetsGuideline(androidTapTargetGuideline));
-  await expectLater(
-      tester, meetsGuideline(TextFieldNavigationGuideline())); // Needs to be last, because it fiddles with UI
+Future<void> runAccessibilityTests(WidgetTester tester, Set<A11yExclusion> exclusions) async {
+  await expectLater(tester, meetsGuidelineWithExclusions(textContrastGuideline, exclusions));
+  await expectLater(tester, meetsGuidelineWithExclusions(labeledTapTargetGuideline, exclusions));
+  await expectLater(tester, meetsGuidelineWithExclusions(androidTapTargetGuideline, exclusions));
+  // Needs to be last, because it fiddles with UI
+  await expectLater(tester, meetsGuidelineWithExclusions(TextFieldNavigationGuideline(), exclusions));
 }
 
 // Here's an example of a custom guideline.  We can conceivably write
@@ -220,5 +250,35 @@ class TextFieldNavigationGuideline extends AccessibilityGuideline {
     }
 
     return result;
+  }
+}
+
+AsyncMatcher meetsGuidelineWithExclusions(AccessibilityGuideline guideline, Set<A11yExclusion> exclusions) {
+  return _MatchesAccessibilityGuidelineWithExclusions(guideline, exclusions);
+}
+
+class _MatchesAccessibilityGuidelineWithExclusions extends AsyncMatcher {
+  _MatchesAccessibilityGuidelineWithExclusions(this.guideline, this.exclusions);
+
+  final AccessibilityGuideline guideline;
+  final Set<A11yExclusion> exclusions;
+
+  @override
+  Description describe(Description description) {
+    return description.add(guideline.description);
+  }
+
+  @override
+  Future<String> matchAsync(covariant WidgetTester tester) async {
+    final Evaluation result = await guideline.evaluate(tester);
+    if (result.passed) return null;
+    for (var exclusion in exclusions) {
+      if (result.reason.contains(exclusion.errorMessageContents)) {
+        print('A11y check failure ignored because $exclusion was applied:');
+        print('    - ${result.reason}');
+        return null;
+      }
+    }
+    return result.reason;
   }
 }

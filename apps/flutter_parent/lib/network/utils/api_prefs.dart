@@ -76,6 +76,12 @@ class ApiPrefs {
     await _prefs.setString(KEY_CURRENT_LOGIN_UUID, login.uuid);
   }
 
+  static bool isMasquerading() {
+    _checkInit();
+    var login = getCurrentLogin();
+    return login != null && login.masqueradeUser != null && login.masqueradeDomain != null;
+  }
+
   static Future<void> performLogout({bool switchingLogins = false}) async {
     _checkInit();
 
@@ -160,7 +166,11 @@ class ApiPrefs {
   }
 
   static Future<void> setUser(User user, {app}) async {
-    await updateCurrentLogin((b) => b..user = user.toBuilder(), app: app);
+    if (isMasquerading()) {
+      await updateCurrentLogin((b) => b..masqueradeUser = user.toBuilder(), app: app);
+    } else {
+      await updateCurrentLogin((b) => b..user = user.toBuilder(), app: app);
+    }
   }
 
   static Locale effectiveLocale() {
@@ -186,13 +196,13 @@ class ApiPrefs {
 
   static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
-  static User getUser() => getCurrentLogin()?.user;
+  static User getUser() => getCurrentLogin()?.masqueradeUser ?? getCurrentLogin()?.user;
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
-  static String getDomain() => getCurrentLogin()?.domain;
+  static String getDomain() => getCurrentLogin()?.masqueradeDomain ?? getCurrentLogin()?.domain;
 
   static String getAuthToken() => getCurrentLogin()?.accessToken;
 

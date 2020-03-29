@@ -67,7 +67,6 @@ void main() {
                 return Scaffold(body: widget ?? CoursesScreen());
               },
             )),
-        platformConfig: PlatformConfig(mockPrefs: null),
       );
 
   group('Render', () {

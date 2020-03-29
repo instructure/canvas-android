@@ -16,6 +16,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -24,6 +26,7 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
+import 'package:flutter_parent/utils/common_widgets/two_finger_double_tap_gesture_detector.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
@@ -36,10 +39,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LoginLandingScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  int loginFlowIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
+        key: _scaffoldKey,
         endDrawer: !DebugFlags.isDebug
             ? null // Don't show snickers in release mode
             : Drawer(
@@ -66,20 +74,23 @@ class LoginLandingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: FullScreenScrollContainer(
-                  children: <Widget>[
-                    _helpRequestButton(context),
-                    Expanded(child: _body(context)),
-                    SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
-                  ],
+        body: TwoFingerDoubleTapGestureDetector(
+          onDoubleTap: () => _changeLoginFlow(context),
+          child: SafeArea(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: FullScreenScrollContainer(
+                    children: <Widget>[
+                      _helpRequestButton(context),
+                      Expanded(child: _body(context)),
+                      SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
+                    ],
+                  ),
                 ),
-              ),
-              _previousLogins(context),
-            ],
+                _previousLogins(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -143,15 +154,36 @@ class LoginLandingScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 0),
                 itemCount: logins.length,
                 itemBuilder: (context, index) {
-                  var login = logins[index];
+                  Login login = logins[index];
+                  User user = login.masqueradeUser ?? login.user;
+                  String domain = login.masqueradeDomain ?? login.domain;
+                  bool isMasked = login.masqueradeUser != null;
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
                       locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
                     },
-                    leading: Avatar.fromUser(login.user),
-                    title: UserName.fromUser(login.user),
-                    subtitle: Text(login.domain),
+                    leading: Stack(
+                      overflow: Overflow.visible,
+                      children: <Widget>[
+                        Avatar.fromUser(user),
+                        if (isMasked)
+                          Positioned(
+                            right: -6,
+                            top: -6,
+                            child: Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: ParentColors.masquerade,
+                                  border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2)),
+                              child: Icon(CanvasIconsSolid.masquerade, color: Colors.white, size: 10),
+                            ),
+                          ),
+                      ],
+                    ),
+                    title: UserName.fromUser(user),
+                    subtitle: Text(domain),
                     trailing: IconButton(
                       tooltip: L10n(context).delete,
                       onPressed: () async {
@@ -198,6 +230,30 @@ class LoginLandingScreen extends StatelessWidget {
   }
 
   onFindSchoolPressed(BuildContext context) {
-    locator<QuickNav>().pushRoute(context, PandaRouter.domainSearch());
+    LoginFlow flow = LoginFlow.values[loginFlowIndex % LoginFlow.values.length];
+    locator<QuickNav>().pushRoute(context, PandaRouter.domainSearch(loginFlow: flow));
+  }
+
+  void _changeLoginFlow(BuildContext context) {
+    loginFlowIndex++;
+    LoginFlow flow = LoginFlow.values[loginFlowIndex % LoginFlow.values.length];
+    String flowDescription;
+    switch (flow) {
+      case LoginFlow.normal:
+        flowDescription = L10n(context).loginFlowNormal;
+        break;
+      case LoginFlow.canvas:
+        flowDescription = L10n(context).loginFlowCanvas;
+        break;
+      case LoginFlow.siteAdmin:
+        flowDescription = L10n(context).loginFlowSiteAdmin;
+        break;
+      case LoginFlow.skipMobileVerify:
+        flowDescription = L10n(context).loginFlowSkipMobileVerify;
+        break;
+    }
+
+    _scaffoldKey.currentState.removeCurrentSnackBar();
+    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(flowDescription)));
   }
 }
