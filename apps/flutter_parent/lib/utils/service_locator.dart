@@ -27,6 +27,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
@@ -87,6 +88,7 @@ void setupLocator() {
   locator.registerLazySingleton<OAuthApi>(() => OAuthApi());
   locator.registerLazySingleton<PageApi>(() => PageApi());
   locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
+  locator.registerLazySingleton<UserApi>(() => UserApi());
 
   // DB helpers
   locator.registerLazySingleton<Database>(() => DbUtil.instance);

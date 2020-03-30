@@ -46,11 +46,19 @@ class CalendarWidget extends StatefulWidget {
 
   final VoidCallback onFilterTap;
 
+  /// Starting DateTime, defaults to today's date
+  final DateTime startingDate;
+
+  /// Starting view, either 'week' or 'calendar'
+  final CalendarView startingView;
+
   const CalendarWidget({
     Key key,
     @required this.dayBuilder,
     @required this.fetcher,
     this.onFilterTap,
+    this.startingDate,
+    this.startingView,
   }) : super(key: key);
 
   @override
@@ -83,7 +91,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static const int _maxMonthIndex = _todayMonthIndex * 2;
 
   /// The currently-selected date
-  DateTime selectedDay = DateTime.now();
+  DateTime selectedDay;
 
   // Global keys for the PageViews
   Key _dayKey = GlobalKey();
@@ -182,6 +190,10 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   void initState() {
+    // TODO: Fix issue with setting initial selected date
+//    selectedDay = startingDate ?? DateTime.now();
+    selectedDay = DateTime.now();
+
     // Update _isMonthExpanded when expansion value changes to or from zero
     _monthExpansionNotifier.addListener(() {
       bool isExpanded = _monthExpansionNotifier.value > 0.0;
@@ -190,6 +202,14 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         setState(() {});
       }
     });
+
+    if (_canExpandMonth) {
+      if (widget.startingView == CalendarView.Month) {
+        _isMonthExpanded = true;
+        _monthExpansionNotifier.value = 1.0;
+      } else
+        _isMonthExpanded = false;
+    }
 
     // Set up animation controller for tap-to-expand/collapse button
     _monthExpandAnimController = AnimationController(duration: CalendarWidget.animDuration, vsync: this);
@@ -619,3 +639,5 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     _monthExpandAnimController.forward();
   }
 }
+
+enum CalendarView { Month, Week }

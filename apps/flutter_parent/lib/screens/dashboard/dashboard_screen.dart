@@ -21,6 +21,7 @@ import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
@@ -42,17 +43,20 @@ import 'package:provider/provider.dart';
 import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
-  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-  DashboardScreen({Key key, this.students}) : super(key: key);
+  DashboardScreen({Key key, this.students, this.startingPage, this.deepLinkParams}) : super(key: key);
 
   final List<User> students;
+
+  // Used when deep linking into the courses, calendar, or alert screen
+  final DashboardContentScreens startingPage;
+  final Map<String, Object> deepLinkParams;
 
   @override
   State<StatefulWidget> createState() => DashboardState();
 }
 
 class DashboardState extends State<DashboardScreen> {
+  GlobalKey<ScaffoldState> scaffoldKey;
   DashboardInteractor _interactor = locator<DashboardInteractor>();
 
   // Dashboard State
@@ -70,14 +74,20 @@ class DashboardState extends State<DashboardScreen> {
   bool _studentsError = false;
 
   User _selectedStudent;
-  int _currentIndex = 0;
+  DashboardContentScreens _currentIndex;
 
   bool expand = false;
 
   SelectedStudentNotifier _selectedStudentNotifier;
 
+  @visibleForTesting
+  Map<String, Object> currentDeepLinkParams;
+
   @override
   void initState() {
+    scaffoldKey = GlobalKey<ScaffoldState>();
+    currentDeepLinkParams = widget.deepLinkParams;
+    _currentIndex = widget.startingPage ?? DashboardContentScreens.Courses;
     _selectedStudentNotifier = SelectedStudentNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
@@ -172,7 +182,7 @@ class DashboardState extends State<DashboardScreen> {
       child: Consumer<SelectedStudentNotifier>(
         builder: (context, model, _) {
           return Scaffold(
-            key: DashboardScreen.scaffoldKey,
+            key: scaffoldKey,
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(107.0),
               child: AppBar(
@@ -192,7 +202,7 @@ class DashboardState extends State<DashboardScreen> {
                     countListenable: _interactor.getInboxCountNotifier(),
                     options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
                   ),
-                  onPressed: () => DashboardScreen.scaffoldKey.currentState.openDrawer(),
+                  onPressed: () => scaffoldKey.currentState.openDrawer(),
                   tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
@@ -232,7 +242,7 @@ class DashboardState extends State<DashboardScreen> {
               BottomNavigationBar(
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 items: _bottomNavigationBarItems(),
-                currentIndex: this._currentIndex,
+                currentIndex: this._currentIndex.index,
                 onTap: (item) => _handleBottomBarClick(item),
               ),
             ),
@@ -331,7 +341,7 @@ class DashboardState extends State<DashboardScreen> {
 
   _handleBottomBarClick(item) {
     setState(() {
-      _currentIndex = item;
+      _currentIndex = DashboardContentScreens.values[item];
     });
   }
 
@@ -341,18 +351,36 @@ class DashboardState extends State<DashboardScreen> {
       return LoadingIndicator();
     }
 
+    Widget _page;
+
     switch (_currentIndex) {
-      case 1:
-        return CalendarScreen();
+      case DashboardContentScreens.Calendar:
+        _page = CalendarScreen(
+          startDate: currentDeepLinkParams != null
+              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
+                  ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
+                  : null)
+              : null,
+          startView: currentDeepLinkParams != null
+              ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
+                  ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
+                  : null)
+              : null,
+        );
         break;
-      case 2:
-        return AlertsScreen();
+      case DashboardContentScreens.Alerts:
+        _page = AlertsScreen();
         break;
-      case 0:
+      case DashboardContentScreens.Courses:
       default:
-        return CoursesScreen();
+        _page = CoursesScreen();
         break;
     }
+
+    // Deep link params are handled, set them to null so we don't use them again
+    currentDeepLinkParams = null;
+
+    return _page;
   }
 
   _navigateToInbox(context) {
@@ -489,3 +517,5 @@ class DashboardState extends State<DashboardScreen> {
         ],
       );
 }
+
+enum DashboardContentScreens { Courses, Calendar, Alerts }

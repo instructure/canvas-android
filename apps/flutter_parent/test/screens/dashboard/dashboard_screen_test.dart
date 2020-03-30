@@ -86,8 +86,18 @@ void main() {
     reset(analyticsMock);
   });
 
-  Widget _testableMaterialWidget({Login initLogin}) => TestApp(
-        Scaffold(body: DashboardScreen()),
+  Widget _testableMaterialWidget({
+    Login initLogin,
+    Map<String, Object> deepLinkParams,
+    DashboardContentScreens startingPage,
+  }) =>
+      TestApp(
+        Scaffold(
+          body: DashboardScreen(
+            deepLinkParams: deepLinkParams,
+            startingPage: startingPage,
+          ),
+        ),
         platformConfig: PlatformConfig(initLoggedInUser: initLogin),
       );
 
@@ -146,7 +156,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('${observer.name} (${observer.pronouns})'), findsOneWidget);
@@ -168,7 +178,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('${observer.name}'), findsOneWidget);
@@ -199,7 +209,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Assert there's no text in the inbox-count
@@ -217,7 +227,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('12321'), findsOneWidget);
@@ -251,6 +261,44 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.descendant(of: find.byType(AppBar), matching: find.byKey(NumberBadge.backgroundKey)), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('displays course when passed in as starting page', (tester) async {
+      _setupLocator();
+
+      await tester.pumpWidget(_testableMaterialWidget(startingPage: DashboardContentScreens.Courses));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CoursesScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('displays calendar when passed in as starting page', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      expect(find.byType(CalendarScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('displays alerts when passed in as starting page', (tester) async {
+      _setupLocator();
+
+      await tester.pumpWidget(_testableMaterialWidget(startingPage: DashboardContentScreens.Alerts));
+      await tester.pumpAndSettle();
+
+      // Check for the alerts screen
+      expect(find.byType(AlertsScreen), findsOneWidget);
     });
   });
 
@@ -315,7 +363,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Inbox
@@ -330,7 +378,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Manage Students
@@ -348,7 +396,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Settings
@@ -369,7 +417,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Help
@@ -407,7 +455,7 @@ void main() {
         expect(ApiPrefs.isLoggedIn(), true);
 
         // Open the nav drawer
-        DashboardScreen.scaffoldKey.currentState.openDrawer();
+        dashboardState(tester).scaffoldKey.currentState.openDrawer();
         await tester.pumpAndSettle();
 
         // Click on Sign Out
@@ -460,7 +508,7 @@ void main() {
       expect(ApiPrefs.isLoggedIn(), true);
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Sign Out
@@ -508,7 +556,7 @@ void main() {
       expect(ApiPrefs.isLoggedIn(), true);
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Click on Sign Out
@@ -543,9 +591,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Widget tree is built, we should have access to what we need to check the state of the expandable widget animation now
-      var slideAnimation =
-          ((StudentExpansionWidget.expansionWidgetKey.currentWidget as SizeTransition).listenable as CurvedAnimation)
-              .parent;
+      var slideAnimation = ((studentExpansionState(tester).animation));
 
       // Make sure the expansion widget exists and is initially retracted
       expect(find.byType(StudentExpansionWidget), findsOneWidget);
@@ -587,9 +633,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Widget tree is built, we should have access to what we need to check the state of the expandable widget animation now
-      var slideAnimation =
-          ((StudentExpansionWidget.expansionWidgetKey.currentWidget as SizeTransition).listenable as CurvedAnimation)
-              .parent;
+      var slideAnimation = ((studentExpansionState(tester).animation));
 
       // Make sure the expansion widget exists and is initially retracted
       expect(find.byType(StudentExpansionWidget), findsOneWidget);
@@ -608,6 +652,24 @@ void main() {
 
       expect(slideAnimation.value, retracted);
     });
+
+    testWidgetsWithAccessibilityChecks('deep link params is cleared after first screen is shown', (tester) async {
+      _setupLocator();
+
+      Map<String, Object> params = {'test': 'Instructure Pandas'};
+
+      await tester.pumpWidget(_testableMaterialWidget(deepLinkParams: params));
+      await tester.pump();
+
+      // Make sure our params made it into DashboardScreen
+      expect(dashboardState(tester).currentDeepLinkParams, params);
+
+      // Finish loading the screen
+      await tester.pumpAndSettle();
+
+      // Check that the deep link params are null
+      expect(dashboardState(tester).currentDeepLinkParams, null);
+    });
   });
 
   group('Loading', () {
@@ -620,7 +682,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       verify(inboxApi.getUnreadCount()).called(1);
@@ -637,7 +699,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       when(inboxApi.getUnreadCount())
@@ -660,7 +722,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       verify(alertsApi.getUnreadCount(any)).called(1);
@@ -676,7 +738,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       // Assert there's no text in the alerts-count
@@ -694,7 +756,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       expect(find.text('88'), findsOneWidget);
@@ -711,7 +773,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Open the nav drawer
-      DashboardScreen.scaffoldKey.currentState.openDrawer();
+      dashboardState(tester).scaffoldKey.currentState.openDrawer();
       await tester.pumpAndSettle();
 
       when(alertsApi.getUnreadCount(any))
@@ -724,6 +786,11 @@ void main() {
     });
   });
 }
+
+DashboardState dashboardState(WidgetTester tester) => tester.state(find.byType(DashboardScreen));
+
+StudentExpansionWidgetState studentExpansionState(WidgetTester tester) =>
+    tester.state(find.byType(StudentExpansionWidget));
 
 class MockHelpScreenInteractor extends HelpScreenInteractor {
   @override

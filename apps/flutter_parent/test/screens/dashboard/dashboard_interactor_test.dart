@@ -15,14 +15,50 @@
 import 'dart:math';
 
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
+import '../../utils/canvas_model_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
+  test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () {
+    var api = MockEnrollmentsApi();
+    setupTestLocator((l) => l.registerLazySingleton<EnrollmentsApi>(() => api));
+    when(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value(<Enrollment>[]));
+
+    var interactor = DashboardInteractor();
+    interactor.getStudents();
+    verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
+  });
+
+  test('getSelf calls getSelf from UserApi', () async {
+    var api = MockUserApi();
+    final initialUser = CanvasModelTestUtils.mockUser();
+    final updatedUser = CanvasModelTestUtils.mockUser(name: 'Inst Panda');
+
+    setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
+    when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
+
+    // Setup ApiPrefs
+    final login = Login((b) => b..user = initialUser.toBuilder());
+    await setupPlatformChannels(
+        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
+
+    var interactor = DashboardInteractor();
+    interactor.getSelf();
+    verify(api.getSelf()).called(1);
+  });
+
   test('Sort users in descending order', () {
     // Create lists
     var startingList = [_mockStudent('Zed'), _mockStudent('Alex'), _mockStudent('Billy')];
@@ -84,3 +120,7 @@ Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());
+
+class MockEnrollmentsApi extends Mock implements EnrollmentsApi {}
+
+class MockUserApi extends Mock implements UserApi {}

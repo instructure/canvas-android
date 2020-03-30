@@ -238,6 +238,27 @@ void main() {
 
       expect(widget, isA<SimpleWebViewScreen>());
     });
+
+    test('calendar returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.calendar, extraParams: {
+        'view_start': ['12-12-2020'],
+        'view_name': ['month']
+      });
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Calendar);
+      expect(widget, isA<DashboardScreen>());
+    });
+
+    test('courses returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.courses());
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Courses);
+      expect(widget, isA<DashboardScreen>());
+    });
+
+    test('alerts returns Dashboard screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.alerts);
+      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Alerts);
+      expect(widget, isA<DashboardScreen>());
+    });
   });
 
   group('external url handler', () {
@@ -245,7 +266,6 @@ void main() {
       final url = 'https://test.instructure.com/not-supported';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for splash handler
       );
 
       expect(widget, isA<SplashScreen>());
@@ -255,7 +275,6 @@ void main() {
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -265,7 +284,6 @@ void main() {
       final url = 'http://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -275,7 +293,6 @@ void main() {
       final url = 'canvas-parent://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -285,7 +302,6 @@ void main() {
       final url = 'canvas-courses://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for conversations handler
       );
 
       expect(widget, isA<ConversationListScreen>());
@@ -295,7 +311,6 @@ void main() {
       final url = 'https://test.instructure.com/courses/123';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for course details handler
       );
 
       expect(widget, isA<CourseDetailsScreen>());
@@ -307,7 +322,6 @@ void main() {
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2, // Once for root url handling, another for assignment details handler
       ) as AssignmentDetailsScreen;
 
       expect(widget, isA<AssignmentDetailsScreen>());
@@ -321,7 +335,6 @@ void main() {
       final url = 'https://fakedomain.instructure.com/courses/$courseId/assignments/$assignmentId';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
-        logCount: 2,
       ) as RouterErrorScreen;
 
       expect(widget, isA<RouterErrorScreen>());
@@ -390,12 +403,6 @@ void main() {
       verify(_mockSnackbar.showSnackBar(any, 'An error occurred when trying to display this link'));
     });
 
-//     Todo once MBL-13924 is done
-//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
-//    });
-  });
-
-  group('internal url handler', () {
     test('returns valid UrlRouteWrapper', () {
       final path = '/courses/1567973';
       final url = '$_domain$path';
@@ -425,18 +432,26 @@ void main() {
       assert(routeWrapper.validHost == true);
       assert(routeWrapper.appRouteMatch == null);
     });
+
+//     Todo once MBL-13924 is done
+//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
+//    });
   });
 }
 
-String _rootWithUrl(String url) => '/external?url=${Uri.encodeQueryComponent(url)}';
+String _rootWithUrl(String url) => 'external?url=${Uri.encodeQueryComponent(url)}';
 
 String _routerErrorRoute(String url) => '/error?url=${Uri.encodeQueryComponent(url)}';
 
 String _simpleWebViewRoute(String url) => '/internal?url=${Uri.encodeQueryComponent(url)}';
 
-Widget _getWidgetFromRoute(String route, {int logCount = 1}) {
+Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}) {
   final match = PandaRouter.router.match(route);
-  return (match.route.handler as Handler).handlerFunc(null, match.parameters);
+
+  if (extraParams != null) match.parameters.addAll(extraParams);
+  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
+
+  return widget;
 }
 
 class _MockAnalytics extends Mock implements Analytics {}
