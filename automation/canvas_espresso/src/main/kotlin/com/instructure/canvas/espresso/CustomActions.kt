@@ -187,6 +187,26 @@ fun explicitClick() : ViewAction {
 }
 
 /**
+ * Clear the focus of a view (i.e., remove focus from a view).
+ */
+fun clearFocus() : ViewAction {
+    return object : ViewAction {
+        override fun getDescription(): String {
+            return "Explicitly remove focus from a view"
+        }
+
+        override fun getConstraints(): Matcher<View> {
+            return  ViewMatchers.isAssignableFrom(View::class.java)
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            view?.clearFocus()
+        }
+
+    }
+}
+
+/**
  * Helper method that clicks on the coordinates of a view based the x/y percentages given
  */
 fun clickCoordinates(percentX: Float, percentY: Float) : ViewAction {
