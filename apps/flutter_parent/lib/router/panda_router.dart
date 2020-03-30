@@ -270,7 +270,7 @@ class PandaRouter {
   static Handler _simpleWebViewHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     final url = params[_RouterKeys.url][0];
     final infoText = params[_RouterKeys.infoText]?.elementAt(0);
-    return SimpleWebViewScreen(url, url, infoText: infoText);
+    return SimpleWebViewScreen(url, url, infoText: infoText == null || infoText == 'null' ? null : infoText);
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -364,15 +364,15 @@ class _RouterKeys {
   static final announcementId = 'announcementId';
   static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
-  static final calendarStart = 'view_start';
-  static final calendarView = 'view_name';
   static final courseId = 'courseId';
   static final domain = 'domain';
   static final eventId = 'eventId';
+  static final infoText = 'infoText';
   static final quizId = 'quizId';
   static final topicId = 'topicId';
-  static final infoText = 'infoText';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
+  static final calendarStart = 'view_start';
+  static final calendarView = 'view_name';
 }
 
 /// Simple helper class to manage the repeated data extracted from a link to be routed

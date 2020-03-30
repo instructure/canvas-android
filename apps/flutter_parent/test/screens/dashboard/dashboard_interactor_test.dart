@@ -51,7 +51,7 @@ void main() {
 
     setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
     when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
-    when(api.getSelfPermissions()).thenAnswer((_) => Future.value(permittedUser));
+    when(api.getSelfPermissions()).thenAnswer((_) => Future.value(permittedUser.permissions));
 
     // Setup ApiPrefs
     final login = Login((b) => b..user = initialUser.toBuilder());
