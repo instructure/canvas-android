@@ -135,7 +135,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         val qrLoginEnabled = RemoteConfigUtils.getString(
                 remoteConfigParam)?.equals("true", ignoreCase = true)
                 ?: false
-        if(loginWithQRCodeEnabled()) {
+        if(loginWithQRCodeEnabled() && qrLoginEnabled) {
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClick {

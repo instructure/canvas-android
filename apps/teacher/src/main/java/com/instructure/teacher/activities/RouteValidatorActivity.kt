@@ -41,7 +41,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.services.FileDownloadService
 import com.instructure.teacher.tasks.TeacherLogoutTask
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 
 class RouteValidatorActivity : FragmentActivity() {
 
@@ -67,11 +66,10 @@ class RouteValidatorActivity : FragmentActivity() {
             val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
             val domain = ApiPrefs.domain
 
-            // TODO - Add support for QR login here
             val qrLoginEnabled = RemoteConfigUtils.getString(
                     RemoteConfigParam.QR_LOGIN_ENABLED_TEACHER)?.equals("true", ignoreCase = true)
                     ?: false
-            if (verifySSOLoginUri(data, true) && qrLoginEnabled) { // TODO - add qrLoginEnabled
+            if (verifySSOLoginUri(data, true) && qrLoginEnabled) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if (isSignedIn) { // If the user is already signed in, use the QR Switch

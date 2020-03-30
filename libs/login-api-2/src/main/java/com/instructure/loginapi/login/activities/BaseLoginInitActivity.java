@@ -71,21 +71,6 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
         checkLoginState();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
     /**
      * This function checks whether or not the current user is signed in.
      */

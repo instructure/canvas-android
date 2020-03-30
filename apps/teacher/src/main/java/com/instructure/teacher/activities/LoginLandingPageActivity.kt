@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
 import com.instructure.pandautils.services.PushNotificationRegistrationService
-import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 
 class LoginLandingPageActivity : BaseLoginLandingPageActivity() {

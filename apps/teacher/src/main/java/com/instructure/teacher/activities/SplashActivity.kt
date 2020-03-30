@@ -21,7 +21,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
 import com.instructure.canvasapi2.managers.CourseManager
@@ -31,7 +30,6 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.LocaleUtils
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitOrThrow
@@ -47,7 +45,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import java.net.UnknownHostException
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
@@ -200,11 +197,7 @@ class SplashActivity : AppCompatActivity() {
                     Crashlytics.setString("domain", null)
                 }
 
-                if(masqueradingUserId != 0L) {
-                    startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
-                } else {
-                    startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
-                }
+                startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))
                 canvasLoadingView.announceForAccessibility(getString(R.string.loading))
                 finish()
             }

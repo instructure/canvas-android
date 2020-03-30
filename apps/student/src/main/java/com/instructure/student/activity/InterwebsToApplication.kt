@@ -29,10 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -86,7 +84,7 @@ class InterwebsToApplication : AppCompatActivity() {
             val qrLoginEnabled = RemoteConfigUtils.getString(
                     RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
                     ?: false
-            if (verifySSOLoginUri(data)) {//qrLoginEnabled) {
+            if (verifySSOLoginUri(data) && qrLoginEnabled) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
