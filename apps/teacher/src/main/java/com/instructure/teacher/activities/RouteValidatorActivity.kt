@@ -45,7 +45,7 @@ import kotlinx.coroutines.delay
 
 class RouteValidatorActivity : FragmentActivity() {
 
-    private var qrSignInJob: Job? = null
+    private var routeValidatorJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -60,99 +60,111 @@ class RouteValidatorActivity : FragmentActivity() {
             return
         }
 
-        val host = data.host.orEmpty() // "mobiledev.instructure.com"
+        routeValidatorJob = tryWeave {
 
-        val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
-        val domain = ApiPrefs.domain
+            val host = data.host.orEmpty() // "mobiledev.instructure.com"
 
-        // TODO - Add support for QR login here
-        val qrLoginEnabled = RemoteConfigUtils.getString(
-                RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
-                ?: false
-        if(verifySSOLoginUri(data, true)) { // TODO - add qrLoginEnabled
-            // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
-            qrSignInJob = tryWeave {
-                if(isSignedIn) { // If the user is already signed in, use the QR Switch
-                    TeacherLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+            val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
+            val domain = ApiPrefs.domain
+
+            // TODO - Add support for QR login here
+            val qrLoginEnabled = RemoteConfigUtils.getString(
+                    RemoteConfigParam.QR_LOGIN_ENABLED_TEACHER)?.equals("true", ignoreCase = true)
+                    ?: false
+            if (verifySSOLoginUri(data, true) && qrLoginEnabled) { // TODO - add qrLoginEnabled
+                // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
+                try {
+                    if (isSignedIn) { // If the user is already signed in, use the QR Switch
+                        TeacherLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                        finish()
+                        return@tryWeave
+                    }
+
+                    val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
+
+                    // If we have a real user, this is a QR code from a masquerading web user
+                    val intent = if (tokenResponse.realUser != null && tokenResponse.user != null) {
+                        // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
+                        ApiPrefs.isMasqueradingFromQRCode = true
+                        val extras = Bundle()
+                        extras.putLong(Const.QR_CODE_MASQUERADE_ID, tokenResponse.user!!.id)
+                        LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, extras)
+                    } else {
+                        logQREvent(ApiPrefs.domain, true)
+                        LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, null)
+                    }
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                    finish()
+                    return@tryWeave
+                } catch (e: Throwable) {
+                    // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
+                    if (!isSignedIn) {
+                        ApiPrefs.clearAllData()
+                    }
+
+                    // Log the analytics
+                    logQREvent(ApiPrefs.domain, false)
+
+                    Toast.makeText(this@RouteValidatorActivity, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
                     finish()
                     return@tryWeave
                 }
+            }
 
-                val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
-
-                // Add delay for animation and launch Navigation Activity
-//                delay(700)
-
-                // If we have a real user, this is a QR code from a masquerading web user
-                val intent = if(tokenResponse.realUser != null && tokenResponse.user != null) {
-                    // We need to set the masquerade request to the user (masqueradee), the real user it the admin user currently masquerading
-                    ApiPrefs.isMasqueradingFromQRCode = true
-                    ApiPrefs.isMasquerading = true // Don't want push notifs getting registered by the below create intent call
-                    val extras = Bundle()
-                    extras.putLong(Const.QR_CODE_MASQUERADE_ID, tokenResponse.user!!.id)
-                    LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, extras)
+            if (!isSignedIn) {
+                val intent = if (host.isNotBlank()) {
+                    SignInActivity.createIntent(this@RouteValidatorActivity, AccountDomain(host))
                 } else {
-                    logQREvent(ApiPrefs.domain, true)
-                    LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, null)
+                    LoginActivity.createIntent(this@RouteValidatorActivity)
                 }
-
+                startActivity(intent)
+                finish()
+                return@tryWeave
+            } else if (host !in domain) {
+                val intent = LoginActivity.createLaunchApplicationMainActivityIntent(this@RouteValidatorActivity, null)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
-            } catch {
-                // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
-                if(!isSignedIn) {
-                    ApiPrefs.clearAllData()
-                }
-
-                // Log the analytics
-                logQREvent(ApiPrefs.domain, false)
-
-                Toast.makeText(this@RouteValidatorActivity, R.string.loginWithQRCodeError, Toast.LENGTH_LONG).show()
-                finish()
-            }
-        }
-
-        if (!isSignedIn) {
-            val intent = if (host.isNotBlank()) {
-                SignInActivity.createIntent(this, AccountDomain(host))
+                return@tryWeave
             } else {
-                LoginActivity.createIntent(this)
-            }
-            startActivity(intent)
-            finish()
-        } else if (host !in domain) {
-            val intent = LoginActivity.createLaunchApplicationMainActivityIntent(this, null)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-            finish()
-        } else {
-            // Allow the UI to show.
-            Handler().postDelayed({
-                // If it's a file link we need to start a service so that our app can download it before we show it
-                val route = RouteMatcher.getInternalRoute(url ?: "", domain)
-                // If we've already downloaded the file we just want to route to it
-                val fileDownloaded = intent.extras?.getBoolean(Const.FILE_DOWNLOADED, false) ?: false
-                if (!fileDownloaded && (route?.routeContext == RouteContext.FILE || route?.primaryClass == FileListFragment::class.java && route.queryParamsHash.containsKey(RouterParams.PREVIEW))) {
-                    val intent = Intent(this@RouteValidatorActivity, FileDownloadService::class.java)
-                    val bundle = Bundle()
-                    bundle.putParcelable(Route.ROUTE, route)
-                    bundle.putString(Const.URL, url)
-                    intent.putExtras(bundle)
-                    this@RouteValidatorActivity.startService(intent)
-                }
-                RouteMatcher.routeUrl(this@RouteValidatorActivity, url ?: "", domain)
+                // Allow the UI to show.
+                Handler().postDelayed({
+                    // If it's a file link we need to start a service so that our app can download it before we show it
+                    val route = RouteMatcher.getInternalRoute(url ?: "", domain)
+                    // If we've already downloaded the file we just want to route to it
+                    val fileDownloaded = intent.extras?.getBoolean(Const.FILE_DOWNLOADED, false) ?: false
+                    if (!fileDownloaded && (route?.routeContext == RouteContext.FILE || route?.primaryClass == FileListFragment::class.java && route.queryParamsHash.containsKey(RouterParams.PREVIEW))) {
+                        val intent = Intent(this@RouteValidatorActivity, FileDownloadService::class.java)
+                        val bundle = Bundle()
+                        bundle.putParcelable(Route.ROUTE, route)
+                        bundle.putString(Const.URL, url)
+                        intent.putExtras(bundle)
+                        this@RouteValidatorActivity.startService(intent)
+                    }
+                    RouteMatcher.routeUrl(this@RouteValidatorActivity, url ?: "", domain)
 
-                finish()
-            }, 1000)
+                    finish()
+                }, 1000)
+                return@tryWeave
+            }
+        } catch {
+            finish()
         }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        routeValidatorJob?.cancel()
     }
 
     private fun logQREvent(domain: String, isSuccess: Boolean) {
         val bundle = Bundle().apply {
             putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
         }
-        if(isSuccess) {
+        if (isSuccess) {
             Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
         } else {
             Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)

@@ -46,8 +46,8 @@ class LoginActivity : BaseLoginInitActivity() {
         super.finish()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         // Check to see if we are switching users from an external QR scan
         if(QRLogin.verifySSOLoginUri(intent.data)) {
             startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))

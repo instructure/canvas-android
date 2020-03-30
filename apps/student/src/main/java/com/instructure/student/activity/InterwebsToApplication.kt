@@ -86,7 +86,7 @@ class InterwebsToApplication : AppCompatActivity() {
             val qrLoginEnabled = RemoteConfigUtils.getString(
                     RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
                     ?: false
-            if (verifySSOLoginUri(data) && qrLoginEnabled) {
+            if (verifySSOLoginUri(data)) {//qrLoginEnabled) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch

@@ -127,10 +127,15 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
         helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
+        val remoteConfigParam = when {
+            packageName.contains("teacher") -> RemoteConfigParam.QR_LOGIN_ENABLED_TEACHER
+            else -> RemoteConfigParam.QR_LOGIN_ENABLED
+        }
+
         val qrLoginEnabled = RemoteConfigUtils.getString(
-                RemoteConfigParam.QR_LOGIN_ENABLED)?.equals("true", ignoreCase = true)
+                remoteConfigParam)?.equals("true", ignoreCase = true)
                 ?: false
-        if(loginWithQRCodeEnabled()) { //&& qrLoginEnabled) {
+        if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClick {
