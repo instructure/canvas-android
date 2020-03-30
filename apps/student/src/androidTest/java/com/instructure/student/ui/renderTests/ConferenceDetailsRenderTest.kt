@@ -20,6 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsViewState
@@ -32,6 +33,7 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class ConferenceDetailsRenderTest : StudentRenderTest() {
     private val canvasContext: CanvasContext = Course(id = 123L, name = "Test Course")
+    private val canvasContextGroup: CanvasContext = Group(id = 1337L, name = "Test Group")
 
     private lateinit var baseState: ConferenceDetailsViewState
     private lateinit var baseRecordingState: ConferenceRecordingViewState
@@ -180,6 +182,16 @@ class ConferenceDetailsRenderTest : StudentRenderTest() {
         )
         loadPageWithViewState(state, canvasContext)
         conferenceDetailsRenderPage.assertDisplaysRecording(recordingState)
+    }
+
+
+    @Test
+    fun displaysToolbarItemsWithGroup() {
+        val state = baseState
+        loadPageWithViewState(state, canvasContextGroup)
+
+        conferenceDetailsRenderPage.assertDisplaysToolbarTitle("Conference Details")
+        conferenceDetailsRenderPage.assertDisplaysToolbarSubtitle(canvasContextGroup.name!!)
     }
 
     private fun loadPageWithViewState(state: ConferenceDetailsViewState, canvasContext: CanvasContext) {
