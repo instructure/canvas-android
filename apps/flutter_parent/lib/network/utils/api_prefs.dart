@@ -181,8 +181,8 @@ class ApiPrefs {
       return Locale.fromSubtags(
         languageCode: localeParts.first,
         scriptCode: userLocale[1].length < 5
-            ? 'inst${userLocale[1]}'
-            : userLocale[1].substring(0, min(8, userLocale[1].length)),
+            ? 'inst${userLocale[1]}' // da-k12 -> da-instk12 (can't be less than 4 characters)
+            : userLocale[1].substring(0, min(8, userLocale[1].length)), // en-unimelb -> en-unimelb (no more than 8)
         countryCode: localeParts.last,
       );
     }
