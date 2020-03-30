@@ -15,6 +15,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -22,8 +23,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 class SimpleWebViewScreen extends StatefulWidget {
   final String _url;
   final String _title;
+  final String _infoText;
 
-  SimpleWebViewScreen(this._url, this._title);
+  SimpleWebViewScreen(this._url, this._title, {String infoText}) : _infoText = infoText;
 
   @override
   State<StatefulWidget> createState() => _SimpleWebViewScreenState();
@@ -45,15 +47,52 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
           title: Text(widget._title, style: Theme.of(context).textTheme.title),
         ),
         body: WebView(
-            javascriptMode: JavascriptMode.unrestricted,
-            gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
-            onWebViewCreated: (controller) {
-              _controller = controller;
-              controller.loadUrl(widget._url);
-            }),
+          javascriptMode: JavascriptMode.unrestricted,
+          userAgent: ApiPrefs.getUserAgent(),
+          gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
+          navigationDelegate: _handleNavigation,
+          onWebViewCreated: (controller) {
+            _controller = controller;
+            controller.loadUrl(widget._url);
+          },
+          onPageFinished: _handlePageLoaded,
+        ),
       ),
     );
   }
+
+  NavigationDecision _handleNavigation(NavigationRequest request) {
+    if (!request.isForMainFrame || widget._url.startsWith(request.url)) return NavigationDecision.navigate;
+    return NavigationDecision.prevent;
+  }
+
+  void _handlePageLoaded(String url) async {
+    // If there's no info to show, just return
+    if (widget._infoText == null || widget._infoText.isEmpty) return;
+
+    // Run javascript to show the info alert
+    await _controller?.evaluateJavascript(_showAlertJavascript);
+  }
+
+  String get _showAlertJavascript => """
+      const floatNode = `<div id="flash_message_holder_mobile" style="z-index: 10000; position: fixed; bottom: 0; left: 0; right: 0; margin: 16px; width: auto;">
+        <div class="ic-flash-info" aria-hidden="true" style="width: unset; max-width: 475px">
+          <div class="ic-flash__icon">
+            <i class="icon-info"></i>
+          </div>
+          ${widget._infoText}
+          <button type="button" class="Button Button--icon-action close_link">
+            <i class="icon-x"></i>
+          </button>
+        </div>
+      </div>`
+
+      \$(floatNode)
+        .appendTo(\$('body')[0])
+        .on('click', 'button', event => {
+          \$('#flash_message_holder_mobile').remove()
+        })
+    """;
 
   @override
   void dispose() {

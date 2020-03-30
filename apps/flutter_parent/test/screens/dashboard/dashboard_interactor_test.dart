@@ -45,9 +45,13 @@ void main() {
     var api = MockUserApi();
     final initialUser = CanvasModelTestUtils.mockUser();
     final updatedUser = CanvasModelTestUtils.mockUser(name: 'Inst Panda');
+    final permittedUser = updatedUser.rebuild((b) {
+      return b..permissions = UserPermission((p) => p..limitParentAppWebAccess = true).toBuilder();
+    });
 
     setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
     when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
+    when(api.getSelfPermissions()).thenAnswer((_) => Future.value(permittedUser.permissions));
 
     // Setup ApiPrefs
     final login = Login((b) => b..user = initialUser.toBuilder());
@@ -55,8 +59,11 @@ void main() {
         config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
 
     var interactor = DashboardInteractor();
-    interactor.getSelf();
+    final actual = await interactor.getSelf();
+
+    expect(actual, permittedUser);
     verify(api.getSelf()).called(1);
+    verify(api.getSelfPermissions()).called(1);
   });
 
   test('Sort users in descending order', () {
