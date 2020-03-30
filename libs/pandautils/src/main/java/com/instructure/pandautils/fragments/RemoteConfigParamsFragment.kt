@@ -17,6 +17,10 @@
 package com.instructure.pandautils.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,9 +65,15 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
             val nameLabel = findViewById<TextView>(R.id.param_name)
             val valueEditText = findViewById<EditText>(R.id.param_value)
             nameLabel.text = param.rc_name + ": "
-            valueEditText.text.insert(0, RemoteConfigPrefs.getString(param.rc_name, param.safeValueAsString))
-            valueEditText.onTextChanged { newText ->
-                RemoteConfigPrefs.putString(param.rc_name, newText)
+            valueEditText.setText(RemoteConfigPrefs.getString(param.rc_name, param.safeValueAsString))
+            valueEditText.setOnKeyListener() {view, id, event ->
+                if(event.action == KeyEvent.ACTION_UP) {
+                    Log.d("RemoteConfigPrefs", "onKeyListener ${param.rc_name} content ${(view as EditText).text}")
+                    RemoteConfigPrefs.putString(param.rc_name, (view as EditText).text.toString())
+                }
+
+                // Returning false allows, for example, the back-button to be handled by other logic.
+                return@setOnKeyListener false
             }
         }
     }

@@ -21,6 +21,7 @@ import android.os.Bundle
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
@@ -51,6 +52,9 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()
             featureFlagButton.onClick { RouteMatcher.route(requireContext(), Route(FeatureFlagsFragment::class.java, null)) }
+
+            remoteConfigButton.setVisible()
+            remoteConfigButton.onClick { RouteMatcher.route(requireContext(), Route(RemoteConfigParamsFragment::class.java, null))}
         }
     }
 

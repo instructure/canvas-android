@@ -40,6 +40,11 @@ object Analytics {
     }
 
     @JvmStatic
+    fun setUserProperty(propertyName: String, propertyValue: String) {
+        firebase.setUserProperty(propertyName, propertyValue)
+    }
+
+    @JvmStatic
     fun createOriginBundle(origin: String): Bundle {
         return Bundle().apply {
             putString(AnalyticsParamConstants.SCREEN_OF_ORIGIN, origin)
@@ -99,6 +104,10 @@ object AnalyticsEventConstants {
     const val QR_CODE_LOGIN_CLICKED = "qr_code_login_clicked"
     const val QR_CODE_LOGIN_SUCCESS = "qr_code_login_success"
     const val QR_CODE_LOGIN_FAILURE = "qr_code_login_failure"
+
+    /* User Properties */
+    const val USER_PROPERTY_BUILD_TYPE = "build_type"
+    const val USER_PROPERTY_OS_VERSION = "os_version"
 }
 
 /**

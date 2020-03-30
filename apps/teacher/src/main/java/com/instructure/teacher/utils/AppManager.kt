@@ -17,10 +17,12 @@
 package com.instructure.teacher.utils
 
 import android.content.IntentFilter
+import android.os.Build
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -44,8 +46,16 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
             // Skip app initialization.
             return
         }
-        RemoteConfigUtils.initialize()
         super.onCreate()
+
+        // Call it superstition, but I don't trust BuildConfig flags to be set correctly
+        // in library builds.  IS_TESTING, for example, does not percolate down to libraries
+        // correctly.  So I'm reading/setting these user properties here instead of canvasapi2/AppManager.
+        com.instructure.canvasapi2.utils.Analytics.setUserProperty(AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE, if (BuildConfig.DEBUG) "debug" else "release")
+        com.instructure.canvasapi2.utils.Analytics.setUserProperty(AnalyticsEventConstants.USER_PROPERTY_OS_VERSION, Build.VERSION.SDK_INT.toString())
+
+        // Hold off on initializing this until we emit the user properties.
+        RemoteConfigUtils.initialize()
 
         if (!ApiPrefs.domain.endsWith(com.instructure.loginapi.login.BuildConfig.ANONYMOUS_SCHOOL_DOMAIN)) {
             val crashlytics = Crashlytics.Builder()

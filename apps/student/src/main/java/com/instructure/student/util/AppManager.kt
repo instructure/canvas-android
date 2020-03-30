@@ -17,6 +17,8 @@
 
 package com.instructure.student.util
 
+import android.os.Build
+import android.util.Log
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
@@ -25,6 +27,9 @@ import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants.USER_PROPERTY_OS_VERSION
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -53,8 +58,17 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
             // Skip app initialization.
             return
         }
-        RemoteConfigUtils.initialize()
         super.onCreate()
+
+        // Call it superstition, but I don't trust BuildConfig flags to be set correctly
+        // in library builds.  IS_TESTING, for example, does not percolate down to libraries
+        // correctly.  So I'm reading/setting these user properties here instead of canvasapi2/AppManager.
+        Analytics.setUserProperty(USER_PROPERTY_BUILD_TYPE, if(BuildConfig.DEBUG) "debug" else "release")
+        Analytics.setUserProperty(USER_PROPERTY_OS_VERSION, Build.VERSION.SDK_INT.toString())
+
+        // Hold off on initializing this until we emit the user properties.
+        RemoteConfigUtils.initialize()
+
         initPSPDFKit()
 
         val crashlyticsKit = Crashlytics.Builder()
@@ -76,6 +90,8 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
         }
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
+
+
     }
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
