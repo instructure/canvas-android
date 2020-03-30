@@ -33,15 +33,12 @@ class LoginInteractionTest : StudentTest() {
         // Should be able to search for and select a school in the "What's your school's name?" page
     }
 
-    @Stub
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.INTERACTION, true)
+    @TestMetaData(Priority.P0, FeatureCategory.LOGIN, TestCategory.INTERACTION, false)
     fun testLogin_qrTutorialPageLoads() {
         // Should be able to view and assert page objects on the QR tutorial page
-        /* Disabled while the remote config flag is off
         loginLandingPage.clickQRCodeButton()
         qrLoginPage.assertPageObjects()
         qrLoginPage.clickForA11y()
-         */
     }
 }
