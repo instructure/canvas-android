@@ -15,14 +15,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/dialog_with_navigator_key.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
+import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/style_slicer.dart';
 
 class MasqueradeUI extends StatefulWidget {
   final Widget child;
@@ -43,10 +46,12 @@ class MasqueradeUI extends StatefulWidget {
       builder: (context) {
         AppLocalizations l10n = L10n(context);
         bool logout = ApiPrefs.getCurrentLogin()?.isMasqueradingFromQRCode == true;
-        String userName = ApiPrefs.getUser()?.name;
+        User user = ApiPrefs.getUser();
+        var nameText = UserName.fromUser(user).text;
+        String messageText = logout ? l10n.endMasqueradeLogoutMessage(nameText) : l10n.endMasqueradeMessage(nameText);
         return AlertDialog(
           title: Text(L10n(context).stopActAsUser),
-          content: Text(logout ? l10n.endMasqueradeLogoutMessage(userName) : l10n.endMasqueradeMessage(userName)),
+          content: Text.rich(StyleSlicer.apply(messageText, [PronounSlice(user.pronouns)])),
           actions: [
             FlatButton(
               child: new Text(L10n(context).cancel),
@@ -77,7 +82,7 @@ class MasqueradeUI extends StatefulWidget {
 
 class MasqueradeUIState extends State<MasqueradeUI> {
   bool _enabled = false;
-  String _userName;
+  User _user;
 
   GlobalKey _childKey = GlobalKey();
 
@@ -93,7 +98,7 @@ class MasqueradeUIState extends State<MasqueradeUI> {
     bool wasEnabled = _enabled;
     if (ApiPrefs.isLoggedIn() && ApiPrefs.isMasquerading()) {
       _enabled = true;
-      _userName = ApiPrefs.getUser().name;
+      _user = ApiPrefs.getUser();
     } else {
       _enabled = false;
     }
@@ -108,6 +113,7 @@ class MasqueradeUIState extends State<MasqueradeUI> {
   Widget build(BuildContext context) {
     Widget child = KeyedSubtree(key: _childKey, child: widget.child);
     if (!_enabled) return child;
+    String message = L10n(context).actingAsUser(UserName.fromUser(_user).text);
     return SafeArea(
       child: Material(
         child: Container(
@@ -124,8 +130,8 @@ class MasqueradeUIState extends State<MasqueradeUI> {
                   children: <Widget>[
                     SizedBox(width: 16),
                     Expanded(
-                      child: Text(
-                        L10n(context).actingAsUser(_userName),
+                      child: Text.rich(
+                        StyleSlicer.apply(message, [PronounSlice(_user.pronouns)]),
                         style: TextStyle(color: Colors.white),
                       ),
                     ),

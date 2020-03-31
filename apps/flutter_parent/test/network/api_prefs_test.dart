@@ -297,8 +297,7 @@ void main() {
     final login = Login((b) => b
       ..masqueradeDomain = 'masqueradeDomain'
       ..masqueradeUser = masqueradeUser.toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     expect(ApiPrefs.getUser(), masqueradeUser);
   });

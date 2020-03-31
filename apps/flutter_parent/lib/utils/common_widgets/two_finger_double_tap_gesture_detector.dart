@@ -52,12 +52,12 @@ class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
   TwoFingerDoubleTapGestureRecognizer() {
     onTapDown = _trackTapDown;
     onTapUp = _trackTapUp;
-    onTapCancel = _cancel;
+    onTapCancel = (_) => _reset();
   }
 
   void _trackTapDown(int pointer, TapDownDetails details) {
     _downPointers[pointer] = DateTime.now();
-    if (_downPointers.length > 2) _cancel(pointer);
+    if (_downPointers.length > 2) _reset();
   }
 
   void _trackTapUp(int pointer, TapUpDetails details) {
@@ -66,7 +66,6 @@ class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
     DateTime upTime = DateTime.now();
     if (upTime.difference(downTime) < kLongPressTimeout) _upPointers[pointer] = upTime;
     if (_upPointers.length >= 2) {
-      _downPointers.clear();
       var upTimes = _upPointers.values.toList();
       if (upTimes[0].difference(upTimes[1]).abs() < kPressTimeout) {
         _trackTwoFingerTap();
@@ -78,17 +77,15 @@ class TwoFingerDoubleTapGestureRecognizer extends MultiTapGestureRecognizer {
 
   void _trackTwoFingerTap() {
     DateTime tapTime = DateTime.now();
-    if (_lastTwoFingerTap == null) {
-      _lastTwoFingerTap = tapTime;
-    } else {
-      if (tapTime.difference(_lastTwoFingerTap) < kDoubleTapTimeout) {
-        if (onDoubleTap != null) onDoubleTap();
-      }
-      _lastTwoFingerTap = null;
+    DateTime lastTap = _lastTwoFingerTap;
+    _lastTwoFingerTap = tapTime;
+    if (lastTap != null && tapTime.difference(lastTap) < kDoubleTapTimeout) {
+      if (onDoubleTap != null) onDoubleTap();
+      _reset();
     }
   }
 
-  void _cancel(int pointer) {
+  void _reset() {
     _downPointers.clear();
     _upPointers.clear();
     _lastTwoFingerTap = null;

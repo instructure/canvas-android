@@ -17,7 +17,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
-import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -155,9 +154,6 @@ class LoginLandingScreen extends StatelessWidget {
                 itemCount: logins.length,
                 itemBuilder: (context, index) {
                   Login login = logins[index];
-                  User user = login.masqueradeUser ?? login.user;
-                  String domain = login.masqueradeDomain ?? login.domain;
-                  bool isMasked = login.masqueradeUser != null;
                   return ListTile(
                     onTap: () {
                       ApiPrefs.switchLogins(login);
@@ -166,8 +162,8 @@ class LoginLandingScreen extends StatelessWidget {
                     leading: Stack(
                       overflow: Overflow.visible,
                       children: <Widget>[
-                        Avatar.fromUser(user),
-                        if (isMasked)
+                        Avatar.fromUser(login.currentUser),
+                        if (login.isMasquerading)
                           Positioned(
                             right: -6,
                             top: -6,
@@ -182,8 +178,8 @@ class LoginLandingScreen extends StatelessWidget {
                           ),
                       ],
                     ),
-                    title: UserName.fromUser(user),
-                    subtitle: Text(domain),
+                    title: UserName.fromUser(login.currentUser),
+                    subtitle: Text(login.currentDomain),
                     trailing: IconButton(
                       tooltip: L10n(context).delete,
                       onPressed: () async {

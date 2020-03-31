@@ -79,8 +79,7 @@ class ApiPrefs {
 
   static bool isMasquerading() {
     _checkInit();
-    var login = getCurrentLogin();
-    return login != null && login.masqueradeUser != null && login.masqueradeDomain != null;
+    return getCurrentLogin()?.isMasquerading == true;
   }
 
   /// Optionally provide ParentApp (ParentApp.of(context)) as app to rebuild the application for any language changes
@@ -200,13 +199,13 @@ class ApiPrefs {
 
   static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
-  static User getUser() => getCurrentLogin()?.masqueradeUser ?? getCurrentLogin()?.user;
+  static User getUser() => getCurrentLogin()?.currentUser;
 
   static String getUserAgent() => 'androidParent/${_packageInfo.version} (${_packageInfo.buildNumber})';
 
   static String getApiUrl({String path = ''}) => '${getDomain()}/api/v1/$path';
 
-  static String getDomain() => getCurrentLogin()?.masqueradeDomain ?? getCurrentLogin()?.domain;
+  static String getDomain() => getCurrentLogin()?.currentDomain;
 
   static String getAuthToken() => getCurrentLogin()?.accessToken;
 

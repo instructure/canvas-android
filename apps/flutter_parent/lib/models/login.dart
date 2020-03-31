@@ -53,6 +53,12 @@ abstract class Login implements Built<Login, LoginBuilder> {
   @nullable
   bool get isMasqueradingFromQRCode;
 
+  bool get isMasquerading => masqueradeUser != null && masqueradeDomain != null;
+
+  User get currentUser => masqueradeUser ?? user;
+
+  String get currentDomain => masqueradeDomain ?? domain;
+
   Login._();
   factory Login([void Function(LoginBuilder) updates]) = _$Login;
 
