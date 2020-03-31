@@ -18,6 +18,8 @@ package com.instructure.student.ui.e2e
 
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -56,5 +58,59 @@ class SettingsE2ETest : StudentTest() {
 
         // May be brittle.  See comments in HelpPage.kt.
         helpPage.assertPageObjects()
+    }
+
+    // The remote config settings page (only available on debug builds) used to do some
+    // really bizarre things when reacting to the soft keyboard appearing and disappearing.
+    // This test verifies that no remote config values change in response to the
+    // soft keyboard appearing.
+    //
+    // Marked as P2 because this is not testing user-facing functionality.
+    @E2E
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testRemoteConfigSettingsE2E() {
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        tokenLogin(student)
+
+        dashboardPage.waitForRender()
+        dashboardPage.launchSettingsPage()
+
+        // Capture the initial remote config values
+        val initialValues = mutableMapOf<String, String?>()
+        RemoteConfigParam.values().forEach {param -> initialValues.put(param.rc_name, RemoteConfigUtils.getString(param))}
+
+        // Launch the remote config page
+        settingsPage.launchRemoteConfigParams()
+
+        // Click on each EditText, which brings up the soft keyboard, then dismiss it.
+        RemoteConfigParam.values().forEach { param ->
+
+            // Bring up the soft keyboard
+            remoteConfigSettingsPage.clickRemoteConfigParamValue(param)
+
+            // and dismiss it
+            Espresso.closeSoftKeyboard()
+
+            // If we don't clear the focus on the EditText, it can cause
+            // funky behavior when we click on the next EditText (like the
+            // "paste | select all" menu popping up).
+            remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param)
+        }
+
+        // Exit the remote config page
+        Espresso.pressBack()
+
+        // Go back in again
+        settingsPage.launchRemoteConfigParams()
+
+        // Verify that all fields have maintained their initial value
+        RemoteConfigParam.values().forEach { param ->
+            remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
+        }
+
+        // Exit the remote config page
+        Espresso.pressBack()
     }
 }

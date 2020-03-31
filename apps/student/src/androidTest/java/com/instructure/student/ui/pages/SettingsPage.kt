@@ -17,6 +17,7 @@
 package com.instructure.student.ui.pages
 
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertHasContentDescription
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.scrollTo
@@ -30,6 +31,7 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val aboutLabel by OnViewWithId(R.id.about)
     private val legalLabel by OnViewWithId(R.id.legal)
     private val helpLabel by OnViewWithId(R.id.help)
+    private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigParams)
 
     fun launchAboutPage() {
         aboutLabel.click()
@@ -41,6 +43,10 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
 
     fun launchHelpPage() {
         helpLabel.scrollTo().click()
+    }
+
+    fun launchRemoteConfigParams() {
+        remoteConfigLabel.scrollTo().click()
     }
 
 
