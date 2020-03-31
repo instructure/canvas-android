@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:convert';
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -82,7 +83,8 @@ class ApiPrefs {
     return login != null && login.masqueradeUser != null && login.masqueradeDomain != null;
   }
 
-  static Future<void> performLogout({bool switchingLogins = false}) async {
+  /// Optionally provide ParentApp (ParentApp.of(context)) as app to rebuild the application for any language changes
+  static Future<void> performLogout({bool switchingLogins = false, app}) async {
     _checkInit();
 
     // Clear network cache
@@ -107,6 +109,7 @@ class ApiPrefs {
     // Clear current Login
     await _prefs.remove(KEY_CURRENT_LOGIN_UUID);
     _currentLogin = null;
+    app?.rebuild(effectiveLocale());
   }
 
   static Future<void> saveLogins(List<Login> logins) async {
@@ -158,8 +161,7 @@ class ApiPrefs {
     // Update locale
     return await new Future<void>.sync(() {
       var newLocale = effectiveLocale();
-      if (oldLocale != effectiveLocale()) {
-        Intl.defaultLocale = effectiveLocale().toLanguageTag();
+      if (Intl.defaultLocale != newLocale) {
         app?.rebuild(newLocale);
       }
     });
@@ -188,7 +190,9 @@ class ApiPrefs {
     } else {
       return Locale.fromSubtags(
         languageCode: localeParts.first,
-        scriptCode: userLocale[1],
+        scriptCode: userLocale[1].length < 5
+            ? 'inst${userLocale[1]}' // da-k12 -> da-instk12 (can't be less than 4 characters)
+            : userLocale[1].substring(0, min(8, userLocale[1].length)), // en-unimelb -> en-unimelb (no more than 8)
         countryCode: localeParts.last,
       );
     }
@@ -243,7 +247,8 @@ class ApiPrefs {
     var headers = {
       'Authorization': 'Bearer $token',
       'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
-          .replaceAll('-', ','),
+          .replaceAll('-', ',')
+          .replaceAll('_', '-'),
       'User-Agent': getUserAgent(),
     };
 

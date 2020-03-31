@@ -53,6 +53,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       _navigate(PandaRouter.login());
       return _defaultBody(context);
     } else {
+      if (_dataFuture == null) {
+        _dataFuture = locator<DashboardInteractor>().getStudents(forceRefresh: true);
+      }
+
       return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
