@@ -17,6 +17,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
@@ -109,7 +110,7 @@ class DashboardState extends State<DashboardScreen> {
       _selfError = false;
     });
 
-    _interactor.getSelf().then((user) {
+    _interactor.getSelf(app: ParentApp.of(context)).then((user) {
       _self = user;
       setState(() {
         _selfLoading = false;
@@ -402,7 +403,7 @@ class DashboardState extends State<DashboardScreen> {
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     ParentTheme.of(context).studentIndex = 0;
-    await ApiPrefs.performLogout(switchingLogins: switchingUsers);
+    await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
     locator<Analytics>()
         .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());

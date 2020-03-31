@@ -41,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
-    _dataFuture = locator<DashboardInteractor>().getStudents(forceRefresh: true);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInBack);
     _animation.addListener(_animationListener);
   }
@@ -53,6 +52,10 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       _navigate(PandaRouter.login());
       return _defaultBody(context);
     } else {
+      if (_dataFuture == null) {
+        _dataFuture = locator<DashboardInteractor>().getStudents(forceRefresh: true);
+      }
+
       return Scaffold(
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
