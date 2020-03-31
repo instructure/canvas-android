@@ -23,13 +23,15 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-data class SignedInUser(
+data class SignedInUser constructor(
         var user: User,
         var domain: String,
         var protocol: String,
         var token: String,
         var accessToken: String,
         var refreshToken: String,
+        var clientId: String?,
+        var clientSecret: String?,
         var calendarFilterPrefs: ArrayList<String>?,
         var lastLogoutDate: Date? = null
 ) : Comparable<SignedInUser>, Parcelable {

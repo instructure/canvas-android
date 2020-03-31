@@ -61,6 +61,8 @@ class NavigationDrawerInteractionTest : StudentTest() {
                 token = data.tokenFor(student1)!!,
                 accessToken = "",
                 refreshToken = "",
+                clientId = "",
+                clientSecret = "",
                 calendarFilterPrefs = null
         ))
         dashboardPage.signOut()
