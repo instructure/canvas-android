@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
@@ -145,6 +146,8 @@ object RouteResolver {
             fragment = ProfileEditFragment.newInstance(route.arguments)
         } else if (FeatureFlagsFragment::class.java.isAssignableFrom(cls)) {
             fragment = FeatureFlagsFragment()
+        } else if (RemoteConfigParamsFragment::class.java.isAssignableFrom(cls)) {
+            fragment = RemoteConfigParamsFragment()
         } else if (LTIWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = LTIWebViewFragment.newInstance(route.arguments)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {

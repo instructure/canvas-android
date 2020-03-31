@@ -29,10 +29,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.*
-import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -112,7 +110,7 @@ class InterwebsToApplication : AppCompatActivity() {
                         Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
                     }
 
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
                     finish()
                     return@tryWeave

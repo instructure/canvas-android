@@ -1249,6 +1249,11 @@ class AppLocalizations {
         desc: 'Button text added to webviews to let users open external tools in their browser',
       );
 
+  String get webAccessLimitedMessage => Intl.message(
+        'Interactions on this page are limited by your institution.',
+        desc: 'Message describing how the webview has limited access due to an instution setting',
+      );
+
   String dateAtTime(String date, String time) => Intl.message(
         '$date at $time',
         args: [date, time],

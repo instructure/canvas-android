@@ -23,4 +23,7 @@ class UserApi {
     var dio = DioConfig.canvas().copyWith(baseUrl: '$domain/api/v1/').dio;
     return fetch(dio.get('users/$userId/profile'));
   }
+
+  Future<UserPermission> getSelfPermissions() =>
+      fetch(canvasDio(forceRefresh: true).get<User>('users/self')).then((user) => user.permissions);
 }

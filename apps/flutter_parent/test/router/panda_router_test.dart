@@ -14,7 +14,9 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
@@ -429,6 +431,26 @@ void main() {
       verify(_mockSnackbar.showSnackBar(any, 'An error occurred when trying to display this link'));
     });
 
+    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
+      final newLogin = login.rebuild((b) => b.user = login.user
+          .rebuild((user) => user.permissions = UserPermissionBuilder()..limitParentAppWebAccess = true)
+          .toBuilder());
+
+      final url = 'https://test.instructure.com/commons/1234';
+      when(_mockWebContentInteractor.getAuthUrl(url)).thenAnswer((_) async => url);
+
+      await TestApp.showWidgetFromTap(
+        tester,
+        (context) => PandaRouter.routeInternally(context, url),
+        config: PlatformConfig(initLoggedInUser: newLogin),
+      );
+
+      verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
+      verify(_mockNav.pushRoute(any, PandaRouter.simpleWebViewRoute(url, AppLocalizations().webAccessLimitedMessage)));
+    });
+  });
+
+  group('url route wrapper', () {
     test('returns valid UrlRouteWrapper', () {
       final path = '/courses/1567973';
       final url = '$_domain$path';
@@ -458,10 +480,6 @@ void main() {
       assert(routeWrapper.validHost == true);
       assert(routeWrapper.appRouteMatch == null);
     });
-
-//     Todo once MBL-13924 is done
-//    testWidgetsWithAccessibilityChecks('launches simpleWebView for limitAccessFlag without match', (tester) async {
-//    });
   });
 }
 
