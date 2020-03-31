@@ -41,7 +41,7 @@ void main() {
     verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
   });
 
-  test('getSelf calls getSelf from UserApi', () async {
+  test('getSelf calls UserApi', () async {
     var api = MockUserApi();
     final initialUser = CanvasModelTestUtils.mockUser();
     final updatedUser = CanvasModelTestUtils.mockUser(name: 'Inst Panda');
@@ -62,6 +62,28 @@ void main() {
     final actual = await interactor.getSelf();
 
     expect(actual, permittedUser);
+    verify(api.getSelf()).called(1);
+    verify(api.getSelfPermissions()).called(1);
+  });
+
+  test('getSelf calls UserApi and handles no permissions', () async {
+    var api = MockUserApi();
+    final initialUser = CanvasModelTestUtils.mockUser();
+    final updatedUser = CanvasModelTestUtils.mockUser(name: 'Inst Panda');
+
+    setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
+    when(api.getSelf()).thenAnswer((_) => Future.value(updatedUser));
+    when(api.getSelfPermissions()).thenAnswer((_) => Future.error('No permissions for this user'));
+
+    // Setup ApiPrefs
+    final login = Login((b) => b..user = initialUser.toBuilder());
+    await setupPlatformChannels(
+        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
+
+    var interactor = DashboardInteractor();
+    final actual = await interactor.getSelf();
+
+    expect(actual, updatedUser);
     verify(api.getSelf()).called(1);
     verify(api.getSelfPermissions()).called(1);
   });
