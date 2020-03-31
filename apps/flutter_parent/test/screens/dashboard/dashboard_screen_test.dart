@@ -21,6 +21,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
@@ -488,12 +489,14 @@ void main() {
       final reminderDb = _MockReminderDb();
       final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
+      final authApi = _MockAuthApi();
 
       _setupLocator();
       final _locator = GetIt.instance;
       _locator.registerLazySingleton<ReminderDb>(() => reminderDb);
       _locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
       _locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
+      _locator.registerLazySingleton<AuthApi>(() => authApi);
 
       when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
 
@@ -856,3 +859,5 @@ class _MockNotificationUtil extends Mock implements NotificationUtil {}
 class MockPlannerApi extends Mock implements PlannerApi {}
 
 class _MockAnalytics extends Mock implements Analytics {}
+
+class _MockAuthApi extends Mock implements AuthApi {}

@@ -17,6 +17,7 @@ import 'dart:ui';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
@@ -134,12 +135,14 @@ void main() {
     expect(ApiPrefs.getCurrentLoginUuid(), null);
   });
 
-  test('perform logout clears out reminders and calendar filters', () async {
+  test('perform logout clears out reminders and calendar filters, and deletes auth token', () async {
     final reminderDb = _MockReminderDb();
     final calendarFilterDb = _MockCalendarFilterDb();
     final notificationUtil = _MockNotificationUtil();
+    final authApi = _MockAuthApi();
     setupTestLocator((locator) {
       locator.registerLazySingleton<ReminderDb>(() => reminderDb);
+      locator.registerLazySingleton<AuthApi>(() => authApi);
       locator.registerLazySingleton<CalendarFilterDb>(() => calendarFilterDb);
       locator.registerLazySingleton<NotificationUtil>(() => notificationUtil);
     });
@@ -164,6 +167,7 @@ void main() {
     verify(notificationUtil.deleteNotifications([reminder.id]));
     verify(reminderDb.deleteAllForUser(login.domain, login.user.id));
     verify(calendarFilterDb.deleteAllForUser(login.domain, login.user.id));
+    verify(authApi.deleteToken(login.domain, login.accessToken));
   });
 
   test('setting user updates stored user', () async {
@@ -353,3 +357,5 @@ class _MockReminderDb extends Mock implements ReminderDb {}
 class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
+
+class _MockAuthApi extends Mock implements AuthApi {}

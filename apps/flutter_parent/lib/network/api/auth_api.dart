@@ -57,4 +57,10 @@ class AuthApi {
       ),
     );
   }
+
+  Future<void> deleteToken(String domain, String token) async {
+    Dio dio = DioConfig().dio;
+    var params = {'access_token': token};
+    await dio.delete('$domain/login/oauth2/token', queryParameters: params);
+  }
 }
