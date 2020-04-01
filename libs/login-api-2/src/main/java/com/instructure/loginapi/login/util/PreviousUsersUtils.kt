@@ -76,7 +76,7 @@ object PreviousUsersUtils {
         // Delete Access Token. We don't care about the result.
         OAuthManager.deleteToken()
 
-        //Save Signed In User to sharedPreferences
+        // Remove Signed In User from sharedPreferences
         val sharedPreferences = context.getSharedPreferences(SIGNED_IN_USERS_PREF_NAME, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.remove(getGlobalUserId(signedInUser.domain, signedInUser.user))

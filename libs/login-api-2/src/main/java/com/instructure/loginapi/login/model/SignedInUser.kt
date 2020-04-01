@@ -30,6 +30,8 @@ data class SignedInUser(
         var token: String,
         var accessToken: String,
         var refreshToken: String,
+        var clientId: String?,
+        var clientSecret: String?,
         var calendarFilterPrefs: ArrayList<String>?,
         var lastLogoutDate: Date? = null
 ) : Comparable<SignedInUser>, Parcelable {

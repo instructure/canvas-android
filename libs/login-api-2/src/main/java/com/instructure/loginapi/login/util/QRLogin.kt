@@ -89,14 +89,16 @@ object QRLogin {
             // Add the user to signed in and api prefs
             ApiPrefs.user = user
             PreviousUsersUtils.add(context, SignedInUser(
-                    user,
-                    updatedDomain,
-                    ApiPrefs.protocol,
-                    "",  // TODO - delete once we move over 100% to refresh tokens
-                    tokenResponse.accessToken!!,
-                    tokenResponse.refreshToken!!,
-                    null,
-                    null
+                user = user,
+                domain = updatedDomain,
+                protocol = ApiPrefs.protocol,
+                token = "",  // TODO - delete once we move over 100% to refresh tokens
+                accessToken = tokenResponse.accessToken!!,
+                refreshToken = tokenResponse.refreshToken!!,
+                clientId = domainVerificationResult.client_id,
+                clientSecret = domainVerificationResult.client_secret,
+                calendarFilterPrefs = null,
+                lastLogoutDate = null
             ))
         }
 

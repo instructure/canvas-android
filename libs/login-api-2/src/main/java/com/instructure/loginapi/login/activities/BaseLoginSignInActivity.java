@@ -39,13 +39,6 @@ import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-
 import com.instructure.canvasapi2.RequestInterceptor;
 import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.OAuthManager;
@@ -70,10 +63,14 @@ import com.instructure.loginapi.login.util.Const;
 import com.instructure.loginapi.login.util.PreviousUsersUtils;
 import com.instructure.pandautils.utils.ViewStyler;
 
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -531,6 +528,8 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                             "", // TODO - delete once we move over 100% to refresh tokens
                             token.getAccessToken(),
                             token.getRefreshToken(),
+                            ApiPrefs.getClientId(),
+                            ApiPrefs.getClientSecret(),
                             null,
                             null
                         );
