@@ -1,7 +1,6 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -12,7 +11,7 @@ class LoginLandingPage : BasePage() {
 
     private val canvasLogoImageView by OnViewWithId(R.id.canvasLogo)
     private val findMySchoolButton by OnViewWithId(R.id.findMySchool)
-    private val canvasNetworkTextView by WaitForViewWithId(R.id.canvasNetwork)
+    private val canvasNetworkTextView by OnViewWithId(R.id.canvasNetwork)
     private val previousLoginWrapper by OnViewWithId(R.id.previousLoginWrapper, autoAssert = false)
     private val previousLoginTitleText by  OnViewWithId(R.id.previousLoginTitleText, autoAssert = false)
     private val previousLoginDivider by  OnViewWithId(R.id.previousLoginDivider, autoAssert = false)
