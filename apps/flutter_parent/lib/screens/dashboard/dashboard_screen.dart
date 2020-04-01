@@ -69,10 +69,7 @@ class DashboardState extends State<DashboardScreen> {
   bool _studentsLoading = false;
   bool _selfLoading = false;
 
-  // These two will likely be used when we have specs for error screens
-  // ignore: unused_field
-  bool _selfError = false;
-
+  // This will likely be used when we have specs for the error state
   // ignore: unused_field
   bool _studentsError = false;
 
@@ -109,8 +106,8 @@ class DashboardState extends State<DashboardScreen> {
 
   void _loadSelf() {
     setState(() {
+      _self = ApiPrefs.getUser();
       _selfLoading = true;
-      _selfError = false;
     });
 
     _interactor.getSelf(app: ParentApp.of(context)).then((user) {
@@ -122,7 +119,6 @@ class DashboardState extends State<DashboardScreen> {
       print('Error loading user: $error');
       setState(() {
         _selfLoading = false;
-        _selfError = true;
       });
     });
   }
@@ -318,15 +314,9 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   Widget _navDrawer(User user) {
-    if (user == null) {
-      if (_selfLoading) {
-        // Still loading...
-        return LoadingIndicator();
-      } else {
-        // Either we loaded a null user, or we got an error
-        // TODO: Add in error screen when we get specs
-        return Text('Error');
-      }
+    if (_selfLoading) {
+      // Still loading...
+      return LoadingIndicator();
     }
 
     return ListTileTheme(
