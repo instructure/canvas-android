@@ -26,6 +26,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.Month
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
@@ -127,9 +128,17 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     }
 
     @Test
-    fun `Sets Assignment due on future date`() {
+    fun `Sets Assignment due on arbitrary date`() {
+        var expectedDueDate = "Due Apr 2 at 1:59 pm"
+        var expectedMonth = 4
+        if(OffsetDateTime.now().month == Month.APRIL) {
+            // If it is April 1-3, the above setting will result in failure.
+            // Move the expected due date to June.
+            expectedDueDate = "Due Jun 2 at 1:59 pm"
+            expectedMonth = 6
+        }
         baseAssignment = baseAssignment.copy(
-            dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(
+            dueAt = OffsetDateTime.now().withMonth(expectedMonth).withDayOfMonth(2).withHour(13).withMinute(59).format(
                 DateTimeFormatter.ISO_DATE_TIME
             )
         )
@@ -138,7 +147,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
 
         val expectedState = defaultLoadedState.copy(
             isAllowedToSubmit = true,
-            dueDateText = "Due Apr 2 at 1:59 pm"
+            dueDateText = expectedDueDate
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
