@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -135,8 +136,13 @@ class ApiPrefs {
   static Future<void> removeLoginByUuid(String uuid) async {
     _checkInit();
     var logins = getLogins();
-    logins.retainWhere((it) => it.uuid != uuid);
-    await saveLogins(logins);
+    Login login = logins.firstWhere((it) => it.uuid == uuid, orElse: () => null);
+    if (login != null) {
+      // Delete token (fire and forget - no need to await)
+      locator<AuthApi>().deleteToken(login.domain, login.accessToken);
+      logins.retainWhere((it) => it.uuid != uuid);
+      await saveLogins(logins);
+    }
   }
 
   /// Updates the current login. If passing in the root app, it will be rebuilt on locale change.

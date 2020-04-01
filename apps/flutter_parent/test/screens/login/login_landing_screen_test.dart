@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
@@ -40,6 +41,7 @@ import '../../utils/test_app.dart';
 void main() {
   final analytics = _MockAnalytics();
   final interactor = _MockInteractor();
+  final authApi = _MockAuthApi();
 
   final login = Login((b) => b
     ..domain = 'domain'
@@ -49,6 +51,7 @@ void main() {
   setupTestLocator((locator) {
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Analytics>(() => analytics);
+    locator.registerLazySingleton<AuthApi>(() => authApi);
 
     locator.registerFactory<DashboardInteractor>(() => interactor);
     locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
@@ -57,6 +60,7 @@ void main() {
 
   setUp(() {
     reset(analytics);
+    reset(authApi);
   });
 
   Future<void> twoFingerDoubleTap(WidgetTester tester) async {
@@ -277,3 +281,5 @@ void main() {
 class _MockAnalytics extends Mock implements Analytics {}
 
 class _MockInteractor extends Mock implements DashboardInteractor {}
+
+class _MockAuthApi extends Mock implements AuthApi {}
