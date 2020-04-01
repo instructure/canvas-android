@@ -14,12 +14,15 @@
 
 import 'dart:async';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -33,7 +36,7 @@ enum LoginFlow {
   skipMobileVerify,
 }
 
-class WebLoginScreen extends StatelessWidget {
+class WebLoginScreen extends StatefulWidget {
   WebLoginScreen(
     this.domain, {
     this.user,
@@ -49,35 +52,59 @@ class WebLoginScreen extends StatelessWidget {
   final String authenticationProvider;
   final LoginFlow loginFlow;
 
-  final String successUrl = '/login/oauth2/auth?code=';
-  final String errorUrl = '/login/oauth2/auth?error=access_denied';
+  static const String PROTOCOL_SKIP_VERIFY_KEY = 'skip-protocol';
+  static const String ID_SKIP_VERIFY_KEY = 'skip-id';
+  static const String SECRET_SKIP_VERIFY_KEY = 'skip-secret';
 
-  get _interactor => locator<WebLoginInteractor>();
+  @override
+  _WebLoginScreenState createState() => _WebLoginScreenState();
+}
+
+class _WebLoginScreenState extends State<WebLoginScreen> {
+  static const String SUCCESS_URL = '/login/oauth2/auth?code=';
+  static const String ERROR_URL = '/login/oauth2/auth?error=access_denied';
+
   final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
+
+  WebLoginInteractor get _interactor => locator<WebLoginInteractor>();
+
+  Future<MobileVerifyResult> _verifyFuture;
+  WebViewController _controller;
+  String _authUrl;
+  String _domain;
 
   @override
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
         appBar: AppBar(
-          title: Text(domain),
+          title: Text(widget.domain),
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
-        body: _webLoginBody(),
+        body: _loginBody(),
       ),
     );
   }
 
-  Widget _webLoginBody() {
+  Widget _loginBody() {
+    if (_verifyFuture == null) {
+      _verifyFuture = (widget.loginFlow == LoginFlow.skipMobileVerify)
+          ? Future.delayed(Duration.zero, () => _SkipVerifyDialog.asDialog(context, widget.domain)).then((result) {
+              // Use the result if we have it, otherwise continue on with mobile verify
+              return result ?? _interactor.mobileVerify(widget.domain);
+            })
+          : _interactor.mobileVerify(widget.domain);
+    }
+
     return FutureBuilder(
-      future: _interactor.mobileVerify(domain),
+      future: _verifyFuture,
       builder: (context, AsyncSnapshot<MobileVerifyResult> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
           if (snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success)) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              _showHelpDialog(context, snapshot);
+              _showErrorDialog(context, snapshot);
             });
           }
 
@@ -94,91 +121,119 @@ class WebLoginScreen extends StatelessWidget {
     return WebView(
       navigationDelegate: (request) => _navigate(context, request, verifyResult),
       javascriptMode: JavascriptMode.unrestricted,
-      onPageFinished: (url) {
-        if (user != null && pass != null) {
-          // SnickerDoodle login
-          _controllerCompleter.future.then((controller) {
-            controller.evaluateJavascript("""javascript: {
-                      document.getElementsByName('pseudonym_session[unique_id]')[0].value = '${user}';
-                      document.getElementsByName('pseudonym_session[password]')[0].value = '${pass}';
-                      document.getElementsByClassName('Button')[0].click();
-                };""");
-          });
-        }
-      },
-      onWebViewCreated: (controller) async {
-        CookieManager().clearCookies();
-        controller.clearCache();
-
-        var authUrl = _buildAuthUrl(verifyResult);
-
-        if (loginFlow == LoginFlow.siteAdmin) {
-          await controller.setAcceptThirdPartyCookies(true);
-          if (domain.contains('.instructure.com')) {
-            String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
-            await controller.setCookie(domain, cookie);
-            await controller.setCookie('.instructure.com', cookie);
-          } else {
-            await controller.setCookie(domain, 'canvas_sa_delegated=1');
-          }
-        }
-
-        controller.loadUrl(authUrl);
-        if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
-      },
+      userAgent: ApiPrefs.getUserAgent(),
+      onPageFinished: (url) => _pageFinished(url, verifyResult),
+      onWebViewCreated: (controller) => _webViewCreated(controller, verifyResult),
     );
   }
 
-  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
-    // TODO: Handle parent specific urls too
-    /*
-     *   private const val PARENT_SUCCESS_URL = "/oauthSuccess"
-     *   private const val PARENT_CANCEL_URL = "/oauth2/deny"
-     *   private const val PARENT_ERROR_URL = "/oauthFailure"
-     *   private const val PARENT_TOKEN_URL = "/canvas/tokenReady"
-     */
+  void _webViewCreated(WebViewController controller, MobileVerifyResult verifyResult) async {
+    controller.clearCache();
+    _controller = controller;
 
-    if (request.url.contains(successUrl)) {
+    // WebView's created, time to load
+    await _buildAuthUrl(verifyResult);
+    await _loadAuthUrl();
+
+    if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
+  }
+
+  void _pageFinished(String url, MobileVerifyResult verifyResult) {
+    _controllerCompleter.future.then((controller) async {
+      if (widget.user != null && widget.pass != null) {
+        // SnickerDoodle login
+        controller.evaluateJavascript("""javascript: {
+                      document.getElementsByName('pseudonym_session[unique_id]')[0].value = '${widget.user}';
+                      document.getElementsByName('pseudonym_session[password]')[0].value = '${widget.pass}';
+                      document.getElementsByClassName('Button')[0].click();
+                };""");
+      }
+
+      // If the institution does not support skipping the authentication screen this will catch that error and force the
+      // rebuilding of the authentication url with the authorization screen flow. Example: canvas.sfu.ca
+      // NOTE: the example institution doesn't work when mobile verify is called with canvasParent in the user-agent
+      final htmlError = await controller.evaluateJavascript("""
+            (function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();
+          """);
+      if (htmlError != null && htmlError.contains("redirect_uri does not match client settings")) {
+        _buildAuthUrl(verifyResult, forceAuthRedirect: true);
+        controller.loadUrl("about:blank");
+        _loadAuthUrl();
+      }
+    });
+  }
+
+  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
+    if (request.url.contains(SUCCESS_URL)) {
+      // Success! Try to get tokens now
       var url = request.url;
-      String oAuthRequest = url.substring(url.indexOf(successUrl) + successUrl.length);
+      String oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length);
       locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_SUCCESS,
           extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
         );
         locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
+      }).catchError((_) {
+        locator<Analytics>().logEvent(
+          AnalyticsEventConstants.LOGIN_FAILURE,
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
+        );
+        // Load the original auth url so the user can try again
+        _loadAuthUrl();
       });
       return NavigationDecision.prevent;
-    } else if (request.url.contains(errorUrl)) {
-      locator<Analytics>().logEvent(
-        AnalyticsEventConstants.LOGIN_FAILURE,
-        extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
-      );
+    } else if (request.url.contains(ERROR_URL)) {
+      // Load the original auth url so the user can try again
+      _loadAuthUrl();
       return NavigationDecision.prevent;
     } else {
       return NavigationDecision.navigate;
     }
   }
 
-  String _buildAuthUrl(MobileVerifyResult verifyResult) {
+  /// Load the authenticated url with any necessary cookies
+  void _loadAuthUrl() async {
+    CookieManager().clearCookies();
+
+    if (widget.loginFlow == LoginFlow.siteAdmin) {
+      await _controller?.setAcceptThirdPartyCookies(true);
+      if (_domain.contains('.instructure.com')) {
+        String cookie = 'canvas_sa_delegated=1;domain=.instructure.com;path=/;';
+        await _controller?.setCookie(_domain, cookie);
+        await _controller?.setCookie('.instructure.com', cookie);
+      } else {
+        await _controller?.setCookie(_domain, 'canvas_sa_delegated=1');
+      }
+    }
+
+    _controller?.loadUrl(_authUrl);
+  }
+
+  /// Sets an authenticated login url as well as the base url of the institution
+  void _buildAuthUrl(
+    MobileVerifyResult verifyResult, {
+    bool forceAuthRedirect = false,
+  }) async {
+    // Sanitize the url
     String baseUrl = verifyResult?.baseUrl;
     if ((baseUrl?.length ?? 0) == 0) {
-      baseUrl = domain;
+      baseUrl = widget.domain;
     }
     if (baseUrl.endsWith('/')) {
       baseUrl = baseUrl.substring(0, baseUrl.length - 1);
     }
-    if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    final scheme = Uri.parse(baseUrl).scheme;
+    if (scheme == null || scheme.isEmpty) {
       baseUrl = 'https://${baseUrl}';
     }
 
-    var purpose = Uri.encodeQueryComponent('canvasParent'); // PackageInfo.fromPlatform().then((info) => info.appName);
+    // Prepare login information
+    var purpose = await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
     var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
     var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
 
-    // TODO: Support skipping mobile verify better
-    // forceAuthRedirect || mCanvasLogin == MOBILE_VERIFY_FLOW || domain.contains(".test.")
-    if (domain.contains(".test.") || loginFlow == LoginFlow.skipMobileVerify) {
+    if (forceAuthRedirect || widget.domain.contains(".test.") || widget.loginFlow == LoginFlow.skipMobileVerify) {
       // Skip mobile verify
       redirect = Uri.encodeQueryComponent("urn:ietf:wg:oauth:2.0:oob");
     }
@@ -186,17 +241,23 @@ class WebLoginScreen extends StatelessWidget {
     var result =
         '$baseUrl/login/oauth2/auth?client_id=$clientId&response_type=code&mobile=1&purpose=$purpose&redirect_uri=$redirect';
 
-    //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
-    if (authenticationProvider != null && authenticationProvider.length > 0) {
-      result = '$result&authentication_provider=${Uri.encodeQueryComponent(authenticationProvider)}';
+    // If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
+    if (widget.authenticationProvider != null &&
+        widget.authenticationProvider.length > 0 &&
+        widget.authenticationProvider.toLowerCase() != 'null') {
+      locator<Analytics>().logMessage('authentication_provider=${widget.authenticationProvider}');
+      result = '$result&authentication_provider=${Uri.encodeQueryComponent(widget.authenticationProvider)}';
     }
 
-    if (loginFlow == LoginFlow.canvas) result += '&canvas_login=1';
+    if (widget.loginFlow == LoginFlow.canvas) result += '&canvas_login=1';
 
-    return result;
+    // Set the variables to use when doing a load
+    _authUrl = result;
+    _domain = baseUrl;
   }
 
-  _showHelpDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
+  /// Shows a simple alert dialog with an error message that correlates to the result code
+  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -231,4 +292,120 @@ class WebLoginScreen extends StatelessWidget {
         return localizations.domainVerificationErrorUnknown;
     }
   }
+}
+
+/// Private dialog to show when skipping mobile verify. Let's users provide their own protocol, and client id/secret.
+class _SkipVerifyDialog extends StatefulWidget {
+  final String domain;
+
+  const _SkipVerifyDialog(this.domain, {Key key}) : super(key: key);
+
+  @override
+  __SkipVerifyDialogState createState() => __SkipVerifyDialogState();
+
+  static Future<MobileVerifyResult> asDialog(BuildContext context, String domain) {
+    return showDialog<MobileVerifyResult>(context: context, builder: (_) => _SkipVerifyDialog(domain));
+  }
+}
+
+class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
+  final _formKey = GlobalKey<FormState>();
+
+  FocusScopeNode _focusScopeNode = FocusScopeNode();
+
+  String _protocol = 'https';
+  String _clientId = '';
+  String _clientSecret = '';
+
+  bool _autoValidate = false;
+
+  @override
+  void dispose() {
+    _focusScopeNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      title: Text(L10n(context).skipMobileVerifyTitle), // Non translated string
+      content: _content(),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(L10n(context).cancel.toUpperCase()),
+          onPressed: () => Navigator.of(context).pop(null),
+        ),
+        FlatButton(
+          child: Text(L10n(context).ok.toUpperCase()),
+          onPressed: () => _popWithResult(),
+        ),
+      ],
+    );
+  }
+
+  void _popWithResult() {
+    if (_formKey.currentState.validate()) {
+      Navigator.of(context).pop(MobileVerifyResult((b) => b
+        ..clientId = _clientId
+        ..clientSecret = _clientSecret
+        ..baseUrl = '$_protocol://${widget.domain}'));
+    } else {
+      // Now that they've tried to submit, let the form start validating
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
+
+  Widget _content() {
+    return SingleChildScrollView(
+      child: ArrowAwareFocusScope(
+        node: _focusScopeNode,
+        child: Form(
+          key: _formKey,
+          autovalidate: _autoValidate,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextFormField(
+                key: Key(WebLoginScreen.PROTOCOL_SKIP_VERIFY_KEY),
+                decoration: _decoration(L10n(context).skipMobileVerifyProtocol),
+                initialValue: _protocol,
+                onChanged: (text) => _protocol = text,
+                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyProtocolMissing : null,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                key: Key(WebLoginScreen.ID_SKIP_VERIFY_KEY),
+                decoration: _decoration(L10n(context).skipMobileVerifyClientId),
+                onChanged: (text) => _clientId = text,
+                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientIdMissing : null,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                key: Key(WebLoginScreen.SECRET_SKIP_VERIFY_KEY),
+                decoration: _decoration(L10n(context).skipMobileVerifyClientSecret),
+                onChanged: (text) => _clientSecret = text,
+                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientSecretMissing : null,
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
+                onEditingComplete: _popWithResult,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _decoration(String label) => InputDecoration(
+        labelText: label,
+        fillColor: ParentTheme.of(context).nearSurfaceColor,
+        filled: true,
+      );
 }

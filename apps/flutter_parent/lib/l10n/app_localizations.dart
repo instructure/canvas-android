@@ -750,6 +750,48 @@ class AppLocalizations {
         desc: 'The generic error shown when we are unable to verify with Canvas',
       );
 
+  // Skip non translatable (support only)
+  String get skipMobileVerifyTitle => Intl.message(
+        'Skipping Mobile Verify…',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyProtocol => Intl.message(
+        'https',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyProtocolMissing => Intl.message(
+        'Must provide a protocol',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientId => Intl.message(
+        'Client Id',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientIdMissing => Intl.message(
+        'Must provide a client id',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientSecret => Intl.message(
+        'Client Secret',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientSecretMissing => Intl.message(
+        'Must provide a client secret',
+        skip: true,
+      );
+
   /// Reminders
 
   String get remindersNotificationChannelName => Intl.message(
