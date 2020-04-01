@@ -56,6 +56,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
@@ -145,6 +146,11 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
+
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
+        if(masqueradingUserId != 0L) {
+            MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, InitActivity::class.java)
+        }
 
         setContentView(R.layout.activity_init)
         selectedTab = savedInstanceState?.getInt(SELECTED_TAB) ?: 0

@@ -19,10 +19,12 @@ package com.instructure.teacher.activities
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
+import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
@@ -43,6 +45,15 @@ class LoginActivity : BaseLoginInitActivity() {
         super.finish()
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Check to see if we are switching users from an external QR scan
+        if(QRLogin.verifySSOLoginUri(intent.data, true)) {
+            startActivity(RouteValidatorActivity.createIntent(this, intent.data!!))
+            finish()
+        }
+    }
+
     companion object {
         fun createIntent(context: Context): Intent {
             val intent = Intent(context, LoginActivity::class.java)
@@ -54,6 +65,14 @@ class LoginActivity : BaseLoginInitActivity() {
             PushNotificationRegistrationService.scheduleJob(context, ApiPrefs.isMasquerading)
 
             return SplashActivity.createIntent(context, extras)
+        }
+
+        // Used specifically for a QR Scan user switch
+        fun createIntent(context: Context, uri: Uri): Intent {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.data = uri
+            return intent
         }
     }
 

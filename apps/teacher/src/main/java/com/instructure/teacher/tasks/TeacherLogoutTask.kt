@@ -20,21 +20,26 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.teacher.view.CanvasRecipientManager
 
-class TeacherLogoutTask(type: Type) : LogoutTask(type) {
+class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
-        TeacherPrefs.clearPrefs()
+        TeacherPrefs.safeClearPrefs()
+        CanvasRecipientManager.getInstance(ContextKeeper.appContext).clearCache()
     }
 
     override fun createLoginIntent(context: Context): Intent {
         return LoginActivity.createIntent(context)
     }
 
-    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? = null
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? {
+        return LoginActivity.createIntent(context, uri)
+    }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
         FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }

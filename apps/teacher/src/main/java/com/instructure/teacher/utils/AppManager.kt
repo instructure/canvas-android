@@ -25,6 +25,7 @@ import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.ColorKeeper
@@ -74,6 +75,8 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
         } catch (e: InvalidPSPDFKitLicenseException) {
             Logger.e("Invalid or Trial PSPDFKIT License!")
         }
+
+        MasqueradeHelper.masqueradeLogoutTask = Runnable { TeacherLogoutTask(LogoutTask.Type.LOGOUT).execute() }
 
         // SpeedGrader submission media comment
         val mediaUploadReceiver = SGPendingMediaCommentReceiver()

@@ -21,7 +21,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.crashlytics.android.Crashlytics
 import com.instructure.canvasapi2.managers.CourseManager
@@ -35,10 +34,7 @@ import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.canvasapi2.utils.weave.weave
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.NotATeacherFragment
@@ -49,7 +45,6 @@ import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import java.net.UnknownHostException
 
 @Suppress("EXPERIMENTAL_FEATURE_WARNING")
 class SplashActivity : AppCompatActivity() {
@@ -71,6 +66,7 @@ class SplashActivity : AppCompatActivity() {
         window.setBackgroundDrawable(ColorDrawable(Color.WHITE))
         setContentView(R.layout.activity_splash)
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
+        val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
 
         try {
             startUp = weave {
@@ -122,8 +118,8 @@ class SplashActivity : AppCompatActivity() {
                         enrollmentCheck.start()
                     }
 
-                    // Determine if user can masquerade
-                    if (ApiPrefs.canBecomeUser == null) {
+                    // Determine if user can masquerade - and isn't coming from a masquerade QR scan
+                    if (ApiPrefs.canBecomeUser == null && masqueradingUserId == 0L) {
                         if (ApiPrefs.domain.startsWith("siteadmin", true)) {
                             ApiPrefs.canBecomeUser = true
                         } else try {
@@ -141,7 +137,7 @@ class SplashActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true) {
+                    if (!TeacherPrefs.isConfirmedTeacher && ApiPrefs.canBecomeUser != true && masqueradingUserId == 0L) {
                         // The user is not a teacher in any course and cannot masquerade; Show them the door
                         canvasLoadingView.setGone()
                         supportFragmentManager.beginTransaction()
