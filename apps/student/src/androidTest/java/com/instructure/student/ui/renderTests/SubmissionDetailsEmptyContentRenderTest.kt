@@ -27,6 +27,7 @@ import com.spotify.mobius.runners.WorkRunner
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.threeten.bp.Month
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.format.DateTimeFormatter
 
@@ -102,9 +103,17 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
     @Test
     fun displaysDueDate() {
-        val expectedText = "Due Apr 2 at 1:59 pm"
+        // Some fancy footwork here to avoid using the Apr 2 date when it is Apr 1, Apr 2 or Apr 3,
+        // as that would cause the date to appear as tomorrow, today and yesterday, respectively.
+        // So if we are in April, we will just change the due date to June.
+        var expectedText = "Due Apr 2 at 1:59 pm"
+        var month = 4
+        if(OffsetDateTime.now().month == Month.APRIL) {
+            expectedText = "Due Jun 2 at 1:59 pm"
+            month = 6
+        }
         loadPageWithModel(baseModel.copy(
-            assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
+            assignment = baseAssignment.copy(dueAt = OffsetDateTime.now().withMonth(month).withDayOfMonth(2).withHour(13).withMinute(59).format(DateTimeFormatter.ISO_DATE_TIME))
         ))
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
