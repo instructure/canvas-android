@@ -25,5 +25,5 @@ class UserApi {
   }
 
   Future<UserPermission> getSelfPermissions() =>
-      fetch(canvasDio(forceRefresh: true).get<User>('users/self')).then((user) => user.permissions);
+      fetch<User>(canvasDio(forceRefresh: true).get('users/self')).then((user) => user.permissions);
 }
