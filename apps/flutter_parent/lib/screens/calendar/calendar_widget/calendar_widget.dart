@@ -91,7 +91,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static const int _maxMonthIndex = _todayMonthIndex * 2;
 
   /// The currently-selected date
-  DateTime selectedDay;
+  DateTime selectedDay = DateTime.now();
 
   // Global keys for the PageViews
   Key _dayKey = GlobalKey();
@@ -190,10 +190,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   void initState() {
-    // TODO: Fix issue with setting initial selected date
-//    selectedDay = startingDate ?? DateTime.now();
-    selectedDay = DateTime.now();
-
     // Update _isMonthExpanded when expansion value changes to or from zero
     _monthExpansionNotifier.addListener(() {
       bool isExpanded = _monthExpansionNotifier.value > 0.0;
@@ -227,6 +223,17 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     _dayController = PageController(initialPage: _todayDayIndex);
     _weekController = PageController(initialPage: _todayWeekIndex);
     _monthController = PageController(initialPage: _todayMonthIndex);
+
+    if (widget.startingDate != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        selectDay(
+          widget.startingDate,
+          dayPagerBehavior: CalendarPageChangeBehavior.jump,
+          weekPagerBehavior: CalendarPageChangeBehavior.jump,
+          monthPagerBehavior: CalendarPageChangeBehavior.jump,
+        );
+      });
+    }
 
     super.initState();
   }

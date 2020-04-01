@@ -69,6 +69,36 @@ void main() {
     expect(find.byType(CalendarMonth), findsOneWidget);
   });
 
+  testWidgetsWithAccessibilityChecks('Switches to specified starting date', (tester) async {
+    DateTime startingDate = DateTime(2000, 1, 1);
+    DateTime dateForDayBuilder = null;
+    await tester.pumpWidget(
+      TestApp(
+        CalendarWidget(
+          startingDate: startingDate,
+          dayBuilder: (_, day) {
+            dateForDayBuilder = day;
+            return Container();
+          },
+          fetcher: _FakeFetcher(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Day should have built using target date
+    expect(dateForDayBuilder, startingDate);
+
+    // Week should start on Dec 26, 1999
+    DateTime weekStart = tester.widget<CalendarWeek>(find.byType(CalendarWeek)).firstDay;
+    expect(weekStart, DateTime(1999, 12, 26));
+
+    // Month should be Jan 2000
+    final monthWidget = tester.widget<CalendarMonth>(find.byType(CalendarMonth, skipOffstage: false));
+    expect(monthWidget.year, 2000);
+    expect(monthWidget.month, 1);
+  });
+
   group('Month Expand/Collapse', () {
     testWidgetsWithAccessibilityChecks('Expand button expands and collapses month', (tester) async {
       final calendar = CalendarWidget(
