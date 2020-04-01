@@ -22,6 +22,8 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
@@ -269,11 +271,16 @@ void main() {
 
     test('calendar returns Dashboard screen', () {
       final widget = _getWidgetFromRoute(PandaRouter.calendar, extraParams: {
-        'view_start': ['12-12-2020'],
+        'view_start': ['2018-12-15'],
         'view_name': ['month']
       });
-      expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Calendar);
+
       expect(widget, isA<DashboardScreen>());
+
+      DashboardScreen dashboard = widget;
+      expect(dashboard.startingPage, DashboardContentScreens.Calendar);
+      expect(dashboard.deepLinkParams[CalendarScreen.startDateKey], DateTime(2018, 12, 15));
+      expect(dashboard.deepLinkParams[CalendarScreen.startViewKey], CalendarView.Month);
     });
 
     test('courses returns Dashboard screen', () {
