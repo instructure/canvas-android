@@ -18,6 +18,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../utils/canvas_model_utils.dart';
 import '../utils/test_app.dart';
 
 void main() {
@@ -89,6 +90,25 @@ void main() {
       expect(options.queryParameters, {'per_page': perPageSize});
     });
 
+    test('sets as_user_id param when masquerading', () async {
+      String userId = "masquerade_user_id";
+      final login = Login((b) => b
+        ..masqueradeDomain = 'masqueradeDomain'
+        ..masqueradeUser = CanvasModelTestUtils.mockUser(id: userId).toBuilder());
+      await ApiPrefs.switchLogins(login);
+
+      final options = canvasDio().options;
+
+      expect(options.queryParameters['as_user_id'], userId);
+    });
+
+    test('Does not set as_user_id param when not masquerading', () async {
+      await ApiPrefs.switchLogins(Login());
+      final options = canvasDio().options;
+
+      expect(options.queryParameters.containsKey('as_user_id'), isFalse);
+    });
+
     test('sets cache extras', () async {
       expect(canvasDio(forceRefresh: true).options.extra, isNotEmpty);
     });
@@ -158,6 +178,7 @@ void main() {
         cacheMaxAge: Duration(minutes: 13),
         forceRefresh: true,
         pageSize: PageSize(13),
+        extraQueryParams: {'param1': '123'},
       );
 
       final copy = original.copyWith();
@@ -167,6 +188,7 @@ void main() {
       expect(copy.cacheMaxAge, original.cacheMaxAge);
       expect(copy.forceRefresh, original.forceRefresh);
       expect(copy.pageSize, original.pageSize);
+      expect(copy.extraQueryParams, original.extraQueryParams);
     });
 
     test('Copy with single value produces correct config', () {
@@ -176,6 +198,7 @@ void main() {
         cacheMaxAge: Duration(minutes: 13),
         forceRefresh: true,
         pageSize: PageSize(13),
+        extraQueryParams: {'param1': '123'},
       );
 
       final copy = original.copyWith(baseUrl: '');
@@ -185,6 +208,7 @@ void main() {
       expect(copy.cacheMaxAge, original.cacheMaxAge);
       expect(copy.forceRefresh, original.forceRefresh);
       expect(copy.pageSize, original.pageSize);
+      expect(copy.extraQueryParams, original.extraQueryParams);
     });
 
     test('Copy with all values produces correct config', () {
@@ -194,6 +218,7 @@ void main() {
         cacheMaxAge: Duration(minutes: 13),
         forceRefresh: true,
         pageSize: PageSize(13),
+        extraQueryParams: {'param1': '123'},
       );
 
       final copy = original.copyWith(
@@ -202,6 +227,7 @@ void main() {
         cacheMaxAge: Duration(minutes: 123),
         forceRefresh: false,
         pageSize: PageSize(123),
+        extraQueryParams: {'param2': '321'},
       );
 
       expect(copy.baseUrl, '123');
@@ -209,6 +235,7 @@ void main() {
       expect(copy.cacheMaxAge, Duration(minutes: 123));
       expect(copy.forceRefresh, false);
       expect(copy.pageSize, PageSize(123));
+      expect(copy.extraQueryParams, {'param2': '321'});
     });
   });
 }

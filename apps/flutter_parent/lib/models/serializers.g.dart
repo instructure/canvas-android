@@ -8,6 +8,7 @@ part of serializers;
 
 Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(AccountNotification.serializer)
+      ..add(AccountPermissions.serializer)
       ..add(Alert.serializer)
       ..add(AlertThreshold.serializer)
       ..add(AlertType.serializer)

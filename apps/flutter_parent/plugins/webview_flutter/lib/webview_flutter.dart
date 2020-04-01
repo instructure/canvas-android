@@ -532,11 +532,19 @@ class WebViewController {
   }
 
   Future<void> loadData(
-    String baseUrl, 
+    String baseUrl,
     String data,
     String mimeType,
     String encoding) async {
     return _webViewPlatformController.loadData(baseUrl, data, mimeType, encoding);
+  }
+
+  Future<void> setAcceptThirdPartyCookies(bool accept) async {
+    return _webViewPlatformController.setAcceptThirdPartyCookies(accept);
+  }
+
+  Future<void> setCookie(String url, String value) async {
+    return _webViewPlatformController.setCookie(url, value);
   }
 
   /// Accessor to the current URL that the WebView is displaying.

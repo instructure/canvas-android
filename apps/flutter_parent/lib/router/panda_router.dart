@@ -77,7 +77,10 @@ class PandaRouter {
 
   static String discussionDetails(String courseId, String topicId) => courseAnnouncementDetails(courseId, topicId);
 
-  static String domainSearch() => '/domainSearch';
+  static String _domainSearch = '/domainSearch';
+
+  static String domainSearch({LoginFlow loginFlow = LoginFlow.normal}) =>
+      '$_domainSearch?${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
 
@@ -92,8 +95,12 @@ class PandaRouter {
 
   static final String _loginWeb = '/loginWeb';
 
-  static String loginWeb(String domain, {String authenticationProvider = null}) =>
-      '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider';
+  static String loginWeb(
+    String domain, {
+    String authenticationProvider = null,
+    LoginFlow loginFlow = LoginFlow.normal,
+  }) =>
+      '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String manageStudents() => '/manage_students';
 
@@ -123,7 +130,7 @@ class PandaRouter {
       _isInitialized = true;
       router.define(conversations(), handler: _conversationsHandler);
       router.define(dashboard(), handler: _dashboardHandler);
-      router.define(domainSearch(), handler: _domainSearchHandler);
+      router.define(_domainSearch, handler: _domainSearchHandler);
       router.define(_loginWeb, handler: _loginWebHandler);
       router.define(login(), handler: _loginHandler);
       router.define(notParent(), handler: _notParentHandler);
@@ -211,7 +218,11 @@ class PandaRouter {
   });
 
   static Handler _domainSearchHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return DomainSearchScreen();
+    // Login flow
+    String loginFlowString = params[_RouterKeys.loginFlow].elementAt(0) ?? LoginFlow.normal.toString();
+    LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
+
+    return DomainSearchScreen(loginFlow: loginFlow);
   });
 
   static Handler _eventDetailsHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -240,14 +251,20 @@ class PandaRouter {
   });
 
   static Handler _loginWebHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    var authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
-    var widget = (authProvider == null || authProvider == 'null')
-        ? WebLoginScreen(params[_RouterKeys.domain][0])
-        : WebLoginScreen(
-            params[_RouterKeys.domain][0],
-            authenticationProvider: authProvider,
-          );
-    return widget;
+    // Auth provider
+    String authProvider = params[_RouterKeys.authenticationProvider]?.elementAt(0);
+    if ('null' == authProvider) authProvider = null;
+
+    // Login flow
+    String loginFlowString = params[_RouterKeys.loginFlow].elementAt(0);
+    if (loginFlowString == null || loginFlowString == 'null') loginFlowString = LoginFlow.normal.toString();
+    LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
+
+    return WebLoginScreen(
+    params[_RouterKeys.domain][0],
+    authenticationProvider: authProvider,
+    loginFlow: loginFlow,
+    );
   });
 
   static Handler _notParentHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -368,6 +385,7 @@ class _RouterKeys {
   static final domain = 'domain';
   static final eventId = 'eventId';
   static final infoText = 'infoText';
+  static final loginFlow = 'loginFlow';
   static final quizId = 'quizId';
   static final topicId = 'topicId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code

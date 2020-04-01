@@ -116,8 +116,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
 
   Widget _empty(BuildContext context) {
     return EmptyPandaWidget(
-      // TODO: Waiting for SVG here
-//      svgPath: ,
+      svgPath: 'assets/svg/panda-manage-students.svg',
       subtitle: L10n(context).emptyStudentList,
       buttonText: L10n(context).retry,
       onButtonTap: () => _refresh(),

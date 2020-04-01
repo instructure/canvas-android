@@ -166,6 +166,24 @@ void main() {
     verify(calendarFilterDb.deleteAllForUser(login.domain, login.user.id));
   });
 
+  test('isMasquerading returns false if not masquerading', () async {
+    final login = Login();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.isMasquerading(), isFalse);
+  });
+
+  test('isMasquerading returns true if masquerading', () async {
+    final login = Login((b) => b
+      ..masqueradeDomain = 'masqueradeDomain'
+      ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.isMasquerading(), isTrue);
+  });
+
   test('setting user updates stored user', () async {
     final login = Login();
     await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
@@ -175,6 +193,19 @@ void main() {
     await ApiPrefs.setUser(user);
 
     expect(ApiPrefs.getUser(), user);
+  });
+
+  test('setting user updates stored masqueradeUser if masquerading', () async {
+    final login = Login((b) => b
+      ..masqueradeDomain = 'masqueradeDomain'
+      ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    final user = CanvasModelTestUtils.mockUser();
+    await ApiPrefs.setUser(user);
+
+    expect(ApiPrefs.getCurrentLogin().masqueradeUser, user);
   });
 
   test('setting user updates with new locale rebuilds the app', () async {
@@ -259,6 +290,28 @@ void main() {
   test('getUser returns null', () async {
     await setupPlatformChannels();
     expect(ApiPrefs.getUser(), null);
+  });
+
+  test('getUser returns masquerade user if masquerading', () async {
+    final masqueradeUser = CanvasModelTestUtils.mockUser();
+    final login = Login((b) => b
+      ..masqueradeDomain = 'masqueradeDomain'
+      ..masqueradeUser = masqueradeUser.toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
+
+    expect(ApiPrefs.getUser(), masqueradeUser);
+  });
+
+  test('getDomain returns masquerade domain if masquerading', () async {
+    final masqueradeDomain = 'masqueradeDomain';
+    final login = Login((b) => b
+      ..domain = 'domain'
+      ..masqueradeDomain = masqueradeDomain
+      ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.getDomain(), masqueradeDomain);
   });
 
   test('getHeaderMap throws state error', () {

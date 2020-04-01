@@ -22,8 +22,11 @@ import 'package:flutter_parent/screens/domain_search/domain_search_interactor.da
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
+import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
+import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
+import 'package:flutter_parent/utils/common_widgets/two_finger_double_tap_gesture_detector.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,12 +51,31 @@ void main() {
     locator.registerLazySingleton<Analytics>(() => analytics);
 
     locator.registerFactory<DashboardInteractor>(() => interactor);
+    locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
     locator.registerFactory<DomainSearchInteractor>(() => null);
   });
 
   setUp(() {
     reset(analytics);
   });
+
+  Future<void> twoFingerDoubleTap(WidgetTester tester) async {
+    Offset center = tester.getCenter(find.byType(TwoFingerDoubleTapGestureDetector));
+
+    // Perform first two-finger tap
+    TestGesture pointer1 = await tester.startGesture(center.translate(-64, 0));
+    TestGesture pointer2 = await tester.startGesture(center.translate(64, 0));
+    await pointer1.up();
+    await pointer2.up();
+
+    // Perform second two-finger tap
+    await tester.pump(Duration(milliseconds: 100));
+    pointer1 = await tester.startGesture(center.translate(-64, 0));
+    pointer2 = await tester.startGesture(center.translate(64, 0));
+    await pointer1.up();
+    await pointer2.up();
+    await tester.pump();
+  }
 
   testWidgetsWithAccessibilityChecks('Opens domain search screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
@@ -115,6 +137,31 @@ void main() {
     expect(find.bySemanticsLabel(AppLocalizations().delete), findsNWidgets(2));
   });
 
+  testWidgetsWithAccessibilityChecks('Displays Previous Login correctly for masquerade', (tester) async {
+    Login login = Login((b) => b
+      ..domain = 'domain1'
+      ..masqueradeDomain = 'masqueradeDomain'
+      ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()
+      ..masqueradeUser = CanvasModelTestUtils.mockUser(name: 'masqueradeUser').toBuilder());
+
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.saveLogins([login]);
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().previousLogins), findsOneWidget);
+    expect(find.byKey(Key('previous-logins')), findsOneWidget);
+
+    expect(find.text(login.user.name), findsNothing);
+    expect(find.text(login.masqueradeUser.name), findsOneWidget);
+
+    expect(find.text(login.domain), findsNothing);
+    expect(find.text(login.masqueradeDomain), findsOneWidget);
+
+    expect(find.byType(Avatar), findsOneWidget);
+    expect(find.bySemanticsLabel(AppLocalizations().delete), findsOneWidget);
+    expect(find.byIcon(CanvasIconsSolid.masquerade), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('Clearing previous login removes it from the list', (tester) async {
     List<Login> logins = [
       Login((b) => b
@@ -156,7 +203,6 @@ void main() {
         ..domain = 'domain1'
         ..user = CanvasModelTestUtils.mockUser(name: 'user 1').toBuilder()),
     ];
-    var interactor = _MockInteractor();
 
     await tester.pumpWidget(TestApp(LoginLandingScreen(), platformConfig: PlatformConfig(initLoggedInUser: login)));
     await ApiPrefs.saveLogins(logins);
@@ -180,6 +226,51 @@ void main() {
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     verify(analytics.logEvent(any)).called(1);
+  });
+
+  testWidgetsWithAccessibilityChecks('Uses two-finger double-tap to cycle login flows', (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await tester.pumpAndSettle();
+
+    // First tap should move to the 'Canvas' login flow
+    await twoFingerDoubleTap(tester);
+    expect(find.text(AppLocalizations().loginFlowCanvas), findsOneWidget);
+
+    // Second tap should move to the 'Site Admin' login flow
+    await twoFingerDoubleTap(tester);
+    expect(find.text(AppLocalizations().loginFlowSiteAdmin), findsOneWidget);
+
+    // Third tap should move to the 'Skip mobile verify' login flow
+    await twoFingerDoubleTap(tester);
+    expect(find.text(AppLocalizations().loginFlowSkipMobileVerify), findsOneWidget);
+
+    // Final tap should cycle back to the 'Normal' login flow
+    await twoFingerDoubleTap(tester);
+    expect(find.text(AppLocalizations().loginFlowNormal), findsOneWidget);
+
+    await tester.pumpAndSettle(); // Wait for SnackBar to finish displaying
+  });
+
+  testWidgetsWithAccessibilityChecks('Passes selected LoginFlow to DomainSearchScreen', (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await tester.pumpAndSettle();
+
+    // Tap three times to move to the 'Skip mobile verify' login flow
+    await twoFingerDoubleTap(tester);
+    await twoFingerDoubleTap(tester);
+    await twoFingerDoubleTap(tester);
+
+    expect(find.text(AppLocalizations().findSchool), findsOneWidget);
+    await tester.tap(find.text(AppLocalizations().findSchool));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(DomainSearchScreen), findsOneWidget);
+
+    DomainSearchScreen domainSearch = tester.widget(find.byType(DomainSearchScreen));
+    expect(domainSearch.loginFlow, LoginFlow.skipMobileVerify);
+
+    // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
+    await tester.pageBack();
   });
 }
 

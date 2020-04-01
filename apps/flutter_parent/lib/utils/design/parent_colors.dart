@@ -48,6 +48,9 @@ class ParentColors {
   /// Color for light mode divider under the app bar
   static const appBarDividerLight = Color(0x1F000000);
 
+  /// Color for masquerade-related UI elements
+  static const masquerade = Color(0xFFBE32A3);
+
   /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.
   static MaterialColor makeSwatch(Color color) {
     var src = HSLColor.fromColor(color);

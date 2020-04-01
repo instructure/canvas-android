@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
@@ -25,5 +26,9 @@ class AccountsApi {
 
   Future<TermsOfService> getTermsOfService() {
     return fetch(canvasDio().get('accounts/self/terms_of_service'));
+  }
+
+  Future<AccountPermissions> getAccountPermissions() {
+    return fetch(canvasDio().get('accounts/self/permissions'));
   }
 }
