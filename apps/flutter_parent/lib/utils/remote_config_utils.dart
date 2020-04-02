@@ -17,7 +17,10 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // All of the Remote Config params that we choose to care about.
-enum RemoteConfigParams { TEST_STRING, QR_LOGIN_ENABLED_PARENT }
+enum RemoteConfigParams {
+  QR_LOGIN_ENABLED_PARENT,
+  TEST_STRING,
+}
 
 class RemoteConfigUtils {
   static RemoteConfig _remoteConfig = null;
@@ -65,19 +68,19 @@ class RemoteConfigUtils {
         String rcParamValue = _remoteConfig.getString(rcParamName);
         String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
-            "RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? "null" : "\"$rcParamValue\""}");
+            'RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
         _prefs.setString(rcPreferencesName, rcParamValue);
       });
     } else {
       // Otherwise, some log info.  The log info here and above will serve as a substitute for
       // a local remote-config settings page, which is not supported at this time.
-      print("RemoteConfigUtils.initialize(): No update");
+      print('RemoteConfigUtils.initialize(): No update');
       RemoteConfigParams.values.forEach((rc) {
         String rcParamName = _getRemoteConfigName(rc);
         String rcPreferencesName = _getSharedPreferencesName(rc);
         String rcParamValue = _prefs.getString(rcPreferencesName);
         print(
-            "RemoteConfigUtils.initialize(): cached $rcParamName value = ${rcParamValue == null ? "null" : "\"$rcParamValue\""}");
+            'RemoteConfigUtils.initialize(): cached $rcParamName value = ${rcParamValue == null ? 'null' : '\"$rcParamValue\"'}');
       });
     }
   }
@@ -106,9 +109,9 @@ class RemoteConfigUtils {
   static String _getRemoteConfigName(RemoteConfigParams rcParam) {
     switch (rcParam) {
       case RemoteConfigParams.TEST_STRING:
-        return "test_string";
+        return 'test_string';
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
-        return "qr_login_enabled_parent";
+        return 'qr_login_enabled_parent';
     }
   }
 
@@ -119,16 +122,16 @@ class RemoteConfigUtils {
   static String _getRemoteConfigDefaultValue(RemoteConfigParams rcParam) {
     switch (rcParam) {
       case RemoteConfigParams.TEST_STRING:
-        return "hey there";
+        return 'hey there';
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
-        return "false";
+        return 'false';
     }
   }
 
   // Utility method to fetch the name of the SharedPreferences entry
-  // that corresponds to rcParam.  Just prepends an "rc_" to the
+  // that corresponds to rcParam.  Just prepends an 'rc_' to the
   // remote config name for rcParam.
   static String _getSharedPreferencesName(RemoteConfigParams rcParam) {
-    return "rc_${_getRemoteConfigName(rcParam)}";
+    return 'rc_${_getRemoteConfigName(rcParam)}';
   }
 }
