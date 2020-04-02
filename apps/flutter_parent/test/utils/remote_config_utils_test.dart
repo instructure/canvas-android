@@ -1,3 +1,17 @@
+// Copyright (C) 2019 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,7 +22,6 @@ import 'test_app.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  RemoteConfig mockRemoteConfig;
 
   tearDown(() {
     RemoteConfigUtils.clean();
@@ -25,7 +38,7 @@ void main() {
     expect(() async => await RemoteConfigUtils.initializeExplicit(mockRemoteConfig), throwsStateError);
   });
 
-  test('unfetched variable yields default', () async {
+  test('unfetched, uncached value yields default', () async {
     // No cached values, no fetched values
     await setupPlatformChannels();
     final mockRemoteConfig = _setupMockRemoteConfig();
@@ -35,7 +48,7 @@ void main() {
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), "hey there");
   });
 
-  test('fetched variable trumps default value', () async {
+  test('fetched value trumps default value', () async {
     // Start up with no cached values
     await setupPlatformChannels();
 
@@ -56,6 +69,18 @@ void main() {
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
 
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), "cached value");
+  });
+
+  test('fetched value trumps cached value', () async {
+    // Create a cached value for the "test string" flag.
+    var platformConfig = PlatformConfig(mockPrefs: {"rc_test_string": "cached value"});
+    await setupPlatformChannels(config: platformConfig);
+
+    // Create a mocked RemoteConfig object that refreshes with new data.
+    final mockRemoteConfig = _setupMockRemoteConfig(valueSettings: {"test_string": "fetched value"});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+
+    expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), "fetched value");
   });
 }
 

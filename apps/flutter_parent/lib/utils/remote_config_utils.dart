@@ -1,13 +1,27 @@
+// Copyright (C) 2020 - present Instructure, Inc.
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, version 3 of the License.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// All of the Remote Config params that we choose to care about.
 enum RemoteConfigParams { TEST_STRING, QR_LOGIN_ENABLED_PARENT }
 
 class RemoteConfigUtils {
   static RemoteConfig _remoteConfig = null;
   static SharedPreferences _prefs;
-  static final _RC_PREFS_PREFIX = "rc_";
 
   // I bifurcated initialize() into initialize() and initializeExplicit() to allow for
   // tests to pass in a mocked RemoteConfig object.
@@ -41,9 +55,10 @@ class RemoteConfigUtils {
       RemoteConfigParams.values.forEach((rc) {
         String rcParamName = _getRemoteConfigName(rc);
         String rcParamValue = _remoteConfig.getString(rcParamName);
+        String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
             "RemoteConfigUtils.initialize(): fetched $rcParamName=${rcParamValue == null ? "null" : "\"$rcParamValue\""}");
-        _prefs.setString("$_RC_PREFS_PREFIX$rcParamName", rcParamValue);
+        _prefs.setString(rcPreferencesName, rcParamValue);
       });
     } else {
       // Otherwise, some log info.  The log info here and above will serve as a substitute for
@@ -51,7 +66,8 @@ class RemoteConfigUtils {
       print("RemoteConfigUtils.initialize(): No update");
       RemoteConfigParams.values.forEach((rc) {
         String rcParamName = _getRemoteConfigName(rc);
-        String rcParamValue = _prefs.getString("$_RC_PREFS_PREFIX$rcParamName");
+        String rcPreferencesName = _getSharedPreferencesName(rc);
+        String rcParamValue = _prefs.getString(rcPreferencesName);
         print(
             "RemoteConfigUtils.initialize(): cached $rcParamName value = ${rcParamValue == null ? "null" : "\"$rcParamValue\""}");
       });
@@ -63,15 +79,16 @@ class RemoteConfigUtils {
 
     var rcName = _getRemoteConfigName(rcParam);
     var rcDefault = _getRemoteConfigDefaultValue(rcParam);
-    var result = _prefs.getString("$_RC_PREFS_PREFIX$rcName");
+    var rcPreferencesName = _getSharedPreferencesName(rcParam);
+    var result = _prefs.getString(rcPreferencesName);
     if (result == null) {
       result = rcDefault;
-      _prefs.setString("$_RC_PREFS_PREFIX$rcName", rcDefault);
+      _prefs.setString(rcPreferencesName, rcDefault);
     }
     return result;
   }
 
-  // TODO: Get bool, double, int
+  // TODO: Get bool, double, int.  But we have historically just used string values.
 
   // Utility method to fetch the remote config variable name associated with rcParam.
   // Switch statements are required to cover all possible cases, so if we add
@@ -97,5 +114,12 @@ class RemoteConfigUtils {
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
         return "false";
     }
+  }
+
+  // Utility method to fetch the name of the SharedPreferences entry
+  // that corresponds to rcParam.  Just prepends an "rc_" to the
+  // remote config name for rcParam.
+  static String _getSharedPreferencesName(RemoteConfigParams rcParam) {
+    return "rc_${_getRemoteConfigName(rcParam)}";
   }
 }
