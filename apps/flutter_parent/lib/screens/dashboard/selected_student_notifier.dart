@@ -14,11 +14,14 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class SelectedStudentNotifier extends ValueNotifier<User> {
   SelectedStudentNotifier() : super(null);
 
   update(User student) {
     value = student;
+    locator<AlertCountNotifier>().update(student.id);
   }
 }

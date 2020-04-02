@@ -312,7 +312,7 @@ Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier 
     TestApp(
       ChangeNotifierProvider<SelectedStudentNotifier>(
           create: (context) => notifier ?? SelectedStudentNotifier()
-            ..update(_mockStudent('1')),
+            ..value = _mockStudent('1'),
           child: Consumer<SelectedStudentNotifier>(
             builder: (context, model, _) {
               return Scaffold(body: widget ?? CalendarScreen());

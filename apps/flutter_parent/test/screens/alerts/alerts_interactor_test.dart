@@ -16,6 +16,7 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
@@ -26,9 +27,11 @@ void main() {
   final studentId = '12321';
 
   final api = _MockAlertsApi();
+  final notifier = _MockAlertCountNotifier();
 
   setupTestLocator((_locator) {
     _locator.registerFactory<AlertsApi>(() => api);
+    _locator.registerLazySingleton<AlertCountNotifier>(() => notifier);
   });
 
   setUp(() {
@@ -77,8 +80,18 @@ void main() {
     final actual = await AlertsInteractor().getAlertsForStudent(studentId, false);
 
     verify(api.getAlertThresholds(studentId, false)).called(1);
+    verifyNever(notifier.update(any)); // No call to notifier since we didn't force update
     expect(actual.thresholds, data); // Verify that the actual list sorted correctly
+  });
+
+  test('updates alert count notifier when forcing refresh', () async {
+    await AlertsInteractor().getAlertsForStudent(studentId, true);
+
+    verify(api.getAlertThresholds(studentId, true)).called(1);
+    verify(notifier.update(studentId)).called(1);
   });
 }
 
 class _MockAlertsApi extends Mock implements AlertsApi {}
+
+class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
