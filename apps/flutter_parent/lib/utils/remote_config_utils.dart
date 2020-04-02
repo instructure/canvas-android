@@ -25,18 +25,26 @@ class RemoteConfigUtils {
 
   // I bifurcated initialize() into initialize() and initializeExplicit() to allow for
   // tests to pass in a mocked RemoteConfig object.
-  // This is the normal initializer that should be used from production code.
+  /**
+   * Initialize RemoteConfigUtils.  Should only be called once.
+   * This is the normal initializer that should be called from production code.
+   **/
   static Future<void> initialize() async {
     RemoteConfig freshRemoteConfig = await RemoteConfig.instance;
     await initializeExplicit(freshRemoteConfig);
   }
 
+  /** Only intended for use in test code.  Should not be called from production code. */
   @visibleForTesting
   static void clean() {
     _remoteConfig = null;
     _prefs = null;
   }
 
+  /**
+   * Initialize RemoteConfigUtils with a pre-built RemoteConfig object.
+   * Only intended for use in test code.  Should not be called from production code.
+   */
   @visibleForTesting
   static Future<void> initializeExplicit(RemoteConfig remoteConfig) async {
     if (_remoteConfig != null) throw StateError('double-initialization of RemoteConfigUtils');
@@ -74,6 +82,7 @@ class RemoteConfigUtils {
     }
   }
 
+  /** Fetch the value (in string form) of the specified RemoteConfigParams element. */
   static String getStringValue(RemoteConfigParams rcParam) {
     if (_remoteConfig == null) throw StateError('RemoteConfigUtils not yet initialized');
 
