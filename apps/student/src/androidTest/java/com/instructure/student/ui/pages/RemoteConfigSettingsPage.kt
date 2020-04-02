@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import android.view.View
 import android.widget.EditText
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
@@ -27,39 +28,38 @@ import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.pandautils.R
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 
 class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
 
     fun clickRemoteConfigParamValue(param: RemoteConfigParam) {
-        val target = Matchers.allOf(
-                ViewMatchers.isAssignableFrom(EditText::class.java),
-                ViewMatchers.hasSibling(containsTextCaseInsensitive(param.rc_name))
-        )
+        val target = getParamValueMatcher(param)
 
         scrollRecyclerView(R.id.recyclerView, target)
-
         onView(target).click()
     }
 
     fun clearRemoteConfigParamValueFocus(param: RemoteConfigParam) {
-        val target = Matchers.allOf(
-                ViewMatchers.isAssignableFrom(EditText::class.java),
-                ViewMatchers.hasSibling(containsTextCaseInsensitive(param.rc_name))
-        )
+        val target = getParamValueMatcher(param)
 
         scrollRecyclerView(R.id.recyclerView, target)
-
         onView(target).perform(clearFocus())
     }
 
     fun verifyRemoteConfigParamValue(param: RemoteConfigParam, targetValue: String) {
-        val target = Matchers.allOf(
-                ViewMatchers.isAssignableFrom(EditText::class.java),
-                ViewMatchers.hasSibling(containsTextCaseInsensitive(param.rc_name))
-        )
+        val target = getParamValueMatcher(param)
 
         scrollRecyclerView(R.id.recyclerView, target)
         onView(target).check(ViewAssertions.matches((ViewMatchers.withText(targetValue))))
+    }
+
+    private fun getParamValueMatcher(param: RemoteConfigParam): Matcher<View> {
+        val matcher = Matchers.allOf(
+                ViewMatchers.isAssignableFrom(EditText::class.java),
+                ViewMatchers.hasSibling(containsTextCaseInsensitive(param.rc_name+":"))
+        )
+
+        return matcher
     }
 }
