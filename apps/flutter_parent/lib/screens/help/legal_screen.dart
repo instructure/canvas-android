@@ -18,7 +18,7 @@ import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 
 class LegalScreen extends StatelessWidget {
   @override
@@ -34,7 +34,7 @@ class LegalScreen extends StatelessWidget {
           children: <Widget>[
             _LegalRow(
               label: l10n.privacyPolicy,
-              onTap: () => launch('https://www.instructure.com/policies/privacy/'),
+              onTap: () => locator<UrlLauncher>().launch('https://www.instructure.com/policies/privacy/'),
               icon: CanvasIcons.admin,
             ),
             _LegalRow(
@@ -45,7 +45,7 @@ class LegalScreen extends StatelessWidget {
             _LegalRow(
               label: l10n.canvasOnGithub,
               icon: CanvasIcons.github,
-              onTap: () => launch('https://github.com/instructure/canvas-android'),
+              onTap: () => locator<UrlLauncher>().launch('https://github.com/instructure/canvas-android'),
             ),
           ],
         ),

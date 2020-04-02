@@ -22,12 +22,12 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:intent/action.dart' as android;
 import 'package:intent/extra.dart' as android;
 import 'package:intent/intent.dart' as android;
 import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'help_screen_interactor.dart';
 
@@ -115,17 +115,17 @@ class _HelpScreenState extends State<HelpScreen> {
     } else if (link.url.contains('cases.canvaslms.com/liveagentchat')) {
       // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
       // to the external browser
-      launch(link.url);
+      locator<UrlLauncher>().launch(link.url);
     } else if (link.id.contains('search_the_canvas_guides')) {
       // Send them to the mobile Canvas guides
       _showSearch();
     } else {
       // External url
-      launch(link.url);
+      locator<UrlLauncher>().launch(link.url);
     }
   }
 
-  void _showSearch() => launch(
+  void _showSearch() => locator<UrlLauncher>().launch(
       'https://community.canvaslms.com/community/answers/guides/mobile-guide/content?filterID=contentstatus%5Bpublished%5D~category%5Btable-of-contents%5D');
 
   void _showReportProblem() => ErrorReportDialog.asDialog(context);
@@ -186,7 +186,8 @@ class _HelpScreenState extends State<HelpScreen> {
       ..startActivity(createChooser: true);
   }
 
-  void _showShareLove() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
+  void _showShareLove() =>
+      locator<UrlLauncher>().launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 
   void _showLegal() => locator<QuickNav>().pushRoute(context, PandaRouter.legal());
 

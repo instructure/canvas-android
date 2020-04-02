@@ -60,6 +60,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
@@ -131,6 +132,7 @@ void setupLocator() {
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
   locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
+  locator.registerLazySingleton<UrlLauncher>(() => UrlLauncher());
 
   // Other
   locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());

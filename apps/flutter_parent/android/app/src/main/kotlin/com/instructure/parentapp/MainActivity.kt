@@ -12,7 +12,7 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 package com.instructure.parentapp
 
@@ -21,6 +21,7 @@ import android.net.Uri
 import androidx.annotation.NonNull
 import com.instructure.parentapp.plugins.DataSeedingPlugin
 import com.instructure.parentapp.plugins.OldAppMigrations
+import com.instructure.parentapp.plugins.UrlLauncher
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
@@ -29,6 +30,7 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine)
         OldAppMigrations.init(flutterEngine, applicationContext)
+        UrlLauncher.init(flutterEngine, applicationContext, this)
         DataSeedingPlugin.init(flutterEngine)
 
         checkForLinkEvent(intent)

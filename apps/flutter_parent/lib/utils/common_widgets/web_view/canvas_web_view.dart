@@ -20,8 +20,8 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/web_view_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 /// A general purpose web view to display html content to users.
@@ -230,7 +230,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     return Set()
       ..add(_interactor.ltiToolPressedChannel((JavascriptMessage message) {
         // TODO: Create an LTI webview that handles this better, so we don't have to just launch them out to a browser
-        launch(message.message);
+        locator<UrlLauncher>().launch(message.message);
       }));
   }
 }
