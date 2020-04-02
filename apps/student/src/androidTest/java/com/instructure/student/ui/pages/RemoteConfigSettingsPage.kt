@@ -57,7 +57,7 @@ class RemoteConfigSettingsPage : BasePage(R.id.remoteConfigSettingsFragment) {
     private fun getParamValueMatcher(param: RemoteConfigParam): Matcher<View> {
         val matcher = Matchers.allOf(
                 ViewMatchers.isAssignableFrom(EditText::class.java),
-                ViewMatchers.hasSibling(containsTextCaseInsensitive(param.rc_name+":"))
+                ViewMatchers.hasSibling(containsTextCaseInsensitive("${param.rc_name}:"))
         )
 
         return matcher
