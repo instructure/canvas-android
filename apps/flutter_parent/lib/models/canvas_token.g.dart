@@ -36,6 +36,13 @@ class _$CanvasTokenSerializer implements StructuredSerializer<CanvasToken> {
       result.add(serializers.serialize(object.user,
           specifiedType: const FullType(User)));
     }
+    result.add('real_user');
+    if (object.realUser == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.realUser,
+          specifiedType: const FullType(User)));
+    }
     return result;
   }
 
@@ -63,6 +70,10 @@ class _$CanvasTokenSerializer implements StructuredSerializer<CanvasToken> {
           result.user.replace(serializers.deserialize(value,
               specifiedType: const FullType(User)) as User);
           break;
+        case 'real_user':
+          result.realUser.replace(serializers.deserialize(value,
+              specifiedType: const FullType(User)) as User);
+          break;
       }
     }
 
@@ -77,11 +88,14 @@ class _$CanvasToken extends CanvasToken {
   final String refreshToken;
   @override
   final User user;
+  @override
+  final User realUser;
 
   factory _$CanvasToken([void Function(CanvasTokenBuilder) updates]) =>
       (new CanvasTokenBuilder()..update(updates)).build();
 
-  _$CanvasToken._({this.accessToken, this.refreshToken, this.user})
+  _$CanvasToken._(
+      {this.accessToken, this.refreshToken, this.user, this.realUser})
       : super._() {
     if (accessToken == null) {
       throw new BuiltValueNullFieldError('CanvasToken', 'accessToken');
@@ -101,13 +115,16 @@ class _$CanvasToken extends CanvasToken {
     return other is CanvasToken &&
         accessToken == other.accessToken &&
         refreshToken == other.refreshToken &&
-        user == other.user;
+        user == other.user &&
+        realUser == other.realUser;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, accessToken.hashCode), refreshToken.hashCode),
-        user.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, accessToken.hashCode), refreshToken.hashCode),
+            user.hashCode),
+        realUser.hashCode));
   }
 
   @override
@@ -115,7 +132,8 @@ class _$CanvasToken extends CanvasToken {
     return (newBuiltValueToStringHelper('CanvasToken')
           ..add('accessToken', accessToken)
           ..add('refreshToken', refreshToken)
-          ..add('user', user))
+          ..add('user', user)
+          ..add('realUser', realUser))
         .toString();
   }
 }
@@ -135,6 +153,10 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
   UserBuilder get user => _$this._user ??= new UserBuilder();
   set user(UserBuilder user) => _$this._user = user;
 
+  UserBuilder _realUser;
+  UserBuilder get realUser => _$this._realUser ??= new UserBuilder();
+  set realUser(UserBuilder realUser) => _$this._realUser = realUser;
+
   CanvasTokenBuilder();
 
   CanvasTokenBuilder get _$this {
@@ -142,6 +164,7 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
       _accessToken = _$v.accessToken;
       _refreshToken = _$v.refreshToken;
       _user = _$v.user?.toBuilder();
+      _realUser = _$v.realUser?.toBuilder();
       _$v = null;
     }
     return this;
@@ -168,12 +191,15 @@ class CanvasTokenBuilder implements Builder<CanvasToken, CanvasTokenBuilder> {
           new _$CanvasToken._(
               accessToken: accessToken,
               refreshToken: refreshToken,
-              user: _user?.build());
+              user: _user?.build(),
+              realUser: _realUser?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'user';
         _user?.build();
+        _$failedField = 'realUser';
+        _realUser?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'CanvasToken', _$failedField, e.toString());

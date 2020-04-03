@@ -121,9 +121,34 @@ class LoginLandingScreen extends StatelessWidget {
               onFindSchoolPressed(context);
             },
           ),
+          SizedBox(height: 16),
+          _qrLogin(context),
         ],
       ),
     );
+  }
+
+  Widget _qrLogin(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          // Navigate to QR Login Tutorial
+          locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
+        },
+        child: Container(
+          padding: EdgeInsets.all(12.0),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SvgPicture.asset('assets/svg/qr-code.svg'),
+                SizedBox(width: 8),
+                Text(
+                  L10n(context).loginWithQRCode,
+                  style: TextStyle(fontSize: 16, color: ParentColors.ash),
+                ),
+              ]),
+        ));
   }
 
   Widget _previousLogins(BuildContext context) {
