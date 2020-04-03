@@ -35,6 +35,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
@@ -91,6 +92,10 @@ class InterwebsToApplication : AppCompatActivity() {
                         StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
                         finish()
                         return@tryWeave
+                    }
+
+                    if(ApiPrefs.userAgent == "") {
+                        ApiPrefs.userAgent = generateUserAgent(this@InterwebsToApplication, Const.STUDENT_USER_AGENT)
                     }
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
