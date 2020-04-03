@@ -27,6 +27,7 @@ import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.BuildConfig
@@ -80,9 +81,7 @@ class LoginActivity : BaseLoginInitActivity() {
         return BuildConfig.IS_TESTING
     }
 
-    override fun userAgent(): String {
-        return "androidTeacher"
-    }
+    override fun userAgent(): String = Const.TEACHER_USER_AGENT
 
     /**
      * ONLY USE FOR UI TESTING
