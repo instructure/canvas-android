@@ -24,6 +24,7 @@ import 'package:flutter_parent/utils/db/db_util.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() {
@@ -36,6 +37,7 @@ void main() {
       CrashUtils.init(),
       FlutterDownloader.initialize(),
       DbUtil.init(),
+      RemoteConfigUtils.initialize()
     ]);
     setupLocator();
     PandaRouter.init();
