@@ -85,6 +85,7 @@
 
         <activity
             android:name=".activities.RouteValidatorActivity"
+            android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:theme="@style/LoginFlowTheme.Splash_Teacher">

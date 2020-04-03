@@ -35,6 +35,7 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.Utils
 import com.instructure.teacher.R
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -78,6 +79,11 @@ class RouteValidatorActivity : FragmentActivity() {
                         return@tryWeave
                     }
 
+                    // Mobile verify requires a user agent be set, multiple attempts/failures can clear this out
+                    if(ApiPrefs.userAgent == "") {
+                        ApiPrefs.userAgent = Utils.generateUserAgent(this@RouteValidatorActivity, Const.TEACHER_USER_AGENT)
+                    }
+
                     val tokenResponse = QRLogin.performSSOLogin(data, this@RouteValidatorActivity, true)
 
                     // If we have a real user, this is a QR code from a masquerading web user
@@ -94,7 +100,7 @@ class RouteValidatorActivity : FragmentActivity() {
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
-                    finish()
+                    finishAffinity()
                     return@tryWeave
                 } catch (e: Throwable) {
                     // If the user wasn't already signed in, let's clear the prefs in case it was a partial success
