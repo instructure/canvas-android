@@ -79,7 +79,7 @@ void main() {
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'test');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     for (int i = 0; i < count; i++) {
       expect(find.text('Test domain $i'), findsOneWidget);
@@ -95,7 +95,7 @@ void main() {
     expect(nextButton.enabled, false);
 
     await tester.enterText(find.byType(TextField), 'aa');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     nextButton =
         tester.widget<MaterialButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(MaterialButton)));
@@ -114,7 +114,7 @@ void main() {
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'test');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     expect(find.text(l10n.domainSearchHelpLabel), findsOneWidget);
   });
@@ -132,12 +132,12 @@ void main() {
 
     // Two characters should perform a search
     await tester.enterText(find.byType(TextField), 'aa');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
     expect(find.text('Domain Result'), findsOneWidget);
 
     // One character should not search and should remove results
     await tester.enterText(find.byType(TextField), 'a');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
     expect(find.text('Domain Result'), findsNothing);
   });
 
@@ -148,9 +148,30 @@ void main() {
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'test');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     expect(find.text(l10n.noDomainResults('test')), findsOneWidget);
+  });
+
+  testWidgets('debounces for 500 milliseconds', (tester) async {
+    var interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
+          SchoolDomain((sd) => sd
+            ..domain = ''
+            ..name = 'Domain Result'),
+        ]));
+    _setupLocator(interactor);
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    // Two characters should perform a search
+    await tester.enterText(find.byType(TextField), 'aa');
+
+    await tester.pumpAndSettle();
+    expect(find.text('Domain Result'), findsNothing);
+
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    expect(find.text('Domain Result'), findsOneWidget);
   });
 
   testWidgets('Clear button shows for non-empty query', (WidgetTester tester) async {
@@ -162,14 +183,14 @@ void main() {
 
     // Add single character query
     await tester.enterText(find.byType(TextField), 'a');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     // Button should now show
     expect(find.byKey(Key('clear-query')), findsOneWidget);
 
     // Add single character query
     await tester.enterText(find.byType(TextField), '');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     // Button should no longer show
     expect(find.byKey(Key('clear-query')), findsNothing);
@@ -181,7 +202,7 @@ void main() {
 
     await tester.tap(find.byType(TextField));
     await tester.enterText(find.byType(TextField), 'testing123');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
     expect(tester.widget<TextField>(find.byType(TextField)).controller.text, 'testing123');
     expect(find.byKey(Key('clear-query')), findsOneWidget);
 
@@ -229,7 +250,9 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'one');
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
     await tester.enterText(find.byType(TextField), 'two');
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
     await tester.enterText(find.byType(TextField), 'three');
     await tester.pumpAndSettle(Duration(milliseconds: 1000)); // Allow plenty of time for first async call to finish
     expect(find.text('Query One'), findsNothing);
@@ -349,7 +372,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
@@ -372,7 +395,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
@@ -396,7 +419,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
