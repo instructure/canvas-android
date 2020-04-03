@@ -19,29 +19,29 @@ void main() {
   test('debouncer calls callback', () async {
     var called = false;
 
-    var debouncer = Debouncer(Duration(milliseconds: 1));
+    var debouncer = Debouncer(Duration(milliseconds: 10));
     debouncer.debounce(() {
       called = true;
     });
 
-    await Future.delayed(const Duration(seconds: 2), () {});
+    await Future.delayed(const Duration(seconds: 20), () {});
     expect(called, true);
   });
 
   test('debouncer calls callback after duration', () async {
     var called = false;
 
-    var debouncer = Debouncer(Duration(milliseconds: 3));
+    var debouncer = Debouncer(Duration(milliseconds: 30));
     debouncer.debounce(() {
       called = true;
     });
 
     // Make sure we haven't been called yet
-    await Future.delayed(const Duration(milliseconds: 1), () {});
+    await Future.delayed(const Duration(milliseconds: 10), () {});
     expect(called, false);
 
     // Check to make sure we got called
-    await Future.delayed(const Duration(milliseconds: 2), () {});
+    await Future.delayed(const Duration(milliseconds: 20), () {});
     expect(called, true);
   });
 
@@ -49,19 +49,19 @@ void main() {
     var called = false;
 
     // First debounce call
-    var debouncer = Debouncer(Duration(milliseconds: 5));
+    var debouncer = Debouncer(Duration(milliseconds: 50));
     debouncer.debounce(() {
       called = true;
     });
 
     // Second one should cancel out the first
-    await Future.delayed(const Duration(milliseconds: 2), () {});
+    await Future.delayed(const Duration(milliseconds: 20), () {});
     debouncer.debounce(() {
       called = true;
     });
 
     // Should be at the threshold for the first debounce after this call
-    await Future.delayed(const Duration(milliseconds: 3), () {});
+    await Future.delayed(const Duration(milliseconds: 30), () {});
 
     // Make sure we didn't call either of the debounce callbacks
     expect(called, false);

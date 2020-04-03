@@ -14,6 +14,8 @@
 
 import 'dart:async';
 
+/// A simple helper class that puts a [_duration] delay on the callback passed to [debounce].
+/// Mainly used for when large amounts of user input can cause an unnecessary large amount of network calls
 class Debouncer {
   final Duration _duration;
   Timer _timer;
