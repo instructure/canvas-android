@@ -34,6 +34,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.TelemetryUtils
 import com.instructure.pandautils.utils.Utils
 
@@ -62,9 +63,7 @@ class LoginActivity : BaseLoginInitActivity() {
         return ContextCompat.getColor(this, R.color.login_studentAppTheme)
     }
 
-    override fun userAgent(): String {
-        return "candroid"
-    }
+    override fun userAgent(): String = Const.STUDENT_USER_AGENT
 
     override fun finish() {
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
