@@ -165,7 +165,7 @@ class __AlertsListState extends State<_AlertsList> {
           ),
           SizedBox(width: 16),
           IconButton(
-            tooltip: L10n(context).dismissAlert,
+            tooltip: L10n(context).dismissAlertLabel(alert.title),
             color: ParentColors.ash,
             padding: EdgeInsets.all(0), // No extra padding, we're already padded enough with min touch size
             icon: Icon(Icons.clear, size: 20),
