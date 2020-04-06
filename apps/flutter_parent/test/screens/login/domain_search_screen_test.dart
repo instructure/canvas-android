@@ -361,7 +361,7 @@ void main() {
     var interactor = MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
-            ..domain = 'mobileqa.instructure.com'
+            ..domain = 'mobileqa'
             ..name = 'Result')
         ]));
     final webInteractor = _MockWebLoginInteractor();
@@ -377,7 +377,10 @@ void main() {
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
 
-    expect(find.byType(WebLoginScreen), findsOneWidget);
+    final webLogin = find.byType(WebLoginScreen);
+    expect(webLogin, findsOneWidget);
+    // Should also append .instructure.com to single word queries
+    expect(tester.widget<WebLoginScreen>(webLogin).domain, "mobileqa.instructure.com");
   });
 
   testWidgets('Navigates to Login page from keyboard submit button', (WidgetTester tester) async {
@@ -407,7 +410,7 @@ void main() {
     var interactor = MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
-            ..domain = 'mobileqa.instructure.com'
+            ..domain = 'mobileqa'
             ..name = 'Result')
         ]));
     final webInteractor = _MockWebLoginInteractor();
@@ -428,6 +431,50 @@ void main() {
 
     WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
     expect(webLogin.loginFlow, flow);
+  });
+
+  testWidgets('Adds .instructure.com to .beta search text', (WidgetTester tester) async {
+    var interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
+    final webInteractor = _MockWebLoginInteractor();
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
+
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'mobileqa.beta');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.domain, 'mobileqa.beta.instructure.com');
+  });
+
+  testWidgets('clears leading www. from search text', (WidgetTester tester) async {
+    var interactor = MockInteractor();
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
+    final webInteractor = _MockWebLoginInteractor();
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+    _setupLocator(interactor, webInteractor: webInteractor);
+
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'www.mobileqa.beta');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.domain, 'mobileqa.beta.instructure.com');
   });
 }
 
