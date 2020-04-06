@@ -1,0 +1,1713 @@
+{
+  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "alertsLabel": "Alerts",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "calendarLabel": "Calendar",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "coursesLabel": "Courses",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Students": "No Students",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Tap to show student selector",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Tap to pair with a new student",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "Tap to select this student",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Manage Students": "Manage Students",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Help": "Help",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Log Out": "Log Out",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Switch Users": "Switch Users",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appVersion": "v. {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Are you sure you want to log out?",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Calendars": "Calendars",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nextMonth": "Next month: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Previous month: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Next week starting {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Previous week starting {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Month of {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "expand",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapse": "collapse",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} points possible",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "No Events Today!": "No Events Today!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "It looks like a great day to rest, relax, and recharge.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "There was an error loading your student's calendar",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Tap to favorite the courses you want to see on the Calendar.",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Previous Logins": "Previous Logins",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas logo",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders": {}
+  },
+  "findSchool": "Find School",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Enter school name or district…",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noDomainResults": "Unable to find schools matching \"{query}\"",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "How do I find my school or district?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas Guides",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas Support",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Try searching for the name of the school or district you’re attempting to access, like “Smith Private School” or “Smith County Schools.” You can also enter a Canvas domain directly, like “smith.instructure.com.”\n\nFor more information on finding your institution’s Canvas account, you can visit the {canvasGuides}, reach out to {canvasSupport}, or contact your school for assistance.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Uh oh!",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Contact Support": "Contact Support",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View error details": "View error details",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Restart app": "Restart app",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Application version": "Application version",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Device model": "Device model",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Android OS version": "Android OS version",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full error message": "Full error message",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Inbox": "Inbox",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "There was an error loading your inbox messages.",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Subject": "No Subject",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Unable to fetch courses. Please check your connection and try again.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "Choose a course to message",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "Inbox Zero",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "You’re all caught up!",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "There was an error loading recipients for this course",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Unable to send message. Check your connection and try again.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "Unsaved changes",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Are you sure you wish to close this page? Your unsent message will be lost.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "New message": "New message",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add attachment": "Add attachment",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send message": "Send message",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select recipients": "Select recipients",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No recipients selected": "No recipients selected",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Message subject": "Message subject",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Message": "Message",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Recipients": "Recipients",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Failed. Tap for options.",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "courseForWhom": "for {studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Regarding: {studentName}, {linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "There was an error loading this conversation",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reply": "Reply",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reply All": "Reply All",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unknown User": "Unknown User",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders": {}
+  },
+  "me": "me",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "{authorName} to {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName} to 1 other}other{{authorName} to {howMany} others}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} to {recipientName} & 1 other}other{{authorName} to {recipientName} & {howMany} others}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Download",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open with another app": "Open with another app",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "There are no installed applications that can open this file",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unsupported File": "Unsupported File",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "This file is unsupported and can’t be viewed through the app",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Unable to play this media file",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "Unable to load this image",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "There was an error loading this file",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Courses": "No Courses",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Your student’s courses might not be published yet.",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "There was an error loading your your student’s courses.",
+  "@There was an error loading your your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Grade": "No Grade",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Filter by": "Filter by",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grades": "Grades",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Syllabus": "Syllabus",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Front Page": "Front Page",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Summary": "Summary",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "Send a message about this course",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Total Grade": "Total Grade",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Graded": "Graded",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Submitted": "Submitted",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Submitted": "Not Submitted",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Late": "Late",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Missing": "Missing",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "All Grading Periods",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Assignments": "No Assignments",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "It looks like assignments haven't been created in this space yet.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "There was an error loading the summary details for this course.",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Summary": "No Summary",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "This course does not have any assignments or calendar events yet.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "{score} out of {pointsPossible} points",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Regarding: {studentName}, Grades",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Regarding: {studentName}, Syllabus",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Regarding: {studentName}, Front Page",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Regarding: {studentName}, Assignment - {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Regarding: {studentName}, Event - {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "There is no page information available.",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment Details": "Assignment Details",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} pts",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} points",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Due",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grade": "Grade",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locked": "Locked",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "This assignment is locked by the module \"{moduleName}\".",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Remind Me",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "Set reminder switch",
+  "@Set reminder switch": {
+    "description": "Label for the switch to set a reminder",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Set a date and time to be notified of this specific assignment.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "You will be notified about this assignment on…",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Description": "Description",
+  "@Description": {
+    "description": "Label for the description of the assignment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Instructions": "Instructions",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No description": "No description",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Send a message about this assignment",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "This app is not authorized for use.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "The server you entered is not authorized for this app.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "The user agent for this app is not authorized.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "We were unable to verify the server for use with this app.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reminders": "Reminders",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Notifications for reminders about assignments and calendar events",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not a parent?": "Not a parent?",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "We couldn't find any students associated with this account",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Are you a student or teacher?",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "One of our other apps might be a better fit. Tap one to visit the Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Return to Login": "Return to Login",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "STUDENT": "STUDENT",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders": {}
+  },
+  "TEACHER": "TEACHER",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas Student",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas Teacher",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Alerts": "No Alerts",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "There’s nothing to be notified of yet.",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dismiss": "dismiss",
+  "@dismiss": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course Announcement": "Course Announcement",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "Institution Announcement",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Assignment Grade Above {threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Assignment Grade Below {threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Course Grade Above {threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Course Grade Below {threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Settings",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Theme": "Theme",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Dark Mode": "Dark Mode",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Light Mode": "Light Mode",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "High Contrast Mode",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Appearance": "Appearance",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Successfully submitted!",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "This assignment was submitted on {date} at {time} and is waiting to be graded",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{Out of 1 point}other{Out of {points} points}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Excused",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Complete": "Complete",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incomplete": "Incomplete",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minus": "minus",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latePenalty": "Late penalty (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Final Grade: {grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Alert Settings",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Alert me when…": "Alert me when…",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course grade below": "Course grade below",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course grade above": "Course grade above",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment missing": "Assignment missing",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "Assignment grade below",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "Assignment grade above",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course Announcements": "Course Announcements",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "Institution Announcements",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Never": "Never",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grade percentage": "Grade percentage",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "There was an error loading your student's alerts.",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Must be below 100": "Must be below 100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Must be below {percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Must be above {percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "Teacher",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Student": "Student",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "TA": "TA",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Observer": "Observer",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Camera": "Use Camera",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Upload File": "Upload File",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Choose from Gallery",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Preparing…": "Preparing…",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add student with…": "Add student with…",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add Student": "Add Student",
+  "@Add Student": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "You are not observing any students.",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "There was an error loading your students.",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Pairing Code": "Pairing Code",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Your code is incorrect or expired.",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "QR Code": "QR Code",
+  "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add new student": "Add new student",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Event": "Event",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Date": "Date",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Location": "Location",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Location Specified": "No Location Specified",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders": {}
+  },
+  "eventTime": "{startAt} - {endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Set a date and time to be notified of this event.",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "You will be notified about this event on…",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "Search the Canvas Guides",
+  "@Search the Canvas Guides": {
+    "description": "Label for option to search the Canvas Guides",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "Find answers to common questions",
+  "@Find answers to common questions": {
+    "description": "Description for option to search the Canvas Guides",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Report a Problem": "Report a Problem",
+  "@Report a Problem": {
+    "description": "Label for option to report a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "If the app misbehaves, let us know",
+  "@If the app misbehaves, let us know": {
+    "description": "Description for option to report a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request a Feature": "Request a Feature",
+  "@Request a Feature": {
+    "description": "Label for option to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "Have an idea to improve the app?",
+  "@Have an idea to improve the app?": {
+    "description": "Description for option to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Share Your Love for the App",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Tell us about your favorite parts of the app",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Legal": "Legal",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Privacy policy, terms of use, open source",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Idea for Canvas Parent App [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "The following information will help us better understand your idea:",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain:": "Domain:",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID:": "User ID:",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email:": "Email:",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locale:": "Locale:",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Privacy Policy",
+  "@Privacy Policy": {
+    "description": "Label for the privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Use": "Terms of Use",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas on GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "There was a problem loading the Terms of Use",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Device": "Device",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "OS Version": "OS Version",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Version Number": "Version Number",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Report A Problem": "Report A Problem",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Subject": "Subject",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "A subject is required.": "A subject is required.",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "Email Address",
+  "@Email Address": {
+    "description": "Label used for Email Address text field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An email address is required.": "An email address is required.",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "A description is required.": "A description is required.",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "How is this affecting you?",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders": {}
+  },
+  "send": "send",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Just a casual question, comment, idea, suggestion…",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "I need some help but it's not urgent.",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Something's broken but I can work around it to get what I need done.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "I can't get things done until I hear back from you.",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "EXTREME CRITICAL EMERGENCY!!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Graded": "Not Graded",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Cancel": "Cancel",
+  "@Cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "next": "Next",
+  "@next": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Yes": "Yes",
+  "@Yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No": "No",
+  "@No": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Retry": "Retry",
+  "@Retry": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Delete": "Delete",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Done": "Done",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "expanded": "expanded",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapsed": "collapsed",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "An unexpected error occurred",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Launch External Tool": "Launch External Tool",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateAtTime": "{date} at {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Due {date} at {time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "No Due Date",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Filter": "Filter",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unread": "unread",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unreadCount": "{count} unread",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "There was an error loading this announcement",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Network error": "Network error",
+  "@Network error": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Under Construction": "Under Construction",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "We are currently building this feature for your viewing pleasure.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Request Login Help Button",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request Login Help": "Request Login Help",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "I'm having trouble logging in",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "An error occurred when trying to display this link",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "We are unable to display this link, it may belong to an institution you currently aren't logged in to.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "Link Error",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Open In Browser",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders": {}
+  }
+}

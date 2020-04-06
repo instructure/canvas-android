@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="chooseMedia">Choose media</string>
     <string name="takeVideo">Take video</string>
     <string name="noCameraOnDevice">No camera</string>
@@ -42,6 +41,8 @@
 
     <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
+
+
     <!-- Turn in Files -->
     <string name="chooseFileSource">Choose file from&#8230;</string>
     <string name="addFile">Add file</string>
@@ -56,7 +57,6 @@
     <string name="file">File</string>
     <string name="fileTalkBack">File %s</string>
     <string name="folderTalkBack">Folder %s</string>
-
     <string name="addItem">Add item</string>
     <string name="assignment">Assignment</string>
     <string name="attachedFiles">Attached files</string>
@@ -100,6 +100,7 @@
     <string name="assignmentSubmissionUpload">Uploading submission for %s</string>
     <string name="assignmentSubmissionError">Submission failed for %s</string>
     <string name="assignmentSubmissionComplete">Successfully submitted %s</string>
+
     <!--Errors-->
     <string name="errorOccurred">An unexpected error occurred.</string>
     <string name="serverError">A server error has occurred.</string>
@@ -122,9 +123,9 @@
     <string name="oneOrMoreExtensionNotAllowed">One or more files has a file extension that isn\'t allowed</string>
     <string name="extensionNotAllowed">The selected file type is not allowed.</string>
     <string name="allowedExtensions">Allowed extensions:&#160;</string>
-
     <string name="quizNetworkErrorTitle">Quiz error</string>
     <string name="quizNetworkErrorMessage">The internet connection appears to be offline.</string>
+
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Please check your data connection and try again. </string>
     <string name="noApps">Your device doesn\'t have any applications installed that can handle this file.</string>
@@ -328,6 +329,7 @@
     </plurals>
 
     <!-- Assignment Override !-->
+
     <string name="utils_unlockAfterDueDateError">Unlock date cannot be after due date</string>
     <string name="utils_lockBeforeDueDateError">Lock date cannot be before due date</string>
     <string name="utils_lockAfterUnlockError">Lock date cannot be before the unlock date</string>
@@ -381,6 +383,7 @@
     <string name="utils_uploadToSubmissionComment">Upload to submission comment</string>
     <string name="utils_attachFile">Attach a file</string>
     <string name="utils_with">with</string>
+
     <string name="notificationPrimaryInboxTitle">Canvas notification</string>
     <string name="notificationChannelNamePrimary">General Canvas notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas notification preferences section.</string>
@@ -414,7 +417,6 @@
     <string name="image_uploading">Image uploading...</string>
     <string name="image_upload_error">Image upload error</string>
     <string name="retry">Retry</string>
-
     <string name="search">Search</string>
     <string name="searchAssignmentsHint">Search assignments</string>
     <string name="searchAnnouncementsHint">Search announcements</string>
@@ -422,6 +424,7 @@
     <string name="searchPagesHint">Search pages</string>
     <string name="searchQuizzesHint">Search quizzes</string>
     <string name="noItemsMatchingQuery">No items match \"%s\"</string>
+
     <string name="selected">Selected</string>
 
 </resources>

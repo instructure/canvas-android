@@ -55,7 +55,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
       onTap: () {
         var idx = widget._students.indexOf(student);
         ParentTheme.of(context).studentIndex = idx;
-        Provider.of<SelectedStudentNotifier>(context, listen: false).value = student;
+        Provider.of<SelectedStudentNotifier>(context, listen: false).update(student);
         ApiPrefs.setCurrentStudent(student);
         widget.onTap();
       },

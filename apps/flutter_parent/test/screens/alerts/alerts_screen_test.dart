@@ -487,7 +487,7 @@ Widget _testableWidget({User student}) {
   return TestApp(
     ChangeNotifierProvider(
       create: (context) =>
-          SelectedStudentNotifier()..update(CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor')),
+          SelectedStudentNotifier()..value = CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor'),
       child: Consumer<SelectedStudentNotifier>(builder: (context, model, _) {
         return Scaffold(body: AlertsScreen());
       }),

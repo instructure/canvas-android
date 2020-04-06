@@ -1,0 +1,430 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">Tria un element multimèdia</string>
+    <string name="takeVideo">Enregistra vídeo</string>
+    <string name="noCameraOnDevice">Sense càmera</string>
+    <string name="takePhoto">Fes una foto</string>
+    <string name="choosePhotoFromGallery">Tria una foto de la Galeria</string>
+
+    <string name="utils_edit">Edita</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">S\'està penjant a Canvas</string>
+    <string name="preparingUpload">S\'està preparant la penjada</string>
+    <string name="loadingFilesIndeterminate">S\'estan carregant els fitxers&#8230;</string>
+    <string name="fileUploadSuccess">La penjada s\'ha realitzat correctament</string>
+    <string name="noNetwork">La xarxa no està disponible; torneu a provar-ho més endavant.</string>
+    <string name="uploadMessage">"Penjada en curs. Comproveu les notificacions per conèixer l\'estat de la penjada.</string>
+    <string name="uploadingFile">S\'està penjant el fitxer&#8230;</string>
+    <string name="errorUploadingFile">S\'ha produït un error en penjar el fitxer. Torneu a provar-ho.</string>
+    <string name="fileSubmission">Envia els fitxers</string>
+    <string name="uploadFiles">Penja els fitxers</string>
+    <string name="upload">Penja</string>
+    <string name="errorSendingMessage">S\'ha produït un error en enviar el missatge. Torneu a provar-ho.</string>
+
+    <string name="notificationChannelNameFileUploadsName">Penja les notificacions</string>
+    <string name="notificationChannelNameFileUploadsDescription">Notificacions de Canvas per a penjades en curs.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="chooseFileSource">Tria el fitxer de&#8230;</string>
+    <string name="addFile">Afegeix un fitxer</string>
+    <string name="choose_a_file">Tria un fitxer</string>
+
+    <string name="fromCamera">Càmera</string>
+    <string name="fromGallery">Galeria</string>
+    <string name="fromDevice">Dispositiu</string>
+    <string name="fromOtherApplication">Altres</string>
+    <string name="Domain">Domini</string>
+    <string name="files">Fitxers</string>
+    <string name="file">Fitxer</string>
+    <string name="fileTalkBack">Fitxer %s</string>
+    <string name="folderTalkBack">Carpeta %s</string>
+    <string name="addItem">Afegeix un element</string>
+    <string name="assignment">Tasca</string>
+    <string name="attachedFiles">Fitxers adjunts</string>
+    <string name="turnIn">Entrega</string>
+    <string name="course">Curs</string>
+    <string name="sending">S\'està enviant&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">Qualificació d\'una estrella</string>
+    <string name="star2">Qualificació de dues estrelles</string>
+    <string name="star3">Qualificació de tres estrelles</string>
+    <string name="star4">Qualificació de quatre estrelles</string>
+    <string name="star5">Qualificació de cinc estrelles</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">En aquest moment, heu sobrepassat la quota d\'emmagatzematge de fitxers.</string>
+    <string name="errorSubmittingFiles">S\'ha produït un error en entregar els fitxers. Torneu a provar-ho.</string>
+    <string name="errorLoadingFiles">S\'ha produït un error en carregar el fitxer. Reviseu la connexió d\'Internet i torneu a provar-ho.</string>
+    <string name="filesUploadedSuccessfully">S\'han penjat correctament els fitxers.</string>
+    <string name="filesSubmittedSuccessfully">S\'han entregat correctament els fitxers.</string>
+    <string name="messageSentSuccessfully">S\'ha enviat correctament el missatge.</string>
+    <string name="shareWithCanvas">Altres aplicacions poden compartir fitxers amb Canvas. Cerqueu en aplicacions la icona que es mostra a continuació i toqueu-la a Canvas.</string>
+    <string name="shareWithCanvas2">D\'aquesta manera, s\'obrirà aquesta aplicació. A continuació, només heu de seleccionar el curs i la tasca per als quals voleu entregar el fitxer.</string>
+    <string name="contentDescriptionSocialShare">Icona d\'ús compartit</string>
+    <string name="submitAssignment">Entrega la tasca</string>
+    <string name="assignmentHeader">Tasca:</string>
+    <string name="submittingAssignment">S\'està entregant la tasca&#8230;</string>
+    <string name="conversations">Converses </string>
+    <string name="inbox">Safata d\'entrada </string>
+    <string name="divider">Divisor</string>
+    <string name="legal">Jurídic</string>
+    <string name="completeHomework">FES els deures</string>
+    <string name="takeExam">Fes un examen</string>
+    <string name="fileIcon">Icona de fitxer</string>
+    <string name="uploadingFileNum" formatted="false">S\'estan penjant %d de %d</string>
+    <string name="fileLocked" formatted="false">S\'ha bloquejat %s.</string>
+    <string name="filePermissionGranted">En aquest moment, el fitxer està a punt per baixar-lo; torneu a provar-ho.</string>
+    <string name="filePermissionDenied">El fitxer no es pot baixar sense que es concedeixi permís.</string>
+    <string name="pleaseTryAgain">Permís concedit; torneu a provar-ho.</string>
+    <string name="pickVideo">Selecciona un vídeo</string>
+    <string name="assignmentSubmissionUpload">S\'està penjant l\'entrega de %s</string>
+    <string name="assignmentSubmissionError">S\'ha produït un error en l\'entrega de %s</string>
+    <string name="assignmentSubmissionComplete">S\'ha entregat correctament %s</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">S\'ha produït un error inesperat.</string>
+    <string name="serverError">S\'ha produït un error de servidor.</string>
+    <string name="unauthorized">No teniu autorització per accedir-hi. O bé no teniu permís o encara no podeu accedir-hi (per exemple, si el curs encara no ha començat)</string>
+    <string name="fileNoLongerExists">Aquest fitxer ja no existeix.</string>
+    <string name="invalidAccessToken">La sessió ha caducat. Inicieu la sessió per començar una sessió nova.</string>
+    <string name="uploadingFromSourceFailed">No s\'ha pogut penjar un fitxer d\'aquest origen.</string>
+    <string name="errorGettingPhoto">S\'ha produït un error en obtenir la foto. Torneu a provar-ho.</string>
+    <string name="errorTextMissing">Afegiu text per enviar un missatge</string>
+
+    <string name="fileUploadNotSupported">No podeu penjar fitxers a la tasca seleccionada.</string>
+    <string name="noCourseSelected">Seleccioneu un curs</string>
+    <string name="selectCourse">Seleccioneu un curs</string>
+    <string name="selectAssignment">Seleccioneu una tasca</string>
+    <string name="loadingAssignments">S\'estan carregant les tasques&#8230;</string>
+    <string name="noAssignmentSelected">Seleccioneu una tasca</string>
+    <string name="noAssignmentsWithFileUpload">Aquest curs no té cap tasca en què es permeti penjar fitxers.</string>
+    <string name="teacherNotAllowedFileSubmission">Com a professor d\'aquest curs, no podeu entregar fitxers</string>
+    <string name="noFilesUploaded">No heu seleccionat cap fitxer.</string>
+    <string name="oneOrMoreExtensionNotAllowed">Un o més fitxers tenen una extensió de fitxer que no està permesa</string>
+    <string name="extensionNotAllowed">El tipus de fitxer seleccionat no està permès.</string>
+    <string name="allowedExtensions">Extensions permeses:&#160;</string>
+    <string name="quizNetworkErrorTitle">Error al qüestionari</string>
+    <string name="quizNetworkErrorMessage">Sembla que la connexió a Internet està fora de línia.</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> Reviseu la connexió de dades i torneu a provar-ho. </string>
+    <string name="noApps">El dispositiu no té cap aplicació instal·lada per obrir aquest fitxer.</string>
+    <string name="noAppsShort">No es pot obrir</string>
+    <string name="unexpectedErrorOpeningFile">S\'ha produït un error inesperat en provar d\'obrir el fitxer.</string>
+    <string name="unexpectedErrorDownloadingFile">S\'ha produït un error inesperat en provar de baixar el fitxer.</string>
+
+    <string name="done">Fet</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">Per utilitzar aquesta característica, primer cal que es concedeixi permís.</string>
+    <string name="noConnection">Sense connexió</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">Els cursos i els grups preferits es mostren aquí.</string>
+    <string name="addCoursesGroups">Afegeix cursos o grups</string>
+    <string name="noDiscussions">No hi ha cap debat</string>
+    <string name="noDiscussionsSubtext">Inicieu una conversa amb altres usuaris.</string>
+    <string name="noDiscussionsTeacher">Inicieu una conversa amb els estudiants.</string>
+    <string name="nothingUnread">Safata d\'entrada buida.</string>
+    <string name="nothingUnreadSubtext">Esteu completament al dia.</string>
+    <string name="nothingStarred">No hi ha cap missatge marcat amb estrelles</string>
+    <string name="nothingStarredSubtext">Toqueu l\'estrella de cada missatge per conservar els missatges importants d\'aquesta secció.</string>
+    <string name="nothingSent">No s\'ha enviat res</string>
+    <string name="nothingSentSubtext">No heu enviat cap missatge.</string>
+    <string name="nothingArchived">No hi ha res arxivat</string>
+    <string name="nothingArchivedSubtext">No heu arxivat cap missatge.</string>
+    <string name="noQuizzes">No hi ha cap qüestionari</string>
+    <string name="noQuizzesSubtext">Encara no existeix cap qüestionari.</string>
+    <string name="noQuizzesTeacher">No hi ha cap qüestionari publicat que es pugui mostrar.</string>
+    <string name="noAnnouncements">No hi ha cap anunci</string>
+    <string name="noAnnouncementsSubtext">Encara no s\'ha anunciat res.</string>
+    <string name="noCourses">No hi ha cap curs</string>
+    <string name="noCoursesSubtext">Sembla que no hi ha cap curs associat a aquest compte. Aneu al lloc web per crear un curs ara mateix.</string>
+    <string name="noAssignments">No hi ha cap tasca</string>
+    <string name="noAssignmentsSubtext">Sembla que en aquest espai no s\'ha creat cap tasca. És l\'hora de sortir i explorar.</string>
+    <string name="noAssignmentsTeacher">Sembla que encara no s\'ha publicat cap tasca.</string>
+    <string name="noFiles">No hi ha cap fitxer</string>
+    <string name="noFilesForAssignment">No hi ha cap fitxer per a aquesta entrega</string>
+    <string name="noFilesSubtext">No hi ha cap fitxer associat a aquest compte.</string>
+    <string name="notSupported">No s\'admet</string>
+    <string name="noEvents">Avui no hi ha cap esdeveniment.</string>
+    <string name="noEventsSubtext">Sembla un dia fabulós per descansar i relaxar-se.</string>
+    <string name="noSubmission">No hi ha cap entrega</string>
+    <string name="noSubmissionTeacher">Aquest estudiant encara no té cap entrega.</string>
+    <string name="locked">Bloquejat</string>
+    <string name="lockedSubtext">Aquesta tasca està bloquejada fins el dia %1$s a les %2$s.</string>
+    <string name="chooseFile">Tria un fitxer</string>
+    <string name="chooseFileSubtext">Toqueu una de les opcions següents per adjuntar un fitxer a l\'entrega.</string>
+    <string name="chooseFileForUploadSubtext">Toqueu una de les opcions següents per seleccionar un fitxer i penjar-lo</string>
+    <string name="noNotifications">No hi ha cap notificació</string>
+    <string name="noNotificationsSubtext">Encara no hi ha res que s\'hagi de notificar.</string>
+    <string name="noTodos">Ben fet.</string>
+    <string name="noTodosSubtext">La llista de tasques pendents està buida. És l\'hora de recarregar.</string>
+    <string name="noSyllabus">No hi ha cap temari</string>
+    <string name="noSyllabusSubtext">Encara no s\'ha creat cap temari.</string>
+    <string name="noBookmarks">No hi ha cap adreça d\'interès</string>
+    <string name="noBookmarksSubtext">Les adreces d\'interès són dreceres per anar a qualsevol pantalla de l\'aplicació. Afegiu-les a la pantalla que vulgueu marcar com a adreça d\'interès.</string>
+    <string name="noModules">No hi ha cap mòdul</string>
+    <string name="noModulesSubtext">Sembla que encara no s\'ha creat cap mòdul.</string>
+    <string name="noPages">No hi ha cap pàgina</string>
+    <string name="noPagesSubtext">Sembla que encara no s\'ha creat cap pàgina.</string>
+
+    <!--General-->
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+
+    <string name="inbox_all">Safata d\'entrada</string>
+    <string name="inbox_unread">Sense llegir</string>
+    <string name="inbox_starred">Marcat amb estrelles</string>
+    <string name="inbox_sent">Enviat</string>
+    <string name="inbox_archived">Arxivat</string>
+
+    <string name="forbidden">Només aquells que han publicat almenys una resposta poden veure les respostes.</string>
+
+    <string name="like">M\'agrada</string>
+    <string name="likes">Entrades de M\'agrada</string>
+    <string name="lockedAssignmentNotModule">Aquesta tasca està bloquejada.</string>
+    <string name="deletedEntryNoChildren">Aquesta entrada de debat suprimit no té cap resposta.</string>
+    <string name="deleted">Suprimit</string>
+    <string name="deleted_by">[Suprimit per %1$s]</string>
+    <string name="lockedDiscussionDesc">Aquest debat forma part del mòdul %s i encara no s\'ha desbloquejat.</string>
+    <string name="gradedDiscussion">Debat qualificat</string>
+    <string name="pointsPossible">Punts possibles</string>
+    <string name="sideCommentEntry">En aquest tipus de debat, no podeu fer comentaris sobre cap entrada d\'aquest nivell.</string>
+
+    <string name="accessibility_overflow">Excés</string>
+
+    <string name="discussion_response">Comentari</string>
+    <string name="discussion_responses">Comentaris</string>
+    <string name="discussion_unread">Sense llegir</string>
+    <string name="discussion_reply">Respon</string>
+    <string name="close">Tanca</string>
+
+    <string name="noInternetConnectionTitle">No hi ha cap connexió a Internet</string>
+    <string name="noInternetConnectionMessage">Per dur a terme aquesta acció cal tenir una connexió a Internet.</string>
+    <string name="content_description_avatar">Avatar</string>
+    <string name="formattedAvatarAction">Mostra la informació d\'usuari per a %s.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
+    <string name="utils_speedgrader">SpeedGrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">Com ho estem fem?</string>
+    <string name="utils_rateUs">Com ens puntuaríeu?</string>
+    <string name="utils_doBetter">Què podem fer millor?</string>
+    <string name="utils_sendFeedback">Envia els comentaris</string>
+    <string name="utils_suggestions">Suggeriments per a Android</string>
+    <string name="utils_domain">Domini</string>
+    <string name="utils_versionNum">Versió:</string>
+    <string name="utils_userId">ID d\'usuari</string>
+    <string name="utils_email">Correu electrònic</string>
+    <string name="utils_dontShowAgain">No ho tornis a mostrar</string>
+    <string name="utils_installDate">Data d\'instal·lació:</string>
+    <string name="utils_device">Dispositiu</string>
+    <string name="utils_osVersion">Versió del sistema operatiu</string>
+    <string name="loading">S\'està carregant</string>
+    <string name="save">Desa</string>
+    <string name="cropInstructions">Pessiga i arrossega per ajustar la imatge.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="one">%s Resposta</item>
+        <item quantity="other">%s Respostes</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">Suprimida aquesta resposta %s</string>
+    <string name="utils_discussionsUnknownAuthor">Autor desconegut</string>
+    <string name="utils_discussionsReply">Respon</string>
+    <string name="utils_discussionsEdit">Edita</string>
+    <string name="utils_discussionsDeleteWarning">Segur que voleu suprimir aquesta resposta?</string>
+    <string name="utils_availableToLabel">Disponible per a:</string>
+    <string name="utils_availableFromLabel">Disponible de:</string>
+    <string name="utils_dueDateHeaderLabel">Venciment</string>
+    <string name="utils_dueLabel">Venciment:</string>
+    <string name="utils_delete">Suprimeix</string>
+    <string name="utils_dueDateAtTime" formatted="false">Venç el %1s a les %2s</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">Disponibilitat:</string>
+    <string name="utils_pinnedIcon">Icona de debat ancorat</string>
+    <string name="utils_pinDiscussion">Ancora el debat</string>
+    <string name="utils_unpinDiscussion">Desancora el debat</string>
+    <string name="utils_discussionPinned">Debat ancorat</string>
+    <string name="utils_pinnedDiscussions">Ancorat</string>
+    <string name="utils_discussionUnpinned">Debats</string>
+    <string name="utils_emptyDiscussions">En aquesta secció, no hi ha cap debat que es pugui mostrar.</string>
+    <string name="utils_description">Descripció</string>
+    <string name="utils_allowThreadedReplies">Permet les respostes enllaçades</string>
+    <string name="utils_usersMustPost">Els estudiants han de fer alguna publicació abans de poder veure les respostes</string>
+    <string name="utils_discussionsClosed">Tancat per als comentaris</string>
+    <string name="utils_discussionsOpen">Obert per als comentaris</string>
+    <string name="utils_discussionsPin">Ancora</string>
+    <string name="utils_discussionsUnpin">Desancora</string>
+    <string name="utils_discussionsOptions">Opcions</string>
+    <string name="utils_discussionsDeleteTitle">Voleu suprimir el debat?</string>
+    <string name="utils_discussionsDelete">Suprimeix el debat</string>
+    <string name="utils_discussionsDeleteMessage">Amb aquesta acció, se suprimirà el debat sencer i les respostes enllaçades.</string>
+    <string name="utils_discussionSentSuccess">S\'ha realitzat correctament la resposta al debat.</string>
+    <string name="utils_discussionUpdateSuccess">S\'ha editat correctament el debat.</string>
+    <string name="utils_discussionSentEmpty">El camp de la resposta al debat no pot estar buit.</string>
+    <string name="utils_discussionSentFailure">En aquest moment, no s\'ha pogut enviar la resposta al debat.</string>
+    <string name="utils_createDiscussion">Debat nou</string>
+    <string name="utils_editDiscussion">Edita el debat</string>
+    <string name="utils_discussionDetails">Informació sobre el debat</string>
+    <string name="utils_discussionSuccessfullyUpdated">S\'ha actualitzat correctament el debat.</string>
+    <string name="utils_saving">S\'està desant</string>
+    <string name="utils_discussionSuccessfullyCreated">S\'ha creat correctament el debat.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">No s\'ha pogut afegir el fitxer adjunt a aquest debat. Reviseu la quota de fitxer i torneu a provar-ho.</string>
+    <string name="utils_noTitle">Sense títol</string>
+    <string name="utils_discussionsReplies_Title">Respostes</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">Més opcions</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">Darrera publicació %s</string>
+    <string name="utils_postedOnDate">Publicada el dia %s</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">Només aquells que han publicat almenys una resposta poden veure les respostes.</string>
+    <string name="utils_createAnnouncementDelayPosting">Publicació retardada</string>
+    <string name="utils_postAt">Publicada a les</string>
+    <string name="utils_postDate">Data de la publicació</string>
+    <string name="utils_postTime">Hora de la publicació</string>
+    <string name="utils_editAnnouncementTitle">Edita l\'anunci</string>
+    <string name="utils_createAnnouncementTitle">Anunci nou</string>
+    <string name="utils_announcementDetails">Informació de l\'anunci</string>
+    <string name="utils_createAnnouncementNoDescription">Cal una descripció</string>
+    <string name="utils_errorSavingAnnouncement">S\'ha produït un error en provar de desar aquest anunci. Torneu a provar-ho.</string>
+    <string name="utils_announcementSuccessfullyUpdated">S\'ha actualitzat correctament l\'anunci.</string>
+    <string name="utils_announcementSuccessfullyCreated">S\'ha creat correctament l\'anunci.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="one">%s Sense llegir</item>
+        <item quantity="other">%s Sense llegir</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">Afegeix un fitxer adjunt</item>
+        <item quantity="one">Afegeix un fitxer adjunt</item>
+        <item quantity="other">Afegeix fitxers adjunts</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">La data de desbloqueig no pot ser posterior a la data de venciment</string>
+    <string name="utils_lockBeforeDueDateError">La data de bloqueig no pot ser anterior a la data de venciment</string>
+    <string name="utils_lockAfterUnlockError">La data de bloqueig no pot ser anterior a la data de desbloqueig</string>
+    <string name="utils_assigneeBlankError">El camp Beneficiari no pot quedar en blanc</string>
+    <string name="utils_assignTo">Assigna a</string>
+    <string name="utils_availableFrom">Disponible de</string>
+    <string name="utils_availableTo">Disponible per a</string>
+    <string name="utils_availableFromDate">Disponible des del dia</string>
+    <string name="utils_availableFromTime">Disponible des de les</string>
+    <string name="utils_availableToDate">Disponible per al dia</string>
+    <string name="utils_availableToTime">Disponible per a les</string>
+    <string name="utils_dueDate">Data de venciment</string>
+    <string name="utils_dueTime">Hora de venciment</string>
+    <string name="utils_addNew">Afegeix nou</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">Baixa el fitxer adjunt</string>
+    <string name="utils_removeAttachment">Elimina el fitxer adjunt</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">Voleu continuar sense desar?</string>
+    <string name="utils_continueWithoutSavingMessage">Segur que voleu continuar sense desar els canvis?</string>
+    <string name="utils_continueUnsaved">Continua</string>
+    <string name="utils_exitWithoutSavingTitle">Voleu sortir sense desar els canvis?</string>
+    <string name="utils_exitWithoutSavingMessage">Segur que voleu sortir sense desar els canvis?</string>
+    <string name="utils_exitUnsaved">Surt</string>
+    <string name="utils_cancel">Cancel·la</string>
+
+    <string name="utils_contentDescriptionFiles">Icona de fitxer</string>
+    <string name="utils_turn_in">Entrega</string>
+    <string name="utils_upload">Penja</string>
+    <string name="utils_okay">D\'acord</string>
+    <string name="utils_loadingFilesIndeterminate">S\'estan carregant els fitxers&#8230;</string>
+    <string name="utils_allowedExtensions">Extensions permeses:&#160;</string>
+    <string name="utils_extensionNotAllowed">El tipus de fitxer seleccionat no està permès.</string>
+    <string name="utils_errorUploadingFile">S\'ha produït un error en penjar el fitxer. Torneu a provar-ho.</string>
+    <string name="utils_filesUploadedSuccessfully">S\'han penjat correctament els fitxers.</string>
+    <string name="utils_uploadingFiles">S\'estan penjant els fitxers&#8230;</string>
+    <string name="utils_uploadingFile">S\'està penjant el fitxer&#8230;</string>
+    <string name="utils_noApps">El dispositiu no té cap aplicació instal·lada per obrir aquest fitxer.</string>
+    <string name="utils_errorGettingPhoto">S\'ha produït un error en obtenir la foto. Torneu a provar-ho.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">Un o més fitxers tenen una extensió de fitxer que no està permesa</string>
+    <string name="utils_fileUploadNotSupported">No podeu penjar fitxers a la tasca seleccionada.</string>
+    <string name="utils_noFilesUploaded">No heu seleccionat cap fitxer.</string>
+    <string name="utils_attachments">Fitxers adjunts</string>
+    <string name="utils_uploadTo">Penja a </string>
+    <string name="utils_uploadToCanvas">Penja a Canvas</string>
+    <string name="utils_uploadMyFiles">Els meus fitxers</string>
+    <string name="utils_uploadCourseFiles">Fitxers del curs</string>
+    <string name="utils_uploadGroupFiles">Fitxers del grup</string>
+    <string name="utils_uploadToSubmissionComment">Penja a Comentari sobre l\'entrega</string>
+    <string name="utils_attachFile">Adjunta un fitxer</string>
+    <string name="utils_with">amb</string>
+
+    <string name="notificationPrimaryInboxTitle">Notificació de Canvas</string>
+    <string name="notificationChannelNamePrimary">Notificacions de Canvas generals</string>
+    <string name="notificationChannelDescriptionPrimary">A la secció de Preferències de notificacions de Canvas es pot ampliar la configuració de les notificacions.</string>
+
+    <string name="copyLinkAddress">Copia l\'adreça de l\'enllaç</string>
+    <string name="copyLink">Copia l\'enllaç</string>
+    <string name="linkCopied">Enllaç copiat</string>
+    <string name="link">Enllaç</string>
+    <string name="fileExists">El fitxer existeix</string>
+    <string name="replace">Substitueix</string>
+    <string name="shareLink">Comparteix l\'enllaç</string>
+
+    <string name="utils_launchExternalTool">Inicieu l\'eina externa</string>
+    <string name="utils_externalToolTitle">Eina externa</string>
+    <string name="utils_placeholderTitle">Eina externa</string>
+    <string name="utils_placeholderDescription">Aneu al compte web de Canvas per editar aquesta eina externa.</string>
+    <string name="utils_unableToViewInBrowser">No podem trobar una aplicació externa per visualitzar aquesta eina LTI.</string>
+
+    <string name="utils_unsupportedFileMessage">No s\'ha pogut mostrar aquest fitxer. Utilitzeu el botó de sota per obrir el fitxer amb una altra aplicació del dispositiu.</string>
+    <string name="utils_openWithAnotherApp">Obre amb&#8230;</string>
+    <string name="utils_couldNotPlayFormat">No s\'admet el format d\'aquest element multimèdia</string>
+    <string name="utils_fullscreen">pantalla completa</string>
+
+    <string name="utils_dataUsageWarningTitle">Advertiment sobre l\'ús de dades</string>
+    <string name="utils_dataUsageWarningMessage">És possible que amb aquesta acció es consumeixi una gran quantitat de dades i se us apliquin càrrecs per superar el límit. Voleu continuar?</string>
+    <string name="utils_doNotShowMessageAgain">No torneu a mostrar aquest missatge</string>
+
+    <string name="utils_no_data_connection">Reviseu la connexió de dades i torneu a provar-ho.</string>
+    <string name="utils_playMedia">Reprodueix l\'element multimèdia</string>
+    <string name="utils_tryAgain">Torneu a provar-ho</string>
+    <string name="image_uploading">S\'està penjant la imatge&#8230;</string>
+    <string name="image_upload_error">Error en penjar la imatge</string>
+    <string name="retry">Torna a provar-ho</string>
+    <string name="search">Cerca</string>
+    <string name="searchAssignmentsHint">Cerca tasques</string>
+    <string name="searchAnnouncementsHint">Cerca anuncis</string>
+    <string name="searchDiscussionsHint">Cerca debats</string>
+    <string name="searchPagesHint">Cerca pàgines</string>
+    <string name="searchQuizzesHint">Cerca qüestionaris</string>
+    <string name="noItemsMatchingQuery">No hi ha cap element que coincideixi \"%s\"</string>
+
+    <string name="selected">Seleccionat</string>
+
+</resources>

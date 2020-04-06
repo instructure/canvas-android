@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
+import 'package:flutter_parent/utils/debouncer.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -57,6 +58,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
   /// The current query, tracked to help prevent race conditions when a previous search completes after a more recent search
   String _currentQuery;
+
+  Debouncer _debouncer = Debouncer(Duration(milliseconds: 500));
 
   final TextEditingController _inputController = TextEditingController();
 
@@ -162,7 +165,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                         },
                       ),
               ),
-              onChanged: (query) => _searchDomains(query),
+              onChanged: (query) => _debouncer.debounce(() => _searchDomains(query)),
             ),
             SizedBox(
               height: 2,

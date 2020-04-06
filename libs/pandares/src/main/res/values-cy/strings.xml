@@ -1125,4 +1125,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Munud</item>
+        <item quantity="other">%s Munud</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Dim Cynadleddau</string>
+    <string name="noConferencesMessage">Does dim cynadleddau i’w dangos eto</string>
+    <string name="noConferenceDescription">Does dim disgrifiad ar gyfer y gynhadledd hon</string>
+    <string name="conferenceListError">Gwall wrth lwytho’ch cynadleddau</string>
+    <string name="conferenceConcludedDateAtTime">Wedi dirwyn i ben %s am %s</string>
+    <string name="conferenceStartedDateAtTime">Wedi dechrau %s am %s</string>
+    <string name="notStarted">Heb ei ddechrau</string>
+    <string name="inProgress">Ar y Gweill</string>
+    <string name="join">Ymuno</string>
+    <string name="newConferences">Cynadleddau Newydd</string>
+    <string name="concludedConferences">Cynadleddau wedi’u Dirwyn i Ben</string>
+    <string name="conferenceDetails">Manylion Cynhadledd</string>
+    <string name="recordings">Recordiad</string>
 </resources>

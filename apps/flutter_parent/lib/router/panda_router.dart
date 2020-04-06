@@ -46,8 +46,8 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interac
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 ///
 /// Debug note: Getting the deep link route from an external source (via the Android Activity's onCreate intent) can be
@@ -272,9 +272,9 @@ class PandaRouter {
     LoginFlow loginFlow = LoginFlow.values.firstWhere((e) => e.toString() == loginFlowString);
 
     return WebLoginScreen(
-    params[_RouterKeys.domain][0],
-    authenticationProvider: authProvider,
-    loginFlow: loginFlow,
+      params[_RouterKeys.domain][0],
+      authenticationProvider: authProvider,
+      loginFlow: loginFlow,
     );
   });
 
@@ -364,9 +364,9 @@ class PandaRouter {
       if (limitWebAccess) {
         // Special case for limit webview access flag (We don't want them to be able to navigate within the webview)
         locator<QuickNav>().pushRoute(context, simpleWebViewRoute(url, L10n(context).webAccessLimitedMessage));
-      } else if (await canLaunch(link) ?? false) {
+      } else if (await locator<UrlLauncher>().canLaunch(link) ?? false) {
         // No native route found, let's launch the url if possible, or show an error toast
-        launch(url);
+        locator<UrlLauncher>().launch(url);
       } else {
         locator<FlutterSnackbarVeneer>().showSnackBar(context, L10n(context).routerLaunchErrorMessage);
       }

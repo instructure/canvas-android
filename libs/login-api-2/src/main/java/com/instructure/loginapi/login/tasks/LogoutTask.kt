@@ -130,6 +130,8 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
         )
         if (currentUser != null && signedInUser != null) {
             signedInUser.user = currentUser
+            signedInUser.clientId = ApiPrefs.clientId
+            signedInUser.clientSecret = ApiPrefs.clientSecret;
             PreviousUsersUtils.add(ContextKeeper.appContext, signedInUser)
         }
     }

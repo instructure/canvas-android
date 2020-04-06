@@ -274,6 +274,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.1+2"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      name: firebase_remote_config
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0+3"
   fixnum:
     dependency: transitive
     description:
@@ -869,20 +876,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
-  url_launcher:
-    dependency: "direct main"
-    description:
-      name: url_launcher
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.2.5"
-  url_launcher_platform_interface:
-    dependency: transitive
-    description:
-      name: url_launcher_platform_interface
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
   uuid:
     dependency: "direct main"
     description:

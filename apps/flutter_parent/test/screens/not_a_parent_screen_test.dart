@@ -14,11 +14,10 @@
 
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
@@ -52,8 +51,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Launches intent to open student app in play store', (tester) async {
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
+    var mockLauncher = _MockUrlLauncher();
+    setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
@@ -66,23 +65,13 @@ void main() {
     await tester.tap(find.text(l10n.studentApp));
     await tester.pump();
 
-    var actualUrl = verify(
-      mockLauncher.launch(
-        captureAny,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      ),
-    ).captured[0];
+    var actualUrl = verify(mockLauncher.launch(captureAny)).captured[0];
     expect(actualUrl, 'market://details?id=com.instructure.candroid');
   });
 
   testWidgetsWithAccessibilityChecks('Launches intent to open teacher app in play store', (tester) async {
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
+    var mockLauncher = _MockUrlLauncher();
+    setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => mockLauncher));
 
     await tester.pumpWidget(TestApp(NotAParentScreen()));
     await tester.pump();
@@ -95,19 +84,9 @@ void main() {
     await tester.tap(find.text(l10n.teacherApp));
     await tester.pump();
 
-    var actualUrl = verify(
-      mockLauncher.launch(
-        captureAny,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      ),
-    ).captured[0];
+    var actualUrl = verify(mockLauncher.launch(captureAny)).captured[0];
     expect(actualUrl, 'market://details?id=com.instructure.teacher');
   });
 }
 
-class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+class _MockUrlLauncher extends Mock implements UrlLauncher {}

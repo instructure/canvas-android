@@ -35,10 +35,9 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
@@ -309,26 +308,18 @@ void main() {
         htmlUrl: '/courses/1/quizzes/1',
       );
 
-      final _mockLauncher = _MockUrlLauncherPlatform();
+      final _mockLauncher = _MockUrlLauncher();
       final _mockWebContentInteractor = _MockWebContentInteractor();
       final _analytics = _MockAnalytics();
 
       when(_mockLauncher.canLaunch(url)).thenAnswer((_) => Future.value(true));
-      when(_mockLauncher.launch(
-        url,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      )).thenAnswer((_) => Future.value(true));
+      when(_mockLauncher.launch(url)).thenAnswer((_) => Future.value(true));
       when(_mockWebContentInteractor.getAuthUrl(url)).thenAnswer((_) => Future.value(url));
 
-      UrlLauncherPlatform.instance = _mockLauncher;
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
         ..registerLazySingleton<Analytics>(() => _analytics)
+        ..registerLazySingleton<UrlLauncher>(() => _mockLauncher)
         ..registerLazySingleton<WebContentInteractor>(() => _mockWebContentInteractor));
 
       await tester.pumpWidget(TestApp(
@@ -346,15 +337,7 @@ void main() {
       await tester.pump();
 
       verify(_analytics.logMessage('Attempting to route INTERNAL url: $url')).called(1);
-      verify(_mockLauncher.launch(
-        url,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      )).called(1);
+      verify(_mockLauncher.launch(url)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('tapping discussion plannable navigates to course announcement details screen',
@@ -431,7 +414,7 @@ class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDet
 
 class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
 
-class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+class _MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
 

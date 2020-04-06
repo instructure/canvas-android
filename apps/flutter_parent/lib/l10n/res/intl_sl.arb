@@ -1,139 +1,229 @@
 ﻿{
-  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "@@last_modified": "2020-03-20T11:04:10.914171",
   "alertsLabel": "Opozorila",
   "@alertsLabel": {
-    "description"<TAG>The label for the Alerts tab",
-    "type"<TAG>text",
+    "description": "The label for the Alerts tab",
+    "type": "text",
     "placeholders": {}
   },
   "calendarLabel": "Koledar",
   "@calendarLabel": {
-    "description"<TAG>The label for the Calendar tab",
-    "type"<TAG>text",
+    "description": "The label for the Calendar tab",
+    "type": "text",
     "placeholders": {}
   },
   "coursesLabel": "Predmeti",
   "@coursesLabel": {
-    "description"<TAG>The label for the Courses tab",
-    "type"<TAG>text",
+    "description": "The label for the Courses tab",
+    "type": "text",
     "placeholders": {}
   },
   "No Students": "Ni študentov",
   "@No Students": {
-    "description"<TAG>Text for when an observer has no students they are observing",
-    "type"<TAG>text",
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to show student selector": "Tapnite za prikaz izbirnika študentov",
   "@Tap to show student selector": {
-    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
-    "type"<TAG>text",
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to pair with a new student": "Tapnite za povezavo z novim študentom",
   "@Tap to pair with a new student": {
-    "description"<TAG>Semantics label for the add student button in the student selector",
-    "type"<TAG>text",
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to select this student": "Tapnite za izbiro tega študenta",
   "@Tap to select this student": {
-    "description"<TAG>Semantics label on individual students in the student switcher",
-    "type"<TAG>text",
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
     "placeholders": {}
   },
   "Manage Students": "Uredi študente",
   "@Manage Students": {
-    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
-    "type"<TAG>text",
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
     "placeholders": {}
   },
   "Help": "Pomoč",
   "@Help": {
-    "description"<TAG>Label text for the help nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
   "Log Out": "Odjava",
   "@Log Out": {
-    "description"<TAG>Label text for the Log Out nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
   "Switch Users": "Preklopi uporabnika",
   "@Switch Users": {
-    "description"<TAG>Label text for the Switch Users nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
-  "appVersion": "r. <bpt>{version}</bpt>",
+  "appVersion": "r. {version}",
   "@appVersion": {
-    "description"<TAG>App version shown in the navigation drawer",
-    "type"<TAG>text",
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
     "placeholders": {
       "version": {}
     }
   },
   "Are you sure you want to log out?": "Ali ste prepričani, da se želite odjaviti?",
   "@Are you sure you want to log out?": {
-    "description"<TAG>Confirmation message displayed when the user tries to log out",
-    "type"<TAG>text",
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Calendars": "Koledarji",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nextMonth": "Naslednji mesec: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Predhodni mesec: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Naslednji teden z začetkom {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Predhodni teden z začetkom {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Mesec {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "razširi",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapse": "strni",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} možnih točk",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "No Events Today!": "Danes ni dogodkov.",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Videti je, da je to krasen dan za počitek, sprostitev in regeneracijo.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "Pri nalaganju koledarja vašega študenta je prišlo do napake",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Tapnite za dodajanje predmetov, ki jih želite prikazane na koledarju, med priljubljene.",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
     "placeholders": {}
   },
   "Previous Logins": "Predhodne prijave",
   "@Previous Logins": {
-    "description"<TAG>Label for the list of previous user logins",
-    "type"<TAG>text",
+    "description": "Label for the list of previous user logins",
+    "type": "text",
     "placeholders": {}
   },
   "canvasLogoLabel": "Logotip sistema Canvas",
   "@canvasLogoLabel": {
-    "description"<TAG>The semantics label for the Canvas logo",
-    "type"<TAG>text",
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
     "placeholders": {}
   },
   "findSchool": "Poišči šolo",
   "@findSchool": {
-    "description"<TAG>Text for the find-my-school button",
-    "type"<TAG>text",
+    "description": "Text for the find-my-school button",
+    "type": "text",
     "placeholders": {}
   },
   "domainSearchInputHint": "Vnos imena šole ali okrožja ...",
   "@domainSearchInputHint": {
-    "description"<TAG>Input hint for the text box on the domain search screen",
-    "type"<TAG>text",
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
     "placeholders": {}
   },
-  "noDomainResults": "Ni mogoče najti šol, ki se ujemajo s/z »<bpt>{query}</bpt>«",
+  "noDomainResults": "Ni mogoče najti šol, ki se ujemajo s/z »{query}«",
   "@noDomainResults": {
-    "description"<TAG>Message shown to users when the domain search query did not return any results",
-    "type"<TAG>text",
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
     "placeholders": {
       "query": {}
     }
   },
   "domainSearchHelpLabel": "Kako najdem svojo šolo ali okrožje?",
   "@domainSearchHelpLabel": {
-    "description"<TAG>Label for the help button on the domain search screen",
-    "type"<TAG>text",
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
     "placeholders": {}
   },
   "canvasGuides": "Vodniki po sistemu Canvas",
   "@canvasGuides": {
-    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
-    "type"<TAG>text",
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
     "placeholders": {}
   },
   "canvasSupport": "Podpora za sistem Canvas",
   "@canvasSupport": {
-    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
-    "type"<TAG>text",
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Poskusite poiskati ime šole ali okrožja, do katerega poskušate dostopati, na primer »Smith Private School« ali »Smith County Schools«. V domeno sistema Canvas lahko vstopite neposredno, na primer »smith.instructure.com«.\n\nZa več informacij o iskanju računa Canvas vaše ustanove, obiščite spletno mesto <bpt>{canvasGuides}</bpt> in se za pomoč obrnite na <bpt>{canvasSupport}</bpt> ali na šolo.",
+  "domainSearchHelpBody": "Poskusite poiskati ime šole ali okrožja, do katerega poskušate dostopati, na primer »Smith Private School« ali »Smith County Schools«. V domeno sistema Canvas lahko vstopite neposredno, na primer »smith.instructure.com«.\n\nZa več informacij o iskanju računa Canvas vaše ustanove, obiščite spletno mesto {canvasGuides} in se za pomoč obrnite na {canvasSupport} ali na šolo.",
   "@domainSearchHelpBody": {
-    "description"<TAG>The body text shown in the help dialog on the domain search screen",
-    "type"<TAG>text",
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
     "placeholders": {
       "canvasGuides": {},
       "canvasSupport": {}
@@ -141,175 +231,175 @@
   },
   "Uh oh!": "Ojoj.",
   "@Uh oh!": {
-    "description"<TAG>Title of the screen that shows when a crash has occurred",
-    "type"<TAG>text",
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Nismo prepričano, kaj se je zgodilo, ni pa bilo dobro. Če se napaka ponovi, nas kontaktirajte.",
   "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
-    "description"<TAG>Message shown when a crash has occurred",
-    "type"<TAG>text",
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "Contact Support": "Stik s podporo",
   "@Contact Support": {
-    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
-    "type"<TAG>text",
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "View error details": "Prikaz podrobnosti o napaki",
   "@View error details": {
-    "description"<TAG>Label for the button that allowed users to view crash details",
-    "type"<TAG>text",
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Restart app": "Ponovno zaženite aplikacijo",
   "@Restart app": {
-    "description"<TAG>Label for the button that will restart the entire application",
-    "type"<TAG>text",
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
     "placeholders": {}
   },
   "Application version": "Različica aplikacije",
   "@Application version": {
-    "description"<TAG>Label for the application version displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Device model": "Model naprave",
   "@Device model": {
-    "description"<TAG>Label for the device model displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Android OS version": "Različica sistema Android",
   "@Android OS version": {
-    "description"<TAG>Label for the Android operating system version displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Full error message": "Polni prikaz sporočila o napaki",
   "@Full error message": {
-    "description"<TAG>Label for the full error message displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Inbox": "Pošta",
   "@Inbox": {
-    "description"<TAG>Title for the Inbox screen",
-    "type"<TAG>text",
+    "description": "Title for the Inbox screen",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your inbox messages.": "Pri nalaganju sporočil vašega nabiralnika je prišlo do napake.",
   "@There was an error loading your inbox messages.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "No Subject": "Ni zadeve",
   "@No Subject": {
-    "description"<TAG>Title used for inbox messages that have no subject",
-    "type"<TAG>text",
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to fetch courses. Please check your connection and try again.": "Predmetov ni bilo mogoče pridobiti. Preverite svojo povezavo in poskusite znova.",
   "@Unable to fetch courses. Please check your connection and try again.": {
-    "description"<TAG>Message shown when an error occured while loading courses",
-    "type"<TAG>text",
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
     "placeholders": {}
   },
   "Choose a course to message": "Izberite predmet za pošiljanje sporočila",
   "@Choose a course to message": {
-    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
-    "type"<TAG>text",
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
     "placeholders": {}
   },
   "Inbox Zero": "Nabiralnik je prazen",
   "@Inbox Zero": {
-    "description"<TAG>Title of the message shown when there are no inbox messages",
-    "type"<TAG>text",
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
     "placeholders": {}
   },
   "You’re all caught up!": "Seznanjeni ste z vsem!",
   "@You’re all caught up!": {
-    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
-    "type"<TAG>text",
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading recipients for this course": "Prišlo je do napake pri nalaganju prejemnikov za ta predmet",
   "@There was an error loading recipients for this course": {
-    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
-    "type"<TAG>text",
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to send message. Check your connection and try again.": "Sporočila ni bilo mogoče poslati. Preverite svojo povezavo in poskusite znova.",
   "@Unable to send message. Check your connection and try again.": {
-    "description"<TAG>Message show when there was an error creating or sending a new message",
-    "type"<TAG>text",
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
     "placeholders": {}
   },
   "Unsaved changes": "Neshranjene spremembe",
   "@Unsaved changes": {
-    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
-    "type"<TAG>text",
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
     "placeholders": {}
   },
   "Are you sure you wish to close this page? Your unsent message will be lost.": "Ali ste prepričani, da želite zapreti to stran? Neposlana sporočila bodo izgubljena.",
   "@Are you sure you wish to close this page? Your unsent message will be lost.": {
-    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
-    "type"<TAG>text",
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
     "placeholders": {}
   },
   "New message": "Novo sporočilo",
   "@New message": {
-    "description"<TAG>Title of the new-message screen",
-    "type"<TAG>text",
+    "description": "Title of the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Add attachment": "Dodaj prilogo",
   "@Add attachment": {
-    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
-    "type"<TAG>text",
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Send message": "Pošlji sporočilo",
   "@Send message": {
-    "description"<TAG>Tooltip for the send-message button in the new-message screen",
-    "type"<TAG>text",
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Select recipients": "Izberi prejemnike",
   "@Select recipients": {
-    "description"<TAG>Tooltip for the button that allows users to select message recipients",
-    "type"<TAG>text",
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
     "placeholders": {}
   },
   "No recipients selected": "Izbran ni noben prejemnik",
   "@No recipients selected": {
-    "description"<TAG>Hint displayed when the user has not selected any message recipients",
-    "type"<TAG>text",
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
     "placeholders": {}
   },
   "Message subject": "Zadeva sporočila",
   "@Message subject": {
-    "description"<TAG>Hint text displayed in the input field for the message subject",
-    "type"<TAG>text",
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
     "placeholders": {}
   },
   "Message": "Sporočilo",
   "@Message": {
-    "description"<TAG>Hint text displayed in the input field for the message body",
-    "type"<TAG>text",
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
     "placeholders": {}
   },
   "Recipients": "Prejemniki",
   "@Recipients": {
-    "description"<TAG>Label for message recipients",
-    "type"<TAG>text",
+    "description": "Label for message recipients",
+    "type": "text",
     "placeholders": {}
   },
-  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "plusRecipientCount": "+{count}",
   "@plusRecipientCount": {
-    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
-    "type"<TAG>text",
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
     "placeholders": {
       "count": {
         "example": 5
@@ -318,22 +408,22 @@
   },
   "Failed. Tap for options.": "Ni uspelo. Tapnite za možnosti.",
   "@Failed. Tap for options.": {
-    "description"<TAG>Short message shown on a message attachment when uploading has failed",
-    "type"<TAG>text",
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
     "placeholders": {}
   },
-  "courseForWhom": "za <bpt>{studentShortName}</bpt>",
+  "courseForWhom": "za {studentShortName}",
   "@courseForWhom": {
-    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
-    "type"<TAG>text",
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
     "placeholders": {
       "studentShortName": {}
     }
   },
-  "messageLinkPostscript": "Zadeva: <bpt>{studentName}</bpt>, <bpt>{linkUrl}</bpt>",
+  "messageLinkPostscript": "Zadeva: {studentName}, {linkUrl}",
   "@messageLinkPostscript": {
-    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
-    "type"<TAG>text",
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "linkUrl": {}
@@ -341,56 +431,56 @@
   },
   "There was an error loading this conversation": "Prišlo je do napake pri nalaganju tega pogovora",
   "@There was an error loading this conversation": {
-    "description"<TAG>Message shown when a conversation fails to load",
-    "type"<TAG>text",
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
     "placeholders": {}
   },
   "Reply": "Odgovori",
   "@Reply": {
-    "description"<TAG>Button label for replying to a conversation",
-    "type"<TAG>text",
+    "description": "Button label for replying to a conversation",
+    "type": "text",
     "placeholders": {}
   },
   "Reply All": "Odgovori vsem",
   "@Reply All": {
-    "description"<TAG>Button label for replying to all conversation participants",
-    "type"<TAG>text",
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
     "placeholders": {}
   },
   "Unknown User": "Neznani uporabnik",
   "@Unknown User": {
-    "description"<TAG>Label used where the user name is not known",
-    "type"<TAG>text",
+    "description": "Label used where the user name is not known",
+    "type": "text",
     "placeholders": {}
   },
   "me": "jaz",
   "@me": {
-    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
-    "type"<TAG>text",
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
     "placeholders": {}
   },
-  "authorToRecipient": "<bpt>{authorName}</bpt> do <bpt>{recipientName}</bpt>",
+  "authorToRecipient": "{authorName} do {recipientName}",
   "@authorToRecipient": {
-    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
-    "type"<TAG>text",
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "recipientName": {}
     }
   },
-  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> do 1 drugi<bpt>}other{{authorName}</bpt> do <bpt>{howMany}</bpt> drugih<bpt>}}</bpt>",
+  "authorToNOthers": "{howMany,plural, =1{{authorName} do 1 drugi}other{{authorName} do {howMany} drugih}}",
   "@authorToNOthers": {
-    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
-    "type"<TAG>text",
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "howMany": {}
     }
   },
-  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> do <bpt>{recipientName}</bpt> in 1 drugi<bpt>}other{{authorName}</bpt> do <bpt>{recipientName}</bpt> in <bpt>{howMany}</bpt> drugih<bpt>}}</bpt>",
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} do {recipientName} in 1 drugi}other{{authorName} do {recipientName} in {howMany} drugih}}",
   "@authorToRecipientAndNOthers": {
-    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
-    "type"<TAG>text",
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "recipientName": {},
@@ -399,242 +489,242 @@
   },
   "Download": "Prenesi",
   "@Download": {
-    "description"<TAG>Label for the button that will begin downloading a file",
-    "type"<TAG>text",
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
     "placeholders": {}
   },
   "Open with another app": "Odpri z drugo aplikacijo",
   "@Open with another app": {
-    "description"<TAG>Label for the button that will allow users to open a file with another app",
-    "type"<TAG>text",
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
     "placeholders": {}
   },
   "There are no installed applications that can open this file": "Nameščene nimate nobene aplikacije, ki bi lahko odprla to datoteko",
   "@There are no installed applications that can open this file": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Unsupported File": "Nepodprta datoteka",
   "@Unsupported File": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "This file is unsupported and can’t be viewed through the app": "Datoteka ni podprta in si je ni mogoče ogledati v aplikaciji",
   "@This file is unsupported and can’t be viewed through the app": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to play this media file": "Te predstavnostne datoteke ni mogoče predvajati",
   "@Unable to play this media file": {
-    "description"<TAG>Message shown when audio or video media could not be played",
-    "type"<TAG>text",
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to load this image": "Te slike ni mogoče naložiti",
   "@Unable to load this image": {
-    "description"<TAG>Message shown when an image file could not be loaded or displayed",
-    "type"<TAG>text",
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading this file": "Prišlo je do napake pri nalaganju te datoteke",
   "@There was an error loading this file": {
-    "description"<TAG>Message shown when a file could not be loaded or displayed",
-    "type"<TAG>text",
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
     "placeholders": {}
   },
   "No Courses": "Ni predmetov",
   "@No Courses": {
-    "description"<TAG>Title for having no courses",
-    "type"<TAG>text",
+    "description": "Title for having no courses",
+    "type": "text",
     "placeholders": {}
   },
   "Your student’s courses might not be published yet.": "Predmeti vašega študenta morda še niso objavljeni.",
   "@Your student’s courses might not be published yet.": {
-    "description"<TAG>Message for having no courses",
-    "type"<TAG>text",
+    "description": "Message for having no courses",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your your student’s courses.": "Pri nalaganju predmetov vašega študenta je prišlo do napake.",
   "@There was an error loading your your student’s courses.": {
-    "description"<TAG>Message displayed when the list of student courses could not be loaded",
-    "type"<TAG>text",
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
     "placeholders": {}
   },
   "No Grade": "Ni ocen",
   "@No Grade": {
-    "description"<TAG>Message shown when there is currently no grade available for a course",
-    "type"<TAG>text",
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
     "placeholders": {}
   },
   "Filter by": "Filtriraj glede na",
   "@Filter by": {
-    "description"<TAG>Title for list of terms to filter grades by",
-    "type"<TAG>text",
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
     "placeholders": {}
   },
   "Grades": "Ocene",
   "@Grades": {
-    "description"<TAG>Label for the \"Grades\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Syllabus": "Učni načrt",
   "@Syllabus": {
-    "description"<TAG>Label for the \"Syllabus\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Front Page": "Prva stran",
   "@Front Page": {
-    "description"<TAG>Label for the \"Front Page\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Summary": "Povzetek",
   "@Summary": {
-    "description"<TAG>Label for the \"Summary\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Send a message about this course": "Pošlji sporočilo o tem predmetu",
   "@Send a message about this course": {
-    "description"<TAG>Accessibility hint for the course messaage floating action button",
-    "type"<TAG>text",
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
     "placeholders": {}
   },
   "Total Grade": "Skupna ocena",
   "@Total Grade": {
-    "description"<TAG>Label for the total grade in the course",
-    "type"<TAG>text",
+    "description": "Label for the total grade in the course",
+    "type": "text",
     "placeholders": {}
   },
   "Graded": "Ocenjeno",
   "@Graded": {
-    "description"<TAG>Label for assignments that have been graded",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been graded",
+    "type": "text",
     "placeholders": {}
   },
   "Submitted": "Poslano",
   "@Submitted": {
-    "description"<TAG>Label for assignments that have been submitted",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
     "placeholders": {}
   },
   "Not Submitted": "Ni oddano.",
   "@Not Submitted": {
-    "description"<TAG>Label for assignments that have not been submitted",
-    "type"<TAG>text",
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
     "placeholders": {}
   },
   "Late": "Zamuda",
   "@Late": {
-    "description"<TAG>Label for assignments that have been marked late or submitted late",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
     "placeholders": {}
   },
   "Missing": "Manjkajoče",
   "@Missing": {
-    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
     "placeholders": {}
   },
   "-": "-",
   "@-": {
-    "description"<TAG>Value representing no score for student submission",
-    "type"<TAG>text",
+    "description": "Value representing no score for student submission",
+    "type": "text",
     "placeholders": {}
   },
   "All Grading Periods": "Vsa ocenjevalna obdobja",
   "@All Grading Periods": {
-    "description"<TAG>Label for selecting all grading periods",
-    "type"<TAG>text",
+    "description": "Label for selecting all grading periods",
+    "type": "text",
     "placeholders": {}
   },
   "No Assignments": "Ni nalog",
   "@No Assignments": {
-    "description"<TAG>Title for the no assignments message",
-    "type"<TAG>text",
+    "description": "Title for the no assignments message",
+    "type": "text",
     "placeholders": {}
   },
   "It looks like assignments haven't been created in this space yet.": "Videti je, da v tem prostoru naloge še niso bile ustvarjene.",
   "@It looks like assignments haven't been created in this space yet.": {
-    "description"<TAG>Message for no assignments",
-    "type"<TAG>text",
+    "description": "Message for no assignments",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading the summary details for this course.": "Prišlo je do napake pri nalaganju povzetka podrobnosti za ta predmet.",
   "@There was an error loading the summary details for this course.": {
-    "description"<TAG>Message shown when the course summary could not be loaded",
-    "type"<TAG>text",
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
     "placeholders": {}
   },
   "No Summary": "Ni povzetka",
   "@No Summary": {
-    "description"<TAG>Title displayed when there are no items in the course summary",
-    "type"<TAG>text",
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
     "placeholders": {}
   },
   "This course does not have any assignments or calendar events yet.": "Ta predmet še nima nalog ali koledarskih dogodkov.",
   "@This course does not have any assignments or calendar events yet.": {
-    "description"<TAG>Message displayed when there are no items in the course summary",
-    "type"<TAG>text",
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
     "placeholders": {}
   },
-  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt>/<bpt>{pointsPossible}</bpt>",
+  "gradeFormatScoreOutOfPointsPossible": "{score}/{pointsPossible}",
   "@gradeFormatScoreOutOfPointsPossible": {
-    "description"<TAG>Formatted string for a student score out of the points possible",
-    "type"<TAG>text",
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
     "placeholders": {
       "score": {},
       "pointsPossible": {}
     }
   },
-  "contentDescriptionScoreOutOfPointsPossible": "<bpt>{score}</bpt> od <bpt>{pointsPossible}</bpt> točk",
+  "contentDescriptionScoreOutOfPointsPossible": "{score} od {pointsPossible} točk",
   "@contentDescriptionScoreOutOfPointsPossible": {
-    "description"<TAG>Formatted string for a student score out of the points possible",
-    "type"<TAG>text",
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
     "placeholders": {
       "score": {},
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Zadeva: <bpt>{studentName}</bpt>, Ocene",
+  "gradesSubjectMessage": "Zadeva: {studentName}, Ocene",
   "@gradesSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "syllabusSubjectMessage": "Zadeva: <bpt>{studentName}</bpt>, Učni načrt predmeta",
+  "syllabusSubjectMessage": "Zadeva: {studentName}, Učni načrt predmeta",
   "@syllabusSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "frontPageSubjectMessage": "Zadeva: <bpt>{studentName}</bpt>, Prva stran",
+  "frontPageSubjectMessage": "Zadeva: {studentName}, Prva stran",
   "@frontPageSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "assignmentSubjectMessage": "Zadeva: <bpt>{studentName}</bpt>, Naloga – <bpt>{assignmentName}</bpt>",
+  "assignmentSubjectMessage": "Zadeva: {studentName}, Naloga – {assignmentName}",
   "@assignmentSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "assignmentName": {}
     }
   },
-  "eventSubjectMessage": "Zadeva: <bpt>{studentName}</bpt>, Dogodek – <bpt>{eventTitle}</bpt>",
+  "eventSubjectMessage": "Zadeva: {studentName}, Dogodek – {eventTitle}",
   "@eventSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "eventTitle": {}
@@ -642,307 +732,313 @@
   },
   "There is no page information available.": "Informacije o strani niso na voljo.",
   "@There is no page information available.": {
-    "description"<TAG>Description for when no page information is available",
-    "type"<TAG>text",
+    "description": "Description for when no page information is available",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment Details": "Podrobnosti o nalogi",
   "@Assignment Details": {
-    "description"<TAG>Title for the page that shows details for an assignment",
-    "type"<TAG>text",
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentTotalPoints": "<bpt>{points}</bpt> točk",
+  "assignmentTotalPoints": "{points} točk",
   "@assignmentTotalPoints": {
-    "description"<TAG>Label used for the total points the assignment is worth",
-    "type"<TAG>text",
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
     "placeholders": {
       "points": {}
     }
   },
-  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> točk",
+  "assignmentTotalPointsAccessible": "{points} točk",
   "@assignmentTotalPointsAccessible": {
-    "description"<TAG>Screen reader label used for the total points the assignment is worth",
-    "type"<TAG>text",
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
     "placeholders": {
       "points": {}
     }
   },
   "Due": "Roki",
   "@Due": {
-    "description"<TAG>Label for an assignment due date",
-    "type"<TAG>text",
+    "description": "Label for an assignment due date",
+    "type": "text",
     "placeholders": {}
   },
   "Grade": "Ocena",
   "@Grade": {
-    "description"<TAG>Label for the section that displays an assignment's grade",
-    "type"<TAG>text",
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
     "placeholders": {}
   },
   "Locked": "Zaklenjeno",
   "@Locked": {
-    "description"<TAG>Label for when an assignment is locked",
-    "type"<TAG>text",
+    "description": "Label for when an assignment is locked",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentLockedModule": "To nalogo je zaklenil modul »<bpt>{moduleName}</bpt>«.",
+  "assignmentLockedModule": "To nalogo je zaklenil modul »{moduleName}«.",
   "@assignmentLockedModule": {
-    "description"<TAG>The locked description when an assignment is locked by a module",
-    "type"<TAG>text",
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
     "placeholders": {
       "moduleName": {}
     }
   },
   "Remind Me": "Opomni me",
   "@Remind Me": {
-    "description"<TAG>Label for the row to set reminders",
-    "type"<TAG>text",
+    "description": "Label for the row to set reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Set reminder switch": "Nastavi preklop opomnika",
   "@Set reminder switch": {
-    "description"<TAG>Label for the switch to set a reminder",
-    "type"<TAG>text",
+    "description": "Label for the switch to set a reminder",
+    "type": "text",
     "placeholders": {}
   },
   "Set a date and time to be notified of this specific assignment.": "Nastavite datum in čas obvestila o tej določeni nalogi.",
   "@Set a date and time to be notified of this specific assignment.": {
-    "description"<TAG>Description for row to set reminders",
-    "type"<TAG>text",
+    "description": "Description for row to set reminders",
+    "type": "text",
     "placeholders": {}
   },
   "You will be notified about this assignment on…": "O tej nalogi boste obveščeni dne ...",
   "@You will be notified about this assignment on…": {
-    "description"<TAG>Description for when a reminder is set",
-    "type"<TAG>text",
+    "description": "Description for when a reminder is set",
+    "type": "text",
     "placeholders": {}
   },
   "Description": "Opis",
   "@Description": {
-    "description"<TAG>Label for the description of the assignment",
-    "type"<TAG>text",
+    "description": "Label for the description of the assignment",
+    "type": "text",
     "placeholders": {}
   },
   "Instructions": "Navodila",
   "@Instructions": {
-    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
-    "type"<TAG>text",
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
     "placeholders": {}
   },
   "No description": "Brez opisa",
   "@No description": {
-    "description"<TAG>Message used when the assignment has no description",
-    "type"<TAG>text",
+    "description": "Message used when the assignment has no description",
+    "type": "text",
     "placeholders": {}
   },
   "Send a message about this assignment": "Pošlji sporočilo o tej nalogi",
   "@Send a message about this assignment": {
-    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
-    "type"<TAG>text",
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
     "placeholders": {}
   },
   "This app is not authorized for use.": "Te aplikacije ni dovoljeno uporabljati.",
   "@This app is not authorized for use.": {
-    "description"<TAG>The error shown when the app being used is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "The server you entered is not authorized for this app.": "Strežnik, ki ste ga vnesli, nima pooblastila za to aplikacijo.",
   "@The server you entered is not authorized for this app.": {
-    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "The user agent for this app is not authorized.": "Zastopnik uporabnika za to aplikacijo ni pooblaščen.",
   "@The user agent for this app is not authorized.": {
-    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "We were unable to verify the server for use with this app.": "Strežnika za uporabo pri tej aplikaciji nismo uspeli preveriti.",
   "@We were unable to verify the server for use with this app.": {
-    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
-    "type"<TAG>text",
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "Reminders": "Opomniki",
   "@Reminders": {
-    "description"<TAG>Name of the system notification channel for assignment and event reminders",
-    "type"<TAG>text",
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Notifications for reminders about assignments and calendar events": "Sporočila za opomnike o nalogah in koledarskih dogodkih",
   "@Notifications for reminders about assignments and calendar events": {
-    "description"<TAG>Description of the system notification channel for assignment and event reminders",
-    "type"<TAG>text",
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Not a parent?": "Niste starš?",
   "@Not a parent?": {
-    "description"<TAG>Title for the screen that shows when the user is not observing any students",
-    "type"<TAG>text",
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
     "placeholders": {}
   },
   "We couldn't find any students associated with this account": "Nismo uspeli najti nobenega študenta, povezanega s tem računom",
   "@We couldn't find any students associated with this account": {
-    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
-    "type"<TAG>text",
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
     "placeholders": {}
   },
   "Are you a student or teacher?": "Ste študent ali izvajalec?",
   "@Are you a student or teacher?": {
-    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
-    "type"<TAG>text",
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
     "placeholders": {}
   },
   "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store.",
   "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
-    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
-    "type"<TAG>text",
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
     "placeholders": {}
   },
   "Return to Login": "Nazaj na prijavo",
   "@Return to Login": {
-    "description"<TAG>Label for the button that returns the user to the login screen",
-    "type"<TAG>text",
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
     "placeholders": {}
   },
   "STUDENT": "ŠTUDENT",
   "@STUDENT": {
-    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
-    "type"<TAG>text",
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
     "placeholders": {}
   },
   "TEACHER": "IZVAJALEC",
   "@TEACHER": {
-    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
-    "type"<TAG>text",
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
     "placeholders": {}
   },
   "Canvas Student": "Študent v sistemu Canvas",
   "@Canvas Student": {
-    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
-    "type"<TAG>text",
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
     "placeholders": {}
   },
   "Canvas Teacher": "Izvajalec v sistemu Canvas",
   "@Canvas Teacher": {
-    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
-    "type"<TAG>text",
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
     "placeholders": {}
   },
   "No Alerts": "Ni opozoril",
   "@No Alerts": {
-    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
-    "type"<TAG>text",
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
     "placeholders": {}
   },
   "There’s nothing to be notified of yet.": "Ni ničesar, o čemer bi bilo treba obveščati.",
   "@There’s nothing to be notified of yet.": {
-    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
-    "type"<TAG>text",
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dismiss": "opusti",
+  "@dismiss": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
     "placeholders": {}
   },
   "Course Announcement": "Obvestilo o predmetu",
   "@Course Announcement": {
-    "description"<TAG>Title for alerts when there is a course announcement",
-    "type"<TAG>text",
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
     "placeholders": {}
   },
   "Institution Announcement": "Obvestilo ustanove",
   "@Institution Announcement": {
-    "description"<TAG>Title for alerts when there is an institution announcement",
-    "type"<TAG>text",
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Ocena pri nalogi višja od <bpt>{threshold}</bpt>",
+  "assignmentGradeAboveThreshold": "Ocena pri nalogi višja od {threshold}",
   "@assignmentGradeAboveThreshold": {
-    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Ocena pri nalogi nižja od <bpt>{threshold}</bpt>",
+  "assignmentGradeBelowThreshold": "Ocena pri nalogi nižja od {threshold}",
   "@assignmentGradeBelowThreshold": {
-    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Ocena pri predmetu višja od <bpt>{threshold}</bpt>",
+  "courseGradeAboveThreshold": "Ocena pri predmetu višja od {threshold}",
   "@courseGradeAboveThreshold": {
-    "description"<TAG>Title for alerts when a course grade is above the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Ocena pri predmetu nižja od <bpt>{threshold}</bpt>",
+  "courseGradeBelowThreshold": "Ocena pri predmetu nižja od {threshold}",
   "@courseGradeBelowThreshold": {
-    "description"<TAG>Title for alerts when a course grade is below the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
   "Settings": "Nastavitve",
   "@Settings": {
-    "description"<TAG>Title for the settings screen",
-    "type"<TAG>text",
+    "description": "Title for the settings screen",
+    "type": "text",
     "placeholders": {}
   },
   "Theme": "Tema",
   "@Theme": {
-    "description"<TAG>Label for the light/dark theme section in the settings page",
-    "type"<TAG>text",
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
     "placeholders": {}
   },
   "Dark Mode": "Temni način",
   "@Dark Mode": {
-    "description"<TAG>Label for the button that enables dark mode",
-    "type"<TAG>text",
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
     "placeholders": {}
   },
   "Light Mode": "Svetli način",
   "@Light Mode": {
-    "description"<TAG>Label for the button that enables light mode",
-    "type"<TAG>text",
+    "description": "Label for the button that enables light mode",
+    "type": "text",
     "placeholders": {}
   },
   "High Contrast Mode": "Visokokontrastni način",
   "@High Contrast Mode": {
-    "description"<TAG>Label for the switch that toggles high contrast mode",
-    "type"<TAG>text",
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
     "placeholders": {}
   },
   "Appearance": "Videz",
   "@Appearance": {
-    "description"<TAG>Label for the appearance section in the settings page",
-    "type"<TAG>text",
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
     "placeholders": {}
   },
   "Successfully submitted!": "Uspešno poslano.",
   "@Successfully submitted!": {
-    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
-    "type"<TAG>text",
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
     "placeholders": {}
   },
-  "submissionStatusSuccessSubtitle": "Ta naloga je bila poslana dne <bpt>{date}</bpt> ob <bpt>{time}</bpt> in čaka na ocenjevanje",
+  "submissionStatusSuccessSubtitle": "Ta naloga je bila poslana dne {date} ob {time} in čaka na ocenjevanje",
   "@submissionStatusSuccessSubtitle": {
-    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
-    "type"<TAG>text",
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
     }
   },
-  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>Od 1 točke<bpt>}other{</bpt>Od <bpt>{points}</bpt> točk<bpt>}}</bpt>",
+  "outOfPoints": "{howMany,plural, =1{Od 1 točke}other{Od {points} točk}}",
   "@outOfPoints": {
-    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
-    "type"<TAG>text",
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
     "placeholders": {
       "points": {},
       "howMany": {}
@@ -950,129 +1046,129 @@
   },
   "Excused": "Opravičeno",
   "@Excused": {
-    "description"<TAG>Grading status for an assignment marked as excused",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
     "placeholders": {}
   },
   "Complete": "Zaključeno",
   "@Complete": {
-    "description"<TAG>Grading status for an assignment marked as complete",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
     "placeholders": {}
   },
   "Incomplete": "Nezaključeno",
   "@Incomplete": {
-    "description"<TAG>Grading status for an assignment marked as incomplete",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
     "placeholders": {}
   },
   "minus": "minus",
   "@minus": {
-    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
-    "type"<TAG>text",
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
     "placeholders": {}
   },
-  "latePenalty": "Kazen za zamudo (-<bpt>{pointsLost}</bpt>)",
+  "latePenalty": "Kazen za zamudo (-{pointsLost})",
   "@latePenalty": {
-    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
-    "type"<TAG>text",
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
     "placeholders": {
       "pointsLost": {}
     }
   },
-  "finalGrade": "Končna ocena: <bpt>{grade}</bpt>",
+  "finalGrade": "Končna ocena: {grade}",
   "@finalGrade": {
-    "description"<TAG>Text that displays the final grade of an assignment",
-    "type"<TAG>text",
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
     "placeholders": {
       "grade": {}
     }
   },
   "Alert Settings": "Nastavitve opozoril",
   "@Alert Settings": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Alert me when…": "Opozori me, ko ...",
   "@Alert me when…": {
-    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
-    "type"<TAG>text",
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
     "placeholders": {}
   },
   "Course grade below": "Ocena pri predmetu nižja od",
   "@Course grade below": {
-    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Course grade above": "Ocena pri predmetu višja od",
   "@Course grade above": {
-    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment missing": "Manjkajoča naloga",
   "@Assignment missing": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment grade below": "Ocena pri nalogi nižja od",
   "@Assignment grade below": {
-    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment grade above": "Ocena pri nalogi višja od",
   "@Assignment grade above": {
-    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Course Announcements": "Obvestila o predmetu",
   "@Course Announcements": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Institution Announcements": "Obvestila ustanove",
   "@Institution Announcements": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Never": "Nikoli",
   "@Never": {
-    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
-    "type"<TAG>text",
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
     "placeholders": {}
   },
   "Grade percentage": "Odstotek ocene",
   "@Grade percentage": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your student's alerts.": "Pri nalaganju opozoril vašega študenta je prišlo do napake.",
   "@There was an error loading your student's alerts.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Must be below 100": "Mora biti nižje od 100",
   "@Must be below 100": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
-  "mustBeBelowN": "Mora biti nižje od <bpt>{percentage}</bpt>",
+  "mustBeBelowN": "Mora biti nižje od {percentage}",
   "@mustBeBelowN": {
-    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
-    "type"<TAG>text",
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
     "placeholders": {
       "percentage": {
         "example": 5
       }
     }
   },
-  "mustBeAboveN": "Mora biti višje od <bpt>{percentage}</bpt>",
+  "mustBeAboveN": "Mora biti višje od {percentage}",
   "@mustBeAboveN": {
-    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
-    "type"<TAG>text",
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
     "placeholders": {
       "percentage": {
         "example": 5
@@ -1081,126 +1177,126 @@
   },
   "Teacher": "Izvajalec",
   "@Teacher": {
-    "description"<TAG>Label for the Teacher enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "Student": "Študent",
   "@Student": {
-    "description"<TAG>Label for the Student enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Student enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "TA": "Demonstrator",
   "@TA": {
-    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
-    "type"<TAG>text",
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
     "placeholders": {}
   },
   "Observer": "Skriti bralec",
   "@Observer": {
-    "description"<TAG>Label for the Observer enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "Use Camera": "Uporabi fotoaparat",
   "@Use Camera": {
-    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
     "placeholders": {}
   },
   "Upload File": "Naloži datoteko",
   "@Upload File": {
-    "description"<TAG>Label for the action item that lets the user upload a file from their device",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
     "placeholders": {}
   },
   "Choose from Gallery": "Izberi iz galerije",
   "@Choose from Gallery": {
-    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
     "placeholders": {}
   },
   "Preparing…": "Pripravljam ...",
   "@Preparing…": {
-    "description"<TAG>Message shown while a file is being prepared to attach to a message",
-    "type"<TAG>text",
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
     "placeholders": {}
   },
   "Add student with…": "Dodaj študenta s/z ...",
   "@Add student with…": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Add Student": "Dodaj študenta",
   "@Add Student": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "You are not observing any students.": "Ne opazujete nobenega študenta.",
   "@You are not observing any students.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your students.": "Pri nalaganju vaših študentov je prišlo do napake.",
   "@There was an error loading your students.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Pairing Code": "Koda za seznanjanje naprave",
   "@Pairing Code": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Vnesite kodo za povezovanje s študentom, ki ste jo prejeli. Če koda za povezovanje ne deluje, je morda potekla",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Your code is incorrect or expired.": "Vaša koda je nepravilna ali potekla.",
   "@Your code is incorrect or expired.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "QR Code": "Koda QR",
   "@QR Code": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Add new student": "Dodaj novega študenta",
   "@Add new student": {
-    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
-    "type"<TAG>text",
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
     "placeholders": {}
   },
   "Event": "Dogodek",
   "@Event": {
-    "description"<TAG>Title for the event details screen",
-    "type"<TAG>text",
+    "description": "Title for the event details screen",
+    "type": "text",
     "placeholders": {}
   },
   "Date": "Datum",
   "@Date": {
-    "description"<TAG>Label for the event date",
-    "type"<TAG>text",
+    "description": "Label for the event date",
+    "type": "text",
     "placeholders": {}
   },
   "Location": "Mesto",
   "@Location": {
-    "description"<TAG>Label for the location information",
-    "type"<TAG>text",
+    "description": "Label for the location information",
+    "type": "text",
     "placeholders": {}
   },
   "No Location Specified": "Mesto ni določeno",
   "@No Location Specified": {
-    "description"<TAG>Description for events that do not have a location",
-    "type"<TAG>text",
+    "description": "Description for events that do not have a location",
+    "type": "text",
     "placeholders": {}
   },
-  "eventTime": "<bpt>{startAt}</bpt> – <bpt>{endAt}</bpt>",
+  "eventTime": "{startAt} – {endAt}",
   "@eventTime": {
-    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
-    "type"<TAG>text",
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
     "placeholders": {
       "startAt": {},
       "endAt": {}
@@ -1208,275 +1304,310 @@
   },
   "Set a date and time to be notified of this event.": "Nastavite datum in čas obvestila o tem dogodku.",
   "@Set a date and time to be notified of this event.": {
-    "description"<TAG>Description for row to set event reminders",
-    "type"<TAG>text",
+    "description": "Description for row to set event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "You will be notified about this event on…": "O tem dogodku boste obveščeni dne ...",
   "@You will be notified about this event on…": {
-    "description"<TAG>Description for when an event reminder is set",
-    "type"<TAG>text",
+    "description": "Description for when an event reminder is set",
+    "type": "text",
     "placeholders": {}
   },
   "Search the Canvas Guides": "Išči vodnike po sistemu Canvas",
   "@Search the Canvas Guides": {
-    "description"<TAG>Label for option to search the Canvas Guides",
-    "type"<TAG>text",
+    "description": "Label for option to search the Canvas Guides",
+    "type": "text",
     "placeholders": {}
   },
   "Find answers to common questions": "Najdi odgovore na pogosta vprašanja",
   "@Find answers to common questions": {
-    "description"<TAG>Description for option to search the Canvas Guides",
-    "type"<TAG>text",
+    "description": "Description for option to search the Canvas Guides",
+    "type": "text",
     "placeholders": {}
   },
   "Report a Problem": "Poročajte o težavi",
   "@Report a Problem": {
-    "description"<TAG>Label for option to report a problem",
-    "type"<TAG>text",
+    "description": "Label for option to report a problem",
+    "type": "text",
     "placeholders": {}
   },
   "If the app misbehaves, let us know": "Če aplikacija ne deluje dobro, nas o tem obvestite",
   "@If the app misbehaves, let us know": {
-    "description"<TAG>Description for option to report a problem",
-    "type"<TAG>text",
+    "description": "Description for option to report a problem",
+    "type": "text",
     "placeholders": {}
   },
   "Request a Feature": "Zahtevaj funkcionalnost",
   "@Request a Feature": {
-    "description"<TAG>Label for option to request a feature",
-    "type"<TAG>text",
+    "description": "Label for option to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "Have an idea to improve the app?": "Ali imate zamisel za izboljšanje aplikacije?",
   "@Have an idea to improve the app?": {
-    "description"<TAG>Description for option to request a feature",
-    "type"<TAG>text",
+    "description": "Description for option to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "Share Your Love for the App": "Delite svoje navdušenje nad aplikacijo",
   "@Share Your Love for the App": {
-    "description"<TAG>Label for option to open the app store",
-    "type"<TAG>text",
+    "description": "Label for option to open the app store",
+    "type": "text",
     "placeholders": {}
   },
   "Tell us about your favorite parts of the app": "Opišite nam, kateri deli aplikacije so vam najljubši",
   "@Tell us about your favorite parts of the app": {
-    "description"<TAG>Description for option to open the app store",
-    "type"<TAG>text",
+    "description": "Description for option to open the app store",
+    "type": "text",
     "placeholders": {}
   },
   "Legal": "Pravne informacije",
   "@Legal": {
-    "description"<TAG>Label for legal information option",
-    "type"<TAG>text",
+    "description": "Label for legal information option",
+    "type": "text",
     "placeholders": {}
   },
   "Privacy policy, terms of use, open source": "Politika zasebnosti, pogoji uporabe, odprti vir",
   "@Privacy policy, terms of use, open source": {
-    "description"<TAG>Description for legal information option",
-    "type"<TAG>text",
+    "description": "Description for legal information option",
+    "type": "text",
     "placeholders": {}
   },
   "Idea for Canvas Parent App [Android]": "Zamisel za aplikacijo Canvas Parent [Android]",
   "@Idea for Canvas Parent App [Android]": {
-    "description"<TAG>The subject for the email to request a feature",
-    "type"<TAG>text",
+    "description": "The subject for the email to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "The following information will help us better understand your idea:": "Z naslednjimi informacijami bomo bolje razumeli vašo zamisel:",
   "@The following information will help us better understand your idea:": {
-    "description"<TAG>The header for the users information that is attached to a feature request",
-    "type"<TAG>text",
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
     "placeholders": {}
   },
   "Domain:": "Domena:",
   "@Domain:": {
-    "description"<TAG>The label for the Canvas domain of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "User ID:": "ID uporabnika:",
   "@User ID:": {
-    "description"<TAG>The label for the Canvas user ID of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "Email:": "E-pošta:",
   "@Email:": {
-    "description"<TAG>The label for the eamil of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "Locale:": "Območna nastavitev:",
   "@Locale:": {
-    "description"<TAG>The label for the locale of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Pravilnik o zasebnosti",
+  "@Privacy Policy": {
+    "description": "Label for the privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Use": "Pogoji uporabe",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas na GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "Prišlo je do težav pri nalaganju pogojev uporabe.",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
     "placeholders": {}
   },
   "Device": "Naprava",
   "@Device": {
-    "description"<TAG>Label used for device manufacturer/model in the error report",
-    "type"<TAG>text",
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "OS Version": "Različica OS",
   "@OS Version": {
-    "description"<TAG>Label used for device operating system version in the error report",
-    "type"<TAG>text",
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "Version Number": "Številka različice",
   "@Version Number": {
-    "description"<TAG>Label used for the app version number in the error report",
-    "type"<TAG>text",
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "Report A Problem": "Poročajte o težavi",
   "@Report A Problem": {
-    "description"<TAG>Title used for generic dialog to report problems",
-    "type"<TAG>text",
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
     "placeholders": {}
   },
   "Subject": "Zadeva",
   "@Subject": {
-    "description"<TAG>Label used for Subject text field",
-    "type"<TAG>text",
+    "description": "Label used for Subject text field",
+    "type": "text",
     "placeholders": {}
   },
   "A subject is required.": "Polje za zadevo mora biti izpolnjeno.",
   "@A subject is required.": {
-    "description"<TAG>Error shown when the subject field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "Email Address": "E-poštni naslov",
   "@Email Address": {
-    "description"<TAG>Label used for Email Address text field",
-    "type"<TAG>text",
+    "description": "Label used for Email Address text field",
+    "type": "text",
     "placeholders": {}
   },
   "An email address is required.": "Potreben je e-poštni naslov.",
   "@An email address is required.": {
-    "description"<TAG>Error shown when the email field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the email field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "A description is required.": "Opis je obvezen.",
   "@A description is required.": {
-    "description"<TAG>Error shown when the description field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the description field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "How is this affecting you?": "Kako to vpliva na vas?",
   "@How is this affecting you?": {
-    "description"<TAG>Label used for the dropdown to select how severe the issue is",
-    "type"<TAG>text",
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
     "placeholders": {}
   },
   "send": "pošlji",
   "@send": {
-    "description"<TAG>Label used for send button when reporting a problem",
-    "type"<TAG>text",
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
     "placeholders": {}
   },
   "Just a casual question, comment, idea, suggestion…": "Samo neobvezno vprašanje, komentar, zamisel, predlog ...",
   "@Just a casual question, comment, idea, suggestion…": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "I need some help but it's not urgent.": "Potrebujem pomoč, ni pa nujno.",
   "@I need some help but it's not urgent.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Something's broken but I can work around it to get what I need done.": "Nekaj ne deluje, a znam to rešiti, da dokončam, kar je treba.",
   "@Something's broken but I can work around it to get what I need done.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "I can't get things done until I hear back from you.": "Ne morem dokončati zadev, dokler ne prejmem vašega odziva.",
   "@I can't get things done until I hear back from you.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "EXTREME CRITICAL EMERGENCY!!": "SKRAJNO KRITIČNI NUJNI PRIMER",
   "@EXTREME CRITICAL EMERGENCY!!": {
-    "type"<TAG>text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Graded": "Ni ocenjeno",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
     "placeholders": {}
   },
   "Cancel": "Prekliči",
   "@Cancel": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "next": "Naprej",
   "@next": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "ok": "V redu",
   "@ok": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Yes": "Da",
   "@Yes": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "No": "Ne",
   "@No": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Retry": "Ponovno poskusi",
   "@Retry": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Delete": "Odstrani",
   "@Delete": {
-    "description"<TAG>Label used for general delete/remove actions",
-    "type"<TAG>text",
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
     "placeholders": {}
   },
   "Done": "Dokončano",
   "@Done": {
-    "description"<TAG>Label for general done/finished actions",
-    "type"<TAG>text",
+    "description": "Label for general done/finished actions",
+    "type": "text",
     "placeholders": {}
   },
   "expanded": "razširjeno",
   "@expanded": {
-    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
-    "type"<TAG>text",
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
     "placeholders": {}
   },
   "collapsed": "strnjeno",
   "@collapsed": {
-    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
-    "type"<TAG>text",
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
     "placeholders": {}
   },
   "An unexpected error occurred": "Prišlo je do nepričakovane napake",
   "@An unexpected error occurred": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
-  "dateAtTime": "<bpt>{date}</bpt> ob <bpt>{time}</bpt>",
+  "Launch External Tool": "Zaženi zunanje orodje",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateAtTime": "{date} ob {time}",
   "@dateAtTime": {
-    "description"<TAG>The string to format dates",
-    "type"<TAG>text",
+    "description": "The string to format dates",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
     }
   },
-  "dueDateAtTime": "Roki <bpt>{date}</bpt> ob <bpt>{time}</bpt>",
+  "dueDateAtTime": "Roki {date} ob {time}",
   "@dueDateAtTime": {
-    "description"<TAG>The string to format due dates",
-    "type"<TAG>text",
+    "description": "The string to format due dates",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
@@ -1484,75 +1615,99 @@
   },
   "No Due Date": "Ni roka.",
   "@No Due Date": {
-    "description"<TAG>Label for assignments that do not have a due date",
-    "type"<TAG>text",
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
     "placeholders": {}
   },
   "Filter": "Filter",
   "@Filter": {
-    "description"<TAG>Label for buttons to filter what items are visible",
-    "type"<TAG>text",
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
     "placeholders": {}
   },
   "unread": "neprebrano",
   "@unread": {
-    "description"<TAG>Label for things that are marked as unread",
-    "type"<TAG>text",
+    "description": "Label for things that are marked as unread",
+    "type": "text",
     "placeholders": {}
   },
-  "unreadCount": "<bpt>{count}</bpt> neprebranih",
+  "unreadCount": "{count} neprebranih",
   "@unreadCount": {
-    "description"<TAG>Formatted string for when there are a number of unread items",
-    "type"<TAG>text",
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
     "placeholders": {
       "count": {}
     }
   },
-  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "badgeNumberPlus": "{count}+",
   "@badgeNumberPlus": {
-    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
-    "type"<TAG>text",
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
     "placeholders": {
       "count": {}
     }
   },
   "There was an error loading this announcement": "Prišlo je do napake pri nalaganju tega obvestila",
   "@There was an error loading this announcement": {
-    "description"<TAG>Message shown when an announcement detail screen fails to load",
-    "type"<TAG>text",
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
     "placeholders": {}
   },
   "Network error": "Napaka v omrežju",
   "@Network error": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Under Construction": "V delu",
   "@Under Construction": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "We are currently building this feature for your viewing pleasure.": "Ta funkcija je v izdelavi za vaš užitek ob gledanju.",
   "@We are currently building this feature for your viewing pleasure.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Request Login Help Button": "Zahtevaj gumb za pomoč pri prijavi",
   "@Request Login Help Button": {
-    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
     "placeholders": {}
   },
   "Request Login Help": "Zahtevaj pomoč pri prijavi",
   "@Request Login Help": {
-    "description"<TAG>Title of help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
     "placeholders": {}
   },
   "I'm having trouble logging in": "Imam težave pri prijavi",
   "@I'm having trouble logging in": {
-    "description"<TAG>Subject of help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "Med prikazovanjem te povezave je prišlo do napake",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Te povezave ne moremo prikazati; morda pripada ustanovi, v katero trenutno niste prijavljeni.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "Napaka povezave",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Odpri v brskalniku",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
     "placeholders": {}
   }
 }

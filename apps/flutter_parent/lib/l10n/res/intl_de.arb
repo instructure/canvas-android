@@ -1,139 +1,229 @@
 ﻿{
-  "@@last_modified"<TAG>2020-02-20T22:07:03.311135",
+  "@@last_modified": "2020-03-20T11:04:10.914171",
   "alertsLabel": "Benachrichtigungen",
   "@alertsLabel": {
-    "description"<TAG>The label for the Alerts tab",
-    "type"<TAG>text",
+    "description": "The label for the Alerts tab",
+    "type": "text",
     "placeholders": {}
   },
   "calendarLabel": "Kalender",
   "@calendarLabel": {
-    "description"<TAG>The label for the Calendar tab",
-    "type"<TAG>text",
+    "description": "The label for the Calendar tab",
+    "type": "text",
     "placeholders": {}
   },
   "coursesLabel": "Kurse",
   "@coursesLabel": {
-    "description"<TAG>The label for the Courses tab",
-    "type"<TAG>text",
+    "description": "The label for the Courses tab",
+    "type": "text",
     "placeholders": {}
   },
   "No Students": "Keine Studenten",
   "@No Students": {
-    "description"<TAG>Text for when an observer has no students they are observing",
-    "type"<TAG>text",
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to show student selector": "Zum Anzeigen des Studentenwählers antippen",
   "@Tap to show student selector": {
-    "description"<TAG>Semantics label for the area that will show the student selector when tapped",
-    "type"<TAG>text",
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to pair with a new student": "Zum Koppeln mit einem neuen Studenten antippen",
   "@Tap to pair with a new student": {
-    "description"<TAG>Semantics label for the add student button in the student selector",
-    "type"<TAG>text",
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
     "placeholders": {}
   },
   "Tap to select this student": "Zum Auswählen dieses Studenten antippen",
   "@Tap to select this student": {
-    "description"<TAG>Semantics label on individual students in the student switcher",
-    "type"<TAG>text",
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
     "placeholders": {}
   },
   "Manage Students": "Teilnehmer verwalten",
   "@Manage Students": {
-    "description"<TAG>Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
-    "type"<TAG>text",
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
     "placeholders": {}
   },
   "Help": "Hilfe",
   "@Help": {
-    "description"<TAG>Label text for the help nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
   "Log Out": "Abmelden",
   "@Log Out": {
-    "description"<TAG>Label text for the Log Out nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
   "Switch Users": "Benutzer wechseln",
   "@Switch Users": {
-    "description"<TAG>Label text for the Switch Users nav drawer button",
-    "type"<TAG>text",
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
     "placeholders": {}
   },
-  "appVersion": "v. <bpt>{version}</bpt>",
+  "appVersion": "v. {version}",
   "@appVersion": {
-    "description"<TAG>App version shown in the navigation drawer",
-    "type"<TAG>text",
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
     "placeholders": {
       "version": {}
     }
   },
   "Are you sure you want to log out?": "Möchten Sie sich wirklich abmelden?",
   "@Are you sure you want to log out?": {
-    "description"<TAG>Confirmation message displayed when the user tries to log out",
-    "type"<TAG>text",
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Calendars": "Kalender",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nextMonth": "Nächster Monat: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Vorheriger Monat: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Nächste Woche, beginnend am {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Vorherige Woche, beginnend am {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Monat {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "erweitern",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapse": "reduzieren",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} Punkte möglich",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "No Events Today!": "Heute keine Ereignisse!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Scheinbar ein großartiger Tag für Ruhe, Entspannung und Energie tanken..",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "Fehler beim Laden Ihres Studentenkalenders",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Tippen Sie, um die Kurse, die Sie im Kalender sehen möchten, in die Favoritenliste aufzunehmen.",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
     "placeholders": {}
   },
   "Previous Logins": "Frühere Anmeldungen",
   "@Previous Logins": {
-    "description"<TAG>Label for the list of previous user logins",
-    "type"<TAG>text",
+    "description": "Label for the list of previous user logins",
+    "type": "text",
     "placeholders": {}
   },
   "canvasLogoLabel": "Canvas-Logo",
   "@canvasLogoLabel": {
-    "description"<TAG>The semantics label for the Canvas logo",
-    "type"<TAG>text",
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
     "placeholders": {}
   },
   "findSchool": "Schule suchen",
   "@findSchool": {
-    "description"<TAG>Text for the find-my-school button",
-    "type"<TAG>text",
+    "description": "Text for the find-my-school button",
+    "type": "text",
     "placeholders": {}
   },
   "domainSearchInputHint": "Schulnamen oder Bezirk eingeben …",
   "@domainSearchInputHint": {
-    "description"<TAG>Input hint for the text box on the domain search screen",
-    "type"<TAG>text",
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
     "placeholders": {}
   },
-  "noDomainResults": "Es konnte keine mit „<bpt>{query}</bpt>“ übereinstimmende Schule gefunden werden",
+  "noDomainResults": "Es konnte keine mit „{query}“ übereinstimmende Schule gefunden werden",
   "@noDomainResults": {
-    "description"<TAG>Message shown to users when the domain search query did not return any results",
-    "type"<TAG>text",
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
     "placeholders": {
       "query": {}
     }
   },
   "domainSearchHelpLabel": "Wie finde ich meine Schule oder meinen Bezirk?",
   "@domainSearchHelpLabel": {
-    "description"<TAG>Label for the help button on the domain search screen",
-    "type"<TAG>text",
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
     "placeholders": {}
   },
   "canvasGuides": "Canvas-Leitfäden",
   "@canvasGuides": {
-    "description"<TAG>Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
-    "type"<TAG>text",
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
     "placeholders": {}
   },
   "canvasSupport": "Canvas-Support",
   "@canvasSupport": {
-    "description"<TAG>Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
-    "type"<TAG>text",
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Suchen Sie den Namen der Schule oder des Bezirks, z. B. „Private Kant-Schule“ oder „Goethe-Gymnasium“. Sie können auch direkt eine Canvas-Domäne eingeben, z. B. „kant.instructure.com“.\n\nUm weitere Informationen zum Auffinden des Canvas-Kontos Ihrer Institution zu erhalten, nutzen Sie die <bpt>{canvasGuides}</bpt>, wenden Sie sich an den <bpt>{canvasSupport}</bpt> oder an Ihre Schule.",
+  "domainSearchHelpBody": "Suchen Sie den Namen der Schule oder des Bezirks, z. B. „Private Kant-Schule“ oder „Goethe-Gymnasium“. Sie können auch direkt eine Canvas-Domäne eingeben, z. B. „kant.instructure.com“.\n\nUm weitere Informationen zum Auffinden des Canvas-Kontos Ihrer Institution zu erhalten, nutzen Sie die {canvasGuides}, wenden Sie sich an den {canvasSupport} oder an Ihre Schule.",
   "@domainSearchHelpBody": {
-    "description"<TAG>The body text shown in the help dialog on the domain search screen",
-    "type"<TAG>text",
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
     "placeholders": {
       "canvasGuides": {},
       "canvasSupport": {}
@@ -141,175 +231,175 @@
   },
   "Uh oh!": "Oh jeh!",
   "@Uh oh!": {
-    "description"<TAG>Title of the screen that shows when a crash has occurred",
-    "type"<TAG>text",
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Wir sind nicht sicher, was passiert ist, aber es war nicht gut. Kontaktieren Sie uns, falls dies wieder passiert.",
   "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
-    "description"<TAG>Message shown when a crash has occurred",
-    "type"<TAG>text",
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "Contact Support": "Den Support kontaktieren",
   "@Contact Support": {
-    "description"<TAG>Label for the button that allows users to contact support after a crash has occurred",
-    "type"<TAG>text",
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
     "placeholders": {}
   },
   "View error details": "Fehlerdetails anzeigen",
   "@View error details": {
-    "description"<TAG>Label for the button that allowed users to view crash details",
-    "type"<TAG>text",
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Restart app": "Anwendung neustarten",
   "@Restart app": {
-    "description"<TAG>Label for the button that will restart the entire application",
-    "type"<TAG>text",
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
     "placeholders": {}
   },
   "Application version": "Anwendungsversion",
   "@Application version": {
-    "description"<TAG>Label for the application version displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Device model": "Gerätemodell",
   "@Device model": {
-    "description"<TAG>Label for the device model displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Android OS version": "Android OS-Version",
   "@Android OS version": {
-    "description"<TAG>Label for the Android operating system version displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Full error message": "Vollständige Fehlermeldung",
   "@Full error message": {
-    "description"<TAG>Label for the full error message displayed in the crash details",
-    "type"<TAG>text",
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
     "placeholders": {}
   },
   "Inbox": "Posteingang",
   "@Inbox": {
-    "description"<TAG>Title for the Inbox screen",
-    "type"<TAG>text",
+    "description": "Title for the Inbox screen",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your inbox messages.": "Fehler beim Laden Ihrer Posteingangsmeldungen.",
   "@There was an error loading your inbox messages.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "No Subject": "Kein Betreff",
   "@No Subject": {
-    "description"<TAG>Title used for inbox messages that have no subject",
-    "type"<TAG>text",
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to fetch courses. Please check your connection and try again.": "Kurse konnten nicht abgerufen werden. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
   "@Unable to fetch courses. Please check your connection and try again.": {
-    "description"<TAG>Message shown when an error occured while loading courses",
-    "type"<TAG>text",
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
     "placeholders": {}
   },
   "Choose a course to message": "Einen Kurs zur Benachrichtigung wählen",
   "@Choose a course to message": {
-    "description"<TAG>Header in the course list shown when the user is choosing which course to associate with a new message",
-    "type"<TAG>text",
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
     "placeholders": {}
   },
   "Inbox Zero": "Posteingang Zero",
   "@Inbox Zero": {
-    "description"<TAG>Title of the message shown when there are no inbox messages",
-    "type"<TAG>text",
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
     "placeholders": {}
   },
   "You’re all caught up!": "Sie werden alle erfasst!",
   "@You’re all caught up!": {
-    "description"<TAG>Subtitle of the message shown when there are no inbox messages",
-    "type"<TAG>text",
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading recipients for this course": "Beim Laden der Empfänger für diesen Kurs ist ein Fehler aufgetreten",
   "@There was an error loading recipients for this course": {
-    "description"<TAG>Message shown when attempting to create a new message but the recipients list failed to load",
-    "type"<TAG>text",
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to send message. Check your connection and try again.": "Die Nachricht kann nicht gesendet werden. Überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
   "@Unable to send message. Check your connection and try again.": {
-    "description"<TAG>Message show when there was an error creating or sending a new message",
-    "type"<TAG>text",
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
     "placeholders": {}
   },
   "Unsaved changes": "Nicht gespeicherte Änderungen",
   "@Unsaved changes": {
-    "description"<TAG>Title of the dialog shown when the user tries to leave with unsaved changes",
-    "type"<TAG>text",
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
     "placeholders": {}
   },
   "Are you sure you wish to close this page? Your unsent message will be lost.": "Möchten Sie diese Seite wirklich schließen? Die nicht gesendete Nachricht geht verloren.",
   "@Are you sure you wish to close this page? Your unsent message will be lost.": {
-    "description"<TAG>Body text of the dialog shown when the user tries leave with unsaved changes",
-    "type"<TAG>text",
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
     "placeholders": {}
   },
   "New message": "Neue Nachricht",
   "@New message": {
-    "description"<TAG>Title of the new-message screen",
-    "type"<TAG>text",
+    "description": "Title of the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Add attachment": "Anhang hinzufügen",
   "@Add attachment": {
-    "description"<TAG>Tooltip for the add-attachment button in the new-message screen",
-    "type"<TAG>text",
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Send message": "Nachricht senden",
   "@Send message": {
-    "description"<TAG>Tooltip for the send-message button in the new-message screen",
-    "type"<TAG>text",
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
     "placeholders": {}
   },
   "Select recipients": "Empfänger auswählen",
   "@Select recipients": {
-    "description"<TAG>Tooltip for the button that allows users to select message recipients",
-    "type"<TAG>text",
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
     "placeholders": {}
   },
   "No recipients selected": "Es wurden keine Empfänger ausgewählt",
   "@No recipients selected": {
-    "description"<TAG>Hint displayed when the user has not selected any message recipients",
-    "type"<TAG>text",
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
     "placeholders": {}
   },
   "Message subject": "Betreff der Nachricht",
   "@Message subject": {
-    "description"<TAG>Hint text displayed in the input field for the message subject",
-    "type"<TAG>text",
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
     "placeholders": {}
   },
   "Message": "Nachricht",
   "@Message": {
-    "description"<TAG>Hint text displayed in the input field for the message body",
-    "type"<TAG>text",
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
     "placeholders": {}
   },
   "Recipients": "Empfänger",
   "@Recipients": {
-    "description"<TAG>Label for message recipients",
-    "type"<TAG>text",
+    "description": "Label for message recipients",
+    "type": "text",
     "placeholders": {}
   },
-  "plusRecipientCount": "+<bpt>{count}</bpt>",
+  "plusRecipientCount": "+{count}",
   "@plusRecipientCount": {
-    "description"<TAG>Shows the number of recipients that are selected but not displayed on screen.",
-    "type"<TAG>text",
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
     "placeholders": {
       "count": {
         "example": 5
@@ -318,22 +408,22 @@
   },
   "Failed. Tap for options.": "Fehlgeschlagen. Für Optionen antippen.",
   "@Failed. Tap for options.": {
-    "description"<TAG>Short message shown on a message attachment when uploading has failed",
-    "type"<TAG>text",
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
     "placeholders": {}
   },
-  "courseForWhom": "für <bpt>{studentShortName}</bpt>",
+  "courseForWhom": "für {studentShortName}",
   "@courseForWhom": {
-    "description"<TAG>Describes for whom a course is for (i.e. for Bill)",
-    "type"<TAG>text",
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
     "placeholders": {
       "studentShortName": {}
     }
   },
-  "messageLinkPostscript": "Betreffend: <bpt>{studentName}</bpt>, <bpt>{linkUrl}</bpt>",
+  "messageLinkPostscript": "Betreffend: {studentName}, {linkUrl}",
   "@messageLinkPostscript": {
-    "description"<TAG>A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
-    "type"<TAG>text",
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "linkUrl": {}
@@ -341,56 +431,56 @@
   },
   "There was an error loading this conversation": "Beim Laden dieses Gesprächs ist ein Fehler aufgetreten",
   "@There was an error loading this conversation": {
-    "description"<TAG>Message shown when a conversation fails to load",
-    "type"<TAG>text",
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
     "placeholders": {}
   },
   "Reply": "Antworten",
   "@Reply": {
-    "description"<TAG>Button label for replying to a conversation",
-    "type"<TAG>text",
+    "description": "Button label for replying to a conversation",
+    "type": "text",
     "placeholders": {}
   },
   "Reply All": "Allen antworten",
   "@Reply All": {
-    "description"<TAG>Button label for replying to all conversation participants",
-    "type"<TAG>text",
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
     "placeholders": {}
   },
   "Unknown User": "Unbekannter Benutzer",
   "@Unknown User": {
-    "description"<TAG>Label used where the user name is not known",
-    "type"<TAG>text",
+    "description": "Label used where the user name is not known",
+    "type": "text",
     "placeholders": {}
   },
   "me": "Ich",
   "@me": {
-    "description"<TAG>First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
-    "type"<TAG>text",
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
     "placeholders": {}
   },
-  "authorToRecipient": "<bpt>{authorName}</bpt> bis <bpt>{recipientName}</bpt>",
+  "authorToRecipient": "{authorName} bis {recipientName}",
   "@authorToRecipient": {
-    "description"<TAG>Author info for a single-recipient message; includes both the author name and the recipient name.",
-    "type"<TAG>text",
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "recipientName": {}
     }
   },
-  "authorToNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> an 1 anderen<bpt>}other{{authorName}</bpt> an <bpt>{howMany}</bpt> andere<bpt>}}</bpt>",
+  "authorToNOthers": "{howMany,plural, =1{{authorName} zu 1 anderen}other{{authorName} zu {howMany} anderen}}",
   "@authorToNOthers": {
-    "description"<TAG>Author info for a mutli-recipient message; includes the author name and the number of recipients",
-    "type"<TAG>text",
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "howMany": {}
     }
   },
-  "authorToRecipientAndNOthers": "<bpt>{howMany,plural, =1{{authorName}</bpt> an <bpt>{recipientName}</bpt> und 1 anderen<bpt>}other{{authorName}</bpt> an <bpt>{recipientName}</bpt> und <bpt>{howMany}</bpt> andere<bpt>}}</bpt>",
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} zu {recipientName} & 1 anderen}other{{authorName} zu {recipientName} & {howMany} anderen}}",
   "@authorToRecipientAndNOthers": {
-    "description"<TAG>Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
-    "type"<TAG>text",
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
     "placeholders": {
       "authorName": {},
       "recipientName": {},
@@ -399,242 +489,242 @@
   },
   "Download": "Herunterladen",
   "@Download": {
-    "description"<TAG>Label for the button that will begin downloading a file",
-    "type"<TAG>text",
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
     "placeholders": {}
   },
   "Open with another app": "Mit einer anderen Anwendung öffnen",
   "@Open with another app": {
-    "description"<TAG>Label for the button that will allow users to open a file with another app",
-    "type"<TAG>text",
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
     "placeholders": {}
   },
   "There are no installed applications that can open this file": "Diese Datei kann mit keiner installierten Anwendung geöffnet werden",
   "@There are no installed applications that can open this file": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Unsupported File": "Nichtunterstützte Datei",
   "@Unsupported File": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "This file is unsupported and can’t be viewed through the app": "Diese Datei wird nicht unterstützt und kann mit der App nicht angezeigt werden",
   "@This file is unsupported and can’t be viewed through the app": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to play this media file": "Diese Mediendatei kann nicht wiedergegeben werden",
   "@Unable to play this media file": {
-    "description"<TAG>Message shown when audio or video media could not be played",
-    "type"<TAG>text",
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
     "placeholders": {}
   },
   "Unable to load this image": "Dieses Bild kann nicht geladen werden",
   "@Unable to load this image": {
-    "description"<TAG>Message shown when an image file could not be loaded or displayed",
-    "type"<TAG>text",
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading this file": "Beim Laden dieser Datei ist ein Fehler aufgetreten",
   "@There was an error loading this file": {
-    "description"<TAG>Message shown when a file could not be loaded or displayed",
-    "type"<TAG>text",
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
     "placeholders": {}
   },
   "No Courses": "Keine Kurse",
   "@No Courses": {
-    "description"<TAG>Title for having no courses",
-    "type"<TAG>text",
+    "description": "Title for having no courses",
+    "type": "text",
     "placeholders": {}
   },
   "Your student’s courses might not be published yet.": "Die Kurse sind möglicherweise noch nicht veröffentlicht.",
   "@Your student’s courses might not be published yet.": {
-    "description"<TAG>Message for having no courses",
-    "type"<TAG>text",
+    "description": "Message for having no courses",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your your student’s courses.": "Fehler beim Laden der Kurse Ihres Studenten.",
   "@There was an error loading your your student’s courses.": {
-    "description"<TAG>Message displayed when the list of student courses could not be loaded",
-    "type"<TAG>text",
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
     "placeholders": {}
   },
   "No Grade": "Keine Note",
   "@No Grade": {
-    "description"<TAG>Message shown when there is currently no grade available for a course",
-    "type"<TAG>text",
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
     "placeholders": {}
   },
   "Filter by": "Filtern nach",
   "@Filter by": {
-    "description"<TAG>Title for list of terms to filter grades by",
-    "type"<TAG>text",
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
     "placeholders": {}
   },
   "Grades": "Noten",
   "@Grades": {
-    "description"<TAG>Label for the \"Grades\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Syllabus": "Kursplan",
   "@Syllabus": {
-    "description"<TAG>Label for the \"Syllabus\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Front Page": "Frontseite",
   "@Front Page": {
-    "description"<TAG>Label for the \"Front Page\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Summary": "Übersicht",
   "@Summary": {
-    "description"<TAG>Label for the \"Summary\" tab in course details",
-    "type"<TAG>text",
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
     "placeholders": {}
   },
   "Send a message about this course": "Nachricht über diesen Kurs senden",
   "@Send a message about this course": {
-    "description"<TAG>Accessibility hint for the course messaage floating action button",
-    "type"<TAG>text",
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
     "placeholders": {}
   },
   "Total Grade": "Endnote",
   "@Total Grade": {
-    "description"<TAG>Label for the total grade in the course",
-    "type"<TAG>text",
+    "description": "Label for the total grade in the course",
+    "type": "text",
     "placeholders": {}
   },
   "Graded": "Benotet",
   "@Graded": {
-    "description"<TAG>Label for assignments that have been graded",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been graded",
+    "type": "text",
     "placeholders": {}
   },
   "Submitted": "Abgegeben",
   "@Submitted": {
-    "description"<TAG>Label for assignments that have been submitted",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
     "placeholders": {}
   },
   "Not Submitted": "Nicht abgegeben",
   "@Not Submitted": {
-    "description"<TAG>Label for assignments that have not been submitted",
-    "type"<TAG>text",
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
     "placeholders": {}
   },
   "Late": "Verspätet",
   "@Late": {
-    "description"<TAG>Label for assignments that have been marked late or submitted late",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
     "placeholders": {}
   },
   "Missing": "Fehlt",
   "@Missing": {
-    "description"<TAG>Label for assignments that have been marked missing or are not submitted and past the due date",
-    "type"<TAG>text",
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
     "placeholders": {}
   },
   "-": "-",
   "@-": {
-    "description"<TAG>Value representing no score for student submission",
-    "type"<TAG>text",
+    "description": "Value representing no score for student submission",
+    "type": "text",
     "placeholders": {}
   },
   "All Grading Periods": "Alle Benotungszeiträume",
   "@All Grading Periods": {
-    "description"<TAG>Label for selecting all grading periods",
-    "type"<TAG>text",
+    "description": "Label for selecting all grading periods",
+    "type": "text",
     "placeholders": {}
   },
   "No Assignments": "Keine Aufgaben",
   "@No Assignments": {
-    "description"<TAG>Title for the no assignments message",
-    "type"<TAG>text",
+    "description": "Title for the no assignments message",
+    "type": "text",
     "placeholders": {}
   },
   "It looks like assignments haven't been created in this space yet.": "Wie es aussieht, wurden in diesem Raum noch keine Aufgaben erstellt.",
   "@It looks like assignments haven't been created in this space yet.": {
-    "description"<TAG>Message for no assignments",
-    "type"<TAG>text",
+    "description": "Message for no assignments",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading the summary details for this course.": "Beim Laden der Übersichtsdetails für diesen Kurs ist ein Fehler aufgetreten.",
   "@There was an error loading the summary details for this course.": {
-    "description"<TAG>Message shown when the course summary could not be loaded",
-    "type"<TAG>text",
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
     "placeholders": {}
   },
   "No Summary": "Keine Übersicht",
   "@No Summary": {
-    "description"<TAG>Title displayed when there are no items in the course summary",
-    "type"<TAG>text",
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
     "placeholders": {}
   },
   "This course does not have any assignments or calendar events yet.": "Für diesen Kurs gibt es noch keine Aufgaben oder Kalenderereignisse.",
   "@This course does not have any assignments or calendar events yet.": {
-    "description"<TAG>Message displayed when there are no items in the course summary",
-    "type"<TAG>text",
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
     "placeholders": {}
   },
-  "gradeFormatScoreOutOfPointsPossible": "<bpt>{score}</bpt> / <bpt>{pointsPossible}</bpt>",
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
   "@gradeFormatScoreOutOfPointsPossible": {
-    "description"<TAG>Formatted string for a student score out of the points possible",
-    "type"<TAG>text",
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
     "placeholders": {
       "score": {},
       "pointsPossible": {}
     }
   },
-  "contentDescriptionScoreOutOfPointsPossible": "<bpt>{score}</bpt> von <bpt>{pointsPossible}</bpt> Punkten",
+  "contentDescriptionScoreOutOfPointsPossible": "{score} von {pointsPossible} Punkten",
   "@contentDescriptionScoreOutOfPointsPossible": {
-    "description"<TAG>Formatted string for a student score out of the points possible",
-    "type"<TAG>text",
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
     "placeholders": {
       "score": {},
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Betreffend: <bpt>{studentName}</bpt>, Noten",
+  "gradesSubjectMessage": "Betreffend: {studentName}, Noten",
   "@gradesSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a student's grades",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "syllabusSubjectMessage": "Betreffend: <bpt>{studentName}</bpt>, Kursplan",
+  "syllabusSubjectMessage": "Betreffend: {studentName}, Kursplan",
   "@syllabusSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a course syllabus",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "frontPageSubjectMessage": "Betreffend: <bpt>{studentName}</bpt>, Frontseite",
+  "frontPageSubjectMessage": "Betreffend: {studentName}, Frontseite",
   "@frontPageSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a course front page",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
     "placeholders": {
       "studentName": {}
     }
   },
-  "assignmentSubjectMessage": "Betreffend: <bpt>{studentName}</bpt>, Aufgabe – <bpt>{assignmentName}</bpt>",
+  "assignmentSubjectMessage": "Betreffend: {studentName}, Aufgabe – {assignmentName}",
   "@assignmentSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a student's assignment",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "assignmentName": {}
     }
   },
-  "eventSubjectMessage": "Betreffend: <bpt>{studentName}</bpt>, Ereignis – <bpt>{eventTitle}</bpt>",
+  "eventSubjectMessage": "Betreffend: {studentName}, Ereignis – {eventTitle}",
   "@eventSubjectMessage": {
-    "description"<TAG>The subject line for a message to a teacher regarding a calendar event",
-    "type"<TAG>text",
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
     "placeholders": {
       "studentName": {},
       "eventTitle": {}
@@ -642,307 +732,313 @@
   },
   "There is no page information available.": "Es steht keine Seiteninformation zur Verfügung.",
   "@There is no page information available.": {
-    "description"<TAG>Description for when no page information is available",
-    "type"<TAG>text",
+    "description": "Description for when no page information is available",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment Details": "Aufgabendetails",
   "@Assignment Details": {
-    "description"<TAG>Title for the page that shows details for an assignment",
-    "type"<TAG>text",
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentTotalPoints": "<bpt>{points}</bpt> Pkte.",
+  "assignmentTotalPoints": "{points} Pkte.",
   "@assignmentTotalPoints": {
-    "description"<TAG>Label used for the total points the assignment is worth",
-    "type"<TAG>text",
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
     "placeholders": {
       "points": {}
     }
   },
-  "assignmentTotalPointsAccessible": "<bpt>{points}</bpt> Punkte",
+  "assignmentTotalPointsAccessible": "{points} Punkte",
   "@assignmentTotalPointsAccessible": {
-    "description"<TAG>Screen reader label used for the total points the assignment is worth",
-    "type"<TAG>text",
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
     "placeholders": {
       "points": {}
     }
   },
   "Due": "Fällig",
   "@Due": {
-    "description"<TAG>Label for an assignment due date",
-    "type"<TAG>text",
+    "description": "Label for an assignment due date",
+    "type": "text",
     "placeholders": {}
   },
   "Grade": "Note",
   "@Grade": {
-    "description"<TAG>Label for the section that displays an assignment's grade",
-    "type"<TAG>text",
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
     "placeholders": {}
   },
   "Locked": "Gesperrt",
   "@Locked": {
-    "description"<TAG>Label for when an assignment is locked",
-    "type"<TAG>text",
+    "description": "Label for when an assignment is locked",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentLockedModule": "Diese Aufgabe wird durch das Modul „<bpt>{moduleName}</bpt>“ gesperrt.",
+  "assignmentLockedModule": "Diese Aufgabe wird durch das Modul „{moduleName}“ gesperrt.",
   "@assignmentLockedModule": {
-    "description"<TAG>The locked description when an assignment is locked by a module",
-    "type"<TAG>text",
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
     "placeholders": {
       "moduleName": {}
     }
   },
   "Remind Me": "Erinnerung",
   "@Remind Me": {
-    "description"<TAG>Label for the row to set reminders",
-    "type"<TAG>text",
+    "description": "Label for the row to set reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Set reminder switch": "Erinnerungsschalter einstellen",
   "@Set reminder switch": {
-    "description"<TAG>Label for the switch to set a reminder",
-    "type"<TAG>text",
+    "description": "Label for the switch to set a reminder",
+    "type": "text",
     "placeholders": {}
   },
   "Set a date and time to be notified of this specific assignment.": "Datum und Uhrzeit für die Benachrichtigung über diese spezifische Aufgabe einstellen.",
   "@Set a date and time to be notified of this specific assignment.": {
-    "description"<TAG>Description for row to set reminders",
-    "type"<TAG>text",
+    "description": "Description for row to set reminders",
+    "type": "text",
     "placeholders": {}
   },
   "You will be notified about this assignment on…": "Sie werden über diese Aufgabe benachrichtigt am …",
   "@You will be notified about this assignment on…": {
-    "description"<TAG>Description for when a reminder is set",
-    "type"<TAG>text",
+    "description": "Description for when a reminder is set",
+    "type": "text",
     "placeholders": {}
   },
   "Description": "Beschreibung",
   "@Description": {
-    "description"<TAG>Label for the description of the assignment",
-    "type"<TAG>text",
+    "description": "Label for the description of the assignment",
+    "type": "text",
     "placeholders": {}
   },
   "Instructions": "Anweisungen",
   "@Instructions": {
-    "description"<TAG>Label for the description of the assignment when it has quiz instructions",
-    "type"<TAG>text",
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
     "placeholders": {}
   },
   "No description": "Keine Beschreibung",
   "@No description": {
-    "description"<TAG>Message used when the assignment has no description",
-    "type"<TAG>text",
+    "description": "Message used when the assignment has no description",
+    "type": "text",
     "placeholders": {}
   },
   "Send a message about this assignment": "Nachricht über diese Aufgabe senden",
   "@Send a message about this assignment": {
-    "description"<TAG>Accessibility hint for the assignment messaage floating action button",
-    "type"<TAG>text",
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
     "placeholders": {}
   },
   "This app is not authorized for use.": "Keine Autorisierung, um diese App zu verwenden.",
   "@This app is not authorized for use.": {
-    "description"<TAG>The error shown when the app being used is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "The server you entered is not authorized for this app.": "Der Server, den Sie eingegeben haben, hat keine Berechtigung für diese App.",
   "@The server you entered is not authorized for this app.": {
-    "description"<TAG>The error shown when the desired login domain is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "The user agent for this app is not authorized.": "Der Benutzeragent für diese App hat keine Berechtigung.",
   "@The user agent for this app is not authorized.": {
-    "description"<TAG>The error shown when the user agent during verification is not verified by Canvas",
-    "type"<TAG>text",
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "We were unable to verify the server for use with this app.": "Der Server konnte für die Verwendung mit dieser App nicht verifiziert werden.",
   "@We were unable to verify the server for use with this app.": {
-    "description"<TAG>The generic error shown when we are unable to verify with Canvas",
-    "type"<TAG>text",
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
     "placeholders": {}
   },
   "Reminders": "Erinnerungen",
   "@Reminders": {
-    "description"<TAG>Name of the system notification channel for assignment and event reminders",
-    "type"<TAG>text",
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Notifications for reminders about assignments and calendar events": "Benachrichtigungen zu Erinnerungen über Zuweisungen und Kalenderereignisse",
   "@Notifications for reminders about assignments and calendar events": {
-    "description"<TAG>Description of the system notification channel for assignment and event reminders",
-    "type"<TAG>text",
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "Not a parent?": "Kein Elternteil?",
   "@Not a parent?": {
-    "description"<TAG>Title for the screen that shows when the user is not observing any students",
-    "type"<TAG>text",
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
     "placeholders": {}
   },
   "We couldn't find any students associated with this account": "Es wurden keine mit diesem Konto verknüpfte Studenten gefunden",
   "@We couldn't find any students associated with this account": {
-    "description"<TAG>Subtitle for the screen that shows when the user is not observing any students",
-    "type"<TAG>text",
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
     "placeholders": {}
   },
   "Are you a student or teacher?": "Sie sind Student oder Lehrer?",
   "@Are you a student or teacher?": {
-    "description"<TAG>Label for button that will show users the option to view other Canvas apps in the Play Store",
-    "type"<TAG>text",
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
     "placeholders": {}
   },
   "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Eine unserer anderen Apps passt möglicherweise besser. Tippen Sie auf eine, um den Play Store zu besuchen.",
   "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
-    "description"<TAG>Description of options to view other Canvas apps in the Play Store",
-    "type"<TAG>text",
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
     "placeholders": {}
   },
   "Return to Login": "Zurück zur Anmeldung",
   "@Return to Login": {
-    "description"<TAG>Label for the button that returns the user to the login screen",
-    "type"<TAG>text",
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
     "placeholders": {}
   },
   "STUDENT": "STUDENT",
   "@STUDENT": {
-    "description"<TAG>The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
-    "type"<TAG>text",
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
     "placeholders": {}
   },
   "TEACHER": "LEHRER",
   "@TEACHER": {
-    "description"<TAG>The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
-    "type"<TAG>text",
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
     "placeholders": {}
   },
   "Canvas Student": "Canvas-Student",
   "@Canvas Student": {
-    "description"<TAG>The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
-    "type"<TAG>text",
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
     "placeholders": {}
   },
   "Canvas Teacher": "Canvas-Lehrer",
   "@Canvas Teacher": {
-    "description"<TAG>The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
-    "type"<TAG>text",
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
     "placeholders": {}
   },
   "No Alerts": "Keine Benachrichtigungen",
   "@No Alerts": {
-    "description"<TAG>The title for the empty message to show to users when there are no alerts for the student.",
-    "type"<TAG>text",
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
     "placeholders": {}
   },
   "There’s nothing to be notified of yet.": "Es gibt noch nichts, an das erinnert werden kann.",
   "@There’s nothing to be notified of yet.": {
-    "description"<TAG>The empty message to show to users when there are no alerts for the student.",
-    "type"<TAG>text",
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dismiss": "Verwerfen",
+  "@dismiss": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
     "placeholders": {}
   },
   "Course Announcement": "Kursankündigung",
   "@Course Announcement": {
-    "description"<TAG>Title for alerts when there is a course announcement",
-    "type"<TAG>text",
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
     "placeholders": {}
   },
   "Institution Announcement": "Institutsankündigung",
   "@Institution Announcement": {
-    "description"<TAG>Title for alerts when there is an institution announcement",
-    "type"<TAG>text",
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Aufgabennote über <bpt>{threshold}</bpt>",
+  "assignmentGradeAboveThreshold": "Aufgabennote über {threshold}",
   "@assignmentGradeAboveThreshold": {
-    "description"<TAG>Title for alerts when an assignment grade is above the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Aufgabennote unter <bpt>{threshold}</bpt>",
+  "assignmentGradeBelowThreshold": "Aufgabennote unter {threshold}",
   "@assignmentGradeBelowThreshold": {
-    "description"<TAG>Title for alerts when an assignment grade is below the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Kursnote über <bpt>{threshold}</bpt>",
+  "courseGradeAboveThreshold": "Kursnote über {threshold}",
   "@courseGradeAboveThreshold": {
-    "description"<TAG>Title for alerts when a course grade is above the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Kursnote unter <bpt>{threshold}</bpt>",
+  "courseGradeBelowThreshold": "Kursnote unter {threshold}",
   "@courseGradeBelowThreshold": {
-    "description"<TAG>Title for alerts when a course grade is below the threshold value",
-    "type"<TAG>text",
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
     "placeholders": {
       "threshold": {}
     }
   },
   "Settings": "Einstellungen",
   "@Settings": {
-    "description"<TAG>Title for the settings screen",
-    "type"<TAG>text",
+    "description": "Title for the settings screen",
+    "type": "text",
     "placeholders": {}
   },
   "Theme": "Design",
   "@Theme": {
-    "description"<TAG>Label for the light/dark theme section in the settings page",
-    "type"<TAG>text",
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
     "placeholders": {}
   },
   "Dark Mode": "Dunkel-Modus",
   "@Dark Mode": {
-    "description"<TAG>Label for the button that enables dark mode",
-    "type"<TAG>text",
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
     "placeholders": {}
   },
   "Light Mode": "Heller Modus",
   "@Light Mode": {
-    "description"<TAG>Label for the button that enables light mode",
-    "type"<TAG>text",
+    "description": "Label for the button that enables light mode",
+    "type": "text",
     "placeholders": {}
   },
   "High Contrast Mode": "Hochkontrastmodus",
   "@High Contrast Mode": {
-    "description"<TAG>Label for the switch that toggles high contrast mode",
-    "type"<TAG>text",
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
     "placeholders": {}
   },
   "Appearance": "Aussehen",
   "@Appearance": {
-    "description"<TAG>Label for the appearance section in the settings page",
-    "type"<TAG>text",
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
     "placeholders": {}
   },
   "Successfully submitted!": "Wurde abgegeben!",
   "@Successfully submitted!": {
-    "description"<TAG>Title displayed in the grade cell for an assignment that has been submitted",
-    "type"<TAG>text",
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
     "placeholders": {}
   },
-  "submissionStatusSuccessSubtitle": "Diese Aufgabe wurde am <bpt>{date}</bpt> um <bpt>{time}</bpt> abgegeben und wartet auf die Benotung",
+  "submissionStatusSuccessSubtitle": "Diese Aufgabe wurde am {date} um {time} abgegeben und wartet auf die Benotung",
   "@submissionStatusSuccessSubtitle": {
-    "description"<TAG>Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
-    "type"<TAG>text",
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
     }
   },
-  "outOfPoints": "<bpt>{howMany,plural, =1{</bpt>von 1 Punkt<bpt>}other{</bpt>von <bpt>{points}</bpt> Punkten<bpt>}}</bpt>",
+  "outOfPoints": "{howMany,plural, =1{von 1 Punkt}other{von {points} Punkten}}",
   "@outOfPoints": {
-    "description"<TAG>Description for an assignment grade that has points without a current scoroe",
-    "type"<TAG>text",
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
     "placeholders": {
       "points": {},
       "howMany": {}
@@ -950,129 +1046,129 @@
   },
   "Excused": "Entschuldigt",
   "@Excused": {
-    "description"<TAG>Grading status for an assignment marked as excused",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
     "placeholders": {}
   },
   "Complete": "Fertigstellen",
   "@Complete": {
-    "description"<TAG>Grading status for an assignment marked as complete",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
     "placeholders": {}
   },
   "Incomplete": "Unvollständig",
   "@Incomplete": {
-    "description"<TAG>Grading status for an assignment marked as incomplete",
-    "type"<TAG>text",
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
     "placeholders": {}
   },
   "minus": "minus",
   "@minus": {
-    "description"<TAG>Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
-    "type"<TAG>text",
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
     "placeholders": {}
   },
-  "latePenalty": "Strafe für Verspätung (-<bpt>{pointsLost}</bpt>)",
+  "latePenalty": "Strafe für Verspätung (-{pointsLost})",
   "@latePenalty": {
-    "description"<TAG>Text displayed when a late penalty has been applied to the assignment",
-    "type"<TAG>text",
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
     "placeholders": {
       "pointsLost": {}
     }
   },
-  "finalGrade": "Gesamtnote: <bpt>{grade}</bpt>",
+  "finalGrade": "Gesamtnote: {grade}",
   "@finalGrade": {
-    "description"<TAG>Text that displays the final grade of an assignment",
-    "type"<TAG>text",
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
     "placeholders": {
       "grade": {}
     }
   },
   "Alert Settings": "Alarmeinstellungen",
   "@Alert Settings": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Alert me when…": "Mich warnen, wenn …",
   "@Alert me when…": {
-    "description"<TAG>Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
-    "type"<TAG>text",
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
     "placeholders": {}
   },
   "Course grade below": "Kursnote unter",
   "@Course grade below": {
-    "description"<TAG>Label describing the threshold for when the course grade is below a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Course grade above": "Kursnote über",
   "@Course grade above": {
-    "description"<TAG>Label describing the threshold for when the course grade is above a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment missing": "Aufgabe fehlt",
   "@Assignment missing": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment grade below": "Aufgabennote unter",
   "@Assignment grade below": {
-    "description"<TAG>Label describing the threshold for when an assignment is graded below a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Assignment grade above": "Aufgabennote über",
   "@Assignment grade above": {
-    "description"<TAG>Label describing the threshold for when an assignment is graded above a certain percentage",
-    "type"<TAG>text",
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
     "placeholders": {}
   },
   "Course Announcements": "Kursankündigungen",
   "@Course Announcements": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Institution Announcements": "Institutsankündigungen",
   "@Institution Announcements": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Never": "Nie",
   "@Never": {
-    "description"<TAG>Indication that tells the user they will not receive alert notifications of a specific kind",
-    "type"<TAG>text",
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
     "placeholders": {}
   },
   "Grade percentage": "Noten-Prozentsatz",
   "@Grade percentage": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your student's alerts.": "Fehler beim Laden der Studentenalarme.",
   "@There was an error loading your student's alerts.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Must be below 100": "Muss unter 100 liegen",
   "@Must be below 100": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
-  "mustBeBelowN": "Muss unter <bpt>{percentage}</bpt> liegen",
+  "mustBeBelowN": "Muss unter {percentage} liegen",
   "@mustBeBelowN": {
-    "description"<TAG>Validation error to the user that they must choose a percentage below 'n'",
-    "type"<TAG>text",
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
     "placeholders": {
       "percentage": {
         "example": 5
       }
     }
   },
-  "mustBeAboveN": "Muss über <bpt>{percentage}</bpt> liegen",
+  "mustBeAboveN": "Muss über {percentage} liegen",
   "@mustBeAboveN": {
-    "description"<TAG>Validation error to the user that they must choose a percentage above 'n'",
-    "type"<TAG>text",
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
     "placeholders": {
       "percentage": {
         "example": 5
@@ -1081,126 +1177,126 @@
   },
   "Teacher": "Lehrer",
   "@Teacher": {
-    "description"<TAG>Label for the Teacher enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "Student": "Student",
   "@Student": {
-    "description"<TAG>Label for the Student enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Student enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "TA": "Lehrassistent",
   "@TA": {
-    "description"<TAG>Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
-    "type"<TAG>text",
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
     "placeholders": {}
   },
   "Observer": "Beobachter",
   "@Observer": {
-    "description"<TAG>Label for the Observer enrollment type",
-    "type"<TAG>text",
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
     "placeholders": {}
   },
   "Use Camera": "Kamera verwenden",
   "@Use Camera": {
-    "description"<TAG>Label for the action item that lets the user capture a photo using the device camera",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
     "placeholders": {}
   },
   "Upload File": "Datei hochladen",
   "@Upload File": {
-    "description"<TAG>Label for the action item that lets the user upload a file from their device",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
     "placeholders": {}
   },
   "Choose from Gallery": "Aus Galerie auswählen",
   "@Choose from Gallery": {
-    "description"<TAG>Label for the action item that lets the user select a photo from their device gallery",
-    "type"<TAG>text",
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
     "placeholders": {}
   },
   "Preparing…": "Vorbereiten ...",
   "@Preparing…": {
-    "description"<TAG>Message shown while a file is being prepared to attach to a message",
-    "type"<TAG>text",
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
     "placeholders": {}
   },
   "Add student with…": "Teilnehmer hinzufügen mit ...",
   "@Add student with…": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Add Student": "Teilnehmer hinzufügen",
   "@Add Student": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "You are not observing any students.": "Sie beobachten keine Studenten.",
   "@You are not observing any students.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "There was an error loading your students.": "Fehler beim Laden Ihrer Studenten.",
   "@There was an error loading your students.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Pairing Code": "Pairing-Code",
   "@Pairing Code": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben. Falls der Pairing-Code nicht funktioniert, ist er möglicherweise abgelaufen",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Your code is incorrect or expired.": "Ihr Code ist falsch oder abgelaufen.",
   "@Your code is incorrect or expired.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "QR Code": "QR-Code",
   "@QR Code": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Add new student": "Neuen Studenten hinzufügen",
   "@Add new student": {
-    "description"<TAG>Semantics label for the FAB on the Manage Students Screen",
-    "type"<TAG>text",
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
     "placeholders": {}
   },
   "Event": "Ereignis",
   "@Event": {
-    "description"<TAG>Title for the event details screen",
-    "type"<TAG>text",
+    "description": "Title for the event details screen",
+    "type": "text",
     "placeholders": {}
   },
   "Date": "Datum",
   "@Date": {
-    "description"<TAG>Label for the event date",
-    "type"<TAG>text",
+    "description": "Label for the event date",
+    "type": "text",
     "placeholders": {}
   },
   "Location": "Standort",
   "@Location": {
-    "description"<TAG>Label for the location information",
-    "type"<TAG>text",
+    "description": "Label for the location information",
+    "type": "text",
     "placeholders": {}
   },
   "No Location Specified": "Kein Standort angegeben",
   "@No Location Specified": {
-    "description"<TAG>Description for events that do not have a location",
-    "type"<TAG>text",
+    "description": "Description for events that do not have a location",
+    "type": "text",
     "placeholders": {}
   },
-  "eventTime": "<bpt>{startAt}</bpt> - <bpt>{endAt}</bpt>",
+  "eventTime": "{startAt} - {endAt}",
   "@eventTime": {
-    "description"<TAG>The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
-    "type"<TAG>text",
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
     "placeholders": {
       "startAt": {},
       "endAt": {}
@@ -1208,275 +1304,310 @@
   },
   "Set a date and time to be notified of this event.": "Datum und Uhrzeit zur Benachrichtigung über dieses Ereignis einstellen.",
   "@Set a date and time to be notified of this event.": {
-    "description"<TAG>Description for row to set event reminders",
-    "type"<TAG>text",
+    "description": "Description for row to set event reminders",
+    "type": "text",
     "placeholders": {}
   },
   "You will be notified about this event on…": "Sie werden benachrichtigt über dieses Ereignis am …",
   "@You will be notified about this event on…": {
-    "description"<TAG>Description for when an event reminder is set",
-    "type"<TAG>text",
+    "description": "Description for when an event reminder is set",
+    "type": "text",
     "placeholders": {}
   },
   "Search the Canvas Guides": "Die Canvas-Anleitungen durchsuchen",
   "@Search the Canvas Guides": {
-    "description"<TAG>Label for option to search the Canvas Guides",
-    "type"<TAG>text",
+    "description": "Label for option to search the Canvas Guides",
+    "type": "text",
     "placeholders": {}
   },
   "Find answers to common questions": "Antworten auf häufige Fragen suchen",
   "@Find answers to common questions": {
-    "description"<TAG>Description for option to search the Canvas Guides",
-    "type"<TAG>text",
+    "description": "Description for option to search the Canvas Guides",
+    "type": "text",
     "placeholders": {}
   },
   "Report a Problem": "Ein Problem melden",
   "@Report a Problem": {
-    "description"<TAG>Label for option to report a problem",
-    "type"<TAG>text",
+    "description": "Label for option to report a problem",
+    "type": "text",
     "placeholders": {}
   },
   "If the app misbehaves, let us know": "Wenn sich die App ungewöhnlich verhält, sagen Sie uns Bescheid",
   "@If the app misbehaves, let us know": {
-    "description"<TAG>Description for option to report a problem",
-    "type"<TAG>text",
+    "description": "Description for option to report a problem",
+    "type": "text",
     "placeholders": {}
   },
   "Request a Feature": "Ein Merkmal anfordern",
   "@Request a Feature": {
-    "description"<TAG>Label for option to request a feature",
-    "type"<TAG>text",
+    "description": "Label for option to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "Have an idea to improve the app?": "Haben Sie eine Idee, wie man die App verbessern könnte?",
   "@Have an idea to improve the app?": {
-    "description"<TAG>Description for option to request a feature",
-    "type"<TAG>text",
+    "description": "Description for option to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "Share Your Love for the App": "Teilen Sie Ihre Liebe für die App anderen mit",
   "@Share Your Love for the App": {
-    "description"<TAG>Label for option to open the app store",
-    "type"<TAG>text",
+    "description": "Label for option to open the app store",
+    "type": "text",
     "placeholders": {}
   },
   "Tell us about your favorite parts of the app": "Sagen Sie uns, was Sie an der App besonders mögen",
   "@Tell us about your favorite parts of the app": {
-    "description"<TAG>Description for option to open the app store",
-    "type"<TAG>text",
+    "description": "Description for option to open the app store",
+    "type": "text",
     "placeholders": {}
   },
   "Legal": "Rechtliches",
   "@Legal": {
-    "description"<TAG>Label for legal information option",
-    "type"<TAG>text",
+    "description": "Label for legal information option",
+    "type": "text",
     "placeholders": {}
   },
   "Privacy policy, terms of use, open source": "Datenschutz, Nutzungsbedingungen, Open-Source",
   "@Privacy policy, terms of use, open source": {
-    "description"<TAG>Description for legal information option",
-    "type"<TAG>text",
+    "description": "Description for legal information option",
+    "type": "text",
     "placeholders": {}
   },
   "Idea for Canvas Parent App [Android]": "Idee für Canvas-Parent-App [Android]",
   "@Idea for Canvas Parent App [Android]": {
-    "description"<TAG>The subject for the email to request a feature",
-    "type"<TAG>text",
+    "description": "The subject for the email to request a feature",
+    "type": "text",
     "placeholders": {}
   },
   "The following information will help us better understand your idea:": "Die folgende Information hilft uns, Ihre Idee besser zu verstehen:",
   "@The following information will help us better understand your idea:": {
-    "description"<TAG>The header for the users information that is attached to a feature request",
-    "type"<TAG>text",
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
     "placeholders": {}
   },
   "Domain:": "Domäne:",
   "@Domain:": {
-    "description"<TAG>The label for the Canvas domain of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "User ID:": "Benutzer-ID:",
   "@User ID:": {
-    "description"<TAG>The label for the Canvas user ID of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "Email:": "E-Mail:",
   "@Email:": {
-    "description"<TAG>The label for the eamil of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
     "placeholders": {}
   },
   "Locale:": "Umgebung:",
   "@Locale:": {
-    "description"<TAG>The label for the locale of the logged in user",
-    "type"<TAG>text",
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Datenschutzrichtlinien",
+  "@Privacy Policy": {
+    "description": "Label for the privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Use": "Nutzungsbedingungen",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas bei GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "Es gab ein Problem beim Laden der Nutzungsbedingungen.",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
     "placeholders": {}
   },
   "Device": "Gerät",
   "@Device": {
-    "description"<TAG>Label used for device manufacturer/model in the error report",
-    "type"<TAG>text",
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "OS Version": "BS-Version",
   "@OS Version": {
-    "description"<TAG>Label used for device operating system version in the error report",
-    "type"<TAG>text",
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "Version Number": "Versionsnummer",
   "@Version Number": {
-    "description"<TAG>Label used for the app version number in the error report",
-    "type"<TAG>text",
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
     "placeholders": {}
   },
   "Report A Problem": "Ein Problem melden",
   "@Report A Problem": {
-    "description"<TAG>Title used for generic dialog to report problems",
-    "type"<TAG>text",
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
     "placeholders": {}
   },
   "Subject": "Betreff",
   "@Subject": {
-    "description"<TAG>Label used for Subject text field",
-    "type"<TAG>text",
+    "description": "Label used for Subject text field",
+    "type": "text",
     "placeholders": {}
   },
   "A subject is required.": "Ein Betreff ist erforderlich.",
   "@A subject is required.": {
-    "description"<TAG>Error shown when the subject field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "Email Address": "E-Mail-Adresse",
   "@Email Address": {
-    "description"<TAG>Label used for Email Address text field",
-    "type"<TAG>text",
+    "description": "Label used for Email Address text field",
+    "type": "text",
     "placeholders": {}
   },
   "An email address is required.": "Eine E-Mail-Adresse ist erforderlich.",
   "@An email address is required.": {
-    "description"<TAG>Error shown when the email field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the email field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "A description is required.": "Eine Beschreibung ist erforderlich.",
   "@A description is required.": {
-    "description"<TAG>Error shown when the description field is empty",
-    "type"<TAG>text",
+    "description": "Error shown when the description field is empty",
+    "type": "text",
     "placeholders": {}
   },
   "How is this affecting you?": "Welche Auswirkung hat dies auf Sie?",
   "@How is this affecting you?": {
-    "description"<TAG>Label used for the dropdown to select how severe the issue is",
-    "type"<TAG>text",
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
     "placeholders": {}
   },
   "send": "senden",
   "@send": {
-    "description"<TAG>Label used for send button when reporting a problem",
-    "type"<TAG>text",
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
     "placeholders": {}
   },
   "Just a casual question, comment, idea, suggestion…": "Nur zwanglos eine Frage, ein Kommentar, eine Idee, ein Vorschlag ...",
   "@Just a casual question, comment, idea, suggestion…": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "I need some help but it's not urgent.": "Ich brauche Hilfe, aber es eilt nicht.",
   "@I need some help but it's not urgent.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Something's broken but I can work around it to get what I need done.": "Irgend etwas ist kaputt. Aber ich kann auch ohne das fertigstellen, was ich noch machen muss.",
   "@Something's broken but I can work around it to get what I need done.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "I can't get things done until I hear back from you.": "Ich kann nicht weitermachen, bevor ich keine Antwort von euch habe.",
   "@I can't get things done until I hear back from you.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "EXTREME CRITICAL EMERGENCY!!": "ÄUSSERST KRITISCHER NOTFALL!",
   "@EXTREME CRITICAL EMERGENCY!!": {
-    "type"<TAG>text",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Graded": "Unbenotet",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
     "placeholders": {}
   },
   "Cancel": "Abbrechen",
   "@Cancel": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "next": "Weiter",
   "@next": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "ok": "OK",
   "@ok": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Yes": "Ja",
   "@Yes": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "No": "Nein",
   "@No": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Retry": "Erneut versuchen",
   "@Retry": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Delete": "Löschen",
   "@Delete": {
-    "description"<TAG>Label used for general delete/remove actions",
-    "type"<TAG>text",
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
     "placeholders": {}
   },
   "Done": "Fertig",
   "@Done": {
-    "description"<TAG>Label for general done/finished actions",
-    "type"<TAG>text",
+    "description": "Label for general done/finished actions",
+    "type": "text",
     "placeholders": {}
   },
   "expanded": "eingeblendet",
   "@expanded": {
-    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
-    "type"<TAG>text",
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
     "placeholders": {}
   },
   "collapsed": "ausgeblendet",
   "@collapsed": {
-    "description"<TAG>Description for the accessibility reader for list groups that are expanded",
-    "type"<TAG>text",
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
     "placeholders": {}
   },
   "An unexpected error occurred": "Es ist ein unerwarteter Fehler aufgetreten",
   "@An unexpected error occurred": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
-  "dateAtTime": "am <bpt>{date}</bpt> um <bpt>{time}</bpt>",
+  "Launch External Tool": "Externes Tool starten",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateAtTime": "Am {date} um {time}",
   "@dateAtTime": {
-    "description"<TAG>The string to format dates",
-    "type"<TAG>text",
+    "description": "The string to format dates",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
     }
   },
-  "dueDateAtTime": "Fällig am <bpt>{date}</bpt> um <bpt>{time}</bpt>",
+  "dueDateAtTime": "Fällig am {date} um {time}",
   "@dueDateAtTime": {
-    "description"<TAG>The string to format due dates",
-    "type"<TAG>text",
+    "description": "The string to format due dates",
+    "type": "text",
     "placeholders": {
       "date": {},
       "time": {}
@@ -1484,75 +1615,99 @@
   },
   "No Due Date": "Kein Abgabetermin",
   "@No Due Date": {
-    "description"<TAG>Label for assignments that do not have a due date",
-    "type"<TAG>text",
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
     "placeholders": {}
   },
   "Filter": "Filter",
   "@Filter": {
-    "description"<TAG>Label for buttons to filter what items are visible",
-    "type"<TAG>text",
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
     "placeholders": {}
   },
   "unread": "ungelesen",
   "@unread": {
-    "description"<TAG>Label for things that are marked as unread",
-    "type"<TAG>text",
+    "description": "Label for things that are marked as unread",
+    "type": "text",
     "placeholders": {}
   },
-  "unreadCount": "<bpt>{count}</bpt> ungelesen",
+  "unreadCount": "{count} ungelesen",
   "@unreadCount": {
-    "description"<TAG>Formatted string for when there are a number of unread items",
-    "type"<TAG>text",
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
     "placeholders": {
       "count": {}
     }
   },
-  "badgeNumberPlus": "<bpt>{count}</bpt>+",
+  "badgeNumberPlus": "{count}+",
   "@badgeNumberPlus": {
-    "description"<TAG>Formatted string for when too many items are being notified in a badge, generally something like: 99+",
-    "type"<TAG>text",
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
     "placeholders": {
       "count": {}
     }
   },
   "There was an error loading this announcement": "Beim Laden dieser Ankündigung ist ein Fehler aufgetreten",
   "@There was an error loading this announcement": {
-    "description"<TAG>Message shown when an announcement detail screen fails to load",
-    "type"<TAG>text",
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
     "placeholders": {}
   },
   "Network error": "Netzwerkfehler",
   "@Network error": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Under Construction": "In Bau",
   "@Under Construction": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "We are currently building this feature for your viewing pleasure.": "Wir bauen derzeit an dieser Funktion für Sie.",
   "@We are currently building this feature for your viewing pleasure.": {
-    "type"<TAG>text",
+    "type": "text",
     "placeholders": {}
   },
   "Request Login Help Button": "Schaltfläche „Hilfe für Anmeldung erbitten“",
   "@Request Login Help Button": {
-    "description"<TAG>Accessibility hint for button that opens help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
     "placeholders": {}
   },
   "Request Login Help": "Hilfe für Anmeldung erbitten",
   "@Request Login Help": {
-    "description"<TAG>Title of help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
     "placeholders": {}
   },
   "I'm having trouble logging in": "Ich habe Probleme bei der Anmeldung",
   "@I'm having trouble logging in": {
-    "description"<TAG>Subject of help dialog for a login help request",
-    "type"<TAG>text",
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "Beim Versuch diesen Link anzuzeigen, ist ein Fehler aufgetreten:",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Wir können diesen Link nicht anzeigen. Er könnte zu einer Institution gehören, bei der Sie derzeit nicht angemeldet sind.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "Link-Fehler",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Im Browser öffnen",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
     "placeholders": {}
   }
 }

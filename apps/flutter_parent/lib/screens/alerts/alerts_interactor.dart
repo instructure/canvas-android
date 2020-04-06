@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertsInteractor {
@@ -29,6 +30,8 @@ class AlertsInteractor {
 
     final thresholdsFuture = _alertsApi().getAlertThresholds(studentId, forceRefresh);
 
+    // If forcing a refresh, also update the alert count
+    if (forceRefresh) locator<AlertCountNotifier>().update(studentId);
     return AlertsList(await alertsFuture, await thresholdsFuture);
   }
 

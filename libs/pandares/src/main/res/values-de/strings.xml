@@ -1125,4 +1125,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Minute</item>
+        <item quantity="other">%s Minuten</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Keine Konferenzen</string>
+    <string name="noConferencesMessage">Es gibt noch keine Konferenzen zum Anzeigen.</string>
+    <string name="noConferenceDescription">Für diese Konferenz gibt es keine Beschreibung</string>
+    <string name="conferenceListError">Fehler beim Laden Ihrer Konferenzen</string>
+    <string name="conferenceConcludedDateAtTime">Abgeschlossen %s um %s</string>
+    <string name="conferenceStartedDateAtTime">Beginn am: %s um %s</string>
+    <string name="notStarted">Nicht begonnen</string>
+    <string name="inProgress">In Arbeit</string>
+    <string name="join">Beitreten</string>
+    <string name="newConferences">Neue Konferenzen</string>
+    <string name="concludedConferences">Abgeschlossene Konferenzen</string>
+    <string name="conferenceDetails">Details der Konferenz</string>
+    <string name="recordings">Aufzeichnungen</string>
 </resources>

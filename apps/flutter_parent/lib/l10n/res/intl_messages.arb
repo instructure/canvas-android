@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-03-27T11:03:02.235673",
+  "@@last_modified": "2020-04-03T11:02:53.662629",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1494,6 +1494,100 @@
     "type": "text",
     "placeholders": {}
   },
+  "Login flow: Normal": "Login flow: Normal",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Login flow: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Login flow: Site Admin",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Login flow: Skip mobile verify",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Act As User": "Act As User",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Stop Acting as User",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "actingAsUser": "You are acting as {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain": "Domain",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "You must enter a valid domain",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID": "User ID",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a user id": "You must enter a user id",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "There was an error trying to act as this user. Please check the Domain and User ID and try again.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "You will stop acting as {userName} and return to your original account.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "You will stop acting as {userName} and will be logged out.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
   "Cancel": "Cancel",
   "@Cancel": {
     "type": "text",
@@ -1556,6 +1650,12 @@
   "Launch External Tool": "Launch External Tool",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Interactions on this page are limited by your institution.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },

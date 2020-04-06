@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 
 /// Displays an error page for routes that we can handle internally but don't match the current domain
 /// Could also be used for failed routes and other route related errors.
@@ -58,7 +58,7 @@ class RouterErrorScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(48, 0, 48, 0),
               child: FlatButton(
                 onPressed: () {
-                  launch(_route);
+                  locator<UrlLauncher>().launch(_route);
                 },
                 child: Text(L10n(context).openInBrowser,
                     style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16)),

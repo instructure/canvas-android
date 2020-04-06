@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
@@ -62,9 +63,11 @@ void main() {
       };
 
       var notifier = SelectedStudentNotifier();
+      final alertNotifier = _MockAlertCountNotifier();
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier);
+        locator.registerLazySingleton<AlertCountNotifier>(() => alertNotifier);
       });
 
       // Setup the widget
@@ -95,6 +98,7 @@ void main() {
 
       // Check to make sure we called the onTap function passed in
       expect(called, true);
+      verify(alertNotifier.update(student2.id)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('add student tap shows add student dialog', (tester) async {
@@ -219,3 +223,5 @@ class SelectedStudentNotifierTestApp extends StatelessWidget {
 class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
 
 class _MockAnalytics extends Mock implements Analytics {}
+
+class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}

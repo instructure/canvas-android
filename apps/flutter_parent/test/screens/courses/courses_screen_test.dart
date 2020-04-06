@@ -29,6 +29,7 @@ import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
@@ -56,12 +57,13 @@ void main() {
     _locator.registerLazySingleton<Analytics>(() => Analytics());
 
     _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
+    _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
   }
 
   Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null}) => TestApp(
         ChangeNotifierProvider<SelectedStudentNotifier>(
             create: (context) => notifier ?? SelectedStudentNotifier()
-              ..update(_mockStudent('1')),
+              ..value = _mockStudent('1'),
             child: Consumer<SelectedStudentNotifier>(
               builder: (context, model, _) {
                 return Scaffold(body: widget ?? CoursesScreen());
@@ -325,6 +327,8 @@ class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
 
 class _MockCourseApi extends Mock implements CourseApi {}
+
+class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
 
 List<Course> generateCoursesForStudent(String userId, {int numberOfCourses = 1}) {
   var student = _mockStudent(userId);

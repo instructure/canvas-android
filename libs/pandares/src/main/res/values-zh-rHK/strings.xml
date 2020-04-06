@@ -1111,4 +1111,22 @@
     <string name="a11y_letterGrade">%s。</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="other">%s 分鐘</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">無會議</string>
+    <string name="noConferencesMessage">尚未有可顯示的會議</string>
+    <string name="noConferenceDescription">此會議沒有描述說明</string>
+    <string name="conferenceListError">載入您的會議時發生錯誤</string>
+    <string name="conferenceConcludedDateAtTime">%s 結束於 %s</string>
+    <string name="conferenceStartedDateAtTime">%s 開始於 %s</string>
+    <string name="notStarted">未加星號</string>
+    <string name="inProgress">進行中</string>
+    <string name="join">加入</string>
+    <string name="newConferences">新會議</string>
+    <string name="concludedConferences">已結束的會議</string>
+    <string name="conferenceDetails">會議詳情</string>
+    <string name="recordings">記錄</string>
 </resources>
