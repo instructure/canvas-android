@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a messages locale. All the
+// This is a library that provides messages for a en_AU locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -17,9 +17,7 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'messages';
-
-  static m40(userName) => "You are acting as ${userName}";
+  String get localeName => 'en_AU';
 
   static m0(version) => "v. ${version}";
 
@@ -57,15 +55,11 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m17(date, time) => "Due ${date} at ${time}";
 
-  static m41(userName) => "You will stop acting as ${userName} and will be logged out.";
-
-  static m42(userName) => "You will stop acting as ${userName} and return to your original account.";
-
   static m18(studentName, eventTitle) => "Regarding: ${studentName}, Event - ${eventTitle}";
 
   static m19(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m20(grade) => "Final Grade: ${grade}";
+  static m20(grade) => "Final Mark: ${grade}";
 
   static m21(studentName) => "Regarding: ${studentName}, Front Page";
 
@@ -107,11 +101,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
-    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("A description is required."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("A subject is required."),
-    "Act As User" : MessageLookupByLibrary.simpleMessage("Act As User"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Add Student"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Add attachment"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Add new student"),
@@ -129,8 +121,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "Are you sure you want to log out?" : MessageLookupByLibrary.simpleMessage("Are you sure you want to log out?"),
     "Are you sure you wish to close this page? Your unsent message will be lost." : MessageLookupByLibrary.simpleMessage("Are you sure you wish to close this page? Your unsent message will be lost."),
     "Assignment Details" : MessageLookupByLibrary.simpleMessage("Assignment Details"),
-    "Assignment grade above" : MessageLookupByLibrary.simpleMessage("Assignment grade above"),
-    "Assignment grade below" : MessageLookupByLibrary.simpleMessage("Assignment grade below"),
+    "Assignment grade above" : MessageLookupByLibrary.simpleMessage("Assignment mark above"),
+    "Assignment grade below" : MessageLookupByLibrary.simpleMessage("Assignment mark below"),
     "Assignment missing" : MessageLookupByLibrary.simpleMessage("Assignment missing"),
     "Calendars" : MessageLookupByLibrary.simpleMessage("Calendars"),
     "Cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
@@ -143,15 +135,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "Contact Support" : MessageLookupByLibrary.simpleMessage("Contact Support"),
     "Course Announcement" : MessageLookupByLibrary.simpleMessage("Course Announcement"),
     "Course Announcements" : MessageLookupByLibrary.simpleMessage("Course Announcements"),
-    "Course grade above" : MessageLookupByLibrary.simpleMessage("Course grade above"),
-    "Course grade below" : MessageLookupByLibrary.simpleMessage("Course grade below"),
+    "Course grade above" : MessageLookupByLibrary.simpleMessage("Course mark above"),
+    "Course grade below" : MessageLookupByLibrary.simpleMessage("Course mark below"),
     "Dark Mode" : MessageLookupByLibrary.simpleMessage("Dark Mode"),
     "Date" : MessageLookupByLibrary.simpleMessage("Date"),
     "Delete" : MessageLookupByLibrary.simpleMessage("Delete"),
     "Description" : MessageLookupByLibrary.simpleMessage("Description"),
     "Device" : MessageLookupByLibrary.simpleMessage("Device"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Device model"),
-    "Domain" : MessageLookupByLibrary.simpleMessage("Domain"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Domain:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Done"),
     "Download" : MessageLookupByLibrary.simpleMessage("Download"),
@@ -167,15 +158,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "Filter by" : MessageLookupByLibrary.simpleMessage("Filter by"),
     "Front Page" : MessageLookupByLibrary.simpleMessage("Front Page"),
     "Full error message" : MessageLookupByLibrary.simpleMessage("Full error message"),
-    "Grade" : MessageLookupByLibrary.simpleMessage("Grade"),
+    "Grade" : MessageLookupByLibrary.simpleMessage("Mark"),
     "Grade percentage" : MessageLookupByLibrary.simpleMessage("Grade percentage"),
-    "Graded" : MessageLookupByLibrary.simpleMessage("Graded"),
-    "Grades" : MessageLookupByLibrary.simpleMessage("Grades"),
+    "Graded" : MessageLookupByLibrary.simpleMessage("Marked"),
+    "Grades" : MessageLookupByLibrary.simpleMessage("Marks"),
     "Help" : MessageLookupByLibrary.simpleMessage("Help"),
     "High Contrast Mode" : MessageLookupByLibrary.simpleMessage("High Contrast Mode"),
     "How is this affecting you?" : MessageLookupByLibrary.simpleMessage("How is this affecting you?"),
     "I can\'t get things done until I hear back from you." : MessageLookupByLibrary.simpleMessage("I can\'t get things done until I hear back from you."),
-    "I need some help but it\'s not urgent." : MessageLookupByLibrary.simpleMessage("I need some help but it\'s not urgent."),
+    "I need some help but it\'s not urgent." : MessageLookupByLibrary.simpleMessage("I need some help, but it\'s not urgent."),
     "I\'m having trouble logging in" : MessageLookupByLibrary.simpleMessage("I\'m having trouble logging in"),
     "Idea for Canvas Parent App [Android]" : MessageLookupByLibrary.simpleMessage("Idea for Canvas Parent App [Android]"),
     "Inbox" : MessageLookupByLibrary.simpleMessage("Inbox"),
@@ -184,7 +175,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Institution Announcement"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Institution Announcements"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Instructions"),
-    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Interactions on this page are limited by your institution."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("It looks like a great day to rest, relax, and recharge."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("It looks like assignments haven\'t been created in this space yet."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Just a casual question, comment, idea, suggestion…"),
@@ -197,10 +187,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Location"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Locked"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Log Out"),
-    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Login flow: Canvas"),
-    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Login flow: Normal"),
-    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Login flow: Site Admin"),
-    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Login flow: Skip mobile verify"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Manage Students"),
     "Message" : MessageLookupByLibrary.simpleMessage("Message"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Message subject"),
@@ -215,14 +201,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "No Courses" : MessageLookupByLibrary.simpleMessage("No Courses"),
     "No Due Date" : MessageLookupByLibrary.simpleMessage("No Due Date"),
     "No Events Today!" : MessageLookupByLibrary.simpleMessage("No Events Today!"),
-    "No Grade" : MessageLookupByLibrary.simpleMessage("No Grade"),
+    "No Grade" : MessageLookupByLibrary.simpleMessage("No Mark"),
     "No Location Specified" : MessageLookupByLibrary.simpleMessage("No Location Specified"),
     "No Students" : MessageLookupByLibrary.simpleMessage("No Students"),
     "No Subject" : MessageLookupByLibrary.simpleMessage("No Subject"),
     "No Summary" : MessageLookupByLibrary.simpleMessage("No Summary"),
     "No description" : MessageLookupByLibrary.simpleMessage("No description"),
     "No recipients selected" : MessageLookupByLibrary.simpleMessage("No recipients selected"),
-    "Not Graded" : MessageLookupByLibrary.simpleMessage("Not Graded"),
+    "Not Graded" : MessageLookupByLibrary.simpleMessage("Not Marked"),
     "Not Submitted" : MessageLookupByLibrary.simpleMessage("Not Submitted"),
     "Not a parent?" : MessageLookupByLibrary.simpleMessage("Not a parent?"),
     "Notifications for reminders about assignments and calendar events" : MessageLookupByLibrary.simpleMessage("Notifications for reminders about assignments and calendar events"),
@@ -258,8 +244,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Set reminder switch"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Settings"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Share Your Love for the App"),
-    "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Something\'s broken but I can work around it to get what I need done."),
-    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Stop Acting as User"),
+    "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Something\'s broken, but I can work around it to get what I need done."),
     "Student" : MessageLookupByLibrary.simpleMessage("Student"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Subject"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Submitted"),
@@ -269,16 +254,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "Syllabus" : MessageLookupByLibrary.simpleMessage("Syllabus"),
     "TA" : MessageLookupByLibrary.simpleMessage("TA"),
     "TEACHER" : MessageLookupByLibrary.simpleMessage("TEACHER"),
-    "Tap to favorite the courses you want to see on the Calendar." : MessageLookupByLibrary.simpleMessage("Tap to favorite the courses you want to see on the Calendar."),
+    "Tap to favorite the courses you want to see on the Calendar." : MessageLookupByLibrary.simpleMessage("Tap to favourite the courses you want to see on the Calendar."),
     "Tap to pair with a new student" : MessageLookupByLibrary.simpleMessage("Tap to pair with a new student"),
     "Tap to select this student" : MessageLookupByLibrary.simpleMessage("Tap to select this student"),
     "Tap to show student selector" : MessageLookupByLibrary.simpleMessage("Tap to show student selector"),
     "Teacher" : MessageLookupByLibrary.simpleMessage("Teacher"),
-    "Tell us about your favorite parts of the app" : MessageLookupByLibrary.simpleMessage("Tell us about your favorite parts of the app"),
+    "Tell us about your favorite parts of the app" : MessageLookupByLibrary.simpleMessage("Tell us about your favourite parts of the app."),
     "Terms of Use" : MessageLookupByLibrary.simpleMessage("Terms of Use"),
     "The following information will help us better understand your idea:" : MessageLookupByLibrary.simpleMessage("The following information will help us better understand your idea:"),
-    "The server you entered is not authorized for this app." : MessageLookupByLibrary.simpleMessage("The server you entered is not authorized for this app."),
-    "The user agent for this app is not authorized." : MessageLookupByLibrary.simpleMessage("The user agent for this app is not authorized."),
+    "The server you entered is not authorized for this app." : MessageLookupByLibrary.simpleMessage("The server you entered is not authorised for this app."),
+    "The user agent for this app is not authorized." : MessageLookupByLibrary.simpleMessage("The user agent for this app is not authorised."),
     "Theme" : MessageLookupByLibrary.simpleMessage("Theme"),
     "There are no installed applications that can open this file" : MessageLookupByLibrary.simpleMessage("There are no installed applications that can open this file"),
     "There is no page information available." : MessageLookupByLibrary.simpleMessage("There is no page information available."),
@@ -292,13 +277,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s alerts." : MessageLookupByLibrary.simpleMessage("There was an error loading your student\'s alerts."),
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("There was an error loading your student\'s calendar"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("There was an error loading your students."),
-    "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("There was an error loading your your student’s courses."),
-    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("There was an error trying to act as this user. Please check the Domain and User ID and try again."),
+    "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("There was an error loading your student’s courses."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("There’s nothing to be notified of yet."),
-    "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("This app is not authorized for use."),
+    "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("This app is not authorised for use."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("This course does not have any assignments or calendar events yet."),
     "This file is unsupported and can’t be viewed through the app" : MessageLookupByLibrary.simpleMessage("This file is unsupported and can’t be viewed through the app"),
-    "Total Grade" : MessageLookupByLibrary.simpleMessage("Total Grade"),
+    "Total Grade" : MessageLookupByLibrary.simpleMessage("Total Mark"),
     "Uh oh!" : MessageLookupByLibrary.simpleMessage("Uh oh!"),
     "Unable to fetch courses. Please check your connection and try again." : MessageLookupByLibrary.simpleMessage("Unable to fetch courses. Please check your connection and try again."),
     "Unable to load this image" : MessageLookupByLibrary.simpleMessage("Unable to load this image"),
@@ -310,7 +294,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Unsupported File"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Upload File"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Use Camera"),
-    "User ID" : MessageLookupByLibrary.simpleMessage("User ID"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("User ID:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Version Number"),
     "View error details" : MessageLookupByLibrary.simpleMessage("View error details"),
@@ -321,14 +304,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Yes"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("You are not observing any students."),
-    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("You must enter a user id"),
-    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("You must enter a valid domain"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("You will be notified about this assignment on…"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("You will be notified about this event on…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Your code is incorrect or expired."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Your student’s courses might not be published yet."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("You’re all caught up!"),
-    "actingAsUser" : m40,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Alerts"),
     "appVersion" : m0,
     "assignmentGradeAboveThreshold" : m1,
@@ -358,8 +338,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("How do I find my school or district?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Enter school name or district…"),
     "dueDateAtTime" : m17,
-    "endMasqueradeLogoutMessage" : m41,
-    "endMasqueradeMessage" : m42,
     "eventSubjectMessage" : m18,
     "eventTime" : m19,
     "expand" : MessageLookupByLibrary.simpleMessage("expand"),
