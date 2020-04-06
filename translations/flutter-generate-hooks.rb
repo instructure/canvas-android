@@ -40,6 +40,7 @@ projects.each do |project|
     # Change directories to the flutter project, so we can run the flutter command
     project_dir = File.join(flutter_dir)
     Dir.chdir project_dir
+    system("flutter pub get")
 
     puts "Generating flutter files for #{project_name}"
     success = system("flutter pub run intl_translation:generate_from_arb --output-dir=lib/l10n/generated --no-use-deferred-loading lib/l10n/app_localizations.dart lib/l10n/res/intl_*.arb")
