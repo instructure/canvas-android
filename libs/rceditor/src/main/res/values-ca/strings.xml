@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">Desfés</string>
+    <string name="rce_contentDescription_redo">Refés</string>
+    <string name="rce_contentDescription_bold">Format negreta</string>
+    <string name="rce_contentDescription_italic">Format cursiva</string>
+    <string name="rce_contentDescription_strikethrough">Ratllat</string>
+    <string name="rce_contentDescription_underline">Subratllat</string>
+    <string name="rce_contentDescription_format_text_color">Format del color del text</string>
+    <string name="rce_contentDescription_border_color">Format del color de la vora del text</string>
+    <string name="rce_contentDescription_indent_increase">Augment de la sagnia</string>
+    <string name="rce_contentDescription_indent_decrease">Reducció de la sagnia</string>
+    <string name="rce_contentDescription_align_left">Alineació esquerra</string>
+    <string name="rce_contentDescription_align_right">Alineació dreta</string>
+    <string name="rce_contentDescription_align_center">Alineació centrada</string>
+    <string name="rce_contentDescription_insert_bullets">Insereix una llista de pics</string>
+    <string name="rce_contentDescription_insert_numbers">Insereix una llista enumerada</string>
+    <string name="rce_contentDescription_insert_photo">Insereix una fotografia</string>
+    <string name="rce_contentDescription_upload_photo">Penja una fotografia des del dispositiu</string>
+    <string name="rce_contentDescription_insert_link">Insereix un enllaç</string>
+    <string name="rce_contentDescription_block_quote">Bloqueja la quota</string>
+
+    <string name="rce_contentDescription_color_none">Cap color</string>
+    <string name="rce_contentDescription_color_white">Color blanc</string>
+    <string name="rce_contentDescription_color_black">Color negre</string>
+    <string name="rce_contentDescription_color_blue">Color blau</string>
+    <string name="rce_contentDescription_color_red">Color vermell</string>
+    <string name="rce_contentDescription_color_green">Color verd</string>
+    <string name="rce_contentDescription_color_gray">Color gris</string>
+    <string name="rce_contentDescription_color_magenta">Color magenta</string>
+    <string name="rce_contentDescription_color_cyan">Color cian</string>
+    <string name="rce_contentDescription_color_orange">Color taronja</string>
+    <string name="rce_contentDescription_color_yellow">Color groc</string>
+    <string name="rce_contentDescription_color_purple">Color porpra</string>
+
+    <string name="rce_editTextUrlHint">Enllaç</string>
+    <string name="rce_editTextALTHint">Text</string>
+    <string name="rce_dialogDone">Fet</string>
+    <string name="rce_dialogCancel">Cancel·la</string>
+    <string name="rce_insertLink">Insereix un enllaç</string>
+    <string name="rce_insertImage">Insereix una imatge</string>
+    <string name="rce_uploadImage">Penja una imatge</string>
+
+    <string name="rce_done">Fet</string>
+    <string name="rce_cancel">Cancel·la</string>
+    <string name="rce_exit">Surt</string>
+    <string name="rce_dialog_exit_title">Voleu sortir de l\'edició de la tasca?</string>
+    <string name="rce_dialog_exit_message">Segur que voleu sortir? Es perdran les dades que no s\'hagin desat.</string>
+    <string name="rce_empty_message">Missatge</string>
+    <string name="rce_empty_description">Afegeix una descripció</string>
+    <string name="rce_scrollInstructions">Desplaça\'t per trobar totes les eines d\'edició</string>
+</resources>

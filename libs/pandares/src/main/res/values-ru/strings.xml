@@ -1166,4 +1166,25 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s минута</item>
+        <item quantity="few">%s минут</item>
+        <item quantity="many">%s минут</item>
+        <item quantity="other">%s минут</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Нет веб-конференций</string>
+    <string name="noConferencesMessage">В настоящее время веб-конференции не отображаются</string>
+    <string name="noConferenceDescription">Нет описания для этой веб-конференции</string>
+    <string name="conferenceListError">Произошла ошибка при загрузке ваших веб-конференций.</string>
+    <string name="conferenceConcludedDateAtTime">Завершение %s в %s</string>
+    <string name="conferenceStartedDateAtTime">Начало %s в %s</string>
+    <string name="notStarted">Не начато</string>
+    <string name="inProgress">Выполняется</string>
+    <string name="join">Присоединиться</string>
+    <string name="newConferences">Новые конференции</string>
+    <string name="concludedConferences">Завершенные конференции</string>
+    <string name="conferenceDetails">Данные веб-конференции</string>
+    <string name="recordings">Записи</string>
 </resources>

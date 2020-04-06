@@ -42,6 +42,7 @@
     <string name="canvasAPI_quiz">Quiz</string>
     <string name="canvasAPI_externalTool">External tool</string>
     <string name="canvasAPI_none">No submission</string>
+
     <string name="canvasAPI_passFail">Pass Fail</string>
     <string name="canvasAPI_percent">Per cent</string>
     <string name="canvasAPI_letterGrade">Letter Grade</string>

@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+    <string name="rce_contentDescription_undo">Annulla</string>
+    <string name="rce_contentDescription_redo">Ripeti</string>
+    <string name="rce_contentDescription_bold">Formato grassetto</string>
+    <string name="rce_contentDescription_italic">Formato corsivo</string>
+    <string name="rce_contentDescription_strikethrough">Barrato</string>
+    <string name="rce_contentDescription_underline">Sottolineatura</string>
+    <string name="rce_contentDescription_format_text_color">Formato colore testo</string>
+    <string name="rce_contentDescription_border_color">Formato colore bordo testo</string>
+    <string name="rce_contentDescription_indent_increase">Aumenta rientro</string>
+    <string name="rce_contentDescription_indent_decrease">Riduci rientro</string>
+    <string name="rce_contentDescription_align_left">Allinea a sinistra</string>
+    <string name="rce_contentDescription_align_right">Allinea a destra</string>
+    <string name="rce_contentDescription_align_center">Allinea al centro</string>
+    <string name="rce_contentDescription_insert_bullets">Inserisci elenco puntato</string>
+    <string name="rce_contentDescription_insert_numbers">Inserisci elenco numerato</string>
+    <string name="rce_contentDescription_insert_photo">Inserisci foto</string>
+    <string name="rce_contentDescription_upload_photo">Carica foto da dispositivo</string>
+    <string name="rce_contentDescription_insert_link">Inserisci link</string>
+    <string name="rce_contentDescription_block_quote">Citazione</string>
+
+    <string name="rce_contentDescription_color_none">Colore nessuno</string>
+    <string name="rce_contentDescription_color_white">Colore bianco</string>
+    <string name="rce_contentDescription_color_black">Colore nero</string>
+    <string name="rce_contentDescription_color_blue">Colore blu</string>
+    <string name="rce_contentDescription_color_red">Colore rosso</string>
+    <string name="rce_contentDescription_color_green">Colore verde</string>
+    <string name="rce_contentDescription_color_gray">Colore grigio</string>
+    <string name="rce_contentDescription_color_magenta">Colore magenta</string>
+    <string name="rce_contentDescription_color_cyan">Colore ciano</string>
+    <string name="rce_contentDescription_color_orange">Colore arancione</string>
+    <string name="rce_contentDescription_color_yellow">Colore giallo</string>
+    <string name="rce_contentDescription_color_purple">Colore viola</string>
+
+    <string name="rce_editTextUrlHint">Link</string>
+    <string name="rce_editTextALTHint">Testo</string>
+    <string name="rce_dialogDone">Fatto</string>
+    <string name="rce_dialogCancel">Annulla</string>
+    <string name="rce_insertLink">Inserisci link</string>
+    <string name="rce_insertImage">Inserisci immagine</string>
+    <string name="rce_uploadImage">Carica immagine</string>
+
+    <string name="rce_done">Fatto</string>
+    <string name="rce_cancel">Annulla</string>
+    <string name="rce_exit">Esci</string>
+    <string name="rce_dialog_exit_title">Uscire da modifica compito?</string>
+    <string name="rce_dialog_exit_message">Uscire? La data non salvata andrà persa.</string>
+    <string name="rce_empty_message">Messaggio</string>
+    <string name="rce_empty_description">Aggiungi descrizione</string>
+    <string name="rce_scrollInstructions">Scorri per tutti gli strumenti di modifica</string>
+
+    <string name="rce_emptyUrlError">L’URL non può essere vuoto</string>
+    <string name="rce_httpNotAllowed">Solo accettati solo URL https</string>
+</resources>

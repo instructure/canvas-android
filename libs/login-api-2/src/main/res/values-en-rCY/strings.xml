@@ -36,9 +36,9 @@
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="userId">User ID</string>
     <string name="domain">Domain</string>
-
     <string name="actAsUser">Act as user</string>
     <string name="stopActAsUser">Stop acting as user</string>
+
     <!--Multiple User Sign in -->
     <string name="removeUser">Remove this user?</string>
     <string name="removedForever">You\'ll have to sign into this user again to access their content.</string>
@@ -56,18 +56,18 @@
     <string name="invalidEmailPassword">Invalid email or password</string>
     <string name="login">Log in</string>
     <string name="logout">Log out</string>
-
     <string name="matchingSchools">Matching Schools</string>
+
     <!--Logout Warning Dialog-->
     <string name="logout_warning">Are you sure you want to log out?</string>
     <string name="logout_yes">Yes</string>
     <string name="logout_no">No</string>
 
     <!--Smart Login-->
+
     <string name="loginNearYou">Near you</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Right behind you</string>
-    <string name="loginMiles">%1$s miles away</string>
     <string name="loginCanvasHelp">Don\'t see your school? Enter the school URL or tap here for help.</string>
     <string name="loginCanvasHelpWithUser">Enter the school URL or tap here for help.</string>
     <string name="loginHint">Find your school or district</string>
@@ -85,9 +85,11 @@
     <string name="errorSeveritySomethingsBroken">Something\'s broken but I can work around it to get what I need done.</string>
     <string name="errorSeverityCantGetThingsDone">I can\'t get things done until I hear back from you.</string>
     <string name="errorSeverityExtremelyCritical">EXTREME CRITICAL EMERGENCY!!</string>
+
     <string name="errorReportEmailAddress">Email address</string>
     <string name="errorReportEnterEmail">Enter your email address&#8230;</string>
     <string name="errorReportUnknown">Unknown</string>
+
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
     <string name="oneMile">1 mile (1.6 km)</string>
@@ -100,7 +102,6 @@
 
     <string name="previousLoginTitle">Previous Logins</string>
     <string name="findMySchool">Find my school</string>
-    <string name="canvasLowerCase">canvas</string>
     <string name="whatsYourSchoolName">What\'s your school\'s name?</string>
     <string name="next">Next</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
@@ -121,7 +122,6 @@
     <string name="masqueradingAs">You are acting as %s</string>
     <string name="stopActingAsTitle">Stop acting as...</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
-
     <string name="weMadeChanges">We\'ve made a few changes.</string>
     <string name="whatsNewText">See what\'s new</string>
 </resources>

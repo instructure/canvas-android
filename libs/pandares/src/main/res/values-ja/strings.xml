@@ -1118,4 +1118,22 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="other">%s 分</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">会議はありません</string>
+    <string name="noConferencesMessage">表示する会議はまだありません</string>
+    <string name="noConferenceDescription">この会議には説明がありません</string>
+    <string name="conferenceListError">会議のロード中にエラーが発生しました</string>
+    <string name="conferenceConcludedDateAtTime">%sを%sに終了</string>
+    <string name="conferenceStartedDateAtTime">%sを%sに開始</string>
+    <string name="notStarted">未開始</string>
+    <string name="inProgress">進行中</string>
+    <string name="join">参加する</string>
+    <string name="newConferences">新しい会議</string>
+    <string name="concludedConferences">終了した会議</string>
+    <string name="conferenceDetails">会議の詳細</string>
+    <string name="recordings">録画</string>
 </resources>

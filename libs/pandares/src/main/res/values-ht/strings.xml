@@ -1125,4 +1125,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Minit</item>
+        <item quantity="other">%s Minit</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Okenn Konferans</string>
+    <string name="noConferencesMessage">Poko gen konferans pou afiche</string>
+    <string name="noConferenceDescription">Pa gen deskripsyon pou konferans sa a</string>
+    <string name="conferenceListError">Te gen yon erè nan chajman konferans ou yo</string>
+    <string name="conferenceConcludedDateAtTime">Fini %s a %s</string>
+    <string name="conferenceStartedDateAtTime">Kòmanse %s a %s</string>
+    <string name="notStarted">Pa Kòmanse</string>
+    <string name="inProgress">Ap Avanse</string>
+    <string name="join">Antre</string>
+    <string name="newConferences">Nouvo Konferans</string>
+    <string name="concludedConferences">Konferans Fini</string>
+    <string name="conferenceDetails">Detay Konferans</string>
+    <string name="recordings">Anrejistreman</string>
 </resources>
