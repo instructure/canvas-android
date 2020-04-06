@@ -16,7 +16,6 @@
   -->
 
 <resources>
-
     <string name="action_settings">Settings</string>
     <string name="canvasLogo">Canvas logo</string>
     <string name="email">Email</string>
@@ -153,11 +152,12 @@
     <string name="set_reminder_toggle">Set Reminder toggle</string>
     <string name="or">or</string>
     <string name="canvas_login_text">Log in with Canvas</string>
-
     <string name="dateRangeContentDescription">Date range from %1$s to %2$s</string>
+
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
+
     <!-- Feature Request -->
     <string name="featureSubject">Idea for Canvas Parent App [Android]</string>
     <string name="understandRequest">The following information will help us better understand your idea:</string>
@@ -179,9 +179,6 @@
 
     <string name="onlyCanvasObservers">Only Canvas observers can authenticate in Canvas Parent.</string>
     <string name="unableToAddStudentError">We are unable to add this student at this time.</string>
-
-    <string name="open_source">Open source</string>
-    <string name="open_source_details">View open source licenses</string>
 
     <string name="unitedStates">United States of America</string>
     <string name="theUnitedStates">the United States of America</string>
@@ -219,7 +216,6 @@
     <string name="not_a_parent_title">Not a parent?</string>
     <string name="not_a_parent_subtitle">One of our other apps may be a better fit. Tap one to visit the Play Store.</string>
     <string name="tryLoginAgain">Try logging in again</string>
-
     <string name="legalDetails">Privacy policy, terms of use, open source</string>
     <string name="assignmentGrade">Assignment mark</string>
     <string name="courseGrade">Module mark</string>

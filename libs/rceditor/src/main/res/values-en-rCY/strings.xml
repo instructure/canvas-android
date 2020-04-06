@@ -17,7 +17,6 @@
   -->
 
 <resources>
-
     <string name="rce_contentDescription_undo">Undo</string>
     <string name="rce_contentDescription_redo">Redo</string>
     <string name="rce_contentDescription_bold">Format bold</string>
@@ -57,8 +56,8 @@
     <string name="rce_dialogCancel">Cancel</string>
     <string name="rce_insertLink">Insert link</string>
     <string name="rce_insertImage">Insert Image</string>
-
     <string name="rce_uploadImage">Upload image</string>
+
     <string name="rce_done">Done</string>
     <string name="rce_cancel">Cancel</string>
     <string name="rce_exit">Exit</string>
@@ -67,6 +66,7 @@
     <string name="rce_empty_message">Message</string>
     <string name="rce_empty_description">Add description</string>
     <string name="rce_scrollInstructions">Scroll for all editing tools</string>
+
     <string name="rce_emptyUrlError">Url cannot be blank</string>
     <string name="rce_httpNotAllowed">Only https urls are accepted</string>
 </resources>

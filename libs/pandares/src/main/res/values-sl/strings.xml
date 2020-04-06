@@ -1125,4 +1125,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s minuta</item>
+        <item quantity="other">%s minut</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Ni konferenc</string>
+    <string name="noConferencesMessage">Zaenkrat ni nobenih konferenc za prikaz</string>
+    <string name="noConferenceDescription">Za to konferenco opis ne obstaja</string>
+    <string name="conferenceListError">Pri nalaganju vaših konferenc je prišlo do napake</string>
+    <string name="conferenceConcludedDateAtTime">Zaključeno %s ob %s</string>
+    <string name="conferenceStartedDateAtTime">Začetek %s ob %s</string>
+    <string name="notStarted">Ni začeto.</string>
+    <string name="inProgress">Poteka</string>
+    <string name="join">Pridružite se</string>
+    <string name="newConferences">Nove konference</string>
+    <string name="concludedConferences">Zaključene konference</string>
+    <string name="conferenceDetails">Podrobnosti o konferenci</string>
+    <string name="recordings">Snemanja</string>
 </resources>

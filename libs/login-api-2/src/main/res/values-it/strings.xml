@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="mobileVerifyGeneral">Questa app non è autorizzata per l’uso</string>
+    <string name="mobileVerifyDomainUnauthorized">Il server in cui sei entrato non è autorizzato per questa app.</string>
+    <string name="mobileVerifyUserAgentUnauthorized">L’agente utente per questa app non è autorizzata.</string>
+    <string name="mobileVerifyUnknownError">Non siamo riusciti a verificare il server per l’uso con questa app.</string>
+    <string name="unknownDevice">UnknownDevice</string>
+    <string name="errorOccurred">Si verificato un errore imprevisto.</string>
+    <string name="pageNotFound">Pagina non trovata.</string>
+    <string name="confirm">Conferma</string>
+    <string name="cancel">Annulla</string>
+    <string name="help">Guida</string>
+    <string name="enterURL">Inserisci il tuo URL Canvas:</string>
+    <string name="signIntoCanvasNetwork">Stai cercando di accedere a Canvas Network?</string>
+    <string name="remove">Rimuovi</string>
+    <string name="exampleURLSimple">myschool.instructure.com</string>
+    <string name="userId">ID utente</string>
+    <string name="domain">Dominio</string>
+    <string name="actAsUser">Agisci come utente</string>
+    <string name="stopActAsUser">Non agire più come utente</string>
+
+    <!--Multiple User Sign in -->
+    <string name="removeUser">Rimuovere questo utente?</string>
+    <string name="removedForever">Per accedere al suo contenuto, dovrai registrate di nuovo questo utente.</string>
+
+    <!--Content Descriptions-->
+    <string name="canvasLogo">Logo Canvas</string>
+
+    <string name="canvasLoginOn">Canvas_Login: ON</string>
+    <string name="canvasLoginOff">Canvas_Login: OFF</string>
+    <string name="siteAdminLogin">Login amministratore sito: ON</string>
+
+    <string name="username">Nome utente</string>
+    <string name="password">Password</string>
+    <string name="authenticationRequired">Autenticazione richiesta</string>
+    <string name="invalidEmailPassword">E-mail o password non valida</string>
+    <string name="login">Accedi</string>
+    <string name="logout">Disconnetti</string>
+    <string name="matchingSchools">Scuole corrispondenti</string>
+
+    <!--Logout Warning Dialog-->
+    <string name="logout_warning">Uscire?</string>
+    <string name="logout_yes">Sì</string>
+    <string name="logout_no">No</string>
+
+    <!--Smart Login-->
+
+    <string name="loginNearYou">Vicino a te</string>
+    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginRightBehindYou">Proprio dietro di te</string>
+    <string name="loginCanvasHelp">Non vedi la tua scuola? Inserisci l’URL della scuola o tocca qui per assistenza.</string>
+    <string name="loginCanvasHelpWithUser">Inserisci l’URL della scuola o tocca qui per assistenza.</string>
+    <string name="loginHint">Trova la tua scuola o distretto</string>
+
+    <!-- Error Report Dialog -->
+    <string name="errorReportAProblem">Segnala un problema</string>
+    <string name="errorReportSubject">Oggetto</string>
+    <string name="errorReportDescription">Descrizione</string>
+    <string name="errorReportWriteSomething">Scrivi qualcosa&#8230;</string>
+    <string name="errorReportSend">Invia</string>
+    <string name="errorReportThankyou">Grazie per aver segnalato il tuo problema al nostro team di assistenza.  Riceverai la verifica e gli aggiornamenti tramite e-mail.</string>
+    <string name="errorReportSeverityText">Quali sono le ripercussioni per te?</string>
+    <string name="errorSeverityCasualQuestion">Solo una domanda casuale, un commento, un\'idea, un suggerimento&#8230;</string>
+    <string name="errorSeverityNeedHelp">Ho bisogno di aiuto ma non è urgente.</string>
+    <string name="errorSeveritySomethingsBroken">Si è verificato un problema ma posso aggirarlo e fare ciò che devo.</string>
+    <string name="errorSeverityCantGetThingsDone">Non riesco a terminare il lavoro finché non ricevo una tua risposta.</string>
+    <string name="errorSeverityExtremelyCritical">EMERGENZA CRITICA.</string>
+
+    <string name="errorReportEmailAddress">Indirizzo e-mail</string>
+    <string name="errorReportEnterEmail">Inserisci il tuo indirizzo e-mail&#8230;</string>
+    <string name="errorReportUnknown">Sconosciuto</string>
+
+    <!-- Distance Strings -->
+    <string name="lessThanOne">&lt; 1 miglio (1,6 km)</string>
+    <string name="oneMile">1 miglio (1,6 km)</string>
+    <string name="miles">miglia</string>
+    <string name="kilometers">km</string>
+
+    <!-- String for submitting tickets -->
+    <string name="device">Dispositivo</string>
+    <string name="osVersion">Versione SO</string>
+
+    <string name="previousLoginTitle">Login precedenti</string>
+    <string name="findMySchool">Trova la mia scuola</string>
+    <string name="whatsYourSchoolName">Qual è il nome della tua scuola?</string>
+    <string name="next">Successivo</string>
+    <string name="schoolInstructureCom">school.instructure.com</string>
+    <string name="contentDescription_removePreviousUser">Rimuovi utente precedente</string>
+    <string name="accountDomainFooter">Non riesci a trova la tua scuola? Prova a digitare l’URL della scuola per intero.</string>
+    <string name="accountDomainFooterLink">Tocca qui per assistenza.</string>
+
+    <string name="login_noInternetConnectionTitle">Nessuna connessione a Internet</string>
+    <string name="login_noInternetConnectionMessage">Questa azione richiede una connessione a Internet.</string>
+    <string name="empty_feedback">Per inviare un feedback sono necessari argomento e descrizione.</string>
+    <string name="versionNum">Numero versione</string>
+    <string name="scrollInstructions">Scorri per vedere tutti i dettagli</string>
+
+    <string name="masqueradeErrorUserId">Devi inserire un ID utente.</string>
+    <string name="masqueradeErrorDomain">Devi inserire un dominio valido</string>
+    <string name="masqueradeError">Errore di esecuzione mascheramento.</string>
+    <string name="masqueradeInfo">\"Agisci come\" prevede sostanzialmente l\'esecuzione dell\'accesso assumendo l\'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente.</string>
+    <string name="masqueradingAs">Stai agendo come %s</string>
+    <string name="stopActingAsTitle">Non agire più come...</string>
+    <string name="stopActingAsMessage">Non agirai più come %s e tornerai al tuo account.</string>
+    <string name="weMadeChanges">Abbiamo apportato qualche modifica.</string>
+    <string name="whatsNewText">Guarda le novità</string>
+</resources>

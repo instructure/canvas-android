@@ -318,6 +318,7 @@
     <string name="assignments_list">Assignments list</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Multiple Due Dates</string>
     <string name="everyone">Everyone</string>
@@ -419,7 +420,6 @@
 
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps may be a better fit. Tap one to visit the Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
 
   <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
@@ -635,7 +635,6 @@
     <string name="discussions_reply">Reply</string>
     <string name="discussions_edit">Edit</string>
     <string name="discussions_forbidden">Replies are only visible to those who have posted at least one reply.</string>
-    <string name="discussions_unknown_author">Unknown author</string>
     <string name="discussions_delete">Delete Discussion</string>
     <string name="discussions_delete_title">Delete Discussion?</string>
     <string name="discussions_delete_message">This will delete the whole discussion and thread.</string>
@@ -732,7 +731,6 @@
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open source</string>
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
     <string name="reportProblem">Report a problem</string>
@@ -786,7 +784,6 @@
     <string name="filterPeople">Filter people</string>
     <string name="loadMore">Load more</string>
     <string name="latestStudentActivityAtFormatted">Latest activity on %1$s at %2$s.</string>
-    <string name="sectionFormatted">Section: %s</string>
     <string name="errorLoadingStudentContextCard">Unable to load details for this user.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Teacher</string>
@@ -899,7 +896,6 @@
     <string name="allSections">All sections</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
     <string name="downloading">Downloading...</string>
 

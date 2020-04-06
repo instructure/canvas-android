@@ -1138,4 +1138,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Mínúta</item>
+        <item quantity="other">%s mínútur</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Engar ráðstefnur</string>
+    <string name="noConferencesMessage">Það eru enn engar ráðstefnur til að sýna</string>
+    <string name="noConferenceDescription">Það eru engin lýsing fyrir þessa ráðstefnu</string>
+    <string name="conferenceListError">Villa kom upp við að sækja ráðstefnur þínar</string>
+    <string name="conferenceConcludedDateAtTime">Lokið %s klukkan %s</string>
+    <string name="conferenceStartedDateAtTime">Byrjað þann %s klukkan %s</string>
+    <string name="notStarted">Ekki byrjað</string>
+    <string name="inProgress">Í gangi</string>
+    <string name="join">Taka þátt</string>
+    <string name="newConferences">Nýjar ráðstefnur</string>
+    <string name="concludedConferences">Loknar ráðstefnur</string>
+    <string name="conferenceDetails">Upplýsingar um ráðstefnur</string>
+    <string name="recordings">Upptökur</string>
 </resources>

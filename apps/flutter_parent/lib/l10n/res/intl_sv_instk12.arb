@@ -1,0 +1,1713 @@
+﻿{
+  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "alertsLabel": "Notiser",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "calendarLabel": "Kalender",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "coursesLabel": "Kurser",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Students": "Inga elever",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Tryck för att visa elevväljare",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Tryck för att koppla samman med en ny elev",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to select this student": "Tryck för att välja den här eleven",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Manage Students": "Hantera elever",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Help": "Hjälp",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Log Out": "Logga ut",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Switch Users": "Växla användare",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "appVersion": "v. {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Vill du logga ut?",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Calendars": "Kalendrar",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders": {}
+  },
+  "nextMonth": "Nästa månad: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Föregående månad: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Nästa vecka börjar {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Föregående vecka startade {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Månaden {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "visa",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapse": "dölj",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} möjliga poäng",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "No Events Today!": "Inga händelser idag!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Det verkar vara en bra dag för vila, avslappning och omladdning.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "Det gick inte att läsa in din elevkalender.",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Tryck för att favoritmarkera de kurser du vill se i kalendern.",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Previous Logins": "Tidigare inloggningar",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas-logotyp",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders": {}
+  },
+  "findSchool": "Sök skola",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Ange skolans namn eller distrikt...",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "noDomainResults": "Det gick inte att hitta skolar som matchar \"{query}\"",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Hur hittar jag min skola eller distrikt?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas-guider",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas Support",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på {canvasGuides} eller kontakta {canvasSupport} eller din skola för att få hjälp.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Oj då!",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Vi vet inte vad som hände, men det fungerar inte. Kontakta oss om detta fortsätter att inträffa.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Contact Support": "Kontakta support",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View error details": "Visa felinformation",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Restart app": "Starta om appen",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Application version": "Programversion",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Device model": "Enhetsmodell",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Android OS version": "Android AS-version",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full error message": "Fullständigt felmeddelande",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Inbox": "Inkorg",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "Det gick inte att läsa in dina meddelanden i inkorgen.",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Subject": "Inget ämne",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Det gick inte att hämta kurser. Kontrollera din anslutning och försök igen.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Choose a course to message": "Välj en kurs att skicka meddelande till",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Inbox Zero": "Inkorg noll",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Du är helt i kapp!",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "Det gick inte att läsa in mottagare för den här kursen",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Det gick inte att skicka meddelandet. Kontrollera din anslutning och försök igen.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unsaved changes": "Osparade ändringar",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Är du säker på att du vill stänga den här sidan? Ditt meddelande du ännu inte skickat kommer att tas bort.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders": {}
+  },
+  "New message": "Nytt meddelande",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add attachment": "Lägg till bilaga",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send message": "Skicka meddelandet",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select recipients": "Välj mottagare",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No recipients selected": "Inga mottagare har valts",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Message subject": "Meddelandeämne",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Message": "Meddelande",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Recipients": "Mottagare",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Misslyckades. Tryck för alternativ.",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "courseForWhom": "för {studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Angående : {studentName}, {linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "Det gick inte att läsa in den här konversationen",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reply": "Svara",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reply All": "Svara alla",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unknown User": "Okänd användare",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders": {}
+  },
+  "me": "jag",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders": {}
+  },
+  "authorToRecipient": "{authorName} till {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName} till 1 annan}other{{authorName} till {howMany} andra}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} till {recipientName} och 1 annan}other{{authorName} till {recipientName} och {howMany} andra}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Ladda ned",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open with another app": "Öppna med en annan app",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "Det finns inga installerade program som kan öppna den här filen",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unsupported File": "Filtyp som inte stöds",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Den här filen stöds inte och kan inte visas i appen",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Det går inte att spela upp den här mediefilen",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Unable to load this image": "Det går inte att läsa in den här bilden",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading this file": "Det gick inte att läsa in den här filen",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Courses": "Inga kurser",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Dina elevkurser kanske inte publicerats än.",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your your student’s courses.": "Det gick inte att läsa in din elevs kurser.",
+  "@There was an error loading your your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Grade": "Ingen bedömning",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Filter by": "Filtrera efter",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grades": "Bedömningar",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Syllabus": "Kursöversikt",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Front Page": "Framsida",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Summary": "Sammanfattning",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send a message about this course": "Skicka ett meddelande om den här kursen",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Total Grade": "Totalt bedömning",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Graded": "Har bedömts",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Submitted": "Inskickad",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Submitted": "Inte inlämnad",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Late": "Sen",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Missing": "Saknad",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "All Grading Periods": "Alla bedömningsperioder",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Assignments": "Inga uppgifter",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Det verkar som om inga uppgifter har skapats för den här platsen än.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "Det gick inte att läsa in sammanfattningsinformationen för den här kursen.",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Summary": "Ingen sammanfattning",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Den här kursen har inga uppgifter eller kalenderhändelser än.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "{score} av {pointsPossible} poäng",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Angående : {studentName}, bedömningar",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Angående : {studentName}, kursöversikt",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Angående : {studentName}, framsida",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Angående : {studentName}, uppgift – {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Angående : {studentName}, händelse – {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "Det finns ingen sidinformation tillgänglig.",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment Details": "Uppgiftens detaljer",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} poäng",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} poäng",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Inlämningsdatum",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grade": "Bedömning",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locked": "Låst",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Den här uppgiften har låsts av modulen \"{moduleName}\".",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Påminn mig",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Set reminder switch": "Ange påminnelse",
+  "@Set reminder switch": {
+    "description": "Label for the switch to set a reminder",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Ange ett datum och tid för att få en notis för den här specifika uppgiften.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Du kommer att få en notis om den här uppgiften på...",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Description": "Beskrivning",
+  "@Description": {
+    "description": "Label for the description of the assignment",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Instructions": "Instruktioner",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No description": "Ingen beskrivning",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Skicka ett meddelande om den här kursen",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Den här appen har inte auktoriserats för användning.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "Den server du har angett har inte auktoriserats för den här appen.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "Användaragenten för den här appen är inte auktoriserad.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "Vi kunde inte verifiera servern för användning med den här appen.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reminders": "Påminnelser",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Påminnelsenotiser om uppgifter och kalenderhändelser",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not a parent?": "Är du inte vårdnadshavare?",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "Det gick inte att hitta elever kopplade till det här kontot",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Är du elev eller lärare?",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Någon av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Return to Login": "Gå tillbaka till inloggning",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "STUDENT": "ELEV",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders": {}
+  },
+  "TEACHER": "LÄRARE",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas-elev",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas-lärare",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Alerts": "Inga notiser",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Det finns inget att avisera om än.",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dismiss": "avvisa",
+  "@dismiss": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course Announcement": "Kursmeddelande",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Institution Announcement": "Institutionsmeddelande",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Uppgiftsbedömning över {threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Uppgiftsbedömning under {threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Kursbedömning över {threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Kursbedömning under {threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Inställningar",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Theme": "Tema",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Dark Mode": "Mörkt läge",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Light Mode": "Ljust läge",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Högt kontrastläge",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Appearance": "Utseende",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Uppgiften har skickats in!",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Uppgiften lämnades in {date} kl. {time} och väntar på bedömning",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{En av 1 poäng}other{En av {points} poäng}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Ursäktad",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Complete": "Fullgjord",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incomplete": "Ej fullständig",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders": {}
+  },
+  "minus": "minus",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders": {}
+  },
+  "latePenalty": "Förseningsbestraffning (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Slutbedömning: {grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Notisinställningar",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Alert me when…": "Notifiera mig om...",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course grade below": "Kursbedömning under",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course grade above": "Kursbedömning över",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment missing": "Uppgift saknas",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment grade below": "Uppgiftsbedömning under",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Assignment grade above": "Uppgiftsbedömning över",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Course Announcements": "Kursmeddelande",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Institution Announcements": "Institutionsmeddelande",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Never": "Aldrig",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Grade percentage": "Bedömningsprocent",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "Det gick inte att läsa in din elevs notiser.",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Must be below 100": "Måste vara under 100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Måste vara under {percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Måste vara över {percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Teacher": "Lärare",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Student": "Elev",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "TA": "Lärarassistent",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Observer": "Observatör",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Camera": "Använd kamera",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Upload File": "Ladda upp fil",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Välj från galleri",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Preparing…": "Förbereder...",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add student with…": "Lägg till elev med...",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add Student": "Lägg till elev",
+  "@Add Student": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "You are not observing any students.": "Du observerar inga elever.",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "Det gick inte att läsa in dina elever.",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Pairing Code": "Parkopplingskod",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Ange den elevparkopplingskod du har fått. Om parkopplingskoden inte fungerar kan den ha gått ut",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Din kod är fel eller har gått ut.",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "QR Code": "QR-kod",
+  "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Add new student": "Lägg till ny elev",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Event": "Händelse",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Date": "Datum",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Location": "Plats",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders": {}
+  },
+  "No Location Specified": "Ingen plats specificerad",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders": {}
+  },
+  "eventTime": "{startAt}/{endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Ange ett datum och tid för att få en notis för den här händelsen.",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Du kommer att få en notis om den här händelsen den...",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Search the Canvas Guides": "Sök i Canvas guider",
+  "@Search the Canvas Guides": {
+    "description": "Label for option to search the Canvas Guides",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Find answers to common questions": "Hitta svaret på vanliga frågor",
+  "@Find answers to common questions": {
+    "description": "Description for option to search the Canvas Guides",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Report a Problem": "Rapportera ett problem",
+  "@Report a Problem": {
+    "description": "Label for option to report a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "If the app misbehaves, let us know": "Om appen inte fungerar bra, berätta det för oss",
+  "@If the app misbehaves, let us know": {
+    "description": "Description for option to report a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request a Feature": "Begär en funktion",
+  "@Request a Feature": {
+    "description": "Label for option to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Have an idea to improve the app?": "Har du någon idé om hur appen kan förbättras?",
+  "@Have an idea to improve the app?": {
+    "description": "Description for option to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Dela din kärlek till appen",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Berätta vad du tycker om mest med appen",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Legal": "Juridik",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Integritetspolicy, användarvillkor, öppen källkod",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Idéer för appen Canvas Parent [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "Följande information kommer att hjälpa oss att förstå din idé bättre:",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain:": "Domän:",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID:": "Användar-ID:",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email:": "E-post:",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locale:": "Plats:",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Integritetspolicy",
+  "@Privacy Policy": {
+    "description": "Label for the privacy policy",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Use": "Användningsvillkor",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas på GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "Det gick inte att läsa in användarvillkoren",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Device": "Enhet",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "OS Version": "Operativsystemets version",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Version Number": "Versionsnummer",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Report A Problem": "Rapportera ett problem",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Subject": "Ämne",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "A subject is required.": "Ämne är obligatoriskt.",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "E-postadress",
+  "@Email Address": {
+    "description": "Label used for Email Address text field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An email address is required.": "E-postadressen är obligatorisk.",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "A description is required.": "Beskrivning är obligatorisk.",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Hur påverkar detta dig?",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders": {}
+  },
+  "send": "skicka",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Bara en vanlig fråga, kommentar, idé, förslag ...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Jag behöver hjälp men det är inte bråttom.",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Det är något som inte fungerar men jag kan göra det jag ska ändå.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "Jag kan inte göra något tills jag hör ifrån er.",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "EXTREMT KRITISKT NÖDFALL!!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Not Graded": "Inte bedömd",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Cancel": "Avbryt",
+  "@Cancel": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "next": "Nästa",
+  "@next": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Yes": "Ja",
+  "@Yes": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No": "Nej",
+  "@No": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Retry": "Försök igen",
+  "@Retry": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Delete": "Ta bort",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Done": "Klar",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders": {}
+  },
+  "expanded": "expanderad",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "collapsed": "minimerad",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "Ett oväntat fel inträffade",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Launch External Tool": "Starta externt verktyg",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "dateAtTime": "{date} kl. {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Ska lämnas in {date} klockan {time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Inget inlämningsdatum",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Filter": "Filtrera",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unread": "olästa",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders": {}
+  },
+  "unreadCount": "{count} olästa",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "Det gick inte att läsa in det här meddelandet",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Network error": "Nätverksfel",
+  "@Network error": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Under Construction": "Under uppbyggnad",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Vi bygger den här funktionen för dig.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Hjälpknapp för inloggningsförfrågningar",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Request Login Help": "Begär hjälp med inloggning",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Jag kan inte logga in",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "Ett fel uppstod när länken skulle visas",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Det går inte att visa den här länken. Den kan tillhöra en institution du för närvarande inte är inloggad på.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "Länkfel",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Öppna i webbläsare",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders": {}
+  }
+}

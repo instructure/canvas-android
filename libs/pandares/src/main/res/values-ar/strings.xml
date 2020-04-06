@@ -1180,4 +1180,31 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
+    <plurals name="minutes">
+        <item quantity="zero">%s من الدقائق</item>
+        <item quantity="zero">%s من الدقائق</item>
+        <item quantity="one">%s دقيقة</item>
+        <item quantity="two">%s من الدقائق</item>
+        <item quantity="few">%s من الدقائق</item>
+        <item quantity="many">%s من الدقائق</item>
+        <item quantity="two">%s من الدقائق</item>
+        <item quantity="few">%s من الدقائق</item>
+        <item quantity="many">%s من الدقائق</item>
+        <item quantity="other">%s من الدقائق</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">لا توجد مؤتمرات</string>
+    <string name="noConferencesMessage">لا توجد أي مؤتمرات للعرض حتى الآن</string>
+    <string name="noConferenceDescription">لا يوجد أي وصف لهذا المؤتمر</string>
+    <string name="conferenceListError">حدث خطأ أثناء تحميل المؤتمرات الخاصة بك</string>
+    <string name="conferenceConcludedDateAtTime">تم الانتهاء من %s في %s</string>
+    <string name="conferenceStartedDateAtTime">تم بدء %s في %s</string>
+    <string name="notStarted">لم يتم البدء</string>
+    <string name="inProgress">قيد التقدم</string>
+    <string name="join">انضم</string>
+    <string name="newConferences">مؤتمرات جديدة</string>
+    <string name="concludedConferences">المؤتمرات المنجزة</string>
+    <string name="conferenceDetails">تفاصيل المؤتمر</string>
+    <string name="recordings">التسجيلات</string>
 </resources>

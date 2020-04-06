@@ -1138,4 +1138,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Minuutti</item>
+        <item quantity="other">%s minuuttia</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Ei konferensseja</string>
+    <string name="noConferencesMessage">Näytettäviä konferensseja ei vielä ole</string>
+    <string name="noConferenceDescription">Tälle konferenssille ei ole kuvausta</string>
+    <string name="conferenceListError">Konferenssiesi latauksessa ilmeni virhe</string>
+    <string name="conferenceConcludedDateAtTime">%s saatettu päätökseen %s</string>
+    <string name="conferenceStartedDateAtTime">Aloitettu %s %s</string>
+    <string name="notStarted">Ei aloitettu</string>
+    <string name="inProgress">Käynnissä</string>
+    <string name="join">Liity</string>
+    <string name="newConferences">Uudet konferenssit</string>
+    <string name="concludedConferences">Loppuunviedyt konferenssit</string>
+    <string name="conferenceDetails">Konferenssin tiedot</string>
+    <string name="recordings">Nauhoitukset</string>
 </resources>

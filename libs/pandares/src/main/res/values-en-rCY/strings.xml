@@ -51,9 +51,7 @@
     <string name="notSubmitted">Not submitted</string>
     <string name="allowedFileTypes">Allowable File Types</string>
     <string name="resubmitAssignment">Resubmit assignment</string>
-
     <string name="launchExternalTool">Launch external tool</string>
-
     <string name="preview">Preview</string>
     <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
     <string name="submissionUploadByteProgress">%1$s of %2$s</string>
@@ -64,18 +62,19 @@
     <string name="submissionDeleted">Submission Deleted</string>
     <string name="missingSubmissionLabel">Missing</string>
     <string name="gradedSubmissionLabel">Graded</string>
+
     <!-- Student Submission -->
     <string name="submissionUrlClearTextError">No preview available for URLs using \'http://\'</string>
     <string name="submissionUrlNotAUrlError">Please enter a valid URL</string>
     <string name="enterAUrlHereForYourSubmission">Enter a URL here for your submission</string>
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record audio</string>
-
     <string name="recordVideo">Record video</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
     <string name="textSubmissionFailureMessage">Something went wrong on submission upload. Submit again.</string>
+
     <!-- Student Submission Details -->
     <string name="submission">Submission</string>
     <string name="submissionVersions">Submission versions</string>
@@ -94,6 +93,7 @@
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
     <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
     <string name="noOnlineSubmissions">No Online Submissions</string>
+
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
@@ -102,10 +102,12 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
     <string name="enterWhatIfScore">Enter what-if score</string>
+
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
     <string name="rubricViewLongDescription">View long description</string>
+
     <!-- Student Submission Comments -->
     <string name="assignmentSubmissionUploadingFile">Uploading file %1$d of %2$d</string>
     <string name="assignmentSubmissionCommentUpload">Uploading comment for %s</string>
@@ -124,6 +126,7 @@
     <string name="commentSubmissionTypeMediaFile">Media file</string>
     <string name="commentSubmissionTypeAudio">Audio</string>
     <string name="commentSubmissionTypeVideo">Video</string>
+
     <!-- Profile Fragment Strings -->
     <string name="canvasVersionNum">Version:</string>
 
@@ -166,7 +169,6 @@
     <string name="future">Future</string>
     <string name="next7Days">Next 7 days</string>
     <string name="days">Days</string>
-
     <string name="submissionDetailsDueTodayAt">Due today at %s</string>
     <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
     <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
@@ -174,6 +176,8 @@
     <string name="submissionDetailsDueAt">Due %1$s at %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
+
+
     <!-- Assignments -->
     <string name="assignmentLocked">Locked</string>
     <string name="assignments">Assignments</string>
@@ -181,14 +185,16 @@
     <string name="noAssignmentsInGroup">No assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
+
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
-
     <string name="fileCurrentlyLocked">This file is currently locked</string>
+
     <!-- Events -->
     <string name="Starts">Starts</string>
     <string name="Ends">Ends</string>
@@ -207,8 +213,6 @@
     <string name="whatIfDialogText">What-if Score</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
-
-
     <string name="inbox">Inbox</string>
     <string name="unread">Unread</string>
     <string name="archived">Archived</string>
@@ -388,8 +392,8 @@
     <string name="students">Students</string>
     <string name="observers">Observers</string>
     <string name="syllabusMissing">A syllabus has not been added.</string>
-
     <string name="syllabusEventsError">There was an error loading your units.</string>
+
     <string name="canvas">Canvas</string>
     <string name="chooseRecipient">Choose recipient(s)</string>
     <string name="messageHasNoRecipients">This message currently has no recipients.</string>
@@ -416,6 +420,7 @@
 
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
+
     <string name="contentDescriptionFiles">File icon</string>
 
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
@@ -439,6 +444,7 @@
     <string name="emptyId">ID cannot be blank</string>
 
     <string name="goToQuiz">Go to quiz</string>
+
     <string name="quizzes">Quizzes</string>
 
     <string name="lastDiscussionPost">Last post</string>
@@ -496,9 +502,9 @@
     <string name="unlockedAt">It will be unlocked at:</string>
     <string name="goToModules">Go to Units</string>
     <string name="markDone">Mark as completed</string>
-
     <string name="moduleItemNotFound">Unit Item Not Found</string>
     <string name="errorLoadingModules">There was an error loading your units.</string>
+
     <string name="help">Help</string>
     <string name="instructor_question">Instructor question</string>
     <string name="link">Link</string>
@@ -514,11 +520,11 @@
     <string name="textEntry">Text entry</string>
     <string name="onlineURL">Online URL</string>
     <string name="oneFileOnly">This submission only accepts one file upload</string>
-
-
     <string name="websiteEntry">Add Website Entry</string>
     <string name="mediaRecordingEntry">Media Recordings</string>
     <string name="submit">Submit</string>
+
+
     <!-- DataLoss Fragment Strings -->
     <string name="unsavedProgress">Unsaved progress</string>
     <string name="informationLost">Unsaved information will be lost. Do you want to continue?</string>
@@ -534,6 +540,7 @@
     <string name="next">Next</string>
     <string name="turnedIn">Handed In:&#160;</string>
     <string name="addComment">Add a comment&#8230;</string>
+
     <string name="home">Home</string>
     <string name="Notifications">Notifications</string>
 
@@ -563,6 +570,8 @@
     <string name="clickToViewSubmission">A snapshot of the website was taken when you handed it in. To open or download the full image, tap and hold image below.</string>
     <string name="urlSubmissionNoPreview">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
     <string name="contentDescriptionPreviewImage">A preview of the submitted URL</string>
+
+
     <string name="isNotSupportedFeature">%1$s are not supported.</string>
     <string name="isNotSupported">Link is not supported.</string>
     <string name="openInBrowser">Open In browser</string>
@@ -579,10 +588,12 @@
     <string name="panda_fact_string">Panda Fact:&#160;</string>
     <string name="remove">Remove</string>
     <string name="founders">Founders</string>
+
     <string name="EULA">EULA</string>
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="termsOfUse">Terms of Use</string>
     <string name="canvasOnGithub">Canvas on GitHub</string>
+
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Assignment quizzes</string>
     <string name="practiceQuizzes">Practice quizzes</string>
@@ -591,9 +602,9 @@
     <string name="quizMatchingDefaultDisplay">[Choose]</string>
     <string name="choose_answer_below">Choose your answer below</string>
     <string name="choose_answers_below">Choose your answers below</string>
-
-
     <string name="flag_the_question">Flag the question</string>
+
+
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do</string>
     <string name="gradesWidgetTitle">Grades</string>
@@ -850,11 +861,11 @@
     <string name="like">like</string>
     <string name="likeEntryLabel">Like Entry</string>
     <string name="likes">likes</string>
-
     <plurals name="likeCountLabel">
         <item quantity="one">%s like</item>
         <item quantity="other">%s likes</item>
     </plurals>
+
     <string name="color_1">Red</string>
     <string name="color_2">Hot Pink</string>
     <string name="color_3">Lavender</string>
@@ -913,6 +924,7 @@
     <string name="editDashboard">Edit Dashboard</string>
     <string name="editDashboardDescriptor">Select which modules you would like to see on the Dashboard</string>
     <string name="a11y_editYourCourseList">Edit your module list</string>
+
     <string name="dashboard">Dashboard</string>
     <string name="previous">Previous</string>
     <string name="pageNum" formatted="false">Page %d of %d</string>
@@ -940,8 +952,8 @@
     <string name="tapToViewAnnouncement">Tap to view announcement</string>
     <string name="acceptCourseInvitation">Accept</string>
     <string name="declineCourseInvitation">Decline</string>
-
     <string name="outOf">out of</string>
+
     <!-- File Strings -->
     <string name="noFilesSubtextCourse">There are no files associated with this module.</string>
     <string name="noFilesSubtextGroup">There are no files associated with this group.</string>
@@ -1002,6 +1014,7 @@
     <string name="unableToViewInBrowser">We are unable to find an external app to view this LTI tool.</string>
 
     <string name="commentUpload">Comment upload</string>
+
     <string name="frontPage">Front page</string>
     <string name="editPage">Edit page</string>
     <string name="description">Description</string>
@@ -1022,6 +1035,7 @@
     <string name="addChildErrorMessage">Pairing Failed. Make sure your pairing code is correct and within the time limit of use.</string>
     <string name="gradeComplete">Complete</string>
     <string name="gradeIncomplete">Incomplete</string>
+
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Post Settings</string>
     <string name="postGradesTab">Post grades</string>
@@ -1106,7 +1120,6 @@
 
     <string name="addVideoComment">Add video comment</string>
     <string name="addAudioComment">Add audio comment</string>
-
     <string name="audioRecordingError">An unexpected error occurred while trying to record audio.</string>
     <string name="videoRecordingError">An unexpected error occurred while trying to record video.</string>
 
@@ -1125,4 +1138,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s minute</item>
+        <item quantity="other">%s Minutes</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">No Conferences</string>
+    <string name="noConferencesMessage">There are no conferences to display yet</string>
+    <string name="noConferenceDescription">There is no description for this conference</string>
+    <string name="conferenceListError">There was an error loading your conferences</string>
+    <string name="conferenceConcludedDateAtTime">Concluded %s at %s</string>
+    <string name="conferenceStartedDateAtTime">Started %s at %s</string>
+    <string name="notStarted">Not started</string>
+    <string name="inProgress">In progress</string>
+    <string name="join">Join</string>
+    <string name="newConferences">New conferences</string>
+    <string name="concludedConferences">Concluded conferences</string>
+    <string name="conferenceDetails">Conference Details</string>
+    <string name="recordings">Recordings</string>
 </resources>
