@@ -2,6 +2,8 @@ require 'fileutils'
 require 'json'
 require 'mkmf'
 
+system("flutter pub get")
+
 projects_json = File.join('translations', 'projects.json')
 
 hub_config = File.join(Dir.home, '.config', 'hub')
