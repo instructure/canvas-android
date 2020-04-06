@@ -25,11 +25,10 @@ import 'package:flutter_parent/screens/help/help_screen_interactor.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -38,11 +37,18 @@ import '../../utils/test_app.dart';
 void main() {
   final l10n = AppLocalizations();
   HelpScreenInteractor interactor = _MockHelpScreenInteractor();
+  _MockUrlLauncher launcher = _MockUrlLauncher();
 
   setupTestLocator((locator) {
     locator.registerSingleton<QuickNav>(QuickNav());
     locator.registerLazySingleton<AndroidIntentVeneer>(() => _MockAndroidIntentVeneer());
     locator.registerLazySingleton<HelpScreenInteractor>(() => interactor);
+    locator.registerLazySingleton<UrlLauncher>(() => launcher);
+  });
+
+  setUp(() {
+    reset(interactor);
+    reset(launcher);
   });
 
   testWidgetsWithAccessibilityChecks('displays links', (tester) async {
@@ -66,9 +72,6 @@ void main() {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer(
         (_) => Future.value([createHelpLink(id: 'search_the_canvas_guides', text: 'Search the Canvas Guides')]));
 
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
-
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
 
@@ -76,14 +79,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(
-      mockLauncher.launch(
+      launcher.launch(
         'https://community.canvaslms.com/community/answers/guides/mobile-guide/content?filterID=contentstatus%5Bpublished%5D~category%5Btable-of-contents%5D',
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
       ),
     ).called(1);
   });
@@ -92,9 +89,6 @@ void main() {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([]));
 
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
-
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
 
@@ -102,14 +96,8 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(
-      mockLauncher.launch(
+      launcher.launch(
         'https://play.google.com/store/apps/details?id=com.instructure.parentapp',
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
       ),
     ).called(1);
   });
@@ -117,9 +105,6 @@ void main() {
   testWidgetsWithAccessibilityChecks('tapping report problem shows error report dialog', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: '#create_ticket', text: 'Report a Problem')]));
-
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -227,26 +212,13 @@ void main() {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
 
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
-
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(text));
     await tester.pumpAndSettle();
 
-    verify(
-      mockLauncher.launch(
-        url,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      ),
-    ).called(1);
+    verify(launcher.launch(url)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping mailto link launches correct intent', (tester) async {
@@ -284,26 +256,13 @@ void main() {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
 
-    var mockLauncher = _MockUrlLauncherPlatform();
-    UrlLauncherPlatform.instance = mockLauncher;
-
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(text));
     await tester.pumpAndSettle();
 
-    verify(
-      mockLauncher.launch(
-        url,
-        useSafariVC: anyNamed('useSafariVC'),
-        useWebView: anyNamed('useWebView'),
-        enableJavaScript: anyNamed('enableJavaScript'),
-        enableDomStorage: anyNamed('enableDomStorage'),
-        universalLinksOnly: anyNamed('universalLinksOnly'),
-        headers: anyNamed('headers'),
-      ),
-    ).called(1);
+    verify(launcher.launch(url)).called(1);
   });
 }
 
@@ -319,7 +278,7 @@ HelpLink createHelpLink({String id, String text, String url}) => HelpLink((b) =>
   ..text = text ?? 'text'
   ..subtext = 'subtext');
 
-class _MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+class _MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class _MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
 

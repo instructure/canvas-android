@@ -84,7 +84,6 @@ dependencies:
   package_info: 0.4.0+10
   permission_handler: 4.1.0
   shared_preferences: 0.5.3+4
-  url_launcher: 5.2.5
   #webview_flutter: 0.3.19+5
   webview_flutter: # TODO: Remove once the flutter plugin supports baseUrl https://github.com/flutter/plugins/pull/2463
     path: ./plugins/webview_flutter

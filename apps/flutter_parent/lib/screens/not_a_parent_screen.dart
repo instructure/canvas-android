@@ -22,8 +22,8 @@ import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class NotAParentScreen extends StatelessWidget {
   @override
@@ -70,10 +70,10 @@ class NotAParentScreen extends StatelessWidget {
           ),
           SizedBox(height: 24),
           _appButton(context, L10n(context).studentApp, L10n(context).canvasStudentApp, ParentColors.studentApp, () {
-            launch('market://details?id=com.instructure.candroid');
+            locator<UrlLauncher>().launch('market://details?id=com.instructure.candroid');
           }),
           _appButton(context, L10n(context).teacherApp, L10n(context).canvasTeacherApp, ParentColors.teacherApp, () {
-            launch('market://details?id=com.instructure.teacher');
+            locator<UrlLauncher>().launch('market://details?id=com.instructure.teacher');
           }),
           SizedBox(height: 24),
         ],
