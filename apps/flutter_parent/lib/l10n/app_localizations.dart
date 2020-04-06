@@ -808,8 +808,10 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
-  String get dismissAlert => Intl.message(
-        'dismiss',
+  String dismissAlertLabel(String alertTitle) => Intl.message(
+        'Dismiss $alertTitle',
+        name: 'dismissAlertLabel',
+        args: [alertTitle],
         desc: 'Accessibility label to dismiss an alert',
       );
 

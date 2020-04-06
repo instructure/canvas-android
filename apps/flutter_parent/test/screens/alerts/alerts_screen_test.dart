@@ -481,6 +481,23 @@ void main() {
       verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
   });
+
+  group('Accessibility', () {
+    testWidgetsWithAccessibilityChecks('Dismiss button semantic label includes alert title', (tester) async {
+      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
+
+      final alert = alerts.first;
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final semantics = find.bySemanticsLabel(AppLocalizations().dismissAlertLabel(alert.title));
+      final icon = find.byIcon(Icons.clear);
+
+      expect(find.descendant(of: semantics, matching: icon), findsOneWidget);
+    });
+  });
 }
 
 Widget _testableWidget({User student}) {
