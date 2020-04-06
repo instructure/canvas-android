@@ -32,6 +32,7 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -122,7 +123,7 @@ class LoginLandingScreen extends StatelessWidget {
             },
           ),
           SizedBox(height: 16),
-          _qrLogin(context),
+          if(RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT) == 'true') _qrLogin(context),
         ],
       ),
     );
