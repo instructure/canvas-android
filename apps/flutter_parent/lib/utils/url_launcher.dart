@@ -23,7 +23,7 @@ class UrlLauncher {
 
   Future<bool> canLaunch(String url, {bool excludeInstructure = true}) {
     return channel.invokeMethod<bool>(
-      'canLaunch',
+      canLaunchMethod,
       <String, Object>{
         'url': url,
         'excludeInstructure': excludeInstructure,
@@ -33,7 +33,7 @@ class UrlLauncher {
 
   Future<void> launch(String url, {bool excludeInstructure = true}) {
     return channel.invokeMethod<void>(
-      'launch',
+      launchMethod,
       <String, Object>{
         'url': url,
         'excludeInstructure': excludeInstructure,

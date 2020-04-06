@@ -46,6 +46,11 @@ void main() {
     locator.registerLazySingleton<UrlLauncher>(() => launcher);
   });
 
+  setUp(() {
+    reset(interactor);
+    reset(launcher);
+  });
+
   testWidgetsWithAccessibilityChecks('displays links', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([createHelpLink()]));
