@@ -67,6 +67,7 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
               onWebViewCreated: (controller) {
                 controller.loadHtml(snapshot.data.content, horizontalPadding: 16);
               },
+              darkMode: ParentTheme.of(context).isDarkMode,
             );
           },
         ),
