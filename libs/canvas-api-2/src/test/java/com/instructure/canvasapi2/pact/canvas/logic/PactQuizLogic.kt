@@ -1,8 +1,26 @@
+/*
+ * Copyright (C) 2020 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.canvasapi2.pact.canvas.logic
 
 import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.models.AssignmentDueDate
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizPermission
 import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.models.QuizSubmissionAnswer
@@ -14,7 +32,66 @@ import org.junit.Assert.assertNotNull
 
 val questionTypeRegex = QuizQuestion.QuestionType.values().map({v -> v.stringVal}).joinToString("|")
 
-fun LambdaDslObject.populateQuizFields(): LambdaDslObject {
+//
+// region logic for allDates object within Quiz
+//
+
+// There are many flavors of AllDates fields
+private fun LambdaDslObject.populateAllDatesFields() : LambdaDslObject {
+    this
+            .stringMatcher("due_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+            .stringMatcher("unlock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+            .stringMatcher("lock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+            .booleanType("base")
+
+    return this
+}
+
+private fun verifyAllDatesPopulated(description: String, dates: AssignmentDueDate) {
+    assertNotNull("$description + dueAt", dates.dueAt)
+    assertNotNull("$description + unlockAt", dates.unlockAt)
+    assertNotNull("$description + lockAt", dates.lockAt)
+    assertNotNull("$description + isBase", dates.isBase)
+}
+//endregion
+
+//
+// region logic for permissions object within quiz
+//
+fun LambdaDslObject.populateQuizPermissionsFields() : LambdaDslObject {
+    this
+            .booleanType("read")
+            .booleanType("submit")
+            .booleanType("create")
+            .booleanType("manage")
+            .booleanType("read_statistics")
+            .booleanType("review_grades")
+            .booleanType("update")
+            .booleanType("delete")
+            .booleanType("grade")
+            .booleanType("view_answer_audits")
+
+    return this
+}
+
+fun verifyQuizPermissionsPopulated(description: String, permissions: QuizPermission) {
+    assertNotNull("$description + read", permissions.read)
+    assertNotNull("$description + submit", permissions.submit)
+    assertNotNull("$description + create", permissions.create)
+    assertNotNull("$description + manage", permissions.manage)
+    assertNotNull("$description + readStatistics", permissions.readStatistics)
+    assertNotNull("$description + reviewGrades", permissions.reviewGrades)
+    assertNotNull("$description + update", permissions.update)
+    assertNotNull("$description + delete", permissions.delete)
+    assertNotNull("$description + grade", permissions.grade)
+    assertNotNull("$description + viewAnswerAudits", permissions.viewAnswerAudits)
+}
+//endregion
+
+//
+// region Logic for quiz object fields
+//
+fun LambdaDslObject.populateQuizFields(role: String = "student", singleQuiz: Boolean = true): LambdaDslObject {
 
     this
             .id("id")
@@ -24,53 +101,67 @@ fun LambdaDslObject.populateQuizFields(): LambdaDslObject {
             .stringMatcher("quiz_type", "practice_quiz|assignment|graded_survey|survey", "assignment")
             .id("assignment_group_id")
     // lock_info?
-    // permissions?
+            .`object`("permissions") { obj ->
+                obj.populateQuizPermissionsFields()
+            }
             .id("allowed_attempts") // "id" -> integer number
             .id("question_count")
-            .stringType("points_possible")
+            .numberType("points_possible") // String in Quiz object, but float from API
             .booleanType("cant_go_back")
             .stringMatcher("due_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z" )
             .id("time_limit")
             .booleanType("shuffle_answers")
             .booleanType("show_correct_answers")
             .stringMatcher("scoring_policy", "keep_highest|keep_latest", "keep_highest")
-            .stringType("access_code")
             .stringType("ip_filter")
             .booleanType("locked_for_user")
             .stringType("lock_explanation")
-            .stringMatcher("hide_results", "always|until_after_last_attempt", "always") // ??
+            // TODO: Test quiz with hide_results != null
+            //.stringMatcher("hide_results", "always|until_after_last_attempt", "always")
             .stringMatcher("show_correct_answers_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .stringMatcher("hide_correct_answers_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .stringMatcher("unlock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .booleanType("one_time_results")
             .stringMatcher("lock_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
-            .minArrayLike(
-                    "question_types",
-                    1,
-                     PactDslJsonRootValue.stringMatcher(questionTypeRegex,"true_false_question"),
-                     1)
             .booleanType("has_access_code")
             .booleanType("one_question_at_a_time")
             .booleanType("require_lockdown_browser")
             .booleanType("require_lockdown_browser_for_results")
-            .booleanType("allow_anonymous_submissions")
+            //.booleanType("allow_anonymous_submissions") // only applies to survey/graded_survey
             .booleanType("published")
             .id("assignment_id")
-    // all_dates?
-            .booleanType("only_visible_to_overrides")
-            .booleanType("unpublishable")
+            .minArrayLike("all_dates", 1) { obj ->
+                obj.populateAllDatesFields()
+            }
+
+    if(role == "teacher") {
+        this
+                .booleanType("only_visible_to_overrides")
+                .booleanType("unpublishable")
+                .stringType("access_code")
+    }
+
+    if(singleQuiz) {
+        this.minArrayLike(
+                "question_types",
+                1,
+                PactDslJsonRootValue.stringMatcher(questionTypeRegex,"true_false_question"),
+                1)
+    }
 
     return this
 }
 
 
-fun assertQuizPopulated(description: String, quiz: Quiz) {
+fun assertQuizPopulated(description: String, quiz: Quiz, role: String = "student", singleQuiz: Boolean = true) {
     assertNotNull("$description + id", quiz.id)
     assertNotNull("$description + mobileUrl", quiz.mobileUrl)
     assertNotNull("$description + htmlUrl", quiz.htmlUrl)
     assertNotNull("$description + description", quiz.description)
     assertNotNull("$description + quizType", quiz.quizType)
     assertNotNull("$description + assignmentGroupId", quiz.assignmentGroupId)
+    assertNotNull("$description + permissions", quiz.permissions)
+    verifyQuizPermissionsPopulated("$description + permissions", quiz.permissions!!)
     assertNotNull("$description + allowedAttempts", quiz.allowedAttempts)
     assertNotNull("$description + questionCount", quiz.questionCount)
     assertNotNull("$description + pointsPossible", quiz.pointsPossible)
@@ -80,28 +171,40 @@ fun assertQuizPopulated(description: String, quiz: Quiz) {
     assertNotNull("$description + shuffleAnswers", quiz.shuffleAnswers)
     assertNotNull("$description + showCorrectAnswers", quiz.showCorrectAnswers)
     assertNotNull("$description + scoringPolicy", quiz.scoringPolicy)
-    assertNotNull("$description + accessCode", quiz.accessCode)
     assertNotNull("$description + ipFilter", quiz.ipFilter)
     assertNotNull("$description + lockedForUser", quiz.lockedForUser)
     assertNotNull("$description + lockExplanation", quiz.lockExplanation)
-    assertNotNull("$description + hideResults", quiz.hideResults)
+    // TODO: Test quiz with hide_results != null
+    //assertNotNull("$description + hideResults", quiz.hideResults)
     assertNotNull("$description + showCorrectAnswersAt", quiz.showCorrectAnswersAt)
     assertNotNull("$description + hideCorrectAnswersAt", quiz.hideCorrectAnswersAt)
     assertNotNull("$description + unlockAt", quiz.unlockAt)
     assertNotNull("$description + oneTimeResults", quiz.oneTimeResults)
     assertNotNull("$description + lockAt", quiz.lockAt)
-    assertNotNull("$description + questionTypes", quiz.questionTypes)  // more?
     assertNotNull("$description + hasAccessCode", quiz.hasAccessCode)
     assertNotNull("$description + oneQuestionAtATime", quiz.oneQuestionAtATime)
     assertNotNull("$description + requireLockdownBrowser", quiz.requireLockdownBrowser)
     assertNotNull("$description + requireLockdownBrowserForResults", quiz.requireLockdownBrowserForResults)
-    assertNotNull("$description + allowAnonymousSubmissions", quiz.allowAnonymousSubmissions)
+    //assertNotNull("$description + allowAnonymousSubmissions", quiz.allowAnonymousSubmissions)
     assertNotNull("$description + published", quiz.published)
     assertNotNull("$description + assignmentId", quiz.assignmentId)
-    assertNotNull("$description + isOnlyVisibleToOverrides", quiz.isOnlyVisibleToOverrides)
-    assertNotNull("$description + unpublishable", quiz.unpublishable)
-}
+    assertNotNull("$description + allDates", quiz.allDates)
 
+    if(role == "teacher") {
+        assertNotNull("$description + accessCode", quiz.accessCode)
+        assertNotNull("$description + isOnlyVisibleToOverrides", quiz.isOnlyVisibleToOverrides)
+        assertNotNull("$description + unpublishable", quiz.unpublishable)
+    }
+
+    if(singleQuiz) {
+        assertNotNull("$description + questionTypes", quiz.questionTypes)  // more?
+    }
+}
+//endregion
+
+//
+// region Logic for QuizSubmission object fields
+//
 fun LambdaDslObject.populateQuizSubmissionFields() : LambdaDslObject {
     this
             .id("id")
@@ -154,14 +257,18 @@ fun assertQuizSubmissionPopulated(description: String, quizSubmission: QuizSubmi
     assertNotNull("$description + validationToken", quizSubmission.validationToken)
     assertNotNull("$description + overDueAndNeedsSubmission", quizSubmission.overDueAndNeedsSubmission)
 }
+//endregion
 
+//
+// region Logic for QuizSubmissionAnswer object within QuizSubmissionQuestion object
+//
 fun LambdaDslObject.populateQuizSubmissionAnswerFields() : LambdaDslObject {
     this
             .id("id")
             .stringType("text")
             .stringType("html")
-            .stringType("comments")
-            .id("weight")
+            //.stringType("comments") // Not returned by API, not used internally
+            //.id("weight") // Not returned by API, not used internally
             .stringType("blank_id")
 
     return this
@@ -171,11 +278,15 @@ fun assertQuizSubmissionAnswerPopulated(description: String, answer: QuizSubmiss
     assertNotNull("$description + id", answer.id)
     assertNotNull("$description + text", answer.text)
     assertNotNull("$description + html", answer.html)
-    assertNotNull("$description + comments", answer.comments)
-    assertNotNull("$description + weight", answer.weight)
+    //assertNotNull("$description + comments", answer.comments) //Not returned by API, not used internally
+    //assertNotNull("$description + weight", answer.weight) //Not returned by API, not used internally
     assertNotNull("$description + blankId", answer.blankId)
 }
+//endregion
 
+//
+// region Logic for QuizSubmissionQuestion object
+//
 fun LambdaDslObject.populateQuizSubmissionQuestionFields() : LambdaDslObject {
     this
             .id("id")
@@ -207,3 +318,4 @@ fun assertQuizSubmissionQuestionPopulated(description: String, question: QuizSub
     assertNotNull("$description + questionType", question.questionType)
     assertNotNull("$description + questionText", question.questionText)
 }
+//endregion

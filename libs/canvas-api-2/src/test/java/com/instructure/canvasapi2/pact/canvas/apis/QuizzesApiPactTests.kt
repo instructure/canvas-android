@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.canvasapi2.pact.canvas.apis
 
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
@@ -19,55 +35,110 @@ import org.junit.Test
 class QuizzesApiPactTests : ApiPactTestBase() {
 
     // Common logic
-    private fun createService(): QuizAPI.QuizInterface {
-        val client = getClient()
+    private fun createService(caller: String = DEFAULT_MOBILE_STUDENT): QuizAPI.QuizInterface {
+        val client = getClient(caller = caller)
         return client.create(QuizAPI.QuizInterface::class.java)
     }
 
-    val getQuizzesQuery: String? = null
-    val getQuizzesPath = "/api/v1/courses/3/quizzes"
-    val getQuizzesResponseBody = LambdaDsl.newJsonArray { array ->
+    //
+    // region Grab all quizzes as teacher
+    //
+    val getAllQuizzesTeacherQuery: String? = null
+    val getAllQuizzesTeacherPath = "/api/v1/courses/3/quizzes"
+    val getAllQuizzesTeacherResponseBody = LambdaDsl.newJsonArray { array ->
         array.`object` { obj ->
-            obj.populateQuizFields()
+            obj.populateQuizFields("teacher", singleQuiz = false)
         }
     }.build()
     @Pact(consumer = "android")
-    fun getQuizzesPact(builder: PactDslWithProvider): RequestResponsePact {
+    fun getAllQuizzesTeacherPact(builder: PactDslWithProvider): RequestResponsePact {
         return builder
                 .given("mobile course with quiz")
 
-                .uponReceiving("Grab all quizzes")
-                .path(getQuizzesPath)
+                .uponReceiving("Grab all quizzes as teacher")
+                .path(getAllQuizzesTeacherPath)
                 .method("GET")
-                .query(getQuizzesQuery)
-                .headers(DEFAULT_REQUEST_HEADERS)
+                .query(getAllQuizzesTeacherQuery)
+                .headers(mapOf(
+                        "Authorization" to "Bearer some_token",
+                        "Auth-User" to "Mobile Teacher",
+                        "Content-Type" to "application/json"
+                ))
 
                 .willRespondWith()
                 .status(200)
-                .body(getQuizzesResponseBody)
+                .body(getAllQuizzesTeacherResponseBody)
                 .headers(DEFAULT_RESPONSE_HEADERS)
 
                 .toPact()
     }
 
     @Test
-    @PactVerification(fragment = "getQuizzesPact")
-    fun `grab all quizzes`() {
-        val service = createService()
+    @PactVerification(fragment = "getAllQuizzesTeacherPact")
+    fun `grab all quizzes as teacher`() {
+        val service = createService(caller = "Mobile Teacher")
 
         val getQuizzesCall = service.getFirstPageQuizzes(contextId = 3)
         val getQuizzesResult = getQuizzesCall.execute()
 
-        assertQueryParamsAndPath(getQuizzesCall, getQuizzesQuery, getQuizzesPath)
+        assertQueryParamsAndPath(getQuizzesCall, getAllQuizzesTeacherQuery, getAllQuizzesTeacherPath)
 
         assertNotNull("Expected non-null response body", getQuizzesResult.body())
         val quizzes = getQuizzesResult.body()!!
 
         assertEquals("Expected 1 quiz to be returned",1,quizzes.size)
 
-        assertQuizPopulated(description = "returned quiz", quiz = quizzes[0])
+        assertQuizPopulated(description = "returned quiz", quiz = quizzes[0], role = "teacher", singleQuiz = false)
+    }
+    //endregion
+
+    //
+    // region Grab single quiz as student
+    //
+    val getOneQuizStudentQuery: String? = null
+    val getOneQuizStudentPath = "/api/v1/courses/3/quizzes/1"
+    val getOneQuizStudentResponseBody = LambdaDsl.newJsonBody { obj ->
+        obj.populateQuizFields(role = "student", singleQuiz = true)
+    }.build()
+    @Pact(consumer = "android")
+    fun getOneQuizStudentPact(builder: PactDslWithProvider): RequestResponsePact {
+        return builder
+                .given("mobile course with quiz")
+
+                .uponReceiving("Grab one quiz as student")
+                .path(getOneQuizStudentPath)
+                .method("GET")
+                .query(getOneQuizStudentQuery)
+                .headers(DEFAULT_REQUEST_HEADERS)
+
+                .willRespondWith()
+                .status(200)
+                .body(getOneQuizStudentResponseBody)
+                .headers(DEFAULT_RESPONSE_HEADERS)
+
+                .toPact()
     }
 
+    @Test
+    @PactVerification(fragment = "getOneQuizStudentPact")
+    fun `grab one quiz as student`() {
+        val service = createService()
+
+        val getQuizCall = service.getQuiz(courseId = 3, quizId = 1)
+        val getQuizResult = getQuizCall.execute()
+
+        assertQueryParamsAndPath(getQuizCall, getOneQuizStudentQuery, getOneQuizStudentPath)
+
+        assertNotNull("Expected non-null response body", getQuizResult.body())
+        val quiz = getQuizResult.body()!!
+
+        assertQuizPopulated(description = "returned quiz", quiz = quiz, role = "student", singleQuiz = true)
+    }
+    //endregion
+
+    //
+    // region Grab quiz submissions
+    //
     val getQuizSubmissionsQuery: String? = null
     val getQuizSubmissionsPath = "/api/v1/courses/3/quizzes/1/submissions"
     val getQuizSubmissionsResponseBody = LambdaDsl.newJsonBody { obj ->
@@ -117,7 +188,11 @@ class QuizzesApiPactTests : ApiPactTestBase() {
                 quizSubmission = quizSubmissionsResponse.quizSubmissions[0]
         )
     }
+    //endregion
 
+    //
+    // region Grab quiz submission questions (and answers)
+    //
     val getQuizSubmissionQuestionsQuery: String? = null
     val getQuizSubmissionQuestionsPath = "/api/v1/quiz_submissions/1/questions"
     val getQuizSubmissionQuestionsResponseBody = LambdaDsl.newJsonBody { obj ->
@@ -166,4 +241,5 @@ class QuizzesApiPactTests : ApiPactTestBase() {
             )
         }
     }
+    //endregion
 }
