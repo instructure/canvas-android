@@ -444,7 +444,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa.beta');
-    await tester.pumpAndSettle(Duration(milliseconds: 550));
+    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
@@ -466,7 +466,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'www.mobileqa.beta');
-    await tester.pumpAndSettle(Duration(milliseconds: 550));
+    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
