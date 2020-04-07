@@ -37,7 +37,6 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   Future<SplashScreenData> _dataFuture;
-  Future<bool> _qrLoginFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
   AnimationController _controller;

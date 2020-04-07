@@ -326,6 +326,10 @@ class PandaRouter {
 
     final urlRouteWrapper = getRouteWrapper(link);
 
+    if(urlRouteWrapper.appRouteMatch.parameters.containsKey(_RouterKeys.qrLoginUrl)) {
+      urlRouteWrapper.appRouteMatch.parameters[_RouterKeys.qrLoginUrl] = params[_RouterKeys.url];
+    }
+
     locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
 
     // We only care about valid app routes if they are already signed in

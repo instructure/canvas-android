@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
@@ -64,8 +65,6 @@ class SplashScreenInteractor {
 
     final mobileVerifyResult = await locator<AuthApi>().mobileVerify(domain);
 
-    // TODO - Test, do we need the potential "updated domain" string mods?
-
     if(mobileVerifyResult.result != VerifyResultEnum.success) {
       return Future.value(false);
     }
@@ -73,17 +72,22 @@ class SplashScreenInteractor {
     final tokenResponse = await locator<AuthApi>().getTokens(mobileVerifyResult, oAuthCode);
 
     // Key here is that realUser represents a masquerading attempt
+    var isMasquerading = tokenResponse.realUser != null;
     Login login = Login((b) => b
       ..accessToken = tokenResponse.accessToken
       ..refreshToken = tokenResponse.refreshToken
       ..domain = mobileVerifyResult.baseUrl
       ..clientId = mobileVerifyResult.clientId
       ..clientSecret = mobileVerifyResult.clientSecret
-      ..isMasqueradingFromQRCode= tokenResponse.realUser != null
+      ..masqueradeUser = isMasquerading ? tokenResponse.user.toBuilder() : null
+      ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
+      ..isMasqueradingFromQRCode = isMasquerading
+      ..canMasquerade = isMasquerading
       ..user = tokenResponse.user.toBuilder());
 
     ApiPrefs.addLogin(login);
     ApiPrefs.switchLogins(login);
+    await DioConfig().clearCache();
 
     return Future.value(true);
   }

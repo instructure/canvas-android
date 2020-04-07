@@ -19,12 +19,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class QRTutorialScreen extends StatelessWidget {
+class QRTutorialScreen extends StatefulWidget {
+  @override
+  _QRTutorialScreenState createState() => _QRTutorialScreenState();
+}
+
+class _QRTutorialScreenState extends State<QRTutorialScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
@@ -51,8 +57,13 @@ class QRTutorialScreen extends StatelessWidget {
       splashColor: Theme.of(context).accentColor.withAlpha(100),
       textColor: Theme.of(context).accentColor,
       shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
-      onPressed: () {
-        scan(context);
+      onPressed: () async {
+        var barcodeResult = await locator<QRTutorialScreenInteractor>().scan(context);
+        if(barcodeResult.isSuccess) {
+          locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
+        } else {
+          _showSnackBarError(context, barcodeResult.errorMessage);
+        }
       },
       child: Text(
         L10n(context).next.toUpperCase(),
@@ -85,28 +96,6 @@ class QRTutorialScreen extends StatelessWidget {
         )
       ],
     );
-  }
-
-  Future scan(BuildContext context) async {
-    try {
-      String barcodeResult = await BarcodeScanner.scan();
-      var uri = Uri.parse(barcodeResult);
-      if (QRUtils.verifySSOLogin(uri)) {
-        locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult));
-      } else {
-        _showSnackBarError(context, L10n(context).invalidQRCodeError);
-      }
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        _showSnackBarError(context, L10n(context).qrCodeNoCameraError);
-      } else {
-        _showSnackBarError(context, L10n(context).invalidQRCodeError);
-      }
-    } on FormatException {
-      // User returned, do nothing
-    } catch (e) {
-      _showSnackBarError(context, L10n(context).invalidQRCodeError);
-    }
   }
 
   _showSnackBarError(BuildContext context, String error) {

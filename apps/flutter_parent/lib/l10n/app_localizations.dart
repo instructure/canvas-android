@@ -1366,6 +1366,6 @@ class AppLocalizations {
 
   String get qrCodeNoCameraError =>
       Intl.message(
-          'No camera, no scannera',
+          'QR scanning requires camera access.',
           desc: 'placeholder for camera error for QR code scan');
 }
