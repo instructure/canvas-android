@@ -151,8 +151,9 @@ class DioConfig {
     Duration cacheMaxAge: Duration.zero,
     bool forceRefresh: false,
     PageSize pageSize: PageSize.none,
+    bool useBetaDomain: false,
   }) {
-    var baseUrl = 'https://canvas.instructure.com/';
+    var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas.instructure.com/';
     if (includeApiPath) baseUrl += 'api/v1/';
 
     return DioConfig(

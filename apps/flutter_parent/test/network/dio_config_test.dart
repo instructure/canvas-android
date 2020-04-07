@@ -129,6 +129,11 @@ void main() {
       expect(options.baseUrl, 'https://canvas.instructure.com/');
     });
 
+    test('initializes with a beta base url', () async {
+      final options = DioConfig.core(useBetaDomain: true).dio.options;
+      expect(options.baseUrl, 'https://canvas.beta.instructure.com/api/v1/');
+    });
+
     test('sets up headers', () async {
       final headers = {'123': '123'};
       final options = DioConfig.core(headers: headers).dio.options;

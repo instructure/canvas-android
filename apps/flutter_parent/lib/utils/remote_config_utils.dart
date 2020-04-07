@@ -18,8 +18,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // All of the Remote Config params that we choose to care about.
 enum RemoteConfigParams {
-  QR_LOGIN_ENABLED_PARENT,
   TEST_STRING,
+  MOBILE_VERIFY_BETA_ENABLED,
+  QR_LOGIN_ENABLED_PARENT,
 }
 
 class RemoteConfigUtils {
@@ -112,6 +113,9 @@ class RemoteConfigUtils {
         return 'test_string';
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
         return 'qr_login_enabled_parent';
+      case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
+        return 'mobile_verify_beta_enabled';
+        break;
     }
   }
 
@@ -125,6 +129,9 @@ class RemoteConfigUtils {
         return 'hey there';
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
         return 'false';
+      case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
+        return 'false';
+        break;
     }
   }
 
