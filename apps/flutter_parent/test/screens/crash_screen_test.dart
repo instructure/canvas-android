@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
+import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -103,6 +104,18 @@ void main() {
 
     // 'Restart app' button
     expect(find.widgetWithText(FlatButton, l10n.crashScreenRestart), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Displays report error dialog', (tester) async {
+    await tester.pumpWidget(TestApp(CrashScreen(_makeError())));
+    await tester.pumpAndSettle();
+
+    // 'Contact support' button
+    expect(find.widgetWithText(FlatButton, l10n.crashScreenContact), findsOneWidget);
+    await tester.tap(find.widgetWithText(FlatButton, l10n.crashScreenContact));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ErrorReportDialog), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Displays error info', (tester) async {

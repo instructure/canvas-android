@@ -35,7 +35,7 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
   final analytics = _MockAnalytics();
 
-  _setupLocator(MockInteractor interactor, {WebLoginInteractor webInteractor}) {
+  _setupLocator(_MockInteractor interactor, {WebLoginInteractor webInteractor}) {
     final _locator = GetIt.instance;
     _locator.reset();
     _locator.registerLazySingleton(() => QuickNav());
@@ -50,7 +50,7 @@ void main() {
   });
 
   testWidgets('default state', (tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator(_MockInteractor());
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -68,7 +68,7 @@ void main() {
 
   testWidgets('Displays search results', (WidgetTester tester) async {
     int count = 5;
-    MockInteractor interactor = MockInteractor();
+    _MockInteractor interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value(List.generate(
           count,
           (idx) => SchoolDomain((sd) => sd
@@ -103,7 +103,7 @@ void main() {
   });
 
   testWidgets('Large result sets do not hide help button', (WidgetTester tester) async {
-    MockInteractor interactor = MockInteractor();
+    _MockInteractor interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value(List.generate(
           100,
           (idx) => SchoolDomain((sd) => sd
@@ -120,7 +120,7 @@ void main() {
   });
 
   testWidgets('Displays results for 2-character query', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = ''
@@ -142,7 +142,7 @@ void main() {
   });
 
   testWidgets('Displays error', (WidgetTester tester) async {
-    MockInteractor interactor = MockInteractor();
+    _MockInteractor interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.error(''));
     _setupLocator(interactor);
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
@@ -154,7 +154,7 @@ void main() {
   });
 
   testWidgets('debounces for 500 milliseconds', (tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = ''
@@ -214,7 +214,7 @@ void main() {
   testWidgets('Does not show stale search results', (WidgetTester tester) async {
     int queryCount = 0;
 
-    MockInteractor interactor = MockInteractor();
+    _MockInteractor interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.sync(() {
           if (queryCount == 0) {
             queryCount++;
@@ -261,7 +261,7 @@ void main() {
   });
 
   testWidgets('Displays and hides help dialog', (WidgetTester tester) async {
-    _setupLocator(MockInteractor());
+    _setupLocator(_MockInteractor());
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -282,7 +282,7 @@ void main() {
   });
 
   testWidgets('Tapping "Canvas Guides" launches url', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     _setupLocator(interactor);
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
@@ -309,7 +309,7 @@ void main() {
   });
 
   testWidgets('Tapping "Canvas Support" launches url', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     _setupLocator(interactor);
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
@@ -335,7 +335,7 @@ void main() {
   });
 
   testWidgets('Navigates to Login page from search result', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = 'mobileqa.instructure.com'
@@ -358,7 +358,7 @@ void main() {
   });
 
   testWidgets('Navigates to Login page from "Next" button', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = 'mobileqa'
@@ -384,7 +384,7 @@ void main() {
   });
 
   testWidgets('Navigates to Login page from keyboard submit button', (WidgetTester tester) async {
-    final interactor = MockInteractor();
+    final interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = 'mobileqa.instructure.com'
@@ -407,7 +407,7 @@ void main() {
   });
 
   testWidgets('Navigates to Login page with correct LoginFlow', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
             ..domain = 'mobileqa'
@@ -434,7 +434,7 @@ void main() {
   });
 
   testWidgets('Adds .instructure.com to .beta search text', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
     final webInteractor = _MockWebLoginInteractor();
     when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
@@ -456,7 +456,7 @@ void main() {
   });
 
   testWidgets('clears leading www. from search text', (WidgetTester tester) async {
-    var interactor = MockInteractor();
+    var interactor = _MockInteractor();
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
     final webInteractor = _MockWebLoginInteractor();
     when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
@@ -478,7 +478,7 @@ void main() {
   });
 }
 
-class MockInteractor extends Mock implements DomainSearchInteractor {}
+class _MockInteractor extends Mock implements DomainSearchInteractor {}
 
 class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
 

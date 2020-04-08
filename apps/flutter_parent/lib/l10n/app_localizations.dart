@@ -704,9 +704,6 @@ class AppLocalizations {
 
   String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
 
-  String get assignmentRemindMeSwitch =>
-      Intl.message('Set reminder switch', desc: 'Label for the switch to set a reminder');
-
   String get assignmentRemindMeDescription =>
       Intl.message('Set a date and time to be notified of this specific assignment.',
           desc: 'Description for row to set reminders');
