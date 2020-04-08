@@ -165,7 +165,8 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
                               ),
                             ),
                           ),
-                          _qrCode(),
+                          // TODO: Uncomment when we're ready with a QR code reader lib
+                          // _qrCode(),
                           _pairingCode(),
                         ],
                       ),

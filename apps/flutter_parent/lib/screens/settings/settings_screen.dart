@@ -64,28 +64,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _themeButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.zero,
-      child: Container(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _themeOption(
-              anchorKey: _lightModeKey,
-              buttonKey: Key('light-mode-button'),
-              context: context,
-              selected: !ParentTheme.of(context).isDarkMode,
-              semanticsLabel: L10n(context).lightModeLabel,
-              child: SvgPicture.asset('assets/svg/panda-light-mode.svg'),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          _themeOption(
+            anchorKey: _lightModeKey,
+            buttonKey: Key('light-mode-button'),
+            context: context,
+            selected: !ParentTheme.of(context).isDarkMode,
+            semanticsLabel: L10n(context).lightModeLabel,
+            child: SvgPicture.asset(
+              'assets/svg/panda-light-mode.svg',
+              excludeFromSemantics: true, // Semantic label is set in _themeOption()
             ),
-            _themeOption(
-              anchorKey: _darkModeKey,
-              buttonKey: Key('dark-mode-button'),
-              context: context,
-              selected: ParentTheme.of(context).isDarkMode,
-              semanticsLabel: L10n(context).darkModeLabel,
-              child: SvgPicture.asset('assets/svg/panda-dark-mode.svg'),
+          ),
+          _themeOption(
+            anchorKey: _darkModeKey,
+            buttonKey: Key('dark-mode-button'),
+            context: context,
+            selected: ParentTheme.of(context).isDarkMode,
+            semanticsLabel: L10n(context).darkModeLabel,
+            child: SvgPicture.asset(
+              'assets/svg/panda-dark-mode.svg',
+              excludeFromSemantics: true, // Semantic label is set in _themeOption()
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -99,33 +103,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Widget child,
   }) {
     double size = 140;
-    return Container(
-      key: anchorKey,
-      width: size,
-      height: size,
-      padding: EdgeInsets.all(5),
-      foregroundDecoration: selected
-          ? BoxDecoration(
-              borderRadius: BorderRadius.circular(100),
-              border: Border.all(color: Theme.of(context).accentColor, width: 2),
-            )
-          : null,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: Stack(
-          children: <Widget>[
-            child,
-            Material(
-              type: MaterialType.transparency,
-              child: Semantics(
-                label: semanticsLabel,
+    return Semantics(
+      selected: selected,
+      label: semanticsLabel,
+      inMutuallyExclusiveGroup: true,
+      button: true,
+      child: Container(
+        key: anchorKey,
+        width: size,
+        height: size,
+        padding: EdgeInsets.all(5),
+        foregroundDecoration: selected
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(color: Theme.of(context).accentColor, width: 2),
+              )
+            : null,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Stack(
+            children: <Widget>[
+              child,
+              Material(
+                type: MaterialType.transparency,
                 child: InkWell(
                   key: buttonKey,
                   onTap: selected ? null : () => _interactor.toggleDarkMode(context, anchorKey),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
