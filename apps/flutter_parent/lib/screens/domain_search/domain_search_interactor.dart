@@ -19,7 +19,7 @@ import 'package:flutter_parent/utils/url_launcher.dart';
 
 class DomainSearchInteractor {
   Future<List<SchoolDomain>> performSearch(String query) {
-    return AccountsApi.searchDomains(query);
+    return locator<AccountsApi>().searchDomains(query);
   }
 
   openCanvasGuides() {

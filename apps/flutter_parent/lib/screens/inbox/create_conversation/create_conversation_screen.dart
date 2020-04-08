@@ -36,18 +36,18 @@ import 'create_conversation_interactor.dart';
 
 class CreateConversationScreen extends StatefulWidget {
   CreateConversationScreen(
-    this._courseId,
-    this._studentId,
-    this._subjectTemplate,
-    this._postscript,
-  )   : assert(_courseId != null),
-        assert(_studentId != null),
-        assert(_subjectTemplate != null);
+    this.courseId,
+    this.studentId,
+    this.subjectTemplate,
+    this.postscript,
+  )   : assert(courseId != null),
+        assert(studentId != null),
+        assert(subjectTemplate != null);
 
-  final String _courseId;
-  final String _studentId;
-  final String _subjectTemplate;
-  final String _postscript;
+  final String courseId;
+  final String studentId;
+  final String subjectTemplate;
+  final String postscript;
 
   static final sendKey = Key('sendButton');
   static final attachmentKey = Key('attachmentButton');
@@ -57,7 +57,7 @@ class CreateConversationScreen extends StatefulWidget {
   static final recipientsAddKey = Key('participantsAddButton');
 
   @override
-  _CreateConversationScreenState createState() => _CreateConversationScreenState(_subjectTemplate);
+  _CreateConversationScreenState createState() => _CreateConversationScreenState(subjectTemplate);
 }
 
 class _CreateConversationScreenState extends State<CreateConversationScreen> with SingleTickerProviderStateMixin {
@@ -122,10 +122,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
       _loading = true;
       _error = false;
     });
-    _interactor.loadData(widget._courseId, widget._studentId).then((data) {
+    _interactor.loadData(widget.courseId, widget.studentId).then((data) {
       course = data.course;
       _allRecipients = data.recipients;
-      String courseId = widget._courseId;
+      String courseId = widget.courseId;
       _selectedRecipients =
           _allRecipients.where((it) => it.commonCourses[courseId]?.contains('TeacherEnrollment')).toList();
       setState(() {
@@ -145,10 +145,10 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
     try {
       var recipientIds = _selectedRecipients.map((it) => it.id).toList();
       var attachmentIds = _attachments.map((it) => it.attachment.id).toList();
-      if (widget._postscript != null) {
-        _bodyText += '\n\n${widget._postscript}';
+      if (widget.postscript != null) {
+        _bodyText += '\n\n${widget.postscript}';
       }
-      await _interactor.createConversation(widget._courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
+      await _interactor.createConversation(widget.courseId, recipientIds, _subjectText, _bodyText, attachmentIds);
       Navigator.of(context).pop(true); // 'true' indicates upload was successful
     } catch (e) {
       setState(() => _sending = false);
@@ -186,6 +186,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
 
   @override
   Widget build(BuildContext context) {
+    print('build');
     return DefaultParentTheme(
       builder: (context) => WillPopScope(
         onWillPop: () => _onWillPop(context),
@@ -546,7 +547,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
   }
 
   String _enrollmentType(BuildContext context, Recipient user) {
-    var type = user.commonCourses[widget._courseId].first;
+    var type = user.commonCourses[widget.courseId].first;
     switch (type) {
       case 'TeacherEnrollment':
         return L10n(context).enrollmentTypeTeacher;

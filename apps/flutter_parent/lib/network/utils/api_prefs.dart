@@ -95,7 +95,7 @@ class ApiPrefs {
       // Remove reminders
       ReminderDb reminderDb = locator<ReminderDb>();
       final reminders = await reminderDb.getAllForUser(getDomain(), getUser().id);
-      final reminderIds = reminders.map((it) => it.id).toList();
+      final reminderIds = reminders?.map((it) => it.id)?.toList();
       await locator<NotificationUtil>().deleteNotifications(reminderIds);
       await reminderDb.deleteAllForUser(getDomain(), getUser().id);
 

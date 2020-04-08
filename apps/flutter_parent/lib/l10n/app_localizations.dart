@@ -704,9 +704,6 @@ class AppLocalizations {
 
   String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
 
-  String get assignmentRemindMeSwitch =>
-      Intl.message('Set reminder switch', desc: 'Label for the switch to set a reminder');
-
   String get assignmentRemindMeDescription =>
       Intl.message('Set a date and time to be notified of this specific assignment.',
           desc: 'Description for row to set reminders');
@@ -907,8 +904,6 @@ class AppLocalizations {
 
   String get highContrastLabel =>
       Intl.message('High Contrast Mode', desc: 'Label for the switch that toggles high contrast mode');
-
-  String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
 
   /// Grade cell
 
