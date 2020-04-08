@@ -18,7 +18,6 @@ import 'dart:core';
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -113,7 +112,8 @@ class PandaRouter {
 
   static String _qrLogin = '/qr_login';
 
-  static String qrLogin(String qrLoginUrl) => '/qr_login?${_RouterKeys.qrLoginUrl}=${Uri.encodeQueryComponent(qrLoginUrl)}';
+  static String qrLogin(String qrLoginUrl) =>
+      '/qr_login?${_RouterKeys.qrLoginUrl}=${Uri.encodeQueryComponent(qrLoginUrl)}';
 
   static String qrTutorial() => '/qr_tutorial';
 
@@ -288,7 +288,7 @@ class PandaRouter {
   });
 
   static Handler _qrTutorialHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return QRTutorialScreen();
+    return QRLoginTutorialScreen();
   });
 
   static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
@@ -319,14 +319,17 @@ class PandaRouter {
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var link = params[_RouterKeys.url][0];
 
+    // QR Login: we need to modify the url slightly
     Uri uri = Uri.parse(link);
-    if(QRUtils.verifySSOLogin(uri)) {
+    if (QRUtils.verifySSOLogin(uri)) {
       link = '/qr_login?qrLoginUrl=${uri.toString()}';
     }
 
     final urlRouteWrapper = getRouteWrapper(link);
 
-    if(urlRouteWrapper.appRouteMatch.parameters.containsKey(_RouterKeys.qrLoginUrl)) {
+    // QR login: we need to modify the params to properly contain the url, urlRouteWrapper strips out all of the params
+    // from the original url
+    if (urlRouteWrapper.appRouteMatch?.parameters != null && urlRouteWrapper.appRouteMatch.parameters.containsKey(_RouterKeys.qrLoginUrl)) {
       urlRouteWrapper.appRouteMatch.parameters[_RouterKeys.qrLoginUrl] = params[_RouterKeys.url];
     }
 

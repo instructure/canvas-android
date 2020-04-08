@@ -23,11 +23,13 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../accessibility_utils.dart';
 import '../canvas_model_utils.dart';
+import '../remote_config_utils_test.dart';
 import '../test_app.dart';
 
 void main() {
@@ -44,6 +46,14 @@ void main() {
   String masqueradeText = l10n.actingAsUser(masqueradeLogin.masqueradeUser.name);
 
   Key masqueradeContainerKey = Key('masquerade-ui-container');
+
+  setUp(() async {
+    RemoteConfigUtils.clean();
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
 
   testWidgetsWithAccessibilityChecks('Builds initially as disabled', (tester) async {
     await tester.pumpWidget(TestApp(_childWithButton()));

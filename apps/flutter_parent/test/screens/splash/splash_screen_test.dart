@@ -27,12 +27,14 @@ import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
+import '../../utils/remote_config_utils_test.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -40,6 +42,14 @@ void main() {
     ..domain = 'domain'
     ..accessToken = 'token'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+  setUp(() async {
+    RemoteConfigUtils.clean();
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
 
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
     var interactor = _MockInteractor();

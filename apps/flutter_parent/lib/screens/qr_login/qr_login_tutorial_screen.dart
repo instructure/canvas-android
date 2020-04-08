@@ -14,23 +14,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class QRTutorialScreen extends StatefulWidget {
+class QRLoginTutorialScreen extends StatefulWidget {
   @override
-  _QRTutorialScreenState createState() => _QRTutorialScreenState();
+  _QRLoginTutorialScreenState createState() => _QRLoginTutorialScreenState();
 }
 
-class _QRTutorialScreenState extends State<QRTutorialScreen> {
+class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
@@ -42,9 +39,7 @@ class _QRTutorialScreenState extends State<QRTutorialScreen> {
                 elevation: 4,
                 title: Text(L10n(context).locateQRCode),
                 automaticallyImplyLeading: true,
-                actions: <Widget>[
-                  _nextButton(context)
-                ],
+                actions: <Widget>[_nextButton(context)],
               ),
               body: _body(context),
             ));
@@ -58,11 +53,15 @@ class _QRTutorialScreenState extends State<QRTutorialScreen> {
       textColor: Theme.of(context).accentColor,
       shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
       onPressed: () async {
-        var barcodeResult = await locator<QRTutorialScreenInteractor>().scan(context);
-        if(barcodeResult.isSuccess) {
+        var barcodeResult = await locator<QRLoginTutorialScreenInteractor>().scan();
+        if (barcodeResult.isSuccess) {
           locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
         } else {
-          _showSnackBarError(context, barcodeResult.errorMessage);
+          _showSnackBarError(
+              context,
+              barcodeResult.errorType == QRError.invalidQR
+                  ? L10n(context).invalidQRCodeError
+                  : L10n(context).qrCodeNoCameraError);
         }
       },
       child: Text(
@@ -77,9 +76,7 @@ class _QRTutorialScreenState extends State<QRTutorialScreen> {
   }
 
   Widget _body(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return ListView(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -92,7 +89,10 @@ class _QRTutorialScreenState extends State<QRTutorialScreen> {
         FractionallySizedBox(
           alignment: Alignment.center,
           widthFactor: 0.75,
-          child: Image(image: AssetImage('assets/png/locate-qr-code-tutorial.png'), fit: BoxFit.contain),
+          child: Image(
+              semanticLabel: L10n(context).qrCodeScreenshotContentDescription,
+              image: AssetImage('assets/png/locate-qr-code-tutorial.png'),
+              fit: BoxFit.contain),
         )
       ],
     );

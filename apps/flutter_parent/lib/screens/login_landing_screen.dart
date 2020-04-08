@@ -123,7 +123,7 @@ class LoginLandingScreen extends StatelessWidget {
             },
           ),
           SizedBox(height: 16),
-          if(RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT) == 'true') _qrLogin(context),
+          if(RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true') _qrLogin(context),
         ],
       ),
     );
@@ -132,7 +132,6 @@ class LoginLandingScreen extends StatelessWidget {
   Widget _qrLogin(BuildContext context) {
     return InkWell(
         onTap: () {
-          // Navigate to QR Login Tutorial
           locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
         },
         child: Container(

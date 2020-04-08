@@ -26,6 +26,7 @@ import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -175,7 +176,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
   Future<void> apiPrefsInitFuture;
-  if (config.mockPrefs != null) {
+  if (config.mockPrefs != null && RemoteConfigUtils.isInitialized() == false) {
     ApiPrefs.clean();
     SharedPreferences.setMockInitialValues(config.safeMockPrefs);
     apiPrefsInitFuture = ApiPrefs.init();

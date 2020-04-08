@@ -52,6 +52,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -60,6 +61,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/platform_config.dart';
+import '../../utils/remote_config_utils_test.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_utils.dart';
 import '../courses/course_summary_screen_test.dart';
@@ -88,8 +90,12 @@ void main() {
     _locator.registerLazySingleton<Analytics>(() => analyticsMock);
   }
 
-  setUp(() {
+  setUp(() async {
     reset(analyticsMock);
+    RemoteConfigUtils.clean();
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
   });
 
   Widget _testableMaterialWidget({

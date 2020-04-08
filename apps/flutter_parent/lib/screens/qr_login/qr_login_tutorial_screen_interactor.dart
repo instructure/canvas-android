@@ -15,34 +15,34 @@
  */
 
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
-class QRTutorialScreenInteractor {
+class QRLoginTutorialScreenInteractor {
 
-  Future<BarcodeScanResult> scan(BuildContext context) async {
+  Future<BarcodeScanResult> scan() async {
     try {
-      String barcodeResult = await BarcodeScanner.scan();
+      String barcodeResult = await locator<BarcodeScanVeneer>().scanBarcode();
       var uri = Uri.parse(barcodeResult);
       if (QRUtils.verifySSOLogin(uri)) {
         return BarcodeScanResult(true, result: barcodeResult);
       } else {
-        return BarcodeScanResult(false, errorMessage: L10n(context).invalidQRCodeError);
+        return BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        return BarcodeScanResult(false, errorMessage: L10n(context).qrCodeNoCameraError);
+        return BarcodeScanResult(false, errorType: QRError.cameraError);
       } else {
         // Unknown error while scanning
-        return BarcodeScanResult(false, errorMessage: L10n(context).invalidQRCodeError);
+        return BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
     } on FormatException {
       // User returned, do nothing
     } catch (e) {
       // Unknown error while scanning
-      return BarcodeScanResult(false, errorMessage: L10n(context).invalidQRCodeError);
+      return BarcodeScanResult(false, errorType: QRError.invalidQR);
     }
   }
 
@@ -50,8 +50,13 @@ class QRTutorialScreenInteractor {
 
 class BarcodeScanResult {
   final bool isSuccess;
-  final String errorMessage;
+  final QRError errorType;
   final String result;
 
-  BarcodeScanResult(this.isSuccess, {this.errorMessage = '', this.result = ''});
+  BarcodeScanResult(this.isSuccess, {this.errorType = null, this.result = null});
+}
+
+enum QRError {
+  invalidQR,
+  cameraError
 }
