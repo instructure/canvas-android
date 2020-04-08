@@ -51,6 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _themeButtons(context),
               SizedBox(height: 16),
+              if (ParentTheme.of(context).isDarkMode) _webViewDarkModeSwitch(context),
               _highContrastModeSwitch(context),
               if (_interactor.isDebugMode()) _themeViewer(context),
             ],
@@ -135,6 +136,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
     );
+  }
+
+  Widget _webViewDarkModeSwitch(BuildContext context) {
+    return MergeSemantics(
+      child: ListTile(
+        title: Text(L10n(context).webViewDarkModeLabel),
+        trailing: Switch(
+          value: ParentTheme.of(context).isWebViewDarkMode,
+          onChanged: (_) => _toggleWebViewDarkMode(context),
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        onTap: () => _toggleWebViewDarkMode(context),
+      ),
+    );
+  }
+
+  _toggleWebViewDarkMode(BuildContext context) {
+    ParentTheme.of(context).toggleWebViewDarkMode();
   }
 
   Widget _highContrastModeSwitch(BuildContext context) {

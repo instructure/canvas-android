@@ -248,6 +248,7 @@ class WebSettings {
   WebSettings({
     this.javascriptMode,
     this.hasNavigationDelegate,
+    this.darkMode,
     this.debuggingEnabled,
     this.gestureNavigationEnabled,
     @required this.userAgent,
@@ -258,6 +259,8 @@ class WebSettings {
 
   /// Whether the [WebView] has a [NavigationDelegate] set.
   final bool hasNavigationDelegate;
+
+  final bool darkMode;
 
   /// Whether to enable the platform's webview content debugging tools.
   ///
