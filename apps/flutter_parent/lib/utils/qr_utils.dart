@@ -25,7 +25,7 @@ class QRUtils {
     if(uri == null) return false;
     var hostList = [QR_HOST, QR_HOST_BETA, QR_HOST_TEST];
     return hostList.contains(uri.host)
-        && uri.queryParameters[QR_DOMAIN].isNotEmpty
-        && uri.queryParameters[QR_AUTH_CODE].isNotEmpty;
+        && uri.queryParameters[QR_DOMAIN] != null
+        && uri.queryParameters[QR_AUTH_CODE] != null;
   }
 }
