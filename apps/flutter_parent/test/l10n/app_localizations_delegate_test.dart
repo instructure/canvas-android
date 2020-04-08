@@ -75,7 +75,7 @@ void main() {
 
   /// resolution tests
 
-  group('resoultion callback', () {
+  group('resolution callback', () {
     test('returns locale when supported', () {
       final fallback = Locale('en', '');
       final locale = Locale('es', '');
