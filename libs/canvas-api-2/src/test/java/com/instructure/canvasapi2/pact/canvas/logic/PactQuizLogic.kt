@@ -36,7 +36,7 @@ val questionTypeRegex = QuizQuestion.QuestionType.values().map({v -> v.stringVal
 // region logic for allDates object within Quiz
 //
 
-// There are many flavors of AllDates fields
+// There are many flavors of AllDates fields, so make this method private to this module
 private fun LambdaDslObject.populateAllDatesFields() : LambdaDslObject {
     this
             .stringMatcher("due_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
@@ -185,10 +185,14 @@ fun assertQuizPopulated(description: String, quiz: Quiz, role: String = "student
     assertNotNull("$description + oneQuestionAtATime", quiz.oneQuestionAtATime)
     assertNotNull("$description + requireLockdownBrowser", quiz.requireLockdownBrowser)
     assertNotNull("$description + requireLockdownBrowserForResults", quiz.requireLockdownBrowserForResults)
+    // Later.  Only used in surveys at the moment.
     //assertNotNull("$description + allowAnonymousSubmissions", quiz.allowAnonymousSubmissions)
     assertNotNull("$description + published", quiz.published)
     assertNotNull("$description + assignmentId", quiz.assignmentId)
     assertNotNull("$description + allDates", quiz.allDates)
+    quiz.allDates.forEach {ad ->
+        verifyAllDatesPopulated("$description + allDates[*]", ad)
+    }
 
     if(role == "teacher") {
         assertNotNull("$description + accessCode", quiz.accessCode)
@@ -197,7 +201,7 @@ fun assertQuizPopulated(description: String, quiz: Quiz, role: String = "student
     }
 
     if(singleQuiz) {
-        assertNotNull("$description + questionTypes", quiz.questionTypes)  // more?
+        assertNotNull("$description + questionTypes", quiz.questionTypes)
     }
 }
 //endregion
@@ -287,7 +291,7 @@ fun assertQuizSubmissionAnswerPopulated(description: String, answer: QuizSubmiss
 //
 // region Logic for QuizSubmissionQuestion object
 //
-fun LambdaDslObject.populateQuizSubmissionQuestionFields() : LambdaDslObject {
+fun LambdaDslObject.populateQuizSubmissionQuestionFields(hasMatches: Boolean = false) : LambdaDslObject {
     this
             .id("id")
             .booleanType("flagged")
@@ -299,13 +303,17 @@ fun LambdaDslObject.populateQuizSubmissionQuestionFields() : LambdaDslObject {
             .stringType("question_name")
             .stringMatcher("question_type", questionTypeRegex, "true_false_question")
             .stringType("question_text")
-    // answer?
-    // matches?
-
+    // TODO: answer field.  Too complicated to specify right now.
+    if(hasMatches) {
+        this.minArrayLike("matches", 1) { obj ->
+            obj.id("match_id")
+            obj.stringType("text")
+        }
+    }
     return this
 }
 
-fun assertQuizSubmissionQuestionPopulated(description: String, question: QuizSubmissionQuestion) {
+fun assertQuizSubmissionQuestionPopulated(description: String, question: QuizSubmissionQuestion, hasMatches: Boolean = false) {
     assertNotNull("$description + id", question.id)
     assertNotNull("$description + isFlagged", question.isFlagged)
     assertNotNull("$description + answers", question.answers)
@@ -317,5 +325,13 @@ fun assertQuizSubmissionQuestionPopulated(description: String, question: QuizSub
     assertNotNull("$description + questionName", question.questionName)
     assertNotNull("$description + questionType", question.questionType)
     assertNotNull("$description + questionText", question.questionText)
+
+    if(hasMatches) {
+        assertNotNull("$description + matches", question.matches)
+        for(i in 0..question.matches!!.size-1) {
+            assertNotNull("$description + matches[$i].matchId", question.matches!![i].matchId)
+            assertNotNull("$description + matches[$i].text", question.matches!![i].text)
+        }
+    }
 }
 //endregion

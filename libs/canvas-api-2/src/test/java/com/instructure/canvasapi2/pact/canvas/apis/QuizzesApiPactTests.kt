@@ -196,8 +196,15 @@ class QuizzesApiPactTests : ApiPactTestBase() {
     val getQuizSubmissionQuestionsQuery: String? = null
     val getQuizSubmissionQuestionsPath = "/api/v1/quiz_submissions/1/questions"
     val getQuizSubmissionQuestionsResponseBody = LambdaDsl.newJsonBody { obj ->
-        obj.minArrayLike("quiz_submission_questions", 1) { obj2 ->
-            obj2.populateQuizSubmissionQuestionFields()
+        // Arggh... I wish I could use minArrayLike, but I need to be able to specify "hasMatches = true"
+        // for the third question and only the third question.
+//        obj.minArrayLike("quiz_submission_questions", 1) { obj2 ->
+//            obj2.populateQuizSubmissionQuestionFields()
+//        }
+        obj.array("quiz_submission_questions") { arr ->
+            arr.`object`() { q1 -> q1.populateQuizSubmissionQuestionFields()} // multiple_choice
+            arr.`object`() { q2 -> q2.populateQuizSubmissionQuestionFields()} // true_false
+            arr.`object`() { q3 -> q3.populateQuizSubmissionQuestionFields(hasMatches = true)} // matching
         }
     }.build()
     @Pact(consumer = "android")
