@@ -19,6 +19,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:mockito/mockito.dart';
@@ -29,9 +30,11 @@ import 'test_app.dart';
 void main() {
   final plugin = _MockPlugin();
   final database = _MockDatabase();
+  final analytics = _MockAnalytics();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<ReminderDb>(() => database);
+    locator.registerLazySingleton<Analytics>(() => analytics);
   });
 
   setUp(() {
@@ -141,6 +144,39 @@ void main() {
     expect(details.android.channelId, NotificationUtil.notificationChannelReminders);
     expect(details.android.channelName, AppLocalizations().remindersNotificationChannelName);
     expect(details.android.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
+
+    verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE));
+  });
+
+  test('scheduleReminder calls plugin with expected parameters', () async {
+    await setupPlatformChannels();
+
+    final reminder = Reminder((b) => b
+      ..id = 123
+      ..type = Reminder.TYPE_ASSIGNMENT
+      ..date = DateTime.now().toUtc());
+
+    final expectedPayload = NotificationPayload((b) => b
+      ..type = NotificationPayloadType.reminder
+      ..data = json.encode(serialize(reminder)));
+
+    await NotificationUtil().scheduleReminder(AppLocalizations(), 'title', 'body', reminder);
+
+    final NotificationDetails details = verify(plugin.schedule(
+      reminder.id,
+      'title',
+      'body',
+      reminder.date,
+      captureAny,
+      payload: json.encode(serialize(expectedPayload)),
+    )).captured.first;
+
+    expect(details.iOS, isNull);
+    expect(details.android.channelId, NotificationUtil.notificationChannelReminders);
+    expect(details.android.channelName, AppLocalizations().remindersNotificationChannelName);
+    expect(details.android.channelDescription, AppLocalizations().remindersNotificationChannelDescription);
+
+    verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE));
   });
 
   // For coverage only
@@ -153,3 +189,5 @@ void main() {
 class _MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
 
 class _MockDatabase extends Mock implements ReminderDb {}
+
+class _MockAnalytics extends Mock implements Analytics {}

@@ -54,7 +54,18 @@ extension A11yExclusionExtension on A11yExclusion {
   }
 }
 
-// A testWidgets() wrapper that runs accessibility checks
+/// A testWidgets() wrapper that does not run accessibility checks. This should not be used by things that are actually
+/// rendering widgets for a meaningful purpose. This should only be used by non widget tests that need access to a
+/// context and a WidgetTester. (example, interactors that need a context as a parameter)
+@isTest
+void testNonWidgetsWithContext(
+  String description,
+  WidgetTesterCallback callback,
+) {
+  testWidgets(description, (tester) async => await callback(tester));
+}
+
+/// A testWidgets() wrapper that runs accessibility checks
 @isTest
 void testWidgetsWithAccessibilityChecks(
   String description,

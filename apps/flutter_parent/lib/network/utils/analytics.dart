@@ -32,6 +32,14 @@ class AnalyticsEventConstants {
   static String get HELP_DOMAIN_SEARCH => 'help_domain_search';
   static String get ADD_STUDENT_MANAGE_STUDENTS => 'add_student_manage_students';
   static String get ADD_STUDENT_DASHBOARD => 'add_student_dashboard';
+  static String get REMINDER_ASSIGNMENT_CREATE => 'reminder_assignment';
+  static String get REMINDER_EVENT_CREATE => 'reminder_event';
+  static String get DARK_MODE_ON => 'dark_mode_on';
+  static String get DARK_MODE_OFF => 'dark_mode_off';
+  static String get HC_MODE_ON => 'hc_mode_on';
+  static String get HC_MODE_OFF => 'hc_mode_off';
+  static String get DARK_WEB_MODE_ON => 'dark_web_mode_on';
+  static String get DARK_WEB_MODE_OFF => 'dark_web_mode_off';
 }
 
 /// (Copied from canvas-api-2, make sure to stay in sync)
