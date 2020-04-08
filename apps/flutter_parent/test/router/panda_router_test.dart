@@ -42,7 +42,6 @@ import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_scr
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -51,7 +50,6 @@ import 'package:mockito/mockito.dart';
 import '../utils/accessibility_utils.dart';
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
-import '../utils/remote_config_utils_test.dart';
 import '../utils/test_app.dart';
 
 final _analytics = _MockAnalytics();

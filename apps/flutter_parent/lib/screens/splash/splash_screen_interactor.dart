@@ -35,7 +35,6 @@ class SplashScreenInteractor {
         // Error out if the login fails, otherwise continue
         if(!qrSuccess) return Future.error(QRLoginError);
       }
-      return Future.error(QRLoginError);
     }
 
     // Use same call as the dashboard so results will be cached

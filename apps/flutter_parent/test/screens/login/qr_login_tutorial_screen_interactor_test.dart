@@ -44,7 +44,7 @@ void main() {
     var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
-    expect(result.isSuccess, true);
+    expect(result.isSuccess, isTrue);
     expect(result.result, barcodeResultUrl);
   });
 
@@ -58,9 +58,9 @@ void main() {
     var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
-    expect(result.isSuccess, false);
+    expect(result.isSuccess, isFalse);
     expect(result.errorType, QRError.invalidQR);
-    expect(result.result, null);
+    expect(result.result, isNull);
   });
 
   test('returns camera error camera access denied', () async {
@@ -69,9 +69,9 @@ void main() {
     var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
-    expect(result.isSuccess, false);
+    expect(result.isSuccess, isFalse);
     expect(result.errorType, QRError.cameraError);
-    expect(result.result, null);
+    expect(result.result, isNull);
   });
 
   test('returns error when given platform error occurs', () async {
@@ -80,9 +80,9 @@ void main() {
     var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
-    expect(result.isSuccess, false);
+    expect(result.isSuccess, isFalse);
     expect(result.errorType, QRError.invalidQR);
-    expect(result.result, null);
+    expect(result.result, isNull);
   });
 
   test('returns error when given FormatException', () async {
@@ -91,9 +91,9 @@ void main() {
     var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
-    expect(result.isSuccess, false);
+    expect(result.isSuccess, isFalse);
     expect(result.errorType, QRError.invalidQR);
-    expect(result.result, null);
+    expect(result.result, isNull);
   });
 
 }
