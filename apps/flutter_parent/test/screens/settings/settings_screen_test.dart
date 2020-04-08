@@ -33,6 +33,7 @@ void main() {
   darkModeButton() => find.byKey(Key('dark-mode-button'));
   lightModeButton() => find.byKey(Key('light-mode-button'));
   hcToggle() => find.text(l10n.highContrastLabel);
+  webViewDarkModeToggle() => find.text(l10n.webViewDarkModeLabel);
 
   setUpAll(() {
     interactor = _MockInteractor();
@@ -131,6 +132,34 @@ void main() {
 
     state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isHC, isTrue);
+  });
+
+  testWidgetsWithAccessibilityChecks('Hides WebView dark mode toggle in light mode', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+
+    expect(webViewDarkModeToggle(), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Shows WebView dark mode toggle in dark mode', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen(), darkMode: true));
+    await tester.pumpAndSettle();
+
+    expect(webViewDarkModeToggle(), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Enables WebView dark mode', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen(), darkMode: true));
+    await tester.pumpAndSettle();
+
+    var state = tester.state(find.byType(SettingsScreen));
+    expect(ParentTheme.of(state.context).isWebViewDarkMode, isFalse);
+
+    await tester.tap(webViewDarkModeToggle());
+    await tester.pumpAndSettle();
+
+    state = tester.state(find.byType(SettingsScreen));
+    expect(ParentTheme.of(state.context).isWebViewDarkMode, isTrue);
   });
 }
 

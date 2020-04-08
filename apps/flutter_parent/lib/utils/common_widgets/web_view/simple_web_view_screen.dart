@@ -49,7 +49,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
         body: WebView(
           javascriptMode: JavascriptMode.unrestricted,
           userAgent: ApiPrefs.getUserAgent(),
-          darkMode: ParentTheme.of(context).isDarkMode,
+          darkMode: ParentTheme.of(context).isWebViewDarkMode,
           gestureRecognizers: Set()..add(Factory<WebViewGestureRecognizer>(() => WebViewGestureRecognizer())),
           navigationDelegate: _handleNavigation,
           onWebViewCreated: (controller) {

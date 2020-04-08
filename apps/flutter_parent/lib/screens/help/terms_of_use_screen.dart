@@ -64,10 +64,10 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
 
             // Content
             return WebView(
+              darkMode: ParentTheme.of(context).isWebViewDarkMode,
               onWebViewCreated: (controller) {
                 controller.loadHtml(snapshot.data.content, horizontalPadding: 16);
               },
-              darkMode: ParentTheme.of(context).isDarkMode,
             );
           },
         ),
