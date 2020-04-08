@@ -18,6 +18,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -174,6 +175,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: _handlePageLoaded,
       onWebViewCreated: _handleWebViewCreated,
+      darkMode: ParentTheme.of(context).isWebViewDarkMode,
       navigationDelegate: _handleNavigation,
       gestureRecognizers: _webViewGestures(),
       javascriptChannels: _webViewChannels(),

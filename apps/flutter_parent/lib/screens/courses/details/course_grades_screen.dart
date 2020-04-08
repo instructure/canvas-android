@@ -178,6 +178,7 @@ class _CourseGradeHeader extends StatelessWidget {
 
     return Column(
       children: [
+        if (gradingPeriodHeader != null || gradeTotalHeader != null) SizedBox(height: 16),
         if (gradingPeriodHeader != null) gradingPeriodHeader,
         if (gradingPeriodHeader != null && gradeTotalHeader != null) SizedBox(height: 4),
         if (gradeTotalHeader != null) gradeTotalHeader,
@@ -202,10 +203,7 @@ class _CourseGradeHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.ideographic,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 16),
-            child: Text(gradingPeriod.title, style: Theme.of(context).textTheme.display1),
-          ),
+          Text(gradingPeriod.title, style: Theme.of(context).textTheme.display1),
           InkWell(
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: 48, minWidth: 48), // For a11y

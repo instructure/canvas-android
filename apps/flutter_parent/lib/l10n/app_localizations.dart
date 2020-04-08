@@ -905,6 +905,11 @@ class AppLocalizations {
   String get highContrastLabel =>
       Intl.message('High Contrast Mode', desc: 'Label for the switch that toggles high contrast mode');
 
+  String get webViewDarkModeLabel =>
+      Intl.message('Use Dark Theme in Web Content', desc: 'Label for the switch that toggles dark mode for webviews');
+
+  String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
+
   /// Grade cell
 
   String get submissionStatusSuccessTitle => Intl.message('Successfully submitted!',
