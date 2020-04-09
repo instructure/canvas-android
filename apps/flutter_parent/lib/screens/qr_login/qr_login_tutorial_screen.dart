@@ -39,7 +39,7 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
                 title: Text(L10n(context).locateQRCode),
                 automaticallyImplyLeading: true,
                 actions: <Widget>[_nextButton(context)],
-                bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: true),
+                bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
               ),
               body: _body(context),
             ));
