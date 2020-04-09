@@ -5,6 +5,12 @@
 # APIs
 lib/network/api/*
 
+# App components - Can't test, and not used in any tests
+lib/parent_app.dart
+lib/utils/crash_utils.dart
+lib/utils/service_locator.dart
+lib/utils/web_view_utils.dart
+
 # AttachmentPickerInteractor - all code calls through to system functions
 lib/screens/inbox/attachment_utils/attachment_picker_interactor.dart
 
@@ -19,3 +25,6 @@ lib/utils/veneers/*
 lib/utils/snickers.dart
 lib/utils/design/student_color_set.dart
 lib/utils/design/canvas_icons*.dart
+
+# Data seeding - not important for test coverage
+lib/models/dataseeding/*

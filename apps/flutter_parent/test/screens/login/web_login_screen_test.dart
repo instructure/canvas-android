@@ -173,6 +173,87 @@ void main() {
 
     expect(find.byType(Dialog), findsNothing);
   });
+
+  testWidgetsWithAccessibilityChecks('Shows a skip verify dialog when that is the login type', (tester) async {
+    final domain = 'domain';
+    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value());
+    when(interactor.performLogin(any, any)).thenAnswer((_) => Future.value());
+
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, loginFlow: LoginFlow.skipMobileVerify),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(Duration(milliseconds: 1000));
+
+    expect(find.byType(Dialog), findsOneWidget);
+    expect(find.text(AppLocalizations().skipMobileVerifyTitle), findsOneWidget);
+    await tester.enterText(find.byKey(Key(WebLoginScreen.PROTOCOL_SKIP_VERIFY_KEY)), '');
+
+    // Tap ok, verify we still have a dialog when id/secret are empty
+    await tester.tap(find.text(AppLocalizations().ok));
+    await tester.pump();
+    expect(find.byType(Dialog), findsOneWidget);
+
+    await tester.enterText(find.byKey(Key(WebLoginScreen.PROTOCOL_SKIP_VERIFY_KEY)), 'https');
+    await tester.enterText(find.byKey(Key(WebLoginScreen.ID_SKIP_VERIFY_KEY)), 'id');
+    await tester.enterText(find.byKey(Key(WebLoginScreen.SECRET_SKIP_VERIFY_KEY)), 'secret');
+
+    // Tap ok, verify the dialog is gone now
+    await tester.tap(find.text(AppLocalizations().ok.toUpperCase()));
+    await tester.pump();
+    await tester.pump();
+    expect(find.byType(Dialog), findsNothing);
+
+    verifyNever(interactor.mobileVerify(any));
+  });
+
+  testWidgetsWithAccessibilityChecks('Can cancel a skip verify dialog when that is the login type', (tester) async {
+    final domain = 'domain';
+    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value());
+    when(interactor.performLogin(any, any)).thenAnswer((_) => Future.value());
+
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, loginFlow: LoginFlow.skipMobileVerify),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(Duration(milliseconds: 1000));
+
+    expect(find.byType(Dialog), findsOneWidget);
+    expect(find.text(AppLocalizations().skipMobileVerifyTitle), findsOneWidget);
+
+    await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Dialog), findsNothing);
+    verify(interactor.mobileVerify(any));
+  });
+
+  testWidgetsWithAccessibilityChecks('Can cancel a skip verify dialog when that is the login type', (tester) async {
+    final domain = 'domain';
+    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value());
+    when(interactor.performLogin(any, any)).thenAnswer((_) => Future.value());
+
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, loginFlow: LoginFlow.skipMobileVerify),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(Duration(milliseconds: 1000));
+
+    expect(find.byType(Dialog), findsOneWidget);
+    expect(find.text(AppLocalizations().skipMobileVerifyTitle), findsOneWidget);
+
+    await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(Dialog), findsNothing);
+    verify(interactor.mobileVerify(any));
+  });
 }
 
 class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}

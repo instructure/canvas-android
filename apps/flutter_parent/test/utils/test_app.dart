@@ -149,6 +149,7 @@ class MockThemePrefs extends ThemePrefs {
   MockThemePrefs(this._darkMode, this._hcMode);
 
   bool _darkMode;
+  bool _webViewDarkMode = false;
   bool _hcMode;
 
   @override
@@ -156,6 +157,12 @@ class MockThemePrefs extends ThemePrefs {
 
   @override
   set darkMode(bool value) => _darkMode = value;
+
+  @override
+  bool get webViewDarkMode => _webViewDarkMode;
+
+  @override
+  set webViewDarkMode(bool value) => _webViewDarkMode = value;
 
   @override
   bool get hcMode => _hcMode;

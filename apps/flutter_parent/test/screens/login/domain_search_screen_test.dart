@@ -353,7 +353,7 @@ void main() {
   testWidgets('Navigates to Login page from "Next" button', (WidgetTester tester) async {
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
-            ..domain = 'mobileqa.instructure.com'
+            ..domain = 'mobileqa'
             ..name = 'Result')
         ]));
     when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
@@ -367,7 +367,10 @@ void main() {
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
 
-    expect(find.byType(WebLoginScreen), findsOneWidget);
+    final webLogin = find.byType(WebLoginScreen);
+    expect(webLogin, findsOneWidget);
+    // Should also append .instructure.com to single word queries
+    expect(tester.widget<WebLoginScreen>(webLogin).domain, "mobileqa.instructure.com");
   });
 
   testWidgets('Navigates to Login page from keyboard submit button', (WidgetTester tester) async {
@@ -393,7 +396,7 @@ void main() {
   testWidgets('Navigates to Login page with correct LoginFlow', (WidgetTester tester) async {
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value([
           SchoolDomain((sd) => sd
-            ..domain = 'mobileqa.instructure.com'
+            ..domain = 'mobileqa'
             ..name = 'Result')
         ]));
     when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
@@ -412,6 +415,44 @@ void main() {
 
     WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
     expect(webLogin.loginFlow, flow);
+  });
+
+  testWidgets('Adds .instructure.com to .beta search text', (WidgetTester tester) async {
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'mobileqa.beta');
+    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.domain, 'mobileqa.beta.instructure.com');
+  });
+
+  testWidgets('clears leading www. from search text', (WidgetTester tester) async {
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'www.mobileqa.beta');
+    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.domain, 'mobileqa.beta.instructure.com');
   });
 }
 

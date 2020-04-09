@@ -22,10 +22,12 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -54,12 +56,15 @@ void main() {
     ..itemId = eventId
     ..date = DateTime(2100)
     ..userDomain = 'domain');
+
   final interactor = _MockEventDetailsInteractor();
+  final mockNav = _MockQuickNav();
 
   final l10n = AppLocalizations();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<EventDetailsInteractor>(() => interactor);
+    locator.registerLazySingleton<QuickNav>(() => mockNav);
     locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
   });
 
@@ -70,7 +75,8 @@ void main() {
   setUp(() async {
     reset(interactor);
     await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+      config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+    );
   });
 
   // Start tests
@@ -85,8 +91,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
     when(interactor.loadEvent(eventId, any)).thenAnswer((_) => Future<ScheduleItem>.error('Failed to load event'));
 
-    await tester
-        .pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId), PlatformConfig(mockPrefs: null)));
+    await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
     await tester.pumpAndSettle(); // Let the future finish
 
     expect(find.byType(ErrorPandaWidget), findsOneWidget);
@@ -100,16 +105,14 @@ void main() {
 
   group('shows loading', () {
     testWidgetsWithAccessibilityChecks('with id', (tester) async {
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
       await tester.pump(); // Let the widget build
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('with event', (tester) async {
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: baseEvent), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: baseEvent)));
       await tester.pump(); // Let the widget build
 
       expect(find.byType(LoadingIndicator), findsOneWidget);
@@ -120,8 +123,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('with id', (tester) async {
       when(interactor.loadEvent(eventId, any)).thenAnswer((_) async => baseEvent);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -136,8 +138,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('with event', (tester) async {
       when(interactor.loadEvent(eventId, any)).thenAnswer((_) async => baseEvent);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withId(eventId: eventId)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -157,8 +158,7 @@ void main() {
         ..isAllDay = true
         ..startAt = date);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -172,8 +172,7 @@ void main() {
         ..isAllDay = true
         ..endAt = date);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -188,8 +187,7 @@ void main() {
         ..startAt = startDate
         ..endAt = endDate);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -202,8 +200,7 @@ void main() {
       final date = DateTime(2000);
       final event = baseEvent.rebuild((b) => b..startAt = date);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -216,8 +213,7 @@ void main() {
       final date = DateTime(2000);
       final event = baseEvent.rebuild((b) => b..endAt = date);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -235,8 +231,7 @@ void main() {
         ..locationName = name
         ..locationAddress = address);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -249,8 +244,7 @@ void main() {
       final name = 'loc name';
       final event = baseEvent.rebuild((b) => b..locationName = name);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -262,8 +256,7 @@ void main() {
       final address = 'loc address';
       final event = baseEvent.rebuild((b) => b..locationAddress = address);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -274,8 +267,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows no location message', (tester) async {
       final event = baseEvent;
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the future finish
 
@@ -291,8 +283,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -307,8 +298,7 @@ void main() {
       final title = 'Event Test Title';
       final event = baseEvent.rebuild((b) => b..title = title);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -327,8 +317,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => null);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -366,8 +355,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => null);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -400,8 +388,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => reminder);
 
-      await tester
-          .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -427,8 +414,7 @@ void main() {
     final title = 'Event Test Title';
     final event = baseEvent.rebuild((b) => b..title = title);
 
-    await tester
-        .pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event), PlatformConfig(mockPrefs: null)));
+    await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
 
@@ -441,7 +427,9 @@ void main() {
     final event = baseEvent.rebuild((b) => b..description = description);
 
     await tester.pumpWidget(_testableWidget(
-        EventDetailsScreen.withEvent(event: event), PlatformConfig(initWebview: true, mockPrefs: null)));
+      EventDetailsScreen.withEvent(event: event),
+      config: PlatformConfig(initWebview: true, mockPrefs: null),
+    ));
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
     await tester.pump(); // Let the webview future finish
@@ -451,13 +439,34 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(WebView), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('shows create conversation screen with correct subject', (tester) async {
+    final title = 'Event Test Title';
+    final event = baseEvent.rebuild((b) => b..title = title);
+
+    await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event, courseId: 'whatever')));
+    await tester.pumpAndSettle(); // Let the widget build
+
+    final fab = find.byType(FloatingActionButton);
+    expect(fab, findsOneWidget);
+    await tester.tap(fab);
+
+    final widget = verify(mockNav.push(any, captureAny)).captured[0] as CreateConversationScreen;
+    expect(widget.subjectTemplate, l10n.eventSubjectMessage(studentName, title));
+  });
 }
 
-Widget _testableWidget(EventDetailsScreen eventDetailsScreen, PlatformConfig platformConfig) {
+// Default to null mock prefs, since set up is already called with a current student
+Widget _testableWidget(
+  EventDetailsScreen eventDetailsScreen, {
+  PlatformConfig config = const PlatformConfig(mockPrefs: null),
+}) {
   return TestApp(
     eventDetailsScreen,
-    platformConfig: platformConfig,
+    platformConfig: config,
   );
 }
 
 class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
+
+class _MockQuickNav extends Mock implements QuickNav {}

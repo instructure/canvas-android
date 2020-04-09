@@ -23,6 +23,8 @@ import android.view.View;
 import android.webkit.WebStorage;
 import android.webkit.WebViewClient;
 import android.webkit.CookieManager;
+import androidx.webkit.WebSettingsCompat;
+import androidx.webkit.WebViewFeature;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -330,9 +332,21 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
         case "userAgent":
           updateUserAgent((String) settings.get(key));
           break;
+        case "darkMode":
+          setDarkMode((boolean) settings.get(key));
+          break;
         default:
           throw new IllegalArgumentException("Unknown WebView setting: " + key);
       }
+    }
+  }
+
+  private void setDarkMode(boolean darkMode) {
+    if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+      int forceDarkMode = darkMode ? WebSettingsCompat.FORCE_DARK_ON : WebSettingsCompat.FORCE_DARK_OFF;
+      WebSettingsCompat.setForceDark(webView.getSettings(), forceDarkMode);
+    } else {
+      Log.d("FlutterWebView", "FORCE_DARK feature is not supported by this WebView");
     }
   }
 

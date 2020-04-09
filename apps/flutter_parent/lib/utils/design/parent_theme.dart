@@ -93,8 +93,18 @@ class _ParentThemeState extends State<ParentTheme> {
     });
   }
 
+  /// Sets whether the current theme should use dark mode for WebViews
+  set isWebViewDarkMode(bool isDark) {
+    setState(() {
+      widget.themePrefs.webViewDarkMode = isDark;
+    });
+  }
+
   /// Toggles dark mode for the current theme
   toggleDarkMode() => isDarkMode = !isDarkMode;
+
+  /// Toggles WebView dark mode for the current theme
+  toggleWebViewDarkMode() => isWebViewDarkMode = !isWebViewDarkMode;
 
   /// Sets whether the current theme should use high-contrast mode
   set isHC(bool isHC) {
@@ -108,6 +118,9 @@ class _ParentThemeState extends State<ParentTheme> {
 
   /// Returns true if dark mode is enabled for the current theme
   bool get isDarkMode => widget.themePrefs.darkMode;
+
+  /// Returns true if dark mode for WebViews is enabled for the current theme
+  bool get isWebViewDarkMode => widget.themePrefs.darkMode && widget.themePrefs.webViewDarkMode;
 
   /// Returns true if high-contrast mode is enabled for the current theme
   bool get isHC => widget.themePrefs.hcMode;

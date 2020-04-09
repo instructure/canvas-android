@@ -272,21 +272,22 @@ void main() {
       expect(find.text(AppLocalizations().addStudentWith), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('QR code tap calls into QR reader via interactor', (tester) async {
-      final interactor = _MockManageStudentsInteractor();
-      when(interactor.getQrReading()).thenAnswer((_) => Future.value(''));
-
-      _setupLocator(interactor);
-
-      await tester.pumpWidget(TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')])));
-      await tester.pumpAndSettle();
-
-      await _clickFAB(tester);
-
-      await _clickQR(tester);
-
-      verify(interactor.getQrReading());
-    });
+    // TODO: Uncomment when we have QR code reading in place
+//    testWidgetsWithAccessibilityChecks('QR code tap calls into QR reader via interactor', (tester) async {
+//      final interactor = _MockManageStudentsInteractor();
+//      when(interactor.getQrReading()).thenAnswer((_) => Future.value(''));
+//
+//      _setupLocator(interactor);
+//
+//      await tester.pumpWidget(TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')])));
+//      await tester.pumpAndSettle();
+//
+//      await _clickFAB(tester);
+//
+//      await _clickQR(tester);
+//
+//      verify(interactor.getQrReading());
+//    });
 
     testWidgetsWithAccessibilityChecks('Pairing Code opens dialog', (tester) async {
       _setupLocator();

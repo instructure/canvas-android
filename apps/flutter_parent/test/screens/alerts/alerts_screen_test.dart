@@ -17,7 +17,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/models/login.dart';
-import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
@@ -159,6 +158,23 @@ void main() {
 
       await tester.pumpAndSettle();
       expect(find.byType(RefreshIndicator), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('refreshes when student changes', (tester) async {
+      final notifier = SelectedStudentNotifier();
+      when(interactor.getAlertsForStudent(any, any)).thenAnswer((_) => Future.value());
+
+      await tester.pumpWidget(_testableWidget(notifier: notifier));
+      await tester.pumpAndSettle();
+
+      verify(interactor.getAlertsForStudent(_studentId, any)).called(1);
+
+      final newStudentId = _studentId + 'new';
+      final newStudent = notifier.value.rebuild((b) => b..id = newStudentId);
+      notifier.update(newStudent);
+      await tester.pump();
+
+      verify(interactor.getAlertsForStudent(newStudentId, true)).called(1);
     });
 
     testWidgetsWithAccessibilityChecks('Shows alert info for institution annoucnements', (tester) async {
@@ -481,13 +497,30 @@ void main() {
       verify(mockNav.routeInternally(any, alert.htmlUrl));
     });
   });
+
+  group('Accessibility', () {
+    testWidgetsWithAccessibilityChecks('Dismiss button semantic label includes alert title', (tester) async {
+      final alerts = _mockData(type: AlertType.courseGradeLow, state: AlertWorkflowState.unread);
+
+      final alert = alerts.first;
+      when(interactor.getAlertsForStudent(_studentId, any)).thenAnswer((_) => Future.value(AlertsList(alerts, null)));
+
+      await tester.pumpWidget(_testableWidget());
+      await tester.pumpAndSettle();
+
+      final semantics = find.bySemanticsLabel(AppLocalizations().dismissAlertLabel(alert.title));
+      final icon = find.byIcon(Icons.clear);
+
+      expect(find.descendant(of: semantics, matching: icon), findsOneWidget);
+    });
+  });
 }
 
-Widget _testableWidget({User student}) {
+Widget _testableWidget({SelectedStudentNotifier notifier}) {
+  notifier = notifier ?? SelectedStudentNotifier();
   return TestApp(
     ChangeNotifierProvider(
-      create: (context) =>
-          SelectedStudentNotifier()..value = CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor'),
+      create: (context) => notifier..value = CanvasModelTestUtils.mockUser(id: _studentId, name: 'Trevor'),
       child: Consumer<SelectedStudentNotifier>(builder: (context, model, _) {
         return Scaffold(body: AlertsScreen());
       }),

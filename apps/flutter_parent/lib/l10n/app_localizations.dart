@@ -704,9 +704,6 @@ class AppLocalizations {
 
   String get assignmentRemindMeLabel => Intl.message('Remind Me', desc: 'Label for the row to set reminders');
 
-  String get assignmentRemindMeSwitch =>
-      Intl.message('Set reminder switch', desc: 'Label for the switch to set a reminder');
-
   String get assignmentRemindMeDescription =>
       Intl.message('Set a date and time to be notified of this specific assignment.',
           desc: 'Description for row to set reminders');
@@ -748,6 +745,48 @@ class AppLocalizations {
   String get domainVerificationErrorUnknown => Intl.message(
         'We were unable to verify the server for use with this app.',
         desc: 'The generic error shown when we are unable to verify with Canvas',
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyTitle => Intl.message(
+        'Skipping Mobile Verify…',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyProtocol => Intl.message(
+        'https',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyProtocolMissing => Intl.message(
+        'Must provide a protocol',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientId => Intl.message(
+        'Client Id',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientIdMissing => Intl.message(
+        'Must provide a client id',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientSecret => Intl.message(
+        'Client Secret',
+        skip: true,
+      );
+
+  // Skip non translatable (support only)
+  String get skipMobileVerifyClientSecretMissing => Intl.message(
+        'Must provide a client secret',
+        skip: true,
       );
 
   /// Reminders
@@ -808,8 +847,10 @@ class AppLocalizations {
         desc: 'The empty message to show to users when there are no alerts for the student.',
       );
 
-  String get dismissAlert => Intl.message(
-        'dismiss',
+  String dismissAlertLabel(String alertTitle) => Intl.message(
+        'Dismiss $alertTitle',
+        name: 'dismissAlertLabel',
+        args: [alertTitle],
         desc: 'Accessibility label to dismiss an alert',
       );
 
@@ -863,6 +904,9 @@ class AppLocalizations {
 
   String get highContrastLabel =>
       Intl.message('High Contrast Mode', desc: 'Label for the switch that toggles high contrast mode');
+
+  String get webViewDarkModeLabel =>
+      Intl.message('Use Dark Theme in Web Content', desc: 'Label for the switch that toggles dark mode for webviews');
 
   String get appearance => Intl.message('Appearance', desc: 'Label for the appearance section in the settings page');
 

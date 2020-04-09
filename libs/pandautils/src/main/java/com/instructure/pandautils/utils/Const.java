@@ -326,4 +326,5 @@ public class Const {
 
     // Intent String for QR Code Masquerading
     public static final String QR_CODE_MASQUERADE_ID = "qrCodeMasqueradeId";
+    public static final String TEACHER_USER_AGENT = "androidTeacher";
 }

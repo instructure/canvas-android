@@ -13,13 +13,22 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
+import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
+import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 
 void main() {
@@ -34,6 +43,29 @@ void main() {
     expect(find.text(l10n.notAParentSubtitle), findsOneWidget); // Subtitle
     expect(find.text(l10n.returnToLogin), findsOneWidget); // 'Return to Login' button
     expect(find.text(l10n.studentOrTeacherTitle), findsOneWidget); // 'Student or teacher' button
+  });
+
+  testWidgetsWithAccessibilityChecks('Can return to login', (tester) async {
+    final mockNav = _MockQuickNav();
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<QuickNav>(() => mockNav);
+      locator.registerLazySingleton<ReminderDb>(() => _MockReminderDb());
+      locator.registerLazySingleton<NotificationUtil>(() => _MockNotificationUtil());
+      locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+      locator.registerLazySingleton<AuthApi>(() => _MockAuthApi());
+    });
+
+    await tester.pumpWidget(TestApp(
+      NotAParentScreen(),
+      platformConfig: PlatformConfig(initLoggedInUser: Login((b) => b..user = User((u) => u..id = '123').toBuilder())),
+    ));
+    await tester.pump();
+
+    expect(find.text(l10n.returnToLogin), findsOneWidget);
+    await tester.tap(find.text(l10n.returnToLogin));
+    await tester.pump();
+
+    verify(mockNav.pushRouteAndClearStack(any, PandaRouter.login()));
   });
 
   testWidgetsWithAccessibilityChecks('Expands to show app options', (tester) async {
@@ -90,3 +122,13 @@ void main() {
 }
 
 class _MockUrlLauncher extends Mock implements UrlLauncher {}
+
+class _MockQuickNav extends Mock implements QuickNav {}
+
+class _MockReminderDb extends Mock implements ReminderDb {}
+
+class _MockNotificationUtil extends Mock implements NotificationUtil {}
+
+class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
+
+class _MockAuthApi extends Mock implements AuthApi {}

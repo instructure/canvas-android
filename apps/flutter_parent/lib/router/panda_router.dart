@@ -104,8 +104,6 @@ class PandaRouter {
   }) =>
       '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
-  static String manageStudents() => '/manage_students';
-
   static String notParent() => '/not_parent';
 
   static String quizAssignmentDetails(String courseId, String quizId) => assignmentDetails(courseId, quizId);
