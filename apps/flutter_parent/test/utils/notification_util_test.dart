@@ -118,7 +118,7 @@ void main() {
     verify(plugin.cancel(notificationIds[2]));
   });
 
-  test('scheduleReminder calls plugin with expected parameters', () async {
+  test('scheduleReminder calls plugin with expected parameters for an event', () async {
     await setupPlatformChannels();
 
     final reminder = Reminder((b) => b
@@ -148,7 +148,7 @@ void main() {
     verify(analytics.logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE));
   });
 
-  test('scheduleReminder calls plugin with expected parameters', () async {
+  test('scheduleReminder calls plugin with expected parameters for an assignment', () async {
     await setupPlatformChannels();
 
     final reminder = Reminder((b) => b
