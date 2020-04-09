@@ -318,9 +318,8 @@ class PandaRouter {
     var link = params[_RouterKeys.url][0];
 
     // QR Login: we need to modify the url slightly
-    Uri uri = Uri.parse(link);
-    if (QRUtils.verifySSOLogin(uri)) {
-      link = qrLogin(uri.toString());
+    if (QRUtils.verifySSOLogin(link) != null) {
+      link = qrLogin(link);
     }
 
     final urlRouteWrapper = getRouteWrapper(link);
@@ -378,7 +377,13 @@ class PandaRouter {
   /// returns a RouteWrapper
   /// _RouteWrapper.appRouteMatch will be null when there is no match or path is root
   static _UrlRouteWrapper getRouteWrapper(String link) {
-    Uri uri = Uri.parse(link);
+    Uri uri;
+
+    try {
+      uri = Uri.parse(link);
+    } catch (e) {
+      return _UrlRouteWrapper(link, false, null);
+    }
 
     // Add any fragment parameters, e.g. '/...#view_name=month&view_start=12-12-2020' as query params to the uri
     var frags = Uri.parse(link).fragment;

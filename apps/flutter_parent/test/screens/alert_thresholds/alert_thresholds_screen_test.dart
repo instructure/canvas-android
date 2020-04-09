@@ -38,11 +38,12 @@ void main() {
 
   final interactor = _MockAlertThresholdsInteractor();
 
+  setupTestLocator((locator) {
+    locator.registerFactory<AlertThresholdsInteractor>(() => interactor);
+  });
+
   setUp(() {
     reset(interactor);
-    setupTestLocator((locator) {
-      locator.registerFactory<AlertThresholdsInteractor>(() => interactor);
-    });
   });
 
   group('Render', () {

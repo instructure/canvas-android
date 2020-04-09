@@ -34,15 +34,15 @@ import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-
   final interactor = _MockAnnouncementDetailsInteractor();
+
+  setupTestLocator((locator) {
+    locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor);
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
+  });
 
   setUp(() {
     reset(interactor);
-    setupTestLocator((locator) {
-      locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor);
-      locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
-    });
   });
 
   group('Loading', () {

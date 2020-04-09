@@ -34,12 +34,13 @@ void main() {
   final _page = Page((b) => b..id = '1');
   final _interactor = _MockCourseDetailsInteractor();
 
+  setupTestLocator((locator) {
+    locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
+    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
+  });
+
   setUp(() {
     reset(_interactor);
-    setupTestLocator((locator) {
-      locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
-      locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
-    });
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {

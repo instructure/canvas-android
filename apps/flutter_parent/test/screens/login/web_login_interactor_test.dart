@@ -19,7 +19,6 @@ import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
@@ -27,11 +26,12 @@ import '../../utils/test_app.dart';
 void main() {
   final api = _MockAuthApi();
 
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<AuthApi>(() => api);
+  });
+
   setUp(() {
     reset(api);
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<AuthApi>(() => api);
-    });
   });
 
   test('mobileVerify calls to the api', () async {

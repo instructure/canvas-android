@@ -27,17 +27,19 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  final barcodeResultUrl =
-      'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+  final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
       '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
   final interactor = _MockInteractor();
   final mockNav = _MockNav();
 
   setupTestLocator((locator) {
-    reset(interactor);
-    reset(mockNav);
     locator.registerFactory<QRLoginTutorialScreenInteractor>(() => interactor);
     locator.registerLazySingleton<QuickNav>(() => mockNav);
+  });
+
+  setUp(() {
+    reset(interactor);
+    reset(mockNav);
   });
 
   testWidgetsWithAccessibilityChecks('Displays page objects and text correctly', (tester) async {
@@ -55,13 +57,12 @@ void main() {
     await expectLater(find.text(AppLocalizations().locateQRCode), findsOneWidget);
     await expectLater(find.text(AppLocalizations().qrCodeExplanation), findsOneWidget);
     await expectLater(find.text(AppLocalizations().next.toUpperCase()), findsOneWidget);
-    await expectLater(find.bySemanticsLabel(AppLocalizations().qrCodeScreenshotContentDescription, skipOffstage: false), findsOneWidget);
+    await expectLater(find.bySemanticsLabel(AppLocalizations().qrCodeScreenshotContentDescription, skipOffstage: false),
+        findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Clicking next scans, returns valid result, and pushes route', (tester) async {
-    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(
-          true, result: barcodeResultUrl
-        )));
+    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(true, result: barcodeResultUrl)));
     await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
     await tester.pumpAndSettle();
 
@@ -70,10 +71,9 @@ void main() {
     verify(mockNav.pushRoute(any, '/qr_login?qrLoginUrl=${Uri.encodeQueryComponent(barcodeResultUrl)}'));
   });
 
-  testWidgetsWithAccessibilityChecks('Clicking next scans, returns invalid result, and displays camera error', (tester) async {
-    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(
-        false, errorType: QRError.cameraError
-    )));
+  testWidgetsWithAccessibilityChecks('Clicking next scans, returns invalid result, and displays camera error',
+      (tester) async {
+    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(false, errorType: QRError.cameraError)));
     await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
     await tester.pumpAndSettle();
 
@@ -82,10 +82,9 @@ void main() {
     expect(find.text(AppLocalizations().qrCodeNoCameraError), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('Clicking next scans, returns invalid result, and displays qr error', (tester) async {
-    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(
-        false, errorType: QRError.invalidQR
-    )));
+  testWidgetsWithAccessibilityChecks('Clicking next scans, returns invalid result, and displays qr error',
+      (tester) async {
+    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(false, errorType: QRError.invalidQR)));
     await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
     await tester.pumpAndSettle();
 

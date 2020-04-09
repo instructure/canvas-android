@@ -21,31 +21,31 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
 class QRLoginTutorialScreenInteractor {
-
   Future<BarcodeScanResult> scan() async {
+    BarcodeScanResult result;
     try {
       String barcodeResult = await locator<BarcodeScanVeneer>().scanBarcode();
-      var uri = Uri.parse(barcodeResult);
-      if (QRUtils.verifySSOLogin(uri)) {
-        return BarcodeScanResult(true, result: barcodeResult);
+      if (QRUtils.verifySSOLogin(barcodeResult) != null) {
+        result = BarcodeScanResult(true, result: barcodeResult);
       } else {
-        return BarcodeScanResult(false, errorType: QRError.invalidQR);
+        result = BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
-        return BarcodeScanResult(false, errorType: QRError.cameraError);
+        result = BarcodeScanResult(false, errorType: QRError.cameraError);
       } else {
         // Unknown error while scanning
-        return BarcodeScanResult(false, errorType: QRError.invalidQR);
+        result = BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
     } on FormatException {
       // User returned, do nothing
     } catch (e) {
       // Unknown error while scanning
-      return BarcodeScanResult(false, errorType: QRError.invalidQR);
+      result = BarcodeScanResult(false, errorType: QRError.invalidQR);
     }
-  }
 
+    return result;
+  }
 }
 
 class BarcodeScanResult {
@@ -56,7 +56,4 @@ class BarcodeScanResult {
   BarcodeScanResult(this.isSuccess, {this.errorType = null, this.result = null});
 }
 
-enum QRError {
-  invalidQR,
-  cameraError
-}
+enum QRError { invalidQR, cameraError }

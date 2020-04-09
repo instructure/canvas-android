@@ -14,13 +14,9 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
-import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -34,7 +30,6 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
-import '../../utils/remote_config_utils_test.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 
@@ -242,9 +237,3 @@ void main() {
 class _MockInteractor extends Mock implements SplashScreenInteractor {}
 
 class _MockNav extends Mock implements QuickNav {}
-
-class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
-
-class _MockInboxCountNotifier extends Mock implements InboxCountNotifier {}

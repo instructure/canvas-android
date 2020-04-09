@@ -18,10 +18,10 @@ import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+
 import '../../utils/test_app.dart';
 
 void main() {
-
   AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b
     ..alertType = type
     ..threshold = value
@@ -29,11 +29,12 @@ void main() {
 
   final api = _MockAlertsApi();
 
+  setupTestLocator((locator) {
+    locator.registerFactory<AlertsApi>(() => api);
+  });
+
   setUp(() {
     reset(api);
-    setupTestLocator((locator) {
-      locator.registerFactory<AlertsApi>(() => api);
-    });
   });
 
   test('Switch created api call', () async {

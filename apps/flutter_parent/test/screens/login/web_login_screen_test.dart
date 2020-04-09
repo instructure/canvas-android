@@ -26,14 +26,14 @@ import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-
   final interactor = _MockWebLoginInteractor();
+
+  setupTestLocator((locator) {
+    locator.registerFactory<WebLoginInteractor>(() => interactor);
+  });
 
   setUp(() {
     reset(interactor);
-    setupTestLocator((locator) {
-      locator.registerFactory<WebLoginInteractor>(() => interactor);
-    });
   });
 
   testWidgetsWithAccessibilityChecks('Shows the domain in the toolbar', (tester) async {

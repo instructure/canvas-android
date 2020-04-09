@@ -15,15 +15,12 @@
  */
 
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
-import 'package:get_it/get_it.dart';
-import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
 
@@ -38,8 +35,7 @@ void main() {
   });
 
   test('returns success when given valid barcode', () async {
-    final barcodeResultUrl =
-        'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+    final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
         '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
 
     when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(barcodeResultUrl));
@@ -52,8 +48,7 @@ void main() {
   });
 
   test('returns failure when given invalid barcode', () async {
-    final barcodeResultUrl =
-        'https://hodor.com/canvas/login?hodor_code=1234'
+    final barcodeResultUrl = 'https://hodor.com/canvas/login?hodor_code=1234'
         '&hodor_domain=mobiledev.instructure.com';
 
     when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(barcodeResultUrl));
@@ -88,7 +83,16 @@ void main() {
     expect(result.result, isNull);
   });
 
-  test('returns error when given FormatException', () async {
+  test('returns nothing when given FormatException', () async {
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw FormatException());
+
+    var interactor = QRLoginTutorialScreenInteractor();
+
+    final result = await interactor.scan();
+    expect(result, isNull);
+  });
+
+  test('returns error when given FormatException ', () async {
     when(mockScanner.scanBarcode()).thenAnswer((_) => throw FormatException);
 
     var interactor = QRLoginTutorialScreenInteractor();
@@ -98,7 +102,6 @@ void main() {
     expect(result.errorType, QRError.invalidQR);
     expect(result.result, isNull);
   });
-
 }
 
 class _MockScanner extends Mock implements BarcodeScanVeneer {}

@@ -38,7 +38,6 @@ import 'package:mockito/mockito.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
-import '../../utils/remote_config_utils_test.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 
@@ -289,7 +288,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
-    await tester.pumpWidget(TestApp(LoginLandingScreen(), platformConfig: PlatformConfig(clearPrefs: false),));
+    await tester.pumpWidget(TestApp(
+      LoginLandingScreen(),
+      platformConfig: PlatformConfig(clearPrefs: false),
+    ));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppLocalizations().qrCode));

@@ -26,19 +26,16 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreenInteractor {
   Future<SplashScreenData> getData({String qrLoginUrl}) async {
-    if(qrLoginUrl != null) {
-      final qrLoginUri = Uri.parse(qrLoginUrl);
+    if (qrLoginUrl != null) {
       // Double check the loginUrl
-      if(!QRUtils.verifySSOLogin(qrLoginUri)) {
-        locator<Analytics>().logEvent(
-          AnalyticsEventConstants.QR_LOGIN_FAILURE,
-          extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
-        );
+      final qrLoginUri = QRUtils.verifySSOLogin(qrLoginUrl);
+      if (qrLoginUrl == null) {
+        locator<Analytics>().logEvent(AnalyticsEventConstants.QR_LOGIN_FAILURE);
         return Future.error(QRLoginError);
       } else {
         final qrSuccess = await _performSSOLogin(qrLoginUri);
         // Error out if the login fails, otherwise continue
-        if(!qrSuccess) {
+        if (!qrSuccess) {
           locator<Analytics>().logEvent(
             AnalyticsEventConstants.QR_LOGIN_FAILURE,
             extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
@@ -80,7 +77,7 @@ class SplashScreenInteractor {
 
     final mobileVerifyResult = await locator<AuthApi>().mobileVerify(domain);
 
-    if(mobileVerifyResult.result != VerifyResultEnum.success) {
+    if (mobileVerifyResult.result != VerifyResultEnum.success) {
       return Future.value(false);
     }
 
@@ -96,8 +93,8 @@ class SplashScreenInteractor {
       ..clientSecret = mobileVerifyResult.clientSecret
       ..masqueradeUser = isMasquerading ? tokenResponse.user.toBuilder() : null
       ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
-      ..isMasqueradingFromQRCode = isMasquerading? true : null
-      ..canMasquerade = isMasquerading? true : null
+      ..isMasqueradingFromQRCode = isMasquerading ? true : null
+      ..canMasquerade = isMasquerading ? true : null
       ..user = tokenResponse.user.toBuilder());
 
     ApiPrefs.addLogin(login);

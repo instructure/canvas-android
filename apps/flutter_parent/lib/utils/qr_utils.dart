@@ -21,11 +21,20 @@ class QRUtils {
   static const String QR_HOST_BETA = 'sso.beta.canvaslms.com';
   static const String QR_HOST_TEST = 'sso.test.canvaslms.com';
 
-  static bool verifySSOLogin(Uri uri) {
-    if(uri == null) return false;
-    var hostList = [QR_HOST, QR_HOST_BETA, QR_HOST_TEST];
-    return hostList.contains(uri.host)
-        && uri.queryParameters[QR_DOMAIN] != null
-        && uri.queryParameters[QR_AUTH_CODE] != null;
+  static Uri verifySSOLogin(String url) {
+    try {
+      var uri = Uri.parse(url);
+      if (uri == null) return null;
+      var hostList = [QR_HOST, QR_HOST_BETA, QR_HOST_TEST];
+      if (hostList.contains(uri.host) &&
+          uri.queryParameters[QR_DOMAIN] != null &&
+          uri.queryParameters[QR_AUTH_CODE] != null) {
+        return uri;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
   }
 }

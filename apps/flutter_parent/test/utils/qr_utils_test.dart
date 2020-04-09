@@ -25,31 +25,27 @@ void main() {
   }
 
   test('verifySSOLogin returns true with valid Uri', () {
-    final testUri = Uri.parse(_getQRUrl());
-    var verified = QRUtils.verifySSOLogin(testUri);
-    expect(verified, isTrue);
+    var verified = QRUtils.verifySSOLogin(_getQRUrl());
+    expect(verified, isNotNull);
   });
 
   test('verifySSOLogin returns false with null Uri', () {
     var verified = QRUtils.verifySSOLogin(null);
-    expect(verified, isFalse);
+    expect(verified, isNull);
   });
 
   test('verifySSOLogin returns false with invalid host param', () {
-    final testUri = Uri.parse(_getQRUrl(host: 'hodor'));
-    var verified = QRUtils.verifySSOLogin(testUri);
-    expect(verified, isFalse);
+    var verified = QRUtils.verifySSOLogin(_getQRUrl(host: 'hodor'));
+    expect(verified, isNull);
   });
 
   test('verifySSOLogin returns false with missing domain param', () {
-    final testUri = Uri.parse(_getQRUrl(domain: 'hodor'));
-    var verified = QRUtils.verifySSOLogin(testUri);
-    expect(verified, isFalse);
+    var verified = QRUtils.verifySSOLogin(_getQRUrl(domain: 'hodor'));
+    expect(verified, isNull);
   });
 
   test('verifySSOLogin returns false with missing auth code param', () {
-    final testUri = Uri.parse(_getQRUrl(code: 'hodor'));
-    var verified = QRUtils.verifySSOLogin(testUri);
-    expect(verified, isFalse);
+    var verified = QRUtils.verifySSOLogin(_getQRUrl(code: 'hodor'));
+    expect(verified, isNull);
   });
 }

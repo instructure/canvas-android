@@ -63,7 +63,6 @@ void main() {
     ..message = 'hodor'
     ..subject = 'hodor subject');
 
-
   _getAnnouncement({bool hasAttachments = true}) {
     return Announcement((b) => b
       ..id = '123'
@@ -79,27 +78,27 @@ void main() {
   final announcementApi = _MockAnnouncementApi();
   final courseApi = _MockCourseApi();
 
+  setupTestLocator((locator) {
+    locator.registerFactory<AnnouncementApi>(() => announcementApi);
+    locator.registerFactory<CourseApi>(() => courseApi);
+  });
+
   setUp(() {
-    setupTestLocator((locator) {
-      reset(announcementApi);
-      reset(courseApi);
-      locator.registerFactory<AnnouncementApi>(() => announcementApi);
-      locator.registerFactory<CourseApi>(() => courseApi);
-    });
+    reset(announcementApi);
+    reset(courseApi);
   });
 
   test('get course announcement returns a proper view state', () async {
     final announcement = _getAnnouncement();
     final expectedViewState =
-    AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, attachment);
+        AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, attachment);
 
     when(announcementApi.getCourseAnnouncement(course.id, announcement.id, any))
         .thenAnswer((_) => Future.value(announcement));
     when(courseApi.getCourse(course.id)).thenAnswer((_) => Future.value(course));
 
-    final actualViewState =
-    await AnnouncementDetailsInteractor().getAnnouncement(
-        announcement.id, AnnouncementType.COURSE, course.id, '', true);
+    final actualViewState = await AnnouncementDetailsInteractor()
+        .getAnnouncement(announcement.id, AnnouncementType.COURSE, course.id, '', true);
 
     verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
     verify(courseApi.getCourse(course.id)).called(1);
@@ -114,15 +113,14 @@ void main() {
   test('get course announcement returns a proper view state with no attachments', () async {
     final announcement = _getAnnouncement(hasAttachments: false);
     final expectedViewState =
-    AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, null);
+        AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, null);
 
     when(announcementApi.getCourseAnnouncement(course.id, announcement.id, any))
         .thenAnswer((_) => Future.value(announcement));
     when(courseApi.getCourse(course.id)).thenAnswer((_) => Future.value(course));
 
-    final actualViewState =
-    await AnnouncementDetailsInteractor().getAnnouncement(
-        announcement.id, AnnouncementType.COURSE, course.id, '', true);
+    final actualViewState = await AnnouncementDetailsInteractor()
+        .getAnnouncement(announcement.id, AnnouncementType.COURSE, course.id, '', true);
 
     verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
     verify(courseApi.getCourse(course.id)).called(1);
@@ -137,9 +135,8 @@ void main() {
   test('get institution announcement returns a proper view state', () async {
     final toolbarTitle = 'Institution Announcement';
 
-    final expectedViewState =
-    AnnouncementViewState(toolbarTitle, accountNotification.subject, accountNotification.message,
-        DateTime.parse(accountNotification.startAt), null);
+    final expectedViewState = AnnouncementViewState(toolbarTitle, accountNotification.subject,
+        accountNotification.message, DateTime.parse(accountNotification.startAt), null);
 
     when(announcementApi.getAccountNotification(accountNotification.id, any))
         .thenAnswer((_) => Future.value(accountNotification));
