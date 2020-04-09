@@ -63,6 +63,7 @@ void main() {
   setUp(() async {
     reset(dashboardInteractor);
     reset(accountsApi);
+    reset(authApi);
     ApiPrefs.clean();
 
     // Default return value for getStudents is an empty list

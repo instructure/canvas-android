@@ -32,6 +32,10 @@ class AnalyticsEventConstants {
   static String get HELP_DOMAIN_SEARCH => 'help_domain_search';
   static String get ADD_STUDENT_MANAGE_STUDENTS => 'add_student_manage_students';
   static String get ADD_STUDENT_DASHBOARD => 'add_student_dashboard';
+
+  static String get QR_LOGIN_SUCCESS => 'qr_code_login_success';
+  static String get QR_LOGIN_FAILURE => 'qr_code_login_failure';
+  static String get QR_LOGIN_CLICKED => 'qr_code_login_clicked';
 }
 
 /// (Copied from canvas-api-2, make sure to stay in sync)

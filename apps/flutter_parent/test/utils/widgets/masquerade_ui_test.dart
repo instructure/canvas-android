@@ -31,6 +31,7 @@ import '../accessibility_utils.dart';
 import '../canvas_model_utils.dart';
 import '../remote_config_utils_test.dart';
 import '../test_app.dart';
+import '../test_helpers/mock_helpers.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();

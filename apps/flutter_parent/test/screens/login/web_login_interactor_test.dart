@@ -25,17 +25,17 @@ import 'package:mockito/mockito.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  _setupLocator({AuthApi authApi}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+  final api = _MockAuthApi();
 
-    _locator.registerLazySingleton<AuthApi>(() => authApi ?? _MockAuthApi());
-  }
+  setUp(() {
+    reset(api);
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<AuthApi>(() => api);
+    });
+  });
 
   test('mobileVerify calls to the api', () async {
     final domain = 'domain';
-    final api = _MockAuthApi();
-    _setupLocator(authApi: api);
 
     await WebLoginInteractor().mobileVerify(domain);
 
@@ -54,9 +54,7 @@ void main() {
       ..accessToken = accessToken
       ..user = user.toBuilder());
 
-    final api = _MockAuthApi();
     when(api.getTokens(mobileVerify, request)).thenAnswer((_) async => tokens);
-    _setupLocator(authApi: api);
 
     await WebLoginInteractor().performLogin(mobileVerify, request);
 

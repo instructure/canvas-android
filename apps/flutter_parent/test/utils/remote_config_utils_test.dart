@@ -19,6 +19,7 @@ import 'package:mockito/mockito.dart';
 
 import 'platform_config.dart';
 import 'test_app.dart';
+import 'test_helpers/mock_helpers.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -83,21 +84,3 @@ void main() {
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'fetched value');
   });
 }
-
-// Create a mocked RemoteConfig object.
-// If valueSettings != null, then (1) a mocked settings fetch will occur, and (2) the retrieved
-// settings will correspond the specified values.
-MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null}) {
-  final mockRemoteConfig = MockRemoteConfig();
-  when(mockRemoteConfig.fetch()).thenAnswer((_) => Future.value());
-  when(mockRemoteConfig.activateFetched()).thenAnswer((_) => Future.value(valueSettings != null));
-  if (valueSettings != null) {
-    valueSettings.forEach((key, value) {
-      when(mockRemoteConfig.getString(key)).thenAnswer((_) => value);
-    });
-  }
-
-  return mockRemoteConfig;
-}
-
-class MockRemoteConfig extends Mock implements RemoteConfig {}

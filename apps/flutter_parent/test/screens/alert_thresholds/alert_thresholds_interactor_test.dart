@@ -17,14 +17,23 @@ import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../utils/test_app.dart';
+
 void main() {
+
+  final api = MockAlertsApi();
+
+  setUp(() {
+    reset(api);
+    setupTestLocator((locator) {
+      locator.registerFactory<AlertsApi>(() => api);
+    });
+  });
+
   test('Switch created api call', () async {
-    final api = MockAlertsApi();
     when(api.createThreshold(any, any)).thenAnswer((_) => null);
-    _setupLocator(api);
 
     var type = AlertType.assignmentMissing;
     var alertThreshold = null;
@@ -36,9 +45,7 @@ void main() {
   });
 
   test('Switch deleted api call', () async {
-    final api = MockAlertsApi();
     when(api.deleteAlert(any)).thenAnswer((_) => null);
-    _setupLocator(api);
 
     var type = AlertType.assignmentMissing;
     var alertThreshold = _mockThreshold(type);
@@ -50,9 +57,7 @@ void main() {
   });
 
   test('Percentage updated api call', () async {
-    final api = MockAlertsApi();
     when(api.createThreshold(any, any)).thenAnswer((_) => null);
-    _setupLocator(api);
 
     var type = AlertType.courseGradeLow;
     var value = '42';
@@ -65,9 +70,7 @@ void main() {
   });
 
   test('Percentage deleted api call', () async {
-    final api = MockAlertsApi();
     when(api.deleteAlert(any)).thenAnswer((_) => null);
-    _setupLocator(api);
 
     var type = AlertType.courseGradeLow;
     var value = '-1';
@@ -79,13 +82,6 @@ void main() {
 
     verify(api.deleteAlert(alertThreshold)).called(1);
   });
-}
-
-void _setupLocator([AlertsApi api]) {
-  final _locator = GetIt.instance;
-  _locator.reset();
-
-  _locator.registerFactory<AlertsApi>(() => api ?? MockAlertsApi());
 }
 
 AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b

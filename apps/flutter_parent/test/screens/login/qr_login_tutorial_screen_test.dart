@@ -34,6 +34,8 @@ void main() {
   final mockNav = _MockNav();
 
   setupTestLocator((locator) {
+    reset(interactor);
+    reset(mockNav);
     locator.registerFactory<QRLoginTutorialScreenInteractor>(() => interactor);
     locator.registerLazySingleton<QuickNav>(() => mockNav);
   });

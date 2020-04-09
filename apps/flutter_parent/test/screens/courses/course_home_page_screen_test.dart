@@ -36,11 +36,10 @@ void main() {
 
   setUp(() {
     reset(_interactor);
-  });
-
-  setupTestLocator((locator) {
-    locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
-    locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
+    setupTestLocator((locator) {
+      locator.registerFactory<CourseDetailsInteractor>(() => _interactor);
+      locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
+    });
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {

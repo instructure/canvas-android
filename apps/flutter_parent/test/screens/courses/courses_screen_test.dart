@@ -47,17 +47,17 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   _setupLocator(CoursesInteractor mockInteractor, {SelectedStudentNotifier notifier}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
-    _locator.registerFactory<CoursesInteractor>(() => mockInteractor);
-    _locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
-    _locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
-    _locator.registerFactory<CourseApi>(() => _MockCourseApi());
-    _locator.registerFactory<QuickNav>(() => QuickNav());
-    _locator.registerLazySingleton<Analytics>(() => Analytics());
+    setupTestLocator((locator) {
+      locator.registerFactory<CoursesInteractor>(() => mockInteractor);
+      locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
+      locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
+      locator.registerFactory<CourseApi>(() => _MockCourseApi());
+      locator.registerFactory<QuickNav>(() => QuickNav());
+      locator.registerLazySingleton<Analytics>(() => Analytics());
 
-    _locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
-    _locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
+      locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier ?? SelectedStudentNotifier());
+      locator.registerLazySingleton<AlertCountNotifier>(() => _MockAlertCountNotifier());
+    });
   }
 
   Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null}) => TestApp(

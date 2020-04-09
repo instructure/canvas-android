@@ -16,6 +16,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
@@ -29,11 +30,26 @@ class SplashScreenInteractor {
       final qrLoginUri = Uri.parse(qrLoginUrl);
       // Double check the loginUrl
       if(!QRUtils.verifySSOLogin(qrLoginUri)) {
+        locator<Analytics>().logEvent(
+          AnalyticsEventConstants.QR_LOGIN_FAILURE,
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
+        );
         return Future.error(QRLoginError);
       } else {
         final qrSuccess = await _performSSOLogin(qrLoginUri);
         // Error out if the login fails, otherwise continue
-        if(!qrSuccess) return Future.error(QRLoginError);
+        if(!qrSuccess) {
+          locator<Analytics>().logEvent(
+            AnalyticsEventConstants.QR_LOGIN_FAILURE,
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
+          );
+          return Future.error(QRLoginError);
+        } else {
+          locator<Analytics>().logEvent(
+            AnalyticsEventConstants.QR_LOGIN_SUCCESS,
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
+          );
+        }
       }
     }
 
@@ -80,8 +96,8 @@ class SplashScreenInteractor {
       ..clientSecret = mobileVerifyResult.clientSecret
       ..masqueradeUser = isMasquerading ? tokenResponse.user.toBuilder() : null
       ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
-      ..isMasqueradingFromQRCode = isMasquerading
-      ..canMasquerade = isMasquerading
+      ..isMasqueradingFromQRCode = isMasquerading? true : null
+      ..canMasquerade = isMasquerading? true : null
       ..user = tokenResponse.user.toBuilder());
 
     ApiPrefs.addLogin(login);

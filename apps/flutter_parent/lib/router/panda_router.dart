@@ -322,16 +322,10 @@ class PandaRouter {
     // QR Login: we need to modify the url slightly
     Uri uri = Uri.parse(link);
     if (QRUtils.verifySSOLogin(uri)) {
-      link = '/qr_login?qrLoginUrl=${uri.toString()}';
+      link = qrLogin(uri.toString());
     }
 
     final urlRouteWrapper = getRouteWrapper(link);
-
-    // QR login: we need to modify the params to properly contain the url, urlRouteWrapper strips out all of the params
-    // from the original url
-    if (urlRouteWrapper.appRouteMatch?.parameters != null && urlRouteWrapper.appRouteMatch.parameters.containsKey(_RouterKeys.qrLoginUrl)) {
-      urlRouteWrapper.appRouteMatch.parameters[_RouterKeys.qrLoginUrl] = params[_RouterKeys.url];
-    }
 
     locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
 

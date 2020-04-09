@@ -25,76 +25,84 @@ import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
-void main() {
-  void _setupLocator({AnnouncementApi announcementApi, CourseApi courseApi}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+import '../../utils/test_app.dart';
 
-    _locator.registerFactory<AnnouncementApi>(() => announcementApi ?? _MockAnnouncementApi());
-    _locator.registerFactory<CourseApi>(() => courseApi ?? _MockCourseApi());
+void main() {
+  //region data config
+  final remoteFile = RemoteFile((b) => b
+    ..id = '123'
+    ..url = 'hodor.com'
+    ..filename = 'hodor.jpg'
+    ..contentType = 'jpg'
+    ..previewUrl = 'hodor.com/preview'
+    ..thumbnailUrl = 'hodor.com/thumbnail'
+    ..displayName = 'hodor');
+
+  final attachment = remoteFile.toAttachment();
+
+  final course = Course((b) => b
+    ..id = '123'
+    ..enrollments = ListBuilder<Enrollment>()
+    ..name = 'flowers for hodornon'
+    ..needsGradingCount = 0
+    ..hideFinalGrades = false
+    ..isPublic = false
+    ..applyAssignmentGroupWeights = false
+    ..isFavorite = false
+    ..accessRestrictedByDate = false
+    ..hasWeightedGradingPeriods = false
+    ..hasGradingPeriods = false
+    ..restrictEnrollmentsToCourseDates = false);
+
+  final accountNotification = AccountNotification((b) => b
+    ..id = '123'
+    ..startAt = DateTime.now().toIso8601String()
+    ..message = 'hodor'
+    ..subject = 'hodor subject');
+
+
+  _getAnnouncement({bool hasAttachments = true}) {
+    return Announcement((b) => b
+      ..id = '123'
+      ..postedAt = DateTime.now()
+      ..message = 'hodor'
+      ..title = 'hodor subject'
+      ..htmlUrl = ''
+      ..attachments = hasAttachments ? ListBuilder<RemoteFile>([remoteFile]) : null);
   }
 
+  //endregion
+
+  final announcementApi = _MockAnnouncementApi();
+  final courseApi = _MockCourseApi();
+
+  setUp(() {
+    setupTestLocator((locator) {
+      reset(announcementApi);
+      reset(courseApi);
+      locator.registerFactory<AnnouncementApi>(() => announcementApi);
+      locator.registerFactory<CourseApi>(() => courseApi);
+    });
+  });
+
   test('get course announcement returns a proper view state', () async {
-    final announcementId = '123';
-    final courseId = '123';
-    final announcementMessage = 'hodor';
-    final announcementSubject = 'hodor subject';
-    final announcementType = AnnouncementType.COURSE;
-    final postedAt = DateTime.now();
-    final courseName = 'flowers for hodornon';
-    final remoteFile = RemoteFile((b) => b
-      ..id = '123'
-      ..url = 'hodor.com'
-      ..filename = 'hodor.jpg'
-      ..contentType = 'jpg'
-      ..previewUrl = 'hodor.com/preview'
-      ..thumbnailUrl = 'hodor.com/thumbnail'
-      ..displayName = 'hodor');
-
-    final attachment = remoteFile.toAttachment();
-
-    final announcementData = Announcement((b) => b
-      ..id = announcementId
-      ..postedAt = postedAt
-      ..message = announcementMessage
-      ..title = announcementSubject
-      ..htmlUrl = ''
-      ..attachments = ListBuilder<RemoteFile>([remoteFile]));
-
-    final courseData = Course((b) => b
-      ..id = courseId
-      ..enrollments = ListBuilder<Enrollment>()
-      ..name = courseName
-      ..needsGradingCount = 0
-      ..hideFinalGrades = false
-      ..isPublic = false
-      ..applyAssignmentGroupWeights = false
-      ..isFavorite = false
-      ..accessRestrictedByDate = false
-      ..hasWeightedGradingPeriods = false
-      ..hasGradingPeriods = false
-      ..restrictEnrollmentsToCourseDates = false);
-
+    final announcement = _getAnnouncement();
     final expectedViewState =
-        AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, attachment);
+    AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, attachment);
 
-    final announcementApi = _MockAnnouncementApi();
-    final courseApi = _MockCourseApi();
-    when(announcementApi.getCourseAnnouncement(courseId, announcementId, any))
-        .thenAnswer((_) => Future.value(announcementData));
-    when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
-
-    _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
+    when(announcementApi.getCourseAnnouncement(course.id, announcement.id, any))
+        .thenAnswer((_) => Future.value(announcement));
+    when(courseApi.getCourse(course.id)).thenAnswer((_) => Future.value(course));
 
     final actualViewState =
-        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '', true);
+    await AnnouncementDetailsInteractor().getAnnouncement(
+        announcement.id, AnnouncementType.COURSE, course.id, '', true);
 
-    verify(announcementApi.getCourseAnnouncement(courseId, announcementId, true)).called(1);
-    verify(courseApi.getCourse(courseId)).called(1);
+    verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
+    verify(courseApi.getCourse(course.id)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
     expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
@@ -104,88 +112,42 @@ void main() {
   });
 
   test('get course announcement returns a proper view state with no attachments', () async {
-    final announcementId = '123';
-    final courseId = '123';
-    final announcementMessage = 'hodor';
-    final announcementSubject = 'hodor subject';
-    final announcementType = AnnouncementType.COURSE;
-    final postedAt = DateTime.now();
-    final courseName = 'flowers for hodornon';
-
-    final announcementData = Announcement((b) => b
-      ..id = announcementId
-      ..postedAt = postedAt
-      ..message = announcementMessage
-      ..title = announcementSubject
-      ..htmlUrl = ''
-      ..attachments = ListBuilder<RemoteFile>([]));
-
-    final courseData = Course((b) => b
-      ..id = courseId
-      ..enrollments = ListBuilder<Enrollment>()
-      ..name = courseName
-      ..needsGradingCount = 0
-      ..hideFinalGrades = false
-      ..isPublic = false
-      ..applyAssignmentGroupWeights = false
-      ..isFavorite = false
-      ..accessRestrictedByDate = false
-      ..hasWeightedGradingPeriods = false
-      ..hasGradingPeriods = false
-      ..restrictEnrollmentsToCourseDates = false);
-
+    final announcement = _getAnnouncement(hasAttachments: false);
     final expectedViewState =
-        AnnouncementViewState(courseName, announcementSubject, announcementMessage, postedAt, null);
+    AnnouncementViewState(course.name, announcement.title, announcement.message, announcement.postedAt, null);
 
-    final announcementApi = _MockAnnouncementApi();
-    final courseApi = _MockCourseApi();
-    when(announcementApi.getCourseAnnouncement(courseId, announcementId, any))
-        .thenAnswer((_) => Future.value(announcementData));
-    when(courseApi.getCourse(courseId)).thenAnswer((_) => Future.value(courseData));
-
-    _setupLocator(announcementApi: announcementApi, courseApi: courseApi);
+    when(announcementApi.getCourseAnnouncement(course.id, announcement.id, any))
+        .thenAnswer((_) => Future.value(announcement));
+    when(courseApi.getCourse(course.id)).thenAnswer((_) => Future.value(course));
 
     final actualViewState =
-        await AnnouncementDetailsInteractor().getAnnouncement(announcementId, announcementType, courseId, '', true);
+    await AnnouncementDetailsInteractor().getAnnouncement(
+        announcement.id, AnnouncementType.COURSE, course.id, '', true);
 
-    verify(announcementApi.getCourseAnnouncement(courseId, announcementId, true)).called(1);
-    verify(courseApi.getCourse(courseId)).called(1);
+    verify(announcementApi.getCourseAnnouncement(course.id, announcement.id, true)).called(1);
+    verify(courseApi.getCourse(course.id)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
     expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);
     expect(actualViewState.announcementTitle, expectedViewState.announcementTitle);
     expect(actualViewState.postedAt, expectedViewState.postedAt);
-    expect(actualViewState.attachment, null);
+    expect(actualViewState.attachment, expectedViewState.attachment);
   });
 
   test('get institution announcement returns a proper view state', () async {
-    final announcementId = '123';
-    final courseId = '123';
-    final announcementMessage = 'hodor';
-    final announcementSubject = 'hodor subject';
-    final announcementType = AnnouncementType.INSTITUTION;
-    final postedAt = DateTime.now();
     final toolbarTitle = 'Institution Announcement';
 
-    final accountNotificationData = AccountNotification((b) => b
-      ..id = announcementId
-      ..startAt = postedAt.toIso8601String()
-      ..message = announcementMessage
-      ..subject = announcementSubject);
-
     final expectedViewState =
-        AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
+    AnnouncementViewState(toolbarTitle, accountNotification.subject, accountNotification.message,
+        DateTime.parse(accountNotification.startAt), null);
 
-    final announcementApi = _MockAnnouncementApi();
-    when(announcementApi.getAccountNotification(announcementId, any))
-        .thenAnswer((_) => Future.value(accountNotificationData));
-
-    _setupLocator(announcementApi: announcementApi);
+    when(announcementApi.getAccountNotification(accountNotification.id, any))
+        .thenAnswer((_) => Future.value(accountNotification));
 
     final actualViewState = await AnnouncementDetailsInteractor()
-        .getAnnouncement(announcementId, announcementType, courseId, toolbarTitle, true);
+        .getAnnouncement(accountNotification.id, AnnouncementType.INSTITUTION, course.id, toolbarTitle, true);
 
-    verify(announcementApi.getAccountNotification(announcementId, true)).called(1);
+    verify(announcementApi.getAccountNotification(accountNotification.id, true)).called(1);
 
     expect(actualViewState.toolbarTitle, expectedViewState.toolbarTitle);
     expect(actualViewState.announcementMessage, expectedViewState.announcementMessage);

@@ -25,13 +25,16 @@ import 'package:get_it/get_it.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../utils/test_app.dart';
+
 void main() {
   final mockScanner = _MockScanner();
 
   setUp(() {
-    final _locator = GetIt.instance;
-    _locator.reset();
-    _locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
+    reset(mockScanner);
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
+    });
   });
 
   test('returns success when given valid barcode', () async {

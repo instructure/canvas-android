@@ -26,7 +26,6 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -35,19 +34,20 @@ import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
-  _setupLocator({AnnouncementDetailsInteractor interactor}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
 
-    _locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor ?? _MockAnnouncementDetailsInteractor());
-    _locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
-  }
+  final interactor = _MockAnnouncementDetailsInteractor();
+
+  setUp(() {
+    reset(interactor);
+    setupTestLocator((locator) {
+      locator.registerFactory<AnnouncementDetailsInteractor>(() => interactor);
+      locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());
+    });
+  });
 
   group('Loading', () {
     testWidgetsWithAccessibilityChecks('Shows while waiting for future', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
       await tester.pump();
@@ -56,9 +56,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Does not show once loaded', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.value());
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
       await tester.pump();
@@ -69,9 +67,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Shows error', (tester) async {
-    final interactor = _MockAnnouncementDetailsInteractor();
     when(interactor.getAnnouncement(any, any, any, any, any)).thenAnswer((_) => Future.error('error'));
-    _setupLocator(interactor: interactor);
 
     await tester.pumpWidget(_testableWidget('', AnnouncementType.COURSE, ''));
     await tester.pumpAndSettle();
@@ -88,7 +84,6 @@ void main() {
 
   group('With data', () {
     testWidgetsWithAccessibilityChecks('Can pull to refresh', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
       final courseId = '123';
       final announcementMessage = 'hodor';
@@ -100,7 +95,6 @@ void main() {
       when(interactor.getAnnouncement(
               announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
       await tester.pumpAndSettle();
@@ -116,7 +110,6 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Shows course announcement', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
       final courseId = '123';
       final announcementMessage = 'hodor';
@@ -128,7 +121,6 @@ void main() {
       when(interactor.getAnnouncement(
               announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
       await tester.pumpAndSettle();
@@ -140,7 +132,6 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Shows course announcement with attachment', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
       final courseId = '123';
       final announcementMessage = 'hodor';
@@ -156,7 +147,6 @@ void main() {
       when(interactor.getAnnouncement(
               announcementId, AnnouncementType.COURSE, courseId, AppLocalizations().institutionAnnouncementTitle, any))
           .thenAnswer((_) => Future.value(response));
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.COURSE, courseId));
       await tester.pumpAndSettle();
@@ -172,7 +162,6 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('Shows institution announcement', (tester) async {
-      final interactor = _MockAnnouncementDetailsInteractor();
       final announcementId = '123';
       final courseId = '123';
       final announcementMessage = 'hodor';
@@ -183,7 +172,6 @@ void main() {
       final response = AnnouncementViewState(toolbarTitle, announcementSubject, announcementMessage, postedAt, null);
       when(interactor.getAnnouncement(announcementId, AnnouncementType.INSTITUTION, courseId, toolbarTitle, any))
           .thenAnswer((_) => Future.value(response));
-      _setupLocator(interactor: interactor);
 
       await tester.pumpWidget(_testableWidget(announcementId, AnnouncementType.INSTITUTION, courseId));
       await tester.pumpAndSettle();

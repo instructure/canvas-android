@@ -17,7 +17,7 @@
 import 'package:barcode_scan/barcode_scan.dart';
 
 class BarcodeScanVeneer {
-  Future<String> scanBarcode() async {
-    return await BarcodeScanner.scan();
+  Future<String> scanBarcode() {
+    return BarcodeScanner.scan();
   }
 }
