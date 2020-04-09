@@ -100,10 +100,6 @@ class RemoteConfigUtils {
     return result;
   }
 
-  static bool isInitialized() {
-    return _remoteConfig != null;
-  }
-
   // TODO: Get bool, double, int.  But we have historically just used string values.
 
   // Utility method to fetch the remote config variable name associated with rcParam.

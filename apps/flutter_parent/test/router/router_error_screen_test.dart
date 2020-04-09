@@ -32,10 +32,13 @@ void main() {
   final String _domain = 'https://test.instructure.com';
 
   setUp(() async {
-    RemoteConfigUtils.clean();
     await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
   });
 
 

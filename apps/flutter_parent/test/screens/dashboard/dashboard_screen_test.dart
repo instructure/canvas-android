@@ -92,10 +92,13 @@ void main() {
 
   setUp(() async {
     reset(analyticsMock);
-    RemoteConfigUtils.clean();
     await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
   });
 
   Widget _testableMaterialWidget({

@@ -64,10 +64,13 @@ void main() {
   setUp(() async {
     reset(analytics);
     reset(authApi);
-    RemoteConfigUtils.clean();
     await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
   });
 
   Future<void> twoFingerDoubleTap(WidgetTester tester) async {
@@ -285,10 +288,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await tester.pumpWidget(TestApp(LoginLandingScreen(), platformConfig: PlatformConfig(clearPrefs: false),));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('QR Code'));
+    await tester.tap(find.text(AppLocalizations().qrCode));
     await tester.pumpAndSettle();
 
     expect(find.byType(QRLoginTutorialScreen), findsOneWidget);

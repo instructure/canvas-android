@@ -44,12 +44,14 @@ void main() {
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   setUp(() async {
-    RemoteConfigUtils.clean();
     await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
   });
 
+  tearDown(() {
+    RemoteConfigUtils.clean();
+  });
 
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
     var interactor = _MockInteractor();
