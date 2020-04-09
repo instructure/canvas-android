@@ -25,7 +25,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
-import '../utils/remote_config_utils_test.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
 
@@ -42,7 +41,6 @@ void main() {
     RemoteConfigUtils.clean();
   });
 
-
   testWidgetsWithAccessibilityChecks('router error renders correctly with url', (tester) async {
     await tester.pumpWidget(TestApp(
       RouterErrorScreen(_domain),
@@ -56,7 +54,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('router error screen open in browser calls launch with url', (tester) async {
-    final _mockLauncher = _MockUrlLauncher();
+    final _mockLauncher = MockUrlLauncher();
     setupTestLocator((locator) => locator.registerLazySingleton<UrlLauncher>(() => _mockLauncher));
 
     when(_mockLauncher.launch(
@@ -89,5 +87,3 @@ void main() {
     expect(ApiPrefs.isLoggedIn(), false);
   });
 }
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}

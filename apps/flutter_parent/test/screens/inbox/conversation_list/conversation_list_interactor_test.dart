@@ -27,6 +27,7 @@ import 'package:mockito/mockito.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   test('getConversations calls api for normal scope and sent scope', () {
@@ -170,7 +171,7 @@ void main() {
   });
 
   test('getStudentEnrollments calls EnrollmentsApi', () {
-    var api = _MockEnrollmentsApi();
+    var api = MockEnrollmentsApi();
     setupTestLocator((locator) => locator.registerLazySingleton<EnrollmentsApi>(() => api));
     ConversationListInteractor().getStudentEnrollments();
     verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
@@ -276,5 +277,3 @@ List<Enrollment> _createEnrollments(String studentName, List<String> courseIds) 
 class _MockInboxApi extends Mock implements InboxApi {}
 
 class _MockCourseApi extends Mock implements CourseApi {}
-
-class _MockEnrollmentsApi extends Mock implements EnrollmentsApi {}

@@ -28,6 +28,7 @@ import 'package:mockito/mockito.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () {
@@ -149,7 +150,5 @@ Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());
-
-class MockEnrollmentsApi extends Mock implements EnrollmentsApi {}
 
 class MockUserApi extends Mock implements UserApi {}

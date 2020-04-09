@@ -20,6 +20,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+import 'test_helpers/mock_helpers.dart';
+
 void mockNetworkImageResponse() {
   final TestWidgetsFlutterBinding binding = TestWidgetsFlutterBinding.ensureInitialized();
   binding.runAsync(() async {
@@ -31,10 +33,11 @@ void mockNetworkImageResponse() {
 class _ImageHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext _) {
-    final _MockHttpClient client = _MockHttpClient();
-    final _MockHttpClientRequest request = _MockHttpClientRequest();
-    final _MockHttpClientResponse response = _MockHttpClientResponse();
-    final _MockHttpHeaders headers = _MockHttpHeaders();
+    final client = MockHttpClient();
+    final request = MockHttpClientRequest();
+    final response = MockHttpClientResponse();
+    final headers = MockHttpHeaders();
+
     when(client.getUrl(any)).thenAnswer((_) => Future<HttpClientRequest>.value(request));
     when(request.headers).thenReturn(headers);
     when(request.close()).thenAnswer((_) => Future<HttpClientResponse>.value(response));
@@ -52,11 +55,3 @@ class _ImageHttpOverrides extends HttpOverrides {
     return client;
   }
 }
-
-class _MockHttpClient extends Mock implements HttpClient {}
-
-class _MockHttpClientRequest extends Mock implements HttpClientRequest {}
-
-class _MockHttpClientResponse extends Mock implements HttpClientResponse {}
-
-class _MockHttpHeaders extends Mock implements HttpHeaders {}

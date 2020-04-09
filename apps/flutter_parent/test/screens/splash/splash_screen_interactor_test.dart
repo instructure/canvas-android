@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/login.dart';
@@ -43,16 +42,13 @@ void main() {
     ..clientId = '123'
     ..clientSecret = '123'
     ..apiKey = '123'
-    ..baseUrl = '123'
-  );
-
+    ..baseUrl = '123');
 
   CanvasToken canvasToken = CanvasToken((b) => b
     ..accessToken = '123'
     ..refreshToken = '123'
     ..user = CanvasModelTestUtils.mockUser().toBuilder()
-    ..realUser = null
-  );
+    ..realUser = null);
 
   setupTestLocator((locator) {
     locator.registerFactory<DashboardInteractor>(() => dashboardInteractor);
@@ -182,9 +178,9 @@ void main() {
 
   test('getData returns valid data for valid qrLoginUrl', () async {
     when(dashboardInteractor.getStudents(forceRefresh: true)).thenAnswer((_) async => [
-      CanvasModelTestUtils.mockUser(name: 'User 1'),
-      CanvasModelTestUtils.mockUser(name: 'User 2'),
-    ]);
+          CanvasModelTestUtils.mockUser(name: 'User 1'),
+          CanvasModelTestUtils.mockUser(name: 'User 2'),
+        ]);
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
@@ -197,12 +193,11 @@ void main() {
       ..accessToken = '123'
       ..refreshToken = '123'
       ..user = CanvasModelTestUtils.mockUser().toBuilder()
-      ..realUser = CanvasModelTestUtils.mockUser().toBuilder()
-    );
+      ..realUser = CanvasModelTestUtils.mockUser().toBuilder());
     when(dashboardInteractor.getStudents(forceRefresh: true)).thenAnswer((_) async => [
-      CanvasModelTestUtils.mockUser(name: 'User 1'),
-      CanvasModelTestUtils.mockUser(name: 'User 2'),
-    ]);
+          CanvasModelTestUtils.mockUser(name: 'User 1'),
+          CanvasModelTestUtils.mockUser(name: 'User 2'),
+        ]);
     when(authApi.getTokens(any, any)).thenAnswer((_) async => altToken);
     ApiPrefs.switchLogins(login);
     final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';

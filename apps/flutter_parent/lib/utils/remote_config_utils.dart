@@ -90,7 +90,6 @@ class RemoteConfigUtils {
   static String getStringValue(RemoteConfigParams rcParam) {
     if (_remoteConfig == null) throw StateError('RemoteConfigUtils not yet initialized');
 
-    var rcName = _getRemoteConfigName(rcParam);
     var rcDefault = _getRemoteConfigDefaultValue(rcParam);
     var rcPreferencesName = _getSharedPreferencesName(rcParam);
     var result = _prefs.getString(rcPreferencesName);
@@ -115,7 +114,8 @@ class RemoteConfigUtils {
         return 'qr_login_enabled_parent';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
         return 'mobile_verify_beta_enabled';
-        break;
+      default:
+        return '';
     }
   }
 
@@ -131,7 +131,8 @@ class RemoteConfigUtils {
         return 'false';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
         return 'false';
-        break;
+      default:
+        return '';
     }
   }
 

@@ -20,6 +20,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   group('fetch', () {
@@ -94,7 +95,7 @@ void main() {
         }),
       );
 
-      final dio = _MockDio();
+      final dio = MockDio();
       when(dio.options).thenReturn(BaseOptions());
       when(dio.get(pageUrl)).thenAnswer((_) => _request(_rawUserList(startIndex: 2)));
 
@@ -117,8 +118,6 @@ Future<Response<dynamic>> _request(data, {Headers headers}) async => Response(da
 Future<Response<dynamic>> _requestFail() async => throw 'ErRoR';
 
 // Mocks
-
-class _MockDio extends Mock implements Dio {}
 
 User _getUser({String id = '0'}) {
   return User((b) => b..id = id);

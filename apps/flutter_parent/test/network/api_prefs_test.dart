@@ -29,6 +29,7 @@ import 'package:package_info/package_info.dart';
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   tearDown(() {
@@ -136,10 +137,10 @@ void main() {
   });
 
   test('perform logout clears out reminders and calendar filters, and deletes auth token', () async {
-    final reminderDb = _MockReminderDb();
-    final calendarFilterDb = _MockCalendarFilterDb();
-    final notificationUtil = _MockNotificationUtil();
-    final authApi = _MockAuthApi();
+    final reminderDb = MockReminderDb();
+    final calendarFilterDb = MockCalendarFilterDb();
+    final notificationUtil = MockNotificationUtil();
+    final authApi = MockAuthApi();
     setupTestLocator((locator) {
       locator.registerLazySingleton<ReminderDb>(() => reminderDb);
       locator.registerLazySingleton<AuthApi>(() => authApi);
@@ -404,11 +405,3 @@ abstract class _Rebuildable {
 }
 
 class _MockApp extends Mock implements _Rebuildable {}
-
-class _MockReminderDb extends Mock implements ReminderDb {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class _MockNotificationUtil extends Mock implements NotificationUtil {}
-
-class _MockAuthApi extends Mock implements AuthApi {}

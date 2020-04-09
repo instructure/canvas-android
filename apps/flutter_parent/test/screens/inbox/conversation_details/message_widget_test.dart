@@ -557,17 +557,13 @@ void main() {
             ..name = 'Myself'),
         ]));
 
-      Attachment actual = null;
-
       await tester.pumpWidget(
         TestApp(
           MessageWidget(
             conversation: conversation,
             message: message,
             currentUserId: currentUserId,
-            onAttachmentClicked: (attachment) {
-              actual = attachment;
-            },
+            onAttachmentClicked: (attachment) {},
           ),
         ),
       );
