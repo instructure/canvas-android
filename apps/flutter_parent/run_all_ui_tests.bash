@@ -7,13 +7,33 @@
 # we might need to tweak this script.  It assumes a 1-1 correspondence between driver files
 # and target files.
 
+passed=0
+failed=0
+failures=()
 for driver in test_driver/*_test.dart
 do
-	echo "driver = $driver"
+	echo "Aggregator: driver = $driver"
 
 	target=${driver/_test}
-	echo "target = $target"
+	echo "Aggregator: target = $target"
 	
 	flutter drive --target=$target
+	if [ $? -eq 0 ]
+	then
+	  echo Aggregator: $driver Passed
+	  ((passed=passed+1))
+	else
+	  echo Aggregator: $driver FAILED
+	  ((failed=failed+1))
+	  failures=("${failures[@]}" $driver)
+	fi
 done
+
+if [ $failed -eq 0 ]
+then
+  echo Aggregator: All tests \($passed\) passed!
+else
+  echo Aggregator: $failed failing tests: ${failures[@]}
+  exit 1
+fi
 
