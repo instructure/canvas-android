@@ -20,18 +20,26 @@ import 'package:flutter_parent/utils/debug_flags.dart';
 /// The naming scheme for the majority of these is found in a google doc so that we can be consistent
 /// across the platforms.
 class AnalyticsEventConstants {
-  static String get LOGIN_FAILURE => 'login_failure';
-  static String get LOGIN_SUCCESS => 'login_success';
-  static String get TOKEN_REFRESH_FAILURE => 'token_refresh_failure';
-  static String get TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID => 'token_refresh_failure_token_not_valid';
-  static String get TOKEN_REFRESH_FAILURE_NO_SECRET => 'token_refresh_failure_no_secret';
+  static const LOGIN_FAILURE = 'login_failure';
+  static const LOGIN_SUCCESS = 'login_success';
+  static const TOKEN_REFRESH_FAILURE = 'token_refresh_failure';
+  static const TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = 'token_refresh_failure_token_not_valid';
+  static const TOKEN_REFRESH_FAILURE_NO_SECRET = 'token_refresh_failure_no_secret';
 
-  static String get LOGOUT => 'logout';
-  static String get SWITCH_USERS => 'switch_users';
-  static String get HELP_LOGIN => 'help_login';
-  static String get HELP_DOMAIN_SEARCH => 'help_domain_search';
-  static String get ADD_STUDENT_MANAGE_STUDENTS => 'add_student_manage_students';
-  static String get ADD_STUDENT_DASHBOARD => 'add_student_dashboard';
+  static const LOGOUT = 'logout';
+  static const SWITCH_USERS = 'switch_users';
+  static const HELP_LOGIN = 'help_login';
+  static const HELP_DOMAIN_SEARCH = 'help_domain_search';
+  static const ADD_STUDENT_MANAGE_STUDENTS = 'add_student_manage_students';
+  static const ADD_STUDENT_DASHBOARD = 'add_student_dashboard';
+  static const REMINDER_ASSIGNMENT_CREATE = 'reminder_assignment';
+  static const REMINDER_EVENT_CREATE = 'reminder_event';
+  static const DARK_MODE_ON = 'dark_mode_on';
+  static const DARK_MODE_OFF = 'dark_mode_off';
+  static const HC_MODE_ON = 'hc_mode_on';
+  static const HC_MODE_OFF = 'hc_mode_off';
+  static const DARK_WEB_MODE_ON = 'dark_web_mode_on';
+  static const DARK_WEB_MODE_OFF = 'dark_web_mode_off';
 }
 
 /// (Copied from canvas-api-2, make sure to stay in sync)
@@ -49,11 +57,11 @@ class AnalyticsEventConstants {
 ///   Used when events can originate from multiple locations
 ///
 class AnalyticsParamConstants {
-  static String get DOMAIN_PARAM => 'affiliation';
-  static String get USER_CONTEXT_ID => 'character';
-  static String get CANVAS_CONTEXT_ID => 'group_id';
-  static String get ASSIGNMENT_ID => 'item_id';
-  static String get SCREEN_OF_ORIGIN => 'origin';
+  static const DOMAIN_PARAM = 'affiliation';
+  static const USER_CONTEXT_ID = 'character';
+  static const CANVAS_CONTEXT_ID = 'group_id';
+  static const ASSIGNMENT_ID = 'item_id';
+  static const SCREEN_OF_ORIGIN = 'origin';
 }
 
 class Analytics {

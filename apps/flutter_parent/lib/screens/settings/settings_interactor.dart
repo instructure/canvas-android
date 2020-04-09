@@ -13,7 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/widgets.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -28,10 +30,20 @@ class SettingsInteractor {
   }
 
   void toggleDarkMode(context, anchorKey) {
+    if (ParentTheme.of(context).isDarkMode) {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_MODE_OFF);
+    } else {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_MODE_ON);
+    }
     ThemeTransitionTarget.toggleDarkMode(context, anchorKey);
   }
 
   void toggleHCMode(context, anchorKey) {
+    if (ParentTheme.of(context).isHC) {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_OFF);
+    } else {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_ON);
+    }
     ThemeTransitionTarget.toggleHCMode(context, anchorKey);
   }
 }

@@ -20,6 +20,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -104,6 +105,12 @@ class NotificationUtil {
       ),
       null,
     );
+
+    if (reminder.type == Reminder.TYPE_ASSIGNMENT) {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE);
+    } else {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
+    }
 
     return _plugin.schedule(
       reminder.id,

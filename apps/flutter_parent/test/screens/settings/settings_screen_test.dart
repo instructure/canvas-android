@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -27,6 +28,7 @@ import '../../utils/test_utils.dart';
 
 void main() {
   SettingsInteractor interactor;
+  final analytics = _MockAnalytics();
   AppLocalizations l10n = AppLocalizations();
 
   themeViewerButton() => find.byKey(Key('theme-viewer'));
@@ -46,7 +48,12 @@ void main() {
     });
     setupTestLocator((locator) {
       locator.registerFactory<SettingsInteractor>(() => interactor);
+      locator.registerFactory<Analytics>(() => analytics);
     });
+  });
+
+  setUp(() {
+    reset(analytics);
   });
 
   testWidgetsWithAccessibilityChecks('Displays theme viewer button in debug mode', (tester) async {
@@ -160,7 +167,18 @@ void main() {
 
     state = tester.state(find.byType(SettingsScreen));
     expect(ParentTheme.of(state.context).isWebViewDarkMode, isTrue);
+
+    await tester.tap(webViewDarkModeToggle());
+    await tester.pumpAndSettle();
+
+    state = tester.state(find.byType(SettingsScreen));
+    expect(ParentTheme.of(state.context).isWebViewDarkMode, isFalse);
+
+    verify(analytics.logEvent(AnalyticsEventConstants.DARK_WEB_MODE_ON)).called(1);
+    verify(analytics.logEvent(AnalyticsEventConstants.DARK_WEB_MODE_OFF)).called(1);
   });
 }
 
 class _MockInteractor extends Mock implements SettingsInteractor {}
+
+class _MockAnalytics extends Mock implements Analytics {}
