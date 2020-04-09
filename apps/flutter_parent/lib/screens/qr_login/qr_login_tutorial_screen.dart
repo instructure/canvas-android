@@ -36,10 +36,10 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
         builder: (context) => Scaffold(
               key: _scaffoldKey,
               appBar: AppBar(
-                elevation: 4,
                 title: Text(L10n(context).locateQRCode),
                 automaticallyImplyLeading: true,
                 actions: <Widget>[_nextButton(context)],
+                bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: true),
               ),
               body: _body(context),
             ));

@@ -155,7 +155,7 @@ class _ParentThemeState extends State<ParentTheme> {
 
   /// Returns a light divider if in dark mode, dark divider in light mode unless shadowInLightMode is true, wrapping the optional bottom passed in
   PreferredSizeWidget appBarDivider({PreferredSizeWidget bottom, bool shadowInLightMode = true}) =>
-      (isDarkMode || !shadowInLightMode)
+      (isDarkMode || shadowInLightMode)
           ? PreferredSize(
               preferredSize: Size.fromHeight(1.0 + (bottom?.preferredSize?.height ?? 0)), // Bottom height plus divider
               child: Column(
