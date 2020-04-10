@@ -327,7 +327,7 @@ class PandaRouter {
 
     locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
 
-    // We only care about valid app routes if they are already signed in
+    // We only care about valid app routes if they are already signed in or performing a qr login
     if (urlRouteWrapper.appRouteMatch != null && (ApiPrefs.isLoggedIn() || qrUri != null)) {
       if (urlRouteWrapper.validHost) {
         // If its a link we can handle natively and within our domain, route
