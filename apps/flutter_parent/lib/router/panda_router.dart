@@ -318,7 +318,8 @@ class PandaRouter {
     var link = params[_RouterKeys.url][0];
 
     // QR Login: we need to modify the url slightly
-    if (QRUtils.verifySSOLogin(link) != null) {
+    var qrUri = QRUtils.verifySSOLogin(link);
+    if (qrUri != null) {
       link = qrLogin(link);
     }
 
@@ -327,7 +328,7 @@ class PandaRouter {
     locator<Analytics>().logMessage('Attempting to route EXTERNAL url: $link');
 
     // We only care about valid app routes if they are already signed in
-    if (urlRouteWrapper.appRouteMatch != null && ApiPrefs.isLoggedIn()) {
+    if (urlRouteWrapper.appRouteMatch != null && (ApiPrefs.isLoggedIn() || qrUri != null)) {
       if (urlRouteWrapper.validHost) {
         // If its a link we can handle natively and within our domain, route
         return (urlRouteWrapper.appRouteMatch.route.handler as Handler)

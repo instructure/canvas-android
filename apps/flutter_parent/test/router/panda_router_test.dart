@@ -302,8 +302,7 @@ void main() {
     });
 
     test('qrLogin returns splash screen', () {
-      final barcodeResultUrl =
-          'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
           '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
       final widget = _getWidgetFromRoute(PandaRouter.qrLogin(barcodeResultUrl));
       expect(widget, isA<SplashScreen>());
@@ -390,11 +389,20 @@ void main() {
     });
 
     test('returns Splash screen for qr login', () {
-      final barcodeResultUrl =
-          'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
           '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
-      final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl));
+      final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl)) as SplashScreen;
       expect(widget, isA<SplashScreen>());
+      expect(widget.qrLoginUrl, barcodeResultUrl);
+    });
+
+    test('returns Splash screen for qr login with no user signed in', () async {
+      await setupPlatformChannels(config: PlatformConfig());
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+          '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
+      final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl)) as SplashScreen;
+      expect(widget, isA<SplashScreen>());
+      expect(widget.qrLoginUrl, barcodeResultUrl);
     });
   });
 
@@ -506,7 +514,7 @@ Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}
   final match = PandaRouter.router.match(route);
 
   if (extraParams != null) match.parameters.addAll(extraParams);
-  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
+  final widget = (match.groute.handler as Handler).handlerFunc(null, match.parameters);
 
   return widget;
 }
