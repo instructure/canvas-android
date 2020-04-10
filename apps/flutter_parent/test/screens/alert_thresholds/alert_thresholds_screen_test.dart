@@ -24,7 +24,6 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
 
@@ -37,11 +36,19 @@ void main() {
   // For user images
   mockNetworkImageResponse();
 
+  final interactor = _MockAlertThresholdsInteractor();
+
+  setupTestLocator((locator) {
+    locator.registerFactory<AlertThresholdsInteractor>(() => interactor);
+  });
+
+  setUp(() {
+    reset(interactor);
+  });
+
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows student', (tester) async {
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -51,9 +58,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows \'alert me\' header', (tester) async {
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -62,9 +67,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows loading', (tester) async {
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pump();
@@ -73,9 +76,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.error('Error'));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -84,7 +85,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows correct thresholds and their types', (tester) async {
-      _setupBasicInteractor();
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -104,9 +105,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('student thresholds', (tester) async {
       String id = '1234';
 
-      var interactor = _setupBasicInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(id: id, name: 'Panda'));
       await tester.pump();
@@ -118,10 +117,8 @@ void main() {
       String threshold = '23';
       AlertType type = AlertType.courseGradeLow;
 
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any))
           .thenAnswer((_) => Future.value([_mockThreshold(type: type, value: threshold)]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -133,9 +130,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('percent - null', (tester) async {
       AlertType type = AlertType.courseGradeLow;
 
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([_mockThreshold(type: type)]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -147,9 +142,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('switch - non-null', (tester) async {
       AlertType type = AlertType.assignmentMissing;
 
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([_mockThreshold(type: type)]));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -159,7 +152,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('switch - null', (tester) async {
-      _setupBasicInteractor();
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -171,7 +164,7 @@ void main() {
 
   group('Interactions', () {
     testWidgetsWithAccessibilityChecks('percent - tap shows dialog', (tester) async {
-      _setupBasicInteractor();
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -185,11 +178,9 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('switch - tap changes value', (tester) async {
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
       when(interactor.updateAlertThreshold(any, any, any))
           .thenAnswer((_) => Future.value(_mockThreshold(type: AlertType.assignmentMissing)));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -213,11 +204,9 @@ void main() {
       var updatedValue = '24';
       var initialThreshold = _mockThreshold(value: initialValue);
 
-      var interactor = MockAlertThresholdsInteractor();
       when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([initialThreshold]));
       when(interactor.updateAlertThreshold(any, any, any, value: updatedValue))
           .thenAnswer((_) => Future.value(initialThreshold.rebuild((b) => b.threshold = updatedValue)));
-      _setupLocator(interactor);
 
       await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
       await tester.pumpAndSettle();
@@ -283,18 +272,4 @@ AlertThreshold _mockThreshold({AlertType type, String value}) => AlertThreshold(
   ..threshold = value ?? null
   ..build());
 
-void _setupLocator([AlertThresholdsInteractor interactor]) {
-  final _locator = GetIt.instance;
-  _locator.reset();
-
-  _locator.registerFactory<AlertThresholdsInteractor>(() => interactor ?? MockAlertThresholdsInteractor());
-}
-
-AlertThresholdsInteractor _setupBasicInteractor() {
-  var interactor = MockAlertThresholdsInteractor();
-  when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
-  _setupLocator(interactor);
-  return interactor;
-}
-
-class MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
+class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}

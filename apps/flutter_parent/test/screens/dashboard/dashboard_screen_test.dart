@@ -52,6 +52,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
@@ -61,35 +62,46 @@ import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 import '../../utils/test_utils.dart';
 import '../courses/course_summary_screen_test.dart';
 
+/**
+ * NOTE: This test file is from the before times, please don't use as reference.
+ */
 void main() {
   mockNetworkImageResponse();
   final analyticsMock = _MockAnalytics();
 
   _setupLocator({MockInteractor interactor, AlertsApi alertsApi, InboxApi inboxApi}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
-    _locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
-    _locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
-    _locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
-    _locator.registerFactory<HelpScreenInteractor>(() => MockHelpScreenInteractor());
-    _locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
-    _locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
-    _locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
-    _locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
-    _locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
-    _locator.registerLazySingleton<InboxApi>(() => inboxApi ?? MockInboxApi());
-    _locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
-    _locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
-    _locator.registerLazySingleton<QuickNav>(() => QuickNav());
-    _locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
-    _locator.registerLazySingleton<Analytics>(() => analyticsMock);
+    setupTestLocator((locator) {
+      locator.registerFactory<AlertsInteractor>(() => MockAlertsInteractor());
+      locator.registerFactory<CoursesInteractor>(() => MockCoursesInteractor());
+      locator.registerFactory<DashboardInteractor>(() => interactor ?? MockInteractor());
+      locator.registerFactory<HelpScreenInteractor>(() => MockHelpScreenInteractor());
+      locator.registerFactory<ManageStudentsInteractor>(() => MockManageStudentsInteractor());
+      locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
+      locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
+      locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
+      locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
+      locator.registerLazySingleton<InboxApi>(() => inboxApi ?? MockInboxApi());
+      locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
+      locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+      locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
+      locator.registerLazySingleton<Analytics>(() => analyticsMock);
+    });
   }
 
-  setUp(() {
+  setUp(() async {
     reset(analyticsMock);
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
   });
 
   Widget _testableMaterialWidget({

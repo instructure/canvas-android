@@ -20,6 +20,7 @@ class PlatformConfig {
   final bool initPackageInfo;
   final bool initDeviceInfo;
   final bool initWebview;
+  final bool clearPrefs;
   final Login initLoggedInUser;
 
   final Map<String, dynamic> mockPrefs;
@@ -30,6 +31,7 @@ class PlatformConfig {
     this.initPackageInfo = true,
     this.initDeviceInfo = true,
     this.initWebview = false,
+    this.clearPrefs = true,
     this.mockPrefs = const {},
     this.initLoggedInUser = null,
   });

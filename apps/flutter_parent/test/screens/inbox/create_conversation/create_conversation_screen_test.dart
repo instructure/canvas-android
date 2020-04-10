@@ -35,6 +35,9 @@ import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
 import '../../../utils/test_utils.dart';
 
+/**
+ * NOTE: This test file is from the before times, please don't use as reference.
+ */
 void main() {
   //String studentName = 'Student Name';
   String studentId = 'student_123';
@@ -42,6 +45,18 @@ void main() {
   mockNetworkImageResponse();
 
   final l10n = AppLocalizations();
+
+  _setupLocator(
+      {int recipientCount = 4,
+        AttachmentHandler attachmentHandler,
+        int fetchFailCount: 0,
+        int sendFailCount: 0,
+        bool pronouns: false}) {
+    setupTestLocator((locator) {
+      locator.registerFactory<CreateConversationInteractor>(
+              () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount, pronouns));
+    });
+  }
 
   Widget _testableWidget({Course course, String subject, String postscript, MockNavigatorObserver observer}) {
     if (course == null) course = _mockCourse('0');
@@ -927,18 +942,6 @@ Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, {MockNavig
   if (observer != null) {
     verify(observer.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
   }
-}
-
-_setupLocator(
-    {int recipientCount = 4,
-    AttachmentHandler attachmentHandler,
-    int fetchFailCount: 0,
-    int sendFailCount: 0,
-    bool pronouns: false}) {
-  final _locator = GetIt.instance;
-  _locator.reset();
-  _locator.registerFactory<CreateConversationInteractor>(
-      () => _MockInteractor(recipientCount, attachmentHandler, fetchFailCount, sendFailCount, pronouns));
 }
 
 class _MockedInteractor extends Mock implements CreateConversationInteractor {}

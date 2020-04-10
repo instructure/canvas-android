@@ -14,19 +14,16 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
-import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/canvas_loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -34,12 +31,23 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final login = Login((b) => b
     ..domain = 'domain'
     ..accessToken = 'token'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+  setUp(() async {
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
+  });
 
   testWidgetsWithAccessibilityChecks('Displays loadingIndicator', (tester) async {
     var interactor = _MockInteractor();
@@ -229,9 +237,3 @@ void main() {
 class _MockInteractor extends Mock implements SplashScreenInteractor {}
 
 class _MockNav extends Mock implements QuickNav {}
-
-class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
-
-class _MockInboxCountNotifier extends Mock implements InboxCountNotifier {}

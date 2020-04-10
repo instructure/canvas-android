@@ -19,15 +19,29 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
+import '../utils/remote_config_utils_test.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final String _domain = 'https://test.instructure.com';
+
+  setUp(() async {
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
+  });
+
 
   testWidgetsWithAccessibilityChecks('router error renders correctly with url', (tester) async {
     await tester.pumpWidget(TestApp(
@@ -60,7 +74,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('router error screen switch users', (tester) async {
-    setupPlatformChannels();
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });

@@ -36,11 +36,13 @@ import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
+import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -106,6 +108,13 @@ class PandaRouter {
 
   static String quizAssignmentDetails(String courseId, String quizId) => assignmentDetails(courseId, quizId);
 
+  static String _qrLogin = '/qr_login';
+
+  static String qrLogin(String qrLoginUrl) =>
+      '/qr_login?${_RouterKeys.qrLoginUrl}=${Uri.encodeQueryComponent(qrLoginUrl)}';
+
+  static String qrTutorial() => '/qr_tutorial';
+
   static final String _rootWithExternalUrl = 'external';
 
   static final String _routerError = '/error';
@@ -150,6 +159,8 @@ class PandaRouter {
       router.define(legal(), handler: _legalHandler);
       router.define(quizAssignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.quizId}'),
           handler: _assignmentDetailsHandler);
+      router.define(_qrLogin, handler: _qrLoginHandler);
+      router.define(qrTutorial(), handler: _qrTutorialHandler);
       router.define(_routerError, handler: _routerErrorHandler);
       router.define(_simpleWebView, handler: _simpleWebViewHandler);
       router.define(settings(), handler: _settingsHandler);
@@ -269,6 +280,15 @@ class PandaRouter {
     return NotAParentScreen();
   });
 
+  static Handler _qrLoginHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    String qrLoginUrl = params[_RouterKeys.qrLoginUrl]?.elementAt(0);
+    return SplashScreen(qrLoginUrl: qrLoginUrl);
+  });
+
+  static Handler _qrTutorialHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return QRLoginTutorialScreen();
+  });
+
   static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return SplashScreen();
   });
@@ -295,7 +315,12 @@ class PandaRouter {
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
   static Handler _rootWithExternalUrlHandler =
       Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    final link = params[_RouterKeys.url][0];
+    var link = params[_RouterKeys.url][0];
+
+    // QR Login: we need to modify the url slightly
+    if (QRUtils.verifySSOLogin(link) != null) {
+      link = qrLogin(link);
+    }
 
     final urlRouteWrapper = getRouteWrapper(link);
 
@@ -352,7 +377,13 @@ class PandaRouter {
   /// returns a RouteWrapper
   /// _RouteWrapper.appRouteMatch will be null when there is no match or path is root
   static _UrlRouteWrapper getRouteWrapper(String link) {
-    Uri uri = Uri.parse(link);
+    Uri uri;
+
+    try {
+      uri = Uri.parse(link);
+    } catch (e) {
+      return _UrlRouteWrapper(link, false, null);
+    }
 
     // Add any fragment parameters, e.g. '/...#view_name=month&view_start=12-12-2020' as query params to the uri
     var frags = Uri.parse(link).fragment;
@@ -379,16 +410,18 @@ class _RouterKeys {
   static final announcementId = 'announcementId';
   static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
+  static final calendarStart = 'view_start';
+  static final calendarView = 'view_name';
   static final courseId = 'courseId';
   static final domain = 'domain';
   static final eventId = 'eventId';
   static final infoText = 'infoText';
   static final loginFlow = 'loginFlow';
+  static final qrLoginUrl = 'qrLoginUrl';
   static final quizId = 'quizId';
   static final topicId = 'topicId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code
-  static final calendarStart = 'view_start';
-  static final calendarView = 'view_name';
+
 }
 
 /// Simple helper class to manage the repeated data extracted from a link to be routed

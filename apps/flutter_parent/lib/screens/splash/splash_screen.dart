@@ -16,6 +16,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
@@ -25,6 +26,11 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
+
+  final String qrLoginUrl;
+
+  SplashScreen({this.qrLoginUrl, Key key}) : super(key: key);
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -47,13 +53,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
-    if (!ApiPrefs.isLoggedIn()) {
-      // route to login screen
+    if (!ApiPrefs.isLoggedIn() && widget.qrLoginUrl == null) {
+      // If they aren't logged in or logging in with QR, route to login screen
       _navigate(PandaRouter.login());
       return _defaultBody(context);
     } else {
       if (_dataFuture == null) {
-        _dataFuture = locator<SplashScreenInteractor>().getData();
+        _dataFuture = locator<SplashScreenInteractor>().getData(qrLoginUrl: widget.qrLoginUrl);
       }
 
       return Scaffold(
@@ -69,8 +75,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 _navigate(PandaRouter.notParent());
               }
             } else if (snapshot.hasError) {
-              // On error, proceed without pre-fetched student list
-              _navigate(PandaRouter.dashboard());
+              if(snapshot.error is QRLoginError) {
+                Scaffold.of(context).showSnackBar(SnackBar(content: Text(L10n(context).loginWithQRCodeError)));
+                Navigator.pop(context);
+              } else {
+                // On error, proceed without pre-fetched student list
+                _navigate(PandaRouter.dashboard());
+              }
             }
             return Container(
               child: Center(

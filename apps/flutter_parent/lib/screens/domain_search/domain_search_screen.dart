@@ -118,6 +118,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
               highlightColor: Colors.transparent,
               splashColor: Theme.of(context).accentColor.withAlpha(100),
               textColor: Theme.of(context).accentColor,
+              shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
               onPressed: _query.isEmpty ? null : () => _next(context),
               child: Text(
                 L10n(context).next,

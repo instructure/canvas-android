@@ -69,6 +69,7 @@ dependencies:
   photo_view: 0.9.1
   video_player: 0.10.5+1
   chewie: 0.9.8+1
+  barcode_scan: ^2.0.1
 
   # Networking / Serialization
   dio: 3.0.5
@@ -118,6 +119,7 @@ flutter:
 
   assets:
     - assets/svg/
+    - assets/png/
     - assets/fonts/
     - assets/html/html_wrapper.html
 

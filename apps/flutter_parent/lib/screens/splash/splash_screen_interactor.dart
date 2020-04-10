@@ -12,14 +12,44 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
+import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreenInteractor {
-  Future<SplashScreenData> getData() async {
+  Future<SplashScreenData> getData({String qrLoginUrl}) async {
+    if (qrLoginUrl != null) {
+      // Double check the loginUrl
+      final qrLoginUri = QRUtils.verifySSOLogin(qrLoginUrl);
+      if (qrLoginUrl == null) {
+        locator<Analytics>().logEvent(AnalyticsEventConstants.QR_LOGIN_FAILURE);
+        return Future.error(QRLoginError);
+      } else {
+        final qrSuccess = await _performSSOLogin(qrLoginUri);
+        // Error out if the login fails, otherwise continue
+        if (!qrSuccess) {
+          locator<Analytics>().logEvent(
+            AnalyticsEventConstants.QR_LOGIN_FAILURE,
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
+          );
+          return Future.error(QRLoginError);
+        } else {
+          locator<Analytics>().logEvent(
+            AnalyticsEventConstants.QR_LOGIN_SUCCESS,
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
+          );
+        }
+      }
+    }
+
     // Use same call as the dashboard so results will be cached
     var students = await locator<DashboardInteractor>().getStudents(forceRefresh: true);
     var isObserver = students.isNotEmpty;
@@ -40,6 +70,39 @@ class SplashScreenInteractor {
 
     return SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
   }
+
+  Future<bool> _performSSOLogin(Uri qrLoginUri) async {
+    final domain = qrLoginUri.queryParameters[QRUtils.QR_DOMAIN];
+    final oAuthCode = qrLoginUri.queryParameters[QRUtils.QR_AUTH_CODE];
+
+    final mobileVerifyResult = await locator<AuthApi>().mobileVerify(domain);
+
+    if (mobileVerifyResult.result != VerifyResultEnum.success) {
+      return Future.value(false);
+    }
+
+    final tokenResponse = await locator<AuthApi>().getTokens(mobileVerifyResult, oAuthCode);
+
+    // Key here is that realUser represents a masquerading attempt
+    var isMasquerading = tokenResponse.realUser != null;
+    Login login = Login((b) => b
+      ..accessToken = tokenResponse.accessToken
+      ..refreshToken = tokenResponse.refreshToken
+      ..domain = mobileVerifyResult.baseUrl
+      ..clientId = mobileVerifyResult.clientId
+      ..clientSecret = mobileVerifyResult.clientSecret
+      ..masqueradeUser = isMasquerading ? tokenResponse.user.toBuilder() : null
+      ..masqueradeDomain = isMasquerading ? mobileVerifyResult.baseUrl : null
+      ..isMasqueradingFromQRCode = isMasquerading ? true : null
+      ..canMasquerade = isMasquerading ? true : null
+      ..user = tokenResponse.user.toBuilder());
+
+    ApiPrefs.addLogin(login);
+    ApiPrefs.switchLogins(login);
+    await DioConfig().clearCache();
+
+    return Future.value(true);
+  }
 }
 
 class SplashScreenData {
@@ -48,3 +111,5 @@ class SplashScreenData {
 
   SplashScreenData(this.isObserver, this.canMasquerade);
 }
+
+class QRLoginError {}

@@ -32,6 +32,7 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -121,9 +122,33 @@ class LoginLandingScreen extends StatelessWidget {
               onFindSchoolPressed(context);
             },
           ),
+          SizedBox(height: 16),
+          if(RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true') _qrLogin(context),
         ],
       ),
     );
+  }
+
+  Widget _qrLogin(BuildContext context) {
+    return InkWell(
+        onTap: () {
+          locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
+        },
+        child: Container(
+          padding: EdgeInsets.all(12.0),
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SvgPicture.asset('assets/svg/qr-code.svg'),
+                SizedBox(width: 8),
+                Text(
+                  L10n(context).loginWithQRCode,
+                  style: TextStyle(fontSize: 16, color: ParentColors.ash),
+                ),
+              ]),
+        ));
   }
 
   Widget _previousLogins(BuildContext context) {
