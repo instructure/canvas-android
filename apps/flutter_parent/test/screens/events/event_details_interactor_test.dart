@@ -108,6 +108,7 @@ void main() {
   test('createReminder inserts reminder into database and schedules a notification', () async {
     final date = DateTime.now();
     final formattedDate = 'Febtember 34, 3031';
+    final courseId = 'course_123';
     final event = ScheduleItem((b) => b
       ..id = 'event-123'
       ..title = 'Event title');
@@ -117,13 +118,14 @@ void main() {
       ..userId = login.user.id
       ..type = Reminder.TYPE_EVENT
       ..itemId = event.id
+      ..courseId = courseId
       ..date = date.toUtc());
 
     final savedReminder = reminder.rebuild((b) => b..id = 123);
     when(reminderDb.insert(reminder)).thenAnswer((_) async => savedReminder);
 
     final l10n = AppLocalizations();
-    await EventDetailsInteractor().createReminder(l10n, date, event.id, event.title, formattedDate);
+    await EventDetailsInteractor().createReminder(l10n, date, event.id, courseId, event.title, formattedDate);
 
     verify(reminderDb.insert(reminder));
     verify(notificationUtil.scheduleReminder(l10n, event.title, formattedDate, savedReminder));

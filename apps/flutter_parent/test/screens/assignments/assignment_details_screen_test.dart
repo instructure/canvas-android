@@ -515,7 +515,7 @@ void main() {
     await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
     await tester.pumpAndSettle();
 
-    verify(interactor.createReminder(any, any, assignmentId, assignment.name, AppLocalizations().noDueDate));
+    verify(interactor.createReminder(any, any, assignmentId, courseId, assignment.name, AppLocalizations().noDueDate));
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
@@ -557,7 +557,7 @@ void main() {
     await tester.pumpAndSettle();
 
     var expectedBody = date.l10nFormat(AppLocalizations().dueDateAtTime);
-    verify(interactor.createReminder(any, any, assignmentId, assignment.name, expectedBody));
+    verify(interactor.createReminder(any, any, assignmentId, courseId, assignment.name, expectedBody));
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);

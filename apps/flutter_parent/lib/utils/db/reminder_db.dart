@@ -24,6 +24,7 @@ class ReminderDb {
   static const String columnUserId = 'user_id';
   static const String columnType = 'type';
   static const String columnItemId = 'item_id';
+  static const String columnCourseId = 'course_id';
   static const String columnDate = 'date';
 
   static const allColumns = [
@@ -32,6 +33,7 @@ class ReminderDb {
     columnUserId,
     columnType,
     columnItemId,
+    columnCourseId,
     columnDate,
   ];
 
@@ -43,6 +45,7 @@ class ReminderDb {
         columnUserId: data.userId,
         columnType: data.type,
         columnItemId: data.itemId,
+        columnCourseId: data.courseId,
         columnDate: data.date.toIso8601String(),
       };
 
@@ -52,6 +55,7 @@ class ReminderDb {
     ..userId = map[columnUserId]
     ..type = map[columnType]
     ..itemId = map[columnItemId]
+    ..courseId = map[columnCourseId]
     ..date = DateTime.parse(map[columnDate]));
 
   static Future<void> createTable(Database db, int version) async {
@@ -62,8 +66,16 @@ class ReminderDb {
         $columnUserId text not null,
         $columnType text not null,
         $columnItemId text not null,
+        $columnCourseId text not null,
         $columnDate text not null )
       ''');
+  }
+
+  static Future<void> updateTable(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 3) {
+      // Course ID column added in database version 3
+      await db.execute('alter table $tableName add column $columnCourseId text not null default \'\'');
+    }
   }
 
   Future<Reminder> insert(Reminder data) async {

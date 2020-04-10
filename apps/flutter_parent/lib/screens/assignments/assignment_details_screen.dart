@@ -313,7 +313,14 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       if (date != null && time != null) {
         DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
         var body = assignment.dueAt.l10nFormat(L10n(context).dueDateAtTime) ?? L10n(context).noDueDate;
-        await _interactor.createReminder(L10n(context), reminderDate, assignment.id, assignment.name, body);
+        await _interactor.createReminder(
+          L10n(context),
+          reminderDate,
+          assignment.id,
+          assignment.courseId,
+          assignment.name,
+          body,
+        );
       }
     }
 
