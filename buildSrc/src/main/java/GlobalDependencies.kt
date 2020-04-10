@@ -3,7 +3,7 @@
 object Versions {
     /* SDK Versions */
     const val COMPILE_SDK = 28
-    const val MIN_SDK = 21
+    const val MIN_SDK = 23
     const val TARGET_SDK = 28
 
     /* Build/tooling */
