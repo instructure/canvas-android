@@ -29,13 +29,16 @@ object ConferencesApi {
 
     internal interface ConferencesInterface {
         @GET("{canvasContext}/conferences")
-        fun getConferences(@Path("canvasContext", encoded = true) canvasContext: String): Call<ConferenceList>
+        fun getConferencesForContext(@Path("canvasContext", encoded = true) canvasContext: String): Call<ConferenceList>
+
+        @GET("conferences?state=live")
+        fun getLiveConferences(): Call<ConferenceList>
 
         @GET
         fun getNextPage(@Url nextUrl: String): Call<ConferenceList>
     }
 
-    fun getConferences(
+    fun getConferencesForContext(
         canvasContext: CanvasContext,
         adapter: RestBuilder,
         callback: StatusCallback<ConferenceList>,
@@ -44,8 +47,12 @@ object ConferencesApi {
         callback.addCall(
             adapter
                 .build(ConferencesInterface::class.java, params)
-                .getConferences(canvasContext.toAPIString().drop(1))
+                .getConferencesForContext(canvasContext.toAPIString().drop(1))
         ).enqueue(callback)
+    }
+
+    fun getLiveConferences(adapter: RestBuilder, callback: StatusCallback<ConferenceList>, params: RestParams) {
+        callback.addCall(adapter.build(ConferencesInterface::class.java, params).getLiveConferences()).enqueue(callback)
     }
 
     fun getNextPage(

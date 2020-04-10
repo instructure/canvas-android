@@ -1159,4 +1159,5 @@
     <string name="concludedConferences">Concluded Conferences</string>
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
+    <string name="conferenceInProgress">Conference in progress</string>
 </resources>

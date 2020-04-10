@@ -18,6 +18,7 @@
 package com.instructure.student.interfaces
 
 import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 
@@ -30,4 +31,6 @@ interface CourseAdapterToFragmentCallback {
     fun onEditCourseNickname(course: Course)
     fun onPickCourseColor(course: Course)
     fun onHandleCourseInvitation(course: Course, accepted: Boolean)
+    fun onConferenceSelected(conference: Conference)
+    fun onDismissConference(conference: Conference)
 }

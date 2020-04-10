@@ -143,13 +143,13 @@ class ConferenceDetailsEffectHandlerTest : Assert() {
 
         // Mock API
         mockkObject(ConferenceManager)
-        every { ConferenceManager.getConferencesAsync(any(), any()) } returns mockk {
+        every { ConferenceManager.getConferencesForContextAsync(any(), any()) } returns mockk {
             coEvery { await() } returns apiResult
         }
 
         connection.accept(ConferenceDetailsEffect.RefreshData(canvasContext))
 
-        verify { ConferenceManager.getConferencesAsync(canvasContext, true) }
+        verify { ConferenceManager.getConferencesForContextAsync(canvasContext, true) }
         verify { eventConsumer.accept(ConferenceDetailsEvent.RefreshFinished(apiResult)) }
 
         confirmVerified(ConferenceManager)
