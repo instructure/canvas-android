@@ -15,6 +15,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
@@ -153,6 +154,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _toggleWebViewDarkMode(BuildContext context) {
+    if (ParentTheme.of(context).isWebViewDarkMode) {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_WEB_MODE_OFF);
+    } else {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.DARK_WEB_MODE_ON);
+    }
     ParentTheme.of(context).toggleWebViewDarkMode();
   }
 
