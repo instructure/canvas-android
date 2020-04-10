@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-03T11:02:53.662629",
+  "@@last_modified": "2020-04-10T11:03:28.570704",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -790,12 +790,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set reminder switch": "Set reminder switch",
-  "@Set reminder switch": {
-    "description": "Label for the switch to set a reminder",
-    "type": "text",
-    "placeholders": {}
-  },
   "Set a date and time to be notified of this specific assignment.": "Set a date and time to be notified of this specific assignment.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
@@ -934,11 +928,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "dismiss": "dismiss",
-  "@dismiss": {
+  "dismissAlertLabel": "Dismiss {alertTitle}",
+  "@dismissAlertLabel": {
     "description": "Accessibility label to dismiss an alert",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "alertTitle": {}
+    }
   },
   "Course Announcement": "Course Announcement",
   "@Course Announcement": {
@@ -1011,6 +1007,12 @@
   "High Contrast Mode": "High Contrast Mode",
   "@High Contrast Mode": {
     "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Use Dark Theme in Web Content",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
     "type": "text",
     "placeholders": {}
   },
