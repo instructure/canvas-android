@@ -33,6 +33,7 @@ import 'dio_config.dart';
 
 class ApiPrefs {
   static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
+  static const String KEY_HAS_CHECKED_OLD_REMINDERS = 'has_checked_old_reminders';
   static const String KEY_LOGINS = 'logins';
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
   static const String KEY_CURRENT_STUDENT = 'current_student';
@@ -224,6 +225,10 @@ class ApiPrefs {
   static bool getHasMigrated() => _getPrefBool(KEY_HAS_MIGRATED);
 
   static Future<void> setHasMigrated(bool hasMigrated) => _setPrefBool(KEY_HAS_MIGRATED, hasMigrated);
+
+  static bool getHasCheckedOldReminders() => _getPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS);
+
+  static Future<void> setHasCheckedOldReminders(bool checked) => _setPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS, checked);
 
   static Future<void> _setPrefBool(String key, bool value) async {
     _checkInit();

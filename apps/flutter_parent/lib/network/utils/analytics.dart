@@ -40,6 +40,7 @@ class AnalyticsEventConstants {
   static const HC_MODE_OFF = 'hc_mode_off';
   static const DARK_WEB_MODE_ON = 'dark_web_mode_on';
   static const DARK_WEB_MODE_OFF = 'dark_web_mode_off';
+  static const VIEWED_OLD_REMINDER_MESSAGE = 'viewed_old_reminder_message';
 }
 
 /// (Copied from canvas-api-2, make sure to stay in sync)

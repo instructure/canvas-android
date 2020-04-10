@@ -59,6 +59,7 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interac
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
@@ -136,8 +137,9 @@ void setupLocator() {
 
   // Other
   locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
-  locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
-  locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
-  locator.registerLazySingleton<QuickNav>(() => QuickNav());
   locator.registerLazySingleton<Analytics>(() => Analytics());
+  locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
+  locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
+  locator.registerLazySingleton<OldAppMigration>(() => OldAppMigration());
+  locator.registerLazySingleton<QuickNav>(() => QuickNav());
 }

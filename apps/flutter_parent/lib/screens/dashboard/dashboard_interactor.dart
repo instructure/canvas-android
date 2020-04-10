@@ -19,6 +19,7 @@ import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
@@ -44,4 +45,6 @@ class DashboardInteractor {
   InboxCountNotifier getInboxCountNotifier() => locator<InboxCountNotifier>();
 
   AlertCountNotifier getAlertCountNotifier() => locator<AlertCountNotifier>();
+
+  Future<bool> shouldShowOldReminderMessage() => locator<OldAppMigration>().hasOldReminders();
 }

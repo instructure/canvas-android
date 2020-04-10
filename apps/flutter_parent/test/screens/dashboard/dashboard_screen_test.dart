@@ -809,6 +809,54 @@ void main() {
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.text(l10n.endMasqueradeMessage(login.user.name)), findsOneWidget);
     });
+
+    testWidgetsWithAccessibilityChecks('Displays and dismisses Old Reminders dialog', (tester) async {
+      var interactor = MockInteractor();
+      interactor.showOldReminderMessage = true;
+      _setupLocator(interactor: interactor);
+
+      // Load the screen
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Should display dialog
+      var dialog = find.byType(AlertDialog);
+      expect(dialog, findsOneWidget);
+
+      // Should display correct title
+      var title = find.descendant(of: dialog, matching: find.text(AppLocalizations().oldReminderMessageTitle));
+      expect(title, findsOneWidget);
+
+      // Should display correct message
+      var message = find.descendant(of: dialog, matching: find.text(AppLocalizations().oldReminderMessage));
+      expect(message, findsOneWidget);
+
+      // Tap ok to dismiss
+      var ok = find.descendant(of: dialog, matching: find.text(AppLocalizations().ok));
+      await tester.tap(ok);
+      await tester.pumpAndSettle();
+
+      // Dialog should no longer show
+      expect(find.byType(AlertDialog), findsNothing);
+
+      // Should have logged analytics event
+      verify(analyticsMock.logEvent(AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE));
+    });
+
+    testWidgetsWithAccessibilityChecks('Does not display Old Reminders dialog if no reminders', (tester) async {
+      var interactor = MockInteractor();
+      interactor.showOldReminderMessage = false;
+      _setupLocator(interactor: interactor);
+
+      // Load the screen
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle();
+
+      // Should not display dialog, title, or message
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text(AppLocalizations().oldReminderMessage), findsNothing);
+      expect(find.text(AppLocalizations().oldReminderMessageTitle), findsNothing);
+    });
   });
 
   group('Loading', () {
@@ -944,6 +992,7 @@ class MockInteractor extends DashboardInteractor {
   bool includePronouns;
   bool generateStudents;
   bool generateSelf;
+  bool showOldReminderMessage = false;
 
   MockInteractor({this.includePronouns = false, this.generateStudents = true, this.generateSelf = true});
 
@@ -967,6 +1016,9 @@ class MockInteractor extends DashboardInteractor {
           pronouns: includePronouns ? 'she/her' : null,
           primaryEmail: 'marlene@instructure.com')
       : null;
+
+  @override
+  Future<bool> shouldShowOldReminderMessage() async => showOldReminderMessage;
 }
 
 class MockInboxApi extends Mock implements InboxApi {}
