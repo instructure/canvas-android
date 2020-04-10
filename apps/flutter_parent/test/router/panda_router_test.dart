@@ -514,7 +514,7 @@ Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}
   final match = PandaRouter.router.match(route);
 
   if (extraParams != null) match.parameters.addAll(extraParams);
-  final widget = (match.groute.handler as Handler).handlerFunc(null, match.parameters);
+  final widget = (match.route.handler as Handler).handlerFunc(null, match.parameters);
 
   return widget;
 }
