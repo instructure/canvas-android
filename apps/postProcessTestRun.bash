@@ -84,6 +84,7 @@ do
         then
             successReport="$successReport $payload"
             ((successCount=successCount+1))
+            # Emit successful test data to Splunk every 100 tests
             if [ $successCount -eq 100 ]
             then
               emitSuccessfulTestData
