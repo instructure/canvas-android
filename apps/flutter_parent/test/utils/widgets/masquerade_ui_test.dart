@@ -29,7 +29,6 @@ import 'package:mockito/mockito.dart';
 
 import '../accessibility_utils.dart';
 import '../canvas_model_utils.dart';
-import '../remote_config_utils_test.dart';
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
 
@@ -57,7 +56,6 @@ void main() {
   tearDown(() {
     RemoteConfigUtils.clean();
   });
-
 
   testWidgetsWithAccessibilityChecks('Builds initially as disabled', (tester) async {
     await tester.pumpWidget(TestApp(_childWithButton()));
@@ -184,7 +182,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Accepting logout confirmation performs logout', (tester) async {
-    final reminderDb = _MockReminderDb();
+    final reminderDb = MockReminderDb();
     final calendarFilterDb = _MockCalendarFilterDb();
     final notificationUtil = _MockNotificationUtil();
     when(reminderDb.getAllForUser(any, any)).thenAnswer((_) async => []);
@@ -213,8 +211,6 @@ void main() {
     expect(ApiPrefs.isLoggedIn(), false);
   });
 }
-
-class _MockReminderDb extends Mock implements ReminderDb {}
 
 class _MockNotificationUtil extends Mock implements NotificationUtil {}
 

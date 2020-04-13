@@ -22,7 +22,6 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
-import 'package:flutter_parent/models/submission.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
@@ -545,26 +544,6 @@ void main() {
       expect(model.showSummary, false);
     });
   });
-}
-
-List<AssignmentGroup> _mockAssignmentGroups(String assignmentId,
-    {bool published = true, List<Submission> submissions}) {
-  return [
-    AssignmentGroup((group) => group
-      ..id = '202'
-      ..name = 'assignments'
-      ..groupWeight = 0
-      ..position = 0
-      ..assignments = BuiltList.of([
-        Assignment((b) => b
-          ..id = assignmentId
-          ..courseId = _courseId
-          ..assignmentGroupId = group.id
-          ..published = published
-          ..position = 0
-          ..submissionList = BuiltList.of(submissions ?? <Submission>[]).toBuilder())
-      ]).toBuilder())
-  ];
 }
 
 class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}

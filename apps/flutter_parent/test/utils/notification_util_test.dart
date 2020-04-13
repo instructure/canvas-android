@@ -26,11 +26,12 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import 'test_app.dart';
+import 'test_helpers/mock_helpers.dart';
 
 void main() {
-  final plugin = _MockPlugin();
-  final database = _MockDatabase();
-  final analytics = _MockAnalytics();
+  final plugin = MockPlugin();
+  final database = MockReminderDb();
+  final analytics = MockAnalytics();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<ReminderDb>(() => database);
@@ -185,9 +186,3 @@ void main() {
     await NotificationUtil.init();
   });
 }
-
-class _MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
-
-class _MockDatabase extends Mock implements ReminderDb {}
-
-class _MockAnalytics extends Mock implements Analytics {}

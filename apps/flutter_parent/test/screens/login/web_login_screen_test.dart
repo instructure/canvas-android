@@ -13,8 +13,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,16 +26,20 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  final interactor = _MockWebLoginInteractor();
+  final interactor = MockWebLoginInteractor();
+  final analytics = MockAnalytics();
 
   setupTestLocator((locator) {
     locator.registerFactory<WebLoginInteractor>(() => interactor);
+    locator.registerFactory<Analytics>(() => analytics);
   });
 
   setUp(() {
     reset(interactor);
+    reset(analytics);
   });
 
   testWidgetsWithAccessibilityChecks('Shows the domain in the toolbar', (tester) async {
@@ -71,6 +77,52 @@ void main() {
     when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value(MobileVerifyResult()));
 
     await tester.pumpWidget(TestApp(WebLoginScreen(domain), platformConfig: PlatformConfig(initWebview: true)));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebView), findsOneWidget);
+    expect(find.byType(Dialog), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Logs when using an authentication provider', (tester) async {
+    final domain = 'domain';
+    when(interactor.mobileVerify(any))
+        .thenAnswer((_) => Future.value(MobileVerifyResult((b) => b..baseUrl = '$domain/')));
+
+    final provider = 'asdf';
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, authenticationProvider: provider),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebView), findsOneWidget);
+    expect(find.byType(Dialog), findsNothing);
+
+    verify(analytics.logMessage('authentication_provider=$provider')).called(1);
+  });
+
+  testWidgetsWithAccessibilityChecks('Handles siteadmin login flow with inst domain', (tester) async {
+    final domain = 'domain.instructure.com';
+    when(interactor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, loginFlow: LoginFlow.siteAdmin),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebView), findsOneWidget);
+    expect(find.byType(Dialog), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Handles siteadmin login flow without inst domain', (tester) async {
+    final domain = 'domain';
+    when(interactor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+
+    await tester.pumpWidget(TestApp(
+      WebLoginScreen(domain, loginFlow: LoginFlow.siteAdmin),
+      platformConfig: PlatformConfig(initWebview: true),
+    ));
     await tester.pumpAndSettle();
 
     expect(find.byType(WebView), findsOneWidget);
@@ -197,11 +249,13 @@ void main() {
     expect(find.byType(Dialog), findsOneWidget);
 
     await tester.enterText(find.byKey(Key(WebLoginScreen.PROTOCOL_SKIP_VERIFY_KEY)), 'https');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.enterText(find.byKey(Key(WebLoginScreen.ID_SKIP_VERIFY_KEY)), 'id');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.enterText(find.byKey(Key(WebLoginScreen.SECRET_SKIP_VERIFY_KEY)), 'secret');
 
-    // Tap ok, verify the dialog is gone now
-    await tester.tap(find.text(AppLocalizations().ok.toUpperCase()));
+    // Hit done on the last field, verify the dialog is gone now
+    await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pump();
     await tester.pump();
     expect(find.byType(Dialog), findsNothing);
@@ -255,5 +309,3 @@ void main() {
     verify(interactor.mobileVerify(any));
   });
 }
-
-class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}

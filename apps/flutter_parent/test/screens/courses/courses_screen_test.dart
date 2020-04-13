@@ -35,7 +35,6 @@ import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 

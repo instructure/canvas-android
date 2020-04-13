@@ -149,7 +149,6 @@ class ApiPrefs {
   static Future<void> updateCurrentLogin(dynamic Function(LoginBuilder) updates, {app}) async {
     _checkInit();
     final login = getCurrentLogin();
-    Locale oldLocale = effectiveLocale();
     final updatedLogin = login.rebuild(updates);
 
     // Save in-memory login

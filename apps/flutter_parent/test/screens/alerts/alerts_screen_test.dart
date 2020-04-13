@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
-import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
@@ -45,10 +44,6 @@ import '../../utils/test_app.dart';
 final _studentId = '123';
 void main() {
   final String domain = 'https://test.instructure.com';
-  final login = Login((b) => b
-    ..domain = domain
-    ..accessToken = 'token'
-    ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   final interactor = _MockAlertsInteractor();
   final announcementInteractor = _MockAnnouncementDetailsInteractor();

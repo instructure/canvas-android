@@ -19,10 +19,11 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final observer = AnalyticsObserver();
-  final analytics = _MockAnalytics();
+  final analytics = MockAnalytics();
 
   setUpAll(() {
     PandaRouter.init(); // Initialize the router so when we matches are found it works as expected
@@ -143,5 +144,3 @@ class _NonPageRoute extends ModalRoute {
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => null;
 }
-
-class _MockAnalytics extends Mock implements Analytics {}

@@ -21,13 +21,14 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final alertId = '123';
   final studentId = '12321';
 
-  final api = _MockAlertsApi();
-  final notifier = _MockAlertCountNotifier();
+  final api = MockAlertsApi();
+  final notifier = MockAlertCountNotifier();
 
   setupTestLocator((_locator) {
     _locator.registerFactory<AlertsApi>(() => api);
@@ -91,7 +92,3 @@ void main() {
     verify(notifier.update(studentId)).called(1);
   });
 }
-
-class _MockAlertsApi extends Mock implements AlertsApi {}
-
-class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
