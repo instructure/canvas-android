@@ -43,7 +43,6 @@ open class ApiPactTestBase {
                     val request = chain.request()
                     val builder = request.newBuilder()
                     builder.addHeader("Content-Type", "application/json")
-                    builder.addHeader("X-Tenant", "contract")
                     chain.proceed(builder.build())
                 }
                 .build()
@@ -66,8 +65,7 @@ open class ApiPactTestBase {
     val DEFAULT_REQUEST_HEADERS = mapOf(
             "Authorization" to "Bearer some_token",
             "Auth-User" to DEFAULT_MOBILE_STUDENT,
-            "Content-Type" to "application/json",
-            "X-Tenant" to "contract"
+            "Content-Type" to "application/json"
     )
 
     val DEFAULT_RESPONSE_HEADERS = mapOf(
