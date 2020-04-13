@@ -38,6 +38,7 @@ import 'package:test_api/src/frontend/async_matcher.dart';
 enum A11yExclusion {
   multipleNodesWithSameLabel,
   minContrastRatio,
+  minTapSize,
 }
 
 extension A11yExclusionExtension on A11yExclusion {
@@ -48,6 +49,9 @@ extension A11yExclusionExtension on A11yExclusion {
         break;
       case A11yExclusion.minContrastRatio:
         return 'Expected contrast ratio of at least';
+        break;
+      case A11yExclusion.minTapSize:
+        return 'expected tap target size of at least';
         break;
     }
     return null;
