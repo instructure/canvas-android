@@ -28,6 +28,15 @@ commonData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \"$appN
 
 # A running collection of info for all passed tests.  JSON object strings are just concatenated together.
 successReport=""
+successCount=0
+
+# Emits collected successful test data to splunk, and zeroes out the running trackers.
+emitSuccessfulTestData () {
+        #echo -e "\nSuccess payload: $successReport\n"
+        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
+        successReport="" # Reset the successReport after emitting it
+        successCount=0
+}
 
 # Process the test report (JUnitReport.xml)
 while IFS= read -r line
@@ -74,18 +83,21 @@ do
         if [[ $failureEncountered = false ]]
         then
             successReport="$successReport $payload"
+            ((successCount=successCount+1))
+            # Emit successful test data to Splunk every 100 tests
+            if [ $successCount -eq 100 ]
+            then
+              emitSuccessfulTestData
+            fi    
         fi
     fi
-
-    # Emit success report after each testsuite/device.  For multi-device runs, the report gets
-    # too large to emit if you aggregate the results of all testsuites.
-    if [[ $line =~ "</testsuite>" ]]
-    then
-        #echo -e "\nSuccess payload: $successReport\n"
-        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
-        successReport="" # Reset the successReport after emitting it
-    fi
 done < "$reportFile"
+
+# Take care of any straggling successful test reports
+if [ $successCount -gt 0 ]
+then
+    emitSuccessfulTestData
+fi
 
 # Globals for parsing time/cost info
 cost=0
