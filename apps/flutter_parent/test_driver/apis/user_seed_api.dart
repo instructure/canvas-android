@@ -65,7 +65,7 @@ class UserSeedApi {
         ..password = userData.pseudonym.password
         ..domain = response.request.uri.host);
 
-      var verifyResult = await AuthApi().mobileVerify(result.domain);
+      var verifyResult = await AuthApi().mobileVerify(result.domain, forceBetaDomain: true);
       var authCode = await _getAuthCode(result, verifyResult);
       var token = await _getToken(result, verifyResult, authCode);
 
