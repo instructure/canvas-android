@@ -65,7 +65,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
                 clientSecret = "",
                 calendarFilterPrefs = null
         ))
-        dashboardPage.signOut()
+        dashboardPage.pressChangeUser()
 
         // Sign in student 2
         val token = data.tokenFor(student2)!!
