@@ -82,9 +82,7 @@ do
     if [[ $line =~ "</testsuite>" ]]
     then
         #echo -e "\nSuccess payload: $successReport\n"
-
-        # Temporarily disabled
-        #curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
+        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
         successReport="" # Reset the successReport after emitting it
     fi
 done < "$reportFile"
