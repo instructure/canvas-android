@@ -94,7 +94,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
         statusCallback?.onCallbackStarted()
 
-        //Can make this check as we KNOW that the setter doesn't allow empty strings.
+        // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
             return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
@@ -184,7 +184,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
         statusCallback?.onCallbackStarted()
 
-        //Can make this check as we KNOW that the setter doesn't allow empty strings.
+        // Can make this check as we KNOW that the setter doesn't allow empty strings.
         if (params.domain == "") {
             Logger.d("The RestAdapter hasn't been set up yet. Call setupInstance(context,token,domain)")
             return Retrofit.Builder().baseUrl("http://invalid.domain.com/").build()
@@ -200,9 +200,8 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
             }
         }
 
-        // Sets the auth token, user agent, and handles masquerading.
         val restParams = params
-        //Sets the auth token, user agent, and handles masquerading.
+        // Sets the auth token, user agent, and handles masquerading.
         return Retrofit.Builder()
                 .baseUrl(params.domain + params.apiVersion + apiContext)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -229,10 +228,10 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
 
         var apiContext = ""
         if (params.canvasContext != null) {
-            apiContext = when {
-                params.canvasContext.type == CanvasContext.Type.COURSE -> "courses/"
-                params.canvasContext.type == CanvasContext.Type.GROUP -> "groups/"
-                params.canvasContext.type == CanvasContext.Type.SECTION -> "sections/"
+            apiContext = when (params.canvasContext.type) {
+                CanvasContext.Type.COURSE -> "courses/"
+                CanvasContext.Type.GROUP -> "groups/"
+                CanvasContext.Type.SECTION -> "sections/"
                 else -> "users/"
             }
         }
@@ -247,7 +246,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
      */
     @Suppress("MemberVisibilityCanBePrivate")
     protected fun finalBuildAdapter(params: RestParams, apiContext: String): Retrofit.Builder {
-        //Sets the auth token, user agent, and handles masquerading.
+        // Sets the auth token, user agent, and handles masquerading.
         return Retrofit.Builder()
             .baseUrl(params.domain + params.apiVersion + apiContext)
             .addConverterFactory(GsonConverterFactory.create())

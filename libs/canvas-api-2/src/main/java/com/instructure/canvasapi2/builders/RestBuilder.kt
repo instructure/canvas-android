@@ -79,7 +79,7 @@ class RestBuilder(callback: StatusCallback<*> = object : StatusCallback<Any>(){}
         @JvmStatic
         fun clearCacheDirectory(): Boolean {
             return try {
-                CanvasRestAdapter.cacheDirectory.delete()
+                cacheDirectory.delete()
             } catch (e: Exception) {
                 Logger.e("Could not delete cache $e")
                 false

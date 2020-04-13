@@ -16,9 +16,10 @@
  */
 package com.instructure.canvasapi2
 
-import com.instructure.canvasapi2.models.CanvasAuthError
-import com.instructure.canvasapi2.utils.*
-import org.greenrobot.eventbus.EventBus
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiType
+import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.Logger
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

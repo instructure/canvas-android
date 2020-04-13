@@ -40,7 +40,12 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
         onRefreshStarted()
 
         mApiCalls = tryWeave {
-            val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, forceNetwork) }.filter { !(it.isExternal && it.isHidden) } //we don't want to list external tools that are hidden
+            val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, forceNetwork) }
+                .filter { !(it.isExternal && it.isHidden) } // We don't want to list external tools that are hidden
+                .toMutableList().apply {
+                    // Add extra tab for the student view and make sure it's at the very end of the list
+                    add(Tab(tabId = Tab.STUDENT_VIEW, position = 1000))
+                }.toList() // Turn back into a non-mutable list
             val launchDefinitions = awaitApi<List<LaunchDefinition>> {
                 LaunchDefinitionsManager.getLaunchDefinitionsForCourse((canvasContext as? Group)?.courseId ?: canvasContext.id, it, forceNetwork)
             }
@@ -72,6 +77,13 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
                 it.checkIfEmpty()
             }
         }
+    }
+
+    fun handleStudentViewClick() {
+        if (viewCallback?.isStudentInstalled() == true)
+            viewCallback?.showStudentView()
+        else
+            viewCallback?.showInstallStudentAppDialog()
     }
 
     override fun refresh(forceNetwork: Boolean) {

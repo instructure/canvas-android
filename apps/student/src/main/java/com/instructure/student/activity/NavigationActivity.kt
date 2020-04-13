@@ -147,7 +147,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     MasqueradingDialog.show(supportFragmentManager, ApiPrefs.domain, null, !isTablet)
                 }
                 R.id.navigationDrawerItem_stopMasquerading -> {
-                    MasqueradeHelper.stopMasquerading(NavigationActivity.startActivityClass)
+                    MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
                 R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
@@ -185,9 +185,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
-        if(masqueradingUserId != 0L) {
+        if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
         }
 
@@ -208,12 +207,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             loadLandingPage(true)
         }
 
-        if(ApiPrefs.user == null) {
-            /* Hard case to repo but it's possible for a user to force exit the app
-               before we finish saving the user but they will still launch into the app.
-               if that happens, log out. */
+        // Make sure we are either masquerading or we aren't - there's a case where we are in the middle of getting the Test User, or the user we want to masquerade as,
+        // and we do the above check if the user is null and logging out before getting the User information back
+        if (ApiPrefs.user == null && ((ApiPrefs.isMasquerading && ApiPrefs.isStudentView) || (!ApiPrefs.isMasquerading && !ApiPrefs.isStudentView))) {
+            // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
+            // If that happens, log out
             StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
         }
+
         setupBottomNavigation()
 
         // There is a chance our fragment may attach before we have our core data back.
@@ -255,7 +256,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun loadLandingPage(clearBackStack: Boolean) {
-        if(clearBackStack) clearBackStack(DashboardFragment::class.java)
+        if (clearBackStack) clearBackStack(DashboardFragment::class.java)
         val dashboardRoute = DashboardFragment.makeRoute(ApiPrefs.user)
         addFragment(DashboardFragment.newInstance(dashboardRoute), dashboardRoute)
 
@@ -403,7 +404,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             override fun onDrawerClosed(drawerView: View) {
                 super.onDrawerClosed(drawerView)
                 invalidateOptionsMenu()
-                //make the scrollview that is inside the drawer scroll to the top
+                // Make the scrollview that is inside the drawer scroll to the top
                 navigationDrawer.scrollTo(0, 0)
             }
         }

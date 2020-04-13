@@ -148,7 +148,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         LoggingUtility.log(this.javaClass.simpleName + " --> On Create")
 
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
-        if(masqueradingUserId != 0L) {
+        if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, InitActivity::class.java)
         }
 

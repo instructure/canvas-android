@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R
-import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.lastAncestorOrNull
 import com.instructure.pandautils.utils.onClick
 import kotlinx.android.synthetic.main.layout_masquerade_notification.view.*

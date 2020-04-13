@@ -79,10 +79,10 @@ public abstract class BaseLoginInitActivity extends AppCompatActivity {
         if (BuildConfig.IS_TESTING || isDebuggable) {
             final String token = ApiPrefs.getValidToken();
             if (token.isEmpty()) {
-                //Start Login Flow
+                // Start Login Flow
                 startActivity(beginLoginFlowIntent());
             } else {
-                //Start App
+                // Start App
                 Intent intent = launchApplicationMainActivityIntent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

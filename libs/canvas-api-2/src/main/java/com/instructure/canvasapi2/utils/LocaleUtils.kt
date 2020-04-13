@@ -26,6 +26,7 @@ import android.os.Handler
 import android.os.LocaleList
 import androidx.core.os.ConfigurationCompat
 import java.util.*
+import kotlin.system.exitProcess
 
 object LocaleUtils {
 
@@ -77,7 +78,7 @@ object LocaleUtils {
             val mPendingIntent = PendingIntent.getActivity(context, LANGUAGES_PENDING_INTENT_ID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             val mgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent)
-            System.exit(0)
+            exitProcess(0)
         }, 500)
     }
 

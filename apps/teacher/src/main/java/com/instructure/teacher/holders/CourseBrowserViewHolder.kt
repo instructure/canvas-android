@@ -46,12 +46,13 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             Tab.FILES_ID -> R.drawable.vd_files
             Tab.PAGES_ID -> R.drawable.vd_pages
             Tab.MODULES_ID -> R.drawable.vd_modules
+            Tab.STUDENT_VIEW -> R.drawable.vd_profile
             else -> {
                 //Determine if its the attendance tool
                 val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
-                if(attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
+                if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                     R.drawable.vd_attendance
-                } else if(tab.type == Tab.TYPE_EXTERNAL) {
+                } else if (tab.type == Tab.TYPE_EXTERNAL) {
                     R.drawable.vd_lti
                 } else R.drawable.vd_canvas_logo
             }
@@ -73,7 +74,16 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
      */
     private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
         labelText = itemView.label
-        itemView.label.text = tab.label
+
+        // Manually set the text for Student View tab since it doesn't have any other info other than tabId
+        if (tab.tabId == Tab.STUDENT_VIEW) {
+            itemView.label.text = itemView.context.getText(R.string.tab_student_view)
+            itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.vd_open_externally))
+        } else {
+            itemView.label.text = tab.label
+            itemView.endIcon.setImageDrawable(null)
+        }
+
         itemView.icon.setImageDrawable(drawable)
         itemView.setOnClickListener {
             callback(tab)

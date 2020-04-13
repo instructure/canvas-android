@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
@@ -105,7 +104,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
 
             // Go to login page
             if (type != Type.LOGOUT_NO_LOGIN_FLOW) {
-                // If this was trigged by a QR switch, we need a different intent to include the URI
+                // If this was triggered by a QR switch, we need a different intent to include the URI
                 val intent = if(type == Type.QR_CODE_SWITCH && uri != null) createQRLoginIntent(ContextKeeper.appContext, uri) else createLoginIntent(ContextKeeper.appContext)
                 intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 ContextKeeper.appContext.startActivity(intent)
@@ -115,7 +114,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
 
     private fun removeUser() {
         // Remove SignedInUser
-        PreviousUsersUtils.removeByToken(ContextKeeper.appContext, ApiPrefs.token, ApiPrefs.refreshToken)
+        PreviousUsersUtils.removeByToken(ContextKeeper.appContext, ApiPrefs.getValidToken(), ApiPrefs.refreshToken)
         // Delete token from server. Fire and forget.
         if (ApiPrefs.getValidToken().isNotEmpty()) OAuthManager.deleteToken()
     }
@@ -131,7 +130,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
         if (currentUser != null && signedInUser != null) {
             signedInUser.user = currentUser
             signedInUser.clientId = ApiPrefs.clientId
-            signedInUser.clientSecret = ApiPrefs.clientSecret;
+            signedInUser.clientSecret = ApiPrefs.clientSecret
             PreviousUsersUtils.add(ContextKeeper.appContext, signedInUser)
         }
     }
