@@ -44,12 +44,14 @@ class AuthApi {
     return fetch(dio.post('${verifyResult.baseUrl}/login/oauth2/token', queryParameters: params));
   }
 
-  Future<MobileVerifyResult> mobileVerify(String domain) async {
-    // We only want to switch over to the beta mobile verify domain if the remote firebase config is true
-    // and we are trying to use a beta domain
-    var mobileVerifyBetaEnabled =
-        RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true' &&
-            domain.contains('.beta.');
+  Future<MobileVerifyResult> mobileVerify(String domain, {bool forceBetaDomain = false}) async {
+    // We only want to switch over to the beta mobile verify domain if either:
+    //   (1) we are forcing the beta domain (typically in UI tests) OR
+    //   (2) the remote firebase config setting for MOBILE_VERIFY_BETA_ENABLED is true
+    // AND we are trying to use a beta domain
+    var mobileVerifyBetaEnabled = (forceBetaDomain ||
+            RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true') &&
+        domain.contains('.beta.');
 
     Dio dio = DioConfig.core(useBetaDomain: mobileVerifyBetaEnabled).dio;
 
