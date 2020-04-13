@@ -34,6 +34,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../utils/accessibility_utils.dart';
+import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
 
@@ -74,7 +75,8 @@ void main() {
 
       var messageWidget = find.byType(MessageWidget);
       expect(messageWidget, findsOneWidget);
-      expect(find.descendant(of: messageWidget, matching: find.text(conversation.messages[0].body)), findsOneWidget);
+      expect(
+          find.descendant(of: messageWidget, matching: find.richText(conversation.messages[0].body)), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('displays multiple messages in correct order', (tester) async {
@@ -129,7 +131,7 @@ void main() {
 
       // Get widget positions in the same order as the messages in the conversation
       var messageWidgetOffsets = conversation.messages
-          .map((it) => find.ancestor(of: find.text(it.body), matching: find.byType(MessageWidget)))
+          .map((it) => find.ancestor(of: find.richText(it.body), matching: find.byType(MessageWidget)))
           .map((it) => tester.getTopLeft(it))
           .toList();
 
@@ -522,16 +524,16 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text(message1Body), findsOneWidget);
-      expect(find.text(message2Body), findsNothing);
+      expect(find.richText(message1Body), findsOneWidget);
+      expect(find.richText(message2Body), findsNothing);
 
       await tester.tap(find.byType(FloatingActionButton));
       await tester.pumpAndSettle();
       await tester.tap(find.text(l10n.reply));
       await tester.pumpAndSettle();
 
-      expect(find.text(message1Body), findsOneWidget);
-      expect(find.text(message2Body), findsOneWidget);
+      expect(find.richText(message1Body), findsOneWidget);
+      expect(find.richText(message2Body), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('route returns true if conversation was updated', (tester) async {

@@ -39,6 +39,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../utils/accessibility_utils.dart';
+import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
 import '../create_conversation/create_conversation_screen_test.dart';
@@ -86,7 +87,7 @@ void main() {
     await tester.pumpWidget(TestApp(ConversationReplyScreen(conversation, message, false)));
     await tester.pumpAndSettle();
 
-    expect(find.descendant(of: find.byType(MessageWidget), matching: find.text(message.body)), findsOneWidget);
+    expect(find.descendant(of: find.byType(MessageWidget), matching: find.richText(message.body)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('tapping attachment on message being replied to shows viewer', (tester) async {
@@ -131,7 +132,8 @@ void main() {
     await tester.pumpAndSettle();
 
     final expectedMessage = conversation.messages[0];
-    expect(find.descendant(of: find.byType(MessageWidget), matching: find.text(expectedMessage.body)), findsOneWidget);
+    expect(
+        find.descendant(of: find.byType(MessageWidget), matching: find.richText(expectedMessage.body)), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('sending disabled when no message is present', (tester) async {
