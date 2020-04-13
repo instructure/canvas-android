@@ -41,6 +41,8 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
 
   String get itemId;
 
+  String get courseId;
+
   DateTime get date;
 
   Reminder._();
@@ -53,5 +55,6 @@ abstract class Reminder implements Built<Reminder, ReminderBuilder> {
     ..userId = ''
     ..type = TYPE_EVENT
     ..itemId = ''
+    ..courseId = ''
     ..date = DateTime.now();
 }

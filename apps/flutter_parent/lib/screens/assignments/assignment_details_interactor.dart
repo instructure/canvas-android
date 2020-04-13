@@ -76,6 +76,7 @@ class AssignmentDetailsInteractor {
     AppLocalizations l10n,
     DateTime date,
     String assignmentId,
+    String courseId,
     String title,
     String body,
   ) async {
@@ -84,6 +85,7 @@ class AssignmentDetailsInteractor {
           ..userId = ApiPrefs.getUser().id
           ..type = Reminder.TYPE_ASSIGNMENT
           ..itemId = assignmentId
+          ..courseId = courseId
           ..date = date.toUtc() // built_value complains about non-utc timestamps
         );
 

@@ -44,12 +44,20 @@ class EventDetailsInteractor {
     return reminder;
   }
 
-  Future<void> createReminder(AppLocalizations l10n, DateTime date, String eventId, String title, String body) async {
+  Future<void> createReminder(
+    AppLocalizations l10n,
+    DateTime date,
+    String eventId,
+    String courseId,
+    String title,
+    String body,
+  ) async {
     var reminder = Reminder((b) => b
           ..userDomain = ApiPrefs.getDomain()
           ..userId = ApiPrefs.getUser().id
           ..type = Reminder.TYPE_EVENT
           ..itemId = eventId
+          ..courseId = courseId
           ..date = date.toUtc() // built_value complains about non-utc timestamps
         );
 
