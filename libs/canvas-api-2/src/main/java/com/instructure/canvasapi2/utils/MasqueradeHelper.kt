@@ -50,8 +50,6 @@ object MasqueradeHelper {
             return // stopMasquerading is called again via LogoutTask, which will run the code below
         }
 
-        ApiPrefs.isMasquerading = true
-        ApiPrefs.isStudentView = true
         ApiPrefs.masqueradeId = -1L
         ApiPrefs.domain = ""
         ApiPrefs.masqueradeDomain = ""
@@ -80,7 +78,7 @@ object MasqueradeHelper {
             // If we don't set isMasquerading to true here the original domain will be set to the masquerading domain, even if trying to
             // masquerade fails
             ApiPrefs.isMasquerading = true
-            ApiPrefs.isStudentView = !masqueradeToken.isBlank()
+            ApiPrefs.isStudentView = courseId != null
 
             ApiPrefs.masqueradeId = masqueradingUserId
             // Because isMasquerading is set to true this will also set the masqueradingDomain
@@ -91,7 +89,7 @@ object MasqueradeHelper {
         }
 
         try {
-            if (ApiPrefs.isStudentView && courseId != null) {
+            if (ApiPrefs.isStudentView) {
                 ApiPrefs.isMasquerading = false // Turn this off so we don't append as_user_id when we get/create the test user account
                 // Make API call to get and/or create Test User account
                 UserManager.getTestUser(courseId, object : StatusCallback<User>() {
@@ -140,7 +138,7 @@ object MasqueradeHelper {
         startupIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, startupIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 550, pendingIntent)
+        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
 
         // Delays the exit long enough for all the shared preferences to be saved and caches to be cleared.
         Handler().postDelayed({

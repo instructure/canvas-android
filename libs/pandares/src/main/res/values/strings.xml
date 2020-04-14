@@ -1066,6 +1066,9 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
+    <string name="studentNotInstalled">Canvas Student Required</string>
+    <string name="studentNotInstalledDesc">Canvas Student app is required to view this course as a student. Tap OK to be taken to the Canvas Student Play Store listing. </string>
+
 
     <!-- Panda Avatar Content Descriptions -->
 

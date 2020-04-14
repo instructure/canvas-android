@@ -91,9 +91,6 @@ object CourseAPI {
 
         @GET("courses/{courseId}/rubrics/{rubricId}")
         fun getRubricSettings(@Path("courseId") courseId: Long, @Path("rubricId") rubricId: Long): Call<RubricSettings>
-
-        @GET("courses/{courseId}/users?enrollment_type[]=student_view")
-        fun getTestStudents(@Path("courseId") courseId: Long): Call<List<User>>
     }
 
     @Throws(IOException::class)
@@ -222,9 +219,5 @@ object CourseAPI {
 
     fun getRubricSettings(courseId: Long, rubricId: Long, adapter: RestBuilder, callback: StatusCallback<RubricSettings>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getRubricSettings(courseId, rubricId)).enqueue(callback)
-    }
-
-    fun getTestStudents(courseId: Long, adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<User>>) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).getTestStudents(courseId)).enqueue(callback)
     }
 }

@@ -325,7 +325,7 @@ class CourseBrowserFragment : BaseSyncFragment<
         var studentInstalled = false
         context?.packageManager?.getInstalledPackages(0)?.let { packages ->
             studentInstalled = packages.any {
-                it.packageName == "com.instructure.candroid"
+                it.packageName == CANVAS_STUDENT_ID
             }
         }
 

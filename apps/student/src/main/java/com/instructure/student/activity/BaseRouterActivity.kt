@@ -200,11 +200,6 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                 RouteMatcher.routeUrl(this, url)
             }
         }
-
-        if (extras.containsKey(Route.ROUTE)) {
-            handleRoute(AllCoursesFragment.makeRoute())
-            return
-        }
     }
 
     protected fun handleSpecificFile(courseId: Long, fileID: String) {
