@@ -20,8 +20,6 @@ import 'test_app.dart';
 import 'test_helpers/mock_helpers.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
   tearDown(() {
     RemoteConfigUtils.clean();
   });
@@ -31,7 +29,7 @@ void main() {
   });
 
   test('double initialization throws', () async {
-    await setupPlatformChannels();
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {}));
     final mockRemoteConfig = setupMockRemoteConfig();
     await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
     expect(() async => await RemoteConfigUtils.initializeExplicit(mockRemoteConfig), throwsStateError);
@@ -39,21 +37,16 @@ void main() {
 
   test('unfetched, uncached value yields default', () async {
     // No cached values, no fetched values
-    await setupPlatformChannels();
-    final mockRemoteConfig = setupMockRemoteConfig();
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: setupMockRemoteConfig()));
 
     // default value = 'hey there'
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'hey there');
   });
 
   test('fetched value trumps default value', () async {
-    // Start up with no cached values
-    await setupPlatformChannels();
-
     // Create a mocked RemoteConfig object that will fetch a 'test_string' value
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'test_string': 'fetched value'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
 
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'fetched value');
   });

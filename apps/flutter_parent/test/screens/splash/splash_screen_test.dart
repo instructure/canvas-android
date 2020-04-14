@@ -40,9 +40,8 @@ void main() {
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   setUp(() async {
-    await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
   });
 
   tearDown(() {

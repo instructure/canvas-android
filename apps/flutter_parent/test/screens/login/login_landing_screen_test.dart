@@ -64,10 +64,10 @@ void main() {
 
   setUp(() async {
     reset(analytics);
+    reset(interactor);
     reset(authApi);
-    await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
   });
 
   tearDown(() {
@@ -289,10 +289,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
-    await tester.pumpWidget(TestApp(
-      LoginLandingScreen(),
-      platformConfig: PlatformConfig(clearPrefs: false),
-    ));
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppLocalizations().qrCode));

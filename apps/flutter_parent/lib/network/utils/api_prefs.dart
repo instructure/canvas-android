@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
@@ -27,7 +28,6 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dio_config.dart';
 
@@ -38,12 +38,12 @@ class ApiPrefs {
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
   static const String KEY_CURRENT_STUDENT = 'current_student';
 
-  static SharedPreferences _prefs;
+  static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
   static Login _currentLogin;
 
   static Future<void> init() async {
-    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
+    if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
   }
 

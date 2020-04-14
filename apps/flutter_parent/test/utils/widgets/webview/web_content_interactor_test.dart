@@ -16,7 +16,6 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -38,8 +37,7 @@ void main() {
   // Reset the interactions for the shared mocks
   setUp(() async {
     reset(oauthApi);
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
   });
 
   group('getAuthUrl', () {

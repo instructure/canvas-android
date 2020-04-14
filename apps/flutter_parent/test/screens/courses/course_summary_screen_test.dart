@@ -299,7 +299,7 @@ void main() {
       model,
       observers: [observer],
       platformConfig: PlatformConfig(
-          mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
+          mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
     ));
     await tester.pumpAndSettle();
 
@@ -346,7 +346,7 @@ Widget _testableWidget(CourseDetailsModel model,
       body: ChangeNotifierProvider<CourseDetailsModel>.value(value: model, child: CourseSummaryScreen()),
     ),
     platformConfig: PlatformConfig(
-        mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
+        mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initLoggedInUser: login),
     navigatorObservers: observers,
   );
 }

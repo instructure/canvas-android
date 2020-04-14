@@ -609,7 +609,8 @@ void main() {
     when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
 
     await tester.pumpWidget(_testableWidget(model,
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_student))})));
+        platformConfig:
+            PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_student))})));
     await tester.pump(); // Build the widget
     await tester.pump(); // Let the future finish
 

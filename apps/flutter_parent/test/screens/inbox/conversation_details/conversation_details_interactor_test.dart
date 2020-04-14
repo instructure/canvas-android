@@ -19,7 +19,6 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/conversation_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_screen.dart';
@@ -64,11 +63,8 @@ void main() {
   test('getCurrentUserId gets user ID from ApiPrefs', () async {
     var expectedId = 'self_1234';
 
-    final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
-
-    ApiPrefs.setUser(User((u) => u.id = expectedId));
+    final login = Login((b) => b..user = User((u) => u..id = expectedId).toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     var actualId = ConversationDetailsInteractor().getCurrentUserId();
 

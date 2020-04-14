@@ -239,7 +239,7 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
       ));
       await tester.pump();
 
@@ -260,7 +260,7 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
       ));
       await tester.pump();
 
@@ -285,7 +285,7 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
       ));
       await tester.pump();
 
@@ -324,12 +324,13 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {
-          ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student)),
-          ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid,
-        }),
+        platformConfig: PlatformConfig(
+          initLoggedInUser: login,
+          mockApiPrefs: {
+            ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student)),
+          },
+        ),
       ));
-      await ApiPrefs.addLogin(login);
       await tester.pump();
 
       // Tap the quiz widget
@@ -350,7 +351,7 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
       ));
       await tester.pump();
 
@@ -371,7 +372,7 @@ void main() {
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
       ));
       await tester.pump();
 

@@ -59,7 +59,7 @@ void main() {
 
   setUp(() async {
     await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+        config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
 
     reset(courseInteractor);
     reset(convoInteractor);

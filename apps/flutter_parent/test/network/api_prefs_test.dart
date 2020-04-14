@@ -62,7 +62,7 @@ void main() {
       ..domain = 'domain'
       ..accessToken = 'token'
       ..user = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: 'other_uuid'}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: 'other_uuid'}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.isLoggedIn(), false);
@@ -73,7 +73,7 @@ void main() {
       ..domain = 'domain'
       ..accessToken = 'token'
       ..user = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.isLoggedIn(), true);
@@ -83,7 +83,7 @@ void main() {
     var login = Login((b) => b
       ..domain = 'domain'
       ..user = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.getApiUrl(), 'domain/api/v1/');
@@ -119,7 +119,7 @@ void main() {
 
     await setupPlatformChannels(
         config: PlatformConfig(
-      mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
+      mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
     ));
     await ApiPrefs.addLogin(login);
 
@@ -159,7 +159,7 @@ void main() {
 
     await setupPlatformChannels(
         config: PlatformConfig(
-      mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
+      mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid},
     ));
     await ApiPrefs.addLogin(login);
     await ApiPrefs.performLogout(switchingLogins: false);
@@ -173,7 +173,7 @@ void main() {
 
   test('isMasquerading returns false if not masquerading', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.isMasquerading(), isFalse);
@@ -183,7 +183,7 @@ void main() {
     final login = Login((b) => b
       ..masqueradeDomain = 'masqueradeDomain'
       ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.isMasquerading(), isTrue);
@@ -191,7 +191,7 @@ void main() {
 
   test('setting user updates stored user', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
@@ -204,7 +204,7 @@ void main() {
     final login = Login((b) => b
       ..masqueradeDomain = 'masqueradeDomain'
       ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
@@ -215,7 +215,7 @@ void main() {
 
   test('setting user updates with new locale rebuilds the app', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
 
     expect(ApiPrefs.getUser(), null);
 
@@ -239,7 +239,7 @@ void main() {
 
   test('effectiveLocale returns the users effective locale', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser();
@@ -250,7 +250,7 @@ void main() {
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b
@@ -264,7 +264,7 @@ void main() {
 
   test('effectiveLocale returns the users effective locale without inst if script is longer than 5', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-AU-x-unimelb');
@@ -277,7 +277,7 @@ void main() {
 
   test('effectiveLocale returns the users effective locale with inst if script is less than 5', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-GB-x-ukhe');
@@ -313,7 +313,7 @@ void main() {
       ..domain = 'domain'
       ..masqueradeDomain = masqueradeDomain
       ..masqueradeUser = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.getDomain(), masqueradeDomain);
@@ -325,7 +325,7 @@ void main() {
 
   test('getHeaderMap returns a map with the accept-language from prefs', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final user = CanvasModelTestUtils.mockUser().rebuild((b) => b..effectiveLocale = 'en-US');
@@ -336,7 +336,7 @@ void main() {
 
   test('getHeaderMap returns a map with the accept-language from device', () async {
     final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     final deviceLocale = window.locale;
@@ -351,7 +351,7 @@ void main() {
     var login = Login((b) => b
       ..accessToken = 'token'
       ..user = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.getHeaderMap()['Authorization'], 'Bearer token');
@@ -361,7 +361,7 @@ void main() {
     var login = Login((b) => b
       ..accessToken = 'token'
       ..user = CanvasModelTestUtils.mockUser().toBuilder());
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
     await ApiPrefs.addLogin(login);
 
     expect(ApiPrefs.getHeaderMap(token: 'other token')['Authorization'], 'Bearer other token');
