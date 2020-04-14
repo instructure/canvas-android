@@ -19,7 +19,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_page.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseFrontPageScreen extends StatefulWidget {

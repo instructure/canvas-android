@@ -19,7 +19,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_page.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 enum CourseShellType {
@@ -75,8 +75,8 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
         appBar: AppBar(
           title: _appBarTitle(
               (widget.type == CourseShellType.frontPage)
-                  ? L10n(context).courseFrontPageLabel
-                  : L10n(context).courseSyllabusLabel,
+                  ? L10n(context).courseFrontPageLabel.toUpperCase()
+                  : L10n(context).courseSyllabusLabel.toUpperCase(),
               data.course.name),
         ),
         body: _body(data));

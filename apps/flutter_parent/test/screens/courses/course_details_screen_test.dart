@@ -213,7 +213,9 @@ void main() {
       ..homePage = HomePage.wiki
       ..name = 'Course Name');
 
-    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
+    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b
+      ..id = '1'
+      ..body = 'hodor'));
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),
@@ -325,7 +327,9 @@ void main() {
       ..homePage = HomePage.wiki);
 
     when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b..id = '1'));
+    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b
+      ..id = '1'
+      ..body = 'hodor'));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
 
     String studentName = 'Panda';

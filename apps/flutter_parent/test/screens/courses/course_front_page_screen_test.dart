@@ -31,7 +31,9 @@ void main() {
   final l10n = AppLocalizations();
 
   final _courseId = '123';
-  final _page = Page((b) => b..id = '1');
+  final _page = Page((b) => b
+    ..id = '1'
+    ..body = '');
   final _interactor = _MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
