@@ -1067,7 +1067,7 @@
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
     <string name="studentNotInstalled">Canvas Student Required</string>
-    <string name="studentNotInstalledDesc">Canvas Student app is required to view this course as a student. Tap OK to be taken to the Canvas Student Play Store listing. </string>
+    <string name="studentNotInstalledDesc">Canvas Student must be installed to view this course as a student. Tap OK to be redirected to the Canvas Student Play Store listing.</string>
     <string name="opensInCanvasStudent">Opens in Canvas Student</string>
     <string name="tab_student_view">Student View</string>
 
