@@ -15,16 +15,15 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/page.dart';
 
 import 'canvas_web_view.dart';
 
-class CanvasPage extends StatelessWidget {
-  final Page homePage;
+class CanvasHtml extends StatelessWidget {
+  final String content;
+  final String emptyDescription;
 
-  const CanvasPage(this.homePage, {Key key})
-      : assert(homePage != null),
+  const CanvasHtml(this.content, {this.emptyDescription, Key key})
+      : assert(content != null),
         super(key: key);
 
   @override
@@ -34,8 +33,8 @@ class CanvasPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 16.0),
         child: CanvasWebView(
-          content: homePage.body,
-          emptyDescription: homePage.lockExplanation ?? L10n(context).noPageFound,
+          content: content,
+          emptyDescription: emptyDescription,
           horizontalPadding: 16,
           fullScreen: false,
         ),

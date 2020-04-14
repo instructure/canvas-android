@@ -70,7 +70,8 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
           } else if (!snapshot.hasData) {
             return LoadingIndicator();
           } else {
-            return CanvasPage(snapshot.data);
+            return CanvasHtml(snapshot.data.body,
+                emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound);
           }
         },
       ),

@@ -20,7 +20,6 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_page.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 enum CourseShellType {
@@ -58,13 +57,12 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
     return FutureBuilder(
       future: _dataFuture,
       builder: (context, AsyncSnapshot<CourseShellData> snapshot) {
-        if (snapshot.hasError) {
-          return ErrorPandaWidget(L10n(context).unexpectedError, () => _refresh());
-        } else if (!snapshot.hasData) {
-          return Material(
-            color: Theme.of(context).scaffoldBackgroundColor,
-            child: LoadingIndicator(),
-          );
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
+        }
+
+        if (snapshot.hasError || snapshot.data == null) {
+          return _error();
         } else {
           return _scaffold(widget.type, snapshot.data);
         }
@@ -90,22 +88,9 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
           return _refresh();
         },
         child: widget.type == CourseShellType.frontPage
-            ? CanvasPage(data.frontPage)
-            : _syllabus(data.course.syllabusBody));
-  }
-
-  Widget _syllabus(String syllabus) {
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: CanvasWebView(
-          content: syllabus,
-          horizontalPadding: 16,
-          fullScreen: false,
-        ),
-      ),
-    );
+            ? CanvasHtml(data.frontPage.body,
+                emptyDescription: data.frontPage.lockExplanation ?? L10n(context).noPageFound)
+            : CanvasHtml(data.course.syllabusBody));
   }
 
   Widget _appBarTitle(String title, String subtitle) {
@@ -117,5 +102,11 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
         Text(subtitle, style: TextStyle(fontSize: 12.0)),
       ],
     );
+  }
+
+  Widget _error() {
+    return Container(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: ErrorPandaWidget(L10n(context).unexpectedError, () => _refresh()));
   }
 }

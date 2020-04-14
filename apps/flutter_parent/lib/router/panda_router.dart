@@ -74,10 +74,6 @@ class PandaRouter {
 
   static String courseDetails(String courseId) => '/courses/$courseId';
 
-  static String syllabus(String courseId) => '/courses/$courseId/assignments/syllabus';
-  static String frontPage(String courseId) => '/courses/$courseId/pages/first-page';
-  static String frontPageWiki(String courseId) => '/courses/$courseId/wiki';
-
   static String courses() => '/courses';
 
   static String dashboard() => '/dashboard';
@@ -90,6 +86,10 @@ class PandaRouter {
       '$_domainSearch?${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String eventDetails(String courseId, String eventId) => 'courses/$courseId/calendar_events/$eventId';
+
+  static String frontPage(String courseId) => '/courses/$courseId/pages/first-page';
+
+  static String frontPageWiki(String courseId) => '/courses/$courseId/wiki';
 
   static String help() => '/help';
 
@@ -135,6 +135,8 @@ class PandaRouter {
 
   static String settings() => '/settings';
 
+  static String syllabus(String courseId) => '/courses/$courseId/assignments/syllabus';
+
   static String termsOfUse() => '/terms_of_use';
 
   static void init() {
@@ -150,6 +152,7 @@ class PandaRouter {
 
       // INTERNAL
       router.define(alerts, handler: _alertHandler);
+      // RIP Alphabetical Order, syllabus needs to appear before assignment details, otherwise they conflict
       router.define(syllabus(':${_RouterKeys.courseId}'), handler: _syllabusHandler);
       router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
           handler: _assignmentDetailsHandler);
