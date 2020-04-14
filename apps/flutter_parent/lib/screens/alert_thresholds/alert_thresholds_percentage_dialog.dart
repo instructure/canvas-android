@@ -86,6 +86,7 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
             keyboardType: TextInputType.number,
             initialValue: _threshold?.threshold,
             maxLength: 3,
+            buildCounter: (_, {currentLength, maxLength, isFocused}) => null, // Don't show the counter
             inputFormatters: [
               // Only accept numbers, no other characters (including '-')
               BlacklistingTextInputFormatter(RegExp('[^0-9]')),

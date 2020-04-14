@@ -134,7 +134,6 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Divider(height: 1),
             TextField(
               maxLines: 1,
               autofocus: true,
@@ -175,7 +174,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                 backgroundColor: Colors.transparent,
               ),
             ),
-            Divider(height: 1),
+            Divider(height: 0),
             Flexible(
               flex: 10000,
               child: ListView.separated(
@@ -200,7 +199,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                 },
               ),
             ),
-            Divider(height: 1),
+            if (_schoolDomains.isNotEmpty) Divider(height: 0),
             Center(
               child: FlatButton(
                 key: Key('help-button'),
