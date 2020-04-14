@@ -213,7 +213,7 @@ void main() {
       ..homePage = HomePage.wiki
       ..name = 'Course Name');
 
-    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
       ..id = '1'
       ..body = 'hodor'));
 
@@ -327,7 +327,7 @@ void main() {
       ..homePage = HomePage.wiki);
 
     when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    when(courseInteractor.loadHomePage(courseId)).thenAnswer((_) async => Page((b) => b
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
       ..id = '1'
       ..body = 'hodor'));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));

@@ -59,6 +59,6 @@ class CourseDetailsInteractor {
     );
   }
 
-  Future<Page> loadHomePage(String courseId, {bool forceRefresh = false}) =>
+  Future<Page> loadFrontPage(String courseId, {bool forceRefresh = false}) =>
       locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
 }

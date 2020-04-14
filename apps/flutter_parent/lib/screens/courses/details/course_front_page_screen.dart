@@ -41,7 +41,7 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
 
   Future<Page> _refreshPage() {
     setState(() {
-      _pageFuture = _interactor.loadHomePage(widget.courseId, forceRefresh: true);
+      _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
     return _pageFuture?.catchError((_) {});
   }
@@ -50,7 +50,7 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
 
   @override
   void initState() {
-    _pageFuture = _interactor.loadHomePage(widget.courseId);
+    _pageFuture = _interactor.loadFrontPage(widget.courseId);
     super.initState();
   }
 

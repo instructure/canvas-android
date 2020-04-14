@@ -53,7 +53,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-    when(_interactor.loadHomePage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
+    when(_interactor.loadFrontPage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
 
     await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
@@ -63,11 +63,11 @@ void main() {
     await tester.tap(find.text(l10n.retry));
     await tester.pump();
 
-    verify(_interactor.loadHomePage(_courseId, forceRefresh: true)).called(1);
+    verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('can refresh', (tester) async {
-    when(_interactor.loadHomePage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
+    when(_interactor.loadFrontPage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
 
     await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
@@ -78,11 +78,11 @@ void main() {
     await tester.drag(refresh, const Offset(0, 200));
     await tester.pumpAndSettle();
 
-    verify(_interactor.loadHomePage(_courseId, forceRefresh: true)).called(1);
+    verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('shows page content', (tester) async {
-    when(_interactor.loadHomePage(_courseId)).thenAnswer((_) async => _page.rebuild((b) => b..body = 'body'));
+    when(_interactor.loadFrontPage(_courseId)).thenAnswer((_) async => _page.rebuild((b) => b..body = 'body'));
 
     await tester.pumpWidget(TestApp(
       CourseFrontPageScreen(courseId: _courseId),

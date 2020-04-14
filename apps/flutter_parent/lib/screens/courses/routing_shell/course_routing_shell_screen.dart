@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 enum CourseShellType {
@@ -78,6 +79,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
                   ? L10n(context).courseFrontPageLabel.toUpperCase()
                   : L10n(context).courseSyllabusLabel.toUpperCase(),
               data.course.name),
+          bottom: ParentTheme.of(context).appBarDivider(),
         ),
         body: _body(data));
   }

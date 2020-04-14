@@ -23,9 +23,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../accessibility_utils.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.dart';
 
 void main() {
-  final interactor = _MockWebViewInteractor();
+  final interactor = MockWebViewInteractor();
 
   setupTestLocator((locator) => locator.registerFactory<WebContentInteractor>(() => interactor));
 
@@ -48,5 +49,3 @@ void main() {
     expect(find.byType(WebView), findsNothing);
   });
 }
-
-class _MockWebViewInteractor extends Mock implements WebContentInteractor {}

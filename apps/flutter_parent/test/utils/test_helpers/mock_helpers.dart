@@ -35,6 +35,7 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -104,3 +105,5 @@ class MockCourseApi extends Mock implements CourseApi {}
 class MockPageApi extends Mock implements PageApi {}
 
 class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
+
+class MockWebViewInteractor extends Mock implements WebContentInteractor {}
