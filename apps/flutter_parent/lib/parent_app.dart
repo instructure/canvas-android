@@ -24,6 +24,7 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 
 class ParentApp extends StatefulWidget {
   @override
@@ -45,6 +46,10 @@ class _ParentAppState extends State<ParentApp> {
   @override
   void initState() {
     super.initState();
+
+    // Init notifications here to ensure it happens after routing/etc
+    NotificationUtil.init();
+
     _locale = ApiPrefs.effectiveLocale();
   }
 
