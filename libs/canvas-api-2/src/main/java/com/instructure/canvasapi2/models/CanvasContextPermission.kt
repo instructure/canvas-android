@@ -41,7 +41,9 @@ data class CanvasContextPermission(
         @SerializedName(CAN_UPDATE_AVATAR)
         val canUpdateAvatar: Boolean = false,
         @SerializedName(CREATE_ANNOUNCEMENT)
-        val canCreateAnnouncement: Boolean = false
+        val canCreateAnnouncement: Boolean = false,
+        @SerializedName(STUDENT_VIEW)
+        val canUseStudentView: Boolean = false
 ) : Parcelable {
     companion object {
         const val BECOME_USER = "become_user"
@@ -55,5 +57,6 @@ data class CanvasContextPermission(
         const val SEND_MESSAGES_ALL = "send_messages_all"
         const val VIEW_ALL_GRADES = "view_all_grades"
         const val VIEW_ANALYTICS = "view_analytics"
+        const val STUDENT_VIEW = "use_student_view"
     }
 }

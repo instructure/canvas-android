@@ -23,7 +23,6 @@ import android.graphics.Color
 import android.net.Uri
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -333,19 +332,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     override
-    fun showInstallStudentAppDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(R.string.studentNotInstalled)
-            .setMessage(R.string.studentNotInstalledDesc)
-            .setNegativeButton(android.R.string.cancel) { _: DialogInterface, _: Int -> }
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                // Student app not installed, take the user to the Play Store
-                gotoStudentPlayStoreListing()
-            }
-            .create().show()
-    }
-
-    private fun gotoStudentPlayStoreListing() {
+    fun gotoStudentPlayStoreListing() {
         // Send the user to the Play Store
         val playStoreIntent: Intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(MARKET_URI_PREFIX + CANVAS_STUDENT_ID)

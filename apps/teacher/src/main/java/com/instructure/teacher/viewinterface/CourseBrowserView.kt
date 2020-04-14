@@ -21,5 +21,5 @@ import instructure.androidblueprint.SyncManager
 interface CourseBrowserView : SyncManager<Tab> {
     fun isStudentInstalled(): Boolean
     fun showStudentView()
-    fun showInstallStudentAppDialog()
+    fun gotoStudentPlayStoreListing()
 }

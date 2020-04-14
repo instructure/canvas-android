@@ -16,19 +16,21 @@
  */
 package com.instructure.teacher.presenters
 
+import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.AttendanceAPI
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.TabManager
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.LaunchDefinition
-import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.CourseBrowserView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
+import retrofit2.Call
+import retrofit2.Response
 
 class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab, Long) -> Boolean) : SyncPresenter<Tab, CourseBrowserView>(Tab::class.java) {
 
@@ -40,11 +42,22 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
         onRefreshStarted()
 
         mApiCalls = tryWeave {
+            // Check to see if we should show the student view tab
+            val canUseStudentView = awaitApiResponse<CanvasContextPermission> {
+                CourseManager.getCoursePermissions(
+                    canvasContext.id,
+                    emptyList(),
+                    it,
+                    true
+                )
+            }
+
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, forceNetwork) }
                 .filter { !(it.isExternal && it.isHidden) } // We don't want to list external tools that are hidden
                 .toMutableList().apply {
-                    // Add extra tab for the student view and make sure it's at the very end of the list
-                    add(Tab(tabId = Tab.STUDENT_VIEW, position = 1000))
+                    if (canUseStudentView.isSuccessful && canUseStudentView.body()?.canUseStudentView == true)
+                        // Add extra tab for the student view and make sure it's at the very end of the list
+                        add(Tab(tabId = Tab.STUDENT_VIEW, position = 1000))
                 }.toList() // Turn back into a non-mutable list
             val launchDefinitions = awaitApi<List<LaunchDefinition>> {
                 LaunchDefinitionsManager.getLaunchDefinitionsForCourse((canvasContext as? Group)?.courseId ?: canvasContext.id, it, forceNetwork)
@@ -83,7 +96,7 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
         if (viewCallback?.isStudentInstalled() == true)
             viewCallback?.showStudentView()
         else
-            viewCallback?.showInstallStudentAppDialog()
+            viewCallback?.gotoStudentPlayStoreListing()
     }
 
     override fun refresh(forceNetwork: Boolean) {
