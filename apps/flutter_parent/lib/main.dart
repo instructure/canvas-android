@@ -43,7 +43,6 @@ void main() {
 
     // Notifications are now initialized in ParentApp.initState()
 
-    // Currently must be initialized after locator has been set up. This may change once routing is implemented.
     await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     runApp(ParentApp());
