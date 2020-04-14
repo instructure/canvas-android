@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/basic_user.dart';
@@ -23,6 +24,8 @@ import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
 
@@ -71,7 +74,11 @@ class MessageWidget extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16),
-          Text(message.body),
+          Linkify(
+            text: message.body,
+            options: LinkifyOptions(humanize: false),
+            onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
+          ),
           _attachmentsWidget(context, message)
         ],
       ),

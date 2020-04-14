@@ -26,6 +26,10 @@ class AnalyticsEventConstants {
   static const TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = 'token_refresh_failure_token_not_valid';
   static const TOKEN_REFRESH_FAILURE_NO_SECRET = 'token_refresh_failure_no_secret';
 
+  static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
+  static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
+  static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
+
   static const LOGOUT = 'logout';
   static const SWITCH_USERS = 'switch_users';
   static const HELP_LOGIN = 'help_login';

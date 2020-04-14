@@ -23,10 +23,11 @@ List<OnDatabaseCreateFn> _creators = [
 
 List<OnDatabaseVersionChangeFn> _updaters = [
   CalendarFilterDb.updateTable,
+  ReminderDb.updateTable,
 ];
 
 class DbUtil {
-  static const dbVersion = 2;
+  static const dbVersion = 3;
   static const dbName = 'canvas_parent.db';
 
   static Database _db;

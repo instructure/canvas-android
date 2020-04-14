@@ -49,6 +49,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -63,6 +64,7 @@ import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
@@ -121,6 +123,7 @@ void setupLocator() {
   locator.registerFactory<HelpScreenInteractor>(() => HelpScreenInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
+  locator.registerFactory<QRLoginTutorialScreenInteractor>(() => QRLoginTutorialScreenInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
@@ -129,6 +132,7 @@ void setupLocator() {
 
   // Veneers and mockable dependencies
   locator.registerLazySingleton<AndroidIntentVeneer>(() => AndroidIntentVeneer());
+  locator.registerLazySingleton<BarcodeScanVeneer>(() => BarcodeScanVeneer());
   locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());

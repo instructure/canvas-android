@@ -35,4 +35,8 @@ abstract class CanvasToken implements Built<CanvasToken, CanvasTokenBuilder> {
 
   @nullable
   User get user;
+
+  @nullable
+  @BuiltValueField(wireName: 'real_user')
+  User get realUser;
 }

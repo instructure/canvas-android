@@ -14,9 +14,6 @@
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 
-import '../assignment.dart';
-import 'create_assignment_info.dart';
-import 'create_submission_info.dart';
 import 'grade_submission_info.dart';
 
 part 'grade_submission_wrapper.g.dart';

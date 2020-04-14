@@ -16,13 +16,19 @@ import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  final api = _MockAlertsApi();
+  AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b
+    ..alertType = type
+    ..threshold = value
+    ..build());
+
+  final api = MockAlertsApi();
 
   setupTestLocator((locator) {
     locator.registerFactory<AlertsApi>(() => api);
@@ -91,10 +97,3 @@ void main() {
     verify(api.getAlertThresholds(studentId, true)).called(1);
   });
 }
-
-AlertThreshold _mockThreshold(AlertType type, {String value}) => AlertThreshold((b) => b
-  ..alertType = type
-  ..threshold = value
-  ..build());
-
-class _MockAlertsApi extends Mock implements AlertsApi {}

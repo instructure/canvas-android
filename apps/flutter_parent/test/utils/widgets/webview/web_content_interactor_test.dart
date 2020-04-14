@@ -24,9 +24,10 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../platform_config.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.dart';
 
 void main() {
-  final oauthApi = _MockOAuthApi();
+  final oauthApi = MockOAuthApi();
   final domain = 'https://www.instructure.com';
   final login = Login((b) => b.domain = domain);
 
@@ -143,8 +144,6 @@ void main() {
     });
   });
 }
-
-class _MockOAuthApi extends Mock implements OAuthApi {}
 
 String _makeIframe({String id, String src, String target, String ltiButtonText}) {
   String ltiButton = ltiButtonText != null

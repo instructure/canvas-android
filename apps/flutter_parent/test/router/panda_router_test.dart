@@ -34,11 +34,13 @@ import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
+import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
@@ -293,6 +295,18 @@ void main() {
       expect((widget as DashboardScreen).startingPage, DashboardContentScreens.Alerts);
       expect(widget, isA<DashboardScreen>());
     });
+
+    test('qrTutorial returns QRTutorial screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.qrTutorial());
+      expect(widget, isA<QRLoginTutorialScreen>());
+    });
+
+    test('qrLogin returns splash screen', () {
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+          '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
+      final widget = _getWidgetFromRoute(PandaRouter.qrLogin(barcodeResultUrl));
+      expect(widget, isA<SplashScreen>());
+    });
   });
 
   group('external url handler', () {
@@ -372,6 +386,23 @@ void main() {
       ) as RouterErrorScreen;
 
       expect(widget, isA<RouterErrorScreen>());
+    });
+
+    test('returns Splash screen for qr login', () {
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+          '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
+      final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl)) as SplashScreen;
+      expect(widget, isA<SplashScreen>());
+      expect(widget.qrLoginUrl, barcodeResultUrl);
+    });
+
+    test('returns Splash screen for qr login with no user signed in', () async {
+      await setupPlatformChannels(config: PlatformConfig());
+      final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
+          '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
+      final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl)) as SplashScreen;
+      expect(widget, isA<SplashScreen>());
+      expect(widget.qrLoginUrl, barcodeResultUrl);
     });
   });
 

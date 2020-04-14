@@ -12,21 +12,30 @@ failed=0
 failures=()
 for driver in test_driver/*_test.dart
 do
-	echo "Aggregator: driver = $driver"
+        echo "Aggregator: driver = $driver"
 
-	target=${driver/_test}
-	echo "Aggregator: target = $target"
+        target=${driver/_test}
+        echo "Aggregator: target = $target"
 	
-	flutter drive --target=$target
-	if [ $? -eq 0 ]
-	then
-	  echo Aggregator: $driver Passed
-	  ((passed=passed+1))
-	else
-	  echo Aggregator: $driver FAILED
-	  ((failed=failed+1))
-	  failures=("${failures[@]}" $driver)
-	fi
+        # Run the test
+        flutter drive --target=$target
+
+        # Allow for a single retry for a failed test
+        if [ $? -ne 0 ]
+        then
+          echo "Aggregator: $driver failed; retrying..."
+          flutter drive --target=$target
+        fi
+
+        # Record test result
+        if [ $? -eq 0 ]
+        then
+          echo Aggregator: $driver Passed
+          ((passed=passed+1))
+        else
+          ((failed=failed+1))
+          failures=("${failures[@]}" $driver)
+        fi
 done
 
 if [ $failed -eq 0 ]

@@ -182,7 +182,7 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
   Future<void> apiPrefsInitFuture;
-  if (config.mockPrefs != null) {
+  if (config.mockPrefs != null && config.clearPrefs) {
     ApiPrefs.clean();
     SharedPreferences.setMockInitialValues(config.safeMockPrefs);
     apiPrefsInitFuture = ApiPrefs.init();

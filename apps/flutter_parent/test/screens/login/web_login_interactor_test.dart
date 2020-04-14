@@ -19,23 +19,23 @@ import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
 
 void main() {
-  _setupLocator({AuthApi authApi}) {
-    final _locator = GetIt.instance;
-    _locator.reset();
+  final api = _MockAuthApi();
 
-    _locator.registerLazySingleton<AuthApi>(() => authApi ?? _MockAuthApi());
-  }
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<AuthApi>(() => api);
+  });
+
+  setUp(() {
+    reset(api);
+  });
 
   test('mobileVerify calls to the api', () async {
     final domain = 'domain';
-    final api = _MockAuthApi();
-    _setupLocator(authApi: api);
 
     await WebLoginInteractor().mobileVerify(domain);
 
@@ -54,9 +54,7 @@ void main() {
       ..accessToken = accessToken
       ..user = user.toBuilder());
 
-    final api = _MockAuthApi();
     when(api.getTokens(mobileVerify, request)).thenAnswer((_) async => tokens);
-    _setupLocator(authApi: api);
 
     await WebLoginInteractor().performLogin(mobileVerify, request);
 

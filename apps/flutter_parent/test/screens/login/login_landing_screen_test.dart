@@ -22,14 +22,17 @@ import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/two_finger_double_tap_gesture_detector.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -37,6 +40,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final analytics = _MockAnalytics();
@@ -58,9 +62,16 @@ void main() {
     locator.registerFactory<DomainSearchInteractor>(() => null);
   });
 
-  setUp(() {
+  setUp(() async {
     reset(analytics);
     reset(authApi);
+    await setupPlatformChannels();
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+  });
+
+  tearDown(() {
+    RemoteConfigUtils.clean();
   });
 
   Future<void> twoFingerDoubleTap(WidgetTester tester) async {
@@ -225,7 +236,7 @@ void main() {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(CanvasIconsSolid.question));
+    await tester.tap(find.byIcon(CanvasIcons.question));
     await tester.pumpAndSettle();
 
     expect(find.byType(ErrorReportDialog), findsOneWidget);
@@ -275,6 +286,19 @@ void main() {
 
     // TODO: Remove this back press once DomainSearchScreen is passing accessibility checks
     await tester.pageBack();
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
+    await tester.pumpWidget(TestApp(
+      LoginLandingScreen(),
+      platformConfig: PlatformConfig(clearPrefs: false),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().qrCode));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(QRLoginTutorialScreen), findsOneWidget);
   });
 }
 

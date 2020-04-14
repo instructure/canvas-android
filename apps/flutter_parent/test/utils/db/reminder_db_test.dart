@@ -19,9 +19,10 @@ import 'package:sqflite/sqflite.dart';
 import 'package:test/test.dart';
 
 import '../test_app.dart';
+import '../test_helpers/mock_helpers.dart';
 
 void main() {
-  final database = _MockDatabase();
+  final database = MockDatabase();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<Database>(() => database);
@@ -149,5 +150,3 @@ void main() {
     ));
   });
 }
-
-class _MockDatabase extends Mock implements Database {}

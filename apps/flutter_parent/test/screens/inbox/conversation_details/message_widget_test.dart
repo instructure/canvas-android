@@ -21,9 +21,12 @@ import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/screens/inbox/conversation_details/message_widget.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 
 import '../../../utils/accessibility_utils.dart';
+import '../../../utils/finders.dart';
 import '../../../utils/network_image_response.dart';
 import '../../../utils/test_app.dart';
 
@@ -411,7 +414,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.text(body), findsOneWidget);
+      expect(find.richText(body), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('attachments', (tester) async {
@@ -557,17 +560,13 @@ void main() {
             ..name = 'Myself'),
         ]));
 
-      Attachment actual = null;
-
       await tester.pumpWidget(
         TestApp(
           MessageWidget(
             conversation: conversation,
             message: message,
             currentUserId: currentUserId,
-            onAttachmentClicked: (attachment) {
-              actual = attachment;
-            },
+            onAttachmentClicked: (attachment) {},
           ),
         ),
       );
@@ -586,5 +585,45 @@ void main() {
       expect(firstAttachment, findsNothing);
       expect(lastAttachment, findsOneWidget);
     });
+
+    testWidgetsWithAccessibilityChecks(
+      'links are selectable',
+      (tester) async {
+        final nav = _MockNav();
+        setupTestLocator((locator) => locator.registerLazySingleton<QuickNav>(() => nav));
+
+        final url = 'https://www.google.com';
+        final body = 'Tap this $url link here';
+        final message = Message((m) => m
+          ..authorId = '123'
+          ..createdAt = DateTime(2020, 12, 25, 8, 34, 0, 0, 0)
+          ..body = body
+          ..participatingUserIds = ListBuilder(['123']));
+
+        final conversation = Conversation((c) => c
+          ..messages = ListBuilder([message])
+          ..participants = ListBuilder([
+            BasicUser((b) => b
+              ..id = '123'
+              ..name = 'Myself'),
+          ]));
+
+        await tester.pumpWidget(
+          TestApp(
+            MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        // Tap link
+        await tester.tap(find.richText(body));
+        await tester.pumpAndSettle();
+
+        verify(nav.routeInternally(any, url));
+      },
+      a11yExclusions: {A11yExclusion.minTapSize}, // inline links are not required to meet the min tap target size
+    );
   });
 }
+
+class _MockNav extends Mock implements QuickNav {}

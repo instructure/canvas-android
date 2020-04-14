@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 
 class AuthApi {
   Future<CanvasToken> refreshToken() async {
@@ -43,8 +44,17 @@ class AuthApi {
     return fetch(dio.post('${verifyResult.baseUrl}/login/oauth2/token', queryParameters: params));
   }
 
-  Future<MobileVerifyResult> mobileVerify(String domain) async {
-    Dio dio = DioConfig.core().dio;
+  Future<MobileVerifyResult> mobileVerify(String domain, {bool forceBetaDomain = false}) async {
+    // We only want to switch over to the beta mobile verify domain if either:
+    //   (1) we are forcing the beta domain (typically in UI tests) OR
+    //   (2) the remote firebase config setting for MOBILE_VERIFY_BETA_ENABLED is true
+    // AND we are trying to use a beta domain
+    var mobileVerifyBetaEnabled = (forceBetaDomain ||
+            RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true') &&
+        domain.contains('.beta.');
+
+    Dio dio = DioConfig.core(useBetaDomain: mobileVerifyBetaEnabled).dio;
+
     String userAgent = ApiPrefs.getUserAgent();
     return fetch(
       dio.get(

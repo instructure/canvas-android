@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -102,7 +101,7 @@ class _SimpleWebViewScreenState extends State<SimpleWebViewScreen> {
   }
 
   Future<bool> _handleBackPress(BuildContext context) async {
-    if (await _controller?.canGoBack()) {
+    if (await _controller?.canGoBack() == true) {
       _controller?.goBack();
       return Future.value(false);
     } else {

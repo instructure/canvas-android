@@ -131,13 +131,21 @@ void main() {
         ..userId = login.user.id
         ..type = Reminder.TYPE_ASSIGNMENT
         ..itemId = assignment.id
+        ..courseId = courseId
         ..date = date.toUtc());
 
       final savedReminder = reminder.rebuild((b) => b..id = 123);
       when(reminderDb.insert(reminder)).thenAnswer((_) async => savedReminder);
 
       final l10n = AppLocalizations();
-      await AssignmentDetailsInteractor().createReminder(l10n, date, assignment.id, assignment.name, formattedDate);
+      await AssignmentDetailsInteractor().createReminder(
+        l10n,
+        date,
+        assignment.id,
+        courseId,
+        assignment.name,
+        formattedDate,
+      );
 
       verify(reminderDb.insert(reminder));
       verify(notificationUtil.scheduleReminder(l10n, assignment.name, formattedDate, savedReminder));

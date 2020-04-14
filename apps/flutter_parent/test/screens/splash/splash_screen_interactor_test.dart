@@ -13,8 +13,11 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/account_permissions.dart';
+import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/login.dart';
+import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
+import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
@@ -27,19 +30,36 @@ import '../../utils/test_app.dart';
 void main() {
   _MockDashboardInteractor dashboardInteractor = _MockDashboardInteractor();
   _MockAccountsApi accountsApi = _MockAccountsApi();
+  _MockAuthApi authApi = _MockAuthApi();
 
   Login login = Login((b) => b
     ..domain = 'domain'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
+  MobileVerifyResult mobileVerifyResult = MobileVerifyResult((b) => b
+    ..authorized = true
+    ..result = VerifyResultEnum.success
+    ..clientId = '123'
+    ..clientSecret = '123'
+    ..apiKey = '123'
+    ..baseUrl = '123');
+
+  CanvasToken canvasToken = CanvasToken((b) => b
+    ..accessToken = '123'
+    ..refreshToken = '123'
+    ..user = CanvasModelTestUtils.mockUser().toBuilder()
+    ..realUser = null);
+
   setupTestLocator((locator) {
     locator.registerFactory<DashboardInteractor>(() => dashboardInteractor);
     locator.registerLazySingleton<AccountsApi>(() => accountsApi);
+    locator.registerLazySingleton<AuthApi>(() => authApi);
   });
 
   setUp(() async {
     reset(dashboardInteractor);
     reset(accountsApi);
+    reset(authApi);
     ApiPrefs.clean();
 
     // Default return value for getStudents is an empty list
@@ -47,6 +67,10 @@ void main() {
 
     // Default return value for getAccountPermissions is default AccountPermissions
     when(accountsApi.getAccountPermissions()).thenAnswer((_) async => AccountPermissions());
+
+    // Default return value for auth apis
+    when(authApi.mobileVerify(any)).thenAnswer((_) async => mobileVerifyResult);
+    when(authApi.getTokens(any, any)).thenAnswer((_) async => canvasToken);
 
     await setupPlatformChannels();
   });
@@ -143,8 +167,48 @@ void main() {
     // canMasquerade should be true
     expect(data.canMasquerade, isTrue);
   });
+
+  test('getData returns QRLoginError for invalid qrLoginUrl', () async {
+    bool fail = false;
+    await SplashScreenInteractor().getData(qrLoginUrl: 'https://hodor.com').catchError((_) {
+      fail = true; // Don't return, just update the flag
+    });
+    expect(fail, isTrue);
+  });
+
+  test('getData returns valid data for valid qrLoginUrl', () async {
+    when(dashboardInteractor.getStudents(forceRefresh: true)).thenAnswer((_) async => [
+          CanvasModelTestUtils.mockUser(name: 'User 1'),
+          CanvasModelTestUtils.mockUser(name: 'User 2'),
+        ]);
+    ApiPrefs.switchLogins(login);
+    final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
+    var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
+    expect(data.isObserver, isTrue);
+    expect(data.canMasquerade, isFalse);
+  });
+
+  test('getData returns valid data for valid qrLoginUrl, canMasquerade true for real user', () async {
+    CanvasToken altToken = CanvasToken((b) => b
+      ..accessToken = '123'
+      ..refreshToken = '123'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder()
+      ..realUser = CanvasModelTestUtils.mockUser().toBuilder());
+    when(dashboardInteractor.getStudents(forceRefresh: true)).thenAnswer((_) async => [
+          CanvasModelTestUtils.mockUser(name: 'User 1'),
+          CanvasModelTestUtils.mockUser(name: 'User 2'),
+        ]);
+    when(authApi.getTokens(any, any)).thenAnswer((_) async => altToken);
+    ApiPrefs.switchLogins(login);
+    final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
+    var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
+    expect(data.isObserver, isTrue);
+    expect(data.canMasquerade, isTrue);
+  });
 }
 
 class _MockAccountsApi extends Mock implements AccountsApi {}
 
 class _MockDashboardInteractor extends Mock implements DashboardInteractor {}
+
+class _MockAuthApi extends Mock implements AuthApi {}

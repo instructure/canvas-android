@@ -25,7 +25,7 @@ description: Canvas Parent
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.1.0-Beta-2+27
+version: 3.2.0+28
 
 module:
   androidX: true
@@ -54,6 +54,7 @@ dependencies:
   faker: ^1.1.1
   uuid: ^2.0.2
   collection: 1.14.11
+  flutter_linkify: 3.1.0
 
   # File handling
   path_provider: 1.5.1
@@ -69,6 +70,7 @@ dependencies:
   photo_view: 0.9.1
   video_player: 0.10.5+1
   chewie: 0.9.8+1
+  barcode_scan: ^2.0.1
 
   # Networking / Serialization
   dio: 3.0.5
@@ -118,6 +120,7 @@ flutter:
 
   assets:
     - assets/svg/
+    - assets/png/
     - assets/fonts/
     - assets/html/html_wrapper.html
 

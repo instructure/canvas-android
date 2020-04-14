@@ -16,10 +16,39 @@ import 'dart:math';
 
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:test/test.dart';
+
+import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
+  final api = MockEnrollmentsApi();
+
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<EnrollmentsApi>(() => api);
+  });
+
+  setUp(() {
+    reset(api);
+  });
+
+  test('getStudents returns a list of students', () async {
+    var startingList = [
+      _mockEnrollment(null),
+      _mockEnrollment(_mockStudent('Zed').toBuilder()),
+      _mockEnrollment(_mockStudent('Alex').toBuilder()),
+      _mockEnrollment(null)
+    ];
+    var expectedList = [_mockStudent('Alex'), _mockStudent('Zed')];
+
+    when(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => startingList);
+
+    expect(await ManageStudentsInteractor().getStudents(), expectedList);
+  });
+
   test('Sort users in descending order', () {
     // Create lists
     var startingList = [_mockStudent('Zed'), _mockStudent('Alex'), _mockStudent('Billy')];
@@ -59,6 +88,17 @@ void main() {
     var result = interactor.filterStudents(startingList);
 
     expect(result, expectedSortedList);
+  });
+
+  test('pairWithStudent calls through to enrollment api', () {
+    final pairingCode = '123';
+    ManageStudentsInteractor().pairWithStudent(pairingCode);
+    verify(api.pairWithStudent(pairingCode)).called(1);
+  });
+
+  // TODO: Implement this test once we get QR pairing
+  test('get QR reading does nothing', () async {
+    expect(await ManageStudentsInteractor().getQrReading(), '');
   });
 }
 

@@ -21,6 +21,7 @@ import 'package:mockito/mockito.dart';
 
 import '../../accessibility_utils.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.dart';
 
 void main() {
   testWidgetsWithAccessibilityChecks('Shows a dialog', (tester) async {
@@ -105,7 +106,7 @@ void main() {
     final email = 'test@email.com';
     final error = FlutterErrorDetails(stack: StackTrace.fromString('fake stack'));
 
-    final interactor = _MockErrorReportInteractor();
+    final interactor = MockErrorReportInteractor();
     setupTestLocator((locator) => locator.registerFactory<ErrorReportInteractor>(() => interactor));
 
     await TestApp.showWidgetFromTap(
@@ -135,5 +136,3 @@ void main() {
         .called(1);
   });
 }
-
-class _MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
