@@ -33,6 +33,7 @@ import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -262,8 +263,13 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('1 pts'), findsOneWidget);
-    expect(find.byIcon(Icons.check_circle), findsOneWidget);
-    expect((tester.widget(find.byIcon(Icons.check_circle)) as Icon).color, StudentColorSet.shamrock.light);
+
+    var icon = find.byIcon(CanvasIconsSolid.check);
+    expect(icon, findsOneWidget);
+    expect((tester.widget(icon) as Icon).color, Colors.white);
+
+    var iconContainer = tester.widget<Container>(find.ancestor(of: icon, matching: find.byType(Container)).first);
+    expect((iconContainer.decoration as BoxDecoration).color, StudentColorSet.shamrock.light);
 
     expect(find.text(AppLocalizations().assignmentSubmittedLabel), findsOneWidget);
     expect((tester.widget(find.text(AppLocalizations().assignmentSubmittedLabel)) as Text).style.color,
