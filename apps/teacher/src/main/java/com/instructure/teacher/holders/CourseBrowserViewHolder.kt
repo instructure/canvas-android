@@ -23,6 +23,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.adapter_course_browser.view.*
@@ -79,9 +81,12 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         if (tab.tabId == Tab.STUDENT_VIEW) {
             itemView.label.text = itemView.context.getText(R.string.tab_student_view)
             itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.vd_open_externally))
+            itemView.description.setVisible()
+            itemView.description.text = itemView.context.getText(R.string.opensInCanvasStudent)
         } else {
             itemView.label.text = tab.label
             itemView.endIcon.setImageDrawable(null)
+            itemView.description.setGone()
         }
 
         itemView.icon.setImageDrawable(drawable)
