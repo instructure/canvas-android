@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -45,10 +46,18 @@ data class Conference(
     val title: String? = null,
     val url: String? = null,
     val recordings: List<ConferenceRecording> = emptyList(),
+    @SerializedName("context_type")
+    val contextType: String = "",
+    @SerializedName("context_id")
+    val contextId: Long = 0,
     @SerializedName("user_settings")
     val userSettings: ConferenceUserSettings? = null,
     val users: List<Long> = emptyList()
-) : Parcelable
+) : Parcelable {
+    // This field is only used temporarily and will not be serialized or parcelized
+    @IgnoredOnParcel
+    lateinit var canvasContext: CanvasContext
+}
 
 @Parcelize
 data class ConferenceUserSettings(

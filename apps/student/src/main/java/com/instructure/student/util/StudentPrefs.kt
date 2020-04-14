@@ -52,6 +52,8 @@ object StudentPrefs : PrefManager("candroidSP") {
     @JvmStatic
     var staleFolderIds by SetPref(Long::class)
 
+    var conferenceDashboardBlacklist by StringSetPref()
+
     override fun keepBaseProps() = listOf(
             ::showGradesOnCard,
             ::weekStartsOnMonday

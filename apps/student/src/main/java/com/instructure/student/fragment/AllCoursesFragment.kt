@@ -74,6 +74,8 @@ class AllCoursesFragment : ParentFragment() {
         recyclerAdapter = AllCoursesRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
             override fun onRemoveAnnouncement(announcement: AccountNotification, position: Int) = Unit
             override fun onHandleCourseInvitation(course: Course, accepted: Boolean) = Unit
+            override fun onConferenceSelected(conference: Conference) = Unit
+            override fun onDismissConference(conference: Conference) = Unit
             override fun onSeeAllCourses() = Unit
             override fun onGroupSelected(group: Group) = Unit
 

@@ -63,7 +63,7 @@ class ConferenceDetailsEffectHandler : EffectHandler<ConferenceDetailsView, Conf
 
     private fun refreshData(effect: ConferenceDetailsEffect.RefreshData) {
         launch {
-            val conferencesResult = ConferenceManager.getConferencesAsync(effect.canvasContext, true).await()
+            val conferencesResult = ConferenceManager.getConferencesForContextAsync(effect.canvasContext, true).await()
             consumer.accept(ConferenceDetailsEvent.RefreshFinished(conferencesResult))
         }
     }

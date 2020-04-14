@@ -38,7 +38,7 @@ class ConferenceListEffectHandler : EffectHandler<ConferenceListView, Conference
     private fun loadData(effect: ConferenceListEffect.LoadData) {
         launch {
             val conferencesResult = ConferenceManager
-                .getConferencesAsync(effect.canvasContext, effect.forceNetwork)
+                .getConferencesForContextAsync(effect.canvasContext, effect.forceNetwork)
                 .await()
             consumer.accept(ConferenceListEvent.DataLoaded(conferencesResult))
         }
