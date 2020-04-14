@@ -102,6 +102,7 @@ class DashboardState extends State<DashboardScreen> {
     super.initState();
 
     _interactor.getInboxCountNotifier().update();
+    _showOldReminderMessage();
   }
 
   void _loadSelf() {
@@ -390,6 +391,31 @@ class DashboardState extends State<DashboardScreen> {
     currentDeepLinkParams = null;
 
     return _page;
+  }
+
+  _showOldReminderMessage() async {
+    if (await _interactor.shouldShowOldReminderMessage()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(L10n(context).oldReminderMessageTitle),
+                content: Text(L10n(context).oldReminderMessage),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text(L10n(context).ok),
+                    onPressed: () {
+                      locator<Analytics>().logEvent(AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE);
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              );
+            });
+      });
+    }
   }
 
   _navigateToInbox(context) {

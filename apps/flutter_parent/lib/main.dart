@@ -45,7 +45,7 @@ void main() {
     // Currently must be initialized after locator has been set up. This may change once routing is implemented.
     await NotificationUtil.init();
 
-    await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+    await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     runApp(ParentApp());
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));

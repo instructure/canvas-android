@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
+import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -139,6 +140,16 @@ void main() {
     var interactor = DashboardInteractor();
     expect(interactor.getInboxCountNotifier(), notifier);
   });
+
+  test('shouldShowOldReminderMessage calls OldAppMigration.hasOldReminders', () {
+    var migration = _MockMigration();
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<OldAppMigration>(() => migration);
+    });
+
+    DashboardInteractor().shouldShowOldReminderMessage();
+    verify(migration.hasOldReminders());
+  });
 }
 
 User _mockStudent(String name) => User((b) => b
@@ -150,5 +161,7 @@ Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
   ..enrollmentState = ''
   ..observedUser = observedUser
   ..build());
+
+class _MockMigration extends Mock implements OldAppMigration {}
 
 class MockUserApi extends Mock implements UserApi {}

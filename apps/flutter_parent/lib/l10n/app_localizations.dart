@@ -801,6 +801,15 @@ class AppLocalizations {
         desc: 'Description of the system notification channel for assignment and event reminders',
       );
 
+  String get oldReminderMessageTitle => Intl.message(
+        'Reminders have changed!',
+        desc: 'Title of the dialog shown when the user needs to update their reminders',
+      );
+
+  String get oldReminderMessage => Intl.message(
+        'In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the "Remind Me" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.',
+      );
+
   /// Not-A-Parent screen
 
   String get notAParentTitle => Intl.message('Not a parent?',

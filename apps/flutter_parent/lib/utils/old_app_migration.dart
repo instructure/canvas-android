@@ -22,10 +22,11 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 class OldAppMigration {
   static const channelName = 'com.instructure.parentapp/oldAppMigrations';
   static const methodGetLogins = 'getLogins';
+  static const methodHasOldReminders = 'hasOldReminders';
 
   static const channel = const MethodChannel(channelName);
 
-  static Future<void> performMigrationIfNecessary() async {
+  Future<void> performMigrationIfNecessary() async {
     // Skip if we have already performed the migration
     if (ApiPrefs.getHasMigrated() == true) return;
 
@@ -43,5 +44,18 @@ class OldAppMigration {
 
     // Mark as migrated
     ApiPrefs.setHasMigrated(true);
+  }
+
+  Future<bool> hasOldReminders() async {
+    // Skip if we have already performed the check
+    if (ApiPrefs.getHasCheckedOldReminders() == true) return false;
+
+    // Get result from native side
+    var hasOldReminders = await channel.invokeMethod(methodHasOldReminders);
+
+    // Mark as checked
+    await ApiPrefs.setHasCheckedOldReminders(true);
+
+    return hasOldReminders;
   }
 }
