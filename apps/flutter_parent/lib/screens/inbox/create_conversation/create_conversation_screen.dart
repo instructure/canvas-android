@@ -517,6 +517,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
                         subtitle: Text(_enrollmentType(context, user)),
                         leading: Avatar(
                           user.avatarUrl,
+                          name: user.name,
                           overlay: selected
                               ? Container(
                                   color: Theme.of(context).accentColor.withOpacity(0.8),

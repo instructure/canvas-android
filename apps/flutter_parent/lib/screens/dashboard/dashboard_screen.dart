@@ -423,7 +423,9 @@ class DashboardState extends State<DashboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 0, 12), child: Avatar(user.avatarUrl, name: user.shortName)),
+            padding: const EdgeInsets.fromLTRB(16, 16, 0, 12),
+            child: Avatar(user.avatarUrl, name: user.shortName, radius: 28),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),

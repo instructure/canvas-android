@@ -15,7 +15,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/parent_colors.dart';
 
 class Avatar extends StatelessWidget {
   final Color backgroundColor;
@@ -49,7 +49,7 @@ class Avatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color bgColor = backgroundColor ?? ParentTheme.of(context).nearSurfaceColor;
+    Color bgColor = backgroundColor ?? Theme.of(context).canvasColor;
 
     // We avoid using CachedNetworkImage in tests due to the complexity of mocking its dependencies.
     // We determine if we're in a test by checking the runtime type of WidgetsBinding. In prod it's an instance of
@@ -93,14 +93,21 @@ class Avatar extends StatelessWidget {
     );
   }
 
-  CircleAvatar _initialsWidget(BuildContext context, Color bgColor) {
-    return CircleAvatar(
-      child: Text(
-        getUserInitials(name),
-        style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold),
+  Widget _initialsWidget(BuildContext context, Color bgColor) {
+    return Container(
+      padding: EdgeInsets.all(0.5),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Theme.of(context).dividerColor,
       ),
-      backgroundColor: bgColor,
-      radius: radius,
+      child: CircleAvatar(
+        child: Text(
+          getUserInitials(name),
+          style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold, color: ParentColors.ash),
+        ),
+        backgroundColor: bgColor,
+        radius: radius,
+      ),
     );
   }
 
