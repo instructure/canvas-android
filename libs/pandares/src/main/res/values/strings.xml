@@ -1069,6 +1069,7 @@
     <string name="studentNotInstalled">Canvas Student Required</string>
     <string name="studentNotInstalledDesc">Canvas Student app is required to view this course as a student. Tap OK to be taken to the Canvas Student Play Store listing. </string>
     <string name="opensInCanvasStudent">Opens in Canvas Student</string>
+    <string name="tab_student_view">Student View</string>
 
 
     <!-- Panda Avatar Content Descriptions -->

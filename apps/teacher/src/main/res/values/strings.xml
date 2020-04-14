@@ -31,8 +31,6 @@
     <string name="tab_attendance">Attendance</string>
     <string name="tab_pages">Pages</string>
     <string name="tab_todo">To Do</string>
-    <string name="tab_student_view">Student View</string>
-    <string name="tab_student_view_subtitle">Opens in Canvas Student</string>
     <string name="content_description_school_logo">School Logo</string>
     <string name="search_guides">Search the Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
