@@ -160,7 +160,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                     semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
                     key: Key("assignment_details_total_points")),
                 if (showStatus) SizedBox(width: 16),
-                if (showStatus) Icon(submitted ? Icons.check_circle : Icons.do_not_disturb, color: submittedColor),
+                if (showStatus) _statusIcon(submitted, submittedColor),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
                   Text(
@@ -255,6 +255,16 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           SizedBox(height: 48), // Fab size at bottom to see whole description
         ],
       ),
+    );
+  }
+
+  Widget _statusIcon(bool submitted, Color submittedColor) {
+    if (!submitted) return Icon(Icons.do_not_disturb, color: submittedColor, size: 18);
+    return Container(
+      width: 18,
+      height: 18,
+      decoration: BoxDecoration(shape: BoxShape.circle, color: submittedColor),
+      child: Icon(CanvasIconsSolid.check, color: Theme.of(context).accentIconTheme.color, size: 8),
     );
   }
 
