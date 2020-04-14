@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemePrefs {
@@ -26,6 +27,9 @@ class ThemePrefs {
   static Future<void> init() async {
     if (_prefs == null) _prefs = await SharedPreferences.getInstance();
   }
+
+  @visibleForTesting
+  static Future<bool> clear() => _prefs.clear();
 
   const ThemePrefs();
 

@@ -21,42 +21,24 @@ import android.app.Activity
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.managers.AccountNotificationManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.models.AccountNotification
-import com.instructure.canvasapi2.models.CanvasComparable
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.models.Enrollment
-import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.managers.*
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.isValidTerm
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.awaitApis
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.utils.ColorApiHelper
-import com.instructure.student.holders.AnnouncementViewHolder
-import com.instructure.student.holders.BlankViewHolder
-import com.instructure.student.holders.CourseHeaderViewHolder
-import com.instructure.student.holders.CourseInvitationViewHolder
-import com.instructure.student.holders.CourseViewHolder
-import com.instructure.student.holders.GroupHeaderViewHolder
-import com.instructure.student.holders.GroupViewHolder
+import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
-import java.util.Date
-
+import com.instructure.student.util.StudentPrefs
+import java.util.*
 
 class DashboardRecyclerAdapter(
         context: Activity,
         private val mAdapterToFragmentCallback: CourseAdapterToFragmentCallback
-) : ExpandableRecyclerAdapter<DashboardRecyclerAdapter.ItemType, CanvasComparable<*>, RecyclerView.ViewHolder>(
+) : ExpandableRecyclerAdapter<DashboardRecyclerAdapter.ItemType, Any, RecyclerView.ViewHolder>(
         context,
         ItemType::class.java,
-        CanvasComparable::class.java
+        Any::class.java
 ) {
 
     enum class ItemType {
@@ -64,6 +46,8 @@ class DashboardRecyclerAdapter(
         INVITATION,
         ANNOUNCEMENT_HEADER,
         ANNOUNCEMENT,
+        CONFERENCE_HEADER,
+        CONFERENCE,
         COURSE_HEADER,
         COURSE,
         GROUP_HEADER,
@@ -83,16 +67,19 @@ class DashboardRecyclerAdapter(
         ItemType.INVITATION -> CourseInvitationViewHolder(v)
         ItemType.ANNOUNCEMENT_HEADER -> BlankViewHolder(v)
         ItemType.ANNOUNCEMENT -> AnnouncementViewHolder(v)
+        ItemType.CONFERENCE_HEADER -> BlankViewHolder(v)
+        ItemType.CONFERENCE -> DashboardConferenceViewHolder(v)
         ItemType.COURSE_HEADER -> CourseHeaderViewHolder(v)
         ItemType.COURSE -> CourseViewHolder(v)
         ItemType.GROUP_HEADER -> GroupHeaderViewHolder(v)
         ItemType.GROUP -> GroupViewHolder(v)
     }
 
-    override fun onBindChildHolder(holder: RecyclerView.ViewHolder, header: ItemType, item: CanvasComparable<*>) {
+    override fun onBindChildHolder(holder: RecyclerView.ViewHolder, header: ItemType, item: Any) {
         when {
             holder is CourseInvitationViewHolder && item is Enrollment -> holder.bind(item, mCourseMap[item.courseId]!!, mAdapterToFragmentCallback)
             holder is AnnouncementViewHolder && item is AccountNotification -> holder.bind(item, mAdapterToFragmentCallback)
+            holder is DashboardConferenceViewHolder && item is Conference -> holder.bind(item, mAdapterToFragmentCallback)
             holder is CourseViewHolder && item is Course -> holder.bind(item, mAdapterToFragmentCallback)
             holder is GroupViewHolder && item is Group -> holder.bind(item, mCourseMap, mAdapterToFragmentCallback)
         }
@@ -102,35 +89,39 @@ class DashboardRecyclerAdapter(
         (holder as? CourseHeaderViewHolder)?.bind(mAdapterToFragmentCallback)
     }
 
-    override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<ItemType, CanvasComparable<*>> {
-        return object : GroupSortedList.ItemComparatorCallback<ItemType, CanvasComparable<*>> {
-            override fun compare(group: ItemType?, o1: CanvasComparable<*>?, o2: CanvasComparable<*>?) = when {
+    override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<ItemType, Any> {
+        return object : GroupSortedList.ItemComparatorCallback<ItemType, Any> {
+            override fun compare(group: ItemType?, o1: Any?, o2: Any?) = when {
                 o1 is AccountNotification && o2 is AccountNotification -> o1.compareTo(o2)
                 o1 is Course && o2 is Course -> -1 // Don't sort courses, the api returns in the users order
                 o1 is Group && o2 is Group -> o1.compareTo(o2)
+                o1 is Conference && o2 is Conference -> o2.startedAt?.compareTo(o1.startedAt) ?: 0
                 else -> -1
             }
 
-            override fun areContentsTheSame(oldItem: CanvasComparable<*>?, newItem: CanvasComparable<*>?) = false
+            override fun areContentsTheSame(oldItem: Any?, newItem: Any?) = false
 
-            override fun areItemsTheSame(item1: CanvasComparable<*>?, item2: CanvasComparable<*>?) = when {
+            override fun areItemsTheSame(item1: Any?, item2: Any?) = when {
                 item1 is AccountNotification && item2 is AccountNotification -> item1.id == item2.id
                 item1 is Course && item2 is Course -> item1.contextId.hashCode() == item2.contextId.hashCode()
                 item1 is Group && item2 is Group -> item1.contextId.hashCode() == item2.contextId.hashCode()
+                item1 is Conference && item2 is Conference -> item1.id == item2.id
                 else -> false
             }
 
-            override fun getUniqueItemId(item: CanvasComparable<*>?) = when (item) {
+            override fun getUniqueItemId(item: Any?) = when (item) {
                 is AccountNotification -> item.id
                 is Enrollment -> item.id
                 is Course -> item.contextId.hashCode().toLong()
                 is Group -> item.contextId.hashCode().toLong()
+                is Conference -> item.id
                 else -> -1L
             }
 
-            override fun getChildType(group: ItemType?, item: CanvasComparable<*>?) = when (item) {
+            override fun getChildType(group: ItemType?, item: Any?) = when (item) {
                 is AccountNotification -> ItemType.ANNOUNCEMENT.ordinal
                 is Enrollment -> ItemType.INVITATION.ordinal
+                is Conference -> ItemType.CONFERENCE.ordinal
                 is Course -> ItemType.COURSE.ordinal
                 is Group -> ItemType.GROUP.ordinal
                 else -> -1
@@ -161,6 +152,7 @@ class DashboardRecyclerAdapter(
             val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
 
             mCourseMap = rawCourses.associateBy { it.id }
+            val groupMap = groups.associateBy { it.id }
 
             // Get enrollment invites
             val invites = awaitApi<List<Enrollment>> {
@@ -170,20 +162,37 @@ class DashboardRecyclerAdapter(
             // Map not null is needed because the dashboard api can return unpublished courses
             val favoriteCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
 
+            // Filter groups
+            val rawGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
+            val favoriteGroups = rawGroups.filter { it.isFavorite }.takeUnless { it.isEmpty() } ?: rawGroups
+
+            // Get live conferences
+            val blackList = StudentPrefs.conferenceDashboardBlacklist
+            val conferences = ConferenceManager.getLiveConferencesAsync(isRefresh).await().dataOrNull
+                ?.filter { conference ->
+                    // Remove blacklisted (i.e. 'dismissed') conferences
+                    !blackList.contains(conference.id.toString())
+                }
+                ?.onEach { conference ->
+                    // Attempt to add full canvas context to conference items, fall back to generic built context
+                    val contextType = conference.contextType.toLowerCase(Locale.US)
+                    val contextId = conference.contextId
+                    val genericContext = CanvasContext.fromContextCode("${contextType}_${contextId}")!!
+                    conference.canvasContext = when (genericContext) {
+                        is Course -> mCourseMap[contextId] ?: genericContext
+                        is Group -> groupMap[contextId] ?: genericContext
+                        else -> genericContext
+                    }
+                } ?: emptyList()
+
+            // Add conferences
+            addOrUpdateAllItems(ItemType.CONFERENCE_HEADER, conferences)
+
             // Add courses
             addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
 
             // Add groups
-            val rawGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
-
-            val favoriteGroups = rawGroups.filter {
-                (it.isFavorite)
-            }
-            if (favoriteGroups.isEmpty()) {
-                addOrUpdateAllItems(ItemType.GROUP_HEADER,rawGroups)
-            } else {
-                addOrUpdateAllItems(ItemType.GROUP_HEADER,favoriteGroups)
-            }
+            addOrUpdateAllItems(ItemType.GROUP_HEADER, favoriteGroups)
 
             // Add announcements
             addOrUpdateAllItems(ItemType.ANNOUNCEMENT_HEADER, announcements)
@@ -211,6 +220,8 @@ class DashboardRecyclerAdapter(
         ItemType.INVITATION -> CourseInvitationViewHolder.HOLDER_RES_ID
         ItemType.ANNOUNCEMENT_HEADER -> BlankViewHolder.HOLDER_RES_ID
         ItemType.ANNOUNCEMENT -> AnnouncementViewHolder.HOLDER_RES_ID
+        ItemType.CONFERENCE_HEADER -> BlankViewHolder.HOLDER_RES_ID
+        ItemType.CONFERENCE -> DashboardConferenceViewHolder.HOLDER_RES_ID
         ItemType.COURSE_HEADER -> CourseHeaderViewHolder.HOLDER_RES_ID
         ItemType.COURSE -> CourseViewHolder.HOLDER_RES_ID
         ItemType.GROUP_HEADER -> GroupHeaderViewHolder.HOLDER_RES_ID

@@ -22,16 +22,20 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.managers.CourseNicknameManager
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -40,8 +44,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.DashboardRecyclerAdapter
-import com.instructure.student.db.Db
-import com.instructure.student.db.getInstance
 import com.instructure.student.decorations.VerticalGridSpacingDecoration
 import com.instructure.student.dialog.ColorPickerDialog
 import com.instructure.student.dialog.EditCourseNicknameDialog
@@ -52,6 +54,9 @@ import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_course_grid.*
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import kotlinx.android.synthetic.main.panda_recycler_refresh_layout.listView as recyclerView
@@ -90,6 +95,14 @@ class DashboardFragment : ParentFragment() {
             override fun onHandleCourseInvitation(course: Course, accepted: Boolean) {
                 swipeRefreshLayout?.isRefreshing = true
                 recyclerAdapter?.refresh()
+            }
+
+            override fun onConferenceSelected(conference: Conference) {
+                launchConference(conference)
+            }
+
+            override fun onDismissConference(conference: Conference) {
+                recyclerAdapter?.removeItem(conference)
             }
 
             override fun onRefreshFinished() {
@@ -272,6 +285,35 @@ class DashboardFragment : ParentFragment() {
     @Subscribe
     fun onCoreDataLoaded(event: CoreDataFinishedLoading) {
         applyTheme()
+    }
+
+    private fun launchConference(conference: Conference) {
+        GlobalScope.launch(Dispatchers.Main) {
+            var url: String = conference.joinUrl
+                ?: "${ApiPrefs.fullDomain}${conference.canvasContext.toAPIString()}/conferences/${conference.id}/join"
+
+            if (url.startsWith(ApiPrefs.fullDomain)) {
+                try {
+                    val authSession = awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }
+                    url = authSession.sessionUrl
+                } catch (e: Throwable) {
+                    // Try launching without authenticated URL
+                }
+            }
+
+            var intent = CustomTabsIntent.Builder()
+                .setToolbarColor(conference.canvasContext.color)
+                .setShowTitle(true)
+                .build()
+                .intent
+
+            intent.data = Uri.parse(url)
+
+            // Exclude Instructure apps from chooser options
+            intent = intent.asChooserExcludingInstructure()
+
+            context?.startActivity(intent)
+        }
     }
 
     override fun onDestroy() {

@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/simple_web_view_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -42,5 +43,22 @@ void main() {
     await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
+  });
+
+  // Can only test the case where the controller isn't set
+  testWidgetsWithAccessibilityChecks('handles back press', (tester) async {
+    final url = 'https://www.google.com';
+    final title = 'title';
+
+    await TestApp.showWidgetFromTap(tester, (context) {
+      return Navigator.of(context).push(MaterialPageRoute(builder: (context) => SimpleWebViewScreen(url, title)));
+    }, config: config);
+
+    expect(find.byType(WebView), findsOneWidget);
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebView), findsNothing);
   });
 }

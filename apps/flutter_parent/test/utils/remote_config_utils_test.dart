@@ -12,10 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import 'platform_config.dart';
 import 'test_app.dart';

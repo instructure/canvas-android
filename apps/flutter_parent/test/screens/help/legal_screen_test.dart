@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/help/legal_screen.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -80,5 +79,3 @@ void main() {
 class _MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class _MockNav extends Mock implements QuickNav {}
-
-class _MockAccountsApi extends Mock implements AccountsApi {}

@@ -532,7 +532,7 @@ void main() {
     testWidgets(
       'tapping Sign Out from nav drawer displays confirmation dialog',
       (tester) async {
-        final reminderDb = _MockReminderDb();
+        final reminderDb = MockReminderDb();
         final notificationUtil = _MockNotificationUtil();
 
         _setupLocator();
@@ -583,7 +583,7 @@ void main() {
     // (the tests for that screen all pass accessibility checks, however)
     testWidgets('tapping Sign Out from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
-      final reminderDb = _MockReminderDb();
+      final reminderDb = MockReminderDb();
       final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
       final authApi = _MockAuthApi();
@@ -633,7 +633,7 @@ void main() {
     // (the tests for that screen all pass accessibility checks, however)
     testWidgets('tapping Switch Users from nav drawer signs user out and returns to the Login Landing screen',
         (tester) async {
-      final reminderDb = _MockReminderDb();
+      final reminderDb = MockReminderDb();
       final calendarFilterDb = _MockCalendarFilterDb();
       final notificationUtil = _MockNotificationUtil();
 
@@ -981,10 +981,6 @@ class MockInteractor extends DashboardInteractor {
       : null;
 }
 
-class MockInboxApi extends Mock implements InboxApi {}
-
-class MockAlertsApi extends Mock implements AlertsApi {}
-
 class MockCoursesInteractor extends CoursesInteractor {
   @override
   Future<List<Course>> getCourses({bool isRefresh = false}) async {
@@ -997,8 +993,6 @@ class MockManageStudentsInteractor extends ManageStudentsInteractor {
   @override
   Future<List<User>> getStudents({bool forceRefresh = false}) => Future.value([]);
 }
-
-class _MockReminderDb extends Mock implements ReminderDb {}
 
 class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 

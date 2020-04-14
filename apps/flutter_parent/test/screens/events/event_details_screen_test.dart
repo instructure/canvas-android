@@ -46,6 +46,7 @@ void main() {
     ..name = studentName);
 
   final eventId = '123';
+  final courseId = 'course_123';
   final baseEvent = ScheduleItem((b) => b
     ..id = eventId
     ..type = ScheduleItem.typeCalendar);
@@ -54,6 +55,7 @@ void main() {
     ..userId = 'user-123'
     ..type = 'type'
     ..itemId = eventId
+    ..courseId = courseId
     ..date = DateTime(2100)
     ..userDomain = 'domain');
 
@@ -317,7 +319,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => null);
 
-      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event, courseId: courseId)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -338,7 +340,7 @@ void main() {
       await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
       await tester.pumpAndSettle();
 
-      verify(interactor.createReminder(any, any, eventId, event.title, 'Saturday Jan 1, 2000'));
+      verify(interactor.createReminder(any, any, eventId, courseId, event.title, 'Saturday Jan 1, 2000'));
 
       expect(find.text(AppLocalizations().eventRemindMeSet), findsOneWidget);
       expect((tester.widget(find.byType(Switch)) as Switch).value, true);
@@ -355,7 +357,7 @@ void main() {
 
       when(interactor.loadReminder(any)).thenAnswer((_) async => null);
 
-      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event)));
+      await tester.pumpWidget(_testableWidget(EventDetailsScreen.withEvent(event: event, courseId: courseId)));
       await tester.pump(); // Let the widget build
       await tester.pump(); // Let the event future finish
       await tester.pump(); // Let the reminder future finish
@@ -376,7 +378,14 @@ void main() {
       await tester.tap(find.text(DefaultMaterialLocalizations().okButtonLabel));
       await tester.pumpAndSettle();
 
-      verify(interactor.createReminder(any, any, eventId, event.title, 'Saturday Jan 1, 2000\n12:00 AM - 2:00 AM'));
+      verify(interactor.createReminder(
+        any,
+        any,
+        eventId,
+        courseId,
+        event.title,
+        'Saturday Jan 1, 2000\n12:00 AM - 2:00 AM',
+      ));
 
       expect(find.text(AppLocalizations().eventRemindMeSet), findsOneWidget);
       expect((tester.widget(find.byType(Switch)) as Switch).value, true);

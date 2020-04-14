@@ -24,6 +24,7 @@ import 'package:test/test.dart';
 
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final login = Login((b) => b
@@ -32,9 +33,9 @@ void main() {
     ..clientSecret = 'client_secret'
     ..clientId = 'client_id');
 
-  final dio = _MockDio();
-  final authApi = _MockAuthApi();
-  final analytics = _MockAnalytics();
+  final dio = MockDio();
+  final authApi = MockAuthApi();
+  final analytics = MockAnalytics();
 
   final interceptor = AuthenticationInterceptor(dio);
 
@@ -157,9 +158,3 @@ void main() {
     verifyNever(analytics.logEvent(any, extras: anyNamed('extras')));
   });
 }
-
-class _MockDio extends Mock implements Dio {}
-
-class _MockAuthApi extends Mock implements AuthApi {}
-
-class _MockAnalytics extends Mock implements Analytics {}

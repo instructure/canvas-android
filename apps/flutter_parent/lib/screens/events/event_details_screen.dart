@@ -107,7 +107,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
     } else if (!snapshot.hasData) {
       return LoadingIndicator();
     } else {
-      return _EventDetails(snapshot.data);
+      return _EventDetails(snapshot.data, widget.courseId);
     }
   }
 
@@ -139,8 +139,9 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
 class _EventDetails extends StatelessWidget {
   final ScheduleItem event;
+  final String courseId;
 
-  const _EventDetails(this.event, {Key key})
+  const _EventDetails(this.event, this.courseId, {Key key})
       : assert(event != null),
         super(key: key);
 
@@ -191,7 +192,7 @@ class _EventDetails extends StatelessWidget {
               _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
               Divider(),
               _SimpleHeader(label: l10n.assignmentRemindMeLabel),
-              _RemindMe(event, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
+              _RemindMe(event, courseId, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
               Divider(),
               _SimpleHeader(label: l10n.assignmentDescriptionLabel),
             ],
@@ -218,9 +219,10 @@ class _EventDetails extends StatelessWidget {
 
 class _RemindMe extends StatefulWidget {
   final ScheduleItem event;
+  final String courseId;
   final String formattedDate;
 
-  const _RemindMe(this.event, this.formattedDate, {Key key}) : super(key: key);
+  const _RemindMe(this.event, this.courseId, this.formattedDate, {Key key}) : super(key: key);
 
   @override
   _RemindMeState createState() => _RemindMeState();
@@ -296,7 +298,14 @@ class _RemindMeState extends State<_RemindMe> {
 
       if (date != null && time != null) {
         DateTime reminderDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-        await _interactor.createReminder(L10n(context), reminderDate, event.id, event.title, formattedDate);
+        await _interactor.createReminder(
+          L10n(context),
+          reminderDate,
+          event.id,
+          widget.courseId,
+          event.title,
+          formattedDate,
+        );
       }
     }
 

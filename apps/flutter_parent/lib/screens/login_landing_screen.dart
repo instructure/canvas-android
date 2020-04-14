@@ -28,6 +28,7 @@ import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container
 import 'package:flutter_parent/utils/common_widgets/two_finger_double_tap_gesture_detector.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -81,6 +82,7 @@ class LoginLandingScreen extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: FullScreenScrollContainer(
+                    horizontalPadding: 0,
                     children: <Widget>[
                       _helpRequestButton(context),
                       Expanded(child: _body(context)),
@@ -107,23 +109,27 @@ class LoginLandingScreen extends StatelessWidget {
             semanticsLabel: L10n(context).canvasLogoLabel,
           ),
           SizedBox(height: 64),
-          RaisedButton(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                L10n(context).findSchool,
-                style: TextStyle(fontSize: 16),
+          ButtonTheme(
+            minWidth: 260,
+            child: RaisedButton(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  L10n(context).findSchool,
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+              onPressed: () {
+                onFindSchoolPressed(context);
+              },
             ),
-            color: Theme.of(context).accentColor,
-            textColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-            onPressed: () {
-              onFindSchoolPressed(context);
-            },
           ),
-          SizedBox(height: 16),
-          if(RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true') _qrLogin(context),
+          SizedBox(height: 8),
+          if (RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true')
+            _qrLogin(context),
         ],
       ),
     );
@@ -240,7 +246,7 @@ class LoginLandingScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Align(
             child: Icon(
-              CanvasIconsSolid.question,
+              CanvasIcons.question,
               color: ParentColors.tiara,
             ),
             alignment: Alignment.topRight,

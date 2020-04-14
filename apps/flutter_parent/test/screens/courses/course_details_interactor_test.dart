@@ -22,6 +22,7 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final courseId = '123';
@@ -30,7 +31,7 @@ void main() {
 
   final _MockCourseApi courseApi = _MockCourseApi();
   final _MockAssignmentApi assignmentApi = _MockAssignmentApi();
-  final _MockEnrollmentApi enrollmentApi = _MockEnrollmentApi();
+  final enrollmentApi = MockEnrollmentsApi();
   final _MockCalendarApi calendarApi = _MockCalendarApi();
   final _MockPageApi pageApi = _MockPageApi();
 
@@ -102,7 +103,5 @@ class _MockCalendarApi extends Mock implements CalendarEventsApi {}
 class _MockCourseApi extends Mock implements CourseApi {}
 
 class _MockAssignmentApi extends Mock implements AssignmentApi {}
-
-class _MockEnrollmentApi extends Mock implements EnrollmentsApi {}
 
 class _MockPageApi extends Mock implements PageApi {}

@@ -29,6 +29,9 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
       'itemId',
       serializers.serialize(object.itemId,
           specifiedType: const FullType(String)),
+      'courseId',
+      serializers.serialize(object.courseId,
+          specifiedType: const FullType(String)),
       'date',
       serializers.serialize(object.date,
           specifiedType: const FullType(DateTime)),
@@ -75,6 +78,10 @@ class _$ReminderSerializer implements StructuredSerializer<Reminder> {
           result.itemId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'courseId':
+          result.courseId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'date':
           result.date = serializers.deserialize(value,
               specifiedType: const FullType(DateTime)) as DateTime;
@@ -98,6 +105,8 @@ class _$Reminder extends Reminder {
   @override
   final String itemId;
   @override
+  final String courseId;
+  @override
   final DateTime date;
 
   factory _$Reminder([void Function(ReminderBuilder) updates]) =>
@@ -109,6 +118,7 @@ class _$Reminder extends Reminder {
       this.userId,
       this.type,
       this.itemId,
+      this.courseId,
       this.date})
       : super._() {
     if (userDomain == null) {
@@ -122,6 +132,9 @@ class _$Reminder extends Reminder {
     }
     if (itemId == null) {
       throw new BuiltValueNullFieldError('Reminder', 'itemId');
+    }
+    if (courseId == null) {
+      throw new BuiltValueNullFieldError('Reminder', 'courseId');
     }
     if (date == null) {
       throw new BuiltValueNullFieldError('Reminder', 'date');
@@ -144,6 +157,7 @@ class _$Reminder extends Reminder {
         userId == other.userId &&
         type == other.type &&
         itemId == other.itemId &&
+        courseId == other.courseId &&
         date == other.date;
   }
 
@@ -152,10 +166,12 @@ class _$Reminder extends Reminder {
     return $jf($jc(
         $jc(
             $jc(
-                $jc($jc($jc(0, id.hashCode), userDomain.hashCode),
-                    userId.hashCode),
-                type.hashCode),
-            itemId.hashCode),
+                $jc(
+                    $jc($jc($jc(0, id.hashCode), userDomain.hashCode),
+                        userId.hashCode),
+                    type.hashCode),
+                itemId.hashCode),
+            courseId.hashCode),
         date.hashCode));
   }
 
@@ -167,6 +183,7 @@ class _$Reminder extends Reminder {
           ..add('userId', userId)
           ..add('type', type)
           ..add('itemId', itemId)
+          ..add('courseId', courseId)
           ..add('date', date))
         .toString();
   }
@@ -195,6 +212,10 @@ class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
   String get itemId => _$this._itemId;
   set itemId(String itemId) => _$this._itemId = itemId;
 
+  String _courseId;
+  String get courseId => _$this._courseId;
+  set courseId(String courseId) => _$this._courseId = courseId;
+
   DateTime _date;
   DateTime get date => _$this._date;
   set date(DateTime date) => _$this._date = date;
@@ -210,6 +231,7 @@ class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
       _userId = _$v.userId;
       _type = _$v.type;
       _itemId = _$v.itemId;
+      _courseId = _$v.courseId;
       _date = _$v.date;
       _$v = null;
     }
@@ -238,6 +260,7 @@ class ReminderBuilder implements Builder<Reminder, ReminderBuilder> {
             userId: userId,
             type: type,
             itemId: itemId,
+            courseId: courseId,
             date: date);
     replace(_$result);
     return _$result;

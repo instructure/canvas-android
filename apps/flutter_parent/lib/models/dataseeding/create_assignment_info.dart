@@ -17,7 +17,6 @@ import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 
 import '../assignment.dart';
-import '../submission.dart';
 
 part 'create_assignment_info.g.dart';
 

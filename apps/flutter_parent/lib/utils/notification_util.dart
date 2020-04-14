@@ -15,28 +15,17 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-/* Concerning MBL-13819 (Set up router): The structure and function of NotificationUtil is not final as it is assumed
-  that significant alterations must be made to wire up notification payloads for routing. If you are implementing
-  routing, do no hesitate to change this class and its tests as necessary.
-
-  Regarding initialization of the FlutterLocalNotificationsPlugin, if the app has been started in response to the user
-  tapping on a notification then the onSelectNotification callback will be invoked as soon as initialization occurs. As
-  such, rather than calling NotificationUtil.init() from main.dart, it may ultimately make more sense to initialize as
-  part of the router setup or as part of a component in the widget tree where it will be more convenient and/or timely
-  to capture the notification payload.
-
-  Additionally, FlutterLocalNotificationsPlugin.getNotificationAppLaunchDetails() can be called at any time (including
-  prior to plugin initialization) to determine if a notification tap caused the app to be launched, and to retrieve
-  the payload of that notification. */
 class NotificationUtil {
   static const notificationChannelReminders = 'com.instructure.parentapp/reminders';
 
@@ -88,8 +77,19 @@ class NotificationUtil {
     // Delete reminder from db
     await locator<ReminderDb>().deleteById(reminder.id);
 
-    // Route to event or assignment
-    // TODO: MBL-13819
+    // Create route
+    String route;
+    switch (reminder.type) {
+      case Reminder.TYPE_ASSIGNMENT:
+        route = PandaRouter.assignmentDetails(reminder.courseId, reminder.itemId);
+        break;
+      case Reminder.TYPE_EVENT:
+        route = PandaRouter.eventDetails(reminder.courseId, reminder.itemId);
+        break;
+    }
+
+    // Push route
+    WidgetsBinding.instance?.handlePushRoute(route);
   }
 
   Future<void> scheduleReminder(AppLocalizations l10n, String title, String body, Reminder reminder) {

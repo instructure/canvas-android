@@ -24,6 +24,7 @@ import 'package:test/test.dart';
 import '../../canvas_model_utils.dart';
 import '../../platform_config.dart';
 import '../../test_app.dart';
+import '../../test_helpers/mock_helpers.dart';
 
 void main() {
   final user = User((b) => b
@@ -31,8 +32,8 @@ void main() {
     ..name = 'UserName'
     ..primaryEmail = 'PrimaryEmail');
 
-  final api = _MockErrorReportApi();
-  final enrollmentsApi = _MockEnrollmentsApi();
+  final api = MockErrorReportApi();
+  final enrollmentsApi = MockEnrollmentsApi();
 
   setUp(() => reset(api));
 
@@ -211,7 +212,3 @@ void main() {
     expect(() async => await ErrorReportInteractor().submitErrorReport('', '', '', null, ''), throwsArgumentError);
   });
 }
-
-class _MockErrorReportApi extends Mock implements ErrorReportApi {}
-
-class _MockEnrollmentsApi extends Mock implements EnrollmentsApi {}

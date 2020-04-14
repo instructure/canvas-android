@@ -29,11 +29,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
-  final analytics = _MockAnalytics();
-  final webInteractor = _MockWebLoginInteractor();
+  final analytics = MockAnalytics();
+  final webInteractor = MockWebLoginInteractor();
   final interactor = _MockInteractor();
 
   setUp(() {
@@ -86,11 +87,11 @@ void main() {
   testWidgets('Enables "next" button if query is not empty', (WidgetTester tester) async {
     int count = 5;
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value(List.generate(
-      count,
+          count,
           (idx) => SchoolDomain((sd) => sd
-        ..domain = 'test$idx.domains.com'
-        ..name = 'Test domain $idx'),
-    )));
+            ..domain = 'test$idx.domains.com'
+            ..name = 'Test domain $idx'),
+        )));
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -195,11 +196,11 @@ void main() {
   testWidgets('Clear button clears text', (WidgetTester tester) async {
     int count = 5;
     when(interactor.performSearch(any)).thenAnswer((_) => Future.value(List.generate(
-      count,
+          count,
           (idx) => SchoolDomain((sd) => sd
-        ..domain = 'test$idx.domains.com'
-        ..name = 'Test domain $idx'),
-    )));
+            ..domain = 'test$idx.domains.com'
+            ..name = 'Test domain $idx'),
+        )));
     await tester.pumpWidget(TestApp(DomainSearchScreen()));
     await tester.pumpAndSettle();
 
@@ -457,7 +458,3 @@ void main() {
 }
 
 class _MockInteractor extends Mock implements DomainSearchInteractor {}
-
-class _MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
-
-class _MockAnalytics extends Mock implements Analytics {}
