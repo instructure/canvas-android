@@ -15,6 +15,13 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_page.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 enum CourseShellType {
   frontPage,
@@ -32,8 +39,83 @@ class CourseRoutingShellScreen extends StatefulWidget {
 }
 
 class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
+  Future<CourseShellData> _dataFuture;
+
+  Future<CourseShellData> _refresh() {
+    setState(() {
+      _dataFuture =
+          locator<CourseRoutingShellInteractor>().loadCourseShell(widget.type, widget.courseId, forceRefresh: true);
+    });
+    return _dataFuture?.catchError((_) {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    return null;
+    if (_dataFuture == null) {
+      _dataFuture = locator<CourseRoutingShellInteractor>().loadCourseShell(widget.type, widget.courseId);
+    }
+
+    return FutureBuilder(
+      future: _dataFuture,
+      builder: (context, AsyncSnapshot<CourseShellData> snapshot) {
+        if (snapshot.hasError) {
+          return ErrorPandaWidget(L10n(context).unexpectedError, () => _refresh());
+        } else if (!snapshot.hasData) {
+          return Material(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: LoadingIndicator(),
+          );
+        } else {
+          return _scaffold(widget.type, snapshot.data);
+        }
+      },
+    );
+  }
+
+  Widget _scaffold(CourseShellType type, CourseShellData data) {
+    return Scaffold(
+        appBar: AppBar(
+          title: _appBarTitle(
+              (widget.type == CourseShellType.frontPage)
+                  ? L10n(context).courseFrontPageLabel
+                  : L10n(context).courseSyllabusLabel,
+              data.course.name),
+        ),
+        body: _body(data));
+  }
+
+  Widget _body(CourseShellData data) {
+    return RefreshIndicator(
+        onRefresh: () {
+          return _refresh();
+        },
+        child: widget.type == CourseShellType.frontPage
+            ? CanvasPage(data.frontPage)
+            : _syllabus(data.course.syllabusBody));
+  }
+
+  Widget _syllabus(String syllabus) {
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: CanvasWebView(
+          content: syllabus,
+          horizontalPadding: 16,
+          fullScreen: false,
+        ),
+      ),
+    );
+  }
+
+  Widget _appBarTitle(String title, String subtitle) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(title, style: TextStyle(fontSize: 18.0)),
+        Text(subtitle, style: TextStyle(fontSize: 12.0)),
+      ],
+    );
   }
 }

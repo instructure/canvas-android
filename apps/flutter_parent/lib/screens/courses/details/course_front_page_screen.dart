@@ -19,7 +19,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_page.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseFrontPageScreen extends StatefulWidget {
@@ -70,33 +70,9 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
           } else if (!snapshot.hasData) {
             return LoadingIndicator();
           } else {
-            return _CourseHomePage(snapshot.data);
+            return CanvasPage(snapshot.data);
           }
         },
-      ),
-    );
-  }
-}
-
-class _CourseHomePage extends StatelessWidget {
-  final Page homePage;
-
-  const _CourseHomePage(this.homePage, {Key key})
-      : assert(homePage != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: CanvasWebView(
-          content: homePage.body,
-          emptyDescription: homePage.lockExplanation ?? L10n(context).noPageFound,
-          horizontalPadding: 16,
-          fullScreen: false,
-        ),
       ),
     );
   }

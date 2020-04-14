@@ -27,6 +27,7 @@ import 'package:flutter_parent/screens/assignments/assignment_details_screen.dar
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
@@ -72,6 +73,10 @@ class PandaRouter {
       '/courses/$courseId/discussion_topics/$announcementId';
 
   static String courseDetails(String courseId) => '/courses/$courseId';
+
+  static String syllabus(String courseId) => '/courses/$courseId/assignments/syllabus';
+  static String frontPage(String courseId) => '/courses/$courseId/pages/first-page';
+  static String frontPageWiki(String courseId) => '/courses/$courseId/wiki';
 
   static String courses() => '/courses';
 
@@ -145,6 +150,7 @@ class PandaRouter {
 
       // INTERNAL
       router.define(alerts, handler: _alertHandler);
+      router.define(syllabus(':${_RouterKeys.courseId}'), handler: _syllabusHandler);
       router.define(assignmentDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.assignmentId}'),
           handler: _assignmentDetailsHandler);
       router.define(calendar, handler: _calendarHandler);
@@ -153,6 +159,8 @@ class PandaRouter {
       router.define(courseDetails(':${_RouterKeys.courseId}'), handler: _courseDetailsHandler);
       router.define(courses(), handler: _coursesHandler);
       router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
+      router.define(frontPage(':${_RouterKeys.courseId}'), handler: _frontPageHandler);
+      router.define(frontPageWiki(':${_RouterKeys.courseId}'), handler: _frontPageHandler);
       router.define(help(), handler: _helpHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
@@ -162,8 +170,8 @@ class PandaRouter {
       router.define(_qrLogin, handler: _qrLoginHandler);
       router.define(qrTutorial(), handler: _qrTutorialHandler);
       router.define(_routerError, handler: _routerErrorHandler);
-      router.define(_simpleWebView, handler: _simpleWebViewHandler);
       router.define(settings(), handler: _settingsHandler);
+      router.define(_simpleWebView, handler: _simpleWebViewHandler);
       router.define(termsOfUse(), handler: _termsOfUseHandler);
 
       // EXTERNAL
@@ -241,6 +249,10 @@ class PandaRouter {
     );
   });
 
+  static Handler _frontPageHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.frontPage);
+  });
+
   static Handler _helpHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return HelpScreen();
   });
@@ -306,6 +318,10 @@ class PandaRouter {
     final url = params[_RouterKeys.url][0];
     final infoText = params[_RouterKeys.infoText]?.elementAt(0);
     return SimpleWebViewScreen(url, url, infoText: infoText == null || infoText == 'null' ? null : infoText);
+  });
+
+  static Handler _syllabusHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.syllabus);
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {

@@ -36,6 +36,7 @@ import 'package:flutter_parent/screens/assignments/assignment_details_interactor
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
+import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
@@ -115,6 +116,7 @@ void setupLocator() {
   locator.registerFactory<CourseDetailsInteractor>(() => CourseDetailsInteractor());
   locator.registerFactory<CoursesInteractor>(() => CoursesInteractor());
   locator.registerFactory<CreateConversationInteractor>(() => CreateConversationInteractor());
+  locator.registerFactory<CourseRoutingShellInteractor>(() => CourseRoutingShellInteractor());
   locator.registerFactory<DashboardInteractor>(() => DashboardInteractor());
   locator.registerFactory<DomainSearchInteractor>(() => DomainSearchInteractor());
   locator.registerFactory<ErrorReportInteractor>(() => ErrorReportInteractor());

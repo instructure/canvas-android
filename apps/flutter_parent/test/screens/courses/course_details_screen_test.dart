@@ -23,8 +23,8 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
-import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
@@ -226,7 +226,7 @@ void main() {
     await tester.tap(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()));
     await tester.pumpAndSettle(); // Let the screen animate to the tab
 
-    expect(find.byType(CourseHomePageScreen), findsOneWidget);
+    expect(find.byType(CourseFrontPageScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Clicking summary tab shows the summary screen', (tester) async {

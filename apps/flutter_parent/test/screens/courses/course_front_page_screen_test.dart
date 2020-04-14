@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
-import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
