@@ -22,18 +22,18 @@ import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class CourseHomePageScreen extends StatefulWidget {
+class CourseFrontPageScreen extends StatefulWidget {
   final String courseId;
 
-  CourseHomePageScreen({Key key, this.courseId})
+  CourseFrontPageScreen({Key key, this.courseId})
       : assert(courseId != null),
         super(key: key);
 
   @override
-  _CourseHomePageScreenState createState() => _CourseHomePageScreenState();
+  _CourseFrontPageScreenState createState() => _CourseFrontPageScreenState();
 }
 
-class _CourseHomePageScreenState extends State<CourseHomePageScreen> with AutomaticKeepAliveClientMixin {
+class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
   Future<Page> _pageFuture;
 
   @override

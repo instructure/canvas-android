@@ -44,7 +44,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
 
     expect(find.byType(LoadingIndicator), findsOneWidget);
@@ -53,7 +53,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
     when(_interactor.loadHomePage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
 
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
     await tester.pump(); // Wait for future to finish
 
@@ -67,7 +67,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('can refresh', (tester) async {
     when(_interactor.loadHomePage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
 
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
     await tester.pump(); // Wait for the future to finish
 
@@ -83,7 +83,7 @@ void main() {
     when(_interactor.loadHomePage(_courseId)).thenAnswer((_) async => _page.rebuild((b) => b..body = 'body'));
 
     await tester.pumpWidget(TestApp(
-      CourseHomePageScreen(courseId: _courseId),
+      CourseFrontPageScreen(courseId: _courseId),
       platformConfig: PlatformConfig(initWebview: true),
     ));
     await tester.pump(); // Wait for widget to build
