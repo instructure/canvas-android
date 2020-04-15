@@ -29,6 +29,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
@@ -228,6 +230,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                         RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, null, bundle))
                     }
                     Tab.STUDENT_VIEW -> {
+                        Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
                         presenter.handleStudentViewClick()
                     }
                     else -> {
