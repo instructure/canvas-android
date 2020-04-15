@@ -22,6 +22,7 @@ import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/db/db_util.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -41,10 +42,12 @@ void main() {
     setupLocator();
     PandaRouter.init();
 
-    // Notifications are now initialized in ParentApp.initState()
+    // This completer waits for the app to be built before allowing the notificationUtil to handle notifications
+    final Completer<void> _appCompleter = Completer<void>();
+    NotificationUtil.init(_appCompleter);
 
     await OldAppMigration.performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
-    runApp(ParentApp());
+    runApp(ParentApp(_appCompleter));
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
 }
