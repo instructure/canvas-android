@@ -29,7 +29,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/style_slicer.dart';
 import 'package:intl/intl.dart';
 
-class MessageWidget extends StatelessWidget {
+class MessageWidget extends StatefulWidget {
   final Conversation conversation;
   final Message message;
   final String currentUserId;
@@ -44,43 +44,94 @@ class MessageWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _MessageWidgetState createState() => _MessageWidgetState();
+}
+
+class _MessageWidgetState extends State<MessageWidget> {
+  bool _participantsExpanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    var author = conversation.participants.firstWhere(
-      (it) => it.id == message.authorId,
+    var author = widget.conversation.participants.firstWhere(
+      (it) => it.id == widget.message.authorId,
       orElse: () => BasicUser((b) => b..name = L10n(context).unknownUser),
     );
-    var date = message.createdAt.l10nFormat(L10n(context).dateAtTime);
+    var date = widget.message.createdAt.l10nFormat(L10n(context).dateAtTime);
     return Container(
       padding: EdgeInsets.all(16),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Avatar(author.avatarUrl, name: author.name),
-              SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _authorText(context, conversation, message, author),
-                    SizedBox(height: 2),
-                    Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 16),
+          _header(author, context, date),
           Linkify(
-            text: message.body,
+            text: widget.message.body,
             options: LinkifyOptions(humanize: false),
             onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
           ),
-          _attachmentsWidget(context, message)
+          _attachmentsWidget(context, widget.message)
         ],
+      ),
+    );
+  }
+
+  Widget _header(BasicUser author, BuildContext context, String date) {
+    return Material(
+      key: Key('message-header'),
+      child: InkWell(
+        onTap:
+            widget.message.participatingUserIds.length > 1 // Only allow expansion if there are non-author participants
+                ? () => setState(() => _participantsExpanded = !_participantsExpanded)
+                : null,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Avatar(author.avatarUrl, name: author.name),
+                SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _authorText(context, widget.conversation, widget.message, author),
+                      SizedBox(height: 2),
+                      Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (_participantsExpanded) _participants(author),
+            SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _participants(BasicUser author) {
+    var participants = widget.message.participatingUserIds
+        .map((id) => widget.conversation.participants.firstWhere((it) => it.id == id))
+        .toList()
+          ..retainWhere((it) => it.id != author.id);
+    return Padding(
+      key: Key('participants'),
+      padding: const EdgeInsetsDirectional.only(top: 16, start: 52),
+      child: ListView.separated(
+        itemCount: participants.length,
+        shrinkWrap: true,
+        separatorBuilder: (context, index) => SizedBox(height: 8),
+        itemBuilder: (context, index) {
+          var user = participants[index];
+          return Row(
+            children: <Widget>[
+              Avatar(user.avatarUrl, name: user.name, radius: 16),
+              SizedBox(width: 12),
+              Expanded(child: Text(user.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
+            ],
+          );
+        },
       ),
     );
   }
@@ -90,7 +141,7 @@ class MessageWidget extends StatelessWidget {
     List<StyleSlicer> slicers = [];
     Color authorColor = ParentTheme.of(context).onSurfaceColor;
 
-    if (message.authorId == currentUserId) {
+    if (message.authorId == widget.currentUserId) {
       var authorName = toBeginningOfSentenceCase(L10n(context).userNameMe);
       slicers.add(PatternSlice(authorName, style: TextStyle(color: authorColor), maxMatches: 1));
       if (message.participatingUserIds.length == 2) {
@@ -144,7 +195,7 @@ class MessageWidget extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         separatorBuilder: (context, index) => SizedBox(width: 12),
         itemBuilder: (context, index) =>
-            AttachmentIndicatorWidget(attachment: attachments[index], onAttachmentClicked: onAttachmentClicked),
+            AttachmentIndicatorWidget(attachment: attachments[index], onAttachmentClicked: widget.onAttachmentClicked),
       ),
     );
   }

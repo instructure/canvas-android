@@ -135,6 +135,92 @@ void main() {
       expect(widget.textSpan.toPlainText(), 'Me to 4 others');
     });
 
+    testWidgetsWithAccessibilityChecks('expands to show participant info', (tester) async {
+      final message = Message((m) => m
+        ..authorId = '123'
+        ..createdAt = DateTime.now()
+        ..body = ''
+        ..participatingUserIds = ListBuilder(['123', '456', '789', '111', '222']));
+
+      final conversation = Conversation((c) => c
+        ..messages = ListBuilder([message])
+        ..participants = ListBuilder([
+          BasicUser((b) => b
+            ..id = '123'
+            ..name = 'Author'),
+          BasicUser((b) => b
+            ..id = '456'
+            ..name = 'User 1'),
+          BasicUser((b) => b
+            ..id = '789'
+            ..name = 'User 2'),
+          BasicUser((b) => b
+            ..id = '111'
+            ..name = 'User 3'),
+          BasicUser((b) => b
+            ..id = '222'
+            ..name = 'User 4'),
+        ]));
+
+      await tester.pumpWidget(
+        TestApp(
+          MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Should not display participant info by default
+      expect(find.byKey(Key('participants')), findsNothing);
+
+      // Tap header to expand participant info
+      await tester.tap(find.byKey(Key('message-header')));
+      await tester.pumpAndSettle();
+
+      // Participant info show now be displayed
+      var participants = find.byKey(Key('participants'));
+      expect(participants, findsOneWidget);
+
+      // Should show all non-author participants
+      expect(find.descendant(of: participants, matching: find.text('Author')), findsNothing);
+      expect(find.descendant(of: participants, matching: find.text('User 1')), findsOneWidget);
+      expect(find.descendant(of: participants, matching: find.text('User 2')), findsOneWidget);
+      expect(find.descendant(of: participants, matching: find.text('User 3')), findsOneWidget);
+      expect(find.descendant(of: participants, matching: find.text('User 4')), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('does not expand participant info for monologue', (tester) async {
+      final message = Message((m) => m
+        ..authorId = '123'
+        ..createdAt = DateTime.now()
+        ..body = ''
+        ..participatingUserIds = ListBuilder(['123']));
+
+      final conversation = Conversation((c) => c
+        ..messages = ListBuilder([message])
+        ..participants = ListBuilder([
+          BasicUser((b) => b
+            ..id = '123'
+            ..name = 'Author'),
+        ]));
+
+      await tester.pumpWidget(
+        TestApp(
+          MessageWidget(conversation: conversation, message: message, currentUserId: currentUserId),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Should not display participant info by default
+      expect(find.byKey(Key('participants')), findsNothing);
+
+      // Tap header to attempt expanding participant info
+      await tester.tap(find.byKey(Key('message-header')));
+      await tester.pumpAndSettle();
+
+      // Participant info should still not be displayed
+      expect(find.byKey(Key('participants')), findsNothing);
+    });
+
     testWidgetsWithAccessibilityChecks('for message from another', (tester) async {
       final message = Message((m) => m
         ..authorId = '456'
