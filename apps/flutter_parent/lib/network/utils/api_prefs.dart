@@ -28,12 +28,14 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dio_config.dart';
 
 class ApiPrefs {
   static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
   static const String KEY_HAS_CHECKED_OLD_REMINDERS = 'has_checked_old_reminders';
+  static const String HAS_MIGRATED_TO_ENCRYPTED_PREFS = 'has_migrated_to_encrypted_prefs';
   static const String KEY_LOGINS = 'logins';
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
   static const String KEY_CURRENT_STUDENT = 'current_student';
@@ -45,6 +47,33 @@ class ApiPrefs {
   static Future<void> init() async {
     if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
+    await _migrateToEncryptedPrefs();
+  }
+
+  static void _migrateToEncryptedPrefs() async {
+    if (_prefs.getBool(HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
+      return;
+    }
+
+    // Set the bool flag so we don't migrate multiple times
+    _prefs.setBool(HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
+
+    final oldPrefs = await SharedPreferences.getInstance();
+
+    _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
+    oldPrefs.remove(KEY_LOGINS);
+
+    _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
+    oldPrefs.remove(KEY_HAS_MIGRATED);
+
+    _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
+    oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
+
+    _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
+    oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
+
+    _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
+    oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
   static void clean() {

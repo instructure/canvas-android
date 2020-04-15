@@ -12,10 +12,14 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/reminder.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -25,6 +29,7 @@ import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
@@ -397,6 +402,68 @@ void main() {
     await ApiPrefs.setCurrentStudent(user);
 
     expect(ApiPrefs.getCurrentStudent(), user);
+  });
+
+  test('migrates old prefs to encrypted prefs', () async {
+    // Setup platform channels with minimal configuration
+    setupPlatformChannels(config: PlatformConfig(mockApiPrefs: null));
+
+    // Values
+    final logins = List.generate(3, (i) {
+      return Login((b) => b
+        ..user = CanvasModelTestUtils.mockUser(id: i.toString(), name: 'Test Login $i').toBuilder()
+        ..accessToken = 'access_$i'
+        ..refreshToken = 'refresh_$i'
+        ..clientSecret = 'client_secret'
+        ..clientId = 'client_id'
+        ..domain = 'domain'
+        ..uuid = i.toString());
+    });
+    final hasMigrated = true;
+    final hasCheckedOldReminders = true;
+    final currentLoginId = '123';
+    final currentStudent = CanvasModelTestUtils.mockUser();
+
+    // Setup
+    final config = PlatformConfig(mockPrefs: {
+      ApiPrefs.KEY_LOGINS: logins.map((it) => json.encode(serialize<Login>(it))).toList(),
+      ApiPrefs.KEY_HAS_MIGRATED: hasMigrated,
+      ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS: hasCheckedOldReminders,
+      ApiPrefs.KEY_CURRENT_LOGIN_UUID: currentLoginId,
+      ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize<User>(currentStudent)),
+    });
+
+    SharedPreferences.setMockInitialValues(config.mockPrefs);
+    EncryptedSharedPreferences.setMockInitialValues({});
+
+    final oldPrefs = await SharedPreferences.getInstance();
+    final encryptedPrefs = await EncryptedSharedPreferences.getInstance();
+
+    // Old prefs should not be null
+    expect(
+        oldPrefs.getStringList(ApiPrefs.KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList(), logins);
+    expect(oldPrefs.getBool(ApiPrefs.KEY_HAS_MIGRATED), hasMigrated);
+    expect(oldPrefs.getBool(ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS), hasCheckedOldReminders);
+    expect(oldPrefs.getString(ApiPrefs.KEY_CURRENT_LOGIN_UUID), currentLoginId);
+    expect(deserialize<User>(json.decode(oldPrefs.get(ApiPrefs.KEY_CURRENT_STUDENT))), currentStudent);
+
+    // Actually do the test, init api prefs so we get the migration
+    await ApiPrefs.init();
+
+    // encryptedPrefs should be not null
+    expect(encryptedPrefs.getStringList(ApiPrefs.KEY_LOGINS).map((it) => deserialize<Login>(json.decode(it))).toList(),
+        logins);
+    expect(encryptedPrefs.getBool(ApiPrefs.KEY_HAS_MIGRATED), hasMigrated);
+    expect(encryptedPrefs.getBool(ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS), hasCheckedOldReminders);
+    expect(encryptedPrefs.getString(ApiPrefs.KEY_CURRENT_LOGIN_UUID), currentLoginId);
+    expect(deserialize<User>(json.decode(encryptedPrefs.get(ApiPrefs.KEY_CURRENT_STUDENT))), currentStudent);
+
+    // Old prefs should be cleared out
+    expect(oldPrefs.get(ApiPrefs.KEY_LOGINS), isNull);
+    expect(oldPrefs.get(ApiPrefs.KEY_HAS_MIGRATED), isNull);
+    expect(oldPrefs.get(ApiPrefs.KEY_HAS_CHECKED_OLD_REMINDERS), isNull);
+    expect(oldPrefs.get(ApiPrefs.KEY_CURRENT_LOGIN_UUID), isNull);
+    expect(oldPrefs.get(ApiPrefs.KEY_CURRENT_STUDENT), isNull);
   });
 }
 
