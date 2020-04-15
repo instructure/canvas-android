@@ -58,16 +58,19 @@ class _MessageWidgetState extends State<MessageWidget> {
     );
     var date = widget.message.createdAt.l10nFormat(L10n(context).dateAtTime);
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(vertical: 16),
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           _header(author, context, date),
-          Linkify(
-            text: widget.message.body,
-            options: LinkifyOptions(humanize: false),
-            onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Linkify(
+              text: widget.message.body,
+              options: LinkifyOptions(humanize: false),
+              onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
+            ),
           ),
           _attachmentsWidget(context, widget.message)
         ],
@@ -83,28 +86,31 @@ class _MessageWidgetState extends State<MessageWidget> {
             widget.message.participatingUserIds.length > 1 // Only allow expansion if there are non-author participants
                 ? () => setState(() => _participantsExpanded = !_participantsExpanded)
                 : null,
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Avatar(author.avatarUrl, name: author.name),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _authorText(context, widget.conversation, widget.message, author),
-                      SizedBox(height: 2),
-                      Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
-                    ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Avatar(author.avatarUrl, name: author.name),
+                  SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        _authorText(context, widget.conversation, widget.message, author),
+                        SizedBox(height: 2),
+                        Text(date, key: Key('message-date'), style: Theme.of(context).textTheme.subtitle),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            if (_participantsExpanded) _participants(author),
-            SizedBox(height: 16),
-          ],
+                ],
+              ),
+              if (_participantsExpanded) _participants(author),
+              SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
@@ -189,6 +195,7 @@ class _MessageWidgetState extends State<MessageWidget> {
       height: 108,
       padding: EdgeInsets.only(top: 12),
       child: ListView.separated(
+        padding: EdgeInsets.symmetric(horizontal: 16),
         key: Key('message_attachment_list'),
         shrinkWrap: true,
         itemCount: attachments.length,
