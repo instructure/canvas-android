@@ -18,6 +18,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -27,10 +28,11 @@ class CreateConversationInteractor {
   Future<CreateConversationData> loadData(String courseId, String studentId) async {
     final courseFuture = locator<CourseApi>().getCourse(courseId);
     final recipients = await locator<InboxApi>().getRecipients(courseId);
+    final userId = ApiPrefs.getUser().id;
 
-    // The only allowed recipients are teachers and the specific student
+    // The only allowed recipients are teachers, the specific student, and the current user
     recipients.retainWhere((it) {
-      return it.id == studentId || it.commonCourses[courseId]?.contains('TeacherEnrollment') == true;
+      return it.id == studentId || it.id == userId || it.commonCourses[courseId]?.contains('TeacherEnrollment') == true;
     });
 
     return CreateConversationData(await courseFuture, recipients);
