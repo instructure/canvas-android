@@ -14,6 +14,7 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
@@ -21,10 +22,13 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../../../utils/canvas_model_utils.dart';
+import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
 
 void main() {
   String studentId = 'student_123';
+  var user = CanvasModelTestUtils.mockUser(id: 'user_123');
 
   final inboxApi = _MockInboxApi();
   final courseApi = _MockCourseApi();
@@ -34,7 +38,8 @@ void main() {
     locator.registerLazySingleton<CourseApi>(() => courseApi);
   });
 
-  setUp(() {
+  setUp(() async {
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: Login((b) => b..user = user.toBuilder())));
     reset(inboxApi);
     reset(courseApi);
   });
@@ -62,7 +67,7 @@ void main() {
     verify(courseApi.getCourse(course.id));
   });
 
-  test('loadData returns only teachers and specified student', () async {
+  test('loadData returns only teachers, specified student, and current user', () async {
     final course = Course((c) => c..id = 'course_1');
     when(courseApi.getCourse(any)).thenAnswer((_) async => course);
 
@@ -76,6 +81,13 @@ void main() {
     var observer = Recipient((r) => r
       ..id = 'observer_456'
       ..name = 'Observer'
+      ..commonCourses = MapBuilder({
+        course.id: BuiltList<String>(['ObserverEnrollment'])
+      }));
+
+    var currentUser = Recipient((r) => r
+      ..id = user.id
+      ..name = 'Current User'
       ..commonCourses = MapBuilder({
         course.id: BuiltList<String>(['ObserverEnrollment'])
       }));
@@ -94,8 +106,8 @@ void main() {
         'course_2': BuiltList<String>(['StudentEnrollment'])
       }));
 
-    final allRecipients = [teacher, observer, student, otherStudent];
-    final expectedRecipients = [teacher, student];
+    final allRecipients = [teacher, observer, currentUser, student, otherStudent];
+    final expectedRecipients = [teacher, currentUser, student];
 
     when(inboxApi.getRecipients(any)).thenAnswer((_) async => allRecipients);
 
