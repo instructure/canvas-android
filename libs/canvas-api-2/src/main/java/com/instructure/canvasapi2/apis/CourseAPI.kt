@@ -220,5 +220,4 @@ object CourseAPI {
     fun getRubricSettings(courseId: Long, rubricId: Long, adapter: RestBuilder, callback: StatusCallback<RubricSettings>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getRubricSettings(courseId, rubricId)).enqueue(callback)
     }
-
 }

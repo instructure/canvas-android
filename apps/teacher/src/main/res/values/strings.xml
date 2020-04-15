@@ -892,6 +892,5 @@
 
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
-    <string name="downloading">Downloading...</string>
-
+    <string name="downloading">Downloading…</string>
 </resources>

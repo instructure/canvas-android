@@ -58,7 +58,6 @@ object EnrollmentAPI {
 
         @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
         fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Void>
-
     }
 
     fun getFirstPageEnrollmentsForCourse(

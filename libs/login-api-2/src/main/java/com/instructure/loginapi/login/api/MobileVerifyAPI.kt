@@ -53,7 +53,7 @@ object MobileVerifyAPI {
                     ?: false
 
             // We only want to switch over to the beta mobile verify domain if the remote firebase config is true
-            val baseUrl = if(mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
+            val baseUrl = if (mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
                 "https://canvas.beta.instructure.com/api/v1/"
             } else {
                 "https://canvas.instructure.com/api/v1/"

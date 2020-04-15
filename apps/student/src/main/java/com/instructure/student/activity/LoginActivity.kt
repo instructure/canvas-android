@@ -86,7 +86,7 @@ class LoginActivity : BaseLoginInitActivity() {
         super.onCreate(savedInstanceState)
 
         // Check to see if we are switching users from an external QR scan
-        if(QRLogin.verifySSOLoginUri(intent.data)) {
+        if (QRLogin.verifySSOLoginUri(intent.data)) {
             startActivity(InterwebsToApplication.createIntent(this, intent.data!!))
             finish()
         }

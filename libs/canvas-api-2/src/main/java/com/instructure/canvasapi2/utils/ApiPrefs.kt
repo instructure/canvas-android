@@ -96,6 +96,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     @JvmStatic
     var isMasquerading by BooleanPref()
     @JvmStatic
+    var isStudentView by BooleanPref()
+    @JvmStatic
     var isMasqueradingFromQRCode by BooleanPref()
     @JvmStatic
     var masqueradeId by LongPref(-1L)
@@ -104,15 +106,15 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     @JvmStatic
     var domain: String
-        get() = if (isMasquerading) masqueradeDomain else originalDomain
+        get() = if (isMasquerading || isStudentView) masqueradeDomain else originalDomain
         set(newDomain) {
             val strippedDomain = newDomain.replaceFirst(Regex("https?://"), "").removeSuffix("/")
-            if (isMasquerading) masqueradeDomain = strippedDomain else originalDomain = strippedDomain
+            if (isMasquerading || isStudentView) masqueradeDomain = strippedDomain else originalDomain = strippedDomain
         }
 
     @JvmStatic
     val fullDomain: String
-        get() = if(isMasquerading)  {
+        get() = if (isMasquerading || isStudentView)  {
             when {
                 masqueradeDomain.isBlank() || protocol.isBlank() -> ""
                 URLUtil.isHttpUrl(masqueradeDomain) || URLUtil.isHttpsUrl(masqueradeDomain) -> masqueradeDomain
@@ -128,9 +130,9 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     @JvmStatic
     var user: User?
-        get() = if (isMasquerading) masqueradeUser else originalUser
+        get() = if (isMasquerading || isStudentView) masqueradeUser else originalUser
         set(newUser) {
-            if (isMasquerading) masqueradeUser = newUser else originalUser = newUser
+            if (isMasquerading || isStudentView) masqueradeUser = newUser else originalUser = newUser
         }
 
     /* Notorious Prefs */

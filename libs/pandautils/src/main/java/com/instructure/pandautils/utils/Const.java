@@ -323,8 +323,16 @@ public class Const {
     public static final String HIDE_TOOLBAR = "hideToolbar";
     public static final String STUDIO_LTI_TOOL = "studioLTITool";
     public static final String STUDENT_USER_AGENT = "candroid";
+    public static final String TEACHER_USER_AGENT = "androidTeacher";
 
     // Intent String for QR Code Masquerading
     public static final String QR_CODE_MASQUERADE_ID = "qrCodeMasqueradeId";
-    public static final String TEACHER_USER_AGENT = "androidTeacher";
+    public static final String MARKET_URI_PREFIX = "market://details?id=";
+    public static final String CANVAS_STUDENT_ID = "com.instructure.candroid";
+    public static final String TOKEN = "token";
+
+    // This is tied directly to an intent filter in the Student app AndroidManifest - if either one changes, make sure they stay in sync
+    public static final String INTENT_ACTION_STUDENT_VIEW = "com.instructure.student.STUDENT_VIEW";
+    public static final String CLIENT_ID = "clientId";
+    public static final String CLIENT_SECRET = "clientSecret";
 }

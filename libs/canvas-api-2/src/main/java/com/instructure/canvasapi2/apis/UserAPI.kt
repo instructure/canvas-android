@@ -82,6 +82,9 @@ object UserAPI {
         @GET("accounts/{accountId}/permissions?permissions[]=become_user")
         fun getBecomeUserPermission(@Path("accountId") accountId: Long): Call<BecomeUserPermission>
 
+        @GET("courses/{courseId}/student_view_student")
+        fun getTestUser(@Path("courseId") courseId: Long?): Call<User>
+
         //region Airwolf
         @POST("users/{userId}/observees")
         fun addObserveeWithPairingCode(@Path("userId") userId: Long?, @Query(value = "pairing_code") pairingCode: String): Call<User>
@@ -136,6 +139,10 @@ object UserAPI {
 
     fun getUser(adapter: RestBuilder, params: RestParams, userId: Long?, callback: StatusCallback<User>) {
         callback.addCall(adapter.build(UsersInterface::class.java, params).getUser(userId)).enqueue(callback)
+    }
+
+    fun getTestUser(adapter: RestBuilder, params: RestParams, courseId: Long?, callback: StatusCallback<User>) {
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getTestUser(courseId)).enqueue(callback)
     }
 
     fun getUserForContextId(adapter: RestBuilder, params: RestParams, canvasContext: CanvasContext, userId: Long, callback: StatusCallback<User>) {

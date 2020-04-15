@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (C) 2020 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="15dp"
+    android:viewportWidth="20"
+    android:viewportHeight="15">
+  <path
+      android:pathData="M1.6667,1.1111H12.778C13.0846,1.1111 13.3335,1.3611 13.3335,1.6667V3.3334H1.1111V1.6667C1.1111,1.3611 1.36,1.1111 1.6667,1.1111ZM13.3335,12.778V10.5557H14.4446V12.778C14.4446,13.6969 13.6969,14.4446 12.778,14.4446H1.6667C0.7478,14.4446 0,13.6969 0,12.778V1.6667C0,0.7478 0.7478,0 1.6667,0H12.778C13.6969,0 14.4446,0.7478 14.4446,1.6667V6.1112H13.3335V4.4445H1.1111V12.778C1.1111,13.0835 1.36,13.3335 1.6667,13.3335H12.778C13.0846,13.3335 13.3335,13.0835 13.3335,12.778ZM19.8375,7.9407C20.0542,8.1573 20.0542,8.5096 19.8375,8.7262L16.5041,12.0596L15.7186,11.274L18.103,8.8896H9.444V7.7784H18.103L15.7186,5.3928L16.5041,4.6073L19.8375,7.9407Z"
+      android:fillColor="#8B969E"
+      android:fillType="evenOdd"/>
+</vector>

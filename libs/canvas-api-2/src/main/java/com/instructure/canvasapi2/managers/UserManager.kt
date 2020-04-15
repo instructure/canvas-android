@@ -105,6 +105,13 @@ object UserManager {
     }
 
     @JvmStatic
+    fun getTestUser(courseId: Long?, callback: StatusCallback<User>, forceNetwork: Boolean) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        UserAPI.getTestUser(adapter, params, courseId, callback)
+    }
+
+    @JvmStatic
     fun getUserForContextId(
         canvasContext: CanvasContext,
         userId: Long,

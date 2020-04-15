@@ -23,6 +23,8 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
 import kotlinx.android.synthetic.main.adapter_course_browser.view.*
@@ -46,12 +48,13 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             Tab.FILES_ID -> R.drawable.vd_files
             Tab.PAGES_ID -> R.drawable.vd_pages
             Tab.MODULES_ID -> R.drawable.vd_modules
+            Tab.STUDENT_VIEW -> R.drawable.vd_profile
             else -> {
                 //Determine if its the attendance tool
                 val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
-                if(attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
+                if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
                     R.drawable.vd_attendance
-                } else if(tab.type == Tab.TYPE_EXTERNAL) {
+                } else if (tab.type == Tab.TYPE_EXTERNAL) {
                     R.drawable.vd_lti
                 } else R.drawable.vd_canvas_logo
             }
@@ -73,7 +76,19 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
      */
     private fun setupTab(tab: Tab, drawable: Drawable, callback: (Tab) -> Unit) {
         labelText = itemView.label
-        itemView.label.text = tab.label
+
+        // Manually set the text for Student View tab since it doesn't have any other info other than tabId
+        if (tab.tabId == Tab.STUDENT_VIEW) {
+            itemView.label.text = itemView.context.getText(R.string.tab_student_view)
+            itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.vd_open_externally))
+            itemView.description.setVisible()
+            itemView.description.text = itemView.context.getText(R.string.opensInCanvasStudent)
+        } else {
+            itemView.label.text = tab.label
+            itemView.endIcon.setImageDrawable(null)
+            itemView.description.setGone()
+        }
+
         itemView.icon.setImageDrawable(drawable)
         itemView.setOnClickListener {
             callback(tab)

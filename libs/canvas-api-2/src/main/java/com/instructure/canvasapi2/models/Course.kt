@@ -211,11 +211,11 @@ data class Course(
     val homePageID: String
         get() =
             when (homePage) {
-                Course.HomePage.HOME_FEED -> Tab.NOTIFICATIONS_ID
-                Course.HomePage.HOME_SYLLABUS -> Tab.SYLLABUS_ID
-                Course.HomePage.HOME_WIKI -> Tab.FRONT_PAGE_ID
-                Course.HomePage.HOME_ASSIGNMENTS -> Tab.ASSIGNMENTS_ID
-                Course.HomePage.HOME_MODULES -> Tab.MODULES_ID
+                HomePage.HOME_FEED -> Tab.NOTIFICATIONS_ID
+                HomePage.HOME_SYLLABUS -> Tab.SYLLABUS_ID
+                HomePage.HOME_WIKI -> Tab.FRONT_PAGE_ID
+                HomePage.HOME_ASSIGNMENTS -> Tab.ASSIGNMENTS_ID
+                HomePage.HOME_MODULES -> Tab.MODULES_ID
                 null -> Tab.NOTIFICATIONS_ID
             }
 

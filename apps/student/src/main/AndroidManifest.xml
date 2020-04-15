@@ -100,6 +100,7 @@
 
             <intent-filter>
                 <action android:name="com.instructure.student.ROUTING_ACTIVITY"/>
+                <action android:name="com.instructure.student.STUDENT_VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
