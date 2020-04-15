@@ -43,7 +43,7 @@ void main() {
     when(interactor.toggleDarkMode(any, any)).thenAnswer((invocation) {
       ParentTheme.of(invocation.positionalArguments[0]).toggleDarkMode();
     });
-    when(interactor.toggleHCMode(any, any)).thenAnswer((invocation) {
+    when(interactor.toggleHCMode(any)).thenAnswer((invocation) {
       ParentTheme.of(invocation.positionalArguments[0]).toggleHC();
     });
     setupTestLocator((locator) {

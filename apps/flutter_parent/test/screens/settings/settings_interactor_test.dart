@@ -78,10 +78,10 @@ void main() {
     final context = tester.state(find.byType(MaterialApp)).context;
     expect(ParentTheme.of(context).isHC, false);
 
-    SettingsInteractor().toggleHCMode(context, null);
+    SettingsInteractor().toggleHCMode(context);
     expect(ParentTheme.of(context).isHC, true);
 
-    SettingsInteractor().toggleHCMode(context, null);
+    SettingsInteractor().toggleHCMode(context);
     expect(ParentTheme.of(context).isHC, false);
 
     verify(analytics.logEvent(AnalyticsEventConstants.HC_MODE_OFF)).called(1);

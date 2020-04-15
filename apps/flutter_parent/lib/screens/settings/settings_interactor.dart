@@ -38,12 +38,12 @@ class SettingsInteractor {
     ThemeTransitionTarget.toggleDarkMode(context, anchorKey);
   }
 
-  void toggleHCMode(context, anchorKey) {
+  void toggleHCMode(context) {
     if (ParentTheme.of(context).isHC) {
       locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_OFF);
     } else {
       locator<Analytics>().logEvent(AnalyticsEventConstants.HC_MODE_ON);
     }
-    ThemeTransitionTarget.toggleHCMode(context, anchorKey);
+    ParentTheme.of(context).toggleHC();
   }
 }
