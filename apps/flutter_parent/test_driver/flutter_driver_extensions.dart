@@ -17,11 +17,15 @@ import 'package:flutter_driver/flutter_driver.dart';
 // Extensions on FlutterDriver that allow us to try pull-to-refresh if the initial attempt fails
 // for some operations.
 extension AutoRefresh on FlutterDriver {
-  Future<String> getTextWithRefreshes(SerializableFinder finder, {int refreshes = 3}) async {
+  Future<String> getTextWithRefreshes(SerializableFinder finder,
+      {int refreshes = 3, String expectedText = null}) async {
     final refreshFinder = find.byType("RefreshIndicator");
     for (int i = 0; i < refreshes; i++) {
       try {
         var result = await this.getText(finder, timeout: Duration(seconds: 1));
+        if (expectedText != null && result != expectedText) {
+          throw Error(); // Cause a refresh
+        }
         return result;
       } catch (err) {
         await this.scroll(refreshFinder, 0, 200, Duration(milliseconds: 200));
