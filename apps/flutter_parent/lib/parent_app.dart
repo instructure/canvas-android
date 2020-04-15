@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -26,8 +27,12 @@ import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 
 class ParentApp extends StatefulWidget {
+  final Completer<void> _appCompleter;
+
   @override
   _ParentAppState createState() => _ParentAppState();
+
+  ParentApp(this._appCompleter, {Key key}) : super(key: key);
 
   static _ParentAppState of(BuildContext context) {
     return context.findAncestorStateOfType<_ParentAppState>();
@@ -45,6 +50,7 @@ class _ParentAppState extends State<ParentApp> {
   @override
   void initState() {
     super.initState();
+
     _locale = ApiPrefs.effectiveLocale();
   }
 
@@ -53,7 +59,12 @@ class _ParentAppState extends State<ParentApp> {
     return Respawn(
       child: ParentTheme(
         builder: (context, themeData) => MaterialApp(
-          builder: (context, child) => MasqueradeUI(navKey: _navKey, child: child),
+          builder: (context, child) {
+            if (!widget._appCompleter.isCompleted) {
+              widget._appCompleter.complete();
+            }
+            return MasqueradeUI(navKey: _navKey, child: child);
+          },
           title: 'Canvas Parent',
           locale: _locale,
           navigatorKey: _navKey,

@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,7 +46,7 @@ void main() {
   });
 
   test('initializes plugin with expected parameters', () async {
-    await NotificationUtil.init();
+    await NotificationUtil.init(null);
 
     final verification = verify(plugin.initialize(
       captureAny,
@@ -62,6 +63,7 @@ void main() {
   });
 
   test('handleReminder deletes reminder from database', () async {
+    final Completer<void> _appCompleter = Completer<void>();
     final reminder = Reminder((b) => b
       ..id = 123
       ..date = DateTime.now().toUtc());
@@ -69,7 +71,7 @@ void main() {
       ..type = NotificationPayloadType.reminder
       ..data = json.encode(serialize(reminder)));
 
-    await NotificationUtil.handleReminder(payload);
+    await NotificationUtil.handleReminder(payload, _appCompleter);
 
     verify(database.deleteById(reminder.id));
   });
@@ -84,7 +86,7 @@ void main() {
 
     final rawPayload = json.encode(serialize(payload));
 
-    await NotificationUtil.handlePayload(rawPayload);
+    await NotificationUtil.handlePayload(rawPayload, null);
 
     verify(database.deleteById(reminder.id));
   });
@@ -94,12 +96,12 @@ void main() {
 
     final rawPayload = json.encode(serialize(payload));
 
-    await NotificationUtil.handlePayload(rawPayload);
+    await NotificationUtil.handlePayload(rawPayload, null);
     // Nothing uses 'other' notification types at the moment, so this test should simply complete without errors
   });
 
   test('handlePayload catches deserialization errors', () async {
-    await NotificationUtil.handlePayload('');
+    await NotificationUtil.handlePayload('', null);
     // No error should be thrown and test should complete successfully
   });
 
@@ -183,6 +185,6 @@ void main() {
   // For coverage only
   test('initializes', () async {
     NotificationUtil.initForTest(null);
-    await NotificationUtil.init();
+    await NotificationUtil.init(null);
   });
 }

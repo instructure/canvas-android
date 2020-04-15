@@ -42,11 +42,12 @@ void main() {
     setupLocator();
     PandaRouter.init();
 
-    // Currently must be initialized after locator has been set up. This may change once routing is implemented.
-    await NotificationUtil.init();
+    // This completer waits for the app to be built before allowing the notificationUtil to handle notifications
+    final Completer<void> _appCompleter = Completer<void>();
+    NotificationUtil.init(_appCompleter);
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
-    runApp(ParentApp());
+    runApp(ParentApp(_appCompleter));
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
 }

@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -36,7 +37,7 @@ class NotificationUtil {
     _plugin = plugin;
   }
 
-  static Future<void> init() async {
+  static Future<void> init(Completer<void> appCompleter) async {
     var initializationSettings = InitializationSettings(
       AndroidInitializationSettings('ic_notification_canvas_logo'),
       null,
@@ -49,18 +50,18 @@ class NotificationUtil {
     await _plugin.initialize(
       initializationSettings,
       onSelectNotification: (rawPayload) async {
-        await handlePayload(rawPayload);
+        await handlePayload(rawPayload, appCompleter);
       },
     );
   }
 
   @visibleForTesting
-  static Future<void> handlePayload(String rawPayload) async {
+  static Future<void> handlePayload(String rawPayload, Completer<void> appCompleter) async {
     try {
       NotificationPayload payload = deserialize(json.decode(rawPayload));
       switch (payload.type) {
         case NotificationPayloadType.reminder:
-          await handleReminder(payload);
+          await handleReminder(payload, appCompleter);
           break;
         case NotificationPayloadType.other:
           break;
@@ -71,7 +72,7 @@ class NotificationUtil {
   }
 
   @visibleForTesting
-  static Future<void> handleReminder(NotificationPayload payload) async {
+  static Future<void> handleReminder(NotificationPayload payload, Completer<void> appCompleter) async {
     Reminder reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
@@ -88,8 +89,8 @@ class NotificationUtil {
         break;
     }
 
-    // Push route
-    WidgetsBinding.instance?.handlePushRoute(route);
+    // Push route, but only after the app has finished building
+    appCompleter.future.then((_) => WidgetsBinding.instance?.handlePushRoute(route));
   }
 
   Future<void> scheduleReminder(AppLocalizations l10n, String title, String body, Reminder reminder) {
