@@ -18,12 +18,6 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
   Iterable<Object> serialize(Serializers serializers, PlannerItem object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
-      'context_type',
-      serializers.serialize(object.contextType,
-          specifiedType: const FullType(String)),
-      'context_name',
-      serializers.serialize(object.contextName,
-          specifiedType: const FullType(String)),
       'plannable_type',
       serializers.serialize(object.plannableType,
           specifiedType: const FullType(String)),
@@ -33,9 +27,6 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       'plannable_date',
       serializers.serialize(object.plannableDate,
           specifiedType: const FullType(DateTime)),
-      'html_url',
-      serializers.serialize(object.htmlUrl,
-          specifiedType: const FullType(String)),
     ];
     result.add('course_id');
     if (object.courseId == null) {
@@ -44,12 +35,33 @@ class _$PlannerItemSerializer implements StructuredSerializer<PlannerItem> {
       result.add(serializers.serialize(object.courseId,
           specifiedType: const FullType(String)));
     }
+    result.add('context_type');
+    if (object.contextType == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.contextType,
+          specifiedType: const FullType(String)));
+    }
+    result.add('context_name');
+    if (object.contextName == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.contextName,
+          specifiedType: const FullType(String)));
+    }
     result.add('submissions');
     if (object.submissionStatusRaw == null) {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.submissionStatusRaw,
           specifiedType: const FullType(JsonObject)));
+    }
+    result.add('html_url');
+    if (object.htmlUrl == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.htmlUrl,
+          specifiedType: const FullType(String)));
     }
     return result;
   }
@@ -136,12 +148,6 @@ class _$PlannerItem extends PlannerItem {
       this.submissionStatusRaw,
       this.htmlUrl})
       : super._() {
-    if (contextType == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'contextType');
-    }
-    if (contextName == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'contextName');
-    }
     if (plannableType == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'plannableType');
     }
@@ -150,9 +156,6 @@ class _$PlannerItem extends PlannerItem {
     }
     if (plannableDate == null) {
       throw new BuiltValueNullFieldError('PlannerItem', 'plannableDate');
-    }
-    if (htmlUrl == null) {
-      throw new BuiltValueNullFieldError('PlannerItem', 'htmlUrl');
     }
   }
 
