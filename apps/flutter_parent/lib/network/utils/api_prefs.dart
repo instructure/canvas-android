@@ -56,24 +56,24 @@ class ApiPrefs {
     }
 
     // Set the bool flag so we don't migrate multiple times
-    _prefs.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
+    await _prefs.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
 
     final oldPrefs = await SharedPreferences.getInstance();
 
-    _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
-    oldPrefs.remove(KEY_LOGINS);
+    await _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
+    await oldPrefs.remove(KEY_LOGINS);
 
-    _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
-    oldPrefs.remove(KEY_HAS_MIGRATED);
+    await _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
+    await oldPrefs.remove(KEY_HAS_MIGRATED);
 
-    _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
-    oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
+    await _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
+    await oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
 
-    _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
-    oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
+    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
+    await oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
 
-    _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
-    oldPrefs.remove(KEY_CURRENT_STUDENT);
+    await _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
+    await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
   static void clean() {
