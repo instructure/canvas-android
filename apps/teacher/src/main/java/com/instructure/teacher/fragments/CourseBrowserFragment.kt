@@ -17,7 +17,6 @@
 package com.instructure.teacher.fragments
 
 import android.animation.ObjectAnimator
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -361,8 +360,14 @@ class CourseBrowserFragment : BaseSyncFragment<
             flags = Intent.FLAG_ACTIVITY_NEW_TASK
         }
 
-        // Send bundle to the student app
-        startActivity(studentViewIntent)
+        val pm = requireActivity().packageManager
+        val canHandleIntent = pm.queryIntentActivities(studentViewIntent, 0).any()
+        if (canHandleIntent)
+            // Send bundle to the student app
+            startActivity(studentViewIntent)
+        // If there is no activity that can handle the intent, then the Student app is not up to date - take them
+        // to the student app listing for them to update it
+        else gotoStudentPlayStoreListing()
     }
 }
 

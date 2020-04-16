@@ -16,12 +16,13 @@
  */
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.AttendanceAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.canvasapi2.utils.weave.catch
@@ -29,8 +30,6 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.teacher.viewinterface.CourseBrowserView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Job
-import retrofit2.Call
-import retrofit2.Response
 
 class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab, Long) -> Boolean) : SyncPresenter<Tab, CourseBrowserView>(Tab::class.java) {
 
@@ -42,20 +41,23 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
         onRefreshStarted()
 
         mApiCalls = tryWeave {
-            // Check to see if we should show the student view tab
-            val canUseStudentView = awaitApiResponse<CanvasContextPermission> {
+            val studentViewEnabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.STUDENT_VIEW_ENABLED_TEACHER) == true
+
+            // Check to see if we should show the student view tab - skip if Student View isn't enabled
+            val canUseStudentView = if (studentViewEnabled)
+                awaitApiResponse<CanvasContextPermission> {
                 CourseManager.getCoursePermissions(
                     canvasContext.id,
                     emptyList(),
                     it,
                     true
                 )
-            }
+            } else null
 
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, forceNetwork) }
                 .filter { !(it.isExternal && it.isHidden) } // We don't want to list external tools that are hidden
                 .toMutableList().apply {
-                    if (canUseStudentView.isSuccessful && canUseStudentView.body()?.canUseStudentView == true)
+                    if (studentViewEnabled && canUseStudentView?.isSuccessful == true && canUseStudentView.body()?.canUseStudentView == true)
                         // Add extra tab for the student view and make sure it's at the very end of the list
                         add(Tab(tabId = Tab.STUDENT_VIEW, position = 1000))
                 }.toList() // Turn back into a non-mutable list

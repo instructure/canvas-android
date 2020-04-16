@@ -17,7 +17,8 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     USE_NEW_RELIC("all_new_relic_enabled", "false"),
     MOBILE_VERIFY_BETA_ENABLED("mobile_verify_beta_enabled", "true"),
     QR_LOGIN_ENABLED("qr_login_enabled", "true"),
-    QR_LOGIN_ENABLED_TEACHER("qr_login_enabled_teacher", "false")
+    QR_LOGIN_ENABLED_TEACHER("qr_login_enabled_teacher", "false"),
+    STUDENT_VIEW_ENABLED_TEACHER("student_view_enabled_teacher", "false")
 }
 
 /**
