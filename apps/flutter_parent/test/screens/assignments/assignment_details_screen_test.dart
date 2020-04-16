@@ -119,7 +119,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(courseName), findsOneWidget);
   });
@@ -218,7 +219,8 @@ void main() {
           PlatformConfig(initWebview: true, mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(assignmentName), findsOneWidget);
     expect(find.text(dueDate.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
@@ -260,7 +262,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text('1 pts'), findsOneWidget);
 
@@ -297,7 +300,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(assignmentName), findsOneWidget);
     expect(find.text('1 pts'), findsOneWidget);
@@ -315,7 +319,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().noDueDate), findsOneWidget);
   });
@@ -396,7 +401,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
     expect(find.text(explanation), findsOneWidget);
@@ -423,7 +429,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     // Should not show locked info since it is not yet locked
     expect(find.text(AppLocalizations().assignmentLockLabel), findsNothing);
@@ -442,7 +449,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().assignmentNoDescriptionBody), findsOneWidget);
   });
@@ -462,7 +470,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().assignmentInstructionsLabel), findsOneWidget);
   });
@@ -481,7 +490,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);
@@ -584,7 +594,8 @@ void main() {
       platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
-    await tester.pumpAndSettle();
+    // Pump for a duration since we're delaying webview load for the animation
+    await tester.pumpAndSettle(Duration(seconds: 1));
 
     expect(find.text(AppLocalizations().assignmentRemindMeSet), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, true);

@@ -215,37 +215,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             ),
           ),
           Divider(),
-          FutureBuilder(
-            future: _animationFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: LoadingIndicator(),
-                );
-
-              if (fullyLocked)
-                // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
-                return Padding(
-                  padding: const EdgeInsets.only(top: 32),
-                  child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
-                );
-              else
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _rowTile(
-                    title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
-                        ? l10n.assignmentInstructionsLabel
-                        : l10n.assignmentDescriptionLabel,
-                    child: CanvasWebView(
-                      content: assignment.description,
-                      emptyDescription: l10n.assignmentNoDescriptionBody,
-                      fullScreen: false,
-                    ),
-                  ),
-                );
-            },
-          ),
+          _descriptionContent(assignment, fullyLocked),
           // TODO: Add in 'Learn more' feature
 //        Divider(),
 //        ..._rowTile(
@@ -256,6 +226,44 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         ],
       ),
     );
+  }
+
+  Widget _descriptionContent(Assignment assignment, bool fullyLocked) {
+    final l10n = L10n(context);
+
+    if (fullyLocked)
+      // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
+      return FutureBuilder(
+        future: _animationFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: LoadingIndicator(),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.only(top: 32),
+            child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
+          );
+        },
+      );
+    else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: _rowTile(
+          title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
+              ? l10n.assignmentInstructionsLabel
+              : l10n.assignmentDescriptionLabel,
+          child: CanvasWebView(
+            content: assignment.description,
+            emptyDescription: l10n.assignmentNoDescriptionBody,
+            fullScreen: false,
+          ),
+        ),
+      );
+    }
   }
 
   Widget _statusIcon(bool submitted, Color submittedColor) {
