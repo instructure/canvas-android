@@ -31,7 +31,11 @@ void main() {
   final mockPageApi = MockPageApi();
   final interactor = CourseRoutingShellInteractor();
 
-  final course = Course((b) => b..name = 'course name');
+  final course = Course((b) => b
+    ..id = '123'
+    ..name = 'course name'
+    ..syllabusBody = 'hodor');
+
   final page = Page((b) => b
     ..id = '123'
     ..body = 'hodor'
@@ -52,19 +56,47 @@ void main() {
   test('returns valid course and null front page for syllabus type', () async {
     when(mockCourseApi.getCourse(any)).thenAnswer((_) => Future.value(course));
 
-    final result = await interactor.loadCourseShell(CourseShellType.syllabus, '123');
+    final result = await interactor.loadCourseShell(CourseShellType.syllabus, course.id);
 
     expect(result.frontPage, isNull);
     expect(result.course, isNotNull);
   });
 
+  test('returns error when course syllabus is null for syllabus type', () async {
+    final courseNullSyllabus = Course((b) => b
+      ..id = '123'
+      ..name = 'course name'
+      ..syllabusBody = null);
+
+    when(mockCourseApi.getCourse(any)).thenAnswer((_) => Future.value(courseNullSyllabus));
+
+    bool fail = false;
+    await interactor.loadCourseShell(CourseShellType.syllabus, courseNullSyllabus.id).catchError((_) {
+      fail = true;
+    });
+
+    expect(fail, isTrue);
+  });
+
   test('returns valid course and front page for frontPage type', () async {
     when(mockCourseApi.getCourse(any)).thenAnswer((_) => Future.value(course));
-    when(mockPageApi.getCourseFrontPage('123')).thenAnswer((_) => Future.value(page));
+    when(mockPageApi.getCourseFrontPage(course.id)).thenAnswer((_) => Future.value(page));
 
-    final result = await interactor.loadCourseShell(CourseShellType.frontPage, '123');
+    final result = await interactor.loadCourseShell(CourseShellType.frontPage, course.id);
 
     expect(result.frontPage, isNotNull);
     expect(result.course, isNotNull);
+  });
+
+  test('returns error when course front page hass null body for frontPage type', () async {
+    when(mockCourseApi.getCourse(any)).thenAnswer((_) => Future.value(course));
+    when(mockPageApi.getCourseFrontPage(course.id)).thenAnswer((_) => Future.value(null));
+
+    bool fail = false;
+    await interactor.loadCourseShell(CourseShellType.frontPage, course.id).catchError((_) {
+      fail = true;
+    });
+
+    expect(fail, isTrue);
   });
 }

@@ -24,10 +24,17 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CourseRoutingShellInteractor {
   Future<CourseShellData> loadCourseShell(CourseShellType type, String courseId, {bool forceRefresh = false}) async {
     var course = await _loadCourse(courseId);
-    var frontPage = null;
+    Page frontPage = null;
 
     if (type == CourseShellType.frontPage) {
       frontPage = await _loadHomePage(courseId, forceRefresh: forceRefresh);
+      if (frontPage?.body == null) {
+        return Future.error('');
+      }
+    }
+
+    if (type == CourseShellType.syllabus && course.syllabusBody == null) {
+      return Future.error('');
     }
 
     return CourseShellData(course, frontPage: frontPage);

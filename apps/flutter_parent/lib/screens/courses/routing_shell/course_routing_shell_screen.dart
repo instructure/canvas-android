@@ -100,8 +100,8 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(title, style: TextStyle(fontSize: 18.0)),
-        Text(subtitle, style: TextStyle(fontSize: 12.0)),
+        Text(title),
+        Text(subtitle, style: Theme.of(context).primaryTextTheme.caption),
       ],
     );
   }
