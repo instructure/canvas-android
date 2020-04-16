@@ -27,7 +27,7 @@ List<OnDatabaseVersionChangeFn> _updaters = [
 ];
 
 class DbUtil {
-  static const dbVersion = 3;
+  static const dbVersion = 1;
   static const dbName = 'canvas_parent.db';
 
   static Database _db;

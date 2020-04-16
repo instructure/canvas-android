@@ -71,12 +71,7 @@ class ReminderDb {
       ''');
   }
 
-  static Future<void> updateTable(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 3) {
-      // Course ID column added in database version 3
-      await db.execute('alter table $tableName add column $columnCourseId text not null default \'\'');
-    }
-  }
+  static Future<void> updateTable(Database db, int oldVersion, int newVersion) async {}
 
   Future<Reminder> insert(Reminder data) async {
     var id = await db.insert(tableName, toMap(data));

@@ -62,19 +62,7 @@ class CalendarFilterDb {
       ''');
   }
 
-  static Future<void> updateTable(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      // This table was added in database version 2
-      await db.execute('''
-        create table $tableName ( 
-          $columnId integer primary key autoincrement, 
-          $columnUserDomain text not null,
-          $columnUserId text not null,
-          $columnObserveeId text not null,
-          $columnFilters text not null)
-        ''');
-    }
-  }
+  static Future<void> updateTable(Database db, int oldVersion, int newVersion) async {}
 
   static String joinFilters(Set<String> filters) {
     if (filters == null || filters.isEmpty) return '';

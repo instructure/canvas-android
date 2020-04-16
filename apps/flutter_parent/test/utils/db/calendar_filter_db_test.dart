@@ -38,20 +38,6 @@ void main() {
     verify(database.execute(argThat(contains('create table ${CalendarFilterDb.tableName}'))));
   });
 
-  test('updateTable executes a create table statement if last db version was less than 2', () async {
-    final lastVersion = 1;
-    final thisVersion = 100;
-    CalendarFilterDb.updateTable(database, lastVersion, thisVersion);
-    verify(database.execute(argThat(contains('create table ${CalendarFilterDb.tableName}'))));
-  });
-
-  test('updateTable does not create table if last db version was 2 or higher', () async {
-    final lastVersion = 2;
-    final thisVersion = 3;
-    CalendarFilterDb.updateTable(database, lastVersion, thisVersion);
-    verifyNever(database.execute(argThat(contains('create table ${CalendarFilterDb.tableName}'))));
-  });
-
   test('insertOrUpdate performs insert if there is no existing item, and returns inserted item with id', () async {
     final calendarFilter = CalendarFilter((b) => b
       ..userDomain = 'domain'
