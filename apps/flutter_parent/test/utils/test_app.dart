@@ -192,7 +192,8 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   Future<void> apiPrefsInitFuture;
   if (config.mockApiPrefs != null) {
     ApiPrefs.clean();
-    EncryptedSharedPreferences.setMockInitialValues(config.mockApiPrefs);
+    EncryptedSharedPreferences.setMockInitialValues(
+        config.mockApiPrefs..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
     apiPrefsInitFuture = ApiPrefs.init();
   }
 

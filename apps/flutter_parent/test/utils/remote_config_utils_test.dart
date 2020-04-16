@@ -53,24 +53,20 @@ void main() {
 
   test('cached value trumps default value', () async {
     // Create a cached value for the 'test string' flag.
-    var platformConfig = PlatformConfig(mockPrefs: {'rc_test_string': 'cached value'});
-    await setupPlatformChannels(config: platformConfig);
-
-    // Create a mocked RemoteConfig object that does not refresh its data.
     final mockRemoteConfig = setupMockRemoteConfig();
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    final platformConfig =
+        PlatformConfig(mockPrefs: {'rc_test_string': 'cached value'}, initRemoteConfig: mockRemoteConfig);
+    await setupPlatformChannels(config: platformConfig);
 
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'cached value');
   });
 
   test('fetched value trumps cached value', () async {
     // Create a cached value for the 'test string' flag.
-    var platformConfig = PlatformConfig(mockPrefs: {'rc_test_string': 'cached value'});
-    await setupPlatformChannels(config: platformConfig);
-
-    // Create a mocked RemoteConfig object that refreshes with new data.
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'test_string': 'fetched value'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    final platformConfig =
+        PlatformConfig(mockPrefs: {'rc_test_string': 'cached value'}, initRemoteConfig: mockRemoteConfig);
+    await setupPlatformChannels(config: platformConfig);
 
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'fetched value');
   });
