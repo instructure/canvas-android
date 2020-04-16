@@ -115,6 +115,7 @@ class _AlertsList extends StatefulWidget {
 }
 
 class __AlertsListState extends State<_AlertsList> {
+  GlobalKey<AnimatedListState> _listKey = GlobalKey();
   AlertsList _data;
 
   @override
@@ -128,14 +129,15 @@ class __AlertsListState extends State<_AlertsList> {
     if (_data == null || _data.alerts == null || _data.alerts.isEmpty) {
       return _empty(context);
     } else {
-      return ListView.builder(
-        itemCount: _data.alerts.length,
-        itemBuilder: (context, index) => _alertTile(context, _data.alerts[index], index),
+      return AnimatedList(
+        key: _listKey,
+        initialItemCount: _data.alerts.length,
+        itemBuilder: (context, index, animation) => _alertTile(context, _data.alerts[index], index),
       );
     }
   }
 
-  Widget _alertTile(BuildContext context, Alert alert, int index) {
+  Widget _alertTile(BuildContext context, Alert alert, int index, {Animation animation = null}) {
     final textTheme = Theme.of(context).textTheme;
     final alertColor = _alertColor(context, alert);
     Widget tile = InkWell(
@@ -178,6 +180,15 @@ class __AlertsListState extends State<_AlertsList> {
     if (alert.workflowState == AlertWorkflowState.unread) {
       tile = WidgetBadge(tile);
     }
+
+    if (animation != null) {
+      tile = SizeTransition(
+        sizeFactor: animation,
+        axis: Axis.vertical,
+        child: tile,
+      );
+    }
+
     return tile;
   }
 
@@ -256,7 +267,13 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _dismissAlert(Alert alert) async {
-    await widget._interactor.markAlertDismissed(widget._student.id, alert.id);
+    widget._interactor.markAlertDismissed(widget._student.id, alert.id);
+    int itemIndex = _data.alerts.indexOf(alert);
+
+    _listKey.currentState.removeItem(
+        itemIndex, (context, animation) => _alertTile(context, alert, itemIndex, animation: animation),
+        duration: const Duration(milliseconds: 200));
+
     setState(() => _data.alerts.remove(alert));
 
     // Update the unread count if the alert was unread
