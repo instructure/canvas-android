@@ -25,6 +25,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
+import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
 
@@ -32,9 +33,8 @@ void main() {
   final String _domain = 'https://test.instructure.com';
 
   setUp(() async {
-    await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
   });
 
   tearDown(() {

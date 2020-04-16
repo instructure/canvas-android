@@ -277,7 +277,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('launches course detail screen when tapping on a course', (tester) async {
       var student = _mockStudent('1');
       await setupPlatformChannels(
-          config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+          config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
       var courses = List.generate(
         1,
         (idx) => _mockCourse(

@@ -218,6 +218,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.5"
+  encrypted_shared_preferences:
+    dependency: "direct main"
+    description:
+      path: "plugins/encrypted_shared_preferences"
+      relative: true
+    source: path
+    version: "0.5.6+3"
   faker:
     dependency: "direct main"
     description:

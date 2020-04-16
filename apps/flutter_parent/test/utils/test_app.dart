@@ -14,6 +14,7 @@
 
 import 'dart:ui';
 
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -174,6 +176,12 @@ class MockThemePrefs extends ThemePrefs {
 ///
 /// Returned is a future that completes when all async tasks spawned by this method call have completed. Waiting isn't
 /// required, though is probably good practice and results in more stable tests.
+///
+/// TODO: Make this method not async, so that all initialization can be done in TestApp#initState (and synchronously elsewhere)
+/// As is, this can cause an issue if anything relies on a platform channel while building TestApp. To get around that,
+/// we'd need to wrap TestApp in a future builder, which leads to an unstable amount of pumps before testing can really
+/// occur. By moving ApiPrefs and RemoteConfigUtils to locator, we should be able to provide mocks in a synchronous
+/// fashion and avoid any asynchronous setup in this setupPlatformChannels method.
 Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig()}) async {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -182,16 +190,27 @@ Future<void> setupPlatformChannels({PlatformConfig config = const PlatformConfig
   if (config.initDeviceInfo) _initPlatformDeviceInfo();
 
   Future<void> apiPrefsInitFuture;
-  if (config.mockPrefs != null && config.clearPrefs) {
+  if (config.mockApiPrefs != null) {
     ApiPrefs.clean();
-    SharedPreferences.setMockInitialValues(config.safeMockPrefs);
+    EncryptedSharedPreferences.setMockInitialValues(
+        config.mockApiPrefs..putIfAbsent(ApiPrefs.KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, () => true));
     apiPrefsInitFuture = ApiPrefs.init();
+  }
+
+  Future<void> remoteConfigInitFuture;
+  if (config.initRemoteConfig != null || config.mockPrefs != null) {
+    SharedPreferences.setMockInitialValues(config.mockPrefs ?? {});
+    if (config.initRemoteConfig != null) {
+      RemoteConfigUtils.clean();
+      remoteConfigInitFuture = RemoteConfigUtils.initializeExplicit(config.initRemoteConfig);
+    }
   }
 
   if (config.initWebview) _initPlatformWebView();
 
   await Future.wait([
     if (apiPrefsInitFuture != null) apiPrefsInitFuture,
+    if (remoteConfigInitFuture != null) remoteConfigInitFuture,
   ]);
 
   if (config.initLoggedInUser != null) {

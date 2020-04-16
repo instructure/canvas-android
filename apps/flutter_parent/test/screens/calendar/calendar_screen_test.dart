@@ -81,8 +81,6 @@ void main() {
 
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows the calendar widget', (tester) async {
-      _setup();
-
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
@@ -96,32 +94,26 @@ void main() {
 
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('clicking on filter navigates to filter screen', (tester) async {
-      {
-        _setup();
+      await tester.pumpWidget(_testableMaterialWidget());
+      await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-        await tester.pumpWidget(_testableMaterialWidget());
-        await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+      when(plannerApi.getUserPlannerItems(any, any, any,
+              contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+          .thenAnswer((_) => Future.value([]));
 
-        when(plannerApi.getUserPlannerItems(any, any, any,
-                contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
-            .thenAnswer((_) => Future.value([]));
+      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => Future.value(_mockCourses()));
 
-        when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-            .thenAnswer((_) => Future.value(_mockCourses()));
+      // Tap on the calendar filter button
+      await tester.tap(find.text(AppLocalizations().calendars));
+      await tester.pump();
+      await tester.pump();
 
-        // Tap on the calendar filter button
-        await tester.tap(find.text(AppLocalizations().calendars));
-        await tester.pump();
-        await tester.pump();
-
-        // Check for the filter screen
-        expect(find.byType(CalendarFilterListScreen), findsOneWidget);
-      }
+      // Check for the filter screen
+      expect(find.byType(CalendarFilterListScreen), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('filter screen returns updated contexts', (tester) async {
-      _setup();
-
       var completer = Completer<List<Course>>();
 
       final observer = _MockNavigatorObserver();
@@ -167,8 +159,6 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('planner updated if user filtered different contexts', (tester) async {
-      _setup();
-
       var completer = Completer<List<Course>>();
 
       final observer = _MockNavigatorObserver();
@@ -215,8 +205,6 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('planner not updated if user did not change filtered contexts', (tester) async {
-      _setup();
-
       var completer = Completer<List<Course>>();
 
       final observer = _MockNavigatorObserver();
@@ -260,8 +248,6 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('filter returns empty list if all items selected', (tester) async {
-    _setup();
-
     var completer = Completer<List<Course>>();
 
     final observer = _MockNavigatorObserver();
@@ -308,42 +294,37 @@ void main() {
   });
 }
 
-Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) =>
-    TestApp(
-      ChangeNotifierProvider<SelectedStudentNotifier>(
-          create: (context) => notifier ?? SelectedStudentNotifier()
-            ..value = _mockStudent('1'),
-          child: Consumer<SelectedStudentNotifier>(
-            builder: (context, model, _) {
-              return Scaffold(body: widget ?? CalendarScreen());
-            },
-          )),
-      darkMode: true,
-      platformConfig: PlatformConfig(mockPrefs: null),
-      navigatorObservers: observer != null ? [observer] : [],
-    );
-
-User _mockStudent(String userId) => User((b) => b
-  ..id = userId
-  ..name = 'UserName'
-  ..sortableName = 'Sortable Name'
-  ..build());
-
-void _setup() async {
+Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) {
   var login = Login((b) => b
     ..uuid = 'uuid'
     ..domain = 'domain'
     ..accessToken = 'token'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
-  await setupPlatformChannels(
-      config: PlatformConfig(mockPrefs: {
-    ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_mockStudent('123'))),
-    ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid
-  }));
-
-  await ApiPrefs.addLogin(login);
+  return TestApp(
+    ChangeNotifierProvider<SelectedStudentNotifier>(
+      create: (context) => notifier ?? SelectedStudentNotifier()
+        ..value = _mockStudent('1'),
+      child: Consumer<SelectedStudentNotifier>(
+        builder: (context, model, _) {
+          return Scaffold(body: widget ?? CalendarScreen());
+        },
+      ),
+    ),
+    darkMode: true,
+    navigatorObservers: observer != null ? [observer] : [],
+    platformConfig: PlatformConfig(
+      initLoggedInUser: login,
+      mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_mockStudent('123')))},
+    ),
+  );
 }
+
+User _mockStudent(String userId) => User((b) => b
+  ..id = userId
+  ..name = 'UserName'
+  ..sortableName = 'Sortable Name'
+  ..build());
 
 List<Course> _mockCourses() {
   return [

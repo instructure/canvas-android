@@ -29,6 +29,7 @@ import 'package:mockito/mockito.dart';
 
 import '../accessibility_utils.dart';
 import '../canvas_model_utils.dart';
+import '../platform_config.dart';
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
 
@@ -48,9 +49,8 @@ void main() {
   Key masqueradeContainerKey = Key('masquerade-ui-container');
 
   setUp(() async {
-    await setupPlatformChannels();
     final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
-    await RemoteConfigUtils.initializeExplicit(mockRemoteConfig);
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
   });
 
   tearDown(() {

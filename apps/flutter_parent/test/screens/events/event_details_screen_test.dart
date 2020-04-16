@@ -77,7 +77,7 @@ void main() {
   setUp(() async {
     reset(interactor);
     await setupPlatformChannels(
-      config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     );
   });
 
@@ -437,7 +437,8 @@ void main() {
 
     await tester.pumpWidget(_testableWidget(
       EventDetailsScreen.withEvent(event: event),
-      config: PlatformConfig(initWebview: true, mockPrefs: null),
+      // Set mockApiPrefs to null so our initial mockApiPrefs are not overridden
+      config: PlatformConfig(initWebview: true, mockApiPrefs: null),
     ));
     await tester.pump(); // Let the widget build
     await tester.pump(); // Let the future finish
@@ -468,7 +469,7 @@ void main() {
 // Default to null mock prefs, since set up is already called with a current student
 Widget _testableWidget(
   EventDetailsScreen eventDetailsScreen, {
-  PlatformConfig config = const PlatformConfig(mockPrefs: null),
+  PlatformConfig config = const PlatformConfig(mockApiPrefs: null),
 }) {
   return TestApp(
     eventDetailsScreen,

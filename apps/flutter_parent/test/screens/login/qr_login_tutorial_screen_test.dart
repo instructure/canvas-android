@@ -43,9 +43,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays page objects and text correctly', (tester) async {
+    await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
+    await tester.pumpAndSettle();
+
     await tester.runAsync(() async {
-      await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
-      await tester.pumpAndSettle();
       Element element = tester.element(find.byType(FractionallySizedBox));
       final FractionallySizedBox widget = element.widget;
       final Image image = widget.child;

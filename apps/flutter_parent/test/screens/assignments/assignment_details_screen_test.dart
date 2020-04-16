@@ -94,7 +94,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pump();
@@ -116,7 +116,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -133,7 +133,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -159,7 +159,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -183,7 +183,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -214,8 +214,8 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig:
-          PlatformConfig(initWebview: true, mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(
+          initWebview: true, mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -257,7 +257,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -294,7 +294,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -312,7 +312,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -336,7 +336,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -366,7 +366,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -393,7 +393,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -420,7 +420,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -439,7 +439,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -459,7 +459,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -478,7 +478,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -499,7 +499,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -540,7 +540,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();
@@ -581,7 +581,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     await tester.pumpAndSettle();

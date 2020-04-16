@@ -35,10 +35,14 @@ void main() {
   final api = MockErrorReportApi();
   final enrollmentsApi = MockEnrollmentsApi();
 
-  setUp(() => reset(api));
+  setUp(() async {
+    reset(api);
+    reset(enrollmentsApi);
+
+    await setupPlatformChannels();
+  });
 
   // Setup test dependencies
-  setupPlatformChannels();
   setupTestLocator((locator) {
     locator.registerLazySingleton<ErrorReportApi>(() => api);
     locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
@@ -67,15 +71,9 @@ void main() {
   });
 
   test('Uses user data from api prefs', () async {
-    await setupPlatformChannels();
+    final login = Login((b) => b..user = user.toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
-    await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data
-
-    final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
-
-    await ApiPrefs.setUser(user);
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
@@ -92,11 +90,9 @@ void main() {
   });
 
   test('Uses empty string for no user data in api prefs', () async {
-    final login = Login();
-    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
-    await ApiPrefs.addLogin(login);
+    final login = Login((b) => b..user = User().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
-    await ApiPrefs.setUser(User());
     await ErrorReportInteractor().submitErrorReport('', '', null, ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
@@ -137,8 +133,6 @@ void main() {
   });
 
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
-    await setupPlatformChannels();
-
     await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 

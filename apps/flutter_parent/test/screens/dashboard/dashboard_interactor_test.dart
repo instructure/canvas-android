@@ -19,7 +19,6 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/inbox_notifier.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
@@ -57,8 +56,7 @@ void main() {
 
     // Setup ApiPrefs
     final login = Login((b) => b..user = initialUser.toBuilder());
-    await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     var interactor = DashboardInteractor();
     final actual = await interactor.getSelf();
@@ -79,8 +77,7 @@ void main() {
 
     // Setup ApiPrefs
     final login = Login((b) => b..user = initialUser.toBuilder());
-    await setupPlatformChannels(
-        config: PlatformConfig(mockPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}, initLoggedInUser: login));
+    await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
 
     var interactor = DashboardInteractor();
     final actual = await interactor.getSelf();

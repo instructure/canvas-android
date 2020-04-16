@@ -14,12 +14,13 @@
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:test/test.dart';
 
+import '../platform_config.dart';
 import '../test_app.dart';
 
 void main() async {
-  await setupPlatformChannels();
-
   setUp(() async {
+    // Setup the platform channel with an empty map so our prefs work
+    await setupPlatformChannels(config: PlatformConfig(mockPrefs: {}));
     await ThemePrefs.init();
     await ThemePrefs.clear();
   });

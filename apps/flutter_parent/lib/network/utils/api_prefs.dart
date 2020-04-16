@@ -16,6 +16,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:encrypted_shared_preferences/encrypted_shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/serializers.dart';
@@ -34,17 +35,45 @@ import 'dio_config.dart';
 class ApiPrefs {
   static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
   static const String KEY_HAS_CHECKED_OLD_REMINDERS = 'has_checked_old_reminders';
+  static const String KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS = 'has_migrated_to_encrypted_prefs';
   static const String KEY_LOGINS = 'logins';
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
   static const String KEY_CURRENT_STUDENT = 'current_student';
 
-  static SharedPreferences _prefs;
+  static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
   static Login _currentLogin;
 
   static Future<void> init() async {
-    if (_prefs == null) _prefs = await SharedPreferences.getInstance();
+    if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
+    await _migrateToEncryptedPrefs();
+  }
+
+  static void _migrateToEncryptedPrefs() async {
+    if (_prefs.getBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS) ?? false) {
+      return;
+    }
+
+    // Set the bool flag so we don't migrate multiple times
+    await _prefs.setBool(KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS, true);
+
+    final oldPrefs = await SharedPreferences.getInstance();
+
+    await _prefs.setStringList(KEY_LOGINS, oldPrefs.getStringList(KEY_LOGINS));
+    await oldPrefs.remove(KEY_LOGINS);
+
+    await _prefs.setBool(KEY_HAS_MIGRATED, oldPrefs.getBool(KEY_HAS_MIGRATED));
+    await oldPrefs.remove(KEY_HAS_MIGRATED);
+
+    await _prefs.setBool(KEY_HAS_CHECKED_OLD_REMINDERS, oldPrefs.getBool(KEY_HAS_CHECKED_OLD_REMINDERS));
+    await oldPrefs.remove(KEY_HAS_CHECKED_OLD_REMINDERS);
+
+    await _prefs.setString(KEY_CURRENT_LOGIN_UUID, oldPrefs.getString(KEY_CURRENT_LOGIN_UUID));
+    await oldPrefs.remove(KEY_CURRENT_LOGIN_UUID);
+
+    await _prefs.setString(KEY_CURRENT_STUDENT, oldPrefs.getString(KEY_CURRENT_STUDENT));
+    await oldPrefs.remove(KEY_CURRENT_STUDENT);
   }
 
   static void clean() {
