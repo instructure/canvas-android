@@ -26,7 +26,8 @@ class DashboardPage {
     var actualCode = await driver.getText(find.byValueKey("${course.courseCode}_code"));
     expect(actualCode, course.courseCode);
     if (grade != null) {
-      var actualGrade = await driver.getText(find.byValueKey("${course.courseCode}_grade"));
+      var actualGrade =
+          await driver.getTextWithRefreshes(find.byValueKey("${course.courseCode}_grade"), expectedText: grade);
       expect(actualGrade, grade);
     }
   }
