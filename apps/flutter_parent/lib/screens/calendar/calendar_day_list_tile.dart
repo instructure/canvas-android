@@ -78,7 +78,7 @@ class CalendarDayListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_item.contextName, style: textTheme.caption),
+                Text(_getContextName(context, _item), style: textTheme.caption),
                 SizedBox(height: 2),
                 Text(_item.plannable.title, style: textTheme.subhead),
                 ..._getDueDate(context, _item),
@@ -95,6 +95,15 @@ class CalendarDayListTile extends StatelessWidget {
     return tile;
   }
 
+  String _getContextName(BuildContext context, PlannerItem item) {
+    if (item.contextName != null) return item.contextName;
+
+    // Planner notes don't have a context name so we'll use 'Planner Note'
+    if (item.plannableType == 'planner_note') return L10n(context).plannerNote;
+
+    return '';
+  }
+
   Widget _getIcon(BuildContext context, PlannerItem item) {
     IconData icon;
     switch (item.plannableType) {
@@ -109,6 +118,12 @@ class CalendarDayListTile extends StatelessWidget {
         break;
       case 'calendar_event':
         icon = CanvasIcons.calendar_day;
+        break;
+      case 'discussion_topic':
+        icon = CanvasIcons.discussion;
+        break;
+      case 'planner_note':
+        icon = CanvasIcons.note;
         break;
     }
     return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).accentColor);

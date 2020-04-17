@@ -141,7 +141,9 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         semanticLabel: L10n(context).addNewStudent,
       ),
       onPressed: () async {
-        showModalBottomSheet(
+        _showAddStudentDialog();
+        // TODO: Uncomment when we're ready with a QR code reader lib
+        /*showModalBottomSheet(
             context: context,
             isScrollControlled: true,
             builder: (context) {
@@ -165,8 +167,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
                               ),
                             ),
                           ),
-                          // TODO: Uncomment when we're ready with a QR code reader lib
-                          // _qrCode(),
+                          _qrCode(),
                           _pairingCode(),
                         ],
                       ),
@@ -174,7 +175,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
                   ),
                 ],
               );
-            });
+            });*/
       },
     );
   }
@@ -224,12 +225,16 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         ),
         onTap: () async {
           Navigator.of(context).pop();
-          bool studentPaired = await _addStudentDialog(context);
-          if (studentPaired) {
-            locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
-            _refreshKey.currentState.show();
-          }
+          _showAddStudentDialog();
         });
+  }
+
+  void _showAddStudentDialog() async {
+    bool studentPaired = await _addStudentDialog(context);
+    if (studentPaired) {
+      locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
+      _refreshKey.currentState.show();
+    }
   }
 
   /// Force widget to reload with a refreshed future

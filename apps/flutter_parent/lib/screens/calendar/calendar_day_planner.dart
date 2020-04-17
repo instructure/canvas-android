@@ -40,7 +40,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
       builder: (_, snapshot, __) {
         Widget body;
         if (snapshot.hasError) {
-          body = ErrorPandaWidget(L10n(context).errorLoadingEvents, _refresh);
+          body = ErrorPandaWidget(L10n(context).errorLoadingEvents, _refresh, header: SizedBox(height: 32));
         } else if (!snapshot.hasData) {
           body = LoadingIndicator();
         } else {

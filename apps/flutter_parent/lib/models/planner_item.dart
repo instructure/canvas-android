@@ -33,9 +33,11 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
   @BuiltValueField(wireName: 'course_id')
   String get courseId;
 
+  @nullable
   @BuiltValueField(wireName: 'context_type')
   String get contextType;
 
+  @nullable
   @BuiltValueField(wireName: 'context_name')
   String get contextName;
 
@@ -51,6 +53,7 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
   @BuiltValueField(wireName: 'submissions')
   JsonObject get submissionStatusRaw;
 
+  @nullable
   @BuiltValueField(wireName: 'html_url')
   String get htmlUrl;
 

@@ -256,7 +256,8 @@ void main() {
   });
 
   group('Add Student', () {
-    testWidgetsWithAccessibilityChecks('Tapping FAB opens bottom sheet', (tester) async {
+    // TODO: Uncomment when we have QR code option and bottom sheet in place
+    /*testWidgetsWithAccessibilityChecks('Tapping FAB opens bottom sheet', (tester) async {
       _setupLocator();
 
       var observedStudents = [
@@ -270,6 +271,26 @@ void main() {
 
       // Check if we are showing the header text of the bottom sheet
       expect(find.text(AppLocalizations().addStudentWith), findsOneWidget);
+    });*/
+
+    // TODO: Remove when we have QR code option and bottom sheet in place
+    testWidgetsWithAccessibilityChecks('Tapping FAB opens dialog', (tester) async {
+      _setupLocator();
+
+      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
+
+      // Start the page in high contrast mode with a single user
+      // (the bottom sheet header text doesn't pass our a11y contrast ratio test by default)
+      await tester.pumpWidget(TestApp(
+        ManageStudentsScreen(observedStudents),
+      ));
+      await tester.pumpAndSettle();
+
+      await _clickFAB(tester);
+      await tester.pumpAndSettle();
+
+      // Check for the dialog
+      expect(find.byType(Dialog), findsOneWidget);
     });
 
     // TODO: Uncomment when we have QR code reading in place
@@ -304,7 +325,8 @@ void main() {
       await _clickFAB(tester);
 
       // Click pairing code option
-      await tester.tap(find.text(AppLocalizations().pairingCode));
+      // TODO: Uncomment when we have QR code option and bottom sheet in place
+//      await tester.tap(find.text(AppLocalizations().pairingCode));
       await tester.pumpAndSettle();
 
       // Check for the dialog

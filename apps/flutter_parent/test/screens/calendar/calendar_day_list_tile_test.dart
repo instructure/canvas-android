@@ -76,6 +76,15 @@ void main() {
       expect(find.text(contextName), findsOneWidget);
     });
 
+    testWidgetsWithAccessibilityChecks('shows "Planner Note" as context name for planner notes', (tester) async {
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(_createPlannerItem(contextName: null, plannableType: 'planner_note')),
+      ));
+      await tester.pump();
+
+      expect(find.text(AppLocalizations().plannerNote), findsOneWidget);
+    });
+
     testWidgetsWithAccessibilityChecks('shows due date', (tester) async {
       var dueDate = 'Due Apr 8 at 11:59 AM';
       var date = DateTime.parse('2020-04-08 11:59:00');
@@ -403,7 +412,7 @@ PlannerItem _createPlannerItem(
       ..courseId = ''
       ..plannable = plannable != null ? plannable.toBuilder() : _createPlannable().toBuilder()
       ..contextType = ''
-      ..contextName = contextName ?? ''
+      ..contextName = contextName
       ..plannableType = plannableType ?? 'assignment'
       ..plannableDate = DateTime.now()
       ..htmlUrl = htmlUrl ?? ''

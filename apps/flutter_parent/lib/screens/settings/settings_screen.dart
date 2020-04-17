@@ -178,7 +178,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   _onHighContrastModeChanged(BuildContext context) {
-    _interactor.toggleHCMode(context, _highContrastModeKey);
+    _interactor.toggleHCMode(context);
   }
 
   Widget _themeViewer(BuildContext context) => ListTile(
