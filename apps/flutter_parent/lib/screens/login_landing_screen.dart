@@ -247,7 +247,7 @@ class LoginLandingScreen extends StatelessWidget {
           child: Align(
             child: Icon(
               CanvasIcons.question,
-              color: ParentColors.tiara,
+              color: ParentColors.ash,
             ),
             alignment: Alignment.topRight,
           ),

@@ -222,15 +222,7 @@ class ConversationListState extends State<ConversationListScreen> {
         ),
       );
     } else if (users.length > 2) {
-      avatar = Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: ParentTheme.of(context).nearSurfaceColor,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(CanvasIcons.group),
-      );
+      avatar = Avatar(null, showInitials: false, overlay: Icon(CanvasIcons.group));
     } else {
       avatar = Avatar(conversation.avatarUrl);
     }

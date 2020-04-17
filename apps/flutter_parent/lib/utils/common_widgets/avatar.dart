@@ -23,6 +23,7 @@ class Avatar extends StatelessWidget {
   final double radius;
   final Widget overlay;
   final String name; // Generally should be the shortname of the user
+  final bool showInitials;
 
   static const List<String> noPictureUrls = const [
     'images/dotted_pic.png',
@@ -38,6 +39,7 @@ class Avatar extends StatelessWidget {
     this.radius = 20,
     this.overlay,
     this.name,
+    this.showInitials = true,
   }) : super(key: key);
 
   Avatar.fromUser(
@@ -101,10 +103,12 @@ class Avatar extends StatelessWidget {
         color: Theme.of(context).dividerColor,
       ),
       child: CircleAvatar(
-        child: Text(
-          getUserInitials(name),
-          style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold, color: ParentColors.ash),
-        ),
+        child: showInitials
+            ? Text(
+                getUserInitials(name),
+                style: TextStyle(fontSize: radius * 0.8, fontWeight: FontWeight.bold, color: ParentColors.ash),
+              )
+            : Container(),
         backgroundColor: bgColor,
         radius: radius,
       ),
