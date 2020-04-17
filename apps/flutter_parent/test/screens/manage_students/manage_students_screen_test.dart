@@ -362,6 +362,7 @@ void main() {
       // Click pairing code option
       await tester.tap(find.text(AppLocalizations().pairingCode));
       await tester.pumpAndSettle();
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
 
       // Enter code
       await tester.enterText(find.byType(TextFormField), 'canvas');
@@ -373,7 +374,8 @@ void main() {
 
       // Make sure we made the call to get students
       verify(interactor.getStudents(forceRefresh: true)).called(1);
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS)).called(1);
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
 
       // Make sure the dialog is gone
       expect(find.byType(AlertDialog), findsNothing);
@@ -404,10 +406,13 @@ void main() {
       // Click on the pairing code option in bottom sheet
       await tester.tap(find.text(AppLocalizations().pairingCode));
       await tester.pumpAndSettle();
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
 
       // Click OK in Add Student Dialog
       await tester.tap(find.text(AppLocalizations().ok));
       await tester.pumpAndSettle();
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE)).called(1);
 
       // Check for error message
       expect(find.text(AppLocalizations().errorPairingFailed), findsOneWidget);

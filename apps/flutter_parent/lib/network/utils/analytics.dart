@@ -20,30 +20,30 @@ import 'package:flutter_parent/utils/debug_flags.dart';
 /// The naming scheme for the majority of these is found in a google doc so that we can be consistent
 /// across the platforms.
 class AnalyticsEventConstants {
+  static const ADD_STUDENT_DASHBOARD = 'add_student_dashboard';
+  static const ADD_STUDENT_FAILURE = 'add_student_failure';
+  static const ADD_STUDENT_MANAGE_STUDENTS = 'add_student_manage_students';
+  static const ADD_STUDENT_SUCCESS = 'add_student_success';
+  static const DARK_MODE_OFF = 'dark_mode_off';
+  static const DARK_MODE_ON = 'dark_mode_on';
+  static const DARK_WEB_MODE_OFF = 'dark_web_mode_off';
+  static const DARK_WEB_MODE_ON = 'dark_web_mode_on';
+  static const HC_MODE_OFF = 'hc_mode_off';
+  static const HC_MODE_ON = 'hc_mode_on';
+  static const HELP_DOMAIN_SEARCH = 'help_domain_search';
+  static const HELP_LOGIN = 'help_login';
   static const LOGIN_FAILURE = 'login_failure';
   static const LOGIN_SUCCESS = 'login_success';
-  static const TOKEN_REFRESH_FAILURE = 'token_refresh_failure';
-  static const TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = 'token_refresh_failure_token_not_valid';
-  static const TOKEN_REFRESH_FAILURE_NO_SECRET = 'token_refresh_failure_no_secret';
-
-  static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
-  static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
-  static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
-
   static const LOGOUT = 'logout';
-  static const SWITCH_USERS = 'switch_users';
-  static const HELP_LOGIN = 'help_login';
-  static const HELP_DOMAIN_SEARCH = 'help_domain_search';
-  static const ADD_STUDENT_MANAGE_STUDENTS = 'add_student_manage_students';
-  static const ADD_STUDENT_DASHBOARD = 'add_student_dashboard';
+  static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
+  static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
+  static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
   static const REMINDER_ASSIGNMENT_CREATE = 'reminder_assignment';
   static const REMINDER_EVENT_CREATE = 'reminder_event';
-  static const DARK_MODE_ON = 'dark_mode_on';
-  static const DARK_MODE_OFF = 'dark_mode_off';
-  static const HC_MODE_ON = 'hc_mode_on';
-  static const HC_MODE_OFF = 'hc_mode_off';
-  static const DARK_WEB_MODE_ON = 'dark_web_mode_on';
-  static const DARK_WEB_MODE_OFF = 'dark_web_mode_off';
+  static const SWITCH_USERS = 'switch_users';
+  static const TOKEN_REFRESH_FAILURE = 'token_refresh_failure';
+  static const TOKEN_REFRESH_FAILURE_NO_SECRET = 'token_refresh_failure_no_secret';
+  static const TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = 'token_refresh_failure_token_not_valid';
   static const VIEWED_OLD_REMINDER_MESSAGE = 'viewed_old_reminder_message';
 }
 

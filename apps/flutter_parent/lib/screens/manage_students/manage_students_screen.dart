@@ -230,9 +230,9 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   }
 
   void _showAddStudentDialog() async {
+    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
     bool studentPaired = await _addStudentDialog(context);
     if (studentPaired) {
-      locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
       _refreshKey.currentState.show();
     }
   }
