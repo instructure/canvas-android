@@ -70,4 +70,19 @@ void main() {
 
     expect(find.text('CI'), findsOneWidget);
   });
+
+  testWidgetsWithAccessibilityChecks('Does not display initials when showInitials is false', (tester) async {
+    var avatarUrl = null;
+    var name = 'Canvas Instructure';
+
+    await tester.pumpWidget(TestApp(Avatar(
+      avatarUrl,
+      name: name,
+      showInitials: false,
+    )));
+
+    await tester.pumpAndSettle();
+
+    expect(find.text('CI'), findsNothing);
+  });
 }
