@@ -19,21 +19,21 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-class CourseHomePageScreen extends StatefulWidget {
+class CourseFrontPageScreen extends StatefulWidget {
   final String courseId;
 
-  CourseHomePageScreen({Key key, this.courseId})
+  CourseFrontPageScreen({Key key, this.courseId})
       : assert(courseId != null),
         super(key: key);
 
   @override
-  _CourseHomePageScreenState createState() => _CourseHomePageScreenState();
+  _CourseFrontPageScreenState createState() => _CourseFrontPageScreenState();
 }
 
-class _CourseHomePageScreenState extends State<CourseHomePageScreen> with AutomaticKeepAliveClientMixin {
+class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
   Future<Page> _pageFuture;
 
   @override
@@ -41,7 +41,7 @@ class _CourseHomePageScreenState extends State<CourseHomePageScreen> with Automa
 
   Future<Page> _refreshPage() {
     setState(() {
-      _pageFuture = _interactor.loadHomePage(widget.courseId, forceRefresh: true);
+      _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
     return _pageFuture?.catchError((_) {});
   }
@@ -50,7 +50,7 @@ class _CourseHomePageScreenState extends State<CourseHomePageScreen> with Automa
 
   @override
   void initState() {
-    _pageFuture = _interactor.loadHomePage(widget.courseId);
+    _pageFuture = _interactor.loadFrontPage(widget.courseId);
     super.initState();
   }
 
@@ -70,33 +70,10 @@ class _CourseHomePageScreenState extends State<CourseHomePageScreen> with Automa
           } else if (!snapshot.hasData) {
             return LoadingIndicator();
           } else {
-            return _CourseHomePage(snapshot.data);
+            return CanvasHtml(snapshot.data.body,
+                emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound);
           }
         },
-      ),
-    );
-  }
-}
-
-class _CourseHomePage extends StatelessWidget {
-  final Page homePage;
-
-  const _CourseHomePage(this.homePage, {Key key})
-      : assert(homePage != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 16.0),
-        child: CanvasWebView(
-          content: homePage.body,
-          emptyDescription: homePage.lockExplanation ?? L10n(context).noPageFound,
-          horizontalPadding: 16,
-          fullScreen: false,
-        ),
       ),
     );
   }

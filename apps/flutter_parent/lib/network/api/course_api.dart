@@ -42,7 +42,7 @@ class CourseApi {
     return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
 
-  Future<Course> getCourse(String courseId) async {
+  Future<Course> getCourse(String courseId, {bool forceRefresh: false}) async {
     final params = {
       'include': [
         'syllabus_body',
@@ -57,7 +57,7 @@ class CourseApi {
         'observed_users',
       ]
     };
-    return fetch(canvasDio().get('courses/${courseId}', queryParameters: params));
+    return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/${courseId}', queryParameters: params));
   }
 
   // TODO: Set up pagination when API is fixed (no header link) and remove per_page query parameter

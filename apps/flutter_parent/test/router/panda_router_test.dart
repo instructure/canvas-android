@@ -25,6 +25,7 @@ import 'package:flutter_parent/screens/assignments/assignment_details_screen.dar
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
@@ -307,6 +308,30 @@ void main() {
       final widget = _getWidgetFromRoute(PandaRouter.qrLogin(barcodeResultUrl));
       expect(widget, isA<SplashScreen>());
     });
+
+    test('syllabus returns CourseRoutingShellScreen', () {
+      final courseId = '123';
+      final widget = _getWidgetFromRoute(PandaRouter.syllabus(courseId));
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect((widget as CourseRoutingShellScreen).courseId, courseId);
+      expect((widget as CourseRoutingShellScreen).type, CourseShellType.syllabus);
+    });
+
+    test('frontPage returns CourseRoutingShellScreen', () {
+      final courseId = '123';
+      final widget = _getWidgetFromRoute(PandaRouter.frontPage(courseId));
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect((widget as CourseRoutingShellScreen).courseId, courseId);
+      expect((widget as CourseRoutingShellScreen).type, CourseShellType.frontPage);
+    });
+
+    test('frontPageWiki returns CourseRoutingShellScreen', () {
+      final courseId = '123';
+      final widget = _getWidgetFromRoute(PandaRouter.frontPageWiki(courseId));
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect((widget as CourseRoutingShellScreen).courseId, courseId);
+      expect((widget as CourseRoutingShellScreen).type, CourseShellType.frontPage);
+    });
   });
 
   group('external url handler', () {
@@ -377,6 +402,17 @@ void main() {
       expect(widget.assignmentId, assignmentId);
     });
 
+    // This route conflicts with assignment details, so having a specific test for it will ensure they aren't broken
+    test('returns CourseRoutingShellScreen for syllabus', () {
+      final courseId = '123';
+      final url = 'https://test.instructure.com/courses/$courseId/assignments/syllabus';
+      final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
+
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect(widget.courseId, courseId);
+      expect(widget.type, CourseShellType.syllabus);
+    });
+
     test('returns router error screen for mismatched domain with valid route', () {
       final courseId = '123';
       final assignmentId = '321';
@@ -403,6 +439,27 @@ void main() {
       final widget = _getWidgetFromRoute(_rootWithUrl(barcodeResultUrl)) as SplashScreen;
       expect(widget, isA<SplashScreen>());
       expect(widget.qrLoginUrl, barcodeResultUrl);
+    });
+
+    // Added the following below tests because they are new cases for the router, two routes, one handler
+    test('returns CourseRoutingShellScreen for frontPage', () {
+      final courseId = '123';
+      final url = 'https://test.instructure.com/courses/$courseId/pages/first-page';
+      final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
+
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect(widget.courseId, courseId);
+      expect(widget.type, CourseShellType.frontPage);
+    });
+
+    test('returns CourseRoutingShellScreen for frontPageWiki', () {
+      final courseId = '123';
+      final url = 'https://test.instructure.com/courses/$courseId/wiki';
+      final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
+
+      expect(widget, isA<CourseRoutingShellScreen>());
+      expect(widget.courseId, courseId);
+      expect(widget.type, CourseShellType.frontPage);
     });
   });
 

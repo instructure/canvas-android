@@ -87,7 +87,7 @@ void main() {
 
   test('load home page calls the api', () {
     final courseId = '123';
-    CourseDetailsInteractor().loadHomePage(courseId, forceRefresh: true);
+    CourseDetailsInteractor().loadFrontPage(courseId, forceRefresh: true);
     verify(pageApi.getCourseFrontPage(courseId, forceRefresh: true)).called(1);
   });
 

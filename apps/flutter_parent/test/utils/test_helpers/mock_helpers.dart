@@ -24,14 +24,18 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
+import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
@@ -95,3 +99,11 @@ class MockRemoteConfig extends Mock implements RemoteConfig {}
 class MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
+
+class MockCourseApi extends Mock implements CourseApi {}
+
+class MockPageApi extends Mock implements PageApi {}
+
+class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
+
+class MockWebViewInteractor extends Mock implements WebContentInteractor {}

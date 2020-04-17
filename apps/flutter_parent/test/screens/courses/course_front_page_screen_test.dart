@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
-import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
@@ -31,7 +31,9 @@ void main() {
   final l10n = AppLocalizations();
 
   final _courseId = '123';
-  final _page = Page((b) => b..id = '1');
+  final _page = Page((b) => b
+    ..id = '1'
+    ..body = '');
   final _interactor = _MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
@@ -44,16 +46,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows loading', (tester) async {
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
 
     expect(find.byType(LoadingIndicator), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-    when(_interactor.loadHomePage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
+    when(_interactor.loadFrontPage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
 
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
     await tester.pump(); // Wait for future to finish
 
@@ -61,13 +63,13 @@ void main() {
     await tester.tap(find.text(l10n.retry));
     await tester.pump();
 
-    verify(_interactor.loadHomePage(_courseId, forceRefresh: true)).called(1);
+    verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('can refresh', (tester) async {
-    when(_interactor.loadHomePage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
+    when(_interactor.loadFrontPage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
 
-    await tester.pumpWidget(TestApp(CourseHomePageScreen(courseId: _courseId)));
+    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build
     await tester.pump(); // Wait for the future to finish
 
@@ -76,14 +78,14 @@ void main() {
     await tester.drag(refresh, const Offset(0, 200));
     await tester.pumpAndSettle();
 
-    verify(_interactor.loadHomePage(_courseId, forceRefresh: true)).called(1);
+    verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('shows page content', (tester) async {
-    when(_interactor.loadHomePage(_courseId)).thenAnswer((_) async => _page.rebuild((b) => b..body = 'body'));
+    when(_interactor.loadFrontPage(_courseId)).thenAnswer((_) async => _page.rebuild((b) => b..body = 'body'));
 
     await tester.pumpWidget(TestApp(
-      CourseHomePageScreen(courseId: _courseId),
+      CourseFrontPageScreen(courseId: _courseId),
       platformConfig: PlatformConfig(initWebview: true),
     ));
     await tester.pump(); // Wait for widget to build

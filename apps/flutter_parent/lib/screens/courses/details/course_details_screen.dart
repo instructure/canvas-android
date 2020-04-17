@@ -17,8 +17,8 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
-import 'package:flutter_parent/screens/courses/details/course_home_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_summary_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
@@ -120,7 +120,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       return TabBarView(
         children: [
           CourseGradesScreen(),
-          if (model.hasHomePageAsFrontPage) CourseHomePageScreen(courseId: model.courseId),
+          if (model.hasHomePageAsFrontPage) CourseFrontPageScreen(courseId: model.courseId),
           if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody, model.course.name),
           if (model.showSummary) CourseSummaryScreen(),
         ],
