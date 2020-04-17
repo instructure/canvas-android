@@ -46,6 +46,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import androidx.annotation.NonNull;
@@ -460,6 +461,21 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             PermissionUtilsKt.requestWebPermissions((Activity) getContext(), request);
         }
 
+        @Override
+        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+            // This allows us to handle links in an iFrame when they have a target of '_blank', which tells the WebView
+            // to launch the URL in a new window.
+            //
+            // Without this, Chrome will launch, but doesn't appear to get the URL. This launches the browser and
+            // explicitly sends it the URL.
+            String url = view.getHitTestResult().getExtra();
+            if (url != null && !url.isEmpty()) {
+                Context context = view.getContext();
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                context.startActivity(browserIntent);
+                return false;
+            } else return super.onCreateWindow(view, isDialog, isUserGesture, resultMsg);
+        }
     }
 
     public class CanvasWebViewClient extends WebViewClient {
