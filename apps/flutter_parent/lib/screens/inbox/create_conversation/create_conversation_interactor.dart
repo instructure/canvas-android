@@ -27,12 +27,21 @@ import '../attachment_utils/attachment_picker.dart';
 class CreateConversationInteractor {
   Future<CreateConversationData> loadData(String courseId, String studentId) async {
     final courseFuture = locator<CourseApi>().getCourse(courseId);
-    final recipients = await locator<InboxApi>().getRecipients(courseId);
+    final recipientFuture = locator<InboxApi>().getRecipients(courseId);
+    final permissionsFuture = locator<CourseApi>().getCoursePermissions(courseId);
+
+    final permissions = await permissionsFuture;
+    final recipients = await recipientFuture;
     final userId = ApiPrefs.getUser().id;
 
-    // The only allowed recipients are teachers, the specific student, and the current user
-    recipients.retainWhere((it) {
-      return it.id == studentId || it.id == userId || it.commonCourses[courseId]?.contains('TeacherEnrollment') == true;
+    recipients.retainWhere((recipient) {
+      // Allow self and specified student as recipients if the sendMessages permission is granted
+      if (permissions.sendMessages == true && (recipient.id == studentId || recipient.id == userId)) return true;
+
+      // Always allow instructors (teachers and TAs) as recipients
+      var enrollments = recipient.commonCourses[courseId];
+      if (enrollments == null) return false;
+      return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
     });
 
     return CreateConversationData(await courseFuture, recipients);

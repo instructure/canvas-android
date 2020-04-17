@@ -31,6 +31,7 @@ import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_permissions.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
 import 'package:flutter_parent/models/dataseeding/create_assignment_info.dart';
@@ -99,6 +100,7 @@ part 'serializers.g.dart';
   CommunicationChannel,
   Conversation,
   Course,
+  CoursePermissions,
   CourseTab,
   CreateAssignmentInfo,
   CreateAssignmentWrapper,
