@@ -56,7 +56,7 @@ void main() {
       await tester.pumpWidget(TestApp(CanvasWebView(content: null)));
       await tester.pump();
 
-      expect(find.descendant(of: find.byType(CanvasWebView), matching: find.byType(Container)), findsOneWidget);
+      expect(find.descendant(of: find.byType(CanvasWebView), matching: find.byType(Container)), findsWidgets);
       expect(find.byType(WebView), findsNothing);
     });
 
@@ -64,7 +64,7 @@ void main() {
       await tester.pumpWidget(TestApp(CanvasWebView(content: '', emptyDescription: '')));
       await tester.pump();
 
-      expect(find.descendant(of: find.byType(CanvasWebView), matching: find.byType(Container)), findsOneWidget);
+      expect(find.descendant(of: find.byType(CanvasWebView), matching: find.byType(Container)), findsWidgets);
       expect(find.byType(WebView), findsNothing);
     });
   });

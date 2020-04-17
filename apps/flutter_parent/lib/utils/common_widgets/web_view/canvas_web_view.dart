@@ -27,34 +27,38 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 /// A general purpose web view to display html content to users.
 class CanvasWebView extends StatefulWidget {
+  /// Flag to authenticate links in the provided html content
+  final bool authContentIfNecessary;
+
   /// The html content to load into the webview
   final String content;
 
   /// The empty description to show when the provided content is blank
   final String emptyDescription;
 
-  /// The initial height to set the webview to, not used if [fullScreen] is true
-  final double initialHeight;
-
-  /// The horizontal padding to add to the content being loaded
-  final double horizontalPadding;
-
-  /// Flag to authenticate links in the provided html content
-  final bool authContentIfNecessary;
-
   /// Flag to set the webview as fullscreen, otherwise it resizes to fit it's content size (used for embedding html content on a screen with other widgets)
   ///
   /// Note: When set to true, overscroll gestures tend to get swallowed and disables the use of a [RefreshIndicator] PTR
   final bool fullScreen;
 
+  /// If set, delays loading the page once the webview is created
+  final Future futureDelay;
+
+  /// The horizontal padding to add to the content being loaded
+  final double horizontalPadding;
+
+  /// The initial height to set the webview to, not used if [fullScreen] is true
+  final double initialHeight;
+
   const CanvasWebView({
     Key key,
+    this.authContentIfNecessary = true,
     this.content,
     this.emptyDescription,
-    this.initialHeight = 1,
-    this.horizontalPadding = 0,
-    this.authContentIfNecessary = true,
     this.fullScreen = true,
+    this.futureDelay = null,
+    this.horizontalPadding = 0,
+    this.initialHeight = 1,
   })  : assert(initialHeight != null),
         assert(horizontalPadding != null),
         assert(authContentIfNecessary != null),
@@ -87,39 +91,35 @@ class _CanvasWebViewState extends State<CanvasWebView> {
       _contentFuture = _interactor.authContent(_content, L10n(context).launchExternalTool);
     }
 
-    return FutureBuilder(
-      future: _contentFuture,
-      builder: (context, AsyncSnapshot<String> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) return LoadingIndicator();
-
-        return _ResizingWebView(
-          content: snapshot.data,
-          emptyDescription: widget.emptyDescription,
-          initialHeight: widget.initialHeight,
-          horizontalPadding: widget.horizontalPadding,
-          fullScreen: widget.fullScreen,
-        );
-      },
+    return _ResizingWebView(
+      contentFuture: _contentFuture,
+      emptyDescription: widget.emptyDescription,
+      initialHeight: widget.initialHeight,
+      horizontalPadding: widget.horizontalPadding,
+      fullScreen: widget.fullScreen,
+      futureDelay: widget.futureDelay,
     );
   }
 }
 
 class _ResizingWebView extends StatefulWidget {
-  final String content;
+  final Future<String> contentFuture;
   final String emptyDescription;
 
   final double initialHeight;
   final double horizontalPadding;
 
   final bool fullScreen;
+  final Future futureDelay;
 
   const _ResizingWebView({
     Key key,
-    this.content,
+    this.contentFuture,
     this.emptyDescription,
     this.initialHeight,
     this.horizontalPadding,
     this.fullScreen,
+    this.futureDelay,
   }) : super(key: key);
 
   @override
@@ -127,16 +127,23 @@ class _ResizingWebView extends StatefulWidget {
 }
 
 class _ResizingWebViewState extends State<_ResizingWebView> {
-  double _height;
   String _content;
   WebViewController _controller;
+  double _height;
+  bool _loading;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
   @override
   void initState() {
     _height = widget.initialHeight;
-    _content = widget.content;
+
+    // We avoid using _loading in tests due to the complexity of mocking its dependencies.
+    // We determine if we're in a test by checking the runtime type of WidgetsBinding. In prod it's an instance of
+    // WidgetsFlutterBinding and in tests it's an instance of AutomatedTestWidgetsFlutterBinding.
+    var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
+
+    _loading = true && !isTest;
 
     super.initState();
   }
@@ -150,8 +157,32 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
 
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: widget.contentFuture,
+      builder: (context, AsyncSnapshot<String> snapshot) => FutureBuilder(
+        future: widget.futureDelay,
+        builder: (context, delay) {
+          final delaying = (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) ||
+              delay.connectionState == ConnectionState.waiting;
+          return Stack(
+            children: <Widget>[
+              if (!delaying) _contentBody(snapshot.data),
+              if (_loading || delaying)
+                // Wrap in a container that's the scaffold color so we don't get the gross black bar while webview is initializing
+                Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: LoadingIndicator(),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _contentBody(String widgetContent) {
     // Check for empty content
-    if (widget.content == null || widget.content.isEmpty) {
+    if (widgetContent == null || widgetContent.isEmpty) {
       if (widget.emptyDescription == null || widget.emptyDescription.isEmpty) {
         return Container(); // No empty text, so just be empty
       } else {
@@ -162,16 +193,14 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
       }
     }
 
-    // Handle being rebuilt by parent widgets
-    if (_content != widget.content) {
+    // Handle being rebuilt by parent widgets (refresh)
+    if (_content != widgetContent) {
       _height = widget.initialHeight;
-      _content = widget.content;
+      _content = widgetContent;
       _controller?.loadHtml(_content, horizontalPadding: widget.horizontalPadding);
     }
 
-    // Unfortunately, there is an issue where the web view will load a black screen first before it's initialized. This
-    // is a known problem and can be followed here: https://github.com/flutter/flutter/issues/27198
-    final webView = WebView(
+    Widget child = WebView(
       javascriptMode: JavascriptMode.unrestricted,
       onPageFinished: _handlePageLoaded,
       onWebViewCreated: _handleWebViewCreated,
@@ -181,14 +210,14 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
       javascriptChannels: _webViewChannels(),
     );
 
-    if (widget.fullScreen) {
-      return webView;
-    } else {
-      return ConstrainedBox(
+    if (!widget.fullScreen) {
+      child = ConstrainedBox(
         constraints: BoxConstraints(maxHeight: _height),
-        child: webView,
+        child: child,
       );
     }
+
+    return child;
   }
 
   Future<NavigationDecision> _handleNavigation(NavigationRequest request) async {
@@ -203,11 +232,16 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
   }
 
   void _handlePageLoaded(String url) async {
+    if (!mounted) return;
+
+    setState(() => _loading = false);
+
     // Don't resize if fullscreen, or if a link was clicked
     // TODO: May not need initialHeight check for links with new navigation request handling
     if (widget.fullScreen || _height != widget.initialHeight) return;
-    final height = double.parse(await _controller?.evaluateJavascript('document.documentElement.scrollHeight;') ??
-        (widget.initialHeight + 1).toString());
+    final height = double.tryParse((await _controller?.evaluateJavascript('document.documentElement.scrollHeight;')) ??
+            (widget.initialHeight + 1).toString()) ??
+        widget.initialHeight;
 
     // TODO: May need to revisit this in the future, on an emulator I was able to get an out of resource exception for too big of a canvas
     // here for creating too large of a webview. Doesn't seem to happen on a real device, will have to monitor crashes.
