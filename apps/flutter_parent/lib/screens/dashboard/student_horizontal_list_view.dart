@@ -118,9 +118,9 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 ),
                 elevation: 8,
                 onPressed: () async {
+                  locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD);
                   bool studentPaired = await _addStudentDialog(context);
                   if (studentPaired) {
-                    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD);
                     widget.onAddStudent();
                   }
                 },

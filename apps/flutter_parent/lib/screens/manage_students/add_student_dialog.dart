@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
@@ -89,8 +90,10 @@ class AddStudentDialogState extends State<AddStudentDialog> {
                   var successful = await widget._interactor.pairWithStudent(code);
                   if (successful) {
                     // Close dialog - return 'true' to represent that a student was paired
+                    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS);
                     Navigator.of(context).pop(true);
                   } else {
+                    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE);
                     _showParingCodeError(true);
                   }
 
