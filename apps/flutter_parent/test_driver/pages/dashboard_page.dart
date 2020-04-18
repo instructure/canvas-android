@@ -62,4 +62,9 @@ class DashboardPage {
   static Future<void> openNavDrawer(FlutterDriver driver) async {
     await driver.tap(find.byValueKey("drawer_menu"));
   }
+
+  static Future<void> openInbox(FlutterDriver driver) async {
+    await openNavDrawer(driver);
+    await driver.tap(find.text("Inbox"));
+  }
 }

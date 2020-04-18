@@ -132,6 +132,7 @@ class ConversationListState extends State<ConversationListScreen> {
                     item.subject.isEmpty ? L10n(context).noSubject : item.subject,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontWeight: FontWeight.w500),
+                    key: ValueKey('conversation_subject_$index'),
                   ),
                 ),
               ),
@@ -149,12 +150,14 @@ class ConversationListState extends State<ConversationListScreen> {
                 Text(
                   item.contextName,
                   style: TextStyle(fontWeight: FontWeight.w500),
+                  key: ValueKey('conversation_context_$index'),
                 ),
               SizedBox(height: 4),
               Text(
                 item.lastMessage ?? item.lastAuthoredMessage,
                 style: Theme.of(context).textTheme.body1,
                 maxLines: 2,
+                key: ValueKey('conversation_message_$index'),
               ),
             ],
           ),
@@ -299,7 +302,7 @@ class ConversationListState extends State<ConversationListScreen> {
       User user = t.item1;
       Course course = t.item2;
       var w = ListTile(
-        title: Text(course.name),
+        title: Text(course.name, key: ValueKey('course_list_course_${course.id}')),
         subtitle: Text(L10n(context).courseForWhom(user.shortName)),
         onTap: () async {
           String postscript = L10n(context).messageLinkPostscript(
