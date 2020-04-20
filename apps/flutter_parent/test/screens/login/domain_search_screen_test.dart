@@ -100,11 +100,14 @@ void main() {
     expect(nextButton.enabled, false);
 
     await tester.enterText(find.byType(TextField), 'aa');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     nextButton =
         tester.widget<MaterialButton>(find.ancestor(of: find.text(l10n.next), matching: find.byType(MaterialButton)));
     expect(nextButton.enabled, true);
+
+    // Wait for debounce to finish so test doesn't fail
+    await tester.pump(Duration(milliseconds: 500));
   });
 
   testWidgets('Large result sets do not hide help button', (WidgetTester tester) async {
@@ -180,17 +183,20 @@ void main() {
 
     // Add single character query
     await tester.enterText(find.byType(TextField), 'a');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     // Button should now show
     expect(find.byKey(Key('clear-query')), findsOneWidget);
 
     // Add single character query
     await tester.enterText(find.byType(TextField), '');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     // Button should no longer show
     expect(find.byKey(Key('clear-query')), findsNothing);
+
+    // Wait for debounce to finish so test doesn't fail
+    await tester.pump(Duration(milliseconds: 500));
   });
 
   testWidgets('Clear button clears text', (WidgetTester tester) async {
@@ -206,13 +212,16 @@ void main() {
 
     await tester.tap(find.byType(TextField));
     await tester.enterText(find.byType(TextField), 'testing123');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle(); // Add in debounce time
     expect(tester.widget<TextField>(find.byType(TextField)).controller.text, 'testing123');
     expect(find.byKey(Key('clear-query')), findsOneWidget);
 
     await tester.tap(find.byKey(Key('clear-query')));
     await tester.pump();
     expect(tester.widget<TextField>(find.byType(TextField)).controller.text, '');
+
+    // Wait for debounce to finish so test doesn't fail
+    await tester.pump(Duration(milliseconds: 500));
   });
 
   testWidgets('Does not show stale search results', (WidgetTester tester) async {
@@ -342,7 +351,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'test');
-    await tester.pumpAndSettle(Duration(seconds: 5));
+    await tester.pumpAndSettle(Duration(milliseconds: 500));
     expect(find.text('Result'), findsOneWidget);
 
     await tester.tap(find.text('Result'));
@@ -363,7 +372,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
@@ -386,7 +395,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
@@ -407,7 +416,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa');
-    await tester.pumpAndSettle(Duration(milliseconds: 500)); // Add in debounce time
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
@@ -426,7 +435,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'mobileqa.beta');
-    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
@@ -445,7 +454,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.enterText(find.byType(TextField), 'www.mobileqa.beta');
-    await tester.pumpAndSettle(Duration(milliseconds: 550)); // Add in a delay for the debouncing
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text(l10n.next));
     await tester.pumpAndSettle();
