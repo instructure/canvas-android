@@ -34,6 +34,7 @@ import 'package:flutter_parent/screens/courses/details/course_details_interactor
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/details/grading_period_modal.dart';
+import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -534,7 +535,7 @@ void main() {
     });
   });
 
-  testWidgetsWithAccessibilityChecks('grading period not shown when noot multiple grading periods', (tester) async {
+  testWidgetsWithAccessibilityChecks('grading period not shown when not multiple grading periods', (tester) async {
     final groups = [
       _mockAssignmentGroup(assignments: [_mockAssignment()])
     ];
@@ -553,6 +554,31 @@ void main() {
     // Verify that we aren't showing the grading period header when there are no periods
     expect(find.text(AppLocalizations().filter), findsNothing);
     expect(find.text(AppLocalizations().allGradingPeriods), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks(
+      'grading period is shown for multiple grading periods when all grading periods is selected and no assignments exist',
+      (tester) async {
+    final groups = List<AssignmentGroup>();
+    final gradingPeriod = GradingPeriod((b) => b
+      ..id = '123'
+      ..title = 'Other');
+    final enrollment = Enrollment((b) => b..enrollmentState = 'active');
+    final model = CourseDetailsModel(_student, _courseId);
+    model.course = _mockCourse();
+    when(interactor.loadAssignmentGroups(_courseId, _studentId, null)).thenAnswer((_) async => groups);
+    when(interactor.loadGradingPeriods(_courseId)).thenAnswer((_) async =>
+        GradingPeriodResponse((b) => b..gradingPeriods = BuiltList<GradingPeriod>.from([gradingPeriod]).toBuilder()));
+    when(interactor.loadEnrollmentsForGradingPeriod(_courseId, _studentId, null)).thenAnswer((_) async => [enrollment]);
+
+    await tester.pumpWidget(_testableWidget(model));
+    await tester.pump(); // Build the widget
+    await tester.pump(); // Let the future finish
+
+    // Verify that we aren't showing the grading period header when there are no periods
+    expect(find.byType(EmptyPandaWidget), findsOneWidget);
+    expect(find.text(AppLocalizations().filter), findsOneWidget);
+    expect(find.text(AppLocalizations().allGradingPeriods), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('filter tap shows grading period modal', (tester) async {
