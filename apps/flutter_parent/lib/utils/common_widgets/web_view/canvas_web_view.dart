@@ -126,11 +126,12 @@ class _ResizingWebView extends StatefulWidget {
   _ResizingWebViewState createState() => _ResizingWebViewState();
 }
 
-class _ResizingWebViewState extends State<_ResizingWebView> {
+class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingObserver {
   String _content;
   WebViewController _controller;
   double _height;
   bool _loading;
+  bool _inactive;
 
   WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
@@ -144,15 +145,40 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     var isTest = WidgetsBinding.instance.runtimeType != WidgetsFlutterBinding;
 
     _loading = true && !isTest;
+    _inactive = false;
 
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
   @override
   void dispose() {
     _controller = null;
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
+  }
+
+  /// Adding this observer method to watch for inactive states, which can break the webview. More on this discussion
+  /// can be found here: https://github.com/flutter/flutter/issues/28651
+  ///
+  /// There were fix attempts by the flutter team to prevent the JNI link error, but we can still reproduce by doing
+  /// the following steps:
+  /// Kill the app -> Click a link that goes to a screen with a webview (assignment details) -> Open in parent app ->
+  /// Press back -> Click a link -> Open in parent app -> App crashes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    switch (state) {
+      case AppLifecycleState.inactive:
+        setState(() => _inactive = true);
+        break;
+      case AppLifecycleState.resumed:
+        setState(() => _inactive = false);
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -197,6 +223,11 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
           child: Text(widget.emptyDescription, style: Theme.of(context).textTheme.body1),
         );
       }
+    }
+
+    // If we are not active, don't display a webview
+    if (_inactive) {
+      return Container();
     }
 
     // Handle being rebuilt by parent widgets (refresh)
