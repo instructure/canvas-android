@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Fritatt</string>
     <string name="last_login_format">Siste innlogging: %s</string>
 
-    <string name="muteGrades">Demp karakterer</string>
-    <string name="unmuteGrades">Gjenåpne karakterer</string>
-    <string name="gradesMutedLabel">Karakterer dempet</string>
     <string name="turnOnAnonymousGrading">Slå på anonym karaktersetting</string>
     <string name="turnOffAnonymousGrading">Slå av anonym karaktersetting</string>
     <string name="anonymousGradingLabel">Anonym karaktersetting</string>

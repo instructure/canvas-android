@@ -43,15 +43,11 @@ class AssignmentSubmissionListPage : BasePage() {
 
     private val addMessageFAB by OnViewWithId(R.id.addMessage)
 
-    private val muteGradesMenuItem by WaitForViewWithText(R.string.muteGrades)
-
-    private val unmuteGradesMenuItem by WaitForViewWithText(R.string.unmuteGrades)
-
     private val enableAnonymousGradingMenuItem by WaitForViewWithText(R.string.turnOnAnonymousGrading)
 
     private val disableAnonymousGradingMenuItem by WaitForViewWithText(R.string.turnOffAnonymousGrading)
 
-    private val mutedStatusView by WaitForViewWithId(R.id.mutedStatusView)
+    private val anonStatusView by WaitForViewWithId(R.id.anonGradingStatusView)
 
     //Only displayed when assignment list is empty
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
@@ -128,22 +124,6 @@ class AssignmentSubmissionListPage : BasePage() {
         addMessageFAB.click()
     }
 
-    fun assertDisplaysMuteOption() {
-        muteGradesMenuItem.assertVisible()
-    }
-
-    fun assertDisplaysUnmuteOption() {
-        unmuteGradesMenuItem.assertVisible()
-    }
-
-    fun clickMuteOption() {
-        muteGradesMenuItem.click()
-    }
-
-    fun assertDisplaysMutedStatus() {
-        mutedStatusView.assertHasText(R.string.gradesMutedLabel)
-    }
-
     fun assertDisplaysEnableAnonymousOption() {
         enableAnonymousGradingMenuItem.assertDisplayed()
     }
@@ -157,7 +137,7 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     fun assertDisplaysAnonymousGradingStatus() {
-        mutedStatusView.assertHasText(R.string.anonymousGradingLabel)
+        anonStatusView.assertHasText(R.string.anonymousGradingLabel)
     }
 
     fun assertDisplaysAnonymousName() {

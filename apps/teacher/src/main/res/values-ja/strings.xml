@@ -227,9 +227,6 @@
     <string name="submission_status_excused">免除</string>
     <string name="last_login_format">最終ログイン：%s</string>
 
-    <string name="muteGrades">成績をミュートする</string>
-    <string name="unmuteGrades">成績をミュート解除する</string>
-    <string name="gradesMutedLabel">成績がミュートされています</string>
     <string name="turnOnAnonymousGrading">匿名での採点をオンにする</string>
     <string name="turnOffAnonymousGrading">匿名での採点をオフにする</string>
     <string name="anonymousGradingLabel">匿名での採点</string>

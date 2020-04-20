@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Wedi esgusodi</string>
     <string name="last_login_format">Manylion mewngofnodi diwethaf: %s</string>
 
-    <string name="muteGrades">Tewi Graddau</string>
-    <string name="unmuteGrades">Dad-dewi Graddau</string>
-    <string name="gradesMutedLabel">Graddau wedi’u tewi</string>
     <string name="turnOnAnonymousGrading">Dechrau Graddio’n Ddienw</string>
     <string name="turnOffAnonymousGrading">Diffodd Graddio’n Ddienw</string>
     <string name="anonymousGradingLabel">Graddio’n Ddienw</string>

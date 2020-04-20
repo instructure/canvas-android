@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Dispensado</string>
     <string name="last_login_format">Último login: %s</string>
 
-    <string name="muteGrades">Silenciar notas</string>
-    <string name="unmuteGrades">Cancelar silenciamento de notas</string>
-    <string name="gradesMutedLabel">Notas silenciadas</string>
     <string name="turnOnAnonymousGrading">Ativar avaliação anônima</string>
     <string name="turnOffAnonymousGrading">Desativar avaliação anônima</string>
     <string name="anonymousGradingLabel">Avaliação anônima</string>

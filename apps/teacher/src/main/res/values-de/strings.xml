@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Entschuldigt</string>
     <string name="last_login_format">Letzte Anmeldung: %s</string>
 
-    <string name="muteGrades">Noten stummschalten</string>
-    <string name="unmuteGrades">Aufheben der Stummschaltung der Noten</string>
-    <string name="gradesMutedLabel">Noten stummgeschaltet</string>
     <string name="turnOnAnonymousGrading">Anonyme Benotung einschalten</string>
     <string name="turnOffAnonymousGrading">Anonyme Benotung ausschalten</string>
     <string name="anonymousGradingLabel">Anonyme Benotung</string>

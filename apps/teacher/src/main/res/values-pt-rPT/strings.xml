@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Desculpado</string>
     <string name="last_login_format">Último login: %s</string>
 
-    <string name="muteGrades">Silenciar classificação</string>
-    <string name="unmuteGrades">Ativar som das notas</string>
-    <string name="gradesMutedLabel">Notas sem som</string>
     <string name="turnOnAnonymousGrading">Ativar classificação anónima</string>
     <string name="turnOffAnonymousGrading">Desativar classificação anónima</string>
     <string name="anonymousGradingLabel">Classificação Anónima</string>

@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Whakawātea</string>
     <string name="last_login_format">Mātāmuri takiuru %s</string>
 
-    <string name="muteGrades">Ngā kōeke whakangū</string>
-    <string name="unmuteGrades">Ngā kōeke kaore i whakangū</string>
-    <string name="gradesMutedLabel">Ngā kōeke kua whakangūtia</string>
     <string name="turnOnAnonymousGrading">Whakakā i te kōeke ingoamuna</string>
     <string name="turnOffAnonymousGrading">Whakaweto i te kōeke ingoamuna</string>
     <string name="anonymousGradingLabel">Kōeke ingoa kore</string>
