@@ -194,6 +194,8 @@
     <!-- Discussions -->
     <string name="forbidden">Només aquells que han publicat almenys una resposta poden veure les respostes.</string>
 
+    <string name="fileCurrentlyLocked">Aquest fitxer està bloquejat actualment</string>
+
     <!-- Events -->
     <string name="Starts">Comença</string>
     <string name="Ends">Acaba</string>
@@ -1137,4 +1139,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s minut</item>
+        <item quantity="other">%s minuts</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Cap conferència</string>
+    <string name="noConferencesMessage">Encara no hi ha cap conferència per mostrar</string>
+    <string name="noConferenceDescription">No hi ha cap descripció per a aquesta conferència</string>
+    <string name="conferenceListError">S\'ha produït un error en carregar les conferències</string>
+    <string name="conferenceConcludedDateAtTime">Finalitzat el %s a les %s</string>
+    <string name="conferenceStartedDateAtTime">Començat el %s a les %s</string>
+    <string name="notStarted">No s\'ha començat</string>
+    <string name="inProgress">En curs</string>
+    <string name="join">Inscriu-t\'hi</string>
+    <string name="newConferences">Conferències noves</string>
+    <string name="concludedConferences">Conferències finalitzades</string>
+    <string name="conferenceDetails">Detalls de la conferència</string>
+    <string name="recordings">Enregistraments</string>
 </resources>

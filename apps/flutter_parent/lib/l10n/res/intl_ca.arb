@@ -1,72 +1,72 @@
 ﻿{
   "@@last_modified": "2020-04-03T11:02:53.662629",
-  "alertsLabel": "Alèt",
+  "alertsLabel": "Avisos",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
     "type": "text",
     "placeholders": {}
   },
-  "calendarLabel": "Kalandriye",
+  "calendarLabel": "Calendari",
   "@calendarLabel": {
     "description": "The label for the Calendar tab",
     "type": "text",
     "placeholders": {}
   },
-  "coursesLabel": "Kou",
+  "coursesLabel": "Cursos",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
     "placeholders": {}
   },
-  "No Students": "Pa gen Elèv",
+  "No Students": "Cap estudiant",
   "@No Students": {
     "description": "Text for when an observer has no students they are observing",
     "type": "text",
     "placeholders": {}
   },
-  "Tap to show student selector": "Tape pou afiche seleksyonè elèv",
+  "Tap to show student selector": "Toqueu per mostrar el selector d'estudiants",
   "@Tap to show student selector": {
     "description": "Semantics label for the area that will show the student selector when tapped",
     "type": "text",
     "placeholders": {}
   },
-  "Tap to pair with a new student": "Tape pou kapab asosye ak yon nouvo elèv",
+  "Tap to pair with a new student": "Toqueu per emparellar amb un estudiant nou",
   "@Tap to pair with a new student": {
     "description": "Semantics label for the add student button in the student selector",
     "type": "text",
     "placeholders": {}
   },
-  "Tap to select this student": "Tape pou ka seleksyone elèv sa a",
+  "Tap to select this student": "Toqueu per seleccionar aquest estudiant",
   "@Tap to select this student": {
     "description": "Semantics label on individual students in the student switcher",
     "type": "text",
     "placeholders": {}
   },
-  "Manage Students": "Jere Elèv",
+  "Manage Students": "Administra els estudiants",
   "@Manage Students": {
     "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
     "type": "text",
     "placeholders": {}
   },
-  "Help": "Èd",
+  "Help": "Ajuda",
   "@Help": {
     "description": "Label text for the help nav drawer button",
     "type": "text",
     "placeholders": {}
   },
-  "Log Out": "Dekonekte",
+  "Log Out": "Tanca la sessió",
   "@Log Out": {
     "description": "Label text for the Log Out nav drawer button",
     "type": "text",
     "placeholders": {}
   },
-  "Switch Users": "Chanje Itilizatè",
+  "Switch Users": "Canvia els usuaris",
   "@Switch Users": {
     "description": "Label text for the Switch Users nav drawer button",
     "type": "text",
     "placeholders": {}
   },
-  "appVersion": "v. {version}",
+  "appVersion": "versió {version}",
   "@appVersion": {
     "description": "App version shown in the navigation drawer",
     "type": "text",
@@ -74,19 +74,19 @@
       "version": {}
     }
   },
-  "Are you sure you want to log out?": "Ou kwè vrèman ou vle dekonekte?",
+  "Are you sure you want to log out?": "Segur que voleu tancar la sessió?",
   "@Are you sure you want to log out?": {
     "description": "Confirmation message displayed when the user tries to log out",
     "type": "text",
     "placeholders": {}
   },
-  "Calendars": "Kalandriye",
+  "Calendars": "Calendaris",
   "@Calendars": {
     "description": "Label for button that lets users select which calendars to display",
     "type": "text",
     "placeholders": {}
   },
-  "nextMonth": "Pwochen mwa: {month}",
+  "nextMonth": "El mes que ve: {month}",
   "@nextMonth": {
     "description": "Label for the button that switches the calendar to the next month",
     "type": "text",
@@ -94,7 +94,7 @@
       "month": {}
     }
   },
-  "previousMonth": "Mwa pase: {month}",
+  "previousMonth": "El mes passat: {month}",
   "@previousMonth": {
     "description": "Label for the button that switches the calendar to the previous month",
     "type": "text",
@@ -102,7 +102,7 @@
       "month": {}
     }
   },
-  "nextWeek": "Semenn pwochen kòmanse {date}",
+  "nextWeek": "La setmana que ve a partir del {date}",
   "@nextWeek": {
     "description": "Label for the button that switches the calendar to the next week",
     "type": "text",
@@ -110,7 +110,7 @@
       "date": {}
     }
   },
-  "previousWeek": "Semenn pase kòmanse {date}",
+  "previousWeek": "La setmana passada a partir del {date}",
   "@previousWeek": {
     "description": "Label for the button that switches the calendar to the previous week",
     "type": "text",
@@ -118,7 +118,7 @@
       "date": {}
     }
   },
-  "selectedMonthLabel": "Mwa {month}",
+  "selectedMonthLabel": "Mes de {month}",
   "@selectedMonthLabel": {
     "description": "Accessibility label for the button that expands/collapses the month view",
     "type": "text",
@@ -126,19 +126,19 @@
       "month": {}
     }
   },
-  "expand": "elaji",
+  "expand": "desplega",
   "@expand": {
     "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
     "type": "text",
     "placeholders": {}
   },
-  "collapse": "ratresi",
+  "collapse": "redueix",
   "@collapse": {
     "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
     "type": "text",
     "placeholders": {}
   },
-  "pointsPossible": "{points} pwen posib",
+  "pointsPossible": "{points} punts possibles",
   "@pointsPossible": {
     "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
     "type": "text",
@@ -146,55 +146,55 @@
       "points": {}
     }
   },
-  "No Events Today!": "Pa gen Aktivite Jodi a!",
+  "No Events Today!": "Avui no hi ha cap esdeveniment.",
   "@No Events Today!": {
     "description": "Title displayed when there are no calendar events for the current day",
     "type": "text",
     "placeholders": {}
   },
-  "It looks like a great day to rest, relax, and recharge.": "Sanble yon bon jou pou repoze w, amize w epi mete enèji..",
+  "It looks like a great day to rest, relax, and recharge.": "Sembla un dia fabulós per descansar, relaxar-se i carregar piles.",
   "@It looks like a great day to rest, relax, and recharge.": {
     "description": "Message displayed when there are no calendar events for the current day",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "Te gen yon erè nan chajman kalandriye elèv ou a",
+  "There was an error loading your student's calendar": "S'ha produït un error en carregar el vostre calendari de l'estudiant",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Tape pou pou ajoute kou ou vle wè nan Kalandriye yo nan favori.",
+  "Tap to favorite the courses you want to see on the Calendar.": "Toqueu per afegir als preferits els cursos que voleu veure al Calendari.",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
     "placeholders": {}
   },
-  "Previous Logins": "Ansyen Koneksyon",
+  "Previous Logins": "Inicis de sessió anteriors",
   "@Previous Logins": {
     "description": "Label for the list of previous user logins",
     "type": "text",
     "placeholders": {}
   },
-  "canvasLogoLabel": "Logo Canvas",
+  "canvasLogoLabel": "Logotip del Canvas",
   "@canvasLogoLabel": {
     "description": "The semantics label for the Canvas logo",
     "type": "text",
     "placeholders": {}
   },
-  "findSchool": "Jwenn Lekòl",
+  "findSchool": "Cerca una escola",
   "@findSchool": {
     "description": "Text for the find-my-school button",
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchInputHint": "Antre non lekòl la oswa distri a...",
+  "domainSearchInputHint": "Introduïu el nom de l'escola o el districte...",
   "@domainSearchInputHint": {
     "description": "Input hint for the text box on the domain search screen",
     "type": "text",
     "placeholders": {}
   },
-  "noDomainResults": "Nou paka jwenn lekòl ki koresponn a \"{query}\"",
+  "noDomainResults": "No s'han trobat escoles que coincideixin amb “{query}”",
   "@noDomainResults": {
     "description": "Message shown to users when the domain search query did not return any results",
     "type": "text",
@@ -202,25 +202,25 @@
       "query": {}
     }
   },
-  "domainSearchHelpLabel": "Kijan mwen kapab jwenn lekòl oswa distri mwen an?",
+  "domainSearchHelpLabel": "Com puc trobar la meva escola o districte?",
   "@domainSearchHelpLabel": {
     "description": "Label for the help button on the domain search screen",
     "type": "text",
     "placeholders": {}
   },
-  "canvasGuides": "Gid Canvas",
+  "canvasGuides": "Guies del Canvas",
   "@canvasGuides": {
     "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
     "type": "text",
     "placeholders": {}
   },
-  "canvasSupport": "Sipò Canvas",
+  "canvasSupport": "Assistència tècnica del Canvas",
   "@canvasSupport": {
     "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
     "type": "text",
     "placeholders": {}
   },
-  "domainSearchHelpBody": "Eseye chèche non lekòl oswa distri ou vle ale sou li a, pa egzanp “Smith Private School” or “Smith County Schools.” Ou kapab antre yon domèn Canvas dirèkteman, tankou pa egzanp “smith.instructure.com.”\n\nPou plis enfòmasyon pou jwenn kont Canvas enstitisyon ou an, ou ka vizite {canvasGuides}, ale sou {canvasSupport}, oswa pran kontak ak lekòl ou a pou plis asistans.",
+  "domainSearchHelpBody": "Proveu de cercar pel nom de l'escola o districte al qual intenteu accedir, com ara “Escola Privada Smith” o “Escoles de la Regió d'Smith”. També podeu introduir un domini del Canvas directament, com ara “smith.instructure.com.”\n\nPer obtenir més informació sobre com cercar el compte del Canvas de la vostra institució, podeu consultar les {canvasGuides}, contactar amb l'{canvasSupport}, o posar-vos en contacte amb la vostra escola per obtenir assistència.",
   "@domainSearchHelpBody": {
     "description": "The body text shown in the help dialog on the domain search screen",
     "type": "text",
@@ -229,168 +229,168 @@
       "canvasSupport": {}
     }
   },
-  "Uh oh!": "Uh oh!",
+  "Uh oh!": "Oh!",
   "@Uh oh!": {
     "description": "Title of the screen that shows when a crash has occurred",
     "type": "text",
     "placeholders": {}
   },
-  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Nou pa twò konnen kisa k pase a, men li pa enteresan. Pran kontak ak nou si sa repwodui.",
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "No estem segurs de què ha passat, però no ha sigut res bo. Poseu-vos en contacte amb nosaltres si us segueix passant.",
   "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
     "description": "Message shown when a crash has occurred",
     "type": "text",
     "placeholders": {}
   },
-  "Contact Support": "Kontakte Sipò",
+  "Contact Support": "Contacta amb l'assistència tècnica",
   "@Contact Support": {
     "description": "Label for the button that allows users to contact support after a crash has occurred",
     "type": "text",
     "placeholders": {}
   },
-  "View error details": "Afiche detay erè",
+  "View error details": "Visualitza els detalls de l'error",
   "@View error details": {
     "description": "Label for the button that allowed users to view crash details",
     "type": "text",
     "placeholders": {}
   },
-  "Restart app": "Reinisyalize app",
+  "Restart app": "Reinicia l'aplicació",
   "@Restart app": {
     "description": "Label for the button that will restart the entire application",
     "type": "text",
     "placeholders": {}
   },
-  "Application version": "Vèsyon aplikasyon",
+  "Application version": "Versió de l'aplicació",
   "@Application version": {
     "description": "Label for the application version displayed in the crash details",
     "type": "text",
     "placeholders": {}
   },
-  "Device model": "Modèl aparèy",
+  "Device model": "Model del dispositiu",
   "@Device model": {
     "description": "Label for the device model displayed in the crash details",
     "type": "text",
     "placeholders": {}
   },
-  "Android OS version": "Vèsyon OS Android",
+  "Android OS version": "Versió del sistema operatiu Android",
   "@Android OS version": {
     "description": "Label for the Android operating system version displayed in the crash details",
     "type": "text",
     "placeholders": {}
   },
-  "Full error message": "Erè mesaj konplè",
+  "Full error message": "Missatge d'error complet",
   "@Full error message": {
     "description": "Label for the full error message displayed in the crash details",
     "type": "text",
     "placeholders": {}
   },
-  "Inbox": "Bwat resepsyon",
+  "Inbox": "Safata d'entrada",
   "@Inbox": {
     "description": "Title for the Inbox screen",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your inbox messages.": "Te gen yo erè pandan chajman mesaj ki nan bwat resepsyon w yo.",
+  "There was an error loading your inbox messages.": "S'ha produït un error en carregar els missatges de la vostra safata d'entrada.",
   "@There was an error loading your inbox messages.": {
     "type": "text",
     "placeholders": {}
   },
-  "No Subject": "Pa gen Sijè",
+  "No Subject": "Sense assumpte",
   "@No Subject": {
     "description": "Title used for inbox messages that have no subject",
     "type": "text",
     "placeholders": {}
   },
-  "Unable to fetch courses. Please check your connection and try again.": "Enposib pou ale chèche kou. Tanpri verifye koneksyon ou a epi eseye ankò.",
+  "Unable to fetch courses. Please check your connection and try again.": "No es poden obtenir els cursos. Reviseu la connexió i torneu-ho a provar.",
   "@Unable to fetch courses. Please check your connection and try again.": {
     "description": "Message shown when an error occured while loading courses",
     "type": "text",
     "placeholders": {}
   },
-  "Choose a course to message": "Chwazi yon kou pou voye mesaj",
+  "Choose a course to message": "Trieu un curs per enviar el missatge",
   "@Choose a course to message": {
     "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
     "type": "text",
     "placeholders": {}
   },
-  "Inbox Zero": "Bwat Resepsyon Zewo",
+  "Inbox Zero": "Safata d'entrada buida",
   "@Inbox Zero": {
     "description": "Title of the message shown when there are no inbox messages",
     "type": "text",
     "placeholders": {}
   },
-  "You’re all caught up!": "Yo pran w!",
+  "You’re all caught up!": "Esteu completament al dia!",
   "@You’re all caught up!": {
     "description": "Subtitle of the message shown when there are no inbox messages",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading recipients for this course": "Te gen yon erè nan chajman destinatè pou kou sa a",
+  "There was an error loading recipients for this course": "S'ha produït un error en carregar els destinataris d'aquest curs",
   "@There was an error loading recipients for this course": {
     "description": "Message shown when attempting to create a new message but the recipients list failed to load",
     "type": "text",
     "placeholders": {}
   },
-  "Unable to send message. Check your connection and try again.": "Enposib pou voye mesaj. Verifye koneksyon ou a epi eseye ankò.",
+  "Unable to send message. Check your connection and try again.": "No es pot enviar el missatge. Reviseu la connexió i torneu-ho a provar.",
   "@Unable to send message. Check your connection and try again.": {
     "description": "Message show when there was an error creating or sending a new message",
     "type": "text",
     "placeholders": {}
   },
-  "Unsaved changes": "Chanjman ki pa anrejistre",
+  "Unsaved changes": "Canvis no desats",
   "@Unsaved changes": {
     "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
     "type": "text",
     "placeholders": {}
   },
-  "Are you sure you wish to close this page? Your unsent message will be lost.": "Ou kwè vrèman ou vle fèmen paj sa a? Mesaj ou genyen ki pa delivre yo ap elimine.",
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Segur que voleu tancar aquesta pàgina? El vostre missatge no enviat es perdrà.",
   "@Are you sure you wish to close this page? Your unsent message will be lost.": {
     "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
     "type": "text",
     "placeholders": {}
   },
-  "New message": "Nouvo mesaj",
+  "New message": "Missatge nou",
   "@New message": {
     "description": "Title of the new-message screen",
     "type": "text",
     "placeholders": {}
   },
-  "Add attachment": "Ajoute atachman",
+  "Add attachment": "Afegeix un fitxer adjunt",
   "@Add attachment": {
     "description": "Tooltip for the add-attachment button in the new-message screen",
     "type": "text",
     "placeholders": {}
   },
-  "Send message": "Voye mesaj",
+  "Send message": "Envia el missatge",
   "@Send message": {
     "description": "Tooltip for the send-message button in the new-message screen",
     "type": "text",
     "placeholders": {}
   },
-  "Select recipients": "Seleksyone destinatè",
+  "Select recipients": "Selecciona els destinataris",
   "@Select recipients": {
     "description": "Tooltip for the button that allows users to select message recipients",
     "type": "text",
     "placeholders": {}
   },
-  "No recipients selected": "Okenn destinatè seleksyone",
+  "No recipients selected": "Cap destinatari seleccionat",
   "@No recipients selected": {
     "description": "Hint displayed when the user has not selected any message recipients",
     "type": "text",
     "placeholders": {}
   },
-  "Message subject": "Sijè mesaj",
+  "Message subject": "Assumpte del missatge",
   "@Message subject": {
     "description": "Hint text displayed in the input field for the message subject",
     "type": "text",
     "placeholders": {}
   },
-  "Message": "Mesaj",
+  "Message": "Missatge",
   "@Message": {
     "description": "Hint text displayed in the input field for the message body",
     "type": "text",
     "placeholders": {}
   },
-  "Recipients": "Destinatè",
+  "Recipients": "Destinataris",
   "@Recipients": {
     "description": "Label for message recipients",
     "type": "text",
@@ -406,13 +406,13 @@
       }
     }
   },
-  "Failed. Tap for options.": "Echwe. Tape pou opsyon.",
+  "Failed. Tap for options.": "S'ha produït un error. Toqueu per veure les opcions.",
   "@Failed. Tap for options.": {
     "description": "Short message shown on a message attachment when uploading has failed",
     "type": "text",
     "placeholders": {}
   },
-  "courseForWhom": "pou {studentShortName}",
+  "courseForWhom": "per a {studentShortName}",
   "@courseForWhom": {
     "description": "Describes for whom a course is for (i.e. for Bill)",
     "type": "text",
@@ -420,7 +420,7 @@
       "studentShortName": {}
     }
   },
-  "messageLinkPostscript": "Konsènan: {studentName}, {linkUrl}",
+  "messageLinkPostscript": "Sobre: {studentName}, {linkUrl}",
   "@messageLinkPostscript": {
     "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
     "type": "text",
@@ -429,37 +429,37 @@
       "linkUrl": {}
     }
   },
-  "There was an error loading this conversation": "Te gen yon erè nan chajman konvèsasyon sa a",
+  "There was an error loading this conversation": "S'ha produït un error en carregar aquesta conversa",
   "@There was an error loading this conversation": {
     "description": "Message shown when a conversation fails to load",
     "type": "text",
     "placeholders": {}
   },
-  "Reply": "Reponn",
+  "Reply": "Respon",
   "@Reply": {
     "description": "Button label for replying to a conversation",
     "type": "text",
     "placeholders": {}
   },
-  "Reply All": "Reponn Tout",
+  "Reply All": "Respon a tots",
   "@Reply All": {
     "description": "Button label for replying to all conversation participants",
     "type": "text",
     "placeholders": {}
   },
-  "Unknown User": "Itilizatè Enkoni",
+  "Unknown User": "Usuari desconegut",
   "@Unknown User": {
     "description": "Label used where the user name is not known",
     "type": "text",
     "placeholders": {}
   },
-  "me": "mwen menm",
+  "me": "mi",
   "@me": {
     "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
     "type": "text",
     "placeholders": {}
   },
-  "authorToRecipient": "{authorName} a {recipientName}",
+  "authorToRecipient": "De {authorName} a {recipientName}",
   "@authorToRecipient": {
     "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
     "type": "text",
@@ -468,7 +468,7 @@
       "recipientName": {}
     }
   },
-  "authorToNOthers": "{howMany,plural, =1{{authorName} a 1 lòt}other{{authorName} a {howMany} lòt}}",
+  "authorToNOthers": "{howMany,plural, =1{{authorName} a 1 altre}other{{authorName} a {howMany} més}}",
   "@authorToNOthers": {
     "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
     "type": "text",
@@ -477,7 +477,7 @@
       "howMany": {}
     }
   },
-  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} a {recipientName} & 1 lòt}other{{authorName} a {recipientName} & {howMany} lòt}}",
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} a {recipientName} i 1 altre}other{{authorName} a {recipientName} i {howMany} més}}",
   "@authorToRecipientAndNOthers": {
     "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
     "type": "text",
@@ -487,142 +487,142 @@
       "howMany": {}
     }
   },
-  "Download": "Telechaje",
+  "Download": "Baixa",
   "@Download": {
     "description": "Label for the button that will begin downloading a file",
     "type": "text",
     "placeholders": {}
   },
-  "Open with another app": "Ouvri ak yon lòt app",
+  "Open with another app": "Obre amb una altra aplicació",
   "@Open with another app": {
     "description": "Label for the button that will allow users to open a file with another app",
     "type": "text",
     "placeholders": {}
   },
-  "There are no installed applications that can open this file": "Pa gen aplikasyon nan sa ki enstale yo ki kapab ouvri fichye sa a",
+  "There are no installed applications that can open this file": "No hi ha cap aplicació instal·lada que pugui obrir aquest fitxer",
   "@There are no installed applications that can open this file": {
     "type": "text",
     "placeholders": {}
   },
-  "Unsupported File": "Fichye pa pran an chaj",
+  "Unsupported File": "Fitxer no admès",
   "@Unsupported File": {
     "type": "text",
     "placeholders": {}
   },
-  "This file is unsupported and can’t be viewed through the app": "Nou pa pran fichye sa a an chaj e li pa kapab afiche nan app la",
+  "This file is unsupported and can’t be viewed through the app": "Aquest fitxer no s'admet i no es pot visualitzar a través de l'aplicació",
   "@This file is unsupported and can’t be viewed through the app": {
     "type": "text",
     "placeholders": {}
   },
-  "Unable to play this media file": "Enposib pou jwe fichye miltimedya sa a",
+  "Unable to play this media file": "No es pot reproduir aquest fitxer multimèdia",
   "@Unable to play this media file": {
     "description": "Message shown when audio or video media could not be played",
     "type": "text",
     "placeholders": {}
   },
-  "Unable to load this image": "Enposib pou chaje imaj sa a",
+  "Unable to load this image": "No es pot carregar aquesta imatge",
   "@Unable to load this image": {
     "description": "Message shown when an image file could not be loaded or displayed",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading this file": "Te gen yon erè nan chajman fichye sa a",
+  "There was an error loading this file": "S'ha produït un error en carregar aquest fitxer",
   "@There was an error loading this file": {
     "description": "Message shown when a file could not be loaded or displayed",
     "type": "text",
     "placeholders": {}
   },
-  "No Courses": "Pa gen Kou",
+  "No Courses": "No hi ha cap curs",
   "@No Courses": {
     "description": "Title for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "Your student’s courses might not be published yet.": "Kou elèv ou a ta dwe gentan pibliye.",
+  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat els vostres cursos de l'estudiant.",
   "@Your student’s courses might not be published yet.": {
     "description": "Message for having no courses",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Te gen yon erè nan chajman kou elèv ou a.",
+  "There was an error loading your your student’s courses.": "S'ha produït un error en carregar els vostres cursos de l'estudiant.",
   "@There was an error loading your your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
   },
-  "No Grade": "Pa gen Klas",
+  "No Grade": "Sense qualificació",
   "@No Grade": {
     "description": "Message shown when there is currently no grade available for a course",
     "type": "text",
     "placeholders": {}
   },
-  "Filter by": "Klase pa",
+  "Filter by": "Filtra per",
   "@Filter by": {
     "description": "Title for list of terms to filter grades by",
     "type": "text",
     "placeholders": {}
   },
-  "Grades": "Nòt",
+  "Grades": "Qualificacions",
   "@Grades": {
     "description": "Label for the \"Grades\" tab in course details",
     "type": "text",
     "placeholders": {}
   },
-  "Syllabus": "Pwogram",
+  "Syllabus": "Temari",
   "@Syllabus": {
     "description": "Label for the \"Syllabus\" tab in course details",
     "type": "text",
     "placeholders": {}
   },
-  "Front Page": "Premye Paj",
+  "Front Page": "Pàgina frontal",
   "@Front Page": {
     "description": "Label for the \"Front Page\" tab in course details",
     "type": "text",
     "placeholders": {}
   },
-  "Summary": "Rezime",
+  "Summary": "Resum",
   "@Summary": {
     "description": "Label for the \"Summary\" tab in course details",
     "type": "text",
     "placeholders": {}
   },
-  "Send a message about this course": "Voye yon mesaj osijè e kou sa a",
+  "Send a message about this course": "Envia un missatge sobre aquest curs",
   "@Send a message about this course": {
     "description": "Accessibility hint for the course messaage floating action button",
     "type": "text",
     "placeholders": {}
   },
-  "Total Grade": "Klas Total",
+  "Total Grade": "Qualificació total",
   "@Total Grade": {
     "description": "Label for the total grade in the course",
     "type": "text",
     "placeholders": {}
   },
-  "Graded": "Klase",
+  "Graded": "Qualificat",
   "@Graded": {
     "description": "Label for assignments that have been graded",
     "type": "text",
     "placeholders": {}
   },
-  "Submitted": "Soumèt",
+  "Submitted": "Entregat",
   "@Submitted": {
     "description": "Label for assignments that have been submitted",
     "type": "text",
     "placeholders": {}
   },
-  "Not Submitted": "Pa Soumèt",
+  "Not Submitted": "No entregat",
   "@Not Submitted": {
     "description": "Label for assignments that have not been submitted",
     "type": "text",
     "placeholders": {}
   },
-  "Late": "An reta",
+  "Late": "Tardà",
   "@Late": {
     "description": "Label for assignments that have been marked late or submitted late",
     "type": "text",
     "placeholders": {}
   },
-  "Missing": "Manke",
+  "Missing": "Falta",
   "@Missing": {
     "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
     "type": "text",
@@ -634,37 +634,37 @@
     "type": "text",
     "placeholders": {}
   },
-  "All Grading Periods": "Tout Peryòd Klasman",
+  "All Grading Periods": "Tots els períodes de qualificació",
   "@All Grading Periods": {
     "description": "Label for selecting all grading periods",
     "type": "text",
     "placeholders": {}
   },
-  "No Assignments": "Okenn Sesyon",
+  "No Assignments": "No hi ha cap tasca",
   "@No Assignments": {
     "description": "Title for the no assignments message",
     "type": "text",
     "placeholders": {}
   },
-  "It looks like assignments haven't been created in this space yet.": "Ta sanble poko gen devwa ki kreye nan espas sa a.",
+  "It looks like assignments haven't been created in this space yet.": "Sembla que en aquest espai encara no s'ha creat cap tasca.",
   "@It looks like assignments haven't been created in this space yet.": {
     "description": "Message for no assignments",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading the summary details for this course.": "Te gen yon erè nan chajman rezime detay kou sa a.",
+  "There was an error loading the summary details for this course.": "S'ha produït un error en carregar els detalls de resumen d'aquest curs.",
   "@There was an error loading the summary details for this course.": {
     "description": "Message shown when the course summary could not be loaded",
     "type": "text",
     "placeholders": {}
   },
-  "No Summary": "Okenn Rezime",
+  "No Summary": "Cap resum",
   "@No Summary": {
     "description": "Title displayed when there are no items in the course summary",
     "type": "text",
     "placeholders": {}
   },
-  "This course does not have any assignments or calendar events yet.": "Kou sa a poko gen devwa oswa kalandriye aktivite.",
+  "This course does not have any assignments or calendar events yet.": "Aquest curs encara no té cap tasca o esdeveniment al calendari.",
   "@This course does not have any assignments or calendar events yet.": {
     "description": "Message displayed when there are no items in the course summary",
     "type": "text",
@@ -679,7 +679,7 @@
       "pointsPossible": {}
     }
   },
-  "contentDescriptionScoreOutOfPointsPossible": "{score} sou {pointsPossible} pwen",
+  "contentDescriptionScoreOutOfPointsPossible": "{score} de {pointsPossible} punts",
   "@contentDescriptionScoreOutOfPointsPossible": {
     "description": "Formatted string for a student score out of the points possible",
     "type": "text",
@@ -688,7 +688,7 @@
       "pointsPossible": {}
     }
   },
-  "gradesSubjectMessage": "Konsènan: {studentName}, Nòt",
+  "gradesSubjectMessage": "Sobre: {studentName}, qualificacions",
   "@gradesSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's grades",
     "type": "text",
@@ -696,7 +696,7 @@
       "studentName": {}
     }
   },
-  "syllabusSubjectMessage": "Konsènan: {studentName}, Pwogram",
+  "syllabusSubjectMessage": "Sobre: {studentName}, temari",
   "@syllabusSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a course syllabus",
     "type": "text",
@@ -704,7 +704,7 @@
       "studentName": {}
     }
   },
-  "frontPageSubjectMessage": "Konsènan: {studentName}, Premye Paj",
+  "frontPageSubjectMessage": "Sobre: {studentName}, pàgina frontal",
   "@frontPageSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a course front page",
     "type": "text",
@@ -712,7 +712,7 @@
       "studentName": {}
     }
   },
-  "assignmentSubjectMessage": "Konsènan: {studentName}, Devwa - {assignmentName}",
+  "assignmentSubjectMessage": "Sobre: {studentName}, tasca - {assignmentName}",
   "@assignmentSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a student's assignment",
     "type": "text",
@@ -721,7 +721,7 @@
       "assignmentName": {}
     }
   },
-  "eventSubjectMessage": "Konsènan: {studentName}, Aktivite - {eventTitle}",
+  "eventSubjectMessage": "Sobre: {studentName}, esdeveniment - {eventTitle}",
   "@eventSubjectMessage": {
     "description": "The subject line for a message to a teacher regarding a calendar event",
     "type": "text",
@@ -730,19 +730,19 @@
       "eventTitle": {}
     }
   },
-  "There is no page information available.": "Pa gen oken enfòmasyon paj disponib.",
+  "There is no page information available.": "No hi ha informació disponible sobre la pàgina.",
   "@There is no page information available.": {
     "description": "Description for when no page information is available",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment Details": "Detay Sesyon",
+  "Assignment Details": "Detalls de la tasca",
   "@Assignment Details": {
     "description": "Title for the page that shows details for an assignment",
     "type": "text",
     "placeholders": {}
   },
-  "assignmentTotalPoints": "{points} pwen",
+  "assignmentTotalPoints": "{points} punts",
   "@assignmentTotalPoints": {
     "description": "Label used for the total points the assignment is worth",
     "type": "text",
@@ -750,7 +750,7 @@
       "points": {}
     }
   },
-  "assignmentTotalPointsAccessible": "{points} pwen",
+  "assignmentTotalPointsAccessible": "{points} punts",
   "@assignmentTotalPointsAccessible": {
     "description": "Screen reader label used for the total points the assignment is worth",
     "type": "text",
@@ -758,25 +758,25 @@
       "points": {}
     }
   },
-  "Due": "Delè",
+  "Due": "Venciment",
   "@Due": {
     "description": "Label for an assignment due date",
     "type": "text",
     "placeholders": {}
   },
-  "Grade": "Klas",
+  "Grade": "Qualificació",
   "@Grade": {
     "description": "Label for the section that displays an assignment's grade",
     "type": "text",
     "placeholders": {}
   },
-  "Locked": "Bloke",
+  "Locked": "Bloquejat",
   "@Locked": {
     "description": "Label for when an assignment is locked",
     "type": "text",
     "placeholders": {}
   },
-  "assignmentLockedModule": "Modil \"{moduleName}\" bloke devwa sa a.",
+  "assignmentLockedModule": "El mòdul “{moduleName}” bloqueja aquesta tasca.",
   "@assignmentLockedModule": {
     "description": "The locked description when an assignment is locked by a module",
     "type": "text",
@@ -784,127 +784,127 @@
       "moduleName": {}
     }
   },
-  "Remind Me": "Raple m",
+  "Remind Me": "Recorda-m'ho",
   "@Remind Me": {
     "description": "Label for the row to set reminders",
     "type": "text",
     "placeholders": {}
   },
-  "Set reminder switch": "Regle entèriptè rapèl",
+  "Set reminder switch": "Estableix el canvi del recordatori",
   "@Set reminder switch": {
     "description": "Label for the switch to set a reminder",
     "type": "text",
     "placeholders": {}
   },
-  "Set a date and time to be notified of this specific assignment.": "Antre yon dat ak yon lè pou yo raple w devwa espesyal sa a.",
+  "Set a date and time to be notified of this specific assignment.": "Establiu una data i hora per rebre una notificació sobre aquesta tasca concreta.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this assignment on…": "Y ap raple w devwa sa a le...",
+  "You will be notified about this assignment on…": "Rebreu una notificació sobre aquesta tasca el...",
   "@You will be notified about this assignment on…": {
     "description": "Description for when a reminder is set",
     "type": "text",
     "placeholders": {}
   },
-  "Description": "Deskripsyon",
+  "Description": "Descripció",
   "@Description": {
     "description": "Label for the description of the assignment",
     "type": "text",
     "placeholders": {}
   },
-  "Instructions": "Enstriksyon",
+  "Instructions": "Instruccions",
   "@Instructions": {
     "description": "Label for the description of the assignment when it has quiz instructions",
     "type": "text",
     "placeholders": {}
   },
-  "No description": "Pa gen deskripsyon",
+  "No description": "Sense descripció",
   "@No description": {
     "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
-  "Send a message about this assignment": "Voye yon mesaj osijè de devwa sa a",
+  "Send a message about this assignment": "Envia un missatge sobre aquesta tasca",
   "@Send a message about this assignment": {
     "description": "Accessibility hint for the assignment messaage floating action button",
     "type": "text",
     "placeholders": {}
   },
-  "This app is not authorized for use.": "Pa gen otorizasyon pou itilize app sa a.",
+  "This app is not authorized for use.": "Aquesta aplicació no té autorització perquè s'utilitzi.",
   "@This app is not authorized for use.": {
     "description": "The error shown when the app being used is not verified by Canvas",
     "type": "text",
     "placeholders": {}
   },
-  "The server you entered is not authorized for this app.": "Sèvè w antre a pa otorize pou app sa a.",
+  "The server you entered is not authorized for this app.": "El servidor que heu introduït no té autorització per a aquesta aplicació.",
   "@The server you entered is not authorized for this app.": {
     "description": "The error shown when the desired login domain is not verified by Canvas",
     "type": "text",
     "placeholders": {}
   },
-  "The user agent for this app is not authorized.": "Ajan itilizatè app sa a pa otorize.",
+  "The user agent for this app is not authorized.": "L'agent d'usuari per a aquesta aplicació no està autoritzat.",
   "@The user agent for this app is not authorized.": {
     "description": "The error shown when the user agent during verification is not verified by Canvas",
     "type": "text",
     "placeholders": {}
   },
-  "We were unable to verify the server for use with this app.": "Nou pa kapab verifye sèvè a pou li ka itilize ak app sa a.",
+  "We were unable to verify the server for use with this app.": "No hem pogut verificar si el servidor es pot utilitzar amb aquesta aplicació.",
   "@We were unable to verify the server for use with this app.": {
     "description": "The generic error shown when we are unable to verify with Canvas",
     "type": "text",
     "placeholders": {}
   },
-  "Reminders": "Rapèl",
+  "Reminders": "Recordatoris",
   "@Reminders": {
     "description": "Name of the system notification channel for assignment and event reminders",
     "type": "text",
     "placeholders": {}
   },
-  "Notifications for reminders about assignments and calendar events": "Notifikasyon pou rapèl osijè de devwa ak kalandriye aktivite yo",
+  "Notifications for reminders about assignments and calendar events": "Notificacions de recordatoris sobre tasques i esdeveniments del calendari",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
     "type": "text",
     "placeholders": {}
   },
-  "Not a parent?": "Ou pa yon paran?",
+  "Not a parent?": "No sou un progenitor?",
   "@Not a parent?": {
     "description": "Title for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders": {}
   },
-  "We couldn't find any students associated with this account": "Nou paka jwenn okenn elèv ki asosye a kont sa a",
+  "We couldn't find any students associated with this account": "No hem trobat cap estudiant associat amb aquest compte",
   "@We couldn't find any students associated with this account": {
     "description": "Subtitle for the screen that shows when the user is not observing any students",
     "type": "text",
     "placeholders": {}
   },
-  "Are you a student or teacher?": "Ou se pwofesè oswa elèv?",
+  "Are you a student or teacher?": "Sou un estudiant o professor?",
   "@Are you a student or teacher?": {
     "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
     "type": "text",
     "placeholders": {}
   },
-  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Yonn nan lòt aplikasyon nou yo kapab pi bon. Tape sou li pou vizite Play Store la.",
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu-ne una per anar a Play Store.",
   "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
     "description": "Description of options to view other Canvas apps in the Play Store",
     "type": "text",
     "placeholders": {}
   },
-  "Return to Login": "Retounen nan Koneksyon",
+  "Return to Login": "Torna a l'inici de sessió",
   "@Return to Login": {
     "description": "Label for the button that returns the user to the login screen",
     "type": "text",
     "placeholders": {}
   },
-  "STUDENT": "ELÈV",
+  "STUDENT": "ESTUDIANT",
   "@STUDENT": {
     "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
     "placeholders": {}
   },
-  "TEACHER": "PWOFESÈ",
+  "TEACHER": "PROFESSOR",
   "@TEACHER": {
     "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
     "type": "text",
@@ -916,43 +916,43 @@
     "type": "text",
     "placeholders": {}
   },
-  "Canvas Teacher": "Pwofesè Canvas",
+  "Canvas Teacher": "Canvas Teacher",
   "@Canvas Teacher": {
     "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
     "type": "text",
     "placeholders": {}
   },
-  "No Alerts": "Pa gen Alèt",
+  "No Alerts": "Cap avís",
   "@No Alerts": {
     "description": "The title for the empty message to show to users when there are no alerts for the student.",
     "type": "text",
     "placeholders": {}
   },
-  "There’s nothing to be notified of yet.": "Poko gen anyen ki merite pou yo avèti w.",
+  "There’s nothing to be notified of yet.": "Encara no hi ha res que s'hagi de notificar.",
   "@There’s nothing to be notified of yet.": {
     "description": "The empty message to show to users when there are no alerts for the student.",
     "type": "text",
     "placeholders": {}
   },
-  "dismiss": "rejte",
+  "dismiss": "descarta",
   "@dismiss": {
     "description": "Accessibility label to dismiss an alert",
     "type": "text",
     "placeholders": {}
   },
-  "Course Announcement": "Anons Kou",
+  "Course Announcement": "Anunci del curs",
   "@Course Announcement": {
     "description": "Title for alerts when there is a course announcement",
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcement": "Anons Enstitisyon",
+  "Institution Announcement": "Anunci de la institució",
   "@Institution Announcement": {
     "description": "Title for alerts when there is an institution announcement",
     "type": "text",
     "placeholders": {}
   },
-  "assignmentGradeAboveThreshold": "Nòt Devwa Plis Pase {threshold}",
+  "assignmentGradeAboveThreshold": "Qualificació de la tasca per sobre de {threshold}",
   "@assignmentGradeAboveThreshold": {
     "description": "Title for alerts when an assignment grade is above the threshold value",
     "type": "text",
@@ -960,7 +960,7 @@
       "threshold": {}
     }
   },
-  "assignmentGradeBelowThreshold": "Nòt Devwa Mwens Pase {threshold}",
+  "assignmentGradeBelowThreshold": "Qualificació de la tasca per sota de {threshold}",
   "@assignmentGradeBelowThreshold": {
     "description": "Title for alerts when an assignment grade is below the threshold value",
     "type": "text",
@@ -968,7 +968,7 @@
       "threshold": {}
     }
   },
-  "courseGradeAboveThreshold": "Nòt Kou Plis Pase {threshold}",
+  "courseGradeAboveThreshold": "Qualificació del curs per sobre de {threshold}",
   "@courseGradeAboveThreshold": {
     "description": "Title for alerts when a course grade is above the threshold value",
     "type": "text",
@@ -976,7 +976,7 @@
       "threshold": {}
     }
   },
-  "courseGradeBelowThreshold": "Nòt Kou Mwens Pase {threshold}",
+  "courseGradeBelowThreshold": "Qualificació del curs per sota de {threshold}",
   "@courseGradeBelowThreshold": {
     "description": "Title for alerts when a course grade is below the threshold value",
     "type": "text",
@@ -984,49 +984,49 @@
       "threshold": {}
     }
   },
-  "Settings": "Paramèt",
+  "Settings": "Configuració",
   "@Settings": {
     "description": "Title for the settings screen",
     "type": "text",
     "placeholders": {}
   },
-  "Theme": "Tèm",
+  "Theme": "Tema",
   "@Theme": {
     "description": "Label for the light/dark theme section in the settings page",
     "type": "text",
     "placeholders": {}
   },
-  "Dark Mode": "Mòd Fonse",
+  "Dark Mode": "Mode fosc",
   "@Dark Mode": {
     "description": "Label for the button that enables dark mode",
     "type": "text",
     "placeholders": {}
   },
-  "Light Mode": "Mòd Klè",
+  "Light Mode": "Mode clar",
   "@Light Mode": {
     "description": "Label for the button that enables light mode",
     "type": "text",
     "placeholders": {}
   },
-  "High Contrast Mode": "Mòd Kontras Elve",
+  "High Contrast Mode": "Mode de contrast alt",
   "@High Contrast Mode": {
     "description": "Label for the switch that toggles high contrast mode",
     "type": "text",
     "placeholders": {}
   },
-  "Appearance": "Aparans",
+  "Appearance": "Aspecte",
   "@Appearance": {
     "description": "Label for the appearance section in the settings page",
     "type": "text",
     "placeholders": {}
   },
-  "Successfully submitted!": "Ale avèk siksè!",
+  "Successfully submitted!": "S'ha enviat correctament.",
   "@Successfully submitted!": {
     "description": "Title displayed in the grade cell for an assignment that has been submitted",
     "type": "text",
     "placeholders": {}
   },
-  "submissionStatusSuccessSubtitle": "Devwa sa a te soumèt nan dat {date} a {time} li an atant pou yo evalye li",
+  "submissionStatusSuccessSubtitle": "Aquesta tasca es va entregar el {date} a les {time} i està a l'espera de qualificació",
   "@submissionStatusSuccessSubtitle": {
     "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
     "type": "text",
@@ -1035,7 +1035,7 @@
       "time": {}
     }
   },
-  "outOfPoints": "{howMany,plural, =1{Sou 1 pwen}other{Sou {points} pwen}}",
+  "outOfPoints": "{howMany,plural, =1{D'1 punt}other{De {points} punts}}",
   "@outOfPoints": {
     "description": "Description for an assignment grade that has points without a current scoroe",
     "type": "text",
@@ -1044,31 +1044,31 @@
       "howMany": {}
     }
   },
-  "Excused": "Egzante",
+  "Excused": "Excusat",
   "@Excused": {
     "description": "Grading status for an assignment marked as excused",
     "type": "text",
     "placeholders": {}
   },
-  "Complete": "Fini",
+  "Complete": "Complet",
   "@Complete": {
     "description": "Grading status for an assignment marked as complete",
     "type": "text",
     "placeholders": {}
   },
-  "Incomplete": "Enkonplè",
+  "Incomplete": "Incomplet",
   "@Incomplete": {
     "description": "Grading status for an assignment marked as incomplete",
     "type": "text",
     "placeholders": {}
   },
-  "minus": "mwens",
+  "minus": "menys",
   "@minus": {
     "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
     "type": "text",
     "placeholders": {}
   },
-  "latePenalty": "Penalite pou reta (-{pointsLost})",
+  "latePenalty": "Sanció per endarreriment (-{pointsLost})",
   "@latePenalty": {
     "description": "Text displayed when a late penalty has been applied to the assignment",
     "type": "text",
@@ -1076,7 +1076,7 @@
       "pointsLost": {}
     }
   },
-  "finalGrade": "Nòt Final: {grade}",
+  "finalGrade": "Qualificació final: {grade}",
   "@finalGrade": {
     "description": "Text that displays the final grade of an assignment",
     "type": "text",
@@ -1084,78 +1084,78 @@
       "grade": {}
     }
   },
-  "Alert Settings": "Paramèt Alèt",
+  "Alert Settings": "Configuració de l'avís",
   "@Alert Settings": {
     "type": "text",
     "placeholders": {}
   },
-  "Alert me when…": "Alète m lè...",
+  "Alert me when…": "Avisa'm quan...",
   "@Alert me when…": {
     "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
     "type": "text",
     "placeholders": {}
   },
-  "Course grade below": "Nòt kou pi ba a",
+  "Course grade below": "Qualificació del curs per sota de",
   "@Course grade below": {
     "description": "Label describing the threshold for when the course grade is below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Course grade above": "Nòt kou pi wo a",
+  "Course grade above": "Qualificació del curs per sobre de",
   "@Course grade above": {
     "description": "Label describing the threshold for when the course grade is above a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment missing": "Sesyon ki manke",
+  "Assignment missing": "Falta la tasca",
   "@Assignment missing": {
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade below": "Npot sesyon pi ba a",
+  "Assignment grade below": "Qualificació de la tasca per sota de",
   "@Assignment grade below": {
     "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Assignment grade above": "Npot sesyon pi wo a",
+  "Assignment grade above": "Qualificació de la tasca per sobre de",
   "@Assignment grade above": {
     "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
     "type": "text",
     "placeholders": {}
   },
-  "Course Announcements": "Anons Kou",
+  "Course Announcements": "Anuncis del curs",
   "@Course Announcements": {
     "type": "text",
     "placeholders": {}
   },
-  "Institution Announcements": "Anons Enstitisyon",
+  "Institution Announcements": "Anuncis de la institució",
   "@Institution Announcements": {
     "type": "text",
     "placeholders": {}
   },
-  "Never": "Jamè",
+  "Never": "Mai",
   "@Never": {
     "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
     "type": "text",
     "placeholders": {}
   },
-  "Grade percentage": "Pousantaj nòt",
+  "Grade percentage": "Percentatge de la qualificació",
   "@Grade percentage": {
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student's alerts.": "Te gen yon erè nan chajman alèt elèv ou a.",
+  "There was an error loading your student's alerts.": "S'ha produït un error en carregar els vostres avisos de l'estudiant.",
   "@There was an error loading your student's alerts.": {
     "type": "text",
     "placeholders": {}
   },
-  "Must be below 100": "Dwe enferyè a 100",
+  "Must be below 100": "Ha de ser inferior a 100",
   "@Must be below 100": {
     "type": "text",
     "placeholders": {}
   },
-  "mustBeBelowN": "Dwe enferyè a {percentage}",
+  "mustBeBelowN": "Ha de ser inferior a {percentage}",
   "@mustBeBelowN": {
     "description": "Validation error to the user that they must choose a percentage below 'n'",
     "type": "text",
@@ -1165,7 +1165,7 @@
       }
     }
   },
-  "mustBeAboveN": "Dwe siperyè a {percentage}",
+  "mustBeAboveN": "Ha de ser superior a {percentage}",
   "@mustBeAboveN": {
     "description": "Validation error to the user that they must choose a percentage above 'n'",
     "type": "text",
@@ -1175,119 +1175,119 @@
       }
     }
   },
-  "Teacher": "Pwofesè",
+  "Teacher": "Professor",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
     "type": "text",
     "placeholders": {}
   },
-  "Student": "Elèv",
+  "Student": "Estudiant",
   "@Student": {
     "description": "Label for the Student enrollment type",
     "type": "text",
     "placeholders": {}
   },
-  "TA": "TA",
+  "TA": "Auxiliar de professor",
   "@TA": {
     "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
     "type": "text",
     "placeholders": {}
   },
-  "Observer": "Obsèvatè",
+  "Observer": "Observador",
   "@Observer": {
     "description": "Label for the Observer enrollment type",
     "type": "text",
     "placeholders": {}
   },
-  "Use Camera": "Itilize Kamera",
+  "Use Camera": "Utilitza la càmera",
   "@Use Camera": {
     "description": "Label for the action item that lets the user capture a photo using the device camera",
     "type": "text",
     "placeholders": {}
   },
-  "Upload File": "Transfere Fichye",
+  "Upload File": "Penja el fitxer",
   "@Upload File": {
     "description": "Label for the action item that lets the user upload a file from their device",
     "type": "text",
     "placeholders": {}
   },
-  "Choose from Gallery": "Chwazi nan Galri",
+  "Choose from Gallery": "Tria de la galeria",
   "@Choose from Gallery": {
     "description": "Label for the action item that lets the user select a photo from their device gallery",
     "type": "text",
     "placeholders": {}
   },
-  "Preparing…": "Preparasyon...",
+  "Preparing…": "S'està preparant...",
   "@Preparing…": {
     "description": "Message shown while a file is being prepared to attach to a message",
     "type": "text",
     "placeholders": {}
   },
-  "Add student with…": "Ajoute elèv ak...",
+  "Add student with…": "Afegeix un estudiant amb...",
   "@Add student with…": {
     "type": "text",
     "placeholders": {}
   },
-  "Add Student": "Ajoute Elèv",
+  "Add Student": "Afegeix un estudiant",
   "@Add Student": {
     "type": "text",
     "placeholders": {}
   },
-  "You are not observing any students.": "Ou pa p obsève okenn elèv.",
+  "You are not observing any students.": "No esteu observant cap estudiant.",
   "@You are not observing any students.": {
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your students.": "Te gen yon erè nan chajman elèv ou yo.",
+  "There was an error loading your students.": "S'ha produït un error en carregar els vostres estudiants.",
   "@There was an error loading your students.": {
     "type": "text",
     "placeholders": {}
   },
-  "Pairing Code": "Kòd Kouplaj",
+  "Pairing Code": "Codi d'emparellament",
   "@Pairing Code": {
     "type": "text",
     "placeholders": {}
   },
-  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Antre kòd kouplaj yo ba ou pou elèv la. Si kòd kouplaj la pa fonksyone, li kapab ekspire",
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduïu el codi d'emparellament d'estudiants que se us ha proporcionat. Si el codi d'emparellament no funciona, pot ser que hagi caducat",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
     "placeholders": {}
   },
-  "Your code is incorrect or expired.": "Kòd ou a enkòrèk oswa li ekspire.",
+  "Your code is incorrect or expired.": "El vostre codi es incorrecte o ha caducat.",
   "@Your code is incorrect or expired.": {
     "type": "text",
     "placeholders": {}
   },
-  "QR Code": "Kòd QR",
+  "QR Code": "Codi QR",
   "@QR Code": {
     "type": "text",
     "placeholders": {}
   },
-  "Add new student": "Ajoute nouvo elèv",
+  "Add new student": "Afegeix un estudiant nou",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
     "type": "text",
     "placeholders": {}
   },
-  "Event": "Aktivite",
+  "Event": "Esdeveniment",
   "@Event": {
     "description": "Title for the event details screen",
     "type": "text",
     "placeholders": {}
   },
-  "Date": "Dat",
+  "Date": "Data",
   "@Date": {
     "description": "Label for the event date",
     "type": "text",
     "placeholders": {}
   },
-  "Location": "Anplasman",
+  "Location": "Ubicació",
   "@Location": {
     "description": "Label for the location information",
     "type": "text",
     "placeholders": {}
   },
-  "No Location Specified": "Okenn Anplasman Espesyal",
+  "No Location Specified": "No s'ha especificat cap ubicació",
   "@No Location Specified": {
     "description": "Description for events that do not have a location",
     "type": "text",
@@ -1302,235 +1302,235 @@
       "endAt": {}
     }
   },
-  "Set a date and time to be notified of this event.": "Antre yon dat ak yon lè pou yo raple w aktivite sa a.",
+  "Set a date and time to be notified of this event.": "Establiu una data i hora per rebre una notificació sobre aquest esdeveniment.",
   "@Set a date and time to be notified of this event.": {
     "description": "Description for row to set event reminders",
     "type": "text",
     "placeholders": {}
   },
-  "You will be notified about this event on…": "Y ap raple w de aktivite sa a le...",
+  "You will be notified about this event on…": "Rebreu una notificació sobre aquest esdeveniment el...",
   "@You will be notified about this event on…": {
     "description": "Description for when an event reminder is set",
     "type": "text",
     "placeholders": {}
   },
-  "Share Your Love for the App": "Pataje lanmou ou genyen pou App la",
+  "Share Your Love for the App": "Compartiu l'interès que us desperta l'aplicació",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
     "type": "text",
     "placeholders": {}
   },
-  "Tell us about your favorite parts of the app": "Di nou kisa w pi renmen nan app la",
+  "Tell us about your favorite parts of the app": "Expliqueu-nos quines són les parts preferides de l'aplicació",
   "@Tell us about your favorite parts of the app": {
     "description": "Description for option to open the app store",
     "type": "text",
     "placeholders": {}
   },
-  "Legal": "Legal",
+  "Legal": "Jurídic",
   "@Legal": {
     "description": "Label for legal information option",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy policy, terms of use, open source": "Politik konfidansyalite, kondisyon itilizasyon, open source",
+  "Privacy policy, terms of use, open source": "Política de privacitat, condicions d'ús, font oberta",
   "@Privacy policy, terms of use, open source": {
     "description": "Description for legal information option",
     "type": "text",
     "placeholders": {}
   },
-  "Idea for Canvas Parent App [Android]": "Ide pou app Canvas Parent [Android]",
+  "Idea for Canvas Parent App [Android]": "Idea per a l'aplicació Canvas Parent (Android)",
   "@Idea for Canvas Parent App [Android]": {
     "description": "The subject for the email to request a feature",
     "type": "text",
     "placeholders": {}
   },
-  "The following information will help us better understand your idea:": "Enfòmasyon annapre yo ap ede nou konprann ide ou a pi byen:",
+  "The following information will help us better understand your idea:": "La informació següent ens ajudarà a conèixer millor la vostra idea:",
   "@The following information will help us better understand your idea:": {
     "description": "The header for the users information that is attached to a feature request",
     "type": "text",
     "placeholders": {}
   },
-  "Domain:": "Domèn:",
+  "Domain:": "Domini:",
   "@Domain:": {
     "description": "The label for the Canvas domain of the logged in user",
     "type": "text",
     "placeholders": {}
   },
-  "User ID:": "Non Itilizatè:",
+  "User ID:": "ID d'usuari:",
   "@User ID:": {
     "description": "The label for the Canvas user ID of the logged in user",
     "type": "text",
     "placeholders": {}
   },
-  "Email:": "Imèl:",
+  "Email:": "Adreça electrònica:",
   "@Email:": {
     "description": "The label for the eamil of the logged in user",
     "type": "text",
     "placeholders": {}
   },
-  "Locale:": "Lokal:",
+  "Locale:": "Zona:",
   "@Locale:": {
     "description": "The label for the locale of the logged in user",
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "Politik Konfidansyalite",
+  "Privacy Policy": "Política de privacitat",
   "@Privacy Policy": {
     "description": "Label for the privacy policy",
     "type": "text",
     "placeholders": {}
   },
-  "Terms of Use": "Kondisyon Itilizasyon",
+  "Terms of Use": "Condicions d'ús",
   "@Terms of Use": {
     "description": "Label for the terms of use",
     "type": "text",
     "placeholders": {}
   },
-  "Canvas on GitHub": "Canvas sou GitHub",
+  "Canvas on GitHub": "Canvas a GitHub",
   "@Canvas on GitHub": {
     "description": "Label for the button that opens the Canvas project on GitHub's website",
     "type": "text",
     "placeholders": {}
   },
-  "There was a problem loading the Terms of Use": "Te gen yon pwoblèm nan chajman Kondisyon Itilizasyon yo",
+  "There was a problem loading the Terms of Use": "S'ha produït un problema en carregar les condicions d'ús",
   "@There was a problem loading the Terms of Use": {
     "type": "text",
     "placeholders": {}
   },
-  "Device": "Aparèy",
+  "Device": "Dispositiu",
   "@Device": {
     "description": "Label used for device manufacturer/model in the error report",
     "type": "text",
     "placeholders": {}
   },
-  "OS Version": "Vèsyon OS",
+  "OS Version": "Versió del sistema operatiu",
   "@OS Version": {
     "description": "Label used for device operating system version in the error report",
     "type": "text",
     "placeholders": {}
   },
-  "Version Number": "Nimewo Vèsyon",
+  "Version Number": "Número de versió",
   "@Version Number": {
     "description": "Label used for the app version number in the error report",
     "type": "text",
     "placeholders": {}
   },
-  "Report A Problem": "Rapòte yon Pwoblèm",
+  "Report A Problem": "Informeu d'un problema",
   "@Report A Problem": {
     "description": "Title used for generic dialog to report problems",
     "type": "text",
     "placeholders": {}
   },
-  "Subject": "Sijè",
+  "Subject": "Assumpte",
   "@Subject": {
     "description": "Label used for Subject text field",
     "type": "text",
     "placeholders": {}
   },
-  "A subject is required.": "Yon sijè obligatwa.",
+  "A subject is required.": "Cal un assumpte.",
   "@A subject is required.": {
     "description": "Error shown when the subject field is empty",
     "type": "text",
     "placeholders": {}
   },
-  "Email Address": "Adrès Imèl",
+  "Email Address": "Adreça electrònica",
   "@Email Address": {
     "description": "Label used for Email Address text field",
     "type": "text",
     "placeholders": {}
   },
-  "An email address is required.": "Yon adrès imèl obligatwa.",
+  "An email address is required.": "Cal una adreça electrònica.",
   "@An email address is required.": {
     "description": "Error shown when the email field is empty",
     "type": "text",
     "placeholders": {}
   },
-  "A description is required.": "Yon deskripsyon obligatwa.",
+  "A description is required.": "Cal una descripció.",
   "@A description is required.": {
     "description": "Error shown when the description field is empty",
     "type": "text",
     "placeholders": {}
   },
-  "How is this affecting you?": "Nan ki sans sa afekte w?",
+  "How is this affecting you?": "Com us afecta això?",
   "@How is this affecting you?": {
     "description": "Label used for the dropdown to select how severe the issue is",
     "type": "text",
     "placeholders": {}
   },
-  "send": "voye",
+  "send": "envia",
   "@send": {
     "description": "Label used for send button when reporting a problem",
     "type": "text",
     "placeholders": {}
   },
-  "Just a casual question, comment, idea, suggestion…": "Sèlman yon kesyon, yon kòmantè, yon ide... enfòmèl",
+  "Just a casual question, comment, idea, suggestion…": "Simplement una pregunta, un comentari, una idea, un suggeriment informal…",
   "@Just a casual question, comment, idea, suggestion…": {
     "type": "text",
     "placeholders": {}
   },
-  "I need some help but it's not urgent.": "Mwen bezwen èd men se pa ijan.",
+  "I need some help but it's not urgent.": "Necessito ajuda, però no és urgent.",
   "@I need some help but it's not urgent.": {
     "type": "text",
     "placeholders": {}
   },
-  "Something's broken but I can work around it to get what I need done.": "Gen yon entèripsyon men mwen ka kontounen li pou mwen jwenn sa mwen bezwen an.",
+  "Something's broken but I can work around it to get what I need done.": "Alguna cosa no funciona bé però per ara puc seguir treballant per tal d'acabar de fer allò que necessito.",
   "@Something's broken but I can work around it to get what I need done.": {
     "type": "text",
     "placeholders": {}
   },
-  "I can't get things done until I hear back from you.": "Mwen paka fè bagay yo jiskaske mwen tounen tande w.",
+  "I can't get things done until I hear back from you.": "No podré fer res fins que em respongueu.",
   "@I can't get things done until I hear back from you.": {
     "type": "text",
     "placeholders": {}
   },
-  "EXTREME CRITICAL EMERGENCY!!": "IJANS KRITIK EKSTRÈM!!",
+  "EXTREME CRITICAL EMERGENCY!!": "EMERGÈNCIA DE CRÍTICA IMPORTÀNCIA!!",
   "@EXTREME CRITICAL EMERGENCY!!": {
     "type": "text",
     "placeholders": {}
   },
-  "Not Graded": "Pa Klase",
+  "Not Graded": "Sense qualificació",
   "@Not Graded": {
     "description": "Description for an assignment has not been graded.",
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Normal": "Flux koneksyon: Nòmal",
+  "Login flow: Normal": "Flux d'inici de sessió: Normal",
   "@Login flow: Normal": {
     "description": "Description for the normal login flow",
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Canvas": "Flux koneksyon: Canvas",
+  "Login flow: Canvas": "Flux d'inici de sessió: Canvas",
   "@Login flow: Canvas": {
     "description": "Description for the Canvas login flow",
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Site Admin": "Flux koneksyon: Administratè Sit",
+  "Login flow: Site Admin": "Flux d'inici de sessió: Administrador del lloc web",
   "@Login flow: Site Admin": {
     "description": "Description for the Site Admin login flow",
     "type": "text",
     "placeholders": {}
   },
-  "Login flow: Skip mobile verify": "Flux koneksyon: Sote verifikasyon mobil",
+  "Login flow: Skip mobile verify": "Flux d'inici de sessió: Omet la verificació mòbil",
   "@Login flow: Skip mobile verify": {
     "description": "Description for the login flow that skips domain verification for mobile",
     "type": "text",
     "placeholders": {}
   },
-  "Act As User": "Pase pou Itilizatè",
+  "Act As User": "Actua com un usuari",
   "@Act As User": {
     "description": "Label for the button that allows the user to act (masquerade) as another user",
     "type": "text",
     "placeholders": {}
   },
-  "Stop Acting as User": "Sispann Pase pou Itilizatè",
+  "Stop Acting as User": "Deixa d'actuar com a usuari",
   "@Stop Acting as User": {
     "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
     "type": "text",
     "placeholders": {}
   },
-  "actingAsUser": "W ap aji tankou {userName}",
+  "actingAsUser": "Esteu fent de {userName}",
   "@actingAsUser": {
     "description": "Message shown while acting (masquerading) as another user",
     "type": "text",
@@ -1538,41 +1538,41 @@
       "userName": {}
     }
   },
-  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Aji tankou\" se koneksyon an tan ke moun sa a san modpas. W ap kapab fè nenpòt bagay kòmsi ou te itilizatè sa a, e pou lòt moun yo, se kòmsi se itilizatè sa a ki t ap fè yo. Men, jounal odit yo endike ke se te ou menm ki te fè aksyon yo nan non itilizatè sa a.",
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "“Actua com” vol dir bàsicament iniciar la sessió com aquest usuari sense una contrasenya. Podreu fer qualsevol acció com si fóssiu aquest usuari, i des del punt de vista dels altres usuaris, serà com si les hagués dut a terme aquest usuari. Tanmateix, els registres d'auditoria enregistren que heu sigut vós qui ha dut a terme les accions en nom de l'altre usuari.",
   "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
     "type": "text",
     "placeholders": {}
   },
-  "Domain": "Domèn",
+  "Domain": "Domini",
   "@Domain": {
     "description": "Text field hint for domain url input",
     "type": "text",
     "placeholders": {}
   },
-  "You must enter a valid domain": "Ou dwe antre yon domèn valid",
+  "You must enter a valid domain": "Heu d'introduir un domini vàlid",
   "@You must enter a valid domain": {
     "description": "Message displayed for domain input error",
     "type": "text",
     "placeholders": {}
   },
-  "User ID": "ID Itilizatè",
+  "User ID": "ID d'usuari",
   "@User ID": {
     "description": "Text field hint for user ID input",
     "type": "text",
     "placeholders": {}
   },
-  "You must enter a user id": "Ou dwe antre yon ID itilizatè",
+  "You must enter a user id": "Heu d'introduir un ID d'usuari",
   "@You must enter a user id": {
     "description": "Message displayed for user Id input error",
     "type": "text",
     "placeholders": {}
   },
-  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Te gen yon erè pandan w ap eseye pase pou itilizatè sa a. Tanpri verifye Domèn nan ak ID Itilizatè a epi eseye ankò.",
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "S'ha produït un error en intentar actuar com a aquest usuari. Comproveu l'ID d'usuari i el domini i torneu-ho a provar.",
   "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
     "type": "text",
     "placeholders": {}
   },
-  "endMasqueradeMessage": "W ap sispann pase pou {userName} epi retounen sou kont orijinal ou.",
+  "endMasqueradeMessage": "Deixareu d'actuar com a {userName} i tornareu al vostre compte original.",
   "@endMasqueradeMessage": {
     "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
     "type": "text",
@@ -1580,7 +1580,7 @@
       "userName": {}
     }
   },
-  "endMasqueradeLogoutMessage": "W ap sispann pase pou {userName} epi w ap dekonekte.",
+  "endMasqueradeLogoutMessage": "Deixareu d'actuar com a {userName} i es tancarà la vostra sessió.",
   "@endMasqueradeLogoutMessage": {
     "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
     "type": "text",
@@ -1588,78 +1588,78 @@
       "userName": {}
     }
   },
-  "Cancel": "Anile",
+  "Cancel": "Cancel·la",
   "@Cancel": {
     "type": "text",
     "placeholders": {}
   },
-  "next": "Pwochen",
+  "next": "Següent",
   "@next": {
     "type": "text",
     "placeholders": {}
   },
-  "ok": "DAKO",
+  "ok": "D'acord",
   "@ok": {
     "type": "text",
     "placeholders": {}
   },
-  "Yes": "Wi",
+  "Yes": "Sí",
   "@Yes": {
     "type": "text",
     "placeholders": {}
   },
-  "No": "Non",
+  "No": "No",
   "@No": {
     "type": "text",
     "placeholders": {}
   },
-  "Retry": "Re eseye",
+  "Retry": "Torna-ho a provar",
   "@Retry": {
     "type": "text",
     "placeholders": {}
   },
-  "Delete": "Efase",
+  "Delete": "Suprimeix",
   "@Delete": {
     "description": "Label used for general delete/remove actions",
     "type": "text",
     "placeholders": {}
   },
-  "Done": "Fini",
+  "Done": "Fet",
   "@Done": {
     "description": "Label for general done/finished actions",
     "type": "text",
     "placeholders": {}
   },
-  "expanded": "elaji",
+  "expanded": "desplegat",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
     "type": "text",
     "placeholders": {}
   },
-  "collapsed": "retresi",
+  "collapsed": "reduït",
   "@collapsed": {
     "description": "Description for the accessibility reader for list groups that are expanded",
     "type": "text",
     "placeholders": {}
   },
-  "An unexpected error occurred": "Yon erè fèt sanzatann",
+  "An unexpected error occurred": "S'ha produït un error inesperat",
   "@An unexpected error occurred": {
     "type": "text",
     "placeholders": {}
   },
-  "Launch External Tool": "Lanse Zouti Eksteryè",
+  "Launch External Tool": "Inicieu l'eina externa",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
     "type": "text",
     "placeholders": {}
   },
-  "Interactions on this page are limited by your institution.": "Enstitisyon ou an limite entèaksyon sou paj sa a.",
+  "Interactions on this page are limited by your institution.": "La vostra institució ha limitat les interaccions en aquesta pàgina.",
   "@Interactions on this page are limited by your institution.": {
     "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },
-  "dateAtTime": "{date} a {time}",
+  "dateAtTime": "{date} a les {time}",
   "@dateAtTime": {
     "description": "The string to format dates",
     "type": "text",
@@ -1668,7 +1668,7 @@
       "time": {}
     }
   },
-  "dueDateAtTime": "Delè {date} a {time}",
+  "dueDateAtTime": "Venç el {date} a les {time}",
   "@dueDateAtTime": {
     "description": "The string to format due dates",
     "type": "text",
@@ -1677,25 +1677,25 @@
       "time": {}
     }
   },
-  "No Due Date": "San Delè",
+  "No Due Date": "Sense data de venciment",
   "@No Due Date": {
     "description": "Label for assignments that do not have a due date",
     "type": "text",
     "placeholders": {}
   },
-  "Filter": "Filtè",
+  "Filter": "Filtre",
   "@Filter": {
     "description": "Label for buttons to filter what items are visible",
     "type": "text",
     "placeholders": {}
   },
-  "unread": "poko li",
+  "unread": "sense llegir",
   "@unread": {
     "description": "Label for things that are marked as unread",
     "type": "text",
     "placeholders": {}
   },
-  "unreadCount": "{count} poko li",
+  "unreadCount": "{count} sense llegir",
   "@unreadCount": {
     "description": "Formatted string for when there are a number of unread items",
     "type": "text",
@@ -1711,64 +1711,64 @@
       "count": {}
     }
   },
-  "There was an error loading this announcement": "Te gen yon erè nan chajman anons sa a",
+  "There was an error loading this announcement": "S'ha produït un error en carregar aquest anunci",
   "@There was an error loading this announcement": {
     "description": "Message shown when an announcement detail screen fails to load",
     "type": "text",
     "placeholders": {}
   },
-  "Network error": "Erè Rezo",
+  "Network error": "Error de xarxa",
   "@Network error": {
     "type": "text",
     "placeholders": {}
   },
-  "Under Construction": "An Konstriksyon",
+  "Under Construction": "En construcció",
   "@Under Construction": {
     "type": "text",
     "placeholders": {}
   },
-  "We are currently building this feature for your viewing pleasure.": "Pou kounye a n ap devlope fonksyon sa a pou nou ka fè w plezi.",
+  "We are currently building this feature for your viewing pleasure.": "Estem creant aquesta característica perquè pugueu gaudir de la visualització.",
   "@We are currently building this feature for your viewing pleasure.": {
     "type": "text",
     "placeholders": {}
   },
-  "Request Login Help Button": "Bouton pou Mande Èd pou Koneksyon",
+  "Request Login Help Button": "Botó Sol·liciteu ajuda per iniciar la sessió",
   "@Request Login Help Button": {
     "description": "Accessibility hint for button that opens help dialog for a login help request",
     "type": "text",
     "placeholders": {}
   },
-  "Request Login Help": "Mande Èd pou Koneksyon",
+  "Request Login Help": "Sol·liciteu ajuda per iniciar la sessió",
   "@Request Login Help": {
     "description": "Title of help dialog for a login help request",
     "type": "text",
     "placeholders": {}
   },
-  "I'm having trouble logging in": "Mwen gen difikilte pou konekte",
+  "I'm having trouble logging in": "Tinc problemes per iniciar la sessió",
   "@I'm having trouble logging in": {
     "description": "Subject of help dialog for a login help request",
     "type": "text",
     "placeholders": {}
   },
-  "An error occurred when trying to display this link": "Gen yon erè ki fèt pandan w ap eseye afiche lyen sa a",
+  "An error occurred when trying to display this link": "S'ha produït un error en provar de mostrar aquest enllaç",
   "@An error occurred when trying to display this link": {
     "description": "Error message shown when a link can't be opened",
     "type": "text",
     "placeholders": {}
   },
-  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Nou pa kapab afiche lyen sa a, petèt ke li se pou yon enstitisyon ke ou pa konekte sou li nan moman an.",
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "No podem mostrar aquest enllaç, pot ser que pertanyi a una institució en la que actualment no teniu la sessió iniciada.",
   "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
     "description": "Description for error page shown when clicking a link",
     "type": "text",
     "placeholders": {}
   },
-  "Link Error": "Lyen Erè",
+  "Link Error": "Error d'enllaç",
   "@Link Error": {
     "description": "Title for error page shown when clicking a link",
     "type": "text",
     "placeholders": {}
   },
-  "Open In Browser": "Ouvri nan Navigatè",
+  "Open In Browser": "Obre'l al navegador",
   "@Open In Browser": {
     "description": "Text for button to open a link in the browswer",
     "type": "text",

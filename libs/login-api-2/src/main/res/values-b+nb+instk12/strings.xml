@@ -67,7 +67,6 @@
     <string name="loginNearYou">Nær deg</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Rett bak deg</string>
-    <string name="loginMiles">%1$s engelske mil unna</string>
     <string name="loginCanvasHelp">Ser du ikke skolen din? Skriv in skolens URL eller tappe her for hjelp.</string>
     <string name="loginCanvasHelpWithUser">Skriv in skolens URL eller tappe her for hjelp.</string>
     <string name="loginHint">Finn din skole eller ditt distrikt</string>
@@ -102,7 +101,13 @@
 
     <string name="previousLoginTitle">Tidligere innlogginger</string>
     <string name="findMySchool">Finne skolen min</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">QR-kode</string>
+    <string name="locateQRCode">Lokalisere QR-kode</string>
+    <string name="qrCodeExplanation">Du finner QR-koden på nettet i kontoprofilen din. Klikk \'QR for mobil-innlogging\' i listen.</string>
+    <string name="qrCodeScanningPrompt">Skann en QR-kode fra Canvas for å begynne.</string>
+    <string name="loginWithQRCodeError">Det oppstod en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.</string>
+    <string name="invalidQRCodeError">Skann en QR-kode generert av Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Skjermbilde som viser plassering av QR-kodegenerering i nettleser</string>
     <string name="whatsYourSchoolName">Hva er navnet på skolen din?</string>
     <string name="next">Neste</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

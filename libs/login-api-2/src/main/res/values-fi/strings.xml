@@ -64,11 +64,9 @@
     <string name="logout_no">Ei</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">Lähistöllä</string>
     <string name="loginCanvasNetwork">Canvas-verkosto</string>
     <string name="loginRightBehindYou">Aivan takanasi</string>
-    <string name="loginMiles">%1$s kilometrin päässä</string>
     <string name="loginCanvasHelp">Etkö näe kouluasi? Syötä koulun URL tai napauta tästä ohjeet.</string>
     <string name="loginCanvasHelpWithUser">Syötä koulun URL tai napauta tästä ohjeet.</string>
     <string name="loginHint">Etsi koulusi tai alueesi</string>
@@ -103,7 +101,13 @@
 
     <string name="previousLoginTitle">Edelliset kirjautumiset</string>
     <string name="findMySchool">Etsi kouluni</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">Viivakoodi</string>
+    <string name="locateQRCode">Etsi viivakoodi</string>
+    <string name="qrCodeExplanation">Löydät viivakoodin verkosta tiliprofiilistasi. Saat mobiilikirjautumistunnuksesi napauttamalla luettelosta.</string>
+    <string name="qrCodeScanningPrompt">Kirjaudu sisään skannaamalla viivakoodi Canvas-sovelluksesta</string>
+    <string name="loginWithQRCodeError">Sisäänkirjautumisessa tapahtui virhe. Luo toinen viivakoodi ja yritä uudelleen.</string>
+    <string name="invalidQRCodeError">Skannaa Canvasin luoma viivakoodi.</string>
+    <string name="qrCodeScreenshotContentDescription">Leikekuva, joka näyttää viivakoodin sijainnin selaimessa.</string>
     <string name="whatsYourSchoolName">Mikä on koulusi nimi?</string>
     <string name="next">Seuraava</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

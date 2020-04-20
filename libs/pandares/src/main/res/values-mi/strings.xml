@@ -1125,4 +1125,23 @@
     <string name="a11y_letterGrade">%s.</string>
     <string name="a11y_gradeCellContentDescription">%s %s</string>
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s, %s</string>
+    <plurals name="minutes">
+        <item quantity="one">%s Meneti</item>
+        <item quantity="other">%s meneti</item>
+    </plurals>
+
+    <!-- Conferences-->
+    <string name="noConferencesTitle">Kaore he hui</string>
+    <string name="noConferencesMessage">Kaore he hui hei whakātu.</string>
+    <string name="noConferenceDescription">Kaore he kōrero mo tēnei hui</string>
+    <string name="conferenceListError">He hapa i puta i te wā e uta ana i ō hui</string>
+    <string name="conferenceConcludedDateAtTime">Kua mutu %s ī %s</string>
+    <string name="conferenceStartedDateAtTime">Kua tīmata %s ī %s</string>
+    <string name="notStarted">Kaore i timata</string>
+    <string name="inProgress">I roto i te ahunga whakamua</string>
+    <string name="join">Hono</string>
+    <string name="newConferences">Ngā hui hou</string>
+    <string name="concludedConferences">Ngā Hui kua oti</string>
+    <string name="conferenceDetails">Ngā taipitopito hui</string>
+    <string name="recordings">Ngā ōrongongo</string>
 </resources>
