@@ -1182,11 +1182,7 @@
     <string name="a11y_gradeCellContentDescriptionWithLetterGrade">%s %s، %s</string>
     <plurals name="minutes">
         <item quantity="zero">%s من الدقائق</item>
-        <item quantity="zero">%s من الدقائق</item>
         <item quantity="one">%s دقيقة</item>
-        <item quantity="two">%s من الدقائق</item>
-        <item quantity="few">%s من الدقائق</item>
-        <item quantity="many">%s من الدقائق</item>
         <item quantity="two">%s من الدقائق</item>
         <item quantity="few">%s من الدقائق</item>
         <item quantity="many">%s من الدقائق</item>
