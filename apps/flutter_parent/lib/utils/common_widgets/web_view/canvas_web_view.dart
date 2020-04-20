@@ -162,11 +162,17 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
       builder: (context, AsyncSnapshot<String> snapshot) => FutureBuilder(
         future: widget.futureDelay,
         builder: (context, delay) {
+          // We're delaying if we're still waiting for data (besides a pull to refresh, show the previous while waiting for new data)
           final delaying = (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) ||
               delay.connectionState == ConnectionState.waiting;
+
+          // If there is no content, and we're not delaying, then we can stop showing loading since pageFinished will never get called
+          final emptyContent = (snapshot.data == null || snapshot.data.isEmpty);
+          if (!delaying && emptyContent) _loading = false;
+
           return Stack(
             children: <Widget>[
-              if (!delaying) _contentBody(snapshot.data),
+              if (!delaying) _contentBody(snapshot.data, emptyContent),
               if (_loading || delaying)
                 // Wrap in a container that's the scaffold color so we don't get the gross black bar while webview is initializing
                 Container(
@@ -180,9 +186,9 @@ class _ResizingWebViewState extends State<_ResizingWebView> {
     );
   }
 
-  Widget _contentBody(String widgetContent) {
+  Widget _contentBody(String widgetContent, bool emptyContent) {
     // Check for empty content
-    if (widgetContent == null || widgetContent.isEmpty) {
+    if (emptyContent) {
       if (widget.emptyDescription == null || widget.emptyDescription.isEmpty) {
         return Container(); // No empty text, so just be empty
       } else {
