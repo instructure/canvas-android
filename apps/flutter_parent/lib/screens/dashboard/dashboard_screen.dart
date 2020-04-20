@@ -430,6 +430,12 @@ class DashboardState extends State<DashboardScreen> {
     locator<QuickNav>().push(context, ManageStudentsScreen(_students));
   }
 
+  _navigateToSettings(context) {
+    // Close the drawer, then push the Settings screen in
+    Navigator.of(context).pop();
+    locator<QuickNav>().pushRoute(context, PandaRouter.settings());
+  }
+
   _navigateToHelp(context) {
     // Close the drawer, then push the Help screen in
     Navigator.of(context).pop();
@@ -498,8 +504,7 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerManageStudents() =>
       ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
 
-  _navDrawerSettings() => ListTile(
-      title: Text(L10n(context).settings), onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.settings()));
+  _navDrawerSettings() => ListTile(title: Text(L10n(context).settings), onTap: () => _navigateToSettings(context));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),

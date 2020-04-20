@@ -505,6 +505,12 @@ void main() {
 
       // Test that settings screen was loaded
       expect(find.byType(SettingsScreen), findsOneWidget);
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      // Drawer should be closed
+      expect(find.byType(Drawer), findsNothing);
     });
 
     testWidgetsWithAccessibilityChecks('tapping Help from nav drawer shows help', (tester) async {
