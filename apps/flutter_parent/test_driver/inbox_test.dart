@@ -25,6 +25,7 @@ import 'driver_seed_utils.dart';
 import 'pages/assignment_details_page.dart';
 import 'pages/conversation_create_page.dart';
 import 'pages/conversation_list_page.dart';
+import 'pages/course_details_page.dart';
 import 'pages/course_grades_page.dart';
 import 'pages/dashboard_page.dart';
 
@@ -58,7 +59,10 @@ void main() {
     // Verify that the pre-seeded conversation shows up
     await DashboardPage.waitForRender(driver);
     await DashboardPage.openInbox(driver);
-    await ConversationListPage.verifyConversationDisplayed(driver, conversation, 0);
+    await ConversationListPage.verifyConversationDataDisplayed(driver, /*index*/ 0,
+        partialSubjects: [conversation.subject],
+        partialContexts: [conversation.contextName],
+        partialMessages: [conversation.lastMessage ?? conversation.lastAuthoredMessage]);
 
     // Create a conversation from the Inbox
     await ConversationListPage.initiateCreateEmail(driver, course); // Will this work with only one course?
@@ -68,7 +72,7 @@ void main() {
     await ConversationCreatePage.sendMail(driver); // Should send us back to conversation list
 
     // Verify that our new conversation shows up the conversation list
-    await ConversationListPage.verifyConversationDataDisplayed(driver, 0,
+    await ConversationListPage.verifyConversationDataDisplayed(driver, /*index*/ 0,
         partialMessages: ['Message 1 Body'], partialSubjects: [course.name]);
 
     // Back to the dashboard
@@ -82,6 +86,16 @@ void main() {
     await ConversationCreatePage.populateBody(driver, 'Grades Body');
     await ConversationCreatePage.sendMail(driver);
 
+    // Go to the syllabus page and send an email
+    await CourseDetailsPage.selectSyllabus(driver);
+    await CourseDetailsPage.initiateCreateEmail(driver);
+    await ConversationCreatePage.verifySubject(driver, 'Regarding: ${student.name}, Syllabus');
+    await ConversationCreatePage.populateBody(driver, 'Syllabus Body');
+    await ConversationCreatePage.sendMail(driver);
+
+    // Back to grades/assignments tab
+    CourseDetailsPage.selectGrades(driver);
+
     // Select an assignment and send an assignment-related email
     await CourseGradesPage.selectAssignment(driver, assignment);
     await AssignmentDetailsPage.initiateCreateEmail(driver);
@@ -94,14 +108,22 @@ void main() {
     await driver.tap(find.pageBack()); // grades list -> dashboard
 
     await DashboardPage.openInbox(driver);
-    await ConversationListPage.refresh(driver);
-    await Future.delayed(const Duration(seconds: 5));
+    await ConversationListPage.refresh(driver); // To make sure and load the latest emails
+    await Future.delayed(const Duration(seconds: 2)); // Give ourselves a moment to load
+    // The most recent email -- the assignment email -- should be on top (index 0)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 0,
-        partialSubjects: [student.name, assignment.name], // Assignment?
+        partialSubjects: [student.name, assignment.name],
+        partialContexts: [course.name],
         partialMessages: ['Assignment Body', student.name]);
+    // The syllabus email should be next (index 1)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 1,
-        partialSubjects: [student.name, "Grades"], // Assignment?
+        partialSubjects: [student.name, "Syllabus"],
+        partialContexts: [course.name],
+        partialMessages: ['Syllabus Body', student.name]);
+    // The grades email should be next (index 2)
+    await ConversationListPage.verifyConversationDataDisplayed(driver, 2,
+        partialSubjects: [student.name, "Grades"],
+        partialContexts: [course.name],
         partialMessages: ['Grades Body', student.name]);
-    //ConversationListPage.verifyConversationDataDisplayed(driver)
   }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
 }

@@ -13,40 +13,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:test/test.dart';
 
 class ConversationListPage {
-  static Future<void> verifyConversationDisplayed(FlutterDriver driver, Conversation conversation, int index) async {
-    var actualSubject = await driver.getText(find.byValueKey('conversation_subject_$index'));
-    expect(actualSubject, conversation.subject, reason: "Conversation subject");
-    var actualContext = await driver.getText(find.byValueKey('conversation_context_$index'));
-    expect(actualContext, conversation.contextName, reason: "Conversation context");
-    var message = await driver.getText(find.byValueKey('conversation_message_$index'));
-    expect(message, conversation.lastMessage ?? conversation.lastAuthoredMessage, reason: "Conversation message");
-  }
-
+  /// Since subjects/messages/contexts can be pretty complex, allow for portions of those
+  /// fields to be verified.
   static Future<void> verifyConversationDataDisplayed(FlutterDriver driver, int index,
       {List<String> partialSubjects: null,
       List<String> partialMessages: null,
       List<String> partialContexts: null}) async {
     if (partialSubjects != null) {
-      var fullText = await driver.getText(find.byValueKey('conversation_subject_$index'));
+      var finder = find.byValueKey('conversation_subject_$index');
+      await driver.scrollIntoView(finder);
+      var fullText = await driver.getText(finder);
       for (String partialSubject in partialSubjects) {
         expect(fullText.toLowerCase().contains(partialSubject.toLowerCase()), true,
             reason: "Message subject \"$partialSubject\" in \"$fullText\"");
       }
     }
     if (partialContexts != null) {
-      var fullText = await driver.getText(find.byValueKey('conversation_context_$index'));
+      var finder = find.byValueKey('conversation_context_$index');
+      await driver.scrollIntoView(finder);
+      var fullText = await driver.getText(finder);
       for (String partialContext in partialContexts) {
         expect(fullText.toLowerCase().contains(partialContext.toLowerCase()), true,
             reason: "Message context \"$partialContext\" in \"$fullText\"");
       }
     }
     if (partialMessages != null) {
-      var fullText = await driver.getText(find.byValueKey('conversation_message_$index'));
+      var finder = find.byValueKey('conversation_message_$index');
+      await driver.scrollIntoView(finder);
+      var fullText = await driver.getText(finder);
       for (String partialMessage in partialMessages) {
         expect(fullText.toLowerCase().contains(partialMessage.toLowerCase()), true,
             reason: "Message body \"$partialMessage\" in \"$fullText\"");

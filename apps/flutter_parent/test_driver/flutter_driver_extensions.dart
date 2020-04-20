@@ -52,4 +52,20 @@ extension AutoRefresh on FlutterDriver {
     // We're out of retries; one more unprotected attempt
     await this.tap(finder);
   }
+
+  Future<void> waitWithRefreshes(SerializableFinder finder, {int refreshes = 3}) async {
+    final refreshFinder = find.byType("RefreshIndicator");
+    for (int i = 0; i < refreshes; i++) {
+      try {
+        await this.waitFor(finder, timeout: Duration(seconds: 1));
+        return;
+      } catch (err) {
+        await this.scroll(refreshFinder, 0, 200, Duration(milliseconds: 200));
+        await Future.delayed(Duration(milliseconds: 500)); // Give ourselves time to load
+      }
+    }
+
+    // We're out of retries; one more unprotected attempt
+    await this.waitFor(finder);
+  }
 }
