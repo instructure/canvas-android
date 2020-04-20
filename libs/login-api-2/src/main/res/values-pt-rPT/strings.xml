@@ -67,7 +67,6 @@
     <string name="loginNearYou">Perto de si</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Atrás de si</string>
-    <string name="loginMiles">%1$s milhas distante</string>
     <string name="loginCanvasHelp">Não vê sua escola? Insira o URL da escola ou escreva para ajuda.</string>
     <string name="loginCanvasHelpWithUser">Insira o URL da escola ou escreva para ajuda.</string>
     <string name="loginHint">Encontrar a sua escola ou distrito</string>
@@ -100,7 +99,13 @@
 
     <string name="previousLoginTitle">Logins anteriores</string>
     <string name="findMySchool">Encontrar minha escola</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">Código QR</string>
+    <string name="locateQRCode">Localizar código QR</string>
+    <string name="qrCodeExplanation">Você encontrará o código QR na web no seu perfil de conta. Clique em "QR para Login Móvel" na lista.</string>
+    <string name="qrCodeScanningPrompt">Digitalize um código QR do Canvas para fazer o login</string>
+    <string name="loginWithQRCodeError">Houve um erro no registo. Por favor, gere outro QR Code e tente novamente.</string>
+    <string name="invalidQRCodeError">Por favor, digitalize um código QR gerado pela Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Captura de tela mostrando a localização da geração do código QR no navegador</string>
     <string name="whatsYourSchoolName">Qual é o nome da sua escola?</string>
     <string name="next">Próximo</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

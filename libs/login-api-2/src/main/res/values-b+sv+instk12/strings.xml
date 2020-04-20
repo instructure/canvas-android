@@ -64,11 +64,9 @@
     <string name="logout_no">Nej</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">Nära dig</string>
     <string name="loginCanvasNetwork">Canvas-nätverk</string>
     <string name="loginRightBehindYou">Precis bakom dig</string>
-    <string name="loginMiles">%1$s engelska mil bort</string>
     <string name="loginCanvasHelp">Ser du inte din skola? Fyll i skolans URL eller tryck här för att få hjälp.</string>
     <string name="loginCanvasHelpWithUser">Fyll i skolans URL eller tryck här för att få hjälp.</string>
     <string name="loginHint">Hitta din skola eller ditt distrikt</string>
@@ -103,6 +101,13 @@
 
     <string name="previousLoginTitle">Tidigare inloggningar</string>
     <string name="findMySchool">Hitta min skola</string>
+    <string name="loginWithQRCode">QR-kod</string>
+    <string name="locateQRCode">Lokalisera QR-kod</string>
+    <string name="qrCodeExplanation">Du hittar QR-koden på webben i din kontoprofil. Klicka på QR for Mobile Login i listan.</string>
+    <string name="qrCodeScanningPrompt">Skanna en QR-kod från Canvas för att logga in</string>
+    <string name="loginWithQRCodeError">Det gick inte att logga in. Generera en annan QR-kod och försök igen.</string>
+    <string name="invalidQRCodeError">Skanna en QR-kod som genererats i Canvas.</string>
+    <string name="qrCodeScreenshotContentDescription">Skärmdumpen visar platsen för QR-kodgenerering i webbläsaren</string>
     <string name="whatsYourSchoolName">Vad heter din skola?</string>
     <string name="next">Nästa</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "@@last_modified": "2020-04-03T11:02:53.662629",
   "alertsLabel": "Alertas",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -164,7 +164,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Toque para escolher os percursos que deseja ver no Calendário.",
+  "Tap to favorite the courses you want to see on the Calendar.": "Toque para escolher os percursos que pretende ver no Calendário.",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
     "type": "text",
@@ -1314,42 +1314,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Search the Canvas Guides": "Procurar nos Guias do Canvas",
-  "@Search the Canvas Guides": {
-    "description": "Label for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Find answers to common questions": "Encontre respostas para perguntas comuns",
-  "@Find answers to common questions": {
-    "description": "Description for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Report a Problem": "Reportar um problema",
-  "@Report a Problem": {
-    "description": "Label for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "If the app misbehaves, let us know": "Se a app não funcionar, conte-nos",
-  "@If the app misbehaves, let us know": {
-    "description": "Description for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Request a Feature": "Solicite um recurso",
-  "@Request a Feature": {
-    "description": "Label for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Have an idea to improve the app?": "Tem uma ideia de como melhorar a app?",
-  "@Have an idea to improve the app?": {
-    "description": "Description for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
   "Share Your Love for the App": "Partilhe o Seu Carinho pela App",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
@@ -1530,6 +1494,100 @@
     "type": "text",
     "placeholders": {}
   },
+  "Login flow: Normal": "Fluxo de login: Normal",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Fluxo de login: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Fluxo de login: Administrador do site",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Fluxo de login: Saltar verificação móvel",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Act As User": "Agir como Utilizador",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Parar de atuar como utilizador",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "actingAsUser": "Você está a agir como {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Atuar como\" é essencialmente fazer logon como esse utilizador sem uma palavra passe. Você será capaz de executar qualquer ação como se fosse este utilizador e de pontos de vista de outros utilizadores, será como se este utilizador executou-os. No entanto, registos de auditoria registam que você foi o único que realizou as ações em nome desse utilizador.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain": "Domínio",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "É necessário introduzir um domínio válido",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID": "ID do utilizador",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a user id": "É necessário introduzir uma id do utilizador",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Houve um erro ao tentar agir como este utilizador. Por favor, verifique o Domínio e o ID do Utilizador e tente novamente.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Vai deixar de agir como {userName} e voltar à sua conta original.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Você vai deixar de agir como {userName} e será desconectado.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
   "Cancel": "Cancelar",
   "@Cancel": {
     "type": "text",
@@ -1592,6 +1650,12 @@
   "Launch External Tool": "Lançar Ferramenta Externa",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "As interações nesta página são limitadas pela sua instituição.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },
@@ -1686,19 +1750,19 @@
     "type": "text",
     "placeholders": {}
   },
-  "An error occurred when trying to display this link": "Ocorreu um erro ao tentar exibir esta ligação",
+  "An error occurred when trying to display this link": "Ocorreu um erro ao tentar mostrar esta ligação",
   "@An error occurred when trying to display this link": {
     "description": "Error message shown when a link can't be opened",
     "type": "text",
     "placeholders": {}
   },
-  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Não podemos exibir esta ligação, ele pode pertencer a uma instituição na qual você não está atualmente conectado.",
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Não podemos mostrar esta ligação, ela pode pertencer a uma instituição na qual você não está atualmente ligado.",
   "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
     "description": "Description for error page shown when clicking a link",
     "type": "text",
     "placeholders": {}
   },
-  "Link Error": "Erro na ligação",
+  "Link Error": "Erro de Ligação",
   "@Link Error": {
     "description": "Title for error page shown when clicking a link",
     "type": "text",

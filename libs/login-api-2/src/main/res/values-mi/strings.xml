@@ -67,7 +67,6 @@
     <string name="loginNearYou">tata koe</string>
     <string name="loginCanvasNetwork">Canvas Whatunga</string>
     <string name="loginRightBehindYou">Mātou muri ia koe</string>
-    <string name="loginMiles">%1$s maero atu</string>
     <string name="loginCanvasHelp">Kaore i te kite i tō kura? E tomo te URL kura pātō konei hoki te tauturu rānei.</string>
     <string name="loginCanvasHelpWithUser">E tomo te URL kura pato konei hoki te tauturu rānei.</string>
     <string name="loginHint">Kimihia tō kura takiwa rānei</string>
@@ -102,7 +101,13 @@
 
     <string name="previousLoginTitle">Ngā takiurunga o mua</string>
     <string name="findMySchool">Kimihia taku kura</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">QR Waehere</string>
+    <string name="locateQRCode">Kimihia QR Waehere</string>
+    <string name="qrCodeExplanation">Ka kitea e koe tte QR waehere i runga i te ipurangi i roto i tō pūkete kōtaha. Pātō QR mo te Waea Haerēre Takiuru i roto i te rārangi.</string>
+    <string name="qrCodeScanningPrompt">Mātai he QR waehere mai i Canvas ki te takiuru</string>
+    <string name="loginWithQRCodeError">He hapa i puta i te wā e takiuru ana. Tēnā koa whakamahi he QR Waehere anō ka ngana anō.</string>
+    <string name="invalidQRCodeError">Tēnā koa mātai he QR Waehere kua whakamahia e Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Tangirua e whkātu ana rohe o te QR Waehere whakamahia i roto i te pūtirotiro</string>
     <string name="whatsYourSchoolName">He aha te ingoa o tō kura?</string>
     <string name="next">E haere ake nei</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

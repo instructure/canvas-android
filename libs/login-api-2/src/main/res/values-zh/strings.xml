@@ -67,7 +67,6 @@
     <string name="loginNearYou">在您附近</string>
     <string name="loginCanvasNetwork">Canvas 网络</string>
     <string name="loginRightBehindYou">在您身后</string>
-    <string name="loginMiles">距离 %1$s 英里</string>
     <string name="loginCanvasHelp">找不到您的学校？输入学校的网址或点击这里寻求帮助。</string>
     <string name="loginCanvasHelpWithUser">输入学校的网址或点击这里寻求帮助。</string>
     <string name="loginHint">查找您的学校或地区</string>
@@ -100,7 +99,13 @@
 
     <string name="previousLoginTitle">历史登录记录</string>
     <string name="findMySchool">查找我的学校</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">二维码</string>
+    <string name="locateQRCode">查找二维码</string>
+    <string name="qrCodeExplanation">您可在帐户个人资料的网页上找到二维码。点击列表中的“用于移动设备登录的二维码”。</string>
+    <string name="qrCodeScanningPrompt">从 Canvas 扫描二维码进行登录</string>
+    <string name="loginWithQRCodeError">登录时发生错误。请生成新的二维码并重试。</string>
+    <string name="invalidQRCodeError">请扫描 Canvas 生成的二维码</string>
+    <string name="qrCodeScreenshotContentDescription">在浏览器中显示二维码生成位置的截图</string>
     <string name="whatsYourSchoolName">您的学校名称是什么？</string>
     <string name="next">下一步</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

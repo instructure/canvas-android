@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "@@last_modified": "2020-04-03T11:02:53.662629",
   "alertsLabel": "Notiser",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1314,42 +1314,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Search the Canvas Guides": "Sök i Canvas guider",
-  "@Search the Canvas Guides": {
-    "description": "Label for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Find answers to common questions": "Hitta svaret på vanliga frågor",
-  "@Find answers to common questions": {
-    "description": "Description for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Report a Problem": "Rapportera ett problem",
-  "@Report a Problem": {
-    "description": "Label for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "If the app misbehaves, let us know": "Om appen inte fungerar bra, berätta det för oss",
-  "@If the app misbehaves, let us know": {
-    "description": "Description for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Request a Feature": "Begär en funktion",
-  "@Request a Feature": {
-    "description": "Label for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Have an idea to improve the app?": "Har du någon idé om hur appen kan förbättras?",
-  "@Have an idea to improve the app?": {
-    "description": "Description for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
   "Share Your Love for the App": "Dela din kärlek till appen",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
@@ -1530,6 +1494,100 @@
     "type": "text",
     "placeholders": {}
   },
+  "Login flow: Normal": "Inloggningsflöde: Normal",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Inloggningsflöde: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Inloggningsflöde: Webbplatsadmin",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Inloggningsflöde: Hoppa över mobilverifiering",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Act As User": "Agera som användare",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Sluta att agera som en användare",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "actingAsUser": "Du agerar som {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Att uppträda som\", loggar huvudsakligen in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du var den här användaren, och från andra användares synpunkter kommer det att upplevas som om den här användaren utförde dem. I historik-loggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain": "Domän",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Du måste ange en giltig domän",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID": "Användar-ID",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a user id": "Du måste ange ett giltigt användar-ID",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Ett fel inträffade under Agera som den här användaren. Kontrollera domänen och användar-ID:t och försök igen.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Du kommer att sluta agera som {userName} och återgå till ditt ursprungliga konto.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Du kommer att sluta agera som {userName} och loggas ut.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
   "Cancel": "Avbryt",
   "@Cancel": {
     "type": "text",
@@ -1592,6 +1650,12 @@
   "Launch External Tool": "Starta externt verktyg",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Interaktioner på den här sidan har begränsats av din institution.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },

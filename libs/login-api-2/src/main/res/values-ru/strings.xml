@@ -67,7 +67,6 @@
     <string name="loginNearYou">Рядом с вами</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Сразу за вами</string>
-    <string name="loginMiles">На расстоянии %1$s миль</string>
     <string name="loginCanvasHelp">Не видите свою школу? Введите URL школы или нажмите здесь для справки.</string>
     <string name="loginCanvasHelpWithUser">Введите URL школы или нажмите здесь для справки.</string>
     <string name="loginHint">Найдите свое учебное заведение или район</string>
@@ -100,7 +99,13 @@
 
     <string name="previousLoginTitle">Предыдущие идентификаторы</string>
     <string name="findMySchool">Найти мою школу</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">QR-код</string>
+    <string name="locateQRCode">Определить местонахождение кода QR</string>
+    <string name="qrCodeExplanation">QR-код находится в сети в профиле вашей учетной записи. Щелкните \'QR для входа с мобильного устройства\' в списке.</string>
+    <string name="qrCodeScanningPrompt">Отсканируйте QR-код в Canvas для входа в систему</string>
+    <string name="loginWithQRCodeError">Ошибка входа в систему. Сгенерируйте другой QR-код и попробуйте еще раз.</string>
+    <string name="invalidQRCodeError">Отсканируйте QR-код, сгенерированный Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Снимок экрана с отображением места генерирования QR-кода в браузере</string>
     <string name="whatsYourSchoolName">Как называется ваше учебное заведение?</string>
     <string name="next">Далее</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

@@ -67,7 +67,6 @@
     <string name="loginNearYou">V vaši bližini.</string>
     <string name="loginCanvasNetwork">Omrežje Canvas Network</string>
     <string name="loginRightBehindYou">Tik za vami.</string>
-    <string name="loginMiles">%1$s milj stran.</string>
     <string name="loginCanvasHelp">Ali svoje šole ne vidite? Za pomoč vnesite naslov URL šole ali tapnite tukaj.</string>
     <string name="loginCanvasHelpWithUser">Za pomoč vnesite naslov URL šole ali tapnite tukaj.</string>
     <string name="loginHint">Najdite svojo šolo ali okoliš.</string>
@@ -102,7 +101,13 @@
 
     <string name="previousLoginTitle">Predhodne prijave</string>
     <string name="findMySchool">Najdi mojo šolo</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">Koda QR</string>
+    <string name="locateQRCode">Poiščite kodo QR</string>
+    <string name="qrCodeExplanation">Kodo QR boste našli v svojem profilu računa na spletu. Na seznamu kliknite »QR za mobilno prijavo«.</string>
+    <string name="qrCodeScanningPrompt">Za prijavo v sistemu Canvas preberite kodo QR</string>
+    <string name="loginWithQRCodeError">Pri prijavi je prišlo do napake. Ustvarite novo kodo QR in poskusite znova.</string>
+    <string name="invalidQRCodeError">Preberite kodo QR, ustvarjeno v sistemu Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Posnetek zaslona, ki prikazuje, kje v brskalniku ustvarite kodo QR</string>
     <string name="whatsYourSchoolName">Kakšno je ime vaše šole?</string>
     <string name="next">Naprej</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

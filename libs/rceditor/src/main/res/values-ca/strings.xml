@@ -67,4 +67,6 @@
     <string name="rce_empty_message">Missatge</string>
     <string name="rce_empty_description">Afegeix una descripció</string>
     <string name="rce_scrollInstructions">Desplaça\'t per trobar totes les eines d\'edició</string>
+    <string name="rce_emptyUrlError">L\'URL no pot estar en blanc</string>
+    <string name="rce_httpNotAllowed">Només s\'accepten URLs https</string>
 </resources>

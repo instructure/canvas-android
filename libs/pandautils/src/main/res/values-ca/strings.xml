@@ -97,7 +97,7 @@
     <string name="filePermissionGranted">En aquest moment, el fitxer està a punt per baixar-lo; torneu a provar-ho.</string>
     <string name="filePermissionDenied">El fitxer no es pot baixar sense que es concedeixi permís.</string>
     <string name="pleaseTryAgain">Permís concedit; torneu a provar-ho.</string>
-    <string name="pickVideo">Selecciona un vídeo</string>
+    <string name="pickFile">Selecciona un fitxer</string>
     <string name="assignmentSubmissionUpload">S\'està penjant l\'entrega de %s</string>
     <string name="assignmentSubmissionError">S\'ha produït un error en l\'entrega de %s</string>
     <string name="assignmentSubmissionComplete">S\'ha entregat correctament %s</string>

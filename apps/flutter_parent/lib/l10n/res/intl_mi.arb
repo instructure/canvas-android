@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-03-13T11:03:31.927140",
+  "@@last_modified": "2020-03-20T11:04:10.914171",
   "alertsLabel": "He whakamataara",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -161,6 +161,12 @@
   "There was an error loading your student's calendar": "He hapa i te wā e uta ana te maramataka a tō ākonga.",
   "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar.": "Pātō ki tō akoranga e hiahia ana koe ki te kite i te Maramataka",
+  "@Tap to favorite the courses you want to see on the Calendar.": {
+    "description": "Description text on calendar filter screen.",
     "type": "text",
     "placeholders": {}
   },
@@ -664,7 +670,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "gradeFormatScoreOutOfPointsPossible": "{score} / {score}",
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
   "@gradeFormatScoreOutOfPointsPossible": {
     "description": "Formatted string for a student score out of the points possible",
     "type": "text",
@@ -1677,6 +1683,30 @@
   "I'm having trouble logging in": "Kei te raru ahau ki te takiuru",
   "@I'm having trouble logging in": {
     "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "He hapa i puta i te wā e ngana ana ki te whakātu i tēnei hono",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Kaore e taea e mātou te whakātu i tēnei hono, ekene e mau ana i tētahi wharekōhanga kaore koe i te takiuru i tēnei wā.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Link Error": "He hapa hono",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open In Browser": "Tuwhera I roto i te Pūtirotiro",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
     "type": "text",
     "placeholders": {}
   }

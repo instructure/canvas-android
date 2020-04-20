@@ -101,6 +101,13 @@
 
     <string name="previousLoginTitle">Inicis de sessió anteriors</string>
     <string name="findMySchool">Cerca la meva escola</string>
+    <string name="loginWithQRCode">Codi QR</string>
+    <string name="locateQRCode">Localitzeu el codi QR</string>
+    <string name="qrCodeExplanation">Trobareu el codi QR a la web, al perfil del vostre compte. Feu clic a "QR per a inici de sessió mòbil" a la llista.</string>
+    <string name="qrCodeScanningPrompt">Escanegeu un codi QR del Canvas per iniciar la sessió</string>
+    <string name="loginWithQRCodeError">S\'ha produït un error en iniciar la sessió. Genereu un altre codi QR i torneu-ho a provar.</string>
+    <string name="invalidQRCodeError">Escanegeu un codi QR generat pel Canvas</string>
+    <string name="qrCodeScreenshotContentDescription">Captura de pantalla que mostra la ubicació de la generació d\'un codi QR al navegador</string>
     <string name="whatsYourSchoolName">Com es diu la vostra escola?</string>
     <string name="next">Següent</string>
     <string name="schoolInstructureCom">school.instructure.com</string>

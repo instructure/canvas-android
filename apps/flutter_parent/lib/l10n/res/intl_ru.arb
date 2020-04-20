@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "@@last_modified": "2020-04-03T11:02:53.662629",
   "alertsLabel": "Предупреждения",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1314,42 +1314,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Search the Canvas Guides": "Поиск в руководствах Canvas",
-  "@Search the Canvas Guides": {
-    "description": "Label for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Find answers to common questions": "Найти ответы на общие вопросы",
-  "@Find answers to common questions": {
-    "description": "Description for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Report a Problem": "Сообщить о проблеме",
-  "@Report a Problem": {
-    "description": "Label for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "If the app misbehaves, let us know": "Если приложение работает с ошибками, дайте нам знать",
-  "@If the app misbehaves, let us know": {
-    "description": "Description for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Request a Feature": "Запросить функцию",
-  "@Request a Feature": {
-    "description": "Label for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Have an idea to improve the app?": "Есть идея по улучшению приложения?",
-  "@Have an idea to improve the app?": {
-    "description": "Description for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
   "Share Your Love for the App": "Поделитесь своей любовью к приложению",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
@@ -1530,6 +1494,100 @@
     "type": "text",
     "placeholders": {}
   },
+  "Login flow: Normal": "Процесс авторизации: Обычный",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Процесс авторизации: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Процесс авторизации: Администратор сайта",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Процесс авторизации: Пропустить проверку мобильного устройства",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Act As User": "Действовать как пользователь",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Перестать действовать как пользователь",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "actingAsUser": "Вы действуете как {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Действовать как пользователь\" является по существу входом в систему в качестве этого пользователя без пароля. Вы сможете совершать любые действия, как если бы вы были этим пользователем, а для других пользователей это будет выглядеть так, как будто эти действия совершил этот пользователь. Тем не менее, в контрольных журналах записывается информация от том, что именно вы выполняли указанные действия от имени этого пользователя.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain": "Домен",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Необходимо указать действительный домен",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID": "Идентификатор пользователя",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a user id": "Необходимо ввести идентификатор пользователя",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Произошла ошибка при попытке использования функции «Действовать как пользователь». Проверьте домен и идентификатор пользователя и повторите попытку.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Функция «Действовать как {userName}» будет отключена и вы вернетесь в свою исходную учетную запись.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Функция «Действовать как {userName}» будет отключена, и сеанс будет завершен.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
   "Cancel": "Отменить",
   "@Cancel": {
     "type": "text",
@@ -1572,13 +1630,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "expanded": "развернуто",
+  "expanded": "в развернутом виде",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
     "type": "text",
     "placeholders": {}
   },
-  "collapsed": "свернуто",
+  "collapsed": "в свернутом виде",
   "@collapsed": {
     "description": "Description for the accessibility reader for list groups that are expanded",
     "type": "text",
@@ -1592,6 +1650,12 @@
   "Launch External Tool": "Запуск внешнего инструмента",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Взаимодействие на этой странице ограничено вашей организацией.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },

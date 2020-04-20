@@ -67,7 +67,6 @@
     <string name="loginNearYou">Tou Prè ou</string>
     <string name="loginCanvasNetwork">Canvas Network</string>
     <string name="loginRightBehindYou">Dèyè w</string>
-    <string name="loginMiles">%1$s kilomèt distans</string>
     <string name="loginCanvasHelp">Ou pa wè lekòl ou a? Antre URL lekòl la oswa tale la pou jwenn èd.</string>
     <string name="loginCanvasHelpWithUser">Antre URL lekòl la oswa tale la pou jwenn èd.</string>
     <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
@@ -100,7 +99,13 @@
 
     <string name="previousLoginTitle">Ansyen Koneksyon</string>
     <string name="findMySchool">Jwenn lekòl mwen an</string>
-    <string name="canvasLowerCase">canvas</string>
+    <string name="loginWithQRCode">Kòd QR</string>
+    <string name="locateQRCode">Jwenn Kòd QR</string>
+    <string name="qrCodeExplanation">W ap jwenn kòd QR la sou entènèt nan pwofil ou. Klike sou \'QR pou Koneksyon Mobil\' nan lis la.</string>
+    <string name="qrCodeScanningPrompt">Eskane yon kòd QR sou Canvas pou ka konekte.</string>
+    <string name="loginWithQRCodeError">Te gen yon erè pandan koneksyon an. Tanpri jenere yon lòt Kòd QR epi eseye ankò.</string>
+    <string name="invalidQRCodeError">Tanpri eskane yon kòd QR Canvas jenere</string>
+    <string name="qrCodeScreenshotContentDescription">Kapti ekran ki montre anplasman jenerasyon kòd QR nan navigatè</string>
     <string name="whatsYourSchoolName">Kijan lekòl ou a rele?</string>
     <string name="next">Pwochen</string>
     <string name="schoolInstructureCom">school.instructure.com</string>
