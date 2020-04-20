@@ -64,16 +64,13 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   final TextEditingController _inputController = TextEditingController();
 
   _searchDomains(String query) async {
-    var thisQuery = query.trim();
-    setState(() => _query = thisQuery);
+    if (query.length < _MIN_SEARCH_LENGTH) query = '';
 
-    if (thisQuery.length < _MIN_SEARCH_LENGTH) thisQuery = '';
+    if (query == _currentQuery) return; // Do nothing if the search query has not effectively changed
 
-    if (thisQuery == _currentQuery) return; // Do nothing if the search query has not effectively changed
+    _currentQuery = query;
 
-    _currentQuery = thisQuery;
-
-    if (thisQuery.isEmpty) {
+    if (query.isEmpty) {
       setState(() {
         _loading = false;
         _error = false;
@@ -84,15 +81,15 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         _loading = true;
         _error = false;
       });
-      await _interactor.performSearch(thisQuery).then((domains) {
-        if (_currentQuery != thisQuery) return;
+      await _interactor.performSearch(query).then((domains) {
+        if (_currentQuery != query) return;
         setState(() {
           _loading = false;
           _error = false;
           _schoolDomains = domains;
         });
       }).catchError((error) {
-        if (_currentQuery != thisQuery) return;
+        if (_currentQuery != query) return;
         setState(() {
           _loading = false;
           _error = true;
@@ -165,7 +162,12 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                         },
                       ),
               ),
-              onChanged: (query) => _debouncer.debounce(() => _searchDomains(query)),
+              onChanged: (query) {
+                // Update the state for the new query, then debounce the search request
+                var thisQuery = query.trim();
+                setState(() => _query = thisQuery);
+                _debouncer.debounce(() => _searchDomains(query));
+              },
             ),
             SizedBox(
               height: 2,
