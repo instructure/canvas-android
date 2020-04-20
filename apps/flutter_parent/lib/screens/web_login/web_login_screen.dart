@@ -82,6 +82,9 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
           bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
         body: _loginBody(),
+        // MBL-14271: When in landscape mode, set this to false in order to avoid the situation
+        // where the soft keyboard keeps flickering on and off.
+        resizeToAvoidBottomInset: MediaQuery.of(context).orientation == Orientation.portrait,
       ),
     );
   }
