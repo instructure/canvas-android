@@ -4,3 +4,5 @@
 # Crashlytics
 -keep class com.crashlytics.** { *; }
 -dontwarn com.crashlytics.**
+
+-keep enum com.google.zxing.** { *; }
