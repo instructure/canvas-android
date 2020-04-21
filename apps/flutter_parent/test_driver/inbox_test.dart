@@ -22,8 +22,10 @@ import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 import 'package:test/test.dart';
 
 import 'driver_seed_utils.dart';
+import 'flutter_driver_extensions.dart';
 import 'pages/assignment_details_page.dart';
 import 'pages/conversation_create_page.dart';
+import 'pages/conversation_details_page.dart';
 import 'pages/conversation_list_page.dart';
 import 'pages/course_details_page.dart';
 import 'pages/course_grades_page.dart';
@@ -62,7 +64,7 @@ void main() {
     await ConversationListPage.verifyConversationDataDisplayed(driver, /*index*/ 0,
         partialSubjects: [conversation.subject],
         partialContexts: [conversation.contextName],
-        partialMessages: [conversation.lastMessage ?? conversation.lastAuthoredMessage]);
+        partialBodies: [conversation.lastMessage ?? conversation.lastAuthoredMessage]);
 
     // Create a conversation from the Inbox
     await ConversationListPage.initiateCreateEmail(driver, course); // Will this work with only one course?
@@ -73,7 +75,7 @@ void main() {
 
     // Verify that our new conversation shows up the conversation list
     await ConversationListPage.verifyConversationDataDisplayed(driver, /*index*/ 0,
-        partialMessages: ['Message 1 Body'], partialSubjects: [course.name]);
+        partialBodies: ['Message 1 Body'], partialSubjects: [course.name]);
 
     // Back to the dashboard
     await driver.tap(find.pageBack());
@@ -108,22 +110,47 @@ void main() {
     await driver.tap(find.pageBack()); // grades list -> dashboard
 
     await DashboardPage.openInbox(driver);
-    await ConversationListPage.refresh(driver); // To make sure and load the latest emails
+    await driver.refresh(); // To make sure and load the latest emails
     await Future.delayed(const Duration(seconds: 2)); // Give ourselves a moment to load
+
+    // Let's make sure that the three most recent emails that we created show up in our
+    // conversation list.
+
     // The most recent email -- the assignment email -- should be on top (index 0)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 0,
         partialSubjects: [student.name, assignment.name],
         partialContexts: [course.name],
-        partialMessages: ['Assignment Body', student.name]);
+        partialBodies: ['Assignment Body', student.name]);
+
     // The syllabus email should be next (index 1)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 1,
         partialSubjects: [student.name, "Syllabus"],
         partialContexts: [course.name],
-        partialMessages: ['Syllabus Body', student.name]);
+        partialBodies: ['Syllabus Body', student.name]);
+
     // The grades email should be next (index 2)
     await ConversationListPage.verifyConversationDataDisplayed(driver, 2,
         partialSubjects: [student.name, "Grades"],
         partialContexts: [course.name],
-        partialMessages: ['Grades Body', student.name]);
-  }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
+        partialBodies: ['Grades Body', student.name]);
+
+    // Let's open the most recent conversation -- should be the assignment conversation
+    await ConversationListPage.selectMessage(driver, 0);
+
+    // Then run some tests on it
+    await ConversationDetailsPage.tapParticipants(driver); // To show individual participants
+    await ConversationDetailsPage.verifyRecipientListed(driver, 0, teacher);
+    await ConversationDetailsPage.verifySubject(driver, [student.name]);
+    await ConversationDetailsPage.verifyCourse(driver, course.name);
+
+    // Now let's reply to the email
+    await ConversationDetailsPage.initiateEmailReplyAll(driver);
+    await ConversationCreatePage.populateBody(driver, "reply body");
+    await ConversationCreatePage.sendMail(driver);
+
+    // And make sure that our new message shows up on the conversation list page...
+    await driver.tap(find.pageBack()); // From conversation detail page to conversation list page
+    await driver.refresh();
+    await ConversationListPage.verifyConversationDataDisplayed(driver, 0, partialBodies: ['reply body']);
+  }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 sec
 }

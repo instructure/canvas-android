@@ -68,6 +68,7 @@ class _MessageWidgetState extends State<MessageWidget> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Linkify(
               text: widget.message.body,
+              key: ValueKey('message_widget_body'),
               options: LinkifyOptions(humanize: false),
               onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
             ),
@@ -134,7 +135,10 @@ class _MessageWidgetState extends State<MessageWidget> {
             children: <Widget>[
               Avatar(user.avatarUrl, name: user.name, radius: 16),
               SizedBox(width: 12),
-              Expanded(child: Text(user.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
+              Expanded(
+                  child: Text(user.name,
+                      key: ValueKey('participant_id_${user.id}'),
+                      style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
             ],
           );
         },

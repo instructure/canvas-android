@@ -21,8 +21,9 @@ class ConversationListPage {
   /// fields to be verified.
   static Future<void> verifyConversationDataDisplayed(FlutterDriver driver, int index,
       {List<String> partialSubjects: null,
-      List<String> partialMessages: null,
+      List<String> partialBodies: null,
       List<String> partialContexts: null}) async {
+    // Validate any specified partial subjects
     if (partialSubjects != null) {
       var finder = find.byValueKey('conversation_subject_$index');
       await driver.scrollIntoView(finder);
@@ -32,6 +33,8 @@ class ConversationListPage {
             reason: "Message subject \"$partialSubject\" in \"$fullText\"");
       }
     }
+
+    // Validate any specified partial contexts
     if (partialContexts != null) {
       var finder = find.byValueKey('conversation_context_$index');
       await driver.scrollIntoView(finder);
@@ -41,11 +44,13 @@ class ConversationListPage {
             reason: "Message context \"$partialContext\" in \"$fullText\"");
       }
     }
-    if (partialMessages != null) {
+
+    // Validate any specified partial messages bodies
+    if (partialBodies != null) {
       var finder = find.byValueKey('conversation_message_$index');
       await driver.scrollIntoView(finder);
       var fullText = await driver.getText(finder);
-      for (String partialMessage in partialMessages) {
+      for (String partialMessage in partialBodies) {
         expect(fullText.toLowerCase().contains(partialMessage.toLowerCase()), true,
             reason: "Message body \"$partialMessage\" in \"$fullText\"");
       }
@@ -59,7 +64,9 @@ class ConversationListPage {
     await Future.delayed(const Duration(seconds: 1)); // Allow time for population
   }
 
-  static Future<void> refresh(FlutterDriver driver) async {
-    driver.scroll(find.byType("RefreshIndicator"), 0, 200, const Duration(milliseconds: 200));
+  static Future<void> selectMessage(FlutterDriver driver, int index) async {
+    var finder = find.byValueKey('conversation_subject_$index');
+    await driver.scrollIntoView(finder);
+    await driver.tap(finder);
   }
 }
