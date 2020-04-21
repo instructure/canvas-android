@@ -99,6 +99,7 @@ open class InternalWebviewFragment : ParentFragment() {
             originalUserAgentString = canvasWebView.settings.userAgentString
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
+            canvasWebView.settings.setSupportMultipleWindows(true) // Required to allow iFrames with links that have a target of '_blank' - see CanvasWebChromeClient#onCreateWindow()
 
             canvasWebView.canvasWebChromeClientCallback = CanvasWebView.CanvasWebChromeClientCallback { _, newProgress ->
                 if (newProgress == 100) {
