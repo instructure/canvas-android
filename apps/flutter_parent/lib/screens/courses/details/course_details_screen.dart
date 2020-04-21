@@ -47,12 +47,18 @@ class CourseDetailsScreen extends StatefulWidget {
   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
 }
 
-class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
   @override
   void initState() {
     super.initState();
     widget._model.loadData();
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -76,35 +82,31 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
 
   Widget _body(BuildContext context, CourseDetailsModel model) {
     final tabCount = model.tabCount();
-    return DefaultTabController(
-      length: tabCount,
-      child: Scaffold(
-        appBar: AppBar(
-            title: Text(model.course?.name ?? ''),
-            bottom: ParentTheme.of(context).appBarDivider(
-              bottom: (tabCount <= 1)
-                  ? null // Don't show the tab bar if we only have one tab
-                  : TabBar(
-                      onTap: (position) {
-                        CourseDetailsModel.selectedTab = position;
-                      },
-                      tabs: [
-                        Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
-                        if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),
-                        if (model.hasHomePageAsSyllabus) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
-                        if (model.showSummary) Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
-                      ],
-                    ),
-            )),
-        body: _tabBody(context, model),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
-          child: Semantics(
-            label: L10n(context).courseMessageHint,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4, top: 4),
-              child: Icon(CanvasIconsSolid.comment),
-            ),
+    if (_tabController == null) _tabController = TabController(initialIndex: 0, length: tabCount, vsync: this);
+    return Scaffold(
+      appBar: AppBar(
+          title: Text(model.course?.name ?? ''),
+          bottom: ParentTheme.of(context).appBarDivider(
+            bottom: (tabCount <= 1)
+                ? null // Don't show the tab bar if we only have one tab
+                : TabBar(
+                    controller: _tabController,
+                    tabs: [
+                      Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                      if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),
+                      if (model.hasHomePageAsSyllabus) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                      if (model.showSummary) Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
+                    ],
+                  ),
+          )),
+      body: _tabBody(context, model),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
+        child: Semantics(
+          label: L10n(context).courseMessageHint,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 4, top: 4),
+            child: Icon(CanvasIconsSolid.comment),
           ),
         ),
       ),
@@ -122,6 +124,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       );
     } else {
       return TabBarView(
+        controller: _tabController,
         children: [
           CourseGradesScreen(),
           if (model.hasHomePageAsFrontPage) CourseFrontPageScreen(courseId: model.courseId),
@@ -135,7 +138,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   void _sendMessage(bool hasSyllabus) {
     String subject;
     String urlLink = '${ApiPrefs.getDomain()}/courses/${widget._model.courseId}';
-    if (CourseDetailsModel.selectedTab == 0) {
+    if (_tabController.index == 0) {
       // Grades
       subject = L10n(context).gradesSubjectMessage(widget._model.student.name);
       urlLink += '/grades';
