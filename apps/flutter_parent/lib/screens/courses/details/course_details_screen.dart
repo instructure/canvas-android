@@ -48,6 +48,7 @@ class CourseDetailsScreen extends StatefulWidget {
 }
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+  TabController _tabController;
   @override
   void initState() {
     super.initState();
@@ -84,6 +85,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
               bottom: (tabCount <= 1)
                   ? null // Don't show the tab bar if we only have one tab
                   : TabBar(
+                      onTap: (position) {
+                        CourseDetailsModel.selectedTab = position;
+                      },
                       tabs: [
                         Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
                         if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),

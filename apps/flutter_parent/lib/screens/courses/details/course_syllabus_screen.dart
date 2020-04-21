@@ -33,7 +33,6 @@ class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with Automa
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
-    CourseDetailsModel.selectedTab = 1;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) => CanvasWebView(
         content: widget._syllabus,
