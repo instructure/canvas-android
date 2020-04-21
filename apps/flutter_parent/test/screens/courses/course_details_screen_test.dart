@@ -59,7 +59,8 @@ void main() {
 
   setUp(() async {
     await setupPlatformChannels(
-        config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}));
+        config: PlatformConfig(
+            mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}, initWebview: true));
 
     reset(courseInteractor);
     reset(convoInteractor);
@@ -356,6 +357,51 @@ void main() {
 
     // Check that we have the correct subject line
     expect(find.text(AppLocalizations().frontPageSubjectMessage(studentName)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks(
+      'Tapping message button after selecting front page tab and then grades tab shows message screen', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..name = 'Course Name'
+      ..courseCode = '1234'
+      ..homePage = HomePage.wiki);
+
+    when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
+      ..id = '1'
+      ..body = 'hodor'));
+    when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
+
+    String studentName = 'Panda';
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen(courseId)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    // Should show the fab
+    final matchedWidget = find.byType(FloatingActionButton);
+    expect(matchedWidget, findsOneWidget);
+
+    // Tap the Front Page tab
+    await tester.tap(find.ancestor(
+        of: find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), matching: find.byType(Tab)));
+    await tester.pumpAndSettle(); // Let the screen creation settle
+
+    // Tap back to the grades tab
+    await tester.tap(
+        find.ancestor(of: find.text(AppLocalizations().courseGradesLabel.toUpperCase()), matching: find.byType(Tab)));
+    await tester.pumpAndSettle();
+
+    // Tap the FAB
+    await tester.tap(matchedWidget);
+    await tester.pumpAndSettle(); // Let the new screen create itself
+
+    // Check to make sure we're on the conversation screen
+    expect(find.byType(CreateConversationScreen), findsOneWidget);
+
+    // Check that we have the correct subject line
+    expect(find.text(AppLocalizations().gradesSubjectMessage(studentName)), findsOneWidget);
   });
 }
 

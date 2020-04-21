@@ -57,7 +57,6 @@ class _CourseGradesScreenState extends State<CourseGradesScreen> with AutomaticK
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
-    CourseDetailsModel.selectedTab = 0;
     return Consumer<CourseDetailsModel>(
       builder: (context, model, _) {
         // Initialize the future here if it wasn't set (we need the model, otherwise could've been done in initState)

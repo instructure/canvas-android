@@ -16,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
-import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
@@ -57,7 +56,6 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
-    CourseDetailsModel.selectedTab = 1;
     return RefreshIndicator(
       onRefresh: () {
         return _refreshPage();
