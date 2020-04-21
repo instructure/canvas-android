@@ -38,8 +38,9 @@ void main() {
   test('returns success when given valid barcode', () async {
     final barcodeResultUrl = 'https://${QRUtils.QR_HOST}/canvas/login?${QRUtils.QR_AUTH_CODE}=1234'
         '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
+    final scanResult = ScanResult(rawContent: barcodeResultUrl);
 
-    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(barcodeResultUrl));
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
@@ -51,8 +52,9 @@ void main() {
   test('returns failure when given invalid barcode', () async {
     final barcodeResultUrl = 'https://hodor.com/canvas/login?hodor_code=1234'
         '&hodor_domain=mobiledev.instructure.com';
+    final scanResult = ScanResult(rawContent: barcodeResultUrl);
 
-    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(barcodeResultUrl));
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
@@ -63,7 +65,7 @@ void main() {
   });
 
   test('returns camera error camera access denied', () async {
-    when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException(code: BarcodeScanner.CameraAccessDenied));
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException(code: BarcodeScanner.cameraAccessDenied));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
@@ -74,7 +76,7 @@ void main() {
   });
 
   test('returns error when given platform error occurs', () async {
-    when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException);
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException(code: ''));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
@@ -84,8 +86,9 @@ void main() {
     expect(result.result, isNull);
   });
 
-  test('returns nothing when given FormatException', () async {
-    when(mockScanner.scanBarcode()).thenAnswer((_) => throw FormatException());
+  test('returns nothing when given ResultType.Cancelled', () async {
+    final scanResult = ScanResult(type: ResultType.Cancelled);
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
@@ -93,8 +96,9 @@ void main() {
     expect(result, isNull);
   });
 
-  test('returns error when given FormatException ', () async {
-    when(mockScanner.scanBarcode()).thenAnswer((_) => throw FormatException);
+  test('returns error when given ResultType.Error', () async {
+    final scanResult = ScanResult(type: ResultType.Error);
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
     var interactor = QRLoginTutorialScreenInteractor();
 
