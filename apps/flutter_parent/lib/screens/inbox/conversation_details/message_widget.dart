@@ -68,7 +68,6 @@ class _MessageWidgetState extends State<MessageWidget> {
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Linkify(
               text: widget.message.body,
-              key: ValueKey('message_widget_body'),
               options: LinkifyOptions(humanize: false),
               onOpen: (link) => locator<QuickNav>().routeInternally(context, link.url),
             ),

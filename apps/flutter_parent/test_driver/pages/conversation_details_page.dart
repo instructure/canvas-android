@@ -13,7 +13,6 @@ class ConversationDetailsPage {
 
   static Future<void> verifySubject(FlutterDriver driver, List<String> partialSubjects) async {
     var fullText = await driver.getText(find.byValueKey('subjectText'));
-    print('verifySubject fullText: $fullText');
     for (String partialSubject in partialSubjects) {
       expect(fullText.toLowerCase().contains(partialSubject.toLowerCase()), true,
           reason: 'email detail header subject: searching for \"$partialSubject\" in \"$fullText\"');
@@ -22,7 +21,6 @@ class ConversationDetailsPage {
 
   static Future<void> verifyCourse(FlutterDriver driver, String courseName) async {
     var fullText = await driver.getText(find.byValueKey('courseText'));
-    print('verifyCourse fullText: $fullText');
     expect(fullText.contains(courseName), true,
         reason: 'email detail header course: searching for \"$courseName\" in \"$fullText\"');
   }
