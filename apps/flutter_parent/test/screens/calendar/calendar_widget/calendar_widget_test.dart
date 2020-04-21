@@ -99,6 +99,69 @@ void main() {
     expect(monthWidget.month, 1);
   });
 
+  testWidgetsWithAccessibilityChecks('Can click events in day content while month is visible', (tester) async {
+    var pressed = false;
+
+    final calendar = CalendarWidget(
+      dayBuilder: (_, __) => FlatButton(
+        onPressed: () => pressed = true,
+        child: Text('Press me!'),
+      ),
+      fetcher: _FakeFetcher(),
+    );
+
+    await tester.pumpWidget(
+      TestApp(
+        calendar,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Tap expand button
+    await tester.tap(find.byKey(Key('expand-button')));
+    await tester.pumpAndSettle();
+
+    // Should show month now
+    expect(find.byType(CalendarMonth), findsOneWidget);
+
+    // Tap on the 'event'
+    await tester.tap(find.byType(FlatButton));
+    await tester.pumpAndSettle();
+
+    // Should have our pressed value true
+    expect(pressed, true);
+  });
+
+  testWidgetsWithAccessibilityChecks('Can click events in day content while week is visible', (tester) async {
+    var pressed = false;
+
+    final calendar = CalendarWidget(
+      dayBuilder: (_, __) => FlatButton(
+        onPressed: () => pressed = true,
+        child: Text('Press me!'),
+      ),
+      fetcher: _FakeFetcher(),
+    );
+
+    await tester.pumpWidget(
+      TestApp(
+        calendar,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    // Should show month now
+    expect(find.byType(CalendarMonth), findsNothing);
+    expect(find.byType(CalendarWeek), findsOneWidget);
+
+    // Tap on the 'event'
+    await tester.tap(find.byType(FlatButton));
+    await tester.pumpAndSettle();
+
+    // Should have our pressed value true
+    expect(pressed, true);
+  });
+
   group('Month Expand/Collapse', () {
     testWidgetsWithAccessibilityChecks('Expand button expands and collapses month', (tester) async {
       final calendar = CalendarWidget(

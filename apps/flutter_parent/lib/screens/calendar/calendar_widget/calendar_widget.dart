@@ -403,8 +403,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         if (_isMonthExpanded)
           GestureDetector(
             excludeFromSemantics: true,
-            behavior: HitTestBehavior.opaque,
-            onTap: _toggleExpanded,
+            behavior: HitTestBehavior.translucent,
             onVerticalDragUpdate: updateCallback,
             onVerticalDragEnd: endCallback,
           ),
