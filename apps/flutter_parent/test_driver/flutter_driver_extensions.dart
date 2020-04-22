@@ -67,6 +67,6 @@ extension AutoRefresh on FlutterDriver {
   }
 
   Future<void> refresh() async {
-    await this.scroll(find.byType('RefreshIndicator'), 0, 200, Duration(milliseconds: 200));
+    await this.scroll(find.byType('RefreshIndicator'), 0, 400, Duration(milliseconds: 200));
   }
 }
