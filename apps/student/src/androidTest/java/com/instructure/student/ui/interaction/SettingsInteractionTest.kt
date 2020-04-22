@@ -73,7 +73,7 @@ class SettingsInteractionTest : StudentTest() {
         helpPage.launchGuides()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle -- the web content could be changed by another team
-                WebViewTextCheck(Locator.ID, "links", "Community Guidelines", 20)
+                WebViewTextCheck(Locator.ID, "links", "Community Guidelines", 25)
         )
     }
 

@@ -26,6 +26,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
@@ -94,7 +95,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun scrollToAssignmentDescription() {
-        waitForViewWithId(R.id.descriptionWebView).scrollTo()
+        waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 20000).scrollTo()
     }
 }
 
