@@ -48,6 +48,9 @@ class QRLoginTutorialScreenInteractor {
         // Unknown error while scanning
         result = BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
+    } catch (e) {
+      // Just in case
+      result = BarcodeScanResult(false, errorType: QRError.invalidQR);
     }
 
     return result;
