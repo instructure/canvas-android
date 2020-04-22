@@ -15,10 +15,8 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.ExternalToolManager
-import com.instructure.canvasapi2.managers.QuizManager
-import com.instructure.canvasapi2.managers.SubmissionManager
+import android.util.Log
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -64,6 +62,11 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
 
         mockkObject(AssignmentManager)
         mockkObject(SubmissionManager)
+        mockkObject(EnrollmentManager)
+
+        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
+        }
 
         every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
@@ -153,6 +156,11 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
 
         mockkObject(AssignmentManager)
         mockkObject(SubmissionManager)
+        mockkObject(EnrollmentManager)
+
+       every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf())
+        }
 
         every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignment)
@@ -169,7 +177,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
-        connection.accept(SubmissionDetailsEffect.LoadData(assignment.id, courseId))
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
 
         verify(timeout = 100) {
             eventConsumer.accept(
@@ -186,6 +194,59 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
 
         confirmVerified(eventConsumer)
     }
+
+    @Test
+    fun `loadData for observer results in DataLoaded`() {
+        val courseId = 1L
+        val observerId = 9000L
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url="https://www.instructure.com")
+        val submission = Submission()
+        val observeeEnrollment = Enrollment().copy(role = Enrollment.EnrollmentType.Observer, courseId = courseId, associatedUserId = observerId)
+        val user = User()
+        val ltiTool = LTITool(url = "https://www.instructure.com")
+
+        mockkObject(AssignmentManager)
+        mockkObject(SubmissionManager)
+        mockkObject(EnrollmentManager)
+
+        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(observeeEnrollment))
+        }
+
+        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(assignment)
+        }
+
+        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), observerId, any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(submission)
+        }
+
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.user } returns user
+
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(
+                SubmissionDetailsEvent.DataLoaded(
+                    assignment = DataResult.Success(assignment),
+                    rootSubmissionResult = DataResult.Success(submission),
+                    ltiUrlResult = DataResult.Success(ltiTool),
+                    isStudioEnabled = false,
+                    quizResult = null,
+                    studioLTIToolResult = DataResult.Fail(null)
+                )
+            )
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+
 
     @Test
     fun `loadData gets quiz if assignment is a quiz`() {
@@ -220,7 +281,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         every { ApiPrefs.user } returns user
         every { ApiPrefs.fullDomain} returns "https://www.instructure.com"
 
-        connection.accept(SubmissionDetailsEffect.LoadData(assignment.id, courseId))
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
 
         verify(timeout = 100) {
             eventConsumer.accept(
@@ -269,7 +330,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         mockkStatic(ApiPrefs::class)
         every { ApiPrefs.user } returns user
 
-        connection.accept(SubmissionDetailsEffect.LoadData(assignment.id, courseId))
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
 
         verify(timeout = 100000) {
             eventConsumer.accept(
