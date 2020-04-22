@@ -24,23 +24,32 @@ class QRLoginTutorialScreenInteractor {
   Future<BarcodeScanResult> scan() async {
     BarcodeScanResult result;
     try {
-      String barcodeResult = await locator<BarcodeScanVeneer>().scanBarcode();
-      if (QRUtils.verifySSOLogin(barcodeResult) != null) {
-        result = BarcodeScanResult(true, result: barcodeResult);
-      } else {
-        result = BarcodeScanResult(false, errorType: QRError.invalidQR);
+      ScanResult scanResult = await locator<BarcodeScanVeneer>().scanBarcode();
+      String barcodeResult = scanResult.rawContent;
+      switch (scanResult.type) {
+        case ResultType.Barcode:
+          if (QRUtils.verifySSOLogin(barcodeResult) != null) {
+            result = BarcodeScanResult(true, result: barcodeResult);
+          } else {
+            result = BarcodeScanResult(false, errorType: QRError.invalidQR);
+          }
+          break;
+        case ResultType.Error:
+          result = BarcodeScanResult(false, errorType: QRError.invalidQR);
+          break;
+        case ResultType.Cancelled:
+          // Do nothing
+          break;
       }
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
         result = BarcodeScanResult(false, errorType: QRError.cameraError);
       } else {
         // Unknown error while scanning
         result = BarcodeScanResult(false, errorType: QRError.invalidQR);
       }
-    } on FormatException {
-      // User returned, do nothing
     } catch (e) {
-      // Unknown error while scanning
+      // Just in case
       result = BarcodeScanResult(false, errorType: QRError.invalidQR);
     }
 
