@@ -90,7 +90,9 @@ class ApiPrefs {
 
   static bool isLoggedIn() {
     _checkInit();
-    return getAuthToken() != null && getDomain() != null;
+    final token = getAuthToken() ?? '';
+    final domain = getDomain() ?? '';
+    return token.isNotEmpty && domain.isNotEmpty;
   }
 
   static Login getCurrentLogin() {
