@@ -18,21 +18,23 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsView
 import com.instructure.student.mobius.common.ChannelSource
 import com.instructure.student.mobius.common.ui.EffectHandler
 import com.instructure.student.util.getStudioLTITool
-import com.instructure.student.util.isStudioEnabled
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import java.io.File
@@ -71,7 +73,12 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
 
     private fun loadData(effect: SubmissionDetailsEffect.LoadData) {
         launch {
-            val submissionResult = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, ApiPrefs.user!!.id, true).await()
+            // If the user is an observer, get the id of the first observee that comes back, otherwise use the user's id
+            val enrollmentsResult = EnrollmentManager.getObserveeEnrollmentsAsync(true).await()
+            val observeeId = enrollmentsResult.dataOrNull?.firstOrNull { it.isObserver && it.courseId == effect.courseId }?.associatedUserId
+            val userId = observeeId ?: ApiPrefs.user!!.id
+
+            val submissionResult = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, userId, true).await()
             val assignmentResult = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
 
             val studioLTIToolResult: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {

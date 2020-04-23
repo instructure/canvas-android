@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.annotations.PdfSubmissionView
 import com.instructure.canvasapi2.managers.CanvaDocsManager
+import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -202,7 +203,25 @@ class SubmissionContentView(
     private fun obtainSubmissionData() {
         initJob = tryWeave {
             if (!mStudentSubmission.isCached) {
-                mStudentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(mCourse.id, mAssignment.id, mStudentSubmission.assigneeId, it, true) }
+                // Determine if the logged in user is an Observer
+                val enrollments = awaitApi<List<Enrollment>> { EnrollmentManager.getObserveeEnrollments(true, it) }
+                val isObserver = enrollments.any { it.isObserver }
+                if (isObserver) {
+                    // Get the first observee associated with this course
+                    val observee = enrollments.first { it.courseId == mCourse.id }
+                    mStudentSubmission.submission = awaitApi<Submission> { SubmissionManager.getSingleSubmission(mCourse.id, mAssignment.id, mStudentSubmission.assigneeId, it, true) }
+                } else {
+                    // Get the user's submission normally
+                    mStudentSubmission.submission = awaitApi<Submission> {
+                        SubmissionManager.getSingleSubmission(
+                            mCourse.id,
+                            mAssignment.id,
+                            mStudentSubmission.assigneeId,
+                            it,
+                            true
+                        )
+                    }
+                }
                 mStudentSubmission.isCached = true
             }
             setup()

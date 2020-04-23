@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object EnrollmentManager {
 
@@ -92,6 +93,10 @@ object EnrollmentManager {
         adapter.statusCallback = depaginatedCallback
         EnrollmentAPI.getObserveeEnrollments(adapter, params, depaginatedCallback)
     }
+
+    fun getObserveeEnrollmentsAsync(forceNetwork: Boolean)
+            = apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
+
 
     @JvmStatic
     fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, callback: StatusCallback<Void>) {
