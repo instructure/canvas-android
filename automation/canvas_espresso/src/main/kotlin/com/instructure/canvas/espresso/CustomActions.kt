@@ -17,6 +17,7 @@
 package com.instructure.canvas.espresso
 
 import android.os.SystemClock
+import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
@@ -27,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.action.CoordinatesProvider
 import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.action.Press
@@ -36,6 +38,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
@@ -255,4 +258,32 @@ fun waitForMatcherWithRefreshes(target: Matcher<View>) {
             }
         }
     }
+}
+
+/** A better version of the shared espresso lib's WaitForViewMatcher.waitForView()
+ *  for a couple of reasons:
+ *    (1) It allows the caller to specify the wait time
+ *    (2) It uses sleeps to avoid monopolizing the CPU and spamming our log files.
+ *
+ *    Waits for [target] to become visible for up to [waitMs] milliseconds,
+ *    sleeping [sleepMs] milliseconds after every attempt.
+ */
+fun waitForMatcherWithSleeps(target: Matcher<View>, waitMs: Long = 10000, sleepMs: Long = 30) : ViewInteraction {
+    val endTime = System.currentTimeMillis() + waitMs
+    do {
+        try {
+            val result = onView(target).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+            return result
+        }
+        catch(ignored: Exception) {
+        }
+        catch(ignored: Error) {
+        }
+
+        sleep(sleepMs) // re-check every 100 ms
+    } while(System.currentTimeMillis() < endTime)
+
+    // If we aren't successful by now, make one more unprotected attempt to throw
+    // the correct error.
+    return onView(target).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
 }
