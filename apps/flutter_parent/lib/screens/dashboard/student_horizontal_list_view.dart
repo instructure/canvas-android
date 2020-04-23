@@ -120,7 +120,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                 onPressed: () async {
                   locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD);
                   bool studentPaired = await _addStudentDialog(context);
-                  if (studentPaired) {
+                  if (studentPaired == true) {
                     widget.onAddStudent();
                   }
                 },
