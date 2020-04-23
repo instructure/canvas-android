@@ -7,6 +7,30 @@
 # we might need to tweak this script.  It assumes a 1-1 correspondence between driver files
 # and target files.
 
+commonSplunkData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \"flutter-parent\", \"branch\" : \"$BITRISE_GIT_BRANCH\""
+
+# Common logic to emit a test result
+# Arg 1 : test name
+# Arg 2 : test status (retry/failed/passed)
+# Arg 3 : test time, in seconds
+emitTestResult() {
+  testName=$1
+  testStatus=$2
+  runTime=$3
+
+  # If we have no Splunk access, abort.
+  # Splunk access = running on bitrise = splunk env var defined
+  if [ -z "$SPLUNK_MOBILE_TOKEN" ] 
+  then
+      echo Aborting test result reporting -- not on Bitrise
+      return
+  fi
+
+  # TODO: collect runTime info for test
+  payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"$testStatus\", \"testName\": \"$testName\", \"runTime\" : $runTime, $commonSplunkData}}"
+  curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
+}
+
 passed=0
 failed=0
 failures=()
@@ -17,6 +41,9 @@ do
         target=${driver/_test}
         echo "Aggregator: target = $target"
 	
+        # Start the clock
+        startTime=`date +"%s"`
+
         # Run the test
         flutter drive --target=$target
 
@@ -24,17 +51,25 @@ do
         if [ $? -ne 0 ]
         then
           echo "Aggregator: $driver failed; retrying..."
-          flutter drive --target=$target
+          emitTestResult $driver retry
+          startTime=`date +"%s"` # restart the clock
+          flutter drive --target=$target # rerun the test
         fi
+
+        # Stop the clock
+        endTime=`date +"%s"`
+        ((runSecs=endTime-startTime))
 
         # Record test result
         if [ $? -eq 0 ]
         then
-          echo Aggregator: $driver Passed
+          echo Aggregator: $driver Passed, secs=$runSecs
           ((passed=passed+1))
+          emitTestResult $driver passed $runSecs
         else
           ((failed=failed+1))
           failures=("${failures[@]}" $driver)
+          emitTestResult $driver failed $runSecs
         fi
 done
 
