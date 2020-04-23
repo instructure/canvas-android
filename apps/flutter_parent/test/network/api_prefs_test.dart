@@ -404,6 +404,14 @@ void main() {
     expect(ApiPrefs.getCurrentStudent(), user);
   });
 
+  test('gets and sets camera count', () async {
+    await setupPlatformChannels();
+    final count = 2;
+    await ApiPrefs.setCameraCount(count);
+
+    expect(ApiPrefs.getCameraCount(), count);
+  });
+
   test('migrates old prefs to encrypted prefs', () async {
     // Setup platform channels with minimal configuration
     setupPlatformChannels(config: PlatformConfig(mockApiPrefs: null));

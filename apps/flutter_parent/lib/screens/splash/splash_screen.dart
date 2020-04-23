@@ -62,7 +62,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       return FutureBuilder(
           future: _cameraFuture,
           builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData || snapshot.hasError) {
+              // Even if the camera count fails, we don't want to trap the user on splash
               _navigate(PandaRouter.login());
             }
 

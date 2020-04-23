@@ -144,6 +144,22 @@ void main() {
     expect(find.byType(LoginLandingScreen), findsOneWidget);
   });
 
+  testWidgetsWithAccessibilityChecks(
+      'Routes to login screen when the user is not logged in and camera count throws error', (tester) async {
+    var interactor = _MockInteractor();
+    setupTestLocator((locator) {
+      locator.registerFactory<SplashScreenInteractor>(() => interactor);
+      locator.registerLazySingleton<QuickNav>(() => QuickNav());
+    });
+
+    when(interactor.getCameraCount()).thenAnswer((_) => Future.error('error'));
+
+    await tester.pumpWidget(TestApp(SplashScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LoginLandingScreen), findsOneWidget);
+  });
+
   /* - TODO - fix this up if this route starts to pre-fetch students again
   testWidgetsWithAccessibilityChecks('Routes to dashboard when there are students', (tester) async {
     var interactor = _MockInteractor();
