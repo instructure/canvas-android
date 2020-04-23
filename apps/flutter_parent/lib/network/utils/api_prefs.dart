@@ -39,6 +39,7 @@ class ApiPrefs {
   static const String KEY_LOGINS = 'logins';
   static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
   static const String KEY_CURRENT_STUDENT = 'current_student';
+  static const String KEY_CAMERA_COUNT = 'camera_count';
 
   static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -258,6 +259,10 @@ class ApiPrefs {
 
   static Future<void> setHasCheckedOldReminders(bool checked) => _setPrefBool(KEY_HAS_CHECKED_OLD_REMINDERS, checked);
 
+  static int getCameraCount() => _getPrefInt(KEY_CAMERA_COUNT);
+
+  static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
+
   static Future<void> _setPrefBool(String key, bool value) async {
     _checkInit();
     await _prefs.setBool(key, value);
@@ -271,6 +276,16 @@ class ApiPrefs {
   static String _getPrefString(String key) {
     _checkInit();
     return _prefs.getString(key);
+  }
+
+  static int _getPrefInt(String key) {
+    _checkInit();
+    return _prefs.getInt(key);
+  }
+
+  static Future<void> _setPrefInt(String key, int value) async {
+    _checkInit();
+    return _prefs.setInt(key, value);
   }
 
   static Map<String, String> getHeaderMap({

@@ -107,6 +107,17 @@ void main() {
     expect(result.errorType, QRError.invalidQR);
     expect(result.result, isNull);
   });
+
+  test('returns error when given generic Exception', () async {
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw Exception('ErRoR'));
+
+    var interactor = QRLoginTutorialScreenInteractor();
+
+    final result = await interactor.scan();
+    expect(result.isSuccess, isFalse);
+    expect(result.errorType, QRError.invalidQR);
+    expect(result.result, isNull);
+  });
 }
 
 class _MockScanner extends Mock implements BarcodeScanVeneer {}
