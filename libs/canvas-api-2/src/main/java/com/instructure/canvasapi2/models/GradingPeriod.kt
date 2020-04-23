@@ -28,5 +28,5 @@ data class GradingPeriod(
         var startDate: String? = null,
         @SerializedName("end_date")
         var endDate: String? = null,
-        var weight: Int = 0
+        var weight: Double = 0.0
 ) : CanvasModel<GradingPeriod>()
