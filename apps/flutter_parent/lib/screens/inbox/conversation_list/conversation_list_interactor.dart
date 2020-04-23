@@ -64,8 +64,14 @@ class ConversationListInteractor {
     // Create tuple list
     // Remove enrollments where the user is not observing anyone
     enrollments.retainWhere((e) => e.observedUser != null);
-    List<Tuple2<User, Course>> thing =
-        enrollments.map((e) => Tuple2(e.observedUser, courses.firstWhere((c) => c.id == e.courseId))).toList();
+    List<Tuple2<User, Course>> thing = enrollments
+        .map((e) {
+          final course = courses.firstWhere((c) => c.id == e.courseId, orElse: () => null);
+          if (course == null) return null;
+          return Tuple2(e.observedUser, course);
+        })
+        .where((e) => e != null)
+        .toList();
 
     // Sort users in alphabetical order and sort their courses alphabetically
     thing.sortBy(
