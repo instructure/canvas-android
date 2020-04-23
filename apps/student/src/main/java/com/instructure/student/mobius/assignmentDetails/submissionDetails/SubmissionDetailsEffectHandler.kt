@@ -75,8 +75,8 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
         launch {
             // If the user is an observer, get the id of the first observee that comes back, otherwise use the user's id
             val enrollmentsResult = EnrollmentManager.getObserveeEnrollmentsAsync(true).await()
-            val observee = enrollmentsResult.dataOrNull?.firstOrNull { it.isObserver && it.courseId == effect.courseId }
-            val userId = observee?.associatedUserId ?: ApiPrefs.user!!.id
+            val observeeId = enrollmentsResult.dataOrNull?.firstOrNull { it.isObserver && it.courseId == effect.courseId }?.associatedUserId
+            val userId = observeeId ?: ApiPrefs.user!!.id
 
             val submissionResult = SubmissionManager.getSingleSubmissionAsync(effect.courseId, effect.assignmentId, userId, true).await()
             val assignmentResult = AssignmentManager.getAssignmentAsync(effect.assignmentId, effect.courseId, true).await()
