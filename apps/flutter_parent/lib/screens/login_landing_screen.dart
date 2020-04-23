@@ -158,7 +158,7 @@ class LoginLandingScreen extends StatelessWidget {
 
   bool _isQRLoginEnabled() {
     return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true' &&
-        ApiPrefs.getCameraCount() != 0;
+        (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
   }
 
   Widget _previousLogins(BuildContext context) {

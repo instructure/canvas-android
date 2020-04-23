@@ -23,9 +23,10 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  final mockScanner = _MockScanner();
+  final mockScanner = MockBarcodeScanner();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
@@ -119,5 +120,3 @@ void main() {
     expect(result.result, isNull);
   });
 }
-
-class _MockScanner extends Mock implements BarcodeScanVeneer {}

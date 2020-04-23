@@ -136,6 +136,8 @@ void main() {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
 
+    when(interactor.getCameraCount()).thenAnswer((_) => Future.value(2));
+
     await tester.pumpWidget(TestApp(SplashScreen()));
     await tester.pumpAndSettle();
 

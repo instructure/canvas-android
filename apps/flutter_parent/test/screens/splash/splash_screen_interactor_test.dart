@@ -21,16 +21,19 @@ import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   _MockDashboardInteractor dashboardInteractor = _MockDashboardInteractor();
   _MockAccountsApi accountsApi = _MockAccountsApi();
   _MockAuthApi authApi = _MockAuthApi();
+  final mockScanner = MockBarcodeScanner();
 
   Login login = Login((b) => b
     ..domain = 'domain'
@@ -54,6 +57,7 @@ void main() {
     locator.registerFactory<DashboardInteractor>(() => dashboardInteractor);
     locator.registerLazySingleton<AccountsApi>(() => accountsApi);
     locator.registerLazySingleton<AuthApi>(() => authApi);
+    locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
   });
 
   setUp(() async {
@@ -204,6 +208,16 @@ void main() {
     var data = await SplashScreenInteractor().getData(qrLoginUrl: url);
     expect(data.isObserver, isTrue);
     expect(data.canMasquerade, isTrue);
+  });
+
+  test('getCameraCount returns valid camera count and sets ApiPrefs', () async {
+    when(mockScanner.getNumberOfCameras()).thenAnswer((_) => Future.value(2));
+
+    final count = await SplashScreenInteractor().getCameraCount();
+
+    final prefCount = await ApiPrefs.getCameraCount();
+
+    expect(count, prefCount);
   });
 }
 
