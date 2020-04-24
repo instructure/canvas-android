@@ -93,8 +93,7 @@ class SubmissionContentView(
         private val mStudentSubmission: GradeableStudentSubmission,
         private val mAssignment: Assignment,
         private val mCourse: Course,
-        var initialTabIndex: Int = 0,
-        private val newGradebookEnabled: Boolean = false
+        var initialTabIndex: Int = 0
 ) : PdfSubmissionView(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
@@ -120,7 +119,7 @@ class SubmissionContentView(
 
     private var mIsCleanedUp = false
     private val activity: SpeedGraderActivity get() = context as SpeedGraderActivity
-    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee, newGradebookEnabled) }
+    private val mGradeFragment by lazy { SpeedGraderGradeFragment.newInstance(mRootSubmission, mAssignment, mCourse, mAssignee) }
 
     val hasUnsavedChanges: Boolean
         get() = mGradeFragment.hasUnsavedChanges
@@ -160,7 +159,6 @@ class SubmissionContentView(
 
         //if we can share the content with another app, show the share icon
         speedGraderToolbar.menu.findItem(R.id.menu_share)?.isVisible = fragment is ShareableFile || fragment is PdfFragment
-        speedGraderToolbar.menu.findItem(R.id.menuPostPolicies)?.isVisible = newGradebookEnabled
 
         ViewStyler.colorToolbarIconsAndText(context as Activity, speedGraderToolbar, Color.BLACK)
     }
@@ -297,40 +295,40 @@ class SubmissionContentView(
     private fun setSubmission(submission: Submission?) {
         if (submission != null) submissionVersionsButton.text = submission.submittedAt.getSubmissionFormattedDate(context)
         val content = when {
-            Assignment.SubmissionType.NONE.apiString in mAssignment.submissionTypesRaw -> NoneContent()
-            Assignment.SubmissionType.ON_PAPER.apiString in mAssignment.submissionTypesRaw -> OnPaperContent()
-            submission?.submissionType == null -> NoSubmissionContent()
+            SubmissionType.NONE.apiString in mAssignment.submissionTypesRaw -> NoneContent
+            SubmissionType.ON_PAPER.apiString in mAssignment.submissionTypesRaw -> OnPaperContent
+            submission?.submissionType == null -> NoSubmissionContent
             mAssignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_MISSING ||
-                    mAssignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING -> NoSubmissionContent()
+                    mAssignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING -> NoSubmissionContent
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType!!)) {
 
             // LTI submission
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
+                SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
                         mCourse,
                         submission.previewUrl.validOrNull() ?: mAssignment.url.validOrNull()
                         ?: mAssignment.htmlUrl ?: ""
                 )
 
             // Text submission
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> TextContent(submission.body ?: "")
+                SubmissionType.ONLINE_TEXT_ENTRY -> TextContent(submission.body ?: "")
 
             // Media submission
-                Assignment.SubmissionType.MEDIA_RECORDING -> submission.mediaComment?.let {
+                SubmissionType.MEDIA_RECORDING -> submission.mediaComment?.let {
                     MediaContent(
                             uri = Uri.parse(it.url),
                             contentType = it.contentType ?: "",
                             displayName = it.displayName
                     )
-                } ?: UnsupportedContent()
+                } ?: UnsupportedContent
 
             // File uploads
-                Assignment.SubmissionType.ONLINE_UPLOAD -> getAttachmentContent(submission.attachments[0])
+                SubmissionType.ONLINE_UPLOAD -> getAttachmentContent(submission.attachments[0])
 
             // URL Submission
-                Assignment.SubmissionType.ONLINE_URL -> UrlContent(submission.url!!, submission.attachments.firstOrNull()?.url)
+                SubmissionType.ONLINE_URL -> UrlContent(submission.url!!, submission.attachments.firstOrNull()?.url)
 
             // Quiz Submission
-                Assignment.SubmissionType.ONLINE_QUIZ -> QuizContent(
+                SubmissionType.ONLINE_QUIZ -> QuizContent(
                         mCourse.id,
                         mAssignment.id,
                         submission.userId,
@@ -339,10 +337,10 @@ class SubmissionContentView(
                 )
 
             // Discussion Submission
-                Assignment.SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
+                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
 
             // Unsupported type
-                else -> UnsupportedContent()
+                else -> UnsupportedContent
             }
         }
         setGradeableContent(content)
@@ -684,7 +682,7 @@ class SubmissionContentView(
 
         for (i in 0 until bottomTabLayout.tabCount) {
             val tab = (bottomTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
-            val params = tab.layoutParams as ViewGroup.MarginLayoutParams
+            val params = tab.layoutParams as MarginLayoutParams
             params.setMargins(spacing, 0, spacing, 0)
             tab.requestLayout()
         }
@@ -896,11 +894,11 @@ class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val course
 
 
 sealed class GradeableContent
-class NoSubmissionContent : GradeableContent()
-class NoneContent : GradeableContent()
+object NoSubmissionContent : GradeableContent()
+object NoneContent : GradeableContent()
 class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : GradeableContent()
-class OnPaperContent : GradeableContent()
-class UnsupportedContent : GradeableContent()
+object OnPaperContent : GradeableContent()
+object UnsupportedContent : GradeableContent()
 class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()
 class PdfContent(val url: String) : GradeableContent()
 class TextContent(val text: String) : GradeableContent()

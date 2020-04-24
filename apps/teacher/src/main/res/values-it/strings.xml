@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Giustificato</string>
     <string name="last_login_format">Ultimo accesso: %s</string>
 
-    <string name="muteGrades">Disattiva voti</string>
-    <string name="unmuteGrades">Riattiva voti</string>
-    <string name="gradesMutedLabel">Voti disattivati</string>
     <string name="turnOnAnonymousGrading">Attiva valutazione anonima</string>
     <string name="turnOffAnonymousGrading">Disattiva valutazione anonima</string>
     <string name="anonymousGradingLabel">Valutazione anonima</string>

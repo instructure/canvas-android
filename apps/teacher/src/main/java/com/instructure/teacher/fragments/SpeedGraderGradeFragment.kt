@@ -40,7 +40,6 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     private var mAssignment: Assignment by ParcelableArg(default = Assignment())
     private var mAssignee: Assignee by ParcelableArg(default = StudentAssignee(User()))
     private var mCourse: Course by ParcelableArg(default = Course())
-    private var newGradebookEnabled: Boolean by BooleanArg(default = false)
 
     override fun layoutResId() = R.layout.fragment_speedgrader_grade
     override fun getPresenterFactory() = SpeedGraderGradePresenterFactory(mSubmission, mAssignment, mCourse, mAssignee)
@@ -88,20 +87,18 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             submission: Submission?,
             assignment: Assignment,
             course: Course,
-            assignee: Assignee,
-            newGradebookEnabled: Boolean
+            assignee: Assignee
         ) = SpeedGraderGradeFragment().apply {
             mSubmission = submission
             mAssignment = assignment
             mCourse = course
             mAssignee = assignee
-            this.newGradebookEnabled = newGradebookEnabled
         }
     }
 
     override fun updateGradeText() {
         // Show 'grade hidden' icon if the submission is graded but there is no postAt date
-        val showHiddenIcon = newGradebookEnabled && presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null } ?: false
+        val showHiddenIcon = presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null } ?: false
         hiddenIcon.setVisible(showHiddenIcon)
 
         val displayGrade = presenter.assignment.getDisplayGrade(presenter.submission, requireContext())

@@ -227,9 +227,6 @@
     <string name="submission_status_excused">已免除</string>
     <string name="last_login_format">上一次登入：%s</string>
 
-    <string name="muteGrades">隱藏評分</string>
-    <string name="unmuteGrades">取消隱藏評分</string>
-    <string name="gradesMutedLabel">已隱藏評分</string>
     <string name="turnOnAnonymousGrading">開啟匿名評分功能</string>
     <string name="turnOffAnonymousGrading">關閉匿名評分功能</string>
     <string name="anonymousGradingLabel">匿名評分</string>

@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Excused</string>
     <string name="last_login_format">Last login: %s</string>
 
-    <string name="muteGrades">Mute Grades</string>
-    <string name="unmuteGrades">Unmute Grades</string>
-    <string name="gradesMutedLabel">Grades Muted</string>
     <string name="turnOnAnonymousGrading">Turn on Anonymous Grading</string>
     <string name="turnOffAnonymousGrading">Turn off Anonymous Grading</string>
     <string name="anonymousGradingLabel">Anonymous grading</string>

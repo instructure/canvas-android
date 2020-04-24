@@ -227,9 +227,6 @@
     <string name="submission_status_excused">已请假</string>
     <string name="last_login_format">最后一次登录：%s</string>
 
-    <string name="muteGrades">屏蔽评分</string>
-    <string name="unmuteGrades">取消屏蔽评分</string>
-    <string name="gradesMutedLabel">已屏蔽评分</string>
     <string name="turnOnAnonymousGrading">打开匿名评分</string>
     <string name="turnOffAnonymousGrading">关闭匿名评分</string>
     <string name="anonymousGradingLabel">匿名评分</string>

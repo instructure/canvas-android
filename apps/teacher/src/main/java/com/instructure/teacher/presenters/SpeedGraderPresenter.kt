@@ -41,7 +41,6 @@ class SpeedGraderPresenter(
     private var mApiJob: Job? = null
 
     private var mHasAttemptedLoad = false
-    private var newGradebookEnabled = false
 
     lateinit var assignment: Assignment
     lateinit var course: Course
@@ -52,7 +51,6 @@ class SpeedGraderPresenter(
         when {
         // Discussion
             discussion != null -> setupDiscussionData(discussion!!)
-
         // Assignment
             else -> setupAssignmentData()
         }
@@ -72,9 +70,6 @@ class SpeedGraderPresenter(
                         // Get assignment for the discussion
                         { AssignmentManager.getAssignment(discussion.assignmentId, course.id, false, it) }
                 )
-                newGradebookEnabled = awaitApi<List<String>> {
-                    FeaturesManager.getEnabledFeaturesForCourse(courseId, true, it)
-                }.contains(FeaturesManager.NEW_GRADEBOOK)
 
                 // Map raw submissions to user id Map<UserId, Submission>
                 val userSubmissionMap = rawSubmissions.associateBy { it.userId }
@@ -86,7 +81,7 @@ class SpeedGraderPresenter(
 
                 assignment = discussionAssignment
                 submissions = discussionSubmissions
-                mView?.onDataSet(discussionAssignment, discussionSubmissions, newGradebookEnabled)
+                mView?.onDataSet(discussionAssignment, discussionSubmissions)
             } catch (ignore: Throwable) {
                 mView?.onErrorSettingData()
             }
@@ -102,7 +97,6 @@ class SpeedGraderPresenter(
             )
             course = data.first
             assignment = data.second
-            newGradebookEnabled = data.third.contains(FeaturesManager.NEW_GRADEBOOK)
 
             if (submissionId > 0 && submissions.isEmpty()) {
                 // We don't have all the data we need (we came from a push notification), get all the stuffs first
@@ -111,7 +105,7 @@ class SpeedGraderPresenter(
                 submissions = listOf(GradeableStudentSubmission(StudentAssignee(user), submission))
             }
 
-            mView?.onDataSet(assignment, submissions, newGradebookEnabled)
+            mView?.onDataSet(assignment, submissions)
         } catch {
             mView?.onErrorSettingData()
         }

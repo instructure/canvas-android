@@ -33,7 +33,7 @@ class GradeableStudentSubmissionAdapter(
 
 
     override fun bindHolder(model: GradeableStudentSubmission, holderSubmission: GradeableStudentSubmissionViewHolder, position: Int) {
-        holderSubmission.bind(mContext, model, mAssignment, mCourseId, presenter.newGradebookEnabled, mCallback)
+        holderSubmission.bind(mContext, model, mAssignment, mCourseId, mCallback)
     }
 
     override fun createViewHolder(v: View, viewType: Int) = GradeableStudentSubmissionViewHolder(v)

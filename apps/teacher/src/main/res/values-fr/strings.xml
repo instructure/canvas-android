@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Excusé</string>
     <string name="last_login_format">Dernière connexion : %s</string>
 
-    <string name="muteGrades">Rendre les notes silencieuses</string>
-    <string name="unmuteGrades">Désactiver le mode silencieux sur les notes</string>
-    <string name="gradesMutedLabel">Notes rendues silencieuses</string>
     <string name="turnOnAnonymousGrading">Activer la notation anonyme</string>
     <string name="turnOffAnonymousGrading">Désactiver la notation anonyme</string>
     <string name="anonymousGradingLabel">Notation anonyme</string>

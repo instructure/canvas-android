@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Ursäktad</string>
     <string name="last_login_format">Senaste inloggning: %s</string>
 
-    <string name="muteGrades">Tysta omdömen</string>
-    <string name="unmuteGrades">Av-tysta omdömen</string>
-    <string name="gradesMutedLabel">Omdömen tystade</string>
     <string name="turnOnAnonymousGrading">Sätt på anonym bedömning</string>
     <string name="turnOffAnonymousGrading">Stäng av anonym bedömning</string>
     <string name="anonymousGradingLabel">Anonym bedömning</string>

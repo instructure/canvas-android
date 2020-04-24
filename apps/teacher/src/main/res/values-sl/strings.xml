@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Opravičeno</string>
     <string name="last_login_format">Zadnja prijava: %s</string>
 
-    <string name="muteGrades">Ocene brez sprotnega obveščanja</string>
-    <string name="unmuteGrades">Ocene s sprotnim obveščanjem</string>
-    <string name="gradesMutedLabel">Ocene so brez sprotnega obveščanja.</string>
     <string name="turnOnAnonymousGrading">Vklopi anonimizirano ocenjevanje</string>
     <string name="turnOffAnonymousGrading">Izklopi anonimizirano ocenjevanje</string>
     <string name="anonymousGradingLabel">Anonimno ocenjevanje</string>

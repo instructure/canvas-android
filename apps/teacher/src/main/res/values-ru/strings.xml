@@ -239,9 +239,6 @@
     <string name="submission_status_excused">По уважительной причине</string>
     <string name="last_login_format">Последний вход: %s</string>
 
-    <string name="muteGrades">Скрыть оценки</string>
-    <string name="unmuteGrades">Разблокировать оценки</string>
-    <string name="gradesMutedLabel">Оценки скрыты</string>
     <string name="turnOnAnonymousGrading">Включить анонимное оценивание</string>
     <string name="turnOffAnonymousGrading">Отключить анонимное оценивание</string>
     <string name="anonymousGradingLabel">Анонимное Оценивание</string>

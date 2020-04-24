@@ -20,5 +20,4 @@ import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import instructure.androidblueprint.SyncManager
 
 interface AssignmentSubmissionListView : SyncManager<GradeableStudentSubmission> {
-    fun onMuteUpdated(success: Boolean, isMuted: Boolean)
 }

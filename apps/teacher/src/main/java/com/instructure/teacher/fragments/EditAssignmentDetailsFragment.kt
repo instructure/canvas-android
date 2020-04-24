@@ -435,8 +435,6 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         if (mAssignment.unpublishable) postData.published = mIsPublished
         else postData.published = mAssignment.published
 
-        postData.isMuted = mAssignment.muted
-
         @Suppress("EXPERIMENTAL_FEATURE_WARNING")
         mPutAssignmentCall = weave {
             try {
