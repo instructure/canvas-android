@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-17T11:03:54.194797",
+  "@@last_modified": "2020-04-24T11:04:11.513016",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -167,6 +167,12 @@
   "Tap to favorite the courses you want to see on the Calendar.": "Tap to favorite the courses you want to see on the Calendar.",
   "@Tap to favorite the courses you want to see on the Calendar.": {
     "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Planner Note": "Planner Note",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
     "type": "text",
     "placeholders": {}
   },
