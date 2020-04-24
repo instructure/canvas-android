@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
@@ -31,7 +32,7 @@ class SplashScreenInteractor {
       final qrLoginUri = QRUtils.verifySSOLogin(qrLoginUrl);
       if (qrLoginUrl == null) {
         locator<Analytics>().logEvent(AnalyticsEventConstants.QR_LOGIN_FAILURE);
-        return Future.error(QRLoginError);
+        return Future.error(QRLoginError());
       } else {
         final qrSuccess = await _performSSOLogin(qrLoginUri);
         // Error out if the login fails, otherwise continue
@@ -40,7 +41,7 @@ class SplashScreenInteractor {
             AnalyticsEventConstants.QR_LOGIN_FAILURE,
             extras: {AnalyticsParamConstants.DOMAIN_PARAM: qrLoginUri.host},
           );
-          return Future.error(QRLoginError);
+          return Future.error(QRLoginError());
         } else {
           locator<Analytics>().logEvent(
             AnalyticsEventConstants.QR_LOGIN_SUCCESS,
@@ -81,7 +82,12 @@ class SplashScreenInteractor {
       return Future.value(false);
     }
 
-    final tokenResponse = await locator<AuthApi>().getTokens(mobileVerifyResult, oAuthCode);
+    CanvasToken tokenResponse;
+    try {
+      tokenResponse = await locator<AuthApi>().getTokens(mobileVerifyResult, oAuthCode);
+    } catch (e) {
+      return Future.value(false);
+    }
 
     // Key here is that realUser represents a masquerading attempt
     var isMasquerading = tokenResponse.realUser != null;

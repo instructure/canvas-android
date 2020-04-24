@@ -55,7 +55,13 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
       onPressed: () async {
         var barcodeResult = await locator<QRLoginTutorialScreenInteractor>().scan();
         if (barcodeResult.isSuccess) {
-          locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
+          final result = await locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
+
+          // Await this result so we can show an error message if the splash screen has to pop after a login issue
+          // (This is typically in the case of the same QR code being scanned twice)
+          if (result != null) {
+            _showSnackBarError(context, result);
+          }
         } else {
           _showSnackBarError(
               context,

@@ -26,7 +26,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
-
   final String qrLoginUrl;
 
   SplashScreen({this.qrLoginUrl, Key key}) : super(key: key);
@@ -36,6 +35,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Future<SplashScreenData> _dataFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
@@ -63,6 +64,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       }
 
       return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
           future: _dataFuture,
@@ -75,9 +77,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                 _navigate(PandaRouter.notParent());
               }
             } else if (snapshot.hasError) {
-              if(snapshot.error is QRLoginError) {
-                Scaffold.of(context).showSnackBar(SnackBar(content: Text(L10n(context).loginWithQRCodeError)));
-                Navigator.pop(context);
+              if (snapshot.error is QRLoginError) {
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => Navigator.pop(context, L10n(context).loginWithQRCodeError));
               } else {
                 // On error, proceed without pre-fetched student list
                 _navigate(PandaRouter.dashboard());
