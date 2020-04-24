@@ -33,6 +33,8 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interac
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -144,6 +146,8 @@ void setupLocator() {
   // Other
   locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
   locator.registerLazySingleton<Analytics>(() => Analytics());
+  locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
+  locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
   locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<OldAppMigration>(() => OldAppMigration());

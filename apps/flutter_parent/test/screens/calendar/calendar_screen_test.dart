@@ -26,6 +26,8 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
@@ -55,10 +57,12 @@ void main() {
   final Set<String> contexts = {'course_123'};
 
   setupTestLocator((locator) {
-    locator.registerLazySingleton<PlannerApi>(() => plannerApi);
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
-    locator.registerLazySingleton<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<CalendarFilterListInteractor>(() => filterInteractor);
+    locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
+    locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
+    locator.registerLazySingleton<PlannerApi>(() => plannerApi);
+    locator.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
   setUp(() {

@@ -15,6 +15,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
@@ -26,6 +28,10 @@ import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
 
 void main() {
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
+    locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
+  });
   Future<CalendarWidgetState> goToDate(WidgetTester tester, DateTime date) async {
     CalendarWidgetState state = tester.state(find.byType(CalendarWidget));
     state.selectDay(
