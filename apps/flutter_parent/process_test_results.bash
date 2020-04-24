@@ -6,16 +6,25 @@ commonSplunkData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \
 echo file is $1
 while IFS= read -r line
 do
+
+  # Process a "test" entry, marking the beginning of the test
+  # This is where we capture file name and test name, map test id to each
+  # Sample line:
+  # {"test":{"id":1799,"name":"internal url handler launches simpleWebView for limitAccessFlag without match","suiteID":1586,"groupIDs":[1731,1786],"metadata":{"skip":false,"skipReason":null},"line":112,"column":3,"url":"package:flutter_test/src/widget_tester.dart","root_line":512,"root_column":5,"root_url":"file:///Users/jhoag/code/projects/canvas-android/apps/flutter_parent/test/router/panda_router_test.dart"},"type":"testStart","time":79561}
+
   if [[ $line =~ "\"test\":" ]]
   then
+    # Parse the test id
     idRegex='\"id\":([0-9]+),'
     [[ $line =~ $idRegex ]]
     id=${BASH_REMATCH[1]}
 
+    # Parse the test name
     nameRegex='\"name\":\"([A-Za-z0-9 -\(\)/\._]+)\",\"suiteID\"'
     [[ $line =~ $nameRegex ]]
     name=${BASH_REMATCH[1]}
 
+    # Parse the file name.  We'll try to grab the root_url field first, then the url field.
     urlRegex='\"root_url\":\"([A-Za-z0-9 -:\(\)/\._]+)\"'
     [[ $line =~ $urlRegex ]]
     url=${BASH_REMATCH[1]}
@@ -26,6 +35,7 @@ do
       url=${BASH_REMATCH[1]}
     fi
 
+    # If we've succeeded in getting a url value, parse the test file from that.
     if [ -n "$url" ]
     then
     
@@ -35,27 +45,37 @@ do
       nameMap[$id]=$name
       fileMap[$id]=$file
 
+      # Print out the file and test name to show some progress.
+      # This is optional.  We can take it out if we want to shrink bitrise logs.
       echo -en "\r\033[K$file - $name"
     fi
 
   fi
 
+  # Process a test result, reporting failures to splunk
+  # Sample line:
+  # {"testID":1801,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":79662}
   if [[ $line =~ "\"result\":" ]]
   then
+
+    # Grab the test id field
     idRegex='\"testID\":([0-9]+),'
     [[ $line =~ $idRegex ]]
     id=${BASH_REMATCH[1]}
 
+    # Grab our test name and file from our id->name and id->file maps
     name=${nameMap[$id]}
     file=${fileMap[$id]}
 
+    # Grab the result field
     resultRegex='\"result\":\"([A-Za-z]+)\",'
     [[ $line =~ $resultRegex ]]
     result=${BASH_REMATCH[1]}
     
+    # On a fail, send a message to splunk
     if [ $result = "error" ]
     then
-      echo -e "\ntest FAILED: $file \"$name\"\n"
+      echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
       # Emit summary payload message to Splunk if we are on bitrise
       if [ -n "$SPLUNK_MOBILE_TOKEN" ]
       then
@@ -68,16 +88,19 @@ do
       ((successCount=successCount+1))
     fi
 
-    #echo id=$id, result=$result, name=$name, file=$file
-
   fi
 
+  # Capture end-of-run event
+  # Sample line:
+  # {"success":false,"type":"done","time":114261}
   if [[ $line =~ "\"success\":" ]]
   then
+    # Capture success field
     successRegex='\"success\":(true|false),'
     [[ $line =~ $successRegex ]]
     success=${BASH_REMATCH[1]}
 
+    # Capture time field
     timeRegex='\"time\":([0-9]+)'
     [[ $line =~ $timeRegex ]]
     msTime=${BASH_REMATCH[1]}
@@ -94,5 +117,5 @@ do
     fi
 
   fi
-#done < $1
+# Reads from either provided file or from stdin.
 done < "${1:-/dev/stdin}"
