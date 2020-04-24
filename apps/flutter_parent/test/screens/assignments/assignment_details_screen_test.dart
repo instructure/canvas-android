@@ -99,7 +99,7 @@ void main() {
 
     await tester.pump();
 
-    expect(find.byType(LoadingIndicator), findsNothing);
+    expect(find.byType(LoadingIndicator), findsOneWidget);
     expect(find.byType(FloatingActionButton), findsNothing);
   });
 
