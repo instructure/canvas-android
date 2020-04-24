@@ -47,8 +47,8 @@ do
       # Emit summary payload message to Splunk if we are on bitrise
       if [ -n "$SPLUNK_MOBILE_TOKEN" ]
       then
-        payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonData}}"
-        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
+        payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
+        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d $payload
       fi
       ((failureCount=failureCount+1))
     else
@@ -76,7 +76,7 @@ do
     # Emit summary payload message to Splunk if we are on bitrise
     if [ -n "$SPLUNK_MOBILE_TOKEN" ]
     then
-      payload="{\"numTests\" : $totalCount, \"numFailures\" : $failureCount, \"runTime\" : $msTime, $commonData}"
+      payload="{\"numTests\" : $totalCount, \"numFailures\" : $failureCount, \"runTime\" : $msTime, $commonSplunkData}"
       curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-summary\", \"event\" : $payload}"
     fi
 
