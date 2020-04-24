@@ -16,15 +16,27 @@ do
     [[ $line =~ $nameRegex ]]
     name=${BASH_REMATCH[1]}
 
-    #urlRegex='\"url\":\"([A-Za-z0-9_:/\-\,]+)\"'
     urlRegex='\"root_url\":\"([A-Za-z0-9 -:\(\)/\._]+)\"'
     [[ $line =~ $urlRegex ]]
     url=${BASH_REMATCH[1]}
-    file=`echo $url | rev | cut -d "/" -f 1 | rev`
+    if [ -z "$url" ]
+    then 
+      urlRegex='\"url\":\"([A-Za-z0-9 -:\(\)/\._]+)\"'
+      [[ $line =~ $urlRegex ]]
+      url=${BASH_REMATCH[1]}
+    fi
 
-    #echo id=$id, name=$name, url=$url, file=$file
-    nameMap[$id]=$name
-    fileMap[$id]=$file
+    if [ -n "$url" ]
+    then
+    
+      file=`echo $url | rev | cut -d "/" -f 1 | rev`
+
+      #echo id=$id, name=$name, url=$url, file=$file
+      nameMap[$id]=$name
+      fileMap[$id]=$file
+
+      echo -en "\r\033[K$file - $name"
+    fi
 
   fi
 
