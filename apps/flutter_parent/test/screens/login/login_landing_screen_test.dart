@@ -290,12 +290,21 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.setCameraCount(2);
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppLocalizations().qrCode));
     await tester.pumpAndSettle();
 
     expect(find.byType(QRLoginTutorialScreen), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('QR login does not display when camera count is 0', (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.setCameraCount(0);
+    await tester.pumpAndSettle();
+
+    expect(find.text(AppLocalizations().qrCode), findsNothing);
   });
 }
 

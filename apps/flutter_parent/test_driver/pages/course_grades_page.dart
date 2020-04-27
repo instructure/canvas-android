@@ -73,4 +73,8 @@ class CourseGradesPage {
   static SerializableFinder _assignmentGradeFinder(Assignment assignment) {
     return find.byValueKey("assignment_${assignment.id}_grade");
   }
+
+  static Future<void> initiateCreateEmail(FlutterDriver driver) async {
+    await driver.tap(find.byType('FloatingActionButton'));
+  }
 }

@@ -35,6 +35,13 @@ class _$CreateCourseInfoSerializer
       result.add(serializers.serialize(object.enrollmentTermId,
           specifiedType: const FullType(int)));
     }
+    result.add('syllabus_body');
+    if (object.syllabusBody == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.syllabusBody,
+          specifiedType: const FullType(String)));
+    }
     return result;
   }
 
@@ -67,6 +74,10 @@ class _$CreateCourseInfoSerializer
           result.role = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
+        case 'syllabus_body':
+          result.syllabusBody = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
       }
     }
 
@@ -83,13 +94,19 @@ class _$CreateCourseInfo extends CreateCourseInfo {
   final int enrollmentTermId;
   @override
   final String role;
+  @override
+  final String syllabusBody;
 
   factory _$CreateCourseInfo(
           [void Function(CreateCourseInfoBuilder) updates]) =>
       (new CreateCourseInfoBuilder()..update(updates)).build();
 
   _$CreateCourseInfo._(
-      {this.name, this.courseCode, this.enrollmentTermId, this.role})
+      {this.name,
+      this.courseCode,
+      this.enrollmentTermId,
+      this.role,
+      this.syllabusBody})
       : super._() {
     if (name == null) {
       throw new BuiltValueNullFieldError('CreateCourseInfo', 'name');
@@ -117,15 +134,18 @@ class _$CreateCourseInfo extends CreateCourseInfo {
         name == other.name &&
         courseCode == other.courseCode &&
         enrollmentTermId == other.enrollmentTermId &&
-        role == other.role;
+        role == other.role &&
+        syllabusBody == other.syllabusBody;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
-        $jc($jc($jc(0, name.hashCode), courseCode.hashCode),
-            enrollmentTermId.hashCode),
-        role.hashCode));
+        $jc(
+            $jc($jc($jc(0, name.hashCode), courseCode.hashCode),
+                enrollmentTermId.hashCode),
+            role.hashCode),
+        syllabusBody.hashCode));
   }
 
   @override
@@ -134,7 +154,8 @@ class _$CreateCourseInfo extends CreateCourseInfo {
           ..add('name', name)
           ..add('courseCode', courseCode)
           ..add('enrollmentTermId', enrollmentTermId)
-          ..add('role', role))
+          ..add('role', role)
+          ..add('syllabusBody', syllabusBody))
         .toString();
   }
 }
@@ -160,6 +181,10 @@ class CreateCourseInfoBuilder
   String get role => _$this._role;
   set role(String role) => _$this._role = role;
 
+  String _syllabusBody;
+  String get syllabusBody => _$this._syllabusBody;
+  set syllabusBody(String syllabusBody) => _$this._syllabusBody = syllabusBody;
+
   CreateCourseInfoBuilder() {
     CreateCourseInfo._initializeBuilder(this);
   }
@@ -170,6 +195,7 @@ class CreateCourseInfoBuilder
       _courseCode = _$v.courseCode;
       _enrollmentTermId = _$v.enrollmentTermId;
       _role = _$v.role;
+      _syllabusBody = _$v.syllabusBody;
       _$v = null;
     }
     return this;
@@ -195,7 +221,8 @@ class CreateCourseInfoBuilder
             name: name,
             courseCode: courseCode,
             enrollmentTermId: enrollmentTermId,
-            role: role);
+            role: role,
+            syllabusBody: syllabusBody);
     replace(_$result);
     return _$result;
   }

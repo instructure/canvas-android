@@ -421,6 +421,7 @@ class _CreateConversationScreenState extends State<CreateConversationScreen> wit
   Widget _chip(Recipient user, {bool ellipsize: false}) {
     return Chip(
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      key: ValueKey("user_chip_${user.id}"),
       //labelPadding: EdgeInsets.zero,
       label: Padding(
         padding: const EdgeInsets.only(top: 2, bottom: 1),

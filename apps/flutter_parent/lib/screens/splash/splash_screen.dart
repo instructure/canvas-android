@@ -36,6 +36,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   Future<SplashScreenData> _dataFuture;
+  Future<int> _cameraFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
   AnimationController _controller;
@@ -54,8 +55,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     if (!ApiPrefs.isLoggedIn() && widget.qrLoginUrl == null) {
       // If they aren't logged in or logging in with QR, route to login screen
-      _navigate(PandaRouter.login());
-      return _defaultBody(context);
+      if (_cameraFuture == null) {
+        _cameraFuture = locator<SplashScreenInteractor>().getCameraCount();
+      }
+
+      return FutureBuilder(
+          future: _cameraFuture,
+          builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+            if (snapshot.hasData || snapshot.hasError) {
+              // Even if the camera count fails, we don't want to trap the user on splash
+              _navigate(PandaRouter.login());
+            }
+
+            return _defaultBody(context);
+          });
     } else {
       if (_dataFuture == null) {
         _dataFuture = locator<SplashScreenInteractor>().getData(qrLoginUrl: widget.qrLoginUrl);

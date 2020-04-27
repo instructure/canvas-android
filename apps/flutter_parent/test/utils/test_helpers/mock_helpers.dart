@@ -40,6 +40,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -107,3 +108,5 @@ class MockPageApi extends Mock implements PageApi {}
 class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
 
 class MockWebViewInteractor extends Mock implements WebContentInteractor {}
+
+class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}

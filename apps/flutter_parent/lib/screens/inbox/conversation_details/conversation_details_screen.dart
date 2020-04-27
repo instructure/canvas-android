@@ -83,11 +83,13 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text(widget.conversationSubject == null || widget.conversationSubject.isEmpty
-              ? L10n(context).noSubject
-              : widget.conversationSubject),
+          Text(
+              widget.conversationSubject == null || widget.conversationSubject.isEmpty
+                  ? L10n(context).noSubject
+                  : widget.conversationSubject,
+              key: ValueKey('subjectText')),
           if (widget.courseName != null && widget.courseName.isNotEmpty)
-            Text(widget.courseName, style: Theme.of(context).textTheme.caption),
+            Text(widget.courseName, style: Theme.of(context).textTheme.caption, key: ValueKey('courseText')),
         ],
       ),
       bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
@@ -160,14 +162,14 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
           separatorBuilder: (context, index) => SizedBox(height: 12),
           itemBuilder: (context, index) {
             var message = conversation.messages[index];
-            return _message(context, conversation, message);
+            return _message(context, conversation, message, index);
           },
         ),
       ),
     );
   }
 
-  Widget _message(BuildContext context, Conversation conversation, Message message) {
+  Widget _message(BuildContext context, Conversation conversation, Message message, int index) {
     return Semantics(
       customSemanticsActions: {
         CustomSemanticsAction(label: L10n(context).reply): () => _reply(context, conversation, message, false),
@@ -211,6 +213,7 @@ class _ConversationDetailsScreenState extends State<ConversationDetailsScreen> {
           onAttachmentClicked: (attachment) {
             _interactor.viewAttachment(context, attachment);
           },
+          key: ValueKey('conversation_message_index_$index'),
         ),
       ),
     );

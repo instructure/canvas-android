@@ -76,4 +76,8 @@ class AssignmentDetailsPage {
     expect(dueDateText.contains(date), true, reason: "Expected due date to contain $date");
     expect(dueDateText.contains(time), true, reason: "Expected due date to contain $time");
   }
+
+  static Future<void> initiateCreateEmail(FlutterDriver driver) async {
+    await driver.tap(find.byType("FloatingActionButton"));
+  }
 }

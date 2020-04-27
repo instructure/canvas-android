@@ -24,6 +24,7 @@ import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
 class SplashScreenInteractor {
   Future<SplashScreenData> getData({String qrLoginUrl}) async {
@@ -70,6 +71,16 @@ class SplashScreenInteractor {
     }
 
     return SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
+  }
+
+  Future<int> getCameraCount() async {
+    if (ApiPrefs.getCameraCount() == null) {
+      int cameraCount = await locator<BarcodeScanVeneer>().getNumberOfCameras();
+      await ApiPrefs.setCameraCount(cameraCount);
+      return cameraCount;
+    } else {
+      return ApiPrefs.getCameraCount();
+    }
   }
 
   Future<bool> _performSSOLogin(Uri qrLoginUri) async {
