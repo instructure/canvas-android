@@ -15,6 +15,7 @@
  */
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
@@ -68,7 +69,7 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.text(AppLocalizations().next.toUpperCase()));
-    await tester.pump();
+    await tester.pumpAndSettle();
     verify(mockNav.pushRoute(any, '/qr_login?qrLoginUrl=${Uri.encodeQueryComponent(barcodeResultUrl)}'));
   });
 
@@ -92,6 +93,28 @@ void main() {
     await tester.tap(find.text(AppLocalizations().next.toUpperCase()));
     await tester.pump();
     expect(find.text(AppLocalizations().invalidQRCodeError), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Clicking next scans, user cancels, and displays no error', (tester) async {
+    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(false, errorType: QRError.cancelled)));
+    await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().next.toUpperCase()));
+    await tester.pump();
+    expect(find.byType(SnackBar), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks(
+      'Clicking next scans, returns valid result, but then displays qr login error on login failure', (tester) async {
+    when(interactor.scan()).thenAnswer((_) => Future.value(BarcodeScanResult(true, result: barcodeResultUrl)));
+    when(mockNav.pushRoute(any, any)).thenAnswer((_) => Future.value(AppLocalizations().loginWithQRCodeError));
+    await tester.pumpWidget(TestApp(QRLoginTutorialScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().next.toUpperCase()));
+    await tester.pumpAndSettle();
+    expect(find.text(AppLocalizations().loginWithQRCodeError), findsOneWidget);
   });
 }
 

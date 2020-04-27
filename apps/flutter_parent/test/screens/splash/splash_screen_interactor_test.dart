@@ -210,6 +210,26 @@ void main() {
     expect(data.canMasquerade, isTrue);
   });
 
+  test('getData returns QRLoginError for invalid auth code', () async {
+    when(authApi.getTokens(any, any)).thenAnswer((_) async => Future.error(''));
+    final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
+    bool fail = false;
+    await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
+      fail = true; // Don't return, just update the flag
+    });
+    expect(fail, isTrue);
+  });
+
+  test('getData returns QRLoginError for error in mobile verify', () async {
+    when(authApi.mobileVerify(any)).thenAnswer((_) async => Future.error(''));
+    final url = 'https://sso.canvaslms.com/canvas/login?code_android_parent=1234&domain=mobiledev.instructure.com';
+    bool fail = false;
+    await SplashScreenInteractor().getData(qrLoginUrl: url).catchError((_) {
+      fail = true; // Don't return, just update the flag
+    });
+    expect(fail, isTrue);
+  });
+
   test('getCameraCount returns valid camera count and sets ApiPrefs', () async {
     when(mockScanner.getNumberOfCameras()).thenAnswer((_) => Future.value(2));
 

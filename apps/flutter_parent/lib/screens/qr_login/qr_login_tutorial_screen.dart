@@ -55,9 +55,16 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
       shape: CircleBorder(side: BorderSide(color: Colors.transparent)),
       onPressed: () async {
         var barcodeResult = await locator<QRLoginTutorialScreenInteractor>().scan();
-        if (barcodeResult?.isSuccess == true) {
-          locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
-        } else {
+        if (barcodeResult.isSuccess) {
+          final result = await locator<QuickNav>().pushRoute(context, PandaRouter.qrLogin(barcodeResult.result));
+
+          // Await this result so we can show an error message if the splash screen has to pop after a login issue
+          // (This is typically in the case of the same QR code being scanned twice)
+          if (result != null) {
+            _showSnackBarError(context, result);
+          }
+        } else if (barcodeResult.errorType == QRError.invalidQR || barcodeResult.errorType == QRError.cameraError) {
+          // We only want to display an error for invalid and camera denied, the other case is the user cancelled
           locator<Analytics>().logMessage(barcodeResult?.errorType?.toString() ?? 'No barcode result');
           _showSnackBarError(
               context,

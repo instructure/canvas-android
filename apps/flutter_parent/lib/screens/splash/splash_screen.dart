@@ -88,8 +88,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
               }
             } else if (snapshot.hasError) {
               if (snapshot.error is QRLoginError) {
-                Scaffold.of(context).showSnackBar(SnackBar(content: Text(L10n(context).loginWithQRCodeError)));
-                Navigator.pop(context);
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => Navigator.pop(context, L10n(context).loginWithQRCodeError));
               } else {
                 // On error, proceed without pre-fetched student list
                 _navigate(PandaRouter.dashboard());

@@ -26,6 +26,7 @@ import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
+  final interactor = QRLoginTutorialScreenInteractor();
   final mockScanner = MockBarcodeScanner();
 
   setupTestLocator((locator) {
@@ -43,8 +44,6 @@ void main() {
 
     when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
-    var interactor = QRLoginTutorialScreenInteractor();
-
     final result = await interactor.scan();
     expect(result.isSuccess, isTrue);
     expect(result.result, barcodeResultUrl);
@@ -57,8 +56,6 @@ void main() {
 
     when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
-    var interactor = QRLoginTutorialScreenInteractor();
-
     final result = await interactor.scan();
     expect(result.isSuccess, isFalse);
     expect(result.errorType, QRError.invalidQR);
@@ -67,8 +64,6 @@ void main() {
 
   test('returns camera error camera access denied', () async {
     when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException(code: BarcodeScanner.cameraAccessDenied));
-
-    var interactor = QRLoginTutorialScreenInteractor();
 
     final result = await interactor.scan();
     expect(result.isSuccess, isFalse);
@@ -79,7 +74,25 @@ void main() {
   test('returns error when given platform error occurs', () async {
     when(mockScanner.scanBarcode()).thenAnswer((_) => throw PlatformException(code: ''));
 
-    var interactor = QRLoginTutorialScreenInteractor();
+    final result = await interactor.scan();
+    expect(result.isSuccess, isFalse);
+    expect(result.errorType, QRError.invalidQR);
+    expect(result.result, isNull);
+  });
+
+  test('returns cancelled error when given ResultType.Cancelled', () async {
+    final scanResult = ScanResult(type: ResultType.Cancelled);
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
+
+    final result = await interactor.scan();
+    expect(result.isSuccess, isFalse);
+    expect(result.errorType, QRError.cancelled);
+    expect(result.result, isNull);
+  });
+
+  test('returns error when given ResultType.Error', () async {
+    final scanResult = ScanResult(type: ResultType.Error);
+    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
 
     final result = await interactor.scan();
     expect(result.isSuccess, isFalse);
@@ -87,21 +100,8 @@ void main() {
     expect(result.result, isNull);
   });
 
-  test('returns nothing when given ResultType.Cancelled', () async {
-    final scanResult = ScanResult(type: ResultType.Cancelled);
-    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
-
-    var interactor = QRLoginTutorialScreenInteractor();
-
-    final result = await interactor.scan();
-    expect(result, isNull);
-  });
-
-  test('returns error when given ResultType.Error', () async {
-    final scanResult = ScanResult(type: ResultType.Error);
-    when(mockScanner.scanBarcode()).thenAnswer((_) => Future.value(scanResult));
-
-    var interactor = QRLoginTutorialScreenInteractor();
+  test('returns default error case on generic exception', () async {
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw Exception());
 
     final result = await interactor.scan();
     expect(result.isSuccess, isFalse);
