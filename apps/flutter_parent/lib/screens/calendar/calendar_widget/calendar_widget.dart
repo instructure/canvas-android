@@ -17,6 +17,8 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_month.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_week.dart';
@@ -25,6 +27,7 @@ import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
@@ -190,6 +193,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   void initState() {
+    locator<CalendarTodayClickNotifier>().addListener(_todayClicked);
+
     // Update _isMonthExpanded when expansion value changes to or from zero
     _monthExpansionNotifier.addListener(() {
       bool isExpanded = _monthExpansionNotifier.value > 0.0;
@@ -461,7 +466,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     );
   }
 
-  @visibleForTesting
   void selectDay(
     DateTime day, {
     CalendarPageChangeBehavior dayPagerBehavior: CalendarPageChangeBehavior.jump,
@@ -472,6 +476,9 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     if (selectedDay.isSameDayAs(day)) return;
 
     selectedDay = day;
+
+    // Enable/disable the today button
+    locator<CalendarTodayNotifier>().value = !DateTime.now().isSameDayAs(selectedDay);
 
     // Month change
     if (monthPagerBehavior == CalendarPageChangeBehavior.animate) {
@@ -643,6 +650,16 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     };
     anim.addListener(listener);
     _monthExpandAnimController.forward();
+  }
+
+  // Use a date without a time (default to midnight), otherwise the second call to selectDay() in the day/month pager
+  // will be off by one day
+  _todayClicked() => selectDay(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+
+  @override
+  void dispose() {
+    locator<CalendarTodayNotifier>().removeListener(_todayClicked);
+    super.dispose();
   }
 }
 

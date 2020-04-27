@@ -29,6 +29,9 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -84,12 +87,14 @@ void main() {
       locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
       locator.registerLazySingleton<AlertsApi>(() => alertsApi ?? AlertsApiMock());
       locator.registerLazySingleton<AlertCountNotifier>(() => AlertCountNotifier());
+      locator.registerLazySingleton<Analytics>(() => analyticsMock);
+      locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
+      locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
       locator.registerLazySingleton<InboxApi>(() => inboxApi ?? MockInboxApi());
       locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
       locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
       locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
-      locator.registerLazySingleton<Analytics>(() => analyticsMock);
     });
   }
 
@@ -989,6 +994,206 @@ void main() {
       expect(find.text('77'), findsOneWidget);
     });
   });
+
+  // Need the Dashboard screen as well as the Calendar screen to test the today button.
+  // To avoid polluting the Calendar screen test file with Dashboard dependencies, these
+  // tests were put here instead of the Calendar screen
+  group('calendar today button', () {
+    testWidgetsWithAccessibilityChecks('today button not shown by default', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      // Start on the Calendar screen
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Check we're on the Calendar screen
+      expect(find.byType(CalendarScreen), findsOneWidget);
+
+      // Check to make sure the today button is hidden
+      expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('today button shown when date other than today selected', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      // Start on the Calendar screen
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Check we're on the Calendar screen
+      expect(find.byType(CalendarScreen), findsOneWidget);
+
+      // Make sure we aren't showing the today button
+      expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsNothing);
+
+      // Tap on another date
+      await goToDate(tester, DateTime.now().add(Duration(days: 2)));
+
+      // Check to see if we are showing the today button
+      expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('today button tap goes to now', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      // Start on the Calendar screen
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      Finder todayButton = find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel);
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Check we're on the Calendar screen
+      expect(find.byType(CalendarScreen), findsOneWidget);
+
+      // Make sure we aren't showing the today button
+      expect(todayButton, findsNothing);
+
+      // Tap on another date
+      await goToDate(tester, DateTime.now().add(Duration(days: 2)));
+
+      // Check to see if we are showing the today button
+      expect(todayButton, findsOneWidget);
+
+      // Tap on today button
+      await tester.tap(todayButton);
+
+      // Make sure we are on today's date
+      CalendarWidgetState state = tester.state(find.byType(CalendarWidget));
+      expect(state.selectedDay.year, DateTime.now().year);
+      expect(state.selectedDay.month, DateTime.now().month);
+      expect(state.selectedDay.day, DateTime.now().day);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping today button hides button', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      // Start on the Calendar screen
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      Finder todayButton = find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel);
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      // Check we're on the Calendar screen
+      expect(find.byType(CalendarScreen), findsOneWidget);
+
+      // Check the today button is hidden
+      expect(todayButton, findsNothing);
+
+      // Tap on another date
+      await goToDate(tester, DateTime.now().add(Duration(days: 2)));
+
+      // Check to see if we are showing the today button
+      expect(todayButton, findsOneWidget);
+
+      // Tap on today button
+      await tester.tap(todayButton);
+
+      // Make sure we are on today's date
+      CalendarWidgetState state = tester.state(find.byType(CalendarWidget));
+      expect(state.selectedDay.year, DateTime.now().year);
+      expect(state.selectedDay.month, DateTime.now().month);
+      expect(state.selectedDay.day, DateTime.now().day);
+
+      // Wait for the button to be hidden
+      await tester.pumpAndSettle();
+
+      // Make sure we aren't showing the today button
+      expect(todayButton, findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('today button hides when not on calendar screen', (tester) async {
+      _setupLocator();
+
+      var login = Login((b) => b
+        ..domain = 'domain'
+        ..accessToken = 'token'
+        ..user = CanvasModelTestUtils.mockUser().toBuilder());
+
+      // Start on the Calendar screen
+      await tester.pumpWidget(_testableMaterialWidget(
+        initLogin: login,
+        startingPage: DashboardContentScreens.Calendar,
+      ));
+
+      Finder todayButton = find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel);
+
+      // Wait for day activity dot animation delay to settle
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      expect(find.byType(CalendarScreen), findsOneWidget);
+
+      // Check to make sure we aren't showing the today button
+      expect(todayButton, findsNothing);
+
+      // Tap on another date
+      await goToDate(tester, DateTime.now().add(Duration(days: 2)));
+
+      // Check to see if we are showing the today button
+      expect(todayButton, findsOneWidget);
+
+      // Navigate to Courses
+      await tester.tap(find.text(AppLocalizations().coursesLabel));
+      await tester.pumpAndSettle();
+
+      // Check to make sure we're on the Courses screen
+      expect(find.byType(CoursesScreen), findsOneWidget);
+
+      // Check to make sure the today button is hidden
+      expect(todayButton, findsNothing);
+    });
+  });
+}
+
+Future<CalendarWidgetState> goToDate(WidgetTester tester, DateTime date) async {
+  CalendarWidgetState state = tester.state(find.byType(CalendarWidget));
+  state.selectDay(
+    date,
+    dayPagerBehavior: CalendarPageChangeBehavior.jump,
+    weekPagerBehavior: CalendarPageChangeBehavior.jump,
+    monthPagerBehavior: CalendarPageChangeBehavior.jump,
+  );
+  await tester.pumpAndSettle();
+  return state;
 }
 
 DashboardState dashboardState(WidgetTester tester) => tester.state(find.byType(DashboardScreen));

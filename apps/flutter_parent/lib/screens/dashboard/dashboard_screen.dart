@@ -21,6 +21,8 @@ import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
@@ -40,6 +42,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
@@ -177,8 +180,15 @@ class DashboardState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SelectedStudentNotifier>(
-      create: (context) => _selectedStudentNotifier,
+    if (_currentIndex != DashboardContentScreens.Calendar) {
+      locator<CalendarTodayNotifier>().value = false;
+    }
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SelectedStudentNotifier>(create: (context) => _selectedStudentNotifier),
+        ChangeNotifierProvider<CalendarTodayNotifier>(create: (context) => locator<CalendarTodayNotifier>()),
+      ],
       child: Consumer<SelectedStudentNotifier>(
         builder: (context, model, _) {
           return Scaffold(
@@ -186,6 +196,28 @@ class DashboardState extends State<DashboardScreen> {
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(107.0),
               child: AppBar(
+                // Today button is only for the calendar and the notifier value is set in the calendar screen
+                actions: [
+                  Consumer<CalendarTodayNotifier>(builder: (context, model, _) {
+                    if (model.value) {
+                      return Semantics(
+                        label: L10n(context).gotoTodayButtonLabel,
+                        child: InkResponse(
+                          onTap: () => {locator<CalendarTodayClickNotifier>().trigger()},
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: SvgPicture.asset(
+                              'assets/svg/calendar-today.svg',
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  })
+                ],
+
                 flexibleSpace: Semantics(
                   label: 'Tap to open the student selector',
                   child: _appBarStudents(_students, model.value),

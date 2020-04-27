@@ -258,6 +258,9 @@ class AppLocalizations {
 
   String get plannerNote => Intl.message('Planner Note', desc: 'Label used for notes in the planner');
 
+  String get gotoTodayButtonLabel =>
+      Intl.message('Go to today', desc: 'Accessibility label used for the today button in the planner');
+
   /// Login landing screen
 
   String get previousLogins => Intl.message('Previous Logins', desc: 'Label for the list of previous user logins');
