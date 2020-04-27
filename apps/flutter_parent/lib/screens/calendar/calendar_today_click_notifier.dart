@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 class CalendarTodayClickNotifier extends ValueNotifier<bool> {
   CalendarTodayClickNotifier() : super(false);
 
-  update(bool newValue) {
+  update() {
     notifyListeners();
   }
 }
