@@ -31,6 +31,9 @@ abstract class CreateCourseInfo implements Built<CreateCourseInfo, CreateCourseI
   @BuiltValueField(wireName: "enrollment_term_id")
   int get enrollmentTermId;
   String get role;
+  @nullable
+  @BuiltValueField(wireName: "syllabus_body")
+  String get syllabusBody;
 
   static void _initializeBuilder(CreateCourseInfoBuilder b) => b..role = "student";
 }

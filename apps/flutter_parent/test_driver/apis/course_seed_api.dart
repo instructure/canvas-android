@@ -32,6 +32,7 @@ class CourseSeedApi {
       ..course.name = courseName
       ..course.courseCode = courseCode
       ..course.role = "student"
+      ..course.syllabusBody = "A Syllabus"
       ..build());
 
     var postBody = json.encode(serialize(courseCreateWrapper));

@@ -134,7 +134,10 @@ class _MessageWidgetState extends State<MessageWidget> {
             children: <Widget>[
               Avatar(user.avatarUrl, name: user.name, radius: 16),
               SizedBox(width: 12),
-              Expanded(child: Text(user.name, style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
+              Expanded(
+                  child: Text(user.name,
+                      key: ValueKey('participant_id_${user.id}'),
+                      style: Theme.of(context).textTheme.subhead.copyWith(fontSize: 14)))
             ],
           );
         },

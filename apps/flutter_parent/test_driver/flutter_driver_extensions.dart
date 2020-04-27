@@ -19,7 +19,6 @@ import 'package:flutter_driver/flutter_driver.dart';
 extension AutoRefresh on FlutterDriver {
   Future<String> getTextWithRefreshes(SerializableFinder finder,
       {int refreshes = 3, String expectedText = null}) async {
-    final refreshFinder = find.byType("RefreshIndicator");
     for (int i = 0; i < refreshes; i++) {
       try {
         var result = await this.getText(finder, timeout: Duration(seconds: 1));
@@ -28,7 +27,7 @@ extension AutoRefresh on FlutterDriver {
         }
         return result;
       } catch (err) {
-        await this.scroll(refreshFinder, 0, 200, Duration(milliseconds: 200));
+        await this.refresh();
         await Future.delayed(Duration(milliseconds: 500)); // Give ourselves time to load
       }
     }
@@ -38,18 +37,36 @@ extension AutoRefresh on FlutterDriver {
   }
 
   Future<void> tapWithRefreshes(SerializableFinder finder, {int refreshes = 3}) async {
-    final refreshFinder = find.byType("RefreshIndicator");
     for (int i = 0; i < refreshes; i++) {
       try {
         await this.tap(finder, timeout: Duration(seconds: 1));
         return;
       } catch (err) {
-        await this.scroll(refreshFinder, 0, 200, Duration(milliseconds: 200));
+        await this.refresh();
         await Future.delayed(Duration(milliseconds: 500)); // Give ourselves time to load
       }
     }
 
     // We're out of retries; one more unprotected attempt
     await this.tap(finder);
+  }
+
+  Future<void> waitWithRefreshes(SerializableFinder finder, {int refreshes = 3}) async {
+    for (int i = 0; i < refreshes; i++) {
+      try {
+        await this.waitFor(finder, timeout: Duration(seconds: 1));
+        return;
+      } catch (err) {
+        await this.refresh();
+        await Future.delayed(Duration(milliseconds: 500)); // Give ourselves time to load
+      }
+    }
+
+    // We're out of retries; one more unprotected attempt
+    await this.waitFor(finder);
+  }
+
+  Future<void> refresh() async {
+    await this.scroll(find.byType('RefreshIndicator'), 0, 400, Duration(milliseconds: 200));
   }
 }
