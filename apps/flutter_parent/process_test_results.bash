@@ -5,6 +5,7 @@
 
 successCount=0
 failureCount=0
+failures=()
 commonSplunkData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \"flutter-parent\", \"branch\" : \"$BITRISE_GIT_BRANCH\""
 
 echo file is $1
@@ -80,6 +81,8 @@ do
     if [ $result = "error" ]
     then
       echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
+      failedTest="$file - \"$name\"\n"
+      failures=("${failures[@]}" $failedTest)
       # Emit summary payload message to Splunk if we are on bitrise
       if [ -n "$SPLUNK_MOBILE_TOKEN" ]
       then
@@ -113,6 +116,10 @@ do
     echo -e "\n"
     echo $successCount of $totalCount tests passed
     echo success: $success, time: $msTime
+    if [ $failureCount -ne 0 ]
+    then
+      echo -e "Failed tests:\n ${failures[@]}"
+    fi
 
     # Emit summary payload message to Splunk if we are on bitrise
     if [ -n "$SPLUNK_MOBILE_TOKEN" ]
