@@ -247,9 +247,6 @@
     <string name="submission_status_excused">غير إجباري</string>
     <string name="last_login_format">آخر تسجيل دخول: %s</string>
 
-    <string name="muteGrades">إخفاء الدرجات</string>
-    <string name="unmuteGrades">إلغاء إخفاء الدرجات</string>
-    <string name="gradesMutedLabel">تم إخفاء الدرجات</string>
     <string name="turnOnAnonymousGrading">تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="turnOffAnonymousGrading">إيقاف تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="anonymousGradingLabel">تقييم الدرجات دون الكشف عن الهوية</string>

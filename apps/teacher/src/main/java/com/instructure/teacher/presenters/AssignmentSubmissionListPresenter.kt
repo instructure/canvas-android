@@ -55,9 +55,6 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     private var mSectionsSelected = ArrayList<CanvasContext>()
 
-    var newGradebookEnabled: Boolean = false
-        private set
-
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     override fun loadData(forceNetwork: Boolean) {
         // Skip if API call are already in progress
@@ -78,7 +75,6 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
                         { EnrollmentManager.getAllEnrollmentsForCourse(mAssignment.courseId, null, forceNetwork, it) },
                         { AssignmentManager.getAllSubmissionsForAssignment(mAssignment.courseId, mAssignment.id, forceNetwork, it) }
                 )
-                newGradebookEnabled = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(mAssignment.courseId, forceNetwork, it) }.contains(FeaturesManager.NEW_GRADEBOOK)
 
                 val enrollmentMap = enrollments.associateBy { it.user?.id }
                 val students = gradeableStudents.distinctBy { it.id }.map {
@@ -113,10 +109,6 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         setFilteredData()
     }
 
-    fun getSections() : List<CanvasContext> {
-        return mSectionsSelected
-    }
-
     /**
      * Convert the list of CanvasContexts to a list of just ids so the dialog can know which CanvasContexts
      * have been selected
@@ -136,7 +128,7 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
             true -> return ""
             false -> {
                 // get the title based on Section selected
-                var title = StringBuilder()
+                val title = StringBuilder()
                 title.append(", ")
                 mSectionsSelected.forEachIndexed { index, canvasContext ->
                     title.append(canvasContext.name)
@@ -174,10 +166,10 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         data.clear()
 
         // Filter by section if there is a section filter set
-        if (!mSectionsSelected.isEmpty()) {
+        if (mSectionsSelected.isNotEmpty()) {
 
             // get list of ids
-            var sectionIds = mSectionsSelected.map { it.id }
+            val sectionIds = mSectionsSelected.map { it.id }
 
             mFilteredSubmissions.forEach { submission ->
                 sectionIds.forEach { section ->
@@ -230,26 +222,13 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     override fun compare(item1: GradeableStudentSubmission?, item2: GradeableStudentSubmission?): Int {
         // Turns out we do need to sort them by sortable name, but not when anonymous grading is on
-        if(item1?.assignee is StudentAssignee && item2?.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
-            return (item1.assignee as StudentAssignee).student.sortableName?.toLowerCase()?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.toLowerCase()!!) ?: -1
+        if (item1?.assignee is StudentAssignee && item2?.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
+            return (item1.assignee as StudentAssignee).student.sortableName?.toLowerCase(Locale.getDefault())?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.toLowerCase()!!) ?: -1
         }
         return -1
     }
 
     override fun areContentsTheSame(item1: GradeableStudentSubmission?, item2: GradeableStudentSubmission?) = false
-
-    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    fun toggleMuted() {
-        tryWeave {
-            val postData = AssignmentPostBody().apply { isMuted = !mAssignment.muted }
-            awaitApi<Assignment> { AssignmentManager.editAssignment(mAssignment.courseId, mAssignment.id, postData, it, false) }
-            mAssignment.muted = !mAssignment.muted
-            AssignmentUpdatedEvent(mAssignment.id).post() // Post bus event
-            viewCallback?.onMuteUpdated(success = true, isMuted = mAssignment.muted)
-        } catch {
-            viewCallback?.onMuteUpdated(success = false, isMuted = mAssignment.muted)
-        }
-    }
 
     // Put in a companion object so we can use it to route to speedgrader from the to do list
     companion object {

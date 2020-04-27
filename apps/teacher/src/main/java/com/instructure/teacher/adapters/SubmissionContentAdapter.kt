@@ -28,8 +28,7 @@ import java.util.*
 class SubmissionContentAdapter(
         private val mAssignment: Assignment,
         private val mCourse: Course,
-        private val mStudentSubmissions: List<GradeableStudentSubmission>,
-        private val newGradebookEnabled: Boolean
+        private val mStudentSubmissions: List<GradeableStudentSubmission>
 ) : PagerAdapter() {
 
     var initialTabIdx = 0
@@ -42,8 +41,7 @@ class SubmissionContentAdapter(
             mStudentSubmission = mStudentSubmissions[position],
             mAssignment = mAssignment,
             mCourse = mCourse,
-            initialTabIndex = initialTabIdx,
-            newGradebookEnabled = newGradebookEnabled
+            initialTabIndex = initialTabIdx
         ).apply {
             container.addView(this)
             mContentMap += position to this

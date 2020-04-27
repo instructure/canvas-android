@@ -27,7 +27,6 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:tuple/tuple.dart';
 
 class CourseDetailsModel extends BaseModel {
-  static int selectedTab = 0;
   User student;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;

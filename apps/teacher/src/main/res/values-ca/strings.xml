@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Excusat</string>
     <string name="last_login_format">Darrer inici de sessió: %s</string>
 
-    <string name="muteGrades">Oculta les qualificacions</string>
-    <string name="unmuteGrades">Deixa d\'ocultar les qualificacions</string>
-    <string name="gradesMutedLabel">Qualificacions ocultes</string>
     <string name="turnOnAnonymousGrading">Activeu l\'opció Qualificacions anònimes</string>
     <string name="turnOffAnonymousGrading">Desactiveu l\'opció Qualificacions anònimes</string>
     <string name="anonymousGradingLabel">Qualificacions anònimes</string>

@@ -41,5 +41,5 @@ abstract class GradingPeriod implements Built<GradingPeriod, GradingPeriodBuilde
   DateTime get endDate;
 
   @nullable
-  int get weight;
+  double get weight;
 }

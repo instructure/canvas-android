@@ -151,13 +151,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
 
-        assignmentSubmissionListToolbar.menu.findItem(R.id.menuPostPolicies)?.let {
-            it.isVisible = presenter.newGradebookEnabled
-        }
-        assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
-            it.isVisible = !presenter.newGradebookEnabled
-        }
-
         // Theme the toolbar again since visibilities may have changed
         ViewStyler.themeToolbar(requireActivity(), assignmentSubmissionListToolbar, mCourseColor, Color.WHITE)
 
@@ -283,7 +276,6 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
 
     val menuItemCallback: (MenuItem) -> Unit = { item ->
         when (item.itemId) {
-            R.id.menuMuteGrades -> withRequireNetwork { presenter.toggleMuted() }
             R.id.filterSubmissions -> {
                 val (keys, values) = mSubmissionFilters.toList().unzip()
                 val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.filter_submissions), values as ArrayList<String>, keys.indexOf(presenter.getFilter().ordinal)) { idx ->
@@ -305,24 +297,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     private fun updateStatuses() {
-        val isMuted = presenter.mAssignment.muted
-        assignmentSubmissionListToolbar.menu.findItem(R.id.menuMuteGrades)?.let {
-            it.title = getString(if (isMuted) R.string.unmuteGrades else R.string.muteGrades)
-        }
-
-        val statuses = mutableListOf<String>()
-        if (presenter.mAssignment.anonymousGrading) statuses += getString(R.string.anonymousGradingLabel)
-        if (isMuted && !presenter.newGradebookEnabled) statuses += getString(R.string.gradesMutedLabel)
-        mutedStatusView.setVisible(statuses.isNotEmpty()).text = statuses.joinToString()
-    }
-
-    override fun onMuteUpdated(success: Boolean, isMuted: Boolean) {
-        if (success) {
-            mAssignment.muted = isMuted
-            updateStatuses()
-        } else {
-            toast(R.string.error_occurred)
-        }
+        if (presenter.mAssignment.anonymousGrading)
+            anonGradingStatusView.setVisible().text = getString(R.string.anonymousGradingLabel)
     }
 
     @Suppress("unused")

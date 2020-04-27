@@ -54,7 +54,7 @@
             android:layout_toStartOf="@+id/clearFilterTextView"/>
 
         <TextView
-            android:id="@+id/mutedStatusView"
+            android:id="@+id/anonGradingStatusView"
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Vrijgesteld</string>
     <string name="last_login_format">Laatste aanmelding: %s</string>
 
-    <string name="muteGrades">Cijfers verbergen</string>
-    <string name="unmuteGrades">Verbergen van cijfers opheffen</string>
-    <string name="gradesMutedLabel">Cijfers verborgen</string>
     <string name="turnOnAnonymousGrading">Anonieme beoordeling inschakelen</string>
     <string name="turnOffAnonymousGrading">Anonieme beoordeling uitschakelen</string>
     <string name="anonymousGradingLabel">Anoniem beoordelen</string>

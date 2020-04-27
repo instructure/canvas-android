@@ -16,6 +16,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -63,9 +64,10 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
             _showSnackBarError(context, result);
           }
         } else {
+          locator<Analytics>().logMessage(barcodeResult?.errorType?.toString() ?? 'No barcode result');
           _showSnackBarError(
               context,
-              barcodeResult.errorType == QRError.invalidQR
+              barcodeResult?.errorType == QRError.invalidQR
                   ? L10n(context).invalidQRCodeError
                   : L10n(context).qrCodeNoCameraError);
         }

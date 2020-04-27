@@ -124,24 +124,6 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
         addMessagePage.assertHasStudentRecipient(student)
     }
 
-    @Test
-    @Ditto
-    fun togglesMute() {
-        if(isLowResDevice()) {
-            // We don't want to run accessibility tests on this device, openOverflowMenu doesn't work on low-res devices
-            Log.v("SkippedTest", "AssignmentSubmissionListPageTest.togglesMute skipped due to low resolution")
-            return
-        }
-
-        goToAssignmentSubmissionListPage()
-        openOverflowMenu()
-        assignmentSubmissionListPage.assertDisplaysMuteOption()
-        assignmentSubmissionListPage.clickMuteOption()
-        assignmentSubmissionListPage.assertDisplaysMutedStatus()
-        openOverflowMenu()
-        assignmentSubmissionListPage.assertDisplaysUnmuteOption()
-    }
-
     private fun goToAssignmentSubmissionListPage(
             students: Int = 1,
             submissions: Int = 1,

@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Justificado</string>
     <string name="last_login_format">Último inicio de sesión: %s</string>
 
-    <string name="muteGrades">Silenciar calificaciones</string>
-    <string name="unmuteGrades">Activar el sonido de las calificaciones</string>
-    <string name="gradesMutedLabel">Calificaciones silenciadas</string>
     <string name="turnOnAnonymousGrading">Activar calificación anónima</string>
     <string name="turnOffAnonymousGrading">Desactivar calificación anónima</string>
     <string name="anonymousGradingLabel">Calificación anónima</string>

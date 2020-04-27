@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Annettu anteeksi</string>
     <string name="last_login_format">Viimeinen sisäänkirjautuminen: %s</string>
 
-    <string name="muteGrades">Mykistä arvosanat</string>
-    <string name="unmuteGrades">Poista mykistys arvosanoista</string>
-    <string name="gradesMutedLabel">Arvosanat mykistetty</string>
     <string name="turnOnAnonymousGrading">Kytke päälle nimetön arvosanojen anto</string>
     <string name="turnOffAnonymousGrading">Kytke nimetön arvosanojen anto pois päältä</string>
     <string name="anonymousGradingLabel">Nimetön arvosanojen anto</string>

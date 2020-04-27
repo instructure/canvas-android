@@ -239,9 +239,6 @@
     <string name="submission_status_excused">Usprawiedliwiony</string>
     <string name="last_login_format">Ostatnie logowanie: %s</string>
 
-    <string name="muteGrades">Wyłącz oceny</string>
-    <string name="unmuteGrades">Włącz oceny</string>
-    <string name="gradesMutedLabel">Wyłączone oceny</string>
     <string name="turnOnAnonymousGrading">Włącz anonimową klasyfikację</string>
     <string name="turnOffAnonymousGrading">Wyłącz anonimową klasyfikację</string>
     <string name="anonymousGradingLabel">Anonimowa klasyfikacja</string>

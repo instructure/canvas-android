@@ -231,9 +231,6 @@
     <string name="submission_status_excused">Egzante</string>
     <string name="last_login_format">Dènye koneksyon: %s</string>
 
-    <string name="muteGrades">Nòt sou Silans</string>
-    <string name="unmuteGrades">Retire npot sou silans</string>
-    <string name="gradesMutedLabel">Nòt sou silans</string>
     <string name="turnOnAnonymousGrading">Aktive Klasman Anonim</string>
     <string name="turnOffAnonymousGrading">Dezaktive Klasman Anonim</string>
     <string name="anonymousGradingLabel">Klasman Anomin</string>
