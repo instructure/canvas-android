@@ -77,22 +77,31 @@ do
     [[ $line =~ $resultRegex ]]
     result=${BASH_REMATCH[1]}
     
-    # On a fail, send a message to splunk
-    if [ $result = "error" ]
+    # Grab the hidden field
+    hiddenRegex='\"hidden\":(true|false),'
+    [[ $line =~ $hiddenRegex ]]
+    hidden=${BASH_REMATCH[1]}
+    
+    # Skip hidden tests
+    if [ $hidden = "false" ]
     then
-      echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
-      failedTest="$file - \"$name\"\n"
-      failures=("${failures[@]}" $failedTest)
-      # Emit summary payload message to Splunk if we are on bitrise
-      if [ -n "$SPLUNK_MOBILE_TOKEN" ]
+      # On a fail, send a message to splunk
+      if [ $result = "error" ]
       then
-        payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
-        #echo error payload: \"$payload\"
-        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
+        echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
+        failedTest="$file - \"$name\"\n"
+        failures=("${failures[@]}" $failedTest)
+        # Emit summary payload message to Splunk if we are on bitrise
+        if [ -n "$SPLUNK_MOBILE_TOKEN" ]
+        then
+          payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
+          #echo error payload: \"$payload\"
+          curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
+        fi
+        ((failureCount=failureCount+1))
+      else
+        ((successCount=successCount+1))
       fi
-      ((failureCount=failureCount+1))
-    else
-      ((successCount=successCount+1))
     fi
 
   fi
