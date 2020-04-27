@@ -604,7 +604,6 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           _monthController.jumpToPage(index - 1);
         },
       ),
-      ),
       IconButton(
         key: Key('calendar-a11y-next-month'),
         tooltip: L10n(context).nextMonth(nextMonthName),
