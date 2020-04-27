@@ -23,9 +23,10 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  final mockScanner = _MockScanner();
+  final mockScanner = MockBarcodeScanner();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
@@ -107,6 +108,15 @@ void main() {
     expect(result.errorType, QRError.invalidQR);
     expect(result.result, isNull);
   });
-}
 
-class _MockScanner extends Mock implements BarcodeScanVeneer {}
+  test('returns error when given generic Exception', () async {
+    when(mockScanner.scanBarcode()).thenAnswer((_) => throw Exception('ErRoR'));
+
+    var interactor = QRLoginTutorialScreenInteractor();
+
+    final result = await interactor.scan();
+    expect(result.isSuccess, isFalse);
+    expect(result.errorType, QRError.invalidQR);
+    expect(result.result, isNull);
+  });
+}

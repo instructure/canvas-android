@@ -20,4 +20,8 @@ class BarcodeScanVeneer {
   Future<ScanResult> scanBarcode() {
     return BarcodeScanner.scan();
   }
+
+  Future<int> getNumberOfCameras() {
+    return BarcodeScanner.numberOfCameras;
+  }
 }

@@ -128,8 +128,7 @@ class LoginLandingScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
-          if (RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true')
-            _qrLogin(context),
+          if (_isQRLoginEnabled()) _qrLogin(context),
         ],
       ),
     );
@@ -155,6 +154,11 @@ class LoginLandingScreen extends StatelessWidget {
                 ),
               ]),
         ));
+  }
+
+  bool _isQRLoginEnabled() {
+    return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true' &&
+        (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
   }
 
   Widget _previousLogins(BuildContext context) {
