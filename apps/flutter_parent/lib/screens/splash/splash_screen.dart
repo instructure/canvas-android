@@ -35,8 +35,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   Future<SplashScreenData> _dataFuture;
 
   // Controller and animation used on the loading indicator for the 'zoom out' effect immediately before routing
@@ -64,7 +62,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       }
 
       return Scaffold(
-        key: _scaffoldKey,
         backgroundColor: Theme.of(context).primaryColor,
         body: FutureBuilder(
           future: _dataFuture,
