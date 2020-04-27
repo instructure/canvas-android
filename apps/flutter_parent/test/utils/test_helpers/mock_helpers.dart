@@ -65,7 +65,13 @@ class MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
 
 class MockAuthApi extends Mock implements AuthApi {}
 
+class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}
+
 class MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
+
+class MockCourseApi extends Mock implements CourseApi {}
+
+class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
 
 class MockDatabase extends Mock implements Database {}
 
@@ -91,6 +97,8 @@ class MockNotificationUtil extends Mock implements NotificationUtil {}
 
 class MockOAuthApi extends Mock implements OAuthApi {}
 
+class MockPageApi extends Mock implements PageApi {}
+
 class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
 
 class MockReminderDb extends Mock implements ReminderDb {}
@@ -101,12 +109,4 @@ class MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
 
-class MockCourseApi extends Mock implements CourseApi {}
-
-class MockPageApi extends Mock implements PageApi {}
-
-class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
-
 class MockWebViewInteractor extends Mock implements WebContentInteractor {}
-
-class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}
