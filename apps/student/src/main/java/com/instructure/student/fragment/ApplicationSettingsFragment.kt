@@ -25,8 +25,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageView
+import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
@@ -35,6 +39,7 @@ import com.instructure.student.activity.NotificationPreferencesActivity
 import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.dialog.LegalDialogStyled
+import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.dialog_about.*
 import kotlinx.android.synthetic.main.fragment_application_settings.*
@@ -70,6 +75,17 @@ class ApplicationSettingsFragment : ParentFragment() {
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         help.onClick { HelpDialogStyled.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
+
+        if (RemoteConfigUtils.getBoolean(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED) == true && ApiPrefs.canGeneratePairingCode == true) {
+            pairObserver.setVisible()
+            pairObserver.onClick {
+                if (APIHelper.hasNetworkConnection()) {
+                    addFragment(PairObserverFragment.newInstance())
+                } else {
+                    NoInternetConnectionDialog.show(requireFragmentManager())
+                }
+            }
+        }
 
         pushNotifications.onClick {
             Analytics.trackAppFlow(requireActivity(), NotificationPreferencesActivity::class.java)

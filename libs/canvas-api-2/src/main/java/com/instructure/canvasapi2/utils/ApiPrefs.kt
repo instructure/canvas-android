@@ -104,6 +104,9 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user")
 
+    // Used to determine if a student can generate a pairing code, saved during splash
+    var canGeneratePairingCode by NBooleanPref()
+
     @JvmStatic
     var domain: String
         get() = if (isMasquerading || isStudentView) masqueradeDomain else originalDomain

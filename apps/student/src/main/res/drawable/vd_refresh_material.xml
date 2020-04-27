@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (C) 2020 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+  <path
+      android:strokeWidth="1"
+      android:pathData="M20,20m-19.5,0a19.5,19.5 0,1 1,39 0a19.5,19.5 0,1 1,-39 0"
+      android:fillColor="#ffffff"
+      android:strokeColor="#C7CDD1"/>
+  <path
+      android:pathData="M20,10V12.2222C24.2878,12.2222 27.7778,15.7111 27.7778,20C27.7778,24.2889 24.2878,27.7778 20,27.7778C15.7122,27.7778 12.2222,24.2889 12.2222,20C12.2222,17.9478 13.0389,16.0156 14.4444,14.5756V17.2222H16.6667V11.1111H10.5556V13.3333H12.5456C10.9233,15.1467 10,17.51 10,20C10,25.5133 14.4856,30 20,30C25.5144,30 30,25.5133 30,20C30,14.4867 25.5144,10 20,10Z"
+      android:fillColor="#8B969E"
+      android:fillType="evenOdd"/>
+</vector>
