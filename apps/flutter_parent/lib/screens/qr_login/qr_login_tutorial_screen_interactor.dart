@@ -22,7 +22,7 @@ import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 
 class QRLoginTutorialScreenInteractor {
   Future<BarcodeScanResult> scan() async {
-    BarcodeScanResult result;
+    BarcodeScanResult result = BarcodeScanResult(false, errorType: QRError.invalidQR);
     try {
       ScanResult scanResult = await locator<BarcodeScanVeneer>().scanBarcode();
       String barcodeResult = scanResult.rawContent;
@@ -39,6 +39,7 @@ class QRLoginTutorialScreenInteractor {
           break;
         case ResultType.Cancelled:
           // Do nothing
+          result = BarcodeScanResult(false, errorType: QRError.cancelled);
           break;
       }
     } on PlatformException catch (e) {
@@ -65,4 +66,4 @@ class BarcodeScanResult {
   BarcodeScanResult(this.isSuccess, {this.errorType = null, this.result = null});
 }
 
-enum QRError { invalidQR, cameraError }
+enum QRError { invalidQR, cameraError, cancelled }

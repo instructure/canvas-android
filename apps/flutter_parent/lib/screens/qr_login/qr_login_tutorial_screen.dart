@@ -63,7 +63,8 @@ class _QRLoginTutorialScreenState extends State<QRLoginTutorialScreen> {
           if (result != null) {
             _showSnackBarError(context, result);
           }
-        } else {
+        } else if (barcodeResult.errorType == QRError.invalidQR || barcodeResult.errorType == QRError.cameraError) {
+          // We only want to display an error for invalid and camera denied, the other case is the user cancelled
           locator<Analytics>().logMessage(barcodeResult?.errorType?.toString() ?? 'No barcode result');
           _showSnackBarError(
               context,
