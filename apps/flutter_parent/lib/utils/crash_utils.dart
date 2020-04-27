@@ -54,8 +54,8 @@ class CrashUtils {
 
     // Set any user info that will help to debug the issue
     await Future.wait([
-      FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain()),
-      FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id),
+      FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain() ?? 'null'),
+      FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id ?? 'null'),
     ]);
 
     await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);

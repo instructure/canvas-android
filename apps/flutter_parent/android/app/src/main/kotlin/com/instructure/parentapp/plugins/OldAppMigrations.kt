@@ -65,6 +65,10 @@ object OldAppMigrations {
                 it.put("domain", "${it.optString("protocol") ?: "https"}://${it.optString("domain")}")
                 it.remove("protocol")
 
+                // Some users may not be on refresh tokens, so pull their old token as the 'accessToken'
+                val token = it.optString("token")
+                if (token != null && token.isNotEmpty()) it.put("accessToken", token)
+
                 // Add client id/secret if this is the current user
                 if (refreshToken == it.optString("refreshToken")) {
                     it.put("clientId", prefs.getString("client_id", null))

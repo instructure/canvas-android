@@ -38,6 +38,7 @@ void main() {
 
   Login normalLogin = Login((b) => b
     ..domain = 'domain'
+    ..accessToken = 'token'
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   Login masqueradeLogin = normalLogin.rebuild((b) => b

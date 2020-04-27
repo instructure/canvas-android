@@ -84,6 +84,28 @@ void main() {
     expect(ApiPrefs.isLoggedIn(), true);
   });
 
+  test('is logged in returns false with an empty token', () async {
+    var login = Login((b) => b
+      ..domain = 'domain'
+      ..accessToken = ''
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.isLoggedIn(), false);
+  });
+
+  test('is logged in returns false with an empty domain', () async {
+    var login = Login((b) => b
+      ..domain = ''
+      ..accessToken = 'token'
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    await setupPlatformChannels(config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_LOGIN_UUID: login.uuid}));
+    await ApiPrefs.addLogin(login);
+
+    expect(ApiPrefs.isLoggedIn(), false);
+  });
+
   test('getApiUrl returns the domain with the api path added', () async {
     var login = Login((b) => b
       ..domain = 'domain'

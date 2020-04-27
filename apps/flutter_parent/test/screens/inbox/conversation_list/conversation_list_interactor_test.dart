@@ -211,8 +211,53 @@ void main() {
       Tuple2(chericeEnrollments[0].observedUser, choirCourse),
     ];
 
-    List<Tuple2<User, Course>> actual = ConversationListInteractor().combineEnrollmentsAndCourses(
-        [choirCourse, boxingCourse, arithmeticCourse], [...billEnrollments, ...andyEnrollments, ...chericeEnrollments]);
+    List<Tuple2<User, Course>> actual = ConversationListInteractor()
+        .combineEnrollmentsAndCourses([choirCourse, boxingCourse, arithmeticCourse], enrollments);
+
+    for (var i = 0; i < expectedResult.length; i++) {
+      expect(actual[i].item1, expectedResult[i].item1);
+      expect(actual[i].item2, expectedResult[i].item2);
+    }
+  });
+
+  // This test simulates a 'pending' enrollment situation, where we get the enrollment but not the course
+  test('combineEnrollmentsAndCourses handles enrollments without matching courses', () {
+    String arithmetic = 'Arithmetic';
+    String boxing = 'Boxing';
+    String choir = 'Choir';
+
+    List<Enrollment> andyEnrollments = _createEnrollments('Andy', [boxing, choir]);
+    List<Enrollment> billEnrollments = _createEnrollments('Bill', [choir, arithmetic]);
+    List<Enrollment> chericeEnrollments = _createEnrollments('Cherice', [choir, arithmetic, boxing]);
+    List<Enrollment> pendingEnrollments = _createEnrollments('pending', ['pending']);
+
+    var enrollments = [...andyEnrollments, ...billEnrollments, ...chericeEnrollments, ...pendingEnrollments];
+
+    Course arithmeticCourse = Course((b) => b
+      ..id = arithmetic
+      ..name = arithmetic
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == arithmetic)));
+    Course boxingCourse = Course((b) => b
+      ..id = boxing
+      ..name = boxing
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == boxing)));
+    Course choirCourse = Course((b) => b
+      ..id = choir
+      ..name = choir
+      ..enrollments = ListBuilder(enrollments.where((e) => e.courseId == choir)));
+
+    List<Tuple2<User, Course>> expectedResult = [
+      Tuple2(andyEnrollments[0].observedUser, boxingCourse),
+      Tuple2(andyEnrollments[1].observedUser, choirCourse),
+      Tuple2(billEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(billEnrollments[0].observedUser, choirCourse),
+      Tuple2(chericeEnrollments[1].observedUser, arithmeticCourse),
+      Tuple2(chericeEnrollments[2].observedUser, boxingCourse),
+      Tuple2(chericeEnrollments[0].observedUser, choirCourse),
+    ];
+
+    List<Tuple2<User, Course>> actual = ConversationListInteractor()
+        .combineEnrollmentsAndCourses([choirCourse, boxingCourse, arithmeticCourse], enrollments);
 
     for (var i = 0; i < expectedResult.length; i++) {
       expect(actual[i].item1, expectedResult[i].item1);

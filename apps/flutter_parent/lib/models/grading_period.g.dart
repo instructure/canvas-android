@@ -52,7 +52,7 @@ class _$GradingPeriodSerializer implements StructuredSerializer<GradingPeriod> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.weight,
-          specifiedType: const FullType(int)));
+          specifiedType: const FullType(double)));
     }
     return result;
   }
@@ -88,7 +88,7 @@ class _$GradingPeriodSerializer implements StructuredSerializer<GradingPeriod> {
           break;
         case 'weight':
           result.weight = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(double)) as double;
           break;
       }
     }
@@ -107,7 +107,7 @@ class _$GradingPeriod extends GradingPeriod {
   @override
   final DateTime endDate;
   @override
-  final int weight;
+  final double weight;
 
   factory _$GradingPeriod([void Function(GradingPeriodBuilder) updates]) =>
       (new GradingPeriodBuilder()..update(updates)).build();
@@ -174,9 +174,9 @@ class GradingPeriodBuilder
   DateTime get endDate => _$this._endDate;
   set endDate(DateTime endDate) => _$this._endDate = endDate;
 
-  int _weight;
-  int get weight => _$this._weight;
-  set weight(int weight) => _$this._weight = weight;
+  double _weight;
+  double get weight => _$this._weight;
+  set weight(double weight) => _$this._weight = weight;
 
   GradingPeriodBuilder();
 
