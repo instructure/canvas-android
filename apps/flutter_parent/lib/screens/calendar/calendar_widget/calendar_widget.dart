@@ -193,7 +193,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   void initState() {
-    locator<CalendarTodayClickNotifier>().addListener(() => selectDay(DateTime.now()));
+    locator<CalendarTodayClickNotifier>().addListener(() => _todayClicked());
 
     // Update _isMonthExpanded when expansion value changes to or from zero
     _monthExpansionNotifier.addListener(() {
@@ -231,6 +231,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
     if (widget.startingDate != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        print('Select day from addPostFrameCallback');
         selectDay(
           widget.startingDate,
           dayPagerBehavior: CalendarPageChangeBehavior.jump,
@@ -382,6 +383,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         return widget.dayBuilder(context, date);
       },
       onPageChanged: (index) {
+        print('Select day from onPageChanged Day Pager');
         selectDay(_dayForIndex(index), dayPagerBehavior: CalendarPageChangeBehavior.none);
       },
     );
@@ -429,6 +431,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           selectedDay: selectedDay,
           monthExpansionListener: _monthExpansionNotifier,
           onDaySelected: (day) {
+            print('Select day from onDaySelected');
             selectDay(day, dayPagerBehavior: CalendarPageChangeBehavior.jump);
           },
         );
@@ -441,6 +444,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
         var maxDays = DateTime(yearMonth.item1, yearMonth.item2 + 1, 0).day;
         int dayOfMonth = min(maxDays, selectedDay.day);
+        print('Select day from onPageChanged');
         selectDay(DateTime(yearMonth.item1, yearMonth.item2, dayOfMonth),
             monthPagerBehavior: CalendarPageChangeBehavior.none, weekPagerBehavior: CalendarPageChangeBehavior.jump);
 
@@ -472,6 +476,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     CalendarPageChangeBehavior weekPagerBehavior: CalendarPageChangeBehavior.animate,
     CalendarPageChangeBehavior monthPagerBehavior: CalendarPageChangeBehavior.animate,
   }) {
+    print('Selected day: $selectedDay');
+    print('Moving to day: $day');
     // Do nothing if the day is already selected
     if (selectedDay.isSameDayAs(day)) return;
 
@@ -527,6 +533,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           firstDay: weekStart,
           displayDayOfWeekHeader: true,
           onDaySelected: (day) {
+            print('Select day from onDaySelected');
             selectDay(day,
                 dayPagerBehavior: CalendarPageChangeBehavior.jump, weekPagerBehavior: CalendarPageChangeBehavior.none);
           },
@@ -538,6 +545,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
         var newSelectedDay = DateTime(weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
 
+        print('Select day from onPageChanged2');
         selectDay(
           newSelectedDay,
           weekPagerBehavior: CalendarPageChangeBehavior.none,
@@ -650,6 +658,16 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     };
     anim.addListener(listener);
     _monthExpandAnimController.forward();
+  }
+
+  // Use a date without a time (default to midnight), otherwise the second call to selectDay() in the day/month pager
+  // will be off by one day
+  _todayClicked() => selectDay(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+
+  @override
+  void dispose() {
+    locator<CalendarTodayNotifier>().removeListener(_todayClicked);
+    super.dispose();
   }
 }
 

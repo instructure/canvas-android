@@ -18,7 +18,6 @@ class CalendarTodayClickNotifier extends ValueNotifier<bool> {
   CalendarTodayClickNotifier() : super(false);
 
   update(bool newValue) {
-    value = !value;
     notifyListeners();
   }
 }

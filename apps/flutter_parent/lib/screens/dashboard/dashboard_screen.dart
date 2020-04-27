@@ -184,8 +184,11 @@ class DashboardState extends State<DashboardScreen> {
       locator<CalendarTodayNotifier>().value = false;
     }
 
-    return ChangeNotifierProvider<SelectedStudentNotifier>(
-      create: (context) => _selectedStudentNotifier,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SelectedStudentNotifier>(create: (context) => _selectedStudentNotifier),
+        ChangeNotifierProvider<CalendarTodayNotifier>(create: (context) => locator<CalendarTodayNotifier>()),
+      ],
       child: Consumer<SelectedStudentNotifier>(
         builder: (context, model, _) {
           return Scaffold(
@@ -195,26 +198,24 @@ class DashboardState extends State<DashboardScreen> {
               child: AppBar(
                 // Today button is only for the calendar and the notifier value is set in the calendar screen
                 actions: [
-                  ChangeNotifierProvider<CalendarTodayNotifier>(
-                      create: (context) => locator<CalendarTodayNotifier>(),
-                      child: Consumer<CalendarTodayNotifier>(builder: (context, model, _) {
-                        if (model.value) {
-                          return Semantics(
-                            label: L10n(context).gotoTodayButtonLabel,
-                            child: InkResponse(
-                              onTap: () => {locator<CalendarTodayClickNotifier>().update(false)},
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                                child: SvgPicture.asset(
-                                  'assets/svg/calendar-today.svg',
-                                ),
-                              ),
+                  Consumer<CalendarTodayNotifier>(builder: (context, model, _) {
+                    if (model.value) {
+                      return Semantics(
+                        label: L10n(context).gotoTodayButtonLabel,
+                        child: InkResponse(
+                          onTap: () => {locator<CalendarTodayClickNotifier>().update(false)},
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.0),
+                            child: SvgPicture.asset(
+                              'assets/svg/calendar-today.svg',
                             ),
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      }))
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  })
                 ],
 
                 flexibleSpace: Semantics(
