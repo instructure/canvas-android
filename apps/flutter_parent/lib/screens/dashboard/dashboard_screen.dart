@@ -203,7 +203,7 @@ class DashboardState extends State<DashboardScreen> {
                       return Semantics(
                         label: L10n(context).gotoTodayButtonLabel,
                         child: InkResponse(
-                          onTap: () => {locator<CalendarTodayClickNotifier>().update()},
+                          onTap: () => {locator<CalendarTodayClickNotifier>().trigger()},
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: SvgPicture.asset(
