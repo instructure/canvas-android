@@ -1070,7 +1070,7 @@ void main() {
       Finder todayButton = find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel);
 
       // Wait for day activity dot animation delay to settle
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 2));
 
       // Check we're on the Calendar screen
       expect(find.byType(CalendarScreen), findsOneWidget);
@@ -1158,7 +1158,7 @@ void main() {
       Finder todayButton = find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel);
 
       // Wait for day activity dot animation delay to settle
-      await tester.pumpAndSettle(Duration(seconds: 1));
+      await tester.pumpAndSettle(Duration(seconds: 2));
 
       expect(find.byType(CalendarScreen), findsOneWidget);
 
@@ -1192,7 +1192,7 @@ Future<CalendarWidgetState> goToDate(WidgetTester tester, DateTime date) async {
     weekPagerBehavior: CalendarPageChangeBehavior.jump,
     monthPagerBehavior: CalendarPageChangeBehavior.jump,
   );
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(Duration(seconds: 1));
   return state;
 }
 
