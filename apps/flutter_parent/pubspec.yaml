@@ -32,7 +32,7 @@ module:
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
-  flutter: 1.12.13+hotfix.7
+  flutter: 1.12.13+hotfix.9
 
 dependencies:
   flutter:

@@ -18,6 +18,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -57,10 +58,11 @@ final _analytics = _MockAnalytics();
 
 void main() {
   final String _domain = 'https://test.instructure.com';
+  final user = CanvasModelTestUtils.mockUser();
   final login = Login((b) => b
     ..domain = _domain
     ..accessToken = 'token'
-    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    ..user = user.toBuilder());
 
   final _mockNav = _MockNav();
   final _mockWebContentInteractor = _MockWebContentInteractor();
@@ -345,6 +347,7 @@ void main() {
     });
 
     test('returns dashboard for https scheme', () {
+      ApiPrefs.setCurrentStudent(user);
       final url = 'https://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
@@ -354,6 +357,8 @@ void main() {
     });
 
     test('returns dashboard for http scheme', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final url = 'http://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
@@ -363,6 +368,8 @@ void main() {
     });
 
     test('returns dashboard for canvas-parent scheme', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final url = 'canvas-parent://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
@@ -372,6 +379,7 @@ void main() {
     });
 
     test('returns dashboard for canvas-courses scheme', () {
+      ApiPrefs.setCurrentStudent(user);
       final url = 'canvas-courses://test.instructure.com/conversations';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
@@ -381,6 +389,8 @@ void main() {
     });
 
     test('returns course details ', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final url = 'https://test.instructure.com/courses/123';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
@@ -390,6 +400,8 @@ void main() {
     });
 
     test('returns assignment details ', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final courseId = '123';
       final assignmentId = '321';
       final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
@@ -404,6 +416,8 @@ void main() {
 
     // This route conflicts with assignment details, so having a specific test for it will ensure they aren't broken
     test('returns CourseRoutingShellScreen for syllabus', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final courseId = '123';
       final url = 'https://test.instructure.com/courses/$courseId/assignments/syllabus';
       final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
@@ -443,6 +457,8 @@ void main() {
 
     // Added the following below tests because they are new cases for the router, two routes, one handler
     test('returns CourseRoutingShellScreen for frontPage', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final courseId = '123';
       final url = 'https://test.instructure.com/courses/$courseId/pages/first-page';
       final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
@@ -453,6 +469,8 @@ void main() {
     });
 
     test('returns CourseRoutingShellScreen for frontPageWiki', () {
+      ApiPrefs.setCurrentStudent(user);
+
       final courseId = '123';
       final url = 'https://test.instructure.com/courses/$courseId/wiki';
       final widget = _getWidgetFromRoute(_rootWithUrl(url)) as CourseRoutingShellScreen;
@@ -460,6 +478,18 @@ void main() {
       expect(widget, isA<CourseRoutingShellScreen>());
       expect(widget.courseId, courseId);
       expect(widget.type, CourseShellType.frontPage);
+    });
+
+    test('returns Dashboard for any route with no current user or QR', () async {
+      final courseId = '123';
+      final assignmentId = '321';
+      final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
+
+      final widget = _getWidgetFromRoute(
+        _rootWithUrl(url),
+      ) as DashboardScreen;
+
+      expect(widget, isA<DashboardScreen>());
     });
   });
 
