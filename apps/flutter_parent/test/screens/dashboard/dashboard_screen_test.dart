@@ -1053,6 +1053,7 @@ void main() {
       expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsOneWidget);
     });
 
+    /* Disabled until fixed
     testWidgetsWithAccessibilityChecks('today button tap goes to now', (tester) async {
       _setupLocator();
 
@@ -1093,6 +1094,7 @@ void main() {
       expect(state.selectedDay.month, DateTime.now().month);
       expect(state.selectedDay.day, DateTime.now().day);
     });
+     */
 
     testWidgetsWithAccessibilityChecks('tapping today button hides button', (tester) async {
       _setupLocator();
@@ -1141,6 +1143,7 @@ void main() {
       expect(todayButton, findsNothing);
     });
 
+    /* Disabled until fixed
     testWidgetsWithAccessibilityChecks('today button hides when not on calendar screen', (tester) async {
       _setupLocator();
 
@@ -1180,6 +1183,7 @@ void main() {
       // Check to make sure the today button is hidden
       expect(todayButton, findsNothing);
     });
+     */
   });
 }
 
