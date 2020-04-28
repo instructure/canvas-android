@@ -75,6 +75,7 @@ import 'dataseeding/create_submission_wrapper.dart';
 import 'dataseeding/create_user_info.dart';
 import 'dataseeding/grade_submission_info.dart';
 import 'dataseeding/grade_submission_wrapper.dart';
+import 'dataseeding/pairing_code.dart';
 import 'dataseeding/seed_context.dart';
 import 'dataseeding/seeded_user.dart';
 import 'dataseeding/user_name_data.dart';
@@ -129,6 +130,7 @@ part 'serializers.g.dart';
   NotificationPayload,
   OAuthToken,
   Page,
+  PairingCode,
   Plannable,
   PlannerItem,
   PlannerSubmission,

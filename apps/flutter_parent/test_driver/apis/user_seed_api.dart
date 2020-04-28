@@ -15,15 +15,18 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_parent/models/dataseeding/create_user_info.dart';
 import 'package:flutter_parent/models/dataseeding/oauth_token.dart';
+import 'package:flutter_parent/models/dataseeding/pairing_code.dart';
 import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
+import 'package:flutter_parent/network/utils/fetch.dart';
 
 import '../../lib/network/api/auth_api.dart';
 
@@ -120,6 +123,25 @@ class UserSeedApi {
     } on MissingPluginException catch (e) {
       print("authCode missing plugin exception: $e");
       return null;
+    }
+  }
+
+  /// Obtain a pairing code for the indicated observee.
+  /// Will only work if the observee has been enrolled in a course as a student.
+  /// Returns a PairingCode structure, which contains a "code" field.
+  static Future<PairingCode> createObserverPairingCode(String observeeId) async {
+    var dio = seedingDio();
+    return fetch(dio.post('users/$observeeId/observer_pairing_codes'));
+  }
+
+  /// Add [observer] as an observer for [observee], using the indicated pairingCode.
+  static Future<bool> addObservee(SeededUser observer, SeededUser observee, String pairingCode) async {
+    try {
+      var pairingResponse = await seedingDio().post('users/${observer.id}/observees',
+          queryParameters: {'pairing_code': pairingCode, 'access_token': observee.token});
+      return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
+    } on DioError {
+      return false;
     }
   }
 }
