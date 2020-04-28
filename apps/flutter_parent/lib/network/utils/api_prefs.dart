@@ -78,6 +78,7 @@ class ApiPrefs {
   }
 
   static void clean() {
+    _prefs?.clear();
     _prefs = null;
     _packageInfo = null;
     _currentLogin = null;
@@ -316,7 +317,11 @@ class ApiPrefs {
 
   static setCurrentStudent(User currentStudent) {
     _checkInit();
-    _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
+    if (currentStudent == null) {
+      _prefs.remove(KEY_CURRENT_STUDENT);
+    } else {
+      _prefs.setString(KEY_CURRENT_STUDENT, json.encode(serialize(currentStudent)));
+    }
   }
 
   static User getCurrentStudent() {
