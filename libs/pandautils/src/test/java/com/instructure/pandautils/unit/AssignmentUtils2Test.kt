@@ -190,8 +190,7 @@ class AssignmentUtils2Test : Assert() {
         )
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString(),
-            muted = true
+            dueAt = date.toApiString()
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission, true)
@@ -211,8 +210,7 @@ class AssignmentUtils2Test : Assert() {
         )
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString(),
-            muted = true
+            dueAt = date.toApiString()
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
