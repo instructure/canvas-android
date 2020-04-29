@@ -96,6 +96,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
         ),
         title: Hero(
           tag: 'studentText${students[index].id}',
+          key: ValueKey('studentTextHero${students[index].id}'),
           child: UserName.fromUserShortName(
             students[index],
             style: Theme.of(context).textTheme.subhead,

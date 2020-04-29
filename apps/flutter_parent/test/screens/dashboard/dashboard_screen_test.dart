@@ -1163,6 +1163,7 @@ void main() {
 
       // Wait for day activity dot animation delay to settle
       await tester.pumpAndSettle(Duration(seconds: 2));
+
       expect(find.byType(CalendarScreen), findsOneWidget);
 
       // Check to make sure we aren't showing the today button
@@ -1196,7 +1197,7 @@ Future<CalendarWidgetState> goToDate(WidgetTester tester, DateTime date) async {
     weekPagerBehavior: CalendarPageChangeBehavior.jump,
     monthPagerBehavior: CalendarPageChangeBehavior.jump,
   );
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(Duration(seconds: 1));
   return state;
 }
 

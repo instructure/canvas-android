@@ -67,4 +67,9 @@ class DashboardPage {
     await openNavDrawer(driver);
     await driver.tap(find.text("Inbox"));
   }
+
+  static Future<void> openManageStudents(FlutterDriver driver) async {
+    await openNavDrawer(driver);
+    await driver.tap(find.text("Manage Students"));
+  }
 }
