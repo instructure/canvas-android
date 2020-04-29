@@ -157,7 +157,6 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig: PactAssignmentFieldCon
             // TODO: needs_grading_count_by_section
             .booleanType("free_form_criterion_comments")
             .booleanType("published")
-            .booleanType("muted")
             .id("group_category_id")
             .booleanType("only_visible_to_overrides")
             .booleanType("anonymous_peer_reviews")
