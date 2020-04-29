@@ -107,67 +107,67 @@
                     android:textColor="@color/defaultPrimary"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_corner_tiara_bg"
-                    android:orientation="vertical"
-                    android:paddingTop="24dp">
+                    android:background="@drawable/rounded_corner_tiara_bg">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/pairObserverQrCode"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_marginTop="24dp"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintBottom_toTopOf="@+id/pairObserverCodeLabel"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@tools:sample/avatars" />
 
-                        <ImageView
-                            android:id="@+id/pairObserverQrCode"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_centerInParent="true"
-                            android:importantForAccessibility="no"
-                            tools:src="@tools:sample/avatars" />
+                    <ImageView
+                        android:id="@+id/pairObserverRefresh"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/contentDescriptionWidgetRefresh"
+                        android:padding="4dp"
+                        android:src="@drawable/vd_refresh_material"
+                        app:layout_constraintBottom_toBottomOf="@+id/pairObserverQrCode"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/pairObserverQrCode"
+                        app:layout_constraintTop_toTopOf="@+id/pairObserverQrCode" />
 
-                        <ImageView
-                            android:id="@+id/pairObserverRefresh"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/pairObserverQrCode"
-                            android:contentDescription="@string/contentDescriptionWidgetRefresh"
-                            android:padding="4dp"
-                            android:src="@drawable/vd_refresh_material" />
-
-                    </RelativeLayout>
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/pairObserverCodeLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
+                        android:text="@string/pairingCodeLabel"
+                        android:textColor="@color/defaultPrimary"
+                        android:textSize="20sp"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintEnd_toStartOf="@+id/pairObserverCode"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/pairObserverCode"
+                        />
+
+                    <TextView
+                        android:id="@+id/pairObserverCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="48dp"
+                        android:minHeight="48dp"
+                        android:textColor="@color/defaultPrimary"
+                        android:textIsSelectable="true"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
                         android:layout_marginTop="24dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="@string/pairingCodeLabel"
-                            android:textColor="@color/defaultPrimary"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/pairObserverCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:minHeight="48dp"
-                            android:minWidth="48dp"
-                            android:layout_gravity="center_horizontal"
-                            android:textColor="@color/defaultPrimary"
-                            android:textIsSelectable="true"
-                            android:textSize="20sp"
-                            android:textStyle="bold"
-                            tools:text="aH52da" />
-                    </LinearLayout>
-                </LinearLayout>
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/pairObserverCodeLabel"
+                        app:layout_constraintTop_toBottomOf="@+id/pairObserverQrCode"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        tools:text="aH52da" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
         </ScrollView>
     </RelativeLayout>

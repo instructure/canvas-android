@@ -21,8 +21,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentActivity
 import com.google.zxing.BarcodeFormat
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -46,7 +49,13 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     }
 
     override fun onConnect(output: Consumer<PairObserverEvent>) {
-        pairObserverRefresh.setOnClickListener { output.accept(PairObserverEvent.RefreshCode) }
+        pairObserverRefresh.setOnClickListener {
+            if (APIHelper.hasNetworkConnection()) {
+                output.accept(PairObserverEvent.RefreshCode)
+            } else {
+                (context as? FragmentActivity)?.supportFragmentManager?.let { NoInternetConnectionDialog.show(it) }
+            }
+        }
     }
 
     override fun render(state: PairObserverViewState) {
