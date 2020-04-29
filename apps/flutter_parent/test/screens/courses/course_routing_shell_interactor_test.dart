@@ -15,7 +15,7 @@
  */
 
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
@@ -36,7 +36,7 @@ void main() {
     ..name = 'course name'
     ..syllabusBody = 'hodor');
 
-  final page = Page((b) => b
+  final page = CoursePage((b) => b
     ..id = '123'
     ..body = 'hodor'
     ..hideFromStudents = false

@@ -31,6 +31,7 @@ import 'package:flutter_parent/models/basic_user.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/models/course_permissions.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
@@ -50,7 +51,6 @@ import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
-import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
@@ -101,6 +101,7 @@ part 'serializers.g.dart';
   CommunicationChannel,
   Conversation,
   Course,
+  CoursePage,
   CoursePermissions,
   CourseTab,
   CreateAssignmentInfo,
@@ -129,7 +130,6 @@ part 'serializers.g.dart';
   MobileVerifyResult,
   NotificationPayload,
   OAuthToken,
-  Page,
   PairingCode,
   Plannable,
   PlannerItem,

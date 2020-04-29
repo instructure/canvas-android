@@ -15,17 +15,17 @@ import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 
-part 'page.g.dart';
+part 'course_page.g.dart';
 
 /// To have this built_value be generated, run this command from the project root:
 /// flutter packages pub run build_runner build --delete-conflicting-outputs
-abstract class Page implements Built<Page, PageBuilder> {
+abstract class CoursePage implements Built<CoursePage, CoursePageBuilder> {
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
-  static Serializer<Page> get serializer => _$pageSerializer;
+  static Serializer<CoursePage> get serializer => _$coursePageSerializer;
 
-  Page._();
+  CoursePage._();
 
-  factory Page([void Function(PageBuilder) updates]) = _$Page;
+  factory CoursePage([void Function(CoursePageBuilder) updates]) = _$CoursePage;
 
   @BuiltValueField(wireName: 'page_id')
   String get id;
@@ -70,7 +70,7 @@ abstract class Page implements Built<Page, PageBuilder> {
   @BuiltValueField(wireName: 'lock_explanation')
   String get lockExplanation;
 
-  static void _initializeBuilder(PageBuilder b) => b
+  static void _initializeBuilder(CoursePageBuilder b) => b
     ..hideFromStudents = false
     ..frontPage = false
     ..published = false;

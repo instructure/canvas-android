@@ -15,7 +15,7 @@
  */
 
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
@@ -24,7 +24,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CourseRoutingShellInteractor {
   Future<CourseShellData> loadCourseShell(CourseShellType type, String courseId, {bool forceRefresh = false}) async {
     var course = await _loadCourse(courseId);
-    Page frontPage = null;
+    CoursePage frontPage = null;
 
     if (type == CourseShellType.frontPage) {
       frontPage = await _loadHomePage(courseId, forceRefresh: forceRefresh);
@@ -44,14 +44,14 @@ class CourseRoutingShellInteractor {
     return locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
   }
 
-  Future<Page> _loadHomePage(String courseId, {bool forceRefresh = false}) {
+  Future<CoursePage> _loadHomePage(String courseId, {bool forceRefresh = false}) {
     return locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
   }
 }
 
 class CourseShellData {
   final Course course;
-  final Page frontPage;
+  final CoursePage frontPage;
 
   CourseShellData(this.course, {this.frontPage});
 }

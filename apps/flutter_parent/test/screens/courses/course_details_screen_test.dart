@@ -17,7 +17,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -214,7 +214,7 @@ void main() {
       ..homePage = HomePage.wiki
       ..name = 'Course Name');
 
-    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => CoursePage((b) => b
       ..id = '1'
       ..body = 'hodor'));
 
@@ -328,7 +328,7 @@ void main() {
       ..homePage = HomePage.wiki);
 
     when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => CoursePage((b) => b
       ..id = '1'
       ..body = 'hodor'));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
@@ -368,7 +368,7 @@ void main() {
       ..homePage = HomePage.wiki);
 
     when(courseInteractor.loadCourse(courseId)).thenAnswer((_) => Future.value(course));
-    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => Page((b) => b
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => CoursePage((b) => b
       ..id = '1'
       ..body = 'hodor'));
     when(convoInteractor.loadData(any, any)).thenAnswer((_) async => CreateConversationData(course, []));
