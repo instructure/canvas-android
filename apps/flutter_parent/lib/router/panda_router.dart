@@ -349,9 +349,15 @@ class PandaRouter {
     // We only care about valid app routes if they are already signed in or performing a qr login
     if (urlRouteWrapper.appRouteMatch != null && (ApiPrefs.isLoggedIn() || qrUri != null)) {
       if (urlRouteWrapper.validHost) {
-        // If its a link we can handle natively and within our domain, route
-        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
-            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+        // Before deep linking, we need to make sure a current student is set
+        if (ApiPrefs.getCurrentStudent() != null || qrUri != null) {
+          // If its a link we can handle natively and within our domain, route
+          return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
+              .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+        } else {
+          // This might be a migrated user or an error case, let's route them to the dashboard
+          return _dashboardHandler.handlerFunc(context, {});
+        }
       } else {
         // Otherwise, we want to route to the error page if they are already logged in
         return _routerErrorHandler.handlerFunc(context, params);

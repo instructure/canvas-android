@@ -18,6 +18,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
@@ -57,10 +58,11 @@ final _analytics = _MockAnalytics();
 
 void main() {
   final String _domain = 'https://test.instructure.com';
+  final user = CanvasModelTestUtils.mockUser();
   final login = Login((b) => b
     ..domain = _domain
     ..accessToken = 'token'
-    ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    ..user = user.toBuilder());
 
   final _mockNav = _MockNav();
   final _mockWebContentInteractor = _MockWebContentInteractor();
@@ -80,6 +82,7 @@ void main() {
 
   setUp(() async {
     await setupPlatformChannels(config: PlatformConfig(initLoggedInUser: login));
+    ApiPrefs.setCurrentStudent(user);
     reset(_analytics);
     reset(_mockLauncher);
     reset(_mockNav);
@@ -460,6 +463,20 @@ void main() {
       expect(widget, isA<CourseRoutingShellScreen>());
       expect(widget.courseId, courseId);
       expect(widget.type, CourseShellType.frontPage);
+    });
+
+    test('returns Dashboard for any route with no current user or QR', () async {
+      ApiPrefs.setCurrentStudent(null);
+
+      final courseId = '123';
+      final assignmentId = '321';
+      final url = 'https://test.instructure.com/courses/$courseId/assignments/$assignmentId';
+
+      final widget = _getWidgetFromRoute(
+        _rootWithUrl(url),
+      ) as DashboardScreen;
+
+      expect(widget, isA<DashboardScreen>());
     });
   });
 
