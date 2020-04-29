@@ -37,6 +37,7 @@ import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
 import 'package:flutter_parent/models/dataseeding/create_assignment_info.dart';
 import 'package:flutter_parent/models/dataseeding/oauth_token.dart';
 import 'package:flutter_parent/models/dataseeding/pseudonym.dart';
+import 'package:flutter_parent/models/dataseeding/quiz.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -135,6 +136,7 @@ part 'serializers.g.dart';
   PlannerItem,
   PlannerSubmission,
   Pseudonym,
+  Quiz,
   Recipient,
   Reminder,
   RemoteFile,
