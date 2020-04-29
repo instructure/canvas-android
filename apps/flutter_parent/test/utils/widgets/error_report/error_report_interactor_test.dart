@@ -133,7 +133,6 @@ void main() {
   });
 
   test('Uses domain from ErrorReportApi if api prefs has none', () async {
-    await ApiPrefs.performLogout(switchingLogins: true); // Clear domain data in ApiPrefs
     await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
 
     verify(api.submitErrorReport(
@@ -150,6 +149,14 @@ void main() {
   });
 
   test('Retrieves user roles and removes duplicates', () async {
+    String domain = 'domain';
+    Login user = Login((b) => b
+      ..accessToken = ''
+      ..refreshToken = ''
+      ..domain = domain
+      ..user = CanvasModelTestUtils.mockUser().toBuilder());
+    ApiPrefs.switchLogins(user);
+
     final enrollmentBuilder = (String type) => Enrollment((b) => b
       ..enrollmentState = 'active'
       ..type = type);
@@ -162,6 +169,24 @@ void main() {
 
     verify(api.submitErrorReport(
       userRoles: 'ObserverEnrollment,StudentEnrollment',
+      subject: anyNamed('subject'),
+      description: anyNamed('description'),
+      email: anyNamed('email'),
+      stacktrace: anyNamed('stacktrace'),
+      severity: anyNamed('severity'),
+      domain: anyNamed('domain'),
+      name: anyNamed('name'),
+      becomeUser: anyNamed('becomeUser'),
+    )).called(1);
+  });
+
+  test('Sends empty user roles with null api prefs user', () async {
+    await ErrorReportInteractor().submitErrorReport('', '', '', ErrorReportSeverity.COMMENT, '');
+
+    verifyNever(enrollmentsApi.getSelfEnrollments(forceRefresh: anyNamed('forceRefresh')));
+
+    verify(api.submitErrorReport(
+      userRoles: '',
       subject: anyNamed('subject'),
       description: anyNamed('description'),
       email: anyNamed('email'),

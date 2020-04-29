@@ -25,7 +25,7 @@ class ErrorReportInteractor {
     final becomeUser = (user?.id?.isNotEmpty == true) ? '$domain?become_user_id=${user.id}' : '';
     final userEmail = (email?.isNotEmpty == true) ? email : user?.primaryEmail ?? '';
 
-    final enrollments = await locator<EnrollmentsApi>().getSelfEnrollments(forceRefresh: true);
+    final enrollments = user == null ? [] : await locator<EnrollmentsApi>().getSelfEnrollments(forceRefresh: true);
     final userRoles = Set.from(enrollments?.map((enrollment) => enrollment.type) ?? []).toList().join(',');
 
     return locator<ErrorReportApi>().submitErrorReport(
