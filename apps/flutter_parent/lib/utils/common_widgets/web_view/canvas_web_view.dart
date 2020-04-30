@@ -285,6 +285,7 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
     // One possible idea is to set to let the max height of the content be the height of the available space (wrapping
     // the ConstrainedBox in a LayoutBuilder to size appropriately). Though this would require adding the
     // WebViewGestureRecognizer, which doesn't support PTR, and would need some extra flag besides just fullScreen.
+    if (!mounted) return; // Possible race condition here
     setState(() => _height = height);
   }
 

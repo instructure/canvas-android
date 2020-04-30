@@ -107,7 +107,7 @@ class PandaRouter {
     String authenticationProvider = null,
     LoginFlow loginFlow = LoginFlow.normal,
   }) =>
-      '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
+      '$_loginWeb?${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String notParent() => '/not_parent';
 
@@ -131,7 +131,7 @@ class PandaRouter {
   static final String _simpleWebView = '/internal';
 
   static String simpleWebViewRoute(String url, String infoText) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=$infoText';
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}';
 
   static String settings() => '/settings';
 
