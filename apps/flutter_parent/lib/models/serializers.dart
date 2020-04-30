@@ -28,6 +28,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/basic_user.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -50,7 +51,6 @@ import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
-import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
@@ -97,6 +97,7 @@ part 'serializers.g.dart';
   Attachment,
   AuthenticatedUrl,
   BasicUser,
+  CanvasPage,
   CanvasToken,
   CommunicationChannel,
   Conversation,
@@ -129,7 +130,6 @@ part 'serializers.g.dart';
   MobileVerifyResult,
   NotificationPayload,
   OAuthToken,
-  Page,
   PairingCode,
   Plannable,
   PlannerItem,

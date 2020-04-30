@@ -18,8 +18,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -40,7 +40,7 @@ void main() {
     ..name = 'course name'
     ..syllabusBody = 'hodor syllabus');
 
-  final page = Page((b) => b
+  final page = CanvasPage((b) => b
     ..id = '123'
     ..body = 'hodor front page'
     ..hideFromStudents = false

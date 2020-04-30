@@ -12,12 +12,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class PageApi {
-  Future<Page> getCourseFrontPage(String courseId, {bool forceRefresh = false}) async {
+  Future<CanvasPage> getCourseFrontPage(String courseId, {bool forceRefresh = false}) async {
     return fetch(canvasDio(forceRefresh: forceRefresh).get('courses/$courseId/front_page'));
   }
 }
