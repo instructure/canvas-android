@@ -13,8 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/assignment_group.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
@@ -59,6 +59,6 @@ class CourseDetailsInteractor {
     );
   }
 
-  Future<CoursePage> loadFrontPage(String courseId, {bool forceRefresh = false}) =>
+  Future<CanvasPage> loadFrontPage(String courseId, {bool forceRefresh = false}) =>
       locator<PageApi>().getCourseFrontPage(courseId, forceRefresh: forceRefresh);
 }

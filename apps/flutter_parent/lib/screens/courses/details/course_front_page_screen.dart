@@ -14,7 +14,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/course_page.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -33,12 +33,12 @@ class CourseFrontPageScreen extends StatefulWidget {
 }
 
 class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with AutomaticKeepAliveClientMixin {
-  Future<CoursePage> _pageFuture;
+  Future<CanvasPage> _pageFuture;
 
   @override
   bool get wantKeepAlive => true;
 
-  Future<CoursePage> _refreshPage() {
+  Future<CanvasPage> _refreshPage() {
     setState(() {
       _pageFuture = _interactor.loadFrontPage(widget.courseId, forceRefresh: true);
     });
@@ -62,7 +62,7 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
       },
       child: FutureBuilder(
         future: _pageFuture,
-        builder: (context, AsyncSnapshot<CoursePage> snapshot) {
+        builder: (context, AsyncSnapshot<CanvasPage> snapshot) {
           if (snapshot.hasError) {
             return ErrorPandaWidget(L10n(context).unexpectedError, () => _refreshPage());
           } else if (!snapshot.hasData) {

@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
@@ -36,7 +36,7 @@ void main() {
     ..name = 'course name'
     ..syllabusBody = 'hodor');
 
-  final page = CoursePage((b) => b
+  final page = CanvasPage((b) => b
     ..id = '123'
     ..body = 'hodor'
     ..hideFromStudents = false

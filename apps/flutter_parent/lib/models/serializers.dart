@@ -28,10 +28,10 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/basic_user.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/course_page.dart';
 import 'package:flutter_parent/models/course_permissions.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
@@ -101,7 +101,7 @@ part 'serializers.g.dart';
   CommunicationChannel,
   Conversation,
   Course,
-  CoursePage,
+  CanvasPage,
   CoursePermissions,
   CourseTab,
   CreateAssignmentInfo,
