@@ -113,7 +113,7 @@ do
       then
         failureMessage=${messageMap[$id]}
         echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
-        echo failureMessage: $failureMessage
+        echo -e "\nfailureMessage: $failureMessage"
         failedTest="$file - \"$name\"\n"
         failures=("${failures[@]}" $failedTest)
         # Emit summary payload message to Splunk if we are on bitrise
