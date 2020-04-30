@@ -100,7 +100,7 @@ void main() {
     await tester.pump();
 
     expect(find.byType(LoadingIndicator), findsOneWidget);
-    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(find.byType(FloatingActionButton), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Shows course name in app bar subtitle', (tester) async {

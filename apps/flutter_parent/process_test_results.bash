@@ -57,6 +57,25 @@ do
 
   fi
 
+  # Process a test message, which contains failure and stack trace info
+  if [[ $line =~ "\"messageType\":\"print\"" ]]
+  then
+
+    # Grab the test id field
+    idRegex='\"testID\":([0-9]+),'
+    [[ $line =~ $idRegex ]]
+    id=${BASH_REMATCH[1]}
+
+    # Grab the messsage field
+    messageRegex='\"message\":\"(.+)\",\"type\"'
+    [[ $line =~ $messageRegex ]]
+    message=${BASH_REMATCH[1]}
+
+    messageMap[$id]=$message
+  fi
+
+    
+
   # Process a test result, reporting failures to splunk
   # Sample line:
   # {"testID":1801,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":79662}
@@ -88,13 +107,15 @@ do
       # On a fail, send a message to splunk
       if [ $result = "error" ]
       then
+        failureMessage=${messageMap[$id]}
         echo -e "\n\ntest FAILED: $file \"$name\"\n\n"
+        echo failureMessage: $failureMessage
         failedTest="$file - \"$name\"\n"
         failures=("${failures[@]}" $failedTest)
         # Emit summary payload message to Splunk if we are on bitrise
         if [ -n "$SPLUNK_MOBILE_TOKEN" ]
         then
-          payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
+          payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"message\": \"$failureMessage\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
           #echo error payload: \"$payload\"
           curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
         fi
