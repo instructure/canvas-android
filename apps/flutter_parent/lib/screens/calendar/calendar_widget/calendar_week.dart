@@ -55,7 +55,6 @@ class CalendarWeek extends StatelessWidget {
                     date: day,
                     selectedDay: selectedDay,
                     onDaySelected: onDaySelected,
-                    key: ValueKey('calendar_day_index_${days.indexOf(day)}'),
                   ),
                 )
             ],

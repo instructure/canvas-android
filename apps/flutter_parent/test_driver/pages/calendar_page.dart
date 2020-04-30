@@ -41,12 +41,19 @@ class CalendarPage {
     await driver.tap(find.text("Calendars"));
     await driver.tap(find.text(course.name));
     await driver.tap(find.pageBack());
-    await Future.delayed(Duration(milliseconds: 1500)); // Give the new fetch some time to settle
+    await driver.waitForAbsent(find.byType('LoadingIndicator'), timeout: Duration(milliseconds: 4999));
+  }
+
+  static Future<void> openAssignment(FlutterDriver driver, Assignment assignment) async {
+    // This should get the assignment into view
+    await _presentHelper(driver, assignment.dueAt, assignment.name);
+    await driver.tap(find.text(assignment.name));
   }
 
   // Helper function to (1) scroll to the correct week if necessary, (2) select the date, and
   // (3) make sure that the search text is present.
   static Future<void> _presentHelper(FlutterDriver driver, DateTime displayDate, String searchString) async {
+    //print('_presentHelper($displayDate,$searchString)');
     var dayOfMonth = displayDate.toLocal().day;
     var present = await _scrollToDayOfMonth(driver, dayOfMonth);
     expect(present, true, reason: "FAILED to scroll to day-of-month $dayOfMonth");
@@ -58,17 +65,17 @@ class CalendarPage {
   // Helper function to (1) scroll to the correct week if necessary, (2) select the date, and
   // (3) make sure that the search text is NOT present.
   static Future<void> _absentHelper(FlutterDriver driver, DateTime displayDate, String searchString) async {
+    //print('_absentHelper($displayDate,$searchString)');
     var dayOfMonth = displayDate.toLocal().day;
     var present = await _scrollToDayOfMonth(driver, dayOfMonth);
     expect(present, true, reason: "FAILED to scroll to day-of-month $dayOfMonth");
     await driver.tap(find.byValueKey('day_of_month_$dayOfMonth'));
-    await driver.waitForAbsent(find.text(searchString), timeout: Duration(milliseconds: 500));
+    await driver.waitForAbsentWithRefreshes(find.text(searchString));
   }
 
   // Helper function makes an attempt to scroll to the right week if the day of month that we are looking
   // for is not visible.  Only searches one week forward and one week backwards.
   static Future<bool> _scrollToDayOfMonth(FlutterDriver driver, int dayOfMonth) async {
-    //var day0 = await driver.getText(find.descendant(of: null, matching: null))
     var present = await _dayPresent(driver, dayOfMonth);
     if (present) return true;
 

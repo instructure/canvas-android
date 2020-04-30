@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 import 'package:test/test.dart';
 
 import 'driver_seed_utils.dart';
+import 'pages/assignment_details_page.dart';
 import 'pages/calendar_page.dart';
 import 'pages/dashboard_page.dart';
 
@@ -71,6 +72,11 @@ void main() {
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment2);
     await CalendarPage.verifyQuizDisplayed(driver, quiz1);
+
+    // Let's try opening an assignment
+    await CalendarPage.openAssignment(driver, assignment1);
+    await AssignmentDetailsPage.validateUnsubmittedAssignment(driver, assignment1);
+    await driver.tap(find.pageBack());
 
     // Let's filter out the first course and try again
     await CalendarPage.toggleFilter(driver, courses[0]);
