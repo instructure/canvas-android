@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utils/accessibility_utils.dart';
 import '../../../utils/test_app.dart';
@@ -30,7 +31,6 @@ import '../../../utils/test_app.dart';
 void main() {
   setupTestLocator((locator) {
     locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
-    locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
   });
   Future<CalendarWidgetState> goToDate(WidgetTester tester, DateTime date) async {
     CalendarWidgetState state = tester.state(find.byType(CalendarWidget));
@@ -44,9 +44,13 @@ void main() {
     return state;
   }
 
+  Widget calendarTestApp(Widget child, {Locale locale}) {
+    return TestApp(ChangeNotifierProvider(create: (_) => CalendarTodayNotifier(), child: child), locale: locale);
+  }
+
   testWidgetsWithAccessibilityChecks('Displays week view by default', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      calendarTestApp(
         CalendarWidget(
           dayBuilder: (_, __) => Container(),
           fetcher: _FakeFetcher(),
@@ -61,7 +65,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Displays month view when passed in', (tester) async {
     await tester.pumpWidget(
-      TestApp(
+      calendarTestApp(
         CalendarWidget(
           dayBuilder: (_, __) => Container(),
           fetcher: _FakeFetcher(),
@@ -79,7 +83,7 @@ void main() {
     DateTime startingDate = DateTime(2000, 1, 1);
     DateTime dateForDayBuilder = null;
     await tester.pumpWidget(
-      TestApp(
+      calendarTestApp(
         CalendarWidget(
           startingDate: startingDate,
           dayBuilder: (_, day) {
@@ -117,7 +121,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      TestApp(
+      calendarTestApp(
         calendar,
       ),
     );
@@ -150,7 +154,7 @@ void main() {
     );
 
     await tester.pumpWidget(
-      TestApp(
+      calendarTestApp(
         calendar,
       ),
     );
@@ -175,7 +179,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           calendar,
         ),
       );
@@ -204,7 +208,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           calendar,
         ),
       );
@@ -233,7 +237,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           calendar,
         ),
       );
@@ -263,7 +267,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           calendar,
         ),
       );
@@ -290,7 +294,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Jumps to selected date', (tester) async {
       DateTime dateForDayBuilder = null;
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
@@ -321,7 +325,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Animates to selected date', (tester) async {
       DateTime dateForDayBuilder = null;
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
@@ -361,7 +365,7 @@ void main() {
   group('Week and Month Swipe', () {
     testWidgetsWithAccessibilityChecks('Swipes to previous week', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -394,7 +398,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Swipes to next week', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -427,7 +431,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Swipes to previous month', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -465,7 +469,7 @@ void main() {
     });
     testWidgetsWithAccessibilityChecks('Swipes to next month', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -506,7 +510,7 @@ void main() {
   group('Accessibility', () {
     testWidgetsWithAccessibilityChecks('Displays a11y arrows for week view', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -528,7 +532,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('A11y arrow moves to previous week', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -557,7 +561,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('A11y arrow moves to next week', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -586,7 +590,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Displays a11y arrows for month view', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -612,7 +616,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('A11y arrow moves to previous month', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -646,7 +650,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('A11y arrow moves to next month', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           MediaQuery(
             child: CalendarWidget(
               dayBuilder: (_, __) => Container(),
@@ -683,7 +687,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Selects date from week view', (tester) async {
       DateTime dateForDayBuilder = null;
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
@@ -716,7 +720,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('Selects date from month view', (tester) async {
       DateTime dateForDayBuilder = null;
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
@@ -754,7 +758,7 @@ void main() {
       final dayContentKey = Key('day-content');
 
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
@@ -795,7 +799,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           Column(
             children: <Widget>[
               SizedBox(height: screenHeight - calendarHeight),
@@ -825,7 +829,7 @@ void main() {
         fetcher: _FakeFetcher(),
       );
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           Column(
             children: <Widget>[
               SizedBox(height: screenHeight - calendarHeight),
@@ -871,7 +875,7 @@ void main() {
         StateSetter stateSetter;
 
         await tester.pumpWidget(
-          TestApp(
+          calendarTestApp(
             StatefulBuilder(
               builder: (context, setState) {
                 stateSetter = setState;
@@ -911,7 +915,7 @@ void main() {
   group('Right-to-Left', () {
     testWidgetsWithAccessibilityChecks('Swipes to previous week in RTL', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -945,7 +949,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Swipes to next week in RTL', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -979,7 +983,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Swipes to previous month in RTL', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -1019,7 +1023,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('Swipes to next month in RTL', (tester) async {
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
@@ -1062,7 +1066,7 @@ void main() {
       final dayContentKey = Key('day-content');
 
       await tester.pumpWidget(
-        TestApp(
+        calendarTestApp(
           CalendarWidget(
             dayBuilder: (_, day) {
               dateForDayBuilder = day;
