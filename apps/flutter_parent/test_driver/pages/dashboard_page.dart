@@ -43,7 +43,9 @@ class DashboardPage {
   }
 
   static Future<void> waitForRender(FlutterDriver driver) async {
-    await driver.waitFor(find.byType("DashboardScreen"), timeout: Duration(seconds: 5));
+    print("Waiting for DashboardScreen to appear");
+    await driver.waitFor(find.byType("DashboardScreen"),
+        timeout: Duration(seconds: 10)); // It can take a while sometimes...
   }
 
   static Future<void> verifyStudentDisplayed(FlutterDriver driver, SeededUser student) async {
@@ -71,5 +73,9 @@ class DashboardPage {
   static Future<void> openManageStudents(FlutterDriver driver) async {
     await openNavDrawer(driver);
     await driver.tap(find.text("Manage Students"));
+  }
+
+  static Future<void> goToCalendar(FlutterDriver driver) async {
+    await driver.tap(find.text("Calendar"));
   }
 }

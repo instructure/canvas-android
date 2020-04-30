@@ -66,6 +66,21 @@ extension AutoRefresh on FlutterDriver {
     await this.waitFor(finder);
   }
 
+  Future<void> waitForAbsentWithRefreshes(SerializableFinder finder, {int refreshes = 3}) async {
+    for (int i = 0; i < refreshes; i++) {
+      try {
+        await this.waitForAbsent(finder, timeout: Duration(seconds: 1));
+        return;
+      } catch (err) {
+        await this.refresh();
+        await Future.delayed(Duration(milliseconds: 500)); // Give ourselves time to load
+      }
+    }
+
+    // We're out of retries; one more unprotected attempt
+    await this.waitForAbsent(finder);
+  }
+
   Future<void> refresh() async {
     await this.scroll(find.byType('RefreshIndicator'), 0, 400, Duration(milliseconds: 200));
   }
