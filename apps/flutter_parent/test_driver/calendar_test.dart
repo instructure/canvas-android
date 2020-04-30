@@ -46,10 +46,10 @@ void main() {
   // verifies that they show up on the calendar.  Also tests course
   // filtering.
   //
-  // WARNING: This test will probably fail on weekends.  It seeds items
-  // within a day forward and a day behind the current day, and expects those
-  // days to fall in the current week.  So running on Saturday or Sunday
-  // could be trouble.
+  // I have added some logic to allow the test to succeed on weekends --
+  // it can scroll to next week or last week to find tomorrow's/yesterday's
+  // assignments if need be.  But normally this should not be necessary,
+  // as we usually run the test M-F.
   test('Calendar E2E', () async {
     // Wait for seeding to complete
     var seedContext = await DriverSeedUtils.waitForSeedingToComplete(driver);
@@ -66,6 +66,7 @@ void main() {
     // Let's check that all of our assignments, quizzes and announcements are displayed
     await DashboardPage.waitForRender(driver);
     await DashboardPage.goToCalendar(driver);
+    await CalendarPage.waitForRender(driver);
     await CalendarPage.verifyAnnouncementDisplayed(driver, announcement1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment2);
@@ -85,7 +86,5 @@ void main() {
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentNotDisplayed(driver, assignment2);
     await CalendarPage.verifyQuizDisplayed(driver, quiz1);
-
-    await Future.delayed(const Duration(seconds: 5));
   }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 secs
 }

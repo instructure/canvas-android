@@ -40,12 +40,11 @@ void main() async {
   var assignment1 =
       await AssignmentSeedApi.createAssignment(course1.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
   var assignment2 =
-      await AssignmentSeedApi.createAssignment(course2.id, dueAt: DateTime.now().subtract(Duration(days: 7)).toUtc());
+      await AssignmentSeedApi.createAssignment(course2.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc());
   var announcement1 =
       await AnnouncementSeedApi.createAnnouncement(course1.id, 'Announcement Title', 'Announcement Message');
-  print('Returned announcement: $announcement1');
   var quiz1 = await QuizSeedApi.createQuiz(course1.id, "Super Stressful Quiz", DateTime.now().add(Duration(days: 1)));
-  print('Returned quiz: $quiz1');
+
   // Sign in the parent
   await AppSeedUtils.signIn(parent);
 
