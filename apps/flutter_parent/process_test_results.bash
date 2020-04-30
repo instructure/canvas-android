@@ -57,7 +57,10 @@ do
 
   fi
 
-  # Process a test message, which contains failure and stack trace info
+  # Process a test message.
+  # There can be many messages in a test, but we'll assume that the final message
+  # for a failed test is the error message with stack trace.  So we'll track the
+  # last message we see for each test.
   if [[ $line =~ "\"messageType\":\"print\"" ]]
   then
 
@@ -71,6 +74,7 @@ do
     [[ $line =~ $messageRegex ]]
     message=${BASH_REMATCH[1]}
 
+    # Record this message as the last one received for the test
     messageMap[$id]=$message
   fi
 
@@ -115,7 +119,8 @@ do
         # Emit summary payload message to Splunk if we are on bitrise
         if [ -n "$SPLUNK_MOBILE_TOKEN" ]
         then
-          payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"message\": \"$failureMessage\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData}}"
+          # Put failureMessage last because it may overflow.
+          payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"failed\", \"testName\": \"$name\", \"testClass\" : \"$file\", $commonSplunkData, \"message\":\"$failureMessage\"}}"
           #echo error payload: \"$payload\"
           curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$payload"
         fi
