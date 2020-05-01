@@ -33,13 +33,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dio_config.dart';
 
 class ApiPrefs {
+  static const String KEY_CAMERA_COUNT = 'camera_count';
+  static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
+  static const String KEY_CURRENT_STUDENT = 'current_student';
   static const String KEY_HAS_MIGRATED = 'has_migrated_from_old_app';
   static const String KEY_HAS_CHECKED_OLD_REMINDERS = 'has_checked_old_reminders';
   static const String KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS = 'has_migrated_to_encrypted_prefs';
   static const String KEY_LOGINS = 'logins';
-  static const String KEY_CURRENT_LOGIN_UUID = 'current_login_uuid';
-  static const String KEY_CURRENT_STUDENT = 'current_student';
-  static const String KEY_CAMERA_COUNT = 'camera_count';
+  static const String KEY_RATING_SHOW_AGAIN_WAIT = 'date_show_again';
+  static const String KEY_RATING_DONT_SHOW_AGAIN = 'dont_show_again';
+  static const String KEY_RATING_FIRST_LAUNCH_DATE = 'date_first_launched';
 
   static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -236,6 +239,8 @@ class ApiPrefs {
     }
   }
 
+  /// Prefs
+
   static String getCurrentLoginUuid() => _getPrefString(KEY_CURRENT_LOGIN_UUID);
 
   static User getUser() => getCurrentLogin()?.currentUser;
@@ -266,6 +271,23 @@ class ApiPrefs {
 
   static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
+  static int getRatingShowAgainWait() => _getPrefInt(KEY_RATING_SHOW_AGAIN_WAIT);
+
+  static Future<void> setRatingShowAgainWait(int showAgainDate) =>
+      _setPrefInt(KEY_RATING_SHOW_AGAIN_WAIT, showAgainDate);
+
+  static int getRatingFirstLaunchDate() => _getPrefInt(KEY_RATING_FIRST_LAUNCH_DATE);
+
+  static Future<void> setRatingFirstLaunchDate(int firstLaunch) =>
+      _setPrefInt(KEY_RATING_FIRST_LAUNCH_DATE, firstLaunch);
+
+  static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
+
+  static Future<void> setRatingDontShowAgain(bool dontShowAgain) =>
+      _setPrefBool(KEY_RATING_DONT_SHOW_AGAIN, dontShowAgain);
+
+  /// Pref helpers
+
   static Future<void> _setPrefBool(String key, bool value) async {
     _checkInit();
     await _prefs.setBool(key, value);
@@ -290,6 +312,8 @@ class ApiPrefs {
     _checkInit();
     return _prefs.setInt(key, value);
   }
+
+  /// Utility functions
 
   static Map<String, String> getHeaderMap({
     bool forceDeviceLanguage = false,

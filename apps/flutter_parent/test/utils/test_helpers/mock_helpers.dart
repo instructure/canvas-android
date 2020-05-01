@@ -40,6 +40,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
+import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
@@ -58,6 +59,8 @@ MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null
 }
 
 class MockAnalytics extends Mock implements Analytics {}
+
+class MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
 
 class MockAlertsApi extends Mock implements AlertsApi {}
 

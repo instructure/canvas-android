@@ -38,6 +38,8 @@ class AnalyticsEventConstants {
   static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
   static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
   static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
+  static const RATING_DIALOG = 'rating_dialog';
+  static const RATING_DIALOG_DONT_SHOW_AGAIN = 'rating_dialog_dont_show_again';
   static const REMINDER_ASSIGNMENT_CREATE = 'reminder_assignment';
   static const REMINDER_EVENT_CREATE = 'reminder_event';
   static const SWITCH_USERS = 'switch_users';
@@ -53,20 +55,20 @@ class AnalyticsEventConstants {
 /// Due to the limits on custom params, we will mostly be using a mapping of the pre-defined params,
 /// mappings will be recorded below. Make sure we are only using params where the data is relevant.
 ///
-/// [DOMAIN_PARAM] -> AFFILIATION
-/// [USER_CONTEXT_ID] -> CHARACTER
+/// [ASSIGNMENT_ID]/DISCUSSION/ETC ID -> ITEM_ID There is also ITEM_CATEGORY if the event is vague regarding the type of item
 /// [CANVAS_CONTEXT_ID] -> GROUP_ID
-/// [ASSIGNMENT_ID]/DISCUSSION/ETC ID -> ITEM_ID
-///   There is also ITEM_CATEGORY if the event is vague regarding the type of item
-/// [SCREEN_OF_ORIGIN] -> ORIGIN
-///   Used when events can originate from multiple locations
+/// [DOMAIN_PARAM] -> AFFILIATION
+/// [SCREEN_OF_ORIGIN] -> ORIGIN Used when events can originate from multiple locations
+/// [STAR_RATING] -> The star rating a user gave in the rating dialog
+/// [USER_CONTEXT_ID] -> CHARACTER
 ///
 class AnalyticsParamConstants {
-  static const DOMAIN_PARAM = 'affiliation';
-  static const USER_CONTEXT_ID = 'character';
-  static const CANVAS_CONTEXT_ID = 'group_id';
   static const ASSIGNMENT_ID = 'item_id';
+  static const CANVAS_CONTEXT_ID = 'group_id';
+  static const DOMAIN_PARAM = 'affiliation';
   static const SCREEN_OF_ORIGIN = 'origin';
+  static const STAR_RATING = 'star_rating';
+  static const USER_CONTEXT_ID = 'character';
 }
 
 class Analytics {
@@ -83,8 +85,12 @@ class Analytics {
     }
   }
 
-  /// Log an event to Firebase analytics (only ini release mode).
+  /// Log an event to Firebase analytics (only in release mode).
   /// If isDebug, it will also print to the console
+  ///
+  /// Params
+  /// * [event] should be one of [AnalyticsEventConstants]
+  /// * [extras] a map of keys [AnalyticsParamConstants] to values. Use sparingly, we only get 25 unique parameters
   void logEvent(String event, {Map<String, dynamic> extras = const {}}) async {
     if (kReleaseMode) {
       await _analytics.logEvent(name: event, parameters: extras);
