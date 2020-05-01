@@ -56,8 +56,14 @@ class RemoteConfigUtils {
     _remoteConfig = remoteConfig;
 
     // fetch data from Firebase
-    await _remoteConfig.fetch(expiration: const Duration(hours: 1));
-    var updated = await _remoteConfig.activateFetched();
+    var updated = false;
+    try {
+      await _remoteConfig.fetch(expiration: const Duration(hours: 1));
+      updated = await _remoteConfig.activateFetched();
+    } catch (e) {
+      // On fetch/activate failure, just make sure that updated is set to false
+      updated = false;
+    }
 
     // Grab a SharedPreferences instance
     _prefs = await SharedPreferences.getInstance();
