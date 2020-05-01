@@ -75,7 +75,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(CalendarWeek), findsNWidgets(5));
+    // Weeks can be 4, 5 or 6 in a month view, we just have to match greater than 4
+    expect(find.byType(CalendarWeek).evaluate().length, greaterThanOrEqualTo(4),
+        reason: 'Not showing all weeks for the month');
     expect(find.byType(CalendarMonth), findsOneWidget);
   });
 
