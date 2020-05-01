@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-24T11:04:11.513016",
+  "@@last_modified": "2020-05-01T11:03:25.020395",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -173,6 +173,12 @@
   "Planner Note": "Planner Note",
   "@Planner Note": {
     "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Go to today": "Go to today",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
     "type": "text",
     "placeholders": {}
   },
