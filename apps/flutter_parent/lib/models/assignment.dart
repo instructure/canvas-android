@@ -17,6 +17,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 
 import 'submission.dart';
 
@@ -68,10 +69,10 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   @nullable
   @BuiltValueField(wireName: 'submission')
-  BuiltList<Submission> get submissionList;
+  SubmissionWrapper get submissionList;
 
   Submission submission(String studentId) =>
-      submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
+      submissionList?.submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
 
   @BuiltValueField(wireName: 'assignment_group_id')
   String get assignmentGroupId;

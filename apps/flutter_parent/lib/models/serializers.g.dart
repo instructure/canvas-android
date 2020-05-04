@@ -68,10 +68,13 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(RemoteFile.serializer)
       ..add(ScheduleItem.serializer)
       ..add(SchoolDomain.serializer)
+      ..add(Section.serializer)
       ..add(SeedContext.serializer)
       ..add(SeededUser.serializer)
       ..add(Submission.serializer)
       ..add(SubmissionTypes.serializer)
+      ..add(SubmissionWrapper.serializer)
+      ..add(Term.serializer)
       ..add(TermsOfService.serializer)
       ..add(UnreadCount.serializer)
       ..add(User.serializer)
@@ -98,6 +101,9 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(Enrollment)]),
           () => new ListBuilder<Enrollment>())
+      ..addBuilderFactory(
+          const FullType(BuiltList, const [const FullType(Section)]),
+          () => new ListBuilder<Section>())
       ..addBuilderFactory(
           const FullType(BuiltList, const [const FullType(GradingPeriod)]),
           () => new ListBuilder<GradingPeriod>())

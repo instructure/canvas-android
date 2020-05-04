@@ -221,8 +221,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.submissionList,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(Submission)])));
+          specifiedType: const FullType(SubmissionWrapper)));
     }
     result.add('lock_at');
     if (object.lockAt == null) {
@@ -321,9 +320,8 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           break;
         case 'submission':
           result.submissionList.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(Submission)]))
-              as BuiltList<Object>);
+                  specifiedType: const FullType(SubmissionWrapper))
+              as SubmissionWrapper);
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
@@ -503,7 +501,7 @@ class _$Assignment extends Assignment {
   @override
   final bool useRubricForGrading;
   @override
-  final BuiltList<Submission> submissionList;
+  final SubmissionWrapper submissionList;
   @override
   final String assignmentGroupId;
   @override
@@ -802,10 +800,10 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set useRubricForGrading(bool useRubricForGrading) =>
       _$this._useRubricForGrading = useRubricForGrading;
 
-  ListBuilder<Submission> _submissionList;
-  ListBuilder<Submission> get submissionList =>
-      _$this._submissionList ??= new ListBuilder<Submission>();
-  set submissionList(ListBuilder<Submission> submissionList) =>
+  SubmissionWrapperBuilder _submissionList;
+  SubmissionWrapperBuilder get submissionList =>
+      _$this._submissionList ??= new SubmissionWrapperBuilder();
+  set submissionList(SubmissionWrapperBuilder submissionList) =>
       _$this._submissionList = submissionList;
 
   String _assignmentGroupId;

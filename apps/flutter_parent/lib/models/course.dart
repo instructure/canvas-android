@@ -16,6 +16,8 @@ library course;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/section.dart';
+import 'package:flutter_parent/models/term.dart';
 
 import 'course_grade.dart';
 import 'enrollment.dart';
@@ -67,7 +69,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   @nullable
   @BuiltValueField(wireName: 'end_at')
-  String get endAt;
+  DateTime get endAt;
 
   @nullable
   @BuiltValueField(wireName: 'syllabus_body')
@@ -115,9 +117,16 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'default_view')
   HomePage get homePage;
 
+  @nullable
+  Term get term;
+
+  @nullable
+  BuiltList<Section> get sections;
+
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
     ..enrollments = ListBuilder<Enrollment>()
+    ..sections = ListBuilder<Section>()
     ..name = ''
     ..needsGradingCount = 0
     ..hideFinalGrades = false
@@ -158,6 +167,31 @@ abstract class Course implements Built<Course, CourseBuilder> {
       );
 
   String contextFilterId() => 'course_${this.id}';
+
+  bool isValidForDate() {
+    if (accessRestrictedByDate) return false;
+
+    if (workflowState == 'completed') return false;
+
+    final now = DateTime.now();
+    final courseDatePassed = endAt?.isBefore(now) == true;
+
+    if (restrictEnrollmentsToCourseDates) {
+      return !courseDatePassed;
+    } else {
+      final termDatePassed = term?.endAt?.isBefore(now) == true;
+      final allSectionsPassed =
+          sections.isNotEmpty && sections.every((section) => section.endAt?.isBefore(now) == true);
+
+      return !courseDatePassed && !termDatePassed && !allSectionsPassed;
+    }
+  }
+
+  /// Filters enrollments by those associated with the currently selected user and isValidForParent
+  bool isValidForCurrentStudent(String currentStudentId) {
+    final hasValidEnrollments = enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
+    return hasValidEnrollments && isValidForDate();
+  }
 }
 
 @BuiltValueEnum(wireName: 'default_view')

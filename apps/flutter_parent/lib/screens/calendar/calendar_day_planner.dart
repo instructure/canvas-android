@@ -15,7 +15,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
@@ -35,7 +35,7 @@ class CalendarDayPlanner extends StatefulWidget {
 class CalendarDayPlannerState extends State<CalendarDayPlanner> {
   @override
   Widget build(BuildContext context) {
-    return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
+    return Selector<PlannerFetcher, AsyncSnapshot<List<ScheduleItem>>>(
       selector: (_, fetcher) => fetcher.getSnapshotForDate(widget._day),
       builder: (_, snapshot, __) {
         Widget body;
@@ -68,7 +68,7 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
 }
 
 class CalendarDayList extends StatelessWidget {
-  final List<PlannerItem> _plannerItems;
+  final List<ScheduleItem> _plannerItems;
 
   CalendarDayList(this._plannerItems);
 
@@ -80,5 +80,5 @@ class CalendarDayList extends StatelessWidget {
     );
   }
 
-  Widget _dayTile(BuildContext context, PlannerItem plannerItem, int index) => CalendarDayListTile(plannerItem);
+  Widget _dayTile(BuildContext context, ScheduleItem plannerItem, int index) => CalendarDayListTile(plannerItem);
 }

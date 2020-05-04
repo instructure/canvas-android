@@ -64,20 +64,18 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _content(BuildContext context) {
     return FutureBuilder(
       future: _coursesFuture,
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<List<Course>> snapshot) {
         Widget _body;
         if (snapshot.hasError) {
           _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState.show());
         } else if (snapshot.hasData) {
-          _courses = snapshot.data;
-          final studentCourses = _courses.where(_enrollmentFilter);
-          _body = (studentCourses == null || studentCourses.isEmpty)
+          _body = (snapshot.data.isEmpty)
               ? EmptyPandaWidget(
                   svgPath: 'assets/svg/panda-book.svg',
                   title: L10n(context).noCoursesTitle,
                   subtitle: L10n(context).noCoursesMessage,
                 )
-              : _success(studentCourses);
+              : _success(snapshot.data);
         } else {
           return LoadingIndicator();
         }

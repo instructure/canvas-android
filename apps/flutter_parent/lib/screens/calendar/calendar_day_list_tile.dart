@@ -15,16 +15,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:intl/intl.dart';
 
 class CalendarDayListTile extends StatelessWidget {
-  final PlannerItem _item;
+  final ScheduleItem _item;
 
   CalendarDayListTile(this._item);
 
@@ -33,31 +33,28 @@ class CalendarDayListTile extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     Widget tile = InkWell(
       onTap: () {
-        switch (_item.plannableType) {
-          case 'assignment':
-            locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.id));
-            break;
-          case 'announcement':
-            // Observers don't get institutional announcements, so we're only dealing with course announcements
+        switch (_item.getItemType()) {
+          case ScheduleItemType.assignment:
             locator<QuickNav>()
-                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
+                .pushRoute(context, PandaRouter.assignmentDetails(_item.assignment.courseId, _item.assignment.id));
             break;
-          case 'quiz':
-            if (_item.plannable.assignmentId != null) {
+          case ScheduleItemType.quiz:
+            if (_item.assignment.quizId != null) {
               // This is a quiz assignment, go to the assignment page
-              locator<QuickNav>()
-                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
+              locator<QuickNav>().pushRoute(
+                  context, PandaRouter.quizAssignmentDetails(_item.assignment.courseId, _item.assignment.id));
             } else {
               // No routes will match this url currently, so routing internally will throw it in an implicit intent
               PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
             }
             break;
-          case 'discussion_topic':
-            locator<QuickNav>().pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.id));
+          case ScheduleItemType.discussion:
+            // TODO - do we have to handle non-assignment discussions from the calendar? Perhaps ungrade discussions?
+//            locator<QuickNav>().pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.id));
             break;
-          case 'calendar_event':
+          case ScheduleItemType.event:
             // Case where the observed user has a personal calendar event
-            locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId, _item.plannable.id));
+            locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.getContextId(), _item.id));
             break;
           default:
             // This is a type that we don't handle - do nothing
@@ -78,11 +75,12 @@ class CalendarDayListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 16),
-                Text(_getContextName(context, _item), style: textTheme.caption),
+                Text('PLACEHOLDER COURSE NAME',
+                    style: textTheme.caption), //_getContextName(context, _item), style: textTheme.caption),
                 SizedBox(height: 2),
-                Text(_item.plannable.title, style: textTheme.subhead),
+                Text(_item.title, style: textTheme.subhead),
                 ..._getDueDate(context, _item),
-                ..._getPointsOrStatus(context, _item),
+                // TODO - add assignment state work here ..._getPointsOrStatus(context, _item),
                 SizedBox(height: 12),
               ],
             ),
@@ -104,42 +102,37 @@ class CalendarDayListTile extends StatelessWidget {
     return '';
   }
 
-  Widget _getIcon(BuildContext context, PlannerItem item) {
+  Widget _getIcon(BuildContext context, ScheduleItem item) {
     IconData icon;
-    switch (item.plannableType) {
-      case 'assignment':
+    switch (item.getItemType()) {
+      case ScheduleItemType.assignment:
         icon = CanvasIcons.assignment;
         break;
-      case 'quiz':
+      case ScheduleItemType.quiz:
         icon = CanvasIcons.quiz;
         break;
-      case 'announcement':
-        icon = CanvasIcons.announcement;
-        break;
-      case 'calendar_event':
-        icon = CanvasIcons.calendar_day;
-        break;
-      case 'discussion_topic':
+      case ScheduleItemType.discussion:
         icon = CanvasIcons.discussion;
         break;
-      case 'planner_note':
-        icon = CanvasIcons.note;
+      case ScheduleItemType.event:
+        icon = CanvasIcons.calendar_day;
         break;
     }
     return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).accentColor);
   }
 
-  List<Widget> _getDueDate(BuildContext context, PlannerItem plannerItem) {
-    if (plannerItem.plannable.dueAt != null) {
+  List<Widget> _getDueDate(BuildContext context, ScheduleItem plannerItem) {
+    if (plannerItem.assignment.dueAt != null) {
       return [
         SizedBox(height: 4),
-        Text(plannerItem.plannable.dueAt.l10nFormat(L10n(context).dueDateAtTime),
+        Text(plannerItem.assignment.dueAt.l10nFormat(L10n(context).dueDateAtTime),
             style: Theme.of(context).textTheme.caption),
       ];
     }
     return [];
   }
 
+  /*
   List<Widget> _getPointsOrStatus(BuildContext context, PlannerItem plannerItem) {
     var submissionStatus = plannerItem.submissionStatus;
     String pointsOrStatus = null;
@@ -176,4 +169,5 @@ class CalendarDayListTile extends StatelessWidget {
 
     return [];
   }
+   */
 }

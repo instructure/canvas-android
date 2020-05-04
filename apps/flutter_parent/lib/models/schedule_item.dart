@@ -95,4 +95,25 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
     ..type = typeCalendar
     ..isAllDay = false
     ..isHidden = false;
+
+  ScheduleItemType getItemType() {
+    if (type == ScheduleItem.typeCalendar) return ScheduleItemType.event;
+    if (assignment?.isQuiz == true) return ScheduleItemType.quiz;
+    if (assignment?.isDiscussion == true) return ScheduleItemType.discussion;
+    return ScheduleItemType.assignment;
+  }
+
+  String getContextId() {
+    if (effectiveContextCode != null) {
+      return parseContextCode(effectiveContextCode);
+    } else {
+      return parseContextCode(contextCode);
+    }
+  }
+
+  String parseContextCode(String code) {
+    return contextCode.substring(6, contextCode.length - 1);
+  }
 }
+
+enum ScheduleItemType { event, quiz, assignment, discussion }

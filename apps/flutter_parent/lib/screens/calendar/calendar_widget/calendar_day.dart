@@ -15,7 +15,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -94,7 +94,7 @@ class CalendarDay extends StatelessWidget {
   }
 
   Widget _eventIndicator(BuildContext context) {
-    return Selector<PlannerFetcher, AsyncSnapshot<List<PlannerItem>>>(
+    return Selector<PlannerFetcher, AsyncSnapshot<List<ScheduleItem>>>(
       selector: (_, fetcher) => fetcher.getSnapshotForDate(date),
       builder: (_, snapshot, __) {
         /// On error, show nothing
