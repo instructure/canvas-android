@@ -37,7 +37,7 @@ class ParentColors {
   static const failure = Color(0xFFEE0612);
 
   /// Core color for the parent app
-  static const parentApp = Color(0xFF008EE2);
+  static const parentApp = Color(0xFF007BC2);
 
   /// Core color for the student app
   static const studentApp = Color(0xFFEE0612);

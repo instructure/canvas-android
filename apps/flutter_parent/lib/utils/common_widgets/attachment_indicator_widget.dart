@@ -64,7 +64,7 @@ class AttachmentIndicatorWidget extends StatelessWidget {
                     )
                   ],
                 ),
-                if (attachment.thumbnailUrl != null)
+                if (attachment.thumbnailUrl != null && attachment.thumbnailUrl.isNotEmpty)
                   ClipRRect(
                     borderRadius: new BorderRadius.circular(4),
                     child: FadeInImage.memoryNetwork(

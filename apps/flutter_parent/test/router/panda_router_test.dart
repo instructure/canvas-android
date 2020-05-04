@@ -137,6 +137,16 @@ void main() {
       expect(widget.domain, domain);
     });
 
+    test('loginWeb returns web login screen with non-uri safe characters ', () {
+      final domain = 'domain%';
+      final widget = _getWidgetFromRoute(
+        PandaRouter.loginWeb(domain),
+      ) as WebLoginScreen;
+
+      expect(widget, isA<WebLoginScreen>());
+      expect(widget.domain, domain);
+    });
+
     test('loginWeb returns web login screen with LoginFlow', () {
       final domain = 'domain';
       final flow = LoginFlow.siteAdmin;
