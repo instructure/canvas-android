@@ -15,12 +15,16 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/course_grade.dart';
 import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/section.dart';
+import 'package:flutter_parent/models/term.dart';
 import 'package:test/test.dart';
 
 void main() {
   final _studentId = '123';
   final _gradingPeriodId = '321';
   final _course = Course((b) => b..id = 'course_123');
+  final futureDate = DateTime.now().add(Duration(days: 10));
+  final pastDate = DateTime.now().subtract(Duration(days: 10));
   final _enrollment = Enrollment((b) => b
     ..enrollmentState = 'active'
     ..userId = _studentId);
@@ -76,6 +80,209 @@ void main() {
       // Test the various ways that grading period can not be set
       final grade = course.getCourseGrade(_studentId, enrollment: enrollment);
       expect(grade, CourseGrade(course, enrollment, forceAllPeriods: false));
+    });
+  });
+
+  group('isValidForParent', () {
+    test('returns false for accessRestrictedByDate', () {
+      final course = _course.rebuild((b) => b..accessRestrictedByDate = true);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isFalse);
+    });
+
+    test('returns false for workFlowState completed', () {
+      final course = _course.rebuild((b) => b
+        ..workflowState = 'completed'
+        ..accessRestrictedByDate = false);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isFalse);
+    });
+
+    test('returns false for restrictEnrollmentsToCourseDates and !isWithinCourseDates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..startAt = futureDate
+        ..endAt = pastDate);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isFalse);
+    });
+
+    test('returns true for restrictEnrollmentsToCourseDates with isWithinCourseDates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..startAt = pastDate
+        ..endAt = futureDate);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test('returns false for !restrictEnrollmentsToCourseDates and !isWithinCourseDates & !isWithinTermDates', () {
+      final term = Term((b) => b
+        ..id = ''
+        ..startAt = pastDate
+        ..endAt = pastDate);
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..startAt = pastDate
+        ..endAt = pastDate
+        ..term = term.toBuilder());
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isFalse);
+    });
+
+    test(
+        'returns false for !restrictEnrollmentsToCourseDates and !isWithinCourseDates & !isWithinTermDates & !isWithinAnySection',
+        () {
+      final section = Section((b) => b
+        ..id = ''
+        ..name = ''
+        ..startAt = pastDate
+        ..endAt = pastDate);
+      final term = Term((b) => b
+        ..id = ''
+        ..startAt = pastDate
+        ..endAt = pastDate);
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = pastDate
+        ..startAt = pastDate
+        ..term = term.toBuilder()
+        ..sections = ListBuilder([section]));
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isFalse);
+    });
+
+    test('returns true for restrictEnrollmentsToCourseDates and null course dates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..startAt = null
+        ..endAt = null);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test(
+        'returns true for !restrictEnrollmentsToCourseDates with isWithinCourseDates & isWithinTermDates & isWithinAnySection',
+        () {
+      final section = Section((b) => b
+        ..id = ''
+        ..name = ''
+        ..startAt = pastDate
+        ..endAt = futureDate);
+      final term = Term((b) => b
+        ..id = ''
+        ..startAt = pastDate
+        ..endAt = futureDate);
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = futureDate
+        ..startAt = pastDate
+        ..term = term.toBuilder()
+        ..sections = ListBuilder([section]));
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test(
+        'returns true for !restrictEnrollmentsToCourseDates with null dates for isWithinCourseDates & isWithinTermDates & isWithinAnySection',
+        () {
+      final section = Section((b) => b
+        ..id = ''
+        ..name = ''
+        ..startAt = null
+        ..endAt = null);
+      final term = Term((b) => b
+        ..id = ''
+        ..startAt = null
+        ..endAt = null);
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = null
+        ..startAt = null
+        ..term = term.toBuilder()
+        ..sections = ListBuilder([section]));
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test('returns true for !restrictEnrollmentsToCourseDates with null course, section, and term dates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = null
+        ..startAt = null
+        ..term = null
+        ..sections = null);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+  });
+
+  group('isValidForCurrentStudent', () {
+    test('returns true for valid date with valid enrollment', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..endAt = futureDate
+        ..enrollments = ListBuilder([_enrollment]));
+
+      final isValid = course.isValidForCurrentStudent(_studentId);
+
+      expect(isValid, isTrue);
+    });
+
+    test('returns false for valid date with invalid enrollment', () {
+      final invalidEnrollment = Enrollment((b) => b
+        ..enrollmentState = 'active'
+        ..userId = '789');
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..endAt = futureDate
+        ..enrollments = ListBuilder([invalidEnrollment]));
+
+      final isValid = course.isValidForCurrentStudent(_studentId);
+
+      expect(isValid, isFalse);
+    });
+
+    test('returns false for invalid date with valid enrollment', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..endAt = pastDate
+        ..enrollments = ListBuilder([_enrollment]));
+
+      final isValid = course.isValidForCurrentStudent(_studentId);
+
+      expect(isValid, isFalse);
     });
   });
 }

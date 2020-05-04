@@ -106,14 +106,14 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.startAt,
-          specifiedType: const FullType(String)));
+          specifiedType: const FullType(DateTime)));
     }
     result.add('end_at');
     if (object.endAt == null) {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.endAt,
-          specifiedType: const FullType(String)));
+          specifiedType: const FullType(DateTime)));
     }
     result.add('syllabus_body');
     if (object.syllabusBody == null) {
@@ -142,6 +142,21 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
     } else {
       result.add(serializers.serialize(object.homePage,
           specifiedType: const FullType(HomePage)));
+    }
+    result.add('term');
+    if (object.term == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.term,
+          specifiedType: const FullType(Term)));
+    }
+    result.add('sections');
+    if (object.sections == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.sections,
+          specifiedType:
+              const FullType(BuiltList, const [const FullType(Section)])));
     }
     return result;
   }
@@ -176,11 +191,11 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'end_at':
           result.endAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'syllabus_body':
           result.syllabusBody = serializers.deserialize(value,
@@ -240,6 +255,16 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           result.homePage = serializers.deserialize(value,
               specifiedType: const FullType(HomePage)) as HomePage;
           break;
+        case 'term':
+          result.term.replace(serializers.deserialize(value,
+              specifiedType: const FullType(Term)) as Term);
+          break;
+        case 'sections':
+          result.sections.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(
+                      BuiltList, const [const FullType(Section)]))
+              as BuiltList<Object>);
+          break;
       }
     }
 
@@ -282,9 +307,9 @@ class _$Course extends Course {
   @override
   final String courseCode;
   @override
-  final String startAt;
+  final DateTime startAt;
   @override
-  final String endAt;
+  final DateTime endAt;
   @override
   final String syllabusBody;
   @override
@@ -313,6 +338,10 @@ class _$Course extends Course {
   final String workflowState;
   @override
   final HomePage homePage;
+  @override
+  final Term term;
+  @override
+  final BuiltList<Section> sections;
 
   factory _$Course([void Function(CourseBuilder) updates]) =>
       (new CourseBuilder()..update(updates)).build();
@@ -341,7 +370,9 @@ class _$Course extends Course {
       this.hasGradingPeriods,
       this.restrictEnrollmentsToCourseDates,
       this.workflowState,
-      this.homePage})
+      this.homePage,
+      this.term,
+      this.sections})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Course', 'id');
@@ -418,7 +449,9 @@ class _$Course extends Course {
         restrictEnrollmentsToCourseDates ==
             other.restrictEnrollmentsToCourseDates &&
         workflowState == other.workflowState &&
-        homePage == other.homePage;
+        homePage == other.homePage &&
+        term == other.term &&
+        sections == other.sections;
   }
 
   @override
@@ -441,26 +474,26 @@ class _$Course extends Course {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode),
-                                                                                name.hashCode),
-                                                                            originalName.hashCode),
-                                                                        courseCode.hashCode),
-                                                                    startAt.hashCode),
-                                                                endAt.hashCode),
-                                                            syllabusBody.hashCode),
-                                                        hideFinalGrades.hashCode),
-                                                    isPublic.hashCode),
-                                                enrollments.hashCode),
-                                            needsGradingCount.hashCode),
-                                        applyAssignmentGroupWeights.hashCode),
-                                    isFavorite.hashCode),
-                                accessRestrictedByDate.hashCode),
-                            imageDownloadUrl.hashCode),
-                        hasWeightedGradingPeriods.hashCode),
-                    hasGradingPeriods.hashCode),
-                restrictEnrollmentsToCourseDates.hashCode),
-            workflowState.hashCode),
-        homePage.hashCode));
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode), name.hashCode), originalName.hashCode),
+                                                                                courseCode.hashCode),
+                                                                            startAt.hashCode),
+                                                                        endAt.hashCode),
+                                                                    syllabusBody.hashCode),
+                                                                hideFinalGrades.hashCode),
+                                                            isPublic.hashCode),
+                                                        enrollments.hashCode),
+                                                    needsGradingCount.hashCode),
+                                                applyAssignmentGroupWeights.hashCode),
+                                            isFavorite.hashCode),
+                                        accessRestrictedByDate.hashCode),
+                                    imageDownloadUrl.hashCode),
+                                hasWeightedGradingPeriods.hashCode),
+                            hasGradingPeriods.hashCode),
+                        restrictEnrollmentsToCourseDates.hashCode),
+                    workflowState.hashCode),
+                homePage.hashCode),
+            term.hashCode),
+        sections.hashCode));
   }
 
   @override
@@ -490,7 +523,9 @@ class _$Course extends Course {
           ..add('restrictEnrollmentsToCourseDates',
               restrictEnrollmentsToCourseDates)
           ..add('workflowState', workflowState)
-          ..add('homePage', homePage))
+          ..add('homePage', homePage)
+          ..add('term', term)
+          ..add('sections', sections))
         .toString();
   }
 }
@@ -530,13 +565,13 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   String get courseCode => _$this._courseCode;
   set courseCode(String courseCode) => _$this._courseCode = courseCode;
 
-  String _startAt;
-  String get startAt => _$this._startAt;
-  set startAt(String startAt) => _$this._startAt = startAt;
+  DateTime _startAt;
+  DateTime get startAt => _$this._startAt;
+  set startAt(DateTime startAt) => _$this._startAt = startAt;
 
-  String _endAt;
-  String get endAt => _$this._endAt;
-  set endAt(String endAt) => _$this._endAt = endAt;
+  DateTime _endAt;
+  DateTime get endAt => _$this._endAt;
+  set endAt(DateTime endAt) => _$this._endAt = endAt;
 
   String _syllabusBody;
   String get syllabusBody => _$this._syllabusBody;
@@ -607,6 +642,15 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   HomePage get homePage => _$this._homePage;
   set homePage(HomePage homePage) => _$this._homePage = homePage;
 
+  TermBuilder _term;
+  TermBuilder get term => _$this._term ??= new TermBuilder();
+  set term(TermBuilder term) => _$this._term = term;
+
+  ListBuilder<Section> _sections;
+  ListBuilder<Section> get sections =>
+      _$this._sections ??= new ListBuilder<Section>();
+  set sections(ListBuilder<Section> sections) => _$this._sections = sections;
+
   CourseBuilder() {
     Course._initializeBuilder(this);
   }
@@ -637,6 +681,8 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _restrictEnrollmentsToCourseDates = _$v.restrictEnrollmentsToCourseDates;
       _workflowState = _$v.workflowState;
       _homePage = _$v.homePage;
+      _term = _$v.term?.toBuilder();
+      _sections = _$v.sections?.toBuilder();
       _$v = null;
     }
     return this;
@@ -685,12 +731,19 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               restrictEnrollmentsToCourseDates:
                   restrictEnrollmentsToCourseDates,
               workflowState: workflowState,
-              homePage: homePage);
+              homePage: homePage,
+              term: _term?.build(),
+              sections: _sections?.build());
     } catch (_) {
       String _$failedField;
       try {
         _$failedField = 'enrollments';
         enrollments.build();
+
+        _$failedField = 'term';
+        _term?.build();
+        _$failedField = 'sections';
+        _sections?.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
             'Course', _$failedField, e.toString());

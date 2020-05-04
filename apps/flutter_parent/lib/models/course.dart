@@ -16,6 +16,8 @@ library course;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/section.dart';
+import 'package:flutter_parent/models/term.dart';
 
 import 'course_grade.dart';
 import 'enrollment.dart';
@@ -63,11 +65,11 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   @nullable
   @BuiltValueField(wireName: 'start_at')
-  String get startAt;
+  DateTime get startAt;
 
   @nullable
   @BuiltValueField(wireName: 'end_at')
-  String get endAt;
+  DateTime get endAt;
 
   @nullable
   @BuiltValueField(wireName: 'syllabus_body')
@@ -115,9 +117,16 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'default_view')
   HomePage get homePage;
 
+  @nullable
+  Term get term;
+
+  @nullable
+  BuiltList<Section> get sections;
+
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
     ..enrollments = ListBuilder<Enrollment>()
+    ..sections = ListBuilder<Section>()
     ..name = ''
     ..needsGradingCount = 0
     ..hideFinalGrades = false
@@ -158,6 +167,51 @@ abstract class Course implements Built<Course, CourseBuilder> {
       );
 
   String contextFilterId() => 'course_${this.id}';
+
+  /// Verifies that the course should be displayed within the parent app
+  bool isValidForDate() {
+    if (accessRestrictedByDate) return false;
+
+    if (workflowState == 'completed') return false;
+
+    final now = DateTime.now();
+    final isWithinCourseDates = _isWithinDates(startAt, endAt, now);
+
+    if (restrictEnrollmentsToCourseDates) {
+      return isWithinCourseDates;
+    } else {
+      final isWithinTermDates = _isWithinDates(term?.startAt, term?.endAt, now);
+      var isWithinAnySection;
+      if (sections == null || sections.isEmpty)
+        isWithinAnySection = true;
+      else
+        isWithinAnySection = sections.any((section) => _isWithinDates(section.startAt, section.endAt, now));
+
+      return isWithinCourseDates && isWithinTermDates && isWithinAnySection;
+    }
+  }
+
+  /// Filters enrollments by those associated with the currently selected user and isValidForParent
+  bool isValidForCurrentStudent(String currentStudentId) {
+    final hasValidEnrollments = enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
+    return hasValidEnrollments && isValidForDate();
+  }
+
+  bool _isWithinDates(DateTime startAt, DateTime endAt, DateTime now) {
+    bool isValidEndAt, isValidStartAt;
+    // If the dates are null, we have to show it
+    if (startAt == null)
+      isValidStartAt = true;
+    else
+      isValidStartAt = now.isAfter(startAt);
+
+    if (endAt == null)
+      isValidEndAt = true;
+    else
+      isValidEndAt = now.isBefore(endAt);
+
+    return isValidEndAt && isValidStartAt;
+  }
 }
 
 @BuiltValueEnum(wireName: 'default_view')

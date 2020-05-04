@@ -1243,7 +1243,7 @@ class MockInteractor extends DashboardInteractor {
 
 class MockCoursesInteractor extends CoursesInteractor {
   @override
-  Future<List<Course>> getCourses({bool isRefresh = false}) async {
+  Future<List<Course>> getCourses({bool isRefresh = false, String studentId = null}) async {
     var courses = List<Course>();
     return courses;
   }
