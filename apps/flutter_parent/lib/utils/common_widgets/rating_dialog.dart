@@ -63,6 +63,8 @@ class RatingDialog extends StatefulWidget {
     ApiPrefs.setRatingShowAgainWait(FOUR_WEEKS); // Update the show again to 4 weeks, in case they cancel the dialog
     ApiPrefs.setRatingFirstLaunchDate(date); // Reset the date first launched to now
 
+    locator<Analytics>().logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW);
+
     return showDialog(
       context: context,
       builder: (context) => RatingDialog._internal(),

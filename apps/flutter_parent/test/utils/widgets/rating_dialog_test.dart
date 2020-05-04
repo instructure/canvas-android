@@ -106,6 +106,8 @@ void main() {
         ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: date,
       });
 
+      verify(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW)).called(1);
+
       expect(ApiPrefs.getRatingFirstLaunchDate(), isNot(date)); // Should not be changed
       expect(ApiPrefs.getRatingShowAgainWait(), RatingDialog.FOUR_WEEKS); // Should be set to four weeks now
       expect(find.byType(RatingDialog), findsOneWidget);

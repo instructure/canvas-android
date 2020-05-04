@@ -39,6 +39,7 @@ class AnalyticsEventConstants {
   static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
   static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
   static const RATING_DIALOG = 'rating_dialog';
+  static const RATING_DIALOG_SHOW = 'rating_dialog_show';
   static const RATING_DIALOG_DONT_SHOW_AGAIN = 'rating_dialog_dont_show_again';
   static const REMINDER_ASSIGNMENT_CREATE = 'reminder_assignment';
   static const REMINDER_EVENT_CREATE = 'reminder_event';
