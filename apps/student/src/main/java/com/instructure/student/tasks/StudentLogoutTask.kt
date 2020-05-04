@@ -23,6 +23,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.view.CanvasRecipientManager
 import com.instructure.student.widget.WidgetUpdater
@@ -30,6 +31,7 @@ import com.instructure.student.widget.WidgetUpdater
 class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
+        FlutterComm.reset()
         StudentPrefs.safeClearPrefs()
         CanvasRecipientManager.getInstance(ContextKeeper.appContext).clearCache()
         WidgetUpdater.updateWidgets()

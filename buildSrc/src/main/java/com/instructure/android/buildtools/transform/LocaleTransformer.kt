@@ -93,7 +93,8 @@ class LocaleTransformer : ClassTransformer() {
     private fun CtClass.transformLocaleUtils() {
         val configLocations = listOf(
             File("translations/projects.json").canonicalFile,
-            File("../translations/projects.json").canonicalFile
+            File("../translations/projects.json").canonicalFile,
+            File("../../translations/projects.json").canonicalFile
         )
         val translationsFile = configLocations.find { it.exists() }
         if (translationsFile == null) {

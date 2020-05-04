@@ -222,28 +222,13 @@
     <string name="addMessage">Add Message</string>
     <string name="monologue">Monologue</string>
     <string name="noItemsToDisplayShort">No items to display</string>
-    <string name="emptyCalendarDate">Nothing Planned For</string>
-    <string name="emptyCalendarWeek">Nothing Planned For The Week</string>
-    <string name="emptyCalendarMonth">Nothing Planned For The Month</string>
-    <string name="selectCanvasCalendars">Select Up To 10 Calendars</string>
-    <string name="contentDesc_colored_calendar_indicator">Colored calendar indicator</string>
-    <string name="noDatesSelected">Please select a date</string>
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
     <string name="favoritedCoursesLabel">Favorited Courses</string>
     <string name="Event">Event</string>
-    <string name="eventSuccessfulCreation">Event was successfully created</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
-    <string name="newEvent">New Event</string>
-    <string name="enterTitle">Enter Title</string>
-    <string name="enterLocation">Enter Location</string>
-    <string name="addNote">Add Note</string>
-    <string name="titleIconDescription">Title Icon</string>
-    <string name="dateIconDescription">Date Icon</string>
     <string name="timeIconDescription">Time Icon</string>
-    <string name="locationIconDescription">Location Icon</string>
-    <string name="noteIconDescription">Note Icon</string>
     <string name="toDoTurnIn">Turn in</string>
     <string name="toDoNoDueDate">No Due Date</string>
 
@@ -400,7 +385,6 @@
     <string name="sendMessage">Send Message</string>
     <string name="userAvatar">User Avatar</string>
 
-    <string name="calendarIcon">Calendar Icon</string>
     <string name="assignmentIcon">Assignment Icon</string>
     <string name="announcementIcon">Announcement Icon</string>
     <string name="conversationIcon">Conversation Icon</string>
@@ -579,7 +563,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Calendar starts on Monday</string>
     <string name="profile">Profile</string>
 
     <string name="noSubject">(No Subject)</string>
@@ -723,12 +706,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Day</string>
-    <string name="calendarWeek">Week</string>
-    <string name="calendarMonth">Month</string>
-    <string name="selectCalendars">Select Calendars</string>
     <string name="createNewCalendarEvent">Create New Event</string>
-    <string name="calendarDialog10Warning">You may only choose 10 Calendars to display</string>
-    <string name="calendarDialogNoneWarning">Please select at least one Calendar</string>
     <string name="enableFunMode">Turn off the pandas</string>
 
     <string name="accountNotifications">Announcements</string>`

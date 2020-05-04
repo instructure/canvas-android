@@ -104,7 +104,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     /** 'Root' fragments that should include the bottom nav bar */
     private val bottomNavBarFragments = listOf(
         DashboardFragment::class.java,
-        CalendarListViewFragment::class.java,
+        CalendarFragment::class.java,
         ToDoListFragment::class.java,
         NotificationListFragment::class.java,
         InboxFragment::class.java
@@ -273,8 +273,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     addFragment(BookmarksFragment.newInstance(route) { RouteMatcher.routeUrl(this, it.url!!) }, route)
                 }
                 AppShortcutManager.APP_SHORTCUT_CALENDAR -> {
-                    val route = CalendarListViewFragment.makeRoute()
-                    addFragment(CalendarListViewFragment.newInstance(route), route)
+                    val route = CalendarFragment.makeRoute()
+                    addFragment(CalendarFragment.newInstance(route), route)
                 }
                 AppShortcutManager.APP_SHORTCUT_TODO -> {
                     val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -348,7 +348,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         drawerLayout?.closeDrawer(navigationDrawer)
     }
 
-    private fun openNavigationDrawer() {
+    fun openNavigationDrawer() {
         drawerLayout?.openDrawer(navigationDrawer)
     }
 
@@ -475,7 +475,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
             R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
-            R.id.bottomNavigationCalendar -> handleRoute(CalendarListViewFragment.makeRoute())
+            R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
             R.id.bottomNavigationToDo -> {
                 val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
                 addFragment(ToDoListFragment.newInstance(route), route)
@@ -500,7 +500,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val currentFragmentClass = it::class.java
             when (item.itemId) {
                 R.id.bottomNavigationCourses -> abortReselect = currentFragmentClass.isAssignableFrom(DashboardFragment::class.java)
-                R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarListViewFragment::class.java)
+                R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> abortReselect = currentFragmentClass.isAssignableFrom(InboxFragment::class.java)
@@ -510,7 +510,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if(!abortReselect) {
             when (item.itemId) {
                 R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
-                R.id.bottomNavigationCalendar -> handleRoute(CalendarListViewFragment.makeRoute())
+                R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
                 R.id.bottomNavigationToDo -> {
                     val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
                     addFragment(ToDoListFragment.newInstance(route), route)
@@ -563,7 +563,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun setBottomBarItemSelected(fragment: Fragment) {
         when(fragment) {
             //Calendar
-            is CalendarListViewFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
+            is CalendarFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             is CalendarEventFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             //To-do
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
@@ -859,12 +859,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun updateCalendarStartDay() {
         //Restarts the CalendarListViewFragment to update the changed start day of the week
-        val fragment = supportFragmentManager.findFragmentByTag(CalendarListViewFragment::class.java.name) as? ParentFragment
+        val fragment = supportFragmentManager.findFragmentByTag(CalendarFragment::class.java.name) as? ParentFragment
         if (fragment != null) {
             supportFragmentManager.beginTransaction().remove(fragment).commit()
         }
-        val route = CalendarListViewFragment.makeRoute()
-        addFragment(CalendarListViewFragment.newInstance(route), route)
+        val route = CalendarFragment.makeRoute()
+        addFragment(CalendarFragment.newInstance(route), route)
     }
 
     override fun addBookmark() {

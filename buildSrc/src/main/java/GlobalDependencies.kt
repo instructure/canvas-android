@@ -17,7 +17,7 @@ object Versions {
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.2.1"
     const val ESPRESSO = "3.1.0"
-    const val OKREPLAY = "1.4.0"
+    const val OKREPLAY = "1.5.0"
     const val JACOCO_ANDROID = "0.1.2"
 
     /* Kotlin */

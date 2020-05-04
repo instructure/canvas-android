@@ -36,6 +36,7 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.InboxFragment
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.util.StudentPrefs
@@ -59,6 +60,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
+            // Update Flutter with the login info
+            FlutterComm.sendUpdatedLogin()
 
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
@@ -87,6 +90,9 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             } else {
                 ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
             }
+
+            // Update Flutter with the theme
+            FlutterComm.sendUpdatedTheme()
 
             // Refresh pandata info if null or expired
             if (ApiPrefs.pandataInfo?.isValid != true) {
@@ -143,6 +149,9 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
         override fun onResponse(response: Response<CanvasTheme>, linkHeaders: LinkHeaders, type: ApiType) {
             //store the theme
             response.body()?.let { ThemePrefs.applyCanvasTheme(it) }
+
+            // Update Flutter with the theme
+            FlutterComm.sendUpdatedTheme()
         }
     }
 

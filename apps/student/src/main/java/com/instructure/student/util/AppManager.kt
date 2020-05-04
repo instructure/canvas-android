@@ -38,12 +38,19 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.service.StudentPageViewService
 import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import io.fabric.sdk.android.Fabric
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
+import io.flutter.view.FlutterMain
+import kotlin.properties.Delegates
 
 class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
@@ -91,7 +98,19 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)
 
+        initFlutterEngine()
+    }
 
+    private fun initFlutterEngine() {
+        flutterEngine = FlutterEngine(this)
+
+        FlutterComm.init(flutterEngine, applicationContext)
+
+        // Execute the 'main' entrypoint
+        flutterEngine.dartExecutor.executeDartEntrypoint(DartEntrypoint.createDefault())
+
+        // Cache the FlutterEngine
+        FlutterEngineCache.getInstance().put(FLUTTER_ENGINE_ID, flutterEngine)
     }
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
@@ -197,6 +216,12 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
 
     override fun performLogoutOnAuthError() {
         StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+    }
+
+    companion object {
+        private const val FLUTTER_ENGINE_ID = "flutter_engine_embed"
+
+        lateinit var flutterEngine: FlutterEngine
     }
 
 }

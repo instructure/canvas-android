@@ -6,7 +6,9 @@ The open source code provided by the Android Team at Instructure.
 
 ## Building
 
-Run `./open_source.sh` once and then use Gradle to build the apps.
+First, install the Flutter SDK using the instructions found [here](https://flutter.dev/docs/get-started/install).
+
+Next, run `./open_source.sh` once. You may now use Gradle to build the apps. Prior to building the Student app for the first time, navigate to `libs/flutter_student_embed` and run the command `flutter pub get`.
 
 App | Command
 --- | ---
