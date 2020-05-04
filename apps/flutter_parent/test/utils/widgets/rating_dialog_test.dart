@@ -37,6 +37,12 @@ void main() {
     locator.registerLazySingleton<UrlLauncher>(() => launcher);
   });
 
+  setUp(() {
+    reset(analytics);
+    reset(intentVeneer);
+    reset(launcher);
+  });
+
   _validShowDate() => DateTime.now().subtract(Duration(days: 7 * 4)).millisecondsSinceEpoch;
 
   Future<void> _showDialog(tester, {Map<String, dynamic> mockApiPrefs = const {}}) async {
@@ -69,6 +75,8 @@ void main() {
     testWidgetsWithAccessibilityChecks('does not show when hiding for tests', (tester) async {
       await TestApp.showWidgetFromTap(tester, (context) => RatingDialog.showDialogIfPossible(context, true));
 
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
+
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingFirstLaunchDate(), isNull); // Should not be set yet
     });
@@ -76,12 +84,16 @@ void main() {
     testWidgetsWithAccessibilityChecks('does not show when dont show again is true', (tester) async {
       await _showDialog(tester, mockApiPrefs: {ApiPrefs.KEY_RATING_DONT_SHOW_AGAIN: true});
 
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
+
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingFirstLaunchDate(), isNull); // Should not be set yet
     });
 
     testWidgetsWithAccessibilityChecks('does not show when first launch is not set', (tester) async {
       await _showDialog(tester, mockApiPrefs: {ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: null});
+
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingFirstLaunchDate(), isNotNull); // Should now be set
@@ -95,6 +107,8 @@ void main() {
         ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: date,
         ApiPrefs.KEY_RATING_SHOW_AGAIN_WAIT: date + 10,
       });
+
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingFirstLaunchDate(), date); // Should not be changed
