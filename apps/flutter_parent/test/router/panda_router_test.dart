@@ -137,7 +137,7 @@ void main() {
       expect(widget.domain, domain);
     });
 
-    test('loginWeb returns web login screen with non-uri safe charachters', () {
+    test('loginWeb returns web login screen with non-uri safe characters ', () {
       final domain = 'domain%';
       final widget = _getWidgetFromRoute(
         PandaRouter.loginWeb(domain),
