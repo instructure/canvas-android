@@ -44,6 +44,8 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" tools:replace="required"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" tools:replace="required"/>
 
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
+
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"

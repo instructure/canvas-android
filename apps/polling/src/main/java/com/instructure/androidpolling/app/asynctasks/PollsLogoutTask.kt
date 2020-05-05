@@ -18,6 +18,7 @@ package com.instructure.androidpolling.app.asynctasks
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import com.instructure.androidpolling.app.activities.InitLoginActivity
 import com.instructure.androidpolling.app.util.ApplicationManager.PREF_FILE_NAME
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -36,6 +37,10 @@ class PollsLogoutTask(type: Type) : LogoutTask(type) {
 
     override fun createLoginIntent(context: Context): Intent {
         return InitLoginActivity.createIntent(ContextKeeper.appContext)
+    }
+
+    override fun createQRLoginIntent(context: Context, uri: Uri): Intent? {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {

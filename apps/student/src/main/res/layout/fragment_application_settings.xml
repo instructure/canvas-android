@@ -85,6 +85,20 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/pairObserver"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/listPreferredItemHeight"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:paddingEnd="16dp"
+                android:paddingStart="16dp"
+                android:text="@string/pairWithObserver"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
                 android:id="@+id/pinAndFingerprint"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"
