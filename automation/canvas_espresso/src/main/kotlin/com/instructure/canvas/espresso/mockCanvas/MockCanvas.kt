@@ -1405,7 +1405,8 @@ fun MockCanvas.addGroupToCourse(
             description = description,
             isPublic = true,
             users = members,
-            contextType = Group.GroupContext.Course,
+            // contextType field removed from Group
+            //contextType = Group.GroupContext.Course,
             courseId = course.id
     )
 
