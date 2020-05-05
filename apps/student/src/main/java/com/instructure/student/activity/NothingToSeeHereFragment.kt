@@ -32,7 +32,7 @@ class NothingToSeeHereFragment : ParentFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_nothing_to_see_here, container, false)
 
-    override fun title() = getString(R.string.unsupportedFeature)
+    override fun title() = "" // Don't need this
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
