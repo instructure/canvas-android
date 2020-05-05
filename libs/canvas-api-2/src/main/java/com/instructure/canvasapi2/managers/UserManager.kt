@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.weave.awaitApi
 
 object UserManager {
 
@@ -251,6 +252,24 @@ object UserManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UserAPI.getBecomeUserPermission(adapter, params, accountId, callback)
     }
+
+    fun getGeneratePairingCodePermission(
+        forceNetwork: Boolean,
+        callback: StatusCallback<GeneratePairingCodePermission>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        UserAPI.getGeneratePairingCodePermission(adapter, params, callback)
+    }
+
+    fun generatePairingCode(forceNetwork: Boolean, callback: StatusCallback<PairingCode>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        UserAPI.generatePairingCode(adapter, params, callback)
+    }
+
+    fun generatePairingCodeAsync(forceNetwork: Boolean) =
+        apiAsync<PairingCode> { generatePairingCode(forceNetwork, it) }
 
     @JvmStatic
     fun addObserveeWithPairingCode(userId: Long, pairingCode: String, callback: StatusCallback<User>) {

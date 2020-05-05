@@ -99,6 +99,7 @@ object AnalyticsEventConstants {
     const val TOKEN_REFRESH_FAILURE_NO_SECRET = "token_refresh_failure_no_secret"
 
     /* Misc Events */
+    const val REFRESH_PAIRING_CODE = "refresh_pairing_code"
     const val STUDENT_VIEW_TAPPED = "student_view_clicked"
 
     const val WHAT_IF_GRADES = "what_if_grades_used"

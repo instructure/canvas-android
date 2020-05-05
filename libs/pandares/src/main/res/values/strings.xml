@@ -633,6 +633,11 @@
     <string name="profileSettings">Profile Settings</string>
     <string name="accountPreferences">Account Preferences</string>
     <string name="pinAndFingerprint">PIN and Fingerprint</string>
+    <string name="pairWithObserver">Pair with Observer</string>
+    <string name="pairWithObserverDetails">Have your parent scan this QR code from the Canvas Parent app to pair with you. This code will expire in seven days, or after one use.</string>
+    <string name="pairingCodeLabel">Pairing Code:\u0020</string>
+    <string name="pairingCodeErrorTitle">Pairing Code Error</string>
+    <string name="pairingCodeErrorDescription">Unable to retrieve a pairing code. This feature is only supported for students.</string>
 
     <string name="launchSpeedgrader">Open Speedgrader</string>
 
