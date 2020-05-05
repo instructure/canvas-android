@@ -177,4 +177,45 @@ class AssignmentUtils2Test : Assert() {
 
         assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED.toLong())
     }
+
+    @Test
+    @Throws(Exception::class)
+    fun getAssignmentState_isTeacher_gradeWithNoSubmission_stateGraded() {
+        val time = Calendar.getInstance().timeInMillis + 100000
+        val date = Date(time)
+
+        val submission = Submission(
+            attempt = 0,
+            grade = "A"
+        )
+        val assignment = Assignment(
+            submission = submission,
+            dueAt = date.toApiString()
+        )
+
+        val testValue = AssignmentUtils2.getAssignmentState(assignment, submission, true)
+
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_GRADED.toLong())
+    }
+
+    @Test
+    @Throws(Exception::class)
+    fun getAssignmentState_isStudent_gradeWithNoSubmission_stateGraded() {
+        val time = Calendar.getInstance().timeInMillis + 100000
+        val date = Date(time)
+
+        val submission = Submission(
+            attempt = 0,
+            grade = "A"
+        )
+        val assignment = Assignment(
+            submission = submission,
+            dueAt = date.toApiString()
+        )
+
+        val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)
+
+        assertEquals("", testValue.toLong(), AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED.toLong())
+    }
+
 }
