@@ -21,10 +21,12 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.router.Route
 import com.instructure.student.R
+import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
@@ -62,6 +64,14 @@ object TabHelper {
     fun getRouteByTabId(tabb: Tab?, canvasContext: CanvasContext): Route? {
         val tab = tabb ?: Tab(Tab.HOME_ID, "")
 
+        // Student view doesn't support groups, collaborations, or external LTIs from the Course Browser
+        if (ApiPrefs.isStudentView) {
+            if (tab.tabId == Tab.CONFERENCES_ID || tab.tabId == Tab.COLLABORATIONS_ID ||
+                    tab.type == Tab.TYPE_EXTERNAL) {
+                return NothingToSeeHereFragment.makeRoute()
+            }
+        }
+
         val isCourse = canvasContext is Course
         var tabId = tab.tabId.validOrNull() ?: (canvasContext as Course).homePageID
 
@@ -91,7 +101,7 @@ object TabHelper {
             Tab.SETTINGS_ID -> CourseSettingsFragment.makeRoute(canvasContext)
             Tab.NOTIFICATIONS_ID -> NotificationListFragment.makeRoute(canvasContext)
             else -> when {
-            // We just care if it's external, some external tabs (Attendance) have an id after "external"
+                // We just care if it's external, some external tabs (Attendance) have an id after "external"
                 tabId.contains(Tab.TYPE_EXTERNAL) -> LTIWebViewFragment.makeRoute(canvasContext, tab)
                 else -> null
             }

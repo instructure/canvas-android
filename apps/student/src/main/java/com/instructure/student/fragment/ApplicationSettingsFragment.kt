@@ -31,6 +31,7 @@ import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.NotificationPreferencesActivity
 import com.instructure.student.activity.SettingsActivity
 import com.instructure.student.dialog.HelpDialogStyled
@@ -65,7 +66,16 @@ class ApplicationSettingsFragment : ParentFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setupViews() {
-        profileSettings.onClick { addFragment(ProfileSettingsFragment.newInstance()) }
+        profileSettings.onClick {
+            val frag = if (ApiPrefs.isStudentView) {
+                // Profile settings not available in Student View
+                NothingToSeeHereFragment.newInstance()
+            } else {
+                ProfileSettingsFragment.newInstance()
+            }
+
+            addFragment(frag)
+        }
         accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         help.onClick { HelpDialogStyled.show(requireActivity()) }
