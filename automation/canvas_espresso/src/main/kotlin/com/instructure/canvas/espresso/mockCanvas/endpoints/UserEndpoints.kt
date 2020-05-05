@@ -27,10 +27,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.user
-import com.instructure.canvasapi2.models.Favorite
-import com.instructure.canvasapi2.models.FileUploadParams
-import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import okio.Buffer
 import java.nio.charset.Charset
@@ -65,7 +62,8 @@ object UserEndpoint : Endpoint(
     Segment("communication_channels") to UserCommunicationChannelsEndpoint,
     Segment("folders") to UserFoldersEndpoint,
     Segment("files") to UserFilesEndpoint,
-        Segment("todo") to UserTodoEndpoint
+    Segment("todo") to UserTodoEndpoint,
+    Segment("observer_pairing_codes") to UserPairingCodeEndpoint
 )
 
 /**
@@ -284,5 +282,16 @@ object UserSettingsEndpoint : Endpoint(response = {
         }
         data.userSettings[pathVars.userId] = settings
         request.successResponse(settings)
+    }
+})
+
+var pairingCodeCount = 0
+/**
+ * Endpoint that can return user generated pairing codes for a parent observer
+ * Increments an index, so different codes are returned each request
+ */
+object UserPairingCodeEndpoint : Endpoint(response = {
+    POST {
+        request.successResponse(PairingCode((pairingCodeCount++).toString()))
     }
 })

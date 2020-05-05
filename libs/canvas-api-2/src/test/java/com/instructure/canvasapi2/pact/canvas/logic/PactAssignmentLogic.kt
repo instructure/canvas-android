@@ -157,7 +157,6 @@ fun LambdaDslObject.populateAssignmentFields(fieldConfig: PactAssignmentFieldCon
             // TODO: needs_grading_count_by_section
             .booleanType("free_form_criterion_comments")
             .booleanType("published")
-            .booleanType("muted")
             .id("group_category_id")
             .booleanType("only_visible_to_overrides")
             .booleanType("anonymous_peer_reviews")
@@ -240,7 +239,6 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
     assertNotNull("$description + unlockAt", assignment.unlockAt)
     assertNotNull("$description + freeFormCriterionComments", assignment.freeFormCriterionComments)
     assertNotNull("$description + published", assignment.published)
-    assertNotNull("$description + muted", assignment.muted)
     assertNotNull("$description + groupCategoryId", assignment.groupCategoryId)
     //assertNotNull("$description + userSubmitted", assignment.userSubmitted) // Not used by our code
     assertNotNull("$description + onlyVisibleToOverrides", assignment.onlyVisibleToOverrides)

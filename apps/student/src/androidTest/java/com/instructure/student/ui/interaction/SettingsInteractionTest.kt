@@ -25,6 +25,7 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -235,6 +236,23 @@ class SettingsInteractionTest : StudentTest() {
                 // Potentially brittle, as this content could be changed by another team.
                 WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "Policies Home", 20)
         )
+    }
+
+    // Should open a page and have a pairing code that can be refreshed
+    // (Checks to see that we can refresh and get a new code)
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testPairObserver_refreshCode() {
+
+        setUpAndSignIn()
+
+        ApiPrefs.canGeneratePairingCode = true
+        dashboardPage.launchSettingsPage()
+        settingsPage.launchPairObserverPage()
+
+        pairObserverPage.hasCode("1")
+        pairObserverPage.refresh()
+        pairObserverPage.hasCode("2")
     }
 
     // Mock a single student and course, sign in, then navigate to the dashboard.
