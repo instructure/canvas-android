@@ -1279,6 +1279,42 @@ class AppLocalizations {
             'Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.',
       );
 
+  /// Rating dialog
+
+  String get ratingDialogTitle => Intl.message(
+        'How are we doing?',
+        desc: 'Title for dialog asking user to rate the app out of 5 stars.',
+      );
+
+  String get ratingDialogDontShowAgain => Intl.message(
+        'Don\'t show again',
+        desc: 'Button to prevent the rating dialog from showing again.',
+      );
+
+  String get ratingDialogCommentDescription => Intl.message(
+        'What can we do better?',
+        desc: 'Hint text for providing a comment with the rating.',
+      );
+
+  String get ratingDialogSendFeedback => Intl.message('Send Feedback', desc: 'Button to send rating with feedback');
+
+  String ratingDialogEmailSubject(String version) => Intl.message(
+        'Suggestions for Android - Canvas Parent $version',
+        desc: 'The subject for an email to provide feedback for CanvasParent.',
+        name: 'ratingDialogEmailSubject',
+        args: [version],
+      );
+
+  String starRating(int position) => Intl.plural(
+        position,
+        one: '$position star',
+        other: '$position stars',
+        args: [position],
+        name: 'starRating',
+        desc: 'Accessibility label for the 1 stars to 5 stars rating',
+        examples: const {'position': 1},
+      );
+
   /// Miscellaneous
 
   String get cancel => Intl.message('Cancel');

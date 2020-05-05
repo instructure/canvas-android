@@ -36,6 +36,7 @@ import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
+import 'package:flutter_parent/utils/common_widgets/rating_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -108,6 +109,11 @@ class DashboardState extends State<DashboardScreen> {
 
     _interactor.getInboxCountNotifier().update();
     _showOldReminderMessage();
+
+    // Try to show the rating dialog
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      RatingDialog.asDialog(context);
+    });
   }
 
   void _loadSelf() {
