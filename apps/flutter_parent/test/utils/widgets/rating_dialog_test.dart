@@ -22,7 +22,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../accessibility_utils.dart';
-import '../platform_config.dart';
 import '../test_app.dart';
 import '../test_helpers/mock_helpers.dart';
 
@@ -43,32 +42,24 @@ void main() {
     reset(launcher);
   });
 
-  _validShowDate() => DateTime.now().subtract(Duration(days: 7 * 4)).millisecondsSinceEpoch;
-
-  Future<void> _showDialog(tester, {Map<String, dynamic> mockApiPrefs = const {}}) async {
-    return TestApp.showWidgetFromTap(
-      tester,
-      (context) => RatingDialog.showDialogIfPossible(context, false),
-      config: PlatformConfig(mockApiPrefs: mockApiPrefs),
-    );
+  Future<void> _showDialog(tester, {DateTime nextShowDate, bool dontShowAgain}) async {
+    return TestApp.showWidgetFromTap(tester, (context) => RatingDialog.showDialogIfPossible(context, false),
+        configBlock: () async {
+      await ApiPrefs.setRatingNextShowDate(nextShowDate);
+      await ApiPrefs.setRatingDontShowAgain(dontShowAgain);
+    });
   }
 
   /// Tests
 
   testWidgetsWithAccessibilityChecks('asDialog does not show because this is a test', (tester) async {
-    final date = DateTime.now().millisecondsSinceEpoch;
     await TestApp.showWidgetFromTap(
       tester,
       (context) => RatingDialog.asDialog(context),
-      config: PlatformConfig(mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: date,
-        ApiPrefs.KEY_RATING_SHOW_AGAIN_WAIT: 0,
-      }),
     );
 
     expect(find.byType(RatingDialog), findsNothing);
-    expect(ApiPrefs.getRatingFirstLaunchDate(), date); // Should not be changed
-    expect(ApiPrefs.getRatingShowAgainWait(), 0); // Should not be changed
+    expect(ApiPrefs.getRatingNextShowDate(), isNull); // Should not be changed
   });
 
   group('showDialog', () {
@@ -78,52 +69,47 @@ void main() {
       verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
-      expect(ApiPrefs.getRatingFirstLaunchDate(), isNull); // Should not be set yet
+      expect(ApiPrefs.getRatingNextShowDate(), isNull); // Should not be set yet
     });
 
     testWidgetsWithAccessibilityChecks('does not show when dont show again is true', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {ApiPrefs.KEY_RATING_DONT_SHOW_AGAIN: true});
+      await _showDialog(tester, dontShowAgain: true);
 
       verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
-      expect(ApiPrefs.getRatingFirstLaunchDate(), isNull); // Should not be set yet
+      expect(ApiPrefs.getRatingNextShowDate(), isNull); // Should not be set yet
     });
 
-    testWidgetsWithAccessibilityChecks('does not show when first launch is not set', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: null});
+    testWidgetsWithAccessibilityChecks('does not show when next show is not set', (tester) async {
+      await _showDialog(tester);
 
       verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
-      expect(ApiPrefs.getRatingFirstLaunchDate(), isNotNull); // Should now be set
+      expect(ApiPrefs.getRatingNextShowDate(), isNotNull); // Should now be set
     });
 
-    testWidgetsWithAccessibilityChecks('does not show when first launch is not past the show again date',
-        (tester) async {
-      final date = DateTime.now().millisecondsSinceEpoch;
+    testWidgetsWithAccessibilityChecks('does not show when next show is after now', (tester) async {
+      final date = DateTime.now().add(Duration(days: 2));
 
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: date,
-        ApiPrefs.KEY_RATING_SHOW_AGAIN_WAIT: date + 10,
-      });
+      await _showDialog(tester, nextShowDate: date);
 
       verifyNever(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW));
 
       expect(find.byType(RatingDialog), findsNothing);
-      expect(ApiPrefs.getRatingFirstLaunchDate(), date); // Should not be changed
+      expect(ApiPrefs.getRatingNextShowDate(), date); // Should not be changed
     });
 
     testWidgetsWithAccessibilityChecks('does show when first launch is past the show again date', (tester) async {
-      final date = _validShowDate();
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: date,
-      });
+      final date = DateTime.now();
+      await _showDialog(tester, nextShowDate: date);
 
       verify(analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW)).called(1);
 
-      expect(ApiPrefs.getRatingFirstLaunchDate(), isNot(date)); // Should not be changed
-      expect(ApiPrefs.getRatingShowAgainWait(), RatingDialog.FOUR_WEEKS); // Should be set to four weeks now
+      // Set four weeks from "now" ("now" is a little later when set in api prefs by rating dialog)
+      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate().isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
       expect(find.byType(RatingDialog), findsOneWidget);
       expect(find.text(AppLocalizations().ratingDialogTitle), findsOneWidget);
       expect(find.text(AppLocalizations().ratingDialogDontShowAgain.toUpperCase()), findsOneWidget);
@@ -132,9 +118,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('dont show again button closes and sets pref', (tester) async {
-    await _showDialog(tester, mockApiPrefs: {
-      ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-    });
+    await _showDialog(tester, nextShowDate: DateTime.now());
 
     expect(find.byType(RatingDialog), findsOneWidget);
     await tester.tap(find.text(AppLocalizations().ratingDialogDontShowAgain.toUpperCase()));
@@ -146,9 +130,7 @@ void main() {
 
   group('Send comments', () {
     testWidgetsWithAccessibilityChecks('are visible when less the 4 stars selected', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-      });
+      await _showDialog(tester, nextShowDate: DateTime.now());
 
       expect(find.byType(RatingDialog), findsOneWidget);
       expect(find.byIcon(Icons.star), findsNWidgets(5));
@@ -166,9 +148,8 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('dismiss the dialog when comments are empty', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-      });
+      final date = DateTime.now();
+      await _showDialog(tester, nextShowDate: date);
 
       expect(find.byType(RatingDialog), findsOneWidget);
 
@@ -184,7 +165,69 @@ void main() {
       // Asserts
       expect(find.byType(RatingDialog), findsNothing);
       expect(ApiPrefs.getRatingDontShowAgain(), isNot(true)); // Shouldn't set this if we are sending feedback
-      expect(ApiPrefs.getRatingShowAgainWait(), RatingDialog.FOUR_WEEKS); // Four weeks when without a comment
+      // Four weeks when without a comment ("now" is a little later when set in api prefs by rating dialog)
+      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.FOUR_WEEKS))), isTrue);
+      expect(ApiPrefs.getRatingNextShowDate().isBefore(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
+      verify(analytics.logEvent(
+        AnalyticsEventConstants.RATING_DIALOG,
+        extras: {AnalyticsParamConstants.STAR_RATING: 1}, // First was clicked, should send a 1
+      )).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows correctly in ltr', (tester) async {
+      await TestApp.showWidgetFromTap(
+        tester,
+        (context) => RatingDialog.showDialogIfPossible(context, false),
+        locale: Locale('en'),
+        configBlock: () async {
+          await ApiPrefs.setRatingNextShowDate(DateTime.now());
+        },
+      );
+
+      // Should verify that the 1 star rating is displayed to the left of the 5 star rating in LTR
+      final icons = find.byIcon(Icons.star);
+      expect(find.byType(RatingDialog), findsOneWidget);
+      expect(await tester.getBottomLeft(icons.first).dx, lessThan(await tester.getBottomLeft(icons.last).dx));
+
+      // Tap the rating
+      await tester.tap(icons.first);
+      await tester.pumpAndSettle();
+
+      // Send feedback
+      await tester.tap(find.text(AppLocalizations().ratingDialogSendFeedback.toUpperCase()));
+      await tester.pumpAndSettle();
+
+      // Verify 1 was clicked
+      verify(analytics.logEvent(
+        AnalyticsEventConstants.RATING_DIALOG,
+        extras: {AnalyticsParamConstants.STAR_RATING: 1}, // First was clicked, should send a 1
+      )).called(1);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows correctly in rtl', (tester) async {
+      await TestApp.showWidgetFromTap(
+        tester,
+        (context) => RatingDialog.showDialogIfPossible(context, false),
+        locale: Locale('ar'),
+        configBlock: () async {
+          await ApiPrefs.setRatingNextShowDate(DateTime.now());
+        },
+      );
+
+      // Should verify that the 1 star rating is displayed to the right of the 5 star rating in RTL
+      final icons = find.byIcon(Icons.star);
+      expect(find.byType(RatingDialog), findsOneWidget);
+      expect(await tester.getBottomLeft(icons.first).dx, greaterThan(await tester.getBottomLeft(icons.last).dx));
+
+      // Tap the rating
+      await tester.tap(icons.first);
+      await tester.pumpAndSettle();
+
+      // Send feedback
+      await tester.tap(find.text(AppLocalizations().ratingDialogSendFeedback.toUpperCase()));
+      await tester.pumpAndSettle();
+
+      // Verify 1 was clicked
       verify(analytics.logEvent(
         AnalyticsEventConstants.RATING_DIALOG,
         extras: {AnalyticsParamConstants.STAR_RATING: 1}, // First was clicked, should send a 1
@@ -193,9 +236,8 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('dismiss the dialog and open email when comments are not empty', (tester) async {
       final comment = 'comment here';
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-      });
+      final date = DateTime.now();
+      await _showDialog(tester, nextShowDate: date);
 
       expect(find.byType(RatingDialog), findsOneWidget);
 
@@ -224,8 +266,9 @@ void main() {
 
       // Asserts
       expect(find.byType(RatingDialog), findsNothing);
-      expect(ApiPrefs.getRatingDontShowAgain(), isNot(true)); // Shouldn't set this if we are sending feedback
-      expect(ApiPrefs.getRatingShowAgainWait(), RatingDialog.SIX_WEEKS); // Four weeks when without a comment
+      expect(ApiPrefs.getRatingDontShowAgain(), isNull); // Shouldn't set this if we are sending feedback
+      // Six weeks when given a comment
+      expect(ApiPrefs.getRatingNextShowDate().isAfter(date.add(Duration(days: RatingDialog.SIX_WEEKS))), isTrue);
       verify(intentVeneer.launchEmailWithBody(AppLocalizations().ratingDialogEmailSubject('1.0.0'), emailBody));
       verify(analytics.logEvent(
         AnalyticsEventConstants.RATING_DIALOG,
@@ -236,9 +279,7 @@ void main() {
 
   group('App store', () {
     testWidgetsWithAccessibilityChecks('4 stars goes to the app store', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-      });
+      await _showDialog(tester, nextShowDate: DateTime.now());
 
       expect(find.byType(RatingDialog), findsOneWidget);
       expect(find.byIcon(Icons.star), findsNWidgets(5));
@@ -257,9 +298,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('5 stars goes to the app store', (tester) async {
-      await _showDialog(tester, mockApiPrefs: {
-        ApiPrefs.KEY_RATING_FIRST_LAUNCH_DATE: _validShowDate(),
-      });
+      await _showDialog(tester, nextShowDate: DateTime.now());
 
       expect(find.byType(RatingDialog), findsOneWidget);
       expect(find.byIcon(Icons.star), findsNWidgets(5));

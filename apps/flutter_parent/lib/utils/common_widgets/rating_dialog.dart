@@ -36,9 +36,9 @@ class RatingDialog extends StatefulWidget {
   /// - when the user sees the dialog again there will be a "don't show again" button
   /// - when the user sees the dialog, there are a few use cases for when to show the dialog again
   ///
-  /// 1. User presses 5 stars -> take user to play store and don't show dialog again
-  /// 2. User presses < 5 stars with no comment -> show again 4 weeks later
-  /// 3. User presses < 5 stars with a comment -> show again 6 weeks later
+  /// 1. User presses 4-5 stars -> take user to play store and don't show dialog again
+  /// 2. User presses < 4 stars with no comment -> show again 4 weeks later
+  /// 3. User presses < 4 stars with a comment -> show again 6 weeks later
   /// 4. User presses back -> show again 4 weeks later
   static Future<void> asDialog(BuildContext context) {
     // Don't show dialog in tests, so that they run more stable. Testing this rating dialog can be achieved by
@@ -52,16 +52,17 @@ class RatingDialog extends StatefulWidget {
   static Future<void> showDialogIfPossible(BuildContext context, bool hideForAutomatedTests) {
     if (ApiPrefs.getRatingDontShowAgain() == true || hideForAutomatedTests) return Future.value();
 
-    final date = DateTime.now().millisecondsSinceEpoch;
-    if ((ApiPrefs.getRatingFirstLaunchDate() ?? 0) == 0) {
-      ApiPrefs.setRatingFirstLaunchDate(date);
+    final nextShowDate = ApiPrefs.getRatingNextShowDate();
+    final date = DateTime.now();
+
+    if (nextShowDate == null) {
+      ApiPrefs.setRatingNextShowDate(date.add(Duration(days: FOUR_WEEKS)));
       return Future.value();
     }
 
-    if (date < (ApiPrefs.getRatingFirstLaunchDate() + _showAgainDate())) return Future.value();
+    if (date.isBefore(nextShowDate)) return Future.value();
 
-    ApiPrefs.setRatingShowAgainWait(FOUR_WEEKS); // Update the show again to 4 weeks, in case they cancel the dialog
-    ApiPrefs.setRatingFirstLaunchDate(date); // Reset the date first launched to now
+    ApiPrefs.setRatingNextShowDate(date.add(Duration(days: FOUR_WEEKS)));
 
     locator<Analytics>().logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW);
 
@@ -69,12 +70,6 @@ class RatingDialog extends StatefulWidget {
       context: context,
       builder: (context) => RatingDialog._internal(),
     );
-  }
-
-  /// Gets the show again date from prefs and converts it to milliseconds, defaulting to four weeks
-  static int _showAgainDate() {
-    final showAgainDate = ApiPrefs.getRatingShowAgainWait() ?? FOUR_WEEKS;
-    return showAgainDate * 24 * 60 * 60 * 1000;
   }
 
   const RatingDialog._internal({Key key}) : super(key: key);
@@ -223,7 +218,8 @@ class _RatingDialogState extends State<RatingDialog> {
 
   _sendFeedback() async {
     try {
-      ApiPrefs.setRatingShowAgainWait(RatingDialog.SIX_WEEKS); // Show again in 6 weeks since they're leaving a comment
+      // Show again in 6 weeks since they're leaving a comment
+      ApiPrefs.setRatingNextShowDate(DateTime.now().add(Duration(days: RatingDialog.SIX_WEEKS)));
 
       final l10n = L10n(context);
 

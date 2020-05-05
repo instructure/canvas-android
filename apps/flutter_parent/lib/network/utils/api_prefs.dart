@@ -40,9 +40,8 @@ class ApiPrefs {
   static const String KEY_HAS_CHECKED_OLD_REMINDERS = 'has_checked_old_reminders';
   static const String KEY_HAS_MIGRATED_TO_ENCRYPTED_PREFS = 'has_migrated_to_encrypted_prefs';
   static const String KEY_LOGINS = 'logins';
-  static const String KEY_RATING_SHOW_AGAIN_WAIT = 'date_show_again';
   static const String KEY_RATING_DONT_SHOW_AGAIN = 'dont_show_again';
-  static const String KEY_RATING_FIRST_LAUNCH_DATE = 'date_first_launched';
+  static const String KEY_RATING_NEXT_SHOW_DATE = 'next_show_date';
 
   static EncryptedSharedPreferences _prefs;
   static PackageInfo _packageInfo;
@@ -271,15 +270,14 @@ class ApiPrefs {
 
   static Future<void> setCameraCount(int count) => _setPrefInt(KEY_CAMERA_COUNT, count);
 
-  static int getRatingShowAgainWait() => _getPrefInt(KEY_RATING_SHOW_AGAIN_WAIT);
+  static DateTime getRatingNextShowDate() {
+    final nextShow = _getPrefString(KEY_RATING_NEXT_SHOW_DATE);
+    if (nextShow == null) return null;
+    return DateTime.parse(nextShow);
+  }
 
-  static Future<void> setRatingShowAgainWait(int showAgainDate) =>
-      _setPrefInt(KEY_RATING_SHOW_AGAIN_WAIT, showAgainDate);
-
-  static int getRatingFirstLaunchDate() => _getPrefInt(KEY_RATING_FIRST_LAUNCH_DATE);
-
-  static Future<void> setRatingFirstLaunchDate(int firstLaunch) =>
-      _setPrefInt(KEY_RATING_FIRST_LAUNCH_DATE, firstLaunch);
+  static Future<void> setRatingNextShowDate(DateTime nextShowDate) =>
+      _setPrefString(KEY_RATING_NEXT_SHOW_DATE, nextShowDate?.toIso8601String());
 
   static bool getRatingDontShowAgain() => _getPrefBool(KEY_RATING_DONT_SHOW_AGAIN);
 
@@ -296,6 +294,11 @@ class ApiPrefs {
   static bool _getPrefBool(String key) {
     _checkInit();
     return _prefs.getBool(key);
+  }
+
+  static Future<void> _setPrefString(String key, String value) async {
+    _checkInit();
+    await _prefs.setString(key, value);
   }
 
   static String _getPrefString(String key) {

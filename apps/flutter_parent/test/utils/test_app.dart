@@ -56,19 +56,49 @@ class TestApp extends StatefulWidget {
   @override
   _TestAppState createState() => _TestAppState();
 
-  static showWidgetFromTap(WidgetTester tester, Future tapCallback(BuildContext context),
-      {bool highContrast = false, PlatformConfig config = const PlatformConfig()}) async {
+  /// Allows a widget to be shown that requires a BuildContext by using the [tapCallback]. Awaiting the future returned
+  /// by this function will drop you off right after the tap callback has finished with a pumpAndSettle().
+  ///
+  /// * [tester] The widget tester from the testWidgets function
+  /// * [tapCallback] a future that can use a BuildContext show a dialog, launch a route, etc...
+  /// * [locale] Passed into TestApp to set the locale of the app under test
+  /// * [config] A [PlatformConfig] object passed to TestApp that is used during [setupPlatformChannels]
+  /// * [configBlock] If you want to do custom configuration of the app or prefs, this is an easy place to setup custom data
+  ///
+  /// Example call:
+  /// testWidgetsWithAccessibility((tester) {
+  ///   await showWidgetFromTap(
+  ///     tester,
+  ///     (context) => ErrorReportDialog.asDialog(context),
+  ///     locale: Locale('ar'),
+  ///     config: PlatformConfig(initWebView: true, initLoggedInUser: login, initRemoteConfig: mockRemoteConfig),
+  ///     configBlock: () async {
+  ///       await ApiPrefs.setCurrentStudent(student);
+  ///     }
+  /// });
+  ///
+  static showWidgetFromTap(
+    WidgetTester tester,
+    Future tapCallback(BuildContext context), {
+    Locale locale,
+    PlatformConfig config = const PlatformConfig(),
+    Future configBlock(),
+  }) async {
     await tester.pumpWidget(TestApp(
-      Builder(
-          builder: (context) => RaisedButton(
-                color: Colors.black,
-                child: Text('tap me', style: TextStyle(color: Colors.white)),
-                onPressed: () => tapCallback(context),
-              )),
-      highContrast: highContrast,
+      Builder(builder: (context) {
+        return RaisedButton(
+          color: Colors.black,
+          child: Text('tap me', style: TextStyle(color: Colors.white)),
+          onPressed: () => tapCallback(context),
+        );
+      }),
+      locale: locale,
       platformConfig: config,
     ));
     await tester.pumpAndSettle();
+
+    // Await any other setup before tapping the button for the tap callback
+    if (configBlock != null) await configBlock();
 
     // Tap the button to trigger the onPressed
     await tester.tap(find.byType(RaisedButton));
