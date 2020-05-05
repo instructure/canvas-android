@@ -23,7 +23,8 @@ class EventsE2ETest: StudentTest() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    @E2E
+    // TODO: Get this working with embedded Flutter
+    /*@E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.EVENTS, TestCategory.E2E)
     fun testEventsE2E() {
@@ -89,7 +90,7 @@ class EventsE2ETest: StudentTest() {
 
         // Make sure that your quiz shows up on the calendar
         calendarPage.assertQuizDisplayed(quiz)
-    }
+    }*/
 
     // TODO: Can we test other types of events?
     // https://mobileqa.test.instructure.com/api/v1/calendar_events/?all_events=false&type=assignment -- covered

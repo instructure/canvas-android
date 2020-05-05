@@ -22,7 +22,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.student.adapter.DiscussionListRecyclerAdapter
-import hirondelle.date4j.DateTime
 import junit.framework.TestCase
 import org.junit.Before
 import org.junit.Test
@@ -74,8 +73,7 @@ class DiscussionListRecyclerAdapterTest : TestCase() {
 
     @Test
     fun testCompare_oneNullDateLastReply() {
-        val dateTime2 = DateTime("2014-12-29")
-        val date = Date(dateTime2.getMilliseconds(TimeZone.getDefault()))
+        val date = GregorianCalendar(2014, 11, 29).time
         val d1 = topicHeader.copy(lastReplyDate = date)
 
         TestCase.assertEquals(-1, mAdapter!!.createItemCallback().compare("", d1, topicHeader2))
@@ -85,9 +83,7 @@ class DiscussionListRecyclerAdapterTest : TestCase() {
 
     @Test
     fun testCompare_oneNullDatePostedAt() {
-        val dateTime = DateTime("2014-12-29")
-        val date = Date(dateTime.getMilliseconds(TimeZone.getDefault()))
-
+        val date = GregorianCalendar(2014, 11, 29).time
         val d1 = topicHeader.copy(postedDate = date)
 
         TestCase.assertEquals(-1, mAdapter!!.createItemCallback().compare("", d1, topicHeader2))
@@ -97,10 +93,8 @@ class DiscussionListRecyclerAdapterTest : TestCase() {
 
     @Test
     fun testCompare_bothHaveDates() {
-        val dateTime1 = DateTime("2014-12-27")
-        val dateTime2 = DateTime("2014-12-29")
-        val date = Date(dateTime1.getMilliseconds(TimeZone.getDefault()))
-        val date2 = Date(dateTime2.getMilliseconds(TimeZone.getDefault()))
+        val date = GregorianCalendar(2014, 11, 27).time
+        val date2 = GregorianCalendar(2014, 11, 29).time
 
         val d1 = topicHeader.copy(lastReplyDate = date)
         val d2 = topicHeader2.copy(lastReplyDate = date2)
