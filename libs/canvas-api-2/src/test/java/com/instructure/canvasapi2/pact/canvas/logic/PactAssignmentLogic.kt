@@ -240,7 +240,6 @@ fun assertAssignmentPopulated(description: String, assignment: Assignment, field
     assertNotNull("$description + unlockAt", assignment.unlockAt)
     assertNotNull("$description + freeFormCriterionComments", assignment.freeFormCriterionComments)
     assertNotNull("$description + published", assignment.published)
-    assertNotNull("$description + muted", assignment.muted)
     assertNotNull("$description + groupCategoryId", assignment.groupCategoryId)
     //assertNotNull("$description + userSubmitted", assignment.userSubmitted) // Not used by our code
     assertNotNull("$description + onlyVisibleToOverrides", assignment.onlyVisibleToOverrides)
