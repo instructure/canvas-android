@@ -84,6 +84,7 @@ object FlutterComm {
         data["primaryColor"] = Integer.toHexString(ThemePrefs.primaryColor)
         data["accentColor"] = Integer.toHexString(ThemePrefs.brandColor)
         data["buttonColor"] = Integer.toHexString(ThemePrefs.buttonColor)
+        data["primaryTextColor"] = Integer.toHexString(ThemePrefs.primaryTextColor)
         data["contextColors"] = ColorKeeper.cachedColors.map {
             it.key.toLowerCase(Locale.US) to Integer.toHexString(it.value)
         }.toMap()

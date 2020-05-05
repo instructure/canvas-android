@@ -57,12 +57,16 @@ class _StudentThemeState extends State<StudentTheme> {
   }
 
   /// Returns a theme with the institution colors
-  ThemeData get defaultTheme =>
-      _buildTheme(StudentColors.primaryColor, StudentColors.accentColor, StudentColors.buttonColor);
+  ThemeData get defaultTheme => _buildTheme(
+        StudentColors.primaryColor,
+        StudentColors.accentColor,
+        StudentColors.buttonColor,
+        StudentColors.primaryTextColor,
+      );
 
   ThemeData getCanvasContextTheme(String contextCode) {
     var contextColor = getCanvasContextColor(contextCode);
-    return _buildTheme(contextColor, contextColor, StudentColors.buttonColor);
+    return _buildTheme(contextColor, contextColor, StudentColors.buttonColor, Colors.white);
   }
 
   Color getCanvasContextColor(String contextCode) {
@@ -95,7 +99,7 @@ class _StudentThemeState extends State<StudentTheme> {
   /// sharply with the [onSurfaceColor]. Examples are chip backgrounds, progressbar backgrounds, avatar backgrounds, etc.
   Color get nearSurfaceColor => StudentColors.porcelain;
 
-  ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor) {
+  ThemeData _buildTheme(Color primaryColor, Color accentColor, Color buttonColor, Color primaryTextColor) {
     var textTheme = _buildTextTheme(onSurfaceColor);
 
     var primarySwatch = StudentColors.makeSwatch(primaryColor);
@@ -116,10 +120,10 @@ class _StudentThemeState extends State<StudentTheme> {
       canvasColor: Colors.white,
       accentColorBrightness: Brightness.dark,
       textTheme: textTheme,
-      primaryTextTheme: _buildTextTheme(Colors.white, fadeColor: Colors.white70),
+      primaryTextTheme: _buildTextTheme(primaryTextColor, fadeColor: primaryTextColor.withOpacity(0.7)),
       accentTextTheme: _buildTextTheme(Colors.white, fadeColor: Colors.white70),
       iconTheme: IconThemeData(color: onSurfaceColor),
-      primaryIconTheme: IconThemeData(color: Colors.white),
+      primaryIconTheme: IconThemeData(color: primaryTextColor),
       accentIconTheme: IconThemeData(color: Colors.white),
       dividerColor: StudentColors.tiara,
       buttonColor: buttonColor,

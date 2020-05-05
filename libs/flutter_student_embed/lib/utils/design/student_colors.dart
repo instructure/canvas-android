@@ -86,6 +86,8 @@ class StudentColors {
 
   static Color buttonColor = defaultButton;
 
+  static Color primaryTextColor = Colors.white;
+
   static Color generateContextColor(String contextCode) {
     return defaultContextColors[contextCode.hashCode % StudentColors.defaultContextColors.length];
   }
@@ -95,6 +97,7 @@ class StudentColors {
     primaryColor = defaultPrimary;
     accentColor = defaultPrimary;
     buttonColor = defaultButton;
+    primaryTextColor = Colors.white;
   }
 
   /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.

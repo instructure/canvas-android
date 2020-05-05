@@ -88,7 +88,12 @@ class CalendarScreenState extends State<CalendarScreen> {
               child: InkResponse(
                 child: Padding(
                   padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset('assets/svg/calendar-today.svg', width: 24, height: 24),
+                  child: SvgPicture.asset(
+                    'assets/svg/calendar-today.svg',
+                    width: 24,
+                    height: 24,
+                    color: Theme.of(context).primaryIconTheme.color,
+                  ),
                 ),
                 onTap: () {
                   var now = DateTime.now();

@@ -89,6 +89,7 @@ class NativeComm {
       StudentColors.primaryColor = Color(int.parse(themeData['primaryColor'], radix: 16));
       StudentColors.accentColor = Color(int.parse(themeData['accentColor'], radix: 16));
       StudentColors.buttonColor = Color(int.parse(themeData['buttonColor'], radix: 16));
+      StudentColors.primaryTextColor = Color(int.parse(themeData['primaryTextColor'], radix: 16));
 
       Map<dynamic, dynamic> contextColors = themeData['contextColors'];
       StudentColors.contextColors = contextColors.map((contextCode, hexCode) {

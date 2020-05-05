@@ -77,9 +77,6 @@ class DioConfig {
     // Create Dio instance and add interceptors
     final dio = Dio(options);
 
-    // Authentication refresh interceptor
-    // TODO? Maybe just ignore for now and have native handle auth refresh
-
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
       dio.interceptors.add(_cacheInterceptor());
