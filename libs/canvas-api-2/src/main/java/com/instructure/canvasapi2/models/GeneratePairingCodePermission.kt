@@ -20,8 +20,12 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class GeneratePairingCodePermission(@SerializedName("self_registration") val selfRegistration: SelfRegistration?) : Parcelable
+data class GeneratePairingCodePermission(@SerializedName("self_registration") val selfRegistration: SelfRegistration?) : Parcelable {
+    fun canGeneratePairingCode(): Boolean =
+        selfRegistration == SelfRegistration.ALL || selfRegistration == SelfRegistration.OBSERVER
+}
 
 enum class SelfRegistration(val apiString: String) {
-    @SerializedName("all") ALL("all")
+    @SerializedName("all") ALL("all"),
+    @SerializedName("observer") OBSERVER("observer")
 }
