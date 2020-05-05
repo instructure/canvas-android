@@ -36,7 +36,6 @@ class CoursesScreen extends StatefulWidget {
 
 class _CoursesScreenState extends State<CoursesScreen> {
   User _student;
-  List<Course> _courses = [];
 
   Future<List<Course>> _coursesFuture;
 
@@ -56,7 +55,8 @@ class _CoursesScreenState extends State<CoursesScreen> {
     }
   }
 
-  Future<List<Course>> _loadCourses({bool forceRefresh = false}) => _interactor.getCourses(isRefresh: forceRefresh);
+  Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
+      _interactor.getCourses(isRefresh: forceRefresh, studentId: _student?.id?.isEmpty == true ? null : _student.id);
 
   @override
   Widget build(BuildContext context) => _content(context);
@@ -64,20 +64,18 @@ class _CoursesScreenState extends State<CoursesScreen> {
   Widget _content(BuildContext context) {
     return FutureBuilder(
       future: _coursesFuture,
-      builder: (context, snapshot) {
+      builder: (context, AsyncSnapshot<List<Course>> snapshot) {
         Widget _body;
         if (snapshot.hasError) {
           _body = ErrorPandaWidget(L10n(context).errorLoadingCourses, () => _refreshKey.currentState.show());
         } else if (snapshot.hasData) {
-          _courses = snapshot.data;
-          final studentCourses = _courses.where(_enrollmentFilter);
-          _body = (studentCourses == null || studentCourses.isEmpty)
+          _body = (snapshot.data.isEmpty)
               ? EmptyPandaWidget(
                   svgPath: 'assets/svg/panda-book.svg',
                   title: L10n(context).noCoursesTitle,
                   subtitle: L10n(context).noCoursesMessage,
                 )
-              : _success(studentCourses);
+              : _success(snapshot.data);
         } else {
           return LoadingIndicator();
         }
@@ -146,11 +144,6 @@ class _CoursesScreenState extends State<CoursesScreen> {
         fontWeight: FontWeight.w500,
       ),
     );
-  }
-
-  /// Filters enrollments by those associated with the currently selected user
-  bool _enrollmentFilter(Course course) {
-    return course.enrollments?.any((enrollment) => enrollment.userId == _student?.id) ?? false;
   }
 
   void _courseTapped(context, Course course) {

@@ -23,6 +23,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
@@ -65,6 +66,8 @@ class MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
 class MockAlertsApi extends Mock implements AlertsApi {}
 
 class MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
+
+class MockAssignmentApi extends Mock implements AssignmentApi {}
 
 class MockAuthApi extends Mock implements AuthApi {}
 

@@ -12,23 +12,114 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
+import 'package:built_collection/built_collection.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
+import 'package:flutter_parent/models/serializers.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
+  final _api = MockCourseApi();
+
+  final _studentId = '123';
+  final _invalidStudentId = '789';
+
+  final _futureDate = DateTime.now().add(Duration(days: 10));
+  final _pastDate = DateTime.now().subtract(Duration(days: 10));
+
+  var _student = User((b) => b
+    ..id = _studentId
+    ..name = 'UserName'
+    ..sortableName = 'Sortable Name'
+    ..build());
+
+  final _enrollment = Enrollment((b) => b
+    ..enrollmentState = 'active'
+    ..userId = _studentId);
+
+  final _invalidEnrollment = Enrollment((b) => b
+    ..enrollmentState = 'active'
+    ..userId = _invalidStudentId);
+
+  final _course = Course((b) => b
+    ..id = 'course_123'
+    ..accessRestrictedByDate = false
+    ..restrictEnrollmentsToCourseDates = true
+    ..endAt = _futureDate
+    ..enrollments = ListBuilder([_enrollment]));
+
+  final _invalidCourse = Course((b) => b
+    ..id = 'course_456'
+    ..accessRestrictedByDate = false
+    ..restrictEnrollmentsToCourseDates = true
+    ..endAt = _futureDate
+    ..enrollments = ListBuilder([_invalidEnrollment]));
+
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<CourseApi>(() => _api);
+  });
+
+  setUp(() async {
+    reset(_api);
+    await setupPlatformChannels(
+        config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_student))}));
+  });
+
   test('getCourses calls API', () async {
-    final api = _MockCourseApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
-    when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
 
-    await CoursesInteractor().getCourses(isRefresh: true);
+    await CoursesInteractor().getCourses(isRefresh: true, studentId: null);
 
-    verify(api.getObserveeCourses(forceRefresh: true));
+    verify(_api.getObserveeCourses(forceRefresh: true));
+  });
+
+  test('getCourses returns only courses for ApiPrefs.currentStudent.id and is valid', () async {
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [_course, _invalidCourse]);
+
+    final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: null);
+
+    verify(_api.getObserveeCourses(forceRefresh: true));
+    expect(result.length, 1);
+    expect(result.first.id, _course.id);
+  });
+
+  test('getCourses returns only courses for studentId parameter and is valid', () async {
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [_course, _invalidCourse]);
+
+    final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: _invalidStudentId);
+
+    verify(_api.getObserveeCourses(forceRefresh: true));
+    expect(result.length, 1);
+    expect(result.first.id, _invalidCourse.id);
+  });
+
+  test('getCourses returns no courses for valid studentId but invalid dates', () async {
+    final badDatesCourse = _course.rebuild((b) => b..endAt = _pastDate);
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [badDatesCourse]);
+
+    final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: _studentId);
+
+    verify(_api.getObserveeCourses(forceRefresh: true));
+    expect(result, isEmpty);
+  });
+
+  test('getCourses returns no courses for invalid studentId but valid dates', () async {
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [_invalidCourse]);
+
+    final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: _studentId);
+
+    verify(_api.getObserveeCourses(forceRefresh: true));
+    expect(result, isEmpty);
   });
 }
-
-class _MockCourseApi extends Mock implements CourseApi {}
