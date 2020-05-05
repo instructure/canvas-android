@@ -56,7 +56,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
   }
 
   Future<List<Course>> _loadCourses({bool forceRefresh = false}) =>
-      _interactor.getCourses(isRefresh: forceRefresh, studentId: _student.id ?? null);
+      _interactor.getCourses(isRefresh: forceRefresh, studentId: _student?.id?.isEmpty == true ? null : _student.id);
 
   @override
   Widget build(BuildContext context) => _content(context);
