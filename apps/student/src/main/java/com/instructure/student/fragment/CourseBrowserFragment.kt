@@ -30,7 +30,6 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -42,7 +41,6 @@ import com.instructure.interactions.Navigation
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.router.RouteMatcher

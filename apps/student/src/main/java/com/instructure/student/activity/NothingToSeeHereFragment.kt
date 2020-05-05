@@ -25,14 +25,14 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
-import kotlinx.android.synthetic.main.activity_nothing_to_see_here.*
+import kotlinx.android.synthetic.main.fragment_nothing_to_see_here.*
 
 class NothingToSeeHereFragment : ParentFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.activity_nothing_to_see_here, container, false)
+        inflater.inflate(R.layout.fragment_nothing_to_see_here, container, false)
 
-    override fun title() = "Test"
+    override fun title() = getString(R.string.unsupportedFeature)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
