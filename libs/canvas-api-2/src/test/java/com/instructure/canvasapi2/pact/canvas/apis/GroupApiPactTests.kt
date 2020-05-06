@@ -34,8 +34,8 @@ class GroupApiPactTests : ApiPactTestBase() {
     val _PROVIDER_STATE_NAME="mobile courses with groups"
 
     // Common logic
-    private fun createService(pathPrefix: String = "/api/v1/"): GroupAPI.GroupInterface {
-        val client = getClient(pathPrefix = pathPrefix)
+    private fun createService(): GroupAPI.GroupInterface {
+        val client = getClient()
         return client.create(GroupAPI.GroupInterface::class.java)
     }
 
