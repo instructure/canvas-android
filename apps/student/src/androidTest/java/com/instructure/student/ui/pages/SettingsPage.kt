@@ -28,6 +28,7 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val profileSettingLabel by OnViewWithId(R.id.profileSettings)
     private val accountPreferencesLabel by OnViewWithId(R.id.accountPreferences)
     private val pushNotificationsLabel by OnViewWithId(R.id.pushNotifications)
+    private val pairObserverLabel by OnViewWithId(R.id.pairObserver)
     private val aboutLabel by OnViewWithId(R.id.about)
     private val legalLabel by OnViewWithId(R.id.legal)
     private val helpLabel by OnViewWithId(R.id.help)
@@ -49,5 +50,7 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
         remoteConfigLabel.scrollTo().click()
     }
 
-
+    fun launchPairObserverPage() {
+        pairObserverLabel.click()
+    }
 }

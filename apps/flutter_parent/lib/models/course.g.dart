@@ -106,7 +106,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       result.add(null);
     } else {
       result.add(serializers.serialize(object.startAt,
-          specifiedType: const FullType(String)));
+          specifiedType: const FullType(DateTime)));
     }
     result.add('end_at');
     if (object.endAt == null) {
@@ -191,7 +191,7 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           break;
         case 'start_at':
           result.startAt = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(DateTime)) as DateTime;
           break;
         case 'end_at':
           result.endAt = serializers.deserialize(value,
@@ -307,7 +307,7 @@ class _$Course extends Course {
   @override
   final String courseCode;
   @override
-  final String startAt;
+  final DateTime startAt;
   @override
   final DateTime endAt;
   @override
@@ -565,9 +565,9 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   String get courseCode => _$this._courseCode;
   set courseCode(String courseCode) => _$this._courseCode = courseCode;
 
-  String _startAt;
-  String get startAt => _$this._startAt;
-  set startAt(String startAt) => _$this._startAt = startAt;
+  DateTime _startAt;
+  DateTime get startAt => _$this._startAt;
+  set startAt(DateTime startAt) => _$this._startAt = startAt;
 
   DateTime _endAt;
   DateTime get endAt => _$this._endAt;

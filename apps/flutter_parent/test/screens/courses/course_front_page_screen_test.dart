@@ -13,7 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/page.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
@@ -31,7 +31,7 @@ void main() {
   final l10n = AppLocalizations();
 
   final _courseId = '123';
-  final _page = Page((b) => b
+  final _page = CanvasPage((b) => b
     ..id = '1'
     ..body = '');
   final _interactor = _MockCourseDetailsInteractor();
@@ -53,7 +53,8 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('shows error', (tester) async {
-    when(_interactor.loadFrontPage(_courseId)).thenAnswer((_) => Future<Page>.error('Failed to load course home page'));
+    when(_interactor.loadFrontPage(_courseId))
+        .thenAnswer((_) => Future<CanvasPage>.error('Failed to load course home page'));
 
     await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
     await tester.pump(); // Wait for widget to build

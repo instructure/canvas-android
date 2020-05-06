@@ -144,7 +144,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             Tab.COLLABORATIONS_ID -> R.drawable.vd_collaborations
             Tab.SETTINGS_ID -> R.drawable.vd_settings
             else -> {
-                // Determine if its the attendance tool
+                // Determine if it's the attendance tool
                 if (tab.type == Tab.TYPE_EXTERNAL) {
                     R.drawable.vd_lti
                 } else R.drawable.vd_canvas_logo

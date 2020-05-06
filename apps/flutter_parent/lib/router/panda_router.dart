@@ -107,7 +107,7 @@ class PandaRouter {
     String authenticationProvider = null,
     LoginFlow loginFlow = LoginFlow.normal,
   }) =>
-      '$_loginWeb?${_RouterKeys.domain}=$domain&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
+      '$_loginWeb?${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.authenticationProvider}=$authenticationProvider&${_RouterKeys.loginFlow}=${loginFlow.toString()}';
 
   static String notParent() => '/not_parent';
 
@@ -131,7 +131,7 @@ class PandaRouter {
   static final String _simpleWebView = '/internal';
 
   static String simpleWebViewRoute(String url, String infoText) =>
-      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=$infoText';
+      '/internal?${_RouterKeys.url}=${Uri.encodeQueryComponent(url)}&${_RouterKeys.infoText}=${Uri.encodeQueryComponent(infoText)}';
 
   static String settings() => '/settings';
 
@@ -349,9 +349,15 @@ class PandaRouter {
     // We only care about valid app routes if they are already signed in or performing a qr login
     if (urlRouteWrapper.appRouteMatch != null && (ApiPrefs.isLoggedIn() || qrUri != null)) {
       if (urlRouteWrapper.validHost) {
-        // If its a link we can handle natively and within our domain, route
-        return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
-            .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+        // Before deep linking, we need to make sure a current student is set
+        if (ApiPrefs.getCurrentStudent() != null || qrUri != null) {
+          // If its a link we can handle natively and within our domain, route
+          return (urlRouteWrapper.appRouteMatch.route.handler as Handler)
+              .handlerFunc(context, urlRouteWrapper.appRouteMatch.parameters);
+        } else {
+          // This might be a migrated user or an error case, let's route them to the dashboard
+          return _dashboardHandler.handlerFunc(context, {});
+        }
       } else {
         // Otherwise, we want to route to the error page if they are already logged in
         return _routerErrorHandler.handlerFunc(context, params);

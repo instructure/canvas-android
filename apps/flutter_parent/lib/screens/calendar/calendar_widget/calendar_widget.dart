@@ -478,7 +478,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     selectedDay = day;
 
     // Enable/disable the today button
-    locator<CalendarTodayNotifier>().value = !DateTime.now().isSameDayAs(selectedDay);
+    Provider.of<CalendarTodayNotifier>(context, listen: false).value = !DateTime.now().isSameDayAs(selectedDay);
 
     // Month change
     if (monthPagerBehavior == CalendarPageChangeBehavior.animate) {
@@ -658,7 +658,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   @override
   void dispose() {
-    locator<CalendarTodayNotifier>().removeListener(_todayClicked);
+    locator<CalendarTodayClickNotifier>().removeListener(_todayClicked);
     super.dispose();
   }
 }

@@ -28,6 +28,7 @@ import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/attachment.dart';
 import 'package:flutter_parent/models/authenticated_url.dart';
 import 'package:flutter_parent/models/basic_user.dart';
+import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -37,6 +38,7 @@ import 'package:flutter_parent/models/dataseeding/communication_channel.dart';
 import 'package:flutter_parent/models/dataseeding/create_assignment_info.dart';
 import 'package:flutter_parent/models/dataseeding/oauth_token.dart';
 import 'package:flutter_parent/models/dataseeding/pseudonym.dart';
+import 'package:flutter_parent/models/dataseeding/quiz.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grade.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -50,7 +52,6 @@ import 'package:flutter_parent/models/media_comment.dart';
 import 'package:flutter_parent/models/message.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/models/notification_payload.dart';
-import 'package:flutter_parent/models/page.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
@@ -78,6 +79,7 @@ import 'dataseeding/create_submission_wrapper.dart';
 import 'dataseeding/create_user_info.dart';
 import 'dataseeding/grade_submission_info.dart';
 import 'dataseeding/grade_submission_wrapper.dart';
+import 'dataseeding/pairing_code.dart';
 import 'dataseeding/seed_context.dart';
 import 'dataseeding/seeded_user.dart';
 import 'dataseeding/user_name_data.dart';
@@ -99,6 +101,7 @@ part 'serializers.g.dart';
   Attachment,
   AuthenticatedUrl,
   BasicUser,
+  CanvasPage,
   CanvasToken,
   CommunicationChannel,
   Conversation,
@@ -131,14 +134,16 @@ part 'serializers.g.dart';
   MobileVerifyResult,
   NotificationPayload,
   OAuthToken,
-  Page,
+  PairingCode,
   Plannable,
   PlannerItem,
   PlannerSubmission,
   Pseudonym,
+  Quiz,
   Recipient,
   Reminder,
   RemoteFile,
+  Section,
   SchoolDomain,
   ScheduleItem,
   Section,

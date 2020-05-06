@@ -55,8 +55,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 208
-        versionName = '6.7.0'
+        versionCode = 209
+        versionName = '6.7.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -281,6 +281,10 @@ dependencies {
 
     /* Database */
     implementation "com.squareup.sqldelight:android-driver:1.1.3"
+
+    /* Qr Code */
+    implementation(Libs.JOURNEY_ZXING) { transitive = false }
+    implementation Libs.ZXING
 }
 
 

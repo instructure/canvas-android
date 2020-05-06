@@ -36,6 +36,7 @@ import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
+import 'package:flutter_parent/utils/common_widgets/rating_dialog.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -82,6 +83,7 @@ class DashboardState extends State<DashboardScreen> {
   bool expand = false;
 
   SelectedStudentNotifier _selectedStudentNotifier;
+  CalendarTodayNotifier _showTodayNotifier;
 
   @visibleForTesting
   Map<String, Object> currentDeepLinkParams;
@@ -92,6 +94,7 @@ class DashboardState extends State<DashboardScreen> {
     currentDeepLinkParams = widget.deepLinkParams;
     _currentIndex = widget.startingPage ?? DashboardContentScreens.Courses;
     _selectedStudentNotifier = SelectedStudentNotifier();
+    _showTodayNotifier = CalendarTodayNotifier();
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
@@ -106,6 +109,11 @@ class DashboardState extends State<DashboardScreen> {
 
     _interactor.getInboxCountNotifier().update();
     _showOldReminderMessage();
+
+    // Try to show the rating dialog
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      RatingDialog.asDialog(context);
+    });
   }
 
   void _loadSelf() {
@@ -181,13 +189,13 @@ class DashboardState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     if (_currentIndex != DashboardContentScreens.Calendar) {
-      locator<CalendarTodayNotifier>().value = false;
+      _showTodayNotifier.value = false;
     }
 
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<SelectedStudentNotifier>(create: (context) => _selectedStudentNotifier),
-        ChangeNotifierProvider<CalendarTodayNotifier>(create: (context) => locator<CalendarTodayNotifier>()),
+        ChangeNotifierProvider<CalendarTodayNotifier>(create: (context) => _showTodayNotifier),
       ],
       child: Consumer<SelectedStudentNotifier>(
         builder: (context, model, _) {

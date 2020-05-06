@@ -73,6 +73,9 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 }
             }
 
+            val permission = awaitApi<GeneratePairingCodePermission> { UserManager.getGeneratePairingCodePermission(true, it) }
+            ApiPrefs.canGeneratePairingCode = permission.canGeneratePairingCode()
+
             // Grab colors
             if (ColorKeeper.hasPreviouslySynced) {
                 UserManager.getColors(userColorsCallback, true)

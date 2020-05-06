@@ -11,7 +11,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/help_link.dart';
@@ -24,9 +23,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
-import 'package:intent/action.dart' as android;
-import 'package:intent/extra.dart' as android;
-import 'package:intent/intent.dart' as android;
 import 'package:package_info/package_info.dart';
 
 import 'help_screen_interactor.dart';
@@ -108,10 +104,10 @@ class _HelpScreenState extends State<HelpScreen> {
       _showRequestFeature();
     } else if (link.url.startsWith('tel:+')) {
       // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
-      _handlePhoneLinks(link.url);
+      locator<AndroidIntentVeneer>().launchPhone(link.url);
     } else if (link.url.startsWith('mailto:')) {
       // Support mailto links: https://community.canvaslms.com/docs/DOC-12664-4214610054
-      _handleMailtoLinks(link.url);
+      locator<AndroidIntentVeneer>().launchEmail(link.url);
     } else if (link.url.contains('cases.canvaslms.com/liveagentchat')) {
       // Chat with Canvas Support - Doesn't seem work properly with WebViews, so we kick it out
       // to the external browser
@@ -151,57 +147,11 @@ class _HelpScreenState extends State<HelpScreen> {
         '----------------------------------------------\r\n';
 
     final subject = l10n.featureRequestSubject;
-    final canvasEmail = 'mobilesupport@instructure.com';
 
-    _sendIntent(canvasEmail, subject, emailBody);
-//    _sendAndroidIntent(canvasEmail, subject, emailBody);
+    locator<AndroidIntentVeneer>().launchEmailWithBody(subject, emailBody);
   }
 
-  // Can't use yet, this doesn't set the 'email' field properly. Also can't specify all components via the data uri, as
-  //  the encoding isn't properly handled by receiving apps (either spaces are turned into '+' or new lines aren't included).
-  //  Can update once AndroidIntent supports string arrays rather than just string array lists (confirmed this is what's
-  //  breaking, can include a link to the flutter plugin PR to fix this once I get one made)
-  void _sendAndroidIntent(String canvasEmail, String subject, String emailBody) {
-    final intent = AndroidIntent(
-      action: 'android.intent.action.SENDTO',
-      data: Uri(scheme: 'mailto').toString(),
-      arguments: {
-        'android.intent.extra.EMAIL': [canvasEmail],
-        'android.intent.extra.SUBJECT': subject,
-        'android.intent.extra.TEXT': emailBody,
-      },
-    );
-
-    AndroidIntentVeneer().launch(intent);
-  }
-
-  // TODO: Switch to AndroidIntent once it supports emails properly (either can't specify 'to' email, or body doesn't support multiline)
-  void _sendIntent(String canvasEmail, String subject, String emailBody) {
-    android.Intent()
-      ..setAction(android.Action.ACTION_SENDTO)
-      ..setData(Uri(scheme: 'mailto'))
-      ..putExtra(android.Extra.EXTRA_EMAIL, [canvasEmail])
-      ..putExtra(android.Extra.EXTRA_SUBJECT, subject)
-      ..putExtra(android.Extra.EXTRA_TEXT, emailBody)
-      ..startActivity(createChooser: true);
-  }
-
-  void _showShareLove() =>
-      locator<UrlLauncher>().launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
+  void _showShareLove() => locator<UrlLauncher>().launchAppStore();
 
   void _showLegal() => locator<QuickNav>().pushRoute(context, PandaRouter.legal());
-
-  void _handlePhoneLinks(String url) {
-    android.Intent()
-      ..setAction(android.Action.ACTION_DIAL)
-      ..setData(Uri.parse(url))
-      ..startActivity(createChooser: false);
-  }
-
-  void _handleMailtoLinks(String url) {
-    android.Intent()
-      ..setAction(android.Action.ACTION_SENDTO)
-      ..setData(Uri.parse(url))
-      ..startActivity(createChooser: true);
-  }
 }

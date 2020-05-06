@@ -108,9 +108,9 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
 
     fun assertReplyDisplayed(reply: DiscussionEntry) {
         // It can take a *long* time for the reply to get rendered to the webview on
-        // tablets (in FTL, anyway).  We'll compensate by giving it up to 20 seconds to render.
+        // tablets (in FTL, anyway).  We'll compensate by giving it up to 30 seconds to render.
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 20)
+                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 30)
                 .check(webMatches(getText(),containsString(reply.message)))
     }
 

@@ -91,6 +91,10 @@ object Libs {
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.0"
     const val MOCKK = "io.mockk:mockk:1.9.3"
 
+    /* Qr Code (zxing) */
+    const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"
+    const val ZXING = "com.google.zxing:core:3.3.0"
+
     /* Other */
     const val CRASHLYTICS = "com.crashlytics.sdk.android:crashlytics:${Versions.CRASHLYTICS}"
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"

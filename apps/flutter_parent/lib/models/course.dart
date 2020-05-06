@@ -65,7 +65,7 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   @nullable
   @BuiltValueField(wireName: 'start_at')
-  String get startAt;
+  DateTime get startAt;
 
   @nullable
   @BuiltValueField(wireName: 'end_at')
@@ -168,22 +168,26 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   String contextFilterId() => 'course_${this.id}';
 
+  /// Verifies that the course should be displayed within the parent app
   bool isValidForDate() {
     if (accessRestrictedByDate) return false;
 
     if (workflowState == 'completed') return false;
 
     final now = DateTime.now();
-    final courseDatePassed = endAt?.isBefore(now) == true;
+    final isWithinCourseDates = _isWithinDates(startAt, endAt, now);
 
     if (restrictEnrollmentsToCourseDates) {
-      return !courseDatePassed;
+      return isWithinCourseDates;
     } else {
-      final termDatePassed = term?.endAt?.isBefore(now) == true;
-      final allSectionsPassed =
-          sections.isNotEmpty && sections.every((section) => section.endAt?.isBefore(now) == true);
+      final isWithinTermDates = _isWithinDates(term?.startAt, term?.endAt, now);
+      var isWithinAnySection;
+      if (sections == null || sections.isEmpty)
+        isWithinAnySection = true;
+      else
+        isWithinAnySection = sections.any((section) => _isWithinDates(section.startAt, section.endAt, now));
 
-      return !courseDatePassed && !termDatePassed && !allSectionsPassed;
+      return isWithinCourseDates && isWithinTermDates && isWithinAnySection;
     }
   }
 
@@ -191,6 +195,22 @@ abstract class Course implements Built<Course, CourseBuilder> {
   bool isValidForCurrentStudent(String currentStudentId) {
     final hasValidEnrollments = enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
     return hasValidEnrollments && isValidForDate();
+  }
+
+  bool _isWithinDates(DateTime startAt, DateTime endAt, DateTime now) {
+    bool isValidEndAt, isValidStartAt;
+    // If the dates are null, we have to show it
+    if (startAt == null)
+      isValidStartAt = true;
+    else
+      isValidStartAt = now.isAfter(startAt);
+
+    if (endAt == null)
+      isValidEndAt = true;
+    else
+      isValidEndAt = now.isBefore(endAt);
+
+    return isValidEndAt && isValidStartAt;
   }
 }
 

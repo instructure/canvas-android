@@ -40,4 +40,6 @@ class UrlLauncher {
       },
     );
   }
+
+  Future<void> launchAppStore() => launch('https://play.google.com/store/apps/details?id=com.instructure.parentapp');
 }

@@ -180,7 +180,7 @@ class AssignmentUtils2Test : Assert() {
 
     @Test
     @Throws(Exception::class)
-    fun getAssignmentState_isTeacher_mutedGradeWithNoSubmission_stateGraded() {
+    fun getAssignmentState_isTeacher_gradeWithNoSubmission_stateGraded() {
         val time = Calendar.getInstance().timeInMillis + 100000
         val date = Date(time)
 
@@ -190,8 +190,7 @@ class AssignmentUtils2Test : Assert() {
         )
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString(),
-            muted = true
+            dueAt = date.toApiString()
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission, true)
@@ -201,7 +200,7 @@ class AssignmentUtils2Test : Assert() {
 
     @Test
     @Throws(Exception::class)
-    fun getAssignmentState_isStudent_mutedGradeWithNoSubmission_stateGraded() {
+    fun getAssignmentState_isStudent_gradeWithNoSubmission_stateGraded() {
         val time = Calendar.getInstance().timeInMillis + 100000
         val date = Date(time)
 
@@ -211,8 +210,7 @@ class AssignmentUtils2Test : Assert() {
         )
         val assignment = Assignment(
             submission = submission,
-            dueAt = date.toApiString(),
-            muted = true
+            dueAt = date.toApiString()
         )
 
         val testValue = AssignmentUtils2.getAssignmentState(assignment, submission)

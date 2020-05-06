@@ -102,10 +102,11 @@ void main() {
       expect(isValid, isFalse);
     });
 
-    test('returns false for restrictEnrollmentsToCourseDates and courseDatesPassed', () {
+    test('returns false for restrictEnrollmentsToCourseDates and !isWithinCourseDates', () {
       final course = _course.rebuild((b) => b
         ..accessRestrictedByDate = false
         ..restrictEnrollmentsToCourseDates = true
+        ..startAt = futureDate
         ..endAt = pastDate);
 
       final isValid = course.isValidForDate();
@@ -113,10 +114,11 @@ void main() {
       expect(isValid, isFalse);
     });
 
-    test('returns true for restrictEnrollmentsToCourseDates with !courseDatesPassed', () {
+    test('returns true for restrictEnrollmentsToCourseDates with isWithinCourseDates', () {
       final course = _course.rebuild((b) => b
         ..accessRestrictedByDate = false
         ..restrictEnrollmentsToCourseDates = true
+        ..startAt = pastDate
         ..endAt = futureDate);
 
       final isValid = course.isValidForDate();
@@ -124,14 +126,15 @@ void main() {
       expect(isValid, isTrue);
     });
 
-    test('returns false for !restrictEnrollmentsToCourseDates and courseDatesPassed & termDatePassed', () {
-      //Course((b) => b..id = 'course_123');
+    test('returns false for !restrictEnrollmentsToCourseDates and !isWithinCourseDates & !isWithinTermDates', () {
       final term = Term((b) => b
         ..id = ''
+        ..startAt = pastDate
         ..endAt = pastDate);
       final course = _course.rebuild((b) => b
         ..accessRestrictedByDate = false
         ..restrictEnrollmentsToCourseDates = false
+        ..startAt = pastDate
         ..endAt = pastDate
         ..term = term.toBuilder());
 
@@ -141,19 +144,22 @@ void main() {
     });
 
     test(
-        'returns false for !restrictEnrollmentsToCourseDates and courseDatesPassed & termDatePassed & allSectionsPassed',
+        'returns false for !restrictEnrollmentsToCourseDates and !isWithinCourseDates & !isWithinTermDates & !isWithinAnySection',
         () {
       final section = Section((b) => b
         ..id = ''
         ..name = ''
+        ..startAt = pastDate
         ..endAt = pastDate);
       final term = Term((b) => b
         ..id = ''
+        ..startAt = pastDate
         ..endAt = pastDate);
       final course = _course.rebuild((b) => b
         ..accessRestrictedByDate = false
         ..restrictEnrollmentsToCourseDates = false
         ..endAt = pastDate
+        ..startAt = pastDate
         ..term = term.toBuilder()
         ..sections = ListBuilder([section]));
 
@@ -162,22 +168,76 @@ void main() {
       expect(isValid, isFalse);
     });
 
+    test('returns true for restrictEnrollmentsToCourseDates and null course dates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = true
+        ..startAt = null
+        ..endAt = null);
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
     test(
-        'returns true for !restrictEnrollmentsToCourseDates with !courseDatesPassed & !termDatePassed & !allSectionsPassed',
+        'returns true for !restrictEnrollmentsToCourseDates with isWithinCourseDates & isWithinTermDates & isWithinAnySection',
         () {
       final section = Section((b) => b
         ..id = ''
         ..name = ''
+        ..startAt = pastDate
         ..endAt = futureDate);
       final term = Term((b) => b
         ..id = ''
+        ..startAt = pastDate
         ..endAt = futureDate);
       final course = _course.rebuild((b) => b
         ..accessRestrictedByDate = false
         ..restrictEnrollmentsToCourseDates = false
         ..endAt = futureDate
+        ..startAt = pastDate
         ..term = term.toBuilder()
         ..sections = ListBuilder([section]));
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test(
+        'returns true for !restrictEnrollmentsToCourseDates with null dates for isWithinCourseDates & isWithinTermDates & isWithinAnySection',
+        () {
+      final section = Section((b) => b
+        ..id = ''
+        ..name = ''
+        ..startAt = null
+        ..endAt = null);
+      final term = Term((b) => b
+        ..id = ''
+        ..startAt = null
+        ..endAt = null);
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = null
+        ..startAt = null
+        ..term = term.toBuilder()
+        ..sections = ListBuilder([section]));
+
+      final isValid = course.isValidForDate();
+
+      expect(isValid, isTrue);
+    });
+
+    test('returns true for !restrictEnrollmentsToCourseDates with null course, section, and term dates', () {
+      final course = _course.rebuild((b) => b
+        ..accessRestrictedByDate = false
+        ..restrictEnrollmentsToCourseDates = false
+        ..endAt = null
+        ..startAt = null
+        ..term = null
+        ..sections = null);
 
       final isValid = course.isValidForDate();
 

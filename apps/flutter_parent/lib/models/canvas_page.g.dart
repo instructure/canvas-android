@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'page.dart';
+part of 'canvas_page.dart';
 
 // **************************************************************************
 // BuiltValueGenerator
 // **************************************************************************
 
-Serializer<Page> _$pageSerializer = new _$PageSerializer();
+Serializer<CanvasPage> _$canvasPageSerializer = new _$CanvasPageSerializer();
 
-class _$PageSerializer implements StructuredSerializer<Page> {
+class _$CanvasPageSerializer implements StructuredSerializer<CanvasPage> {
   @override
-  final Iterable<Type> types = const [Page, _$Page];
+  final Iterable<Type> types = const [CanvasPage, _$CanvasPage];
   @override
-  final String wireName = 'Page';
+  final String wireName = 'CanvasPage';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Page object,
+  Iterable<Object> serialize(Serializers serializers, CanvasPage object,
       {FullType specifiedType = FullType.unspecified}) {
     final result = <Object>[
       'page_id',
@@ -93,9 +93,9 @@ class _$PageSerializer implements StructuredSerializer<Page> {
   }
 
   @override
-  Page deserialize(Serializers serializers, Iterable<Object> serialized,
+  CanvasPage deserialize(Serializers serializers, Iterable<Object> serialized,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = new PageBuilder();
+    final result = new CanvasPageBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
@@ -163,7 +163,7 @@ class _$PageSerializer implements StructuredSerializer<Page> {
   }
 }
 
-class _$Page extends Page {
+class _$CanvasPage extends CanvasPage {
   @override
   final String id;
   @override
@@ -191,10 +191,10 @@ class _$Page extends Page {
   @override
   final String lockExplanation;
 
-  factory _$Page([void Function(PageBuilder) updates]) =>
-      (new PageBuilder()..update(updates)).build();
+  factory _$CanvasPage([void Function(CanvasPageBuilder) updates]) =>
+      (new CanvasPageBuilder()..update(updates)).build();
 
-  _$Page._(
+  _$CanvasPage._(
       {this.id,
       this.url,
       this.title,
@@ -210,33 +210,33 @@ class _$Page extends Page {
       this.lockExplanation})
       : super._() {
     if (id == null) {
-      throw new BuiltValueNullFieldError('Page', 'id');
+      throw new BuiltValueNullFieldError('CanvasPage', 'id');
     }
     if (hideFromStudents == null) {
-      throw new BuiltValueNullFieldError('Page', 'hideFromStudents');
+      throw new BuiltValueNullFieldError('CanvasPage', 'hideFromStudents');
     }
     if (frontPage == null) {
-      throw new BuiltValueNullFieldError('Page', 'frontPage');
+      throw new BuiltValueNullFieldError('CanvasPage', 'frontPage');
     }
     if (lockInfo == null) {
-      throw new BuiltValueNullFieldError('Page', 'lockInfo');
+      throw new BuiltValueNullFieldError('CanvasPage', 'lockInfo');
     }
     if (published == null) {
-      throw new BuiltValueNullFieldError('Page', 'published');
+      throw new BuiltValueNullFieldError('CanvasPage', 'published');
     }
   }
 
   @override
-  Page rebuild(void Function(PageBuilder) updates) =>
+  CanvasPage rebuild(void Function(CanvasPageBuilder) updates) =>
       (toBuilder()..update(updates)).build();
 
   @override
-  PageBuilder toBuilder() => new PageBuilder()..replace(this);
+  CanvasPageBuilder toBuilder() => new CanvasPageBuilder()..replace(this);
 
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is Page &&
+    return other is CanvasPage &&
         id == other.id &&
         url == other.url &&
         title == other.title &&
@@ -282,7 +282,7 @@ class _$Page extends Page {
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Page')
+    return (newBuiltValueToStringHelper('CanvasPage')
           ..add('id', id)
           ..add('url', url)
           ..add('title', title)
@@ -300,8 +300,8 @@ class _$Page extends Page {
   }
 }
 
-class PageBuilder implements Builder<Page, PageBuilder> {
-  _$Page _$v;
+class CanvasPageBuilder implements Builder<CanvasPage, CanvasPageBuilder> {
+  _$CanvasPage _$v;
 
   String _id;
   String get id => _$this._id;
@@ -357,11 +357,11 @@ class PageBuilder implements Builder<Page, PageBuilder> {
   set lockExplanation(String lockExplanation) =>
       _$this._lockExplanation = lockExplanation;
 
-  PageBuilder() {
-    Page._initializeBuilder(this);
+  CanvasPageBuilder() {
+    CanvasPage._initializeBuilder(this);
   }
 
-  PageBuilder get _$this {
+  CanvasPageBuilder get _$this {
     if (_$v != null) {
       _id = _$v.id;
       _url = _$v.url;
@@ -382,24 +382,24 @@ class PageBuilder implements Builder<Page, PageBuilder> {
   }
 
   @override
-  void replace(Page other) {
+  void replace(CanvasPage other) {
     if (other == null) {
       throw new ArgumentError.notNull('other');
     }
-    _$v = other as _$Page;
+    _$v = other as _$CanvasPage;
   }
 
   @override
-  void update(void Function(PageBuilder) updates) {
+  void update(void Function(CanvasPageBuilder) updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$Page build() {
-    _$Page _$result;
+  _$CanvasPage build() {
+    _$CanvasPage _$result;
     try {
       _$result = _$v ??
-          new _$Page._(
+          new _$CanvasPage._(
               id: id,
               url: url,
               title: title,
@@ -420,7 +420,7 @@ class PageBuilder implements Builder<Page, PageBuilder> {
         lockInfo.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Page', _$failedField, e.toString());
+            'CanvasPage', _$failedField, e.toString());
       }
       rethrow;
     }

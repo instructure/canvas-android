@@ -692,13 +692,13 @@ class AttachmentWidget extends StatelessWidget {
               )
             ],
           ),
-          if (handler.attachment?.thumbnailUrl != null)
+          if (handler.attachment?.thumbnailUrl != null && handler.attachment.thumbnailUrl.isNotEmpty)
             ClipRRect(
               borderRadius: new BorderRadius.circular(4),
               child: FadeInImage.memoryNetwork(
                 fadeInDuration: const Duration(milliseconds: 300),
                 fit: BoxFit.cover,
-                image: handler.attachment.thumbnailUrl ?? '',
+                image: handler.attachment.thumbnailUrl,
                 placeholder: kTransparentImage,
               ),
             ),
