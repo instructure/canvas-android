@@ -12,10 +12,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/enrollment.dart';
-import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
@@ -23,46 +25,76 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../../utils/canvas_model_utils.dart';
+import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
+  final _api = MockCourseApi();
+  final _user = CanvasModelTestUtils.mockUser(id: '123');
+
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<CourseApi>(() => _api);
+  });
+
+  setUp(() async {
+    reset(_api);
+    await setupPlatformChannels(
+        config: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_user))}));
+  });
+
   test('getCourses calls API', () async {
-    final api = _MockCourseApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
-    when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => []);
 
     await CalendarFilterListInteractor().getCoursesForSelectedStudent(isRefresh: true);
 
-    verify(api.getObserveeCourses(forceRefresh: true));
+    verify(_api.getObserveeCourses(forceRefresh: true));
   });
 
   test('getCourses filters by student enrollment', () async {
-    final studentId = 'student123';
-    await setupPlatformChannels();
-    User user = CanvasModelTestUtils.mockUser(id: studentId);
-    await ApiPrefs.setCurrentStudent(user);
-
     final apiCourses = [
       Course(),
       Course((c) => c
         ..enrollments = ListBuilder([
           Enrollment((e) => e
-            ..userId = studentId
+            ..userId = _user.id
             ..enrollmentState = '')
         ])),
       Course(),
     ];
     final expectedCourses = [apiCourses[1]];
 
-    final api = _MockCourseApi();
-    setupTestLocator((locator) => locator.registerLazySingleton<CourseApi>(() => api));
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => apiCourses);
 
-    when(api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => apiCourses);
+    final actualCourses = await CalendarFilterListInteractor().getCoursesForSelectedStudent(isRefresh: true);
+
+    expect(actualCourses, expectedCourses);
+  });
+
+  test('getCourses filters by valid course dates', () async {
+    final apiCourses = [
+      Course((c) => c
+        ..accessRestrictedByDate = true
+        ..enrollments = ListBuilder([
+          Enrollment((e) => e
+            ..userId = _user.id
+            ..enrollmentState = '')
+        ])),
+      Course((c) => c
+        ..accessRestrictedByDate = false
+        ..endAt = DateTime.now().add(Duration(days: 10))
+        ..enrollments = ListBuilder([
+          Enrollment((e) => e
+            ..userId = _user.id
+            ..enrollmentState = '')
+        ]))
+    ];
+    final expectedCourses = [apiCourses[1]];
+
+    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => apiCourses);
 
     final actualCourses = await CalendarFilterListInteractor().getCoursesForSelectedStudent(isRefresh: true);
 
     expect(actualCourses, expectedCourses);
   });
 }
-
-class _MockCourseApi extends Mock implements CourseApi {}

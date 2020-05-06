@@ -1010,6 +1010,9 @@
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
     <string name="pdfError">An error occurred trying to load this PDF.</string>
+    <string name="featureNotAllowedInStudentView">So sorry! This feature isn\'t allowed in student view.</string>
+    <string name="nothingToSeeHere">Nothing To See Here</string>
+    <string name="unsupportedFeature">Unsupported Feature</string>
 
     <!-- Parent Strings -->
     <string name="addChildTitle">Add Student</string>

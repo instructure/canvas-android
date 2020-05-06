@@ -14,10 +14,8 @@
 import 'dart:async';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/help_link.dart';
-import 'package:flutter_parent/models/help_links.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/help/help_screen.dart';
@@ -36,24 +34,26 @@ import '../../utils/test_app.dart';
 
 void main() {
   final l10n = AppLocalizations();
-  HelpScreenInteractor interactor = _MockHelpScreenInteractor();
   _MockUrlLauncher launcher = _MockUrlLauncher();
+  _MockAndroidIntentVeneer intentVeneer = _MockAndroidIntentVeneer();
+  HelpScreenInteractor interactor = _MockHelpScreenInteractor();
 
   setupTestLocator((locator) {
     locator.registerSingleton<QuickNav>(QuickNav());
-    locator.registerLazySingleton<AndroidIntentVeneer>(() => _MockAndroidIntentVeneer());
+    locator.registerLazySingleton<AndroidIntentVeneer>(() => intentVeneer);
     locator.registerLazySingleton<HelpScreenInteractor>(() => interactor);
     locator.registerLazySingleton<UrlLauncher>(() => launcher);
   });
 
   setUp(() {
+    reset(intentVeneer);
     reset(interactor);
     reset(launcher);
   });
 
   testWidgetsWithAccessibilityChecks('displays links', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink()]));
+        .thenAnswer((_) => Future.value([_createHelpLink()]));
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -70,7 +70,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('tapping search launches url', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer(
-        (_) => Future.value([createHelpLink(id: 'search_the_canvas_guides', text: 'Search the Canvas Guides')]));
+        (_) => Future.value([_createHelpLink(id: 'search_the_canvas_guides', text: 'Search the Canvas Guides')]));
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -96,15 +96,13 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(
-      launcher.launch(
-        'https://play.google.com/store/apps/details?id=com.instructure.parentapp',
-      ),
+      launcher.launchAppStore(),
     ).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping report problem shows error report dialog', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(url: '#create_ticket', text: 'Report a Problem')]));
+        .thenAnswer((_) => Future.value([_createHelpLink(url: '#create_ticket', text: 'Report a Problem')]));
 
     await tester.pumpWidget(TestApp(HelpScreen()));
     await tester.pumpAndSettle();
@@ -117,7 +115,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('tapping request feature launches email intent', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(id: 'submit_feature_idea', text: 'Request a Feature')]));
+        .thenAnswer((_) => Future.value([_createHelpLink(id: 'submit_feature_idea', text: 'Request a Feature')]));
 
     final user = User((b) => b
       ..id = '123'
@@ -142,25 +140,10 @@ void main() {
     ));
     await tester.pumpAndSettle();
 
-    final completer = Completer();
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
-      expect(call.method, 'startActivity');
-      expect(call.arguments['action'], 'android.intent.action.SENDTO');
-      expect(call.arguments['data'], 'mailto:');
-      expect(call.arguments['extra'], {
-        'android.intent.extra.EMAIL': ['mobilesupport@instructure.com'],
-        'android.intent.extra.SUBJECT': l10n.featureRequestSubject,
-        'android.intent.extra.TEXT': emailBody,
-      });
-
-      completer.complete(); // Finish the completer so the test can finish
-      return null;
-    });
-
     await tester.tap(find.text('Request a Feature'));
     await tester.pumpAndSettle();
 
-    await completer.future; // Wait for the completer to finish the test
+    verify(intentVeneer.launchEmailWithBody(l10n.featureRequestSubject, emailBody)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping legal shows legal screen', (tester) async {
@@ -181,20 +164,7 @@ void main() {
     var text = 'Telephone';
 
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(url: telUri, text: text)]));
-
-    // Get the platform channels going
-    await setupPlatformChannels();
-
-    final completer = Completer();
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
-      expect(call.method, 'startActivity');
-      expect(call.arguments['action'], 'android.intent.action.DIAL');
-      expect(call.arguments['data'], Uri.parse(telUri).toString());
-
-      completer.complete(); // Finish the completer so the test can finish
-      return null;
-    });
+        .thenAnswer((_) => Future.value([_createHelpLink(url: telUri, text: text)]));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -202,7 +172,7 @@ void main() {
     await tester.tap(find.text(text));
     await tester.pumpAndSettle();
 
-    await completer.future;
+    verify(intentVeneer.launchPhone(telUri)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping canvas chat support launches mobile browser intent', (tester) async {
@@ -210,7 +180,7 @@ void main() {
     var text = 'Chat';
 
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
+        .thenAnswer((_) => Future.value([_createHelpLink(url: url, text: text)]));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -226,20 +196,7 @@ void main() {
     var text = 'Mailto';
 
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(url: mailto, text: text)]));
-
-    // Get the platform channels going
-    await setupPlatformChannels();
-
-    final completer = Completer();
-    await MethodChannel('intent').setMockMethodCallHandler((MethodCall call) async {
-      expect(call.method, 'startActivity');
-      expect(call.arguments['action'], 'android.intent.action.SENDTO');
-      expect(call.arguments['data'], Uri.parse(mailto).toString());
-
-      completer.complete(); // Finish the completer so the test can finish
-      return null;
-    });
+        .thenAnswer((_) => Future.value([_createHelpLink(url: mailto, text: text)]));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -247,14 +204,14 @@ void main() {
     await tester.tap(find.text(text));
     await tester.pumpAndSettle();
 
-    await completer.future;
+    verify(intentVeneer.launchEmail(mailto)).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping an unhandled link launches', (tester) async {
     var url = 'https://www.instructure.com';
     var text = 'Some link';
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value([createHelpLink(url: url, text: text)]));
+        .thenAnswer((_) => Future.value([_createHelpLink(url: url, text: text)]));
 
     await tester.pumpWidget(TestApp(HelpScreen(), highContrast: true));
     await tester.pumpAndSettle();
@@ -266,11 +223,7 @@ void main() {
   });
 }
 
-HelpLinks createHelpLinks({bool customLinks = false, bool defaultLinks = false}) => HelpLinks((b) => b
-  ..customHelpLinks = customLinks ? BuiltList.from(<HelpLink>[createHelpLink()]).toBuilder() : []
-  ..defaultHelpLinks = defaultLinks ? BuiltList.from(<HelpLink>[createHelpLink()]).toBuilder() : []);
-
-HelpLink createHelpLink({String id, String text, String url}) => HelpLink((b) => b
+HelpLink _createHelpLink({String id, String text, String url}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
   ..availableTo = BuiltList.of(<AvailableTo>[]).toBuilder()

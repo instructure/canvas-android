@@ -41,6 +41,7 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   AppLocalizations l10n = AppLocalizations();
@@ -49,8 +50,8 @@ void main() {
     setupTestLocator((locator) {
       locator.registerFactory<CoursesInteractor>(() => mockInteractor);
       locator.registerFactory<CourseDetailsInteractor>(() => _MockCourseDetailsInteractor());
-      locator.registerFactory<AssignmentApi>(() => _MockAssignmentApi());
-      locator.registerFactory<CourseApi>(() => _MockCourseApi());
+      locator.registerFactory<AssignmentApi>(() => MockAssignmentApi());
+      locator.registerFactory<CourseApi>(() => MockCourseApi());
       locator.registerFactory<QuickNav>(() => QuickNav());
       locator.registerLazySingleton<Analytics>(() => Analytics());
 
@@ -192,65 +193,6 @@ void main() {
       final gradeWidget = find.text('90%');
       expect(gradeWidget, findsNWidgets(courses.length));
     });
-
-    testWidgetsWithAccessibilityChecks('only shows courses for selected user', (tester) async {
-      var numCourses1 = 3;
-      var numCourses2 = 1;
-      var student1 = _mockStudent('1');
-      var student2 = _mockStudent('2');
-      var courses1 = generateCoursesForStudent(student1.id, numberOfCourses: numCourses1);
-      var courses2 = generateCoursesForStudent(student2.id, numberOfCourses: numCourses2);
-
-      SelectedStudentNotifier notifier = SelectedStudentNotifier();
-      _setupLocator(_MockedCoursesInteractor(courses: courses1..addAll(courses2)), notifier: notifier);
-
-      await tester.pumpWidget(_testableMaterialWidget(notifier: notifier));
-      await tester.pumpAndSettle();
-
-      // First student will be selected, verify that we show their courses
-      final listTileWidget = find.byType(ListTile);
-      expect(listTileWidget, findsNWidgets(numCourses1));
-
-      // Select second student
-      notifier.update(student2);
-      await tester.pump();
-      await tester.pumpAndSettle();
-
-      // Check for the courses of the second student
-      expect(listTileWidget, findsNWidgets(numCourses2));
-    });
-
-    testWidgetsWithAccessibilityChecks('updates courses when selected user changes', (tester) async {
-      var numCourses1 = 3;
-      var numCourses2 = 1;
-      var student1 = _mockStudent('1');
-      var student2 = _mockStudent('2');
-      var courses1 = generateCoursesForStudent(student1.id, numberOfCourses: numCourses1);
-      var courses2 = generateCoursesForStudent(student2.id, numberOfCourses: numCourses2);
-
-      SelectedStudentNotifier notifier = SelectedStudentNotifier();
-      var interactor = _MockCoursesInteractor();
-      when(interactor.getCourses(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => Future.value([...courses1, ...courses2]));
-
-      _setupLocator(interactor, notifier: notifier);
-
-      await tester.pumpWidget(_testableMaterialWidget(notifier: notifier));
-      await tester.pumpAndSettle();
-
-      // First student will be selected, verify that we show their courses
-      expect(find.byType(ListTile), findsNWidgets(numCourses1));
-
-      // Select second student
-      notifier.update(student2);
-      await tester.pumpAndSettle();
-
-      // Check for the courses of the second student
-      expect(find.byType(ListTile), findsNWidgets(numCourses2));
-
-      // Verify that we called getCourses twice, once on initial load and again when we switched students
-      verify(interactor.getCourses(isRefresh: true)).called(2);
-    });
   });
 
   group('Interaction', () {
@@ -313,19 +255,13 @@ class _MockedCoursesInteractor extends CoursesInteractor {
   _MockedCoursesInteractor({this.courses});
 
   @override
-  Future<List<Course>> getCourses({bool isRefresh = false}) async {
+  Future<List<Course>> getCourses({bool isRefresh = false, String studentId = null}) async {
     if (error) throw '';
     return courses ?? [_mockCourse('1')];
   }
 }
 
-class _MockCoursesInteractor extends Mock implements CoursesInteractor {}
-
 class _MockCourseDetailsInteractor extends CourseDetailsInteractor {}
-
-class _MockAssignmentApi extends Mock implements AssignmentApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}
 
 class _MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
 

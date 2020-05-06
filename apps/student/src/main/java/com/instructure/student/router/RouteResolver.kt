@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
+import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.files.search.FileSearchFragment
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
@@ -115,6 +116,7 @@ object RouteResolver {
             cls.isA<PickerSubmissionUploadFragment>() -> PickerSubmissionUploadFragment.newInstance(route)
             cls.isA<UploadStatusSubmissionFragment>() -> UploadStatusSubmissionFragment.newInstance(route)
             cls.isA<AnnotationCommentListFragment>() -> AnnotationCommentListFragment.newInstance(route)
+            cls.isA<NothingToSeeHereFragment>() -> NothingToSeeHereFragment.newInstance()
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

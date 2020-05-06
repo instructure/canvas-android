@@ -20,12 +20,6 @@ import 'package:flutter_parent/utils/service_locator.dart';
 class CalendarFilterListInteractor {
   Future<List<Course>> getCoursesForSelectedStudent({bool isRefresh = false}) async {
     var courses = await locator<CourseApi>().getObserveeCourses(forceRefresh: isRefresh);
-    return courses.where(_enrollmentFilter).toList();
-  }
-
-  /// Filters enrollments by those associated with the currently selected user
-  bool _enrollmentFilter(Course course) {
-    String _studentId = ApiPrefs.getCurrentStudent().id;
-    return course.enrollments?.any((enrollment) => enrollment.userId == _studentId) ?? false;
+    return courses.where((course) => course.isValidForCurrentStudent(ApiPrefs.getCurrentStudent().id)).toList();
   }
 }

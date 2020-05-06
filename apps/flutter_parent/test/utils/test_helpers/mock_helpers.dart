@@ -23,6 +23,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
@@ -40,6 +41,7 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
+import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
@@ -59,9 +61,13 @@ MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null
 
 class MockAnalytics extends Mock implements Analytics {}
 
+class MockAndroidIntentVeneer extends Mock implements AndroidIntentVeneer {}
+
 class MockAlertsApi extends Mock implements AlertsApi {}
 
 class MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
+
+class MockAssignmentApi extends Mock implements AssignmentApi {}
 
 class MockAuthApi extends Mock implements AuthApi {}
 

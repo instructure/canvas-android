@@ -93,11 +93,11 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/items/:${RouterParams.MODULE_ITEM_ID}"), ModuleListFragment::class.java)) // Just route to modules list. API does not have a way to fetch a module item without knowing the module id (even though web canvas can do it)
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/modules/:${RouterParams.MODULE_ID}"), ModuleListFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, Arrays.asList(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, Arrays.asList(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, Arrays.asList(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, Arrays.asList(":${RouterParams.MODULE_ITEM_ID}")))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, Arrays.asList(":${RouterParams.MODULE_ITEM_ID}"))) // TODO TEST
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/pages/:${RouterParams.PAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/quizzes/:${RouterParams.QUIZ_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/discussion_topics/:${RouterParams.MESSAGE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}")))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), ModuleListFragment::class.java, CourseModuleProgressionFragment::class.java, listOf(":${RouterParams.MODULE_ITEM_ID}"))) // TODO TEST
         // endregion
 
         // Notifications
@@ -218,6 +218,14 @@ object RouteMatcher : BaseRouteMatcher() {
         //One or two classes? (F, or M/D)
 
         val route = getInternalRoute(url, domain)
+
+        // Prevent routing to unsupported features while in student view
+        if (ApiPrefs.isStudentView &&
+            (route?.primaryClass == InboxFragment::class.java ||
+                    route?.tabId == Tab.CONFERENCES_ID || route?.tabId == Tab.COLLABORATIONS_ID)) {
+            route.primaryClass = NothingToSeeHereFragment::class.java
+        }
+
         extras?.let { route?.arguments?.putAll(it) }
 
         // The Group API will not load an individual user's details, so we route to the List fragment by default
@@ -235,7 +243,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
-                //No route, no problem
+                // No route, no problem
                 handleWebViewUrl(context, route.uri.toString())
             }
         } else if (route.routeContext == RouteContext.FILE || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true && route.queryParamsHash.containsKey(RouterParams.PREVIEW)) {
