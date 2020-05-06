@@ -38,6 +38,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
@@ -152,6 +153,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(hamburgerButtonMatcher).click()
         onViewWithId(R.id.navigationDrawerItem_logout).scrollTo().click()
         onViewWithText(android.R.string.yes).click()
+        // It can potentially take a long time for the sign-out to take effect, especially on
+        // slow FTL devices.  So let's pause for a bit until we see the canvas logo.
+        waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(matches(isDisplayed()))
+
     }
 
     fun pressChangeUser() {

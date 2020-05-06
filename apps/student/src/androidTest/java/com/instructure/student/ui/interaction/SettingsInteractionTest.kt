@@ -26,6 +26,9 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -48,6 +51,8 @@ class SettingsInteractionTest : StudentTest() {
         // If we try to read this later, it may be null, possibly because we will have navigated
         // away from our initial activity.
         activity = activityRule.activity
+
+
     }
 
     // Should open a dialog and send a question for the selected course
@@ -244,15 +249,31 @@ class SettingsInteractionTest : StudentTest() {
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testPairObserver_refreshCode() {
 
-        setUpAndSignIn()
+        // Let's simulate the QR_PAIR_OBSERVER_ENABLED remote-config flag being on,
+        // remembering our original value.
+        val originalVal = RemoteConfigPrefs.getString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name);
+        RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, "true")
 
-        ApiPrefs.canGeneratePairingCode = true
-        dashboardPage.launchSettingsPage()
-        settingsPage.launchPairObserverPage()
+        try {
+            setUpAndSignIn()
 
-        pairObserverPage.hasCode("1")
-        pairObserverPage.refresh()
-        pairObserverPage.hasCode("2")
+            ApiPrefs.canGeneratePairingCode = true
+            dashboardPage.launchSettingsPage()
+            settingsPage.launchPairObserverPage()
+
+            pairObserverPage.hasCode("1")
+            pairObserverPage.refresh()
+            pairObserverPage.hasCode("2")
+        }
+        finally {
+            // Restore the original remote-config setting
+            if(originalVal == null) {
+                RemoteConfigPrefs.remove(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name);
+            }
+            else {
+                RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, originalVal);
+            }
+        }
     }
 
     // Mock a single student and course, sign in, then navigate to the dashboard.
