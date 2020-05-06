@@ -31,8 +31,8 @@ void setupLocator() {
   locator.registerLazySingleton<PlannerApi>(() => PlannerApi());
 
   // DB helpers
-  locator.registerLazySingleton<Database>(() => DbUtil.instance);
   locator.registerLazySingleton<CalendarFilterDb>(() => CalendarFilterDb());
+  locator.registerLazySingleton<Database>(() => DbUtil.instance);
 
   // Interactors
   locator.registerFactory<CalendarFilterListInteractor>(() => CalendarFilterListInteractor());
