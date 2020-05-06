@@ -118,8 +118,15 @@ AppLocalizations L10n(BuildContext context) => Localizations.of<AppLocalizations
 ///
 class AppLocalizations {
   static Future<AppLocalizations> _load(Locale locale) {
-    final String localeName =
-        (locale.countryCode == null && locale.scriptCode == null) ? locale.languageCode : locale.toString();
+    String localeName;
+    if (locale.countryCode == null && locale.scriptCode == null) {
+      localeName = locale.languageCode;
+    } else if (locale.scriptCode != null) {
+      final countryCode = locale.countryCode == null ? '' : '_${locale.countryCode}';
+      localeName = '${locale.languageCode}${countryCode}_${locale.scriptCode}';
+    } else {
+      localeName = locale.toString();
+    }
 
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
