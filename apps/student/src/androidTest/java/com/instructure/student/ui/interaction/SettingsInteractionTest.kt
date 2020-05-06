@@ -26,6 +26,8 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -243,6 +245,11 @@ class SettingsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testPairObserver_refreshCode() {
+
+        // Let's not run this test if the corresponding remote-config setting is not enabled.
+        if(RemoteConfigUtils.getString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED) != "true") {
+            return
+        }
 
         setUpAndSignIn()
 
