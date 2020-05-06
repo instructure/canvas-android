@@ -147,7 +147,7 @@ class CrashScreen extends StatelessWidget {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text(L10n(context).done),
+            child: Text(L10n(context).done.toUpperCase()),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ],

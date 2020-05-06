@@ -268,7 +268,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
   Future<bool> _onWillPop() async {
     if (_saving) return false;
     if (!_hasUnsavedChanges()) return true;
-    return showDialog(
+    return await showDialog(
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text(L10n(context).unsavedChangesDialogTitle),
@@ -276,13 +276,11 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
             actions: <Widget>[
               new FlatButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: new Text(L10n(context).no),
+                child: new Text(L10n(context).no.toUpperCase()),
               ),
               new FlatButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: new Text(L10n(context).yes),
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text(L10n(context).yes.toUpperCase()),
               ),
             ],
           ),

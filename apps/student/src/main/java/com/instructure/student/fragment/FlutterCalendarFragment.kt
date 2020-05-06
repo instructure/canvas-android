@@ -59,8 +59,16 @@ class FlutterCalendarFragment : FlutterFragment() {
     }
 
     fun handleBackPressed(): Boolean {
+        // Get the current 'shouldPop' value. For now it is expected that 'shouldPop'  will only be true if the
+        // current Flutter route is a CalendarScreen.
         val shouldPop = FlutterComm.shouldPop
+
+        // Perform onBackPressed on the FlutterFragment, which will attempt to pop the current route and update
+        // the 'shouldPop' value for future use.
         onBackPressed()
+
+        // If 'shouldPop' was true it means we just popped a CalendarScreen in Flutter and that we should also
+        // allow this fragment to be popped
         return !shouldPop
     }
 

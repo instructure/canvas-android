@@ -157,10 +157,14 @@ class ToDoDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (!deleting) FlatButton(child: Text(L10n(context).cancel), onPressed: () => Navigator.pop(context)),
               if (!deleting)
                 FlatButton(
-                  child: Text(L10n(context).delete),
+                  child: Text(L10n(context).cancel.toUpperCase()),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              if (!deleting)
+                FlatButton(
+                  child: Text(L10n(context).delete.toUpperCase()),
                   onPressed: () async {
                     updateState(() {
                       deleting = true;
