@@ -18,7 +18,6 @@
 package com.instructure.student.util
 
 import android.os.Build
-import android.util.Log
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
 import com.crashlytics.android.Crashlytics
@@ -47,10 +46,7 @@ import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import io.fabric.sdk.android.Fabric
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
-import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
-import io.flutter.view.FlutterMain
-import kotlin.properties.Delegates
 
 class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
@@ -112,6 +108,8 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
         // Cache the FlutterEngine
         FlutterEngineCache.getInstance().put(FLUTTER_ENGINE_ID, flutterEngine)
     }
+
+    override fun onCanvasTokenRefreshed() = FlutterComm.sendUpdatedLogin()
 
     override fun trackButtonPressed(buttonName: String?, buttonValue: Long?) {
         if (buttonName == null) return

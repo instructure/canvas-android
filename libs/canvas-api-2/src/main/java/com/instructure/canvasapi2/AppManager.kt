@@ -24,10 +24,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.*
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.paperdb.Paper
 import org.greenrobot.eventbus.EventBus
@@ -58,6 +55,14 @@ abstract class AppManager : Application() {
     fun authErrorEvent(event: CanvasAuthError) {
         validateAuthentication()
     }
+
+    @Suppress("unused", "UNUSED_PARAMETER")
+    @Subscribe
+    fun tokenRefreshedEvent(event: CanvasTokenRefreshedEvent) {
+        onCanvasTokenRefreshed()
+    }
+
+    open fun onCanvasTokenRefreshed() = Unit
 
     private fun logTokenAnalytics() {
         val analyticsString = if (ApiPrefs.refreshToken.isNotEmpty()) {
