@@ -32,16 +32,20 @@ data class Group(
         val avatarUrl: String? = null,
         @SerializedName("is_public")
         val isPublic: Boolean = false,
-        @SerializedName("followed_by_user")
-        val isFollowedByUser: Boolean = false,
+        // Pact: We don't use isFollowedByUser in any code, and it does not appear to
+        // be populated by our API calls.  So I'm removing it for now.
+        //@SerializedName("followed_by_user")
+        //val isFollowedByUser: Boolean = false,
         @SerializedName("members_count")
         val membersCount: Int = 0,
         val users: List<User> = emptyList(),
         @SerializedName("join_level")
         val joinLevel: Group.JoinLevel? = Group.JoinLevel.Unknown,
-        @SerializedName("context_type")
-        val contextType: Group.GroupContext? = Group.GroupContext.Other,
-        // At most, ONE of these will be set.
+        // Pact: the context_type wasn't being serialized correctly (it was looking for "course"/"account"
+        // rather than "Course"/"Account"), and it is not used in our code.  So I'm removing it for now.
+        //@SerializedName("context_type")
+        //val contextType: Group.GroupContext? = Group.GroupContext.Other,
+        // At most, ONE of course_id and account_id will be set.
         @SerializedName("course_id")
         val courseId: Long = 0,
         @SerializedName("account_id")
