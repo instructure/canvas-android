@@ -29,17 +29,12 @@ abstract class Login implements Built<Login, LoginBuilder> {
 
   String get domain;
 
-  @nullable
-  String get clientId;
-
-  @nullable
-  String get clientSecret;
-
   String get accessToken;
 
-  String get refreshToken;
-
   User get user;
+
+  @nullable
+  String get masqueradeId;
 
   Login._();
   factory Login([void Function(LoginBuilder) updates]) = _$Login;
@@ -48,6 +43,5 @@ abstract class Login implements Built<Login, LoginBuilder> {
     ..uuid = Uuid().v4()
     ..domain = ''
     ..accessToken = ''
-    ..refreshToken = ''
     ..user = User().toBuilder();
 }

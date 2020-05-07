@@ -27,6 +27,7 @@ class DioConfig {
   final Duration cacheMaxAge;
   final bool forceRefresh;
   final PageSize pageSize;
+  final Map<String, dynamic> extraQueryParams;
 
   DioConfig({
     this.baseUrl = '',
@@ -34,6 +35,7 @@ class DioConfig {
     this.cacheMaxAge = Duration.zero,
     this.forceRefresh = false,
     this.pageSize = PageSize.none,
+    this.extraQueryParams,
   })  : this.baseHeaders = baseHeaders ?? {},
         assert(baseUrl != null),
         assert(cacheMaxAge != null),
@@ -47,6 +49,7 @@ class DioConfig {
     Duration cacheMaxAge,
     bool forceRefresh,
     PageSize pageSize,
+    Map<String, dynamic> extraQueryParams,
   }) {
     return DioConfig(
       baseUrl: baseUrl ?? this.baseUrl,
@@ -54,6 +57,7 @@ class DioConfig {
       cacheMaxAge: cacheMaxAge ?? this.cacheMaxAge,
       forceRefresh: forceRefresh ?? this.forceRefresh,
       pageSize: pageSize ?? this.pageSize,
+      extraQueryParams: extraQueryParams ?? this.extraQueryParams,
     );
   }
 
@@ -66,7 +70,11 @@ class DioConfig {
     var options = BaseOptions(baseUrl: baseUrl, headers: baseHeaders);
 
     // Add per_page query param if requested
-    if (pageSize.size > 0) options.queryParameters = {'per_page': pageSize.size};
+    Map<String, dynamic> extraParams = extraQueryParams ?? {};
+    if (pageSize.size > 0) extraParams['per_page'] = pageSize.size;
+
+    // Set extra query params
+    options.queryParameters = extraParams;
 
     // Add cache configuration to base options
     if (cacheMaxAge != Duration.zero) {
@@ -115,16 +123,20 @@ class DioConfig {
     Map<String, String> extraHeaders,
     PageSize pageSize: PageSize.none,
   }) {
+    String masqueradeId = ApiPrefs.getCurrentLogin().masqueradeId;
+    Map<String, dynamic> extraParams = masqueradeId == null ? null : {'as_user_id': masqueradeId};
     return DioConfig(
-        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
-        baseHeaders: ApiPrefs.getHeaderMap(
-          forceDeviceLanguage: forceDeviceLanguage,
-          token: overrideToken,
-          extraHeaders: extraHeaders,
-        ),
-        cacheMaxAge: const Duration(hours: 1),
-        forceRefresh: forceRefresh,
-        pageSize: pageSize);
+      baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
+      baseHeaders: ApiPrefs.getHeaderMap(
+        forceDeviceLanguage: forceDeviceLanguage,
+        token: overrideToken,
+        extraHeaders: extraHeaders,
+      ),
+      cacheMaxAge: const Duration(hours: 1),
+      forceRefresh: forceRefresh,
+      pageSize: pageSize,
+      extraQueryParams: extraParams,
+    );
   }
 
   /// Creates a [DioConfig] targeted at core/free-for-teacher API usage (i.e. canvas.instructure.com)
@@ -186,11 +198,11 @@ Dio canvasDio({
   PageSize pageSize: PageSize.none,
 }) {
   return DioConfig.canvas(
-          forceRefresh: forceRefresh,
-          forceDeviceLanguage: forceDeviceLanguage,
-          overrideToken: overrideToken,
-          extraHeaders: extraHeaders,
-          pageSize: pageSize,
-          includeApiPath: includeApiPath)
-      .dio;
+    forceRefresh: forceRefresh,
+    forceDeviceLanguage: forceDeviceLanguage,
+    overrideToken: overrideToken,
+    extraHeaders: extraHeaders,
+    pageSize: pageSize,
+    includeApiPath: includeApiPath,
+  ).dio;
 }

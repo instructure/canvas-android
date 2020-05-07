@@ -26,24 +26,14 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
       'accessToken',
       serializers.serialize(object.accessToken,
           specifiedType: const FullType(String)),
-      'refreshToken',
-      serializers.serialize(object.refreshToken,
-          specifiedType: const FullType(String)),
       'user',
       serializers.serialize(object.user, specifiedType: const FullType(User)),
     ];
-    result.add('clientId');
-    if (object.clientId == null) {
+    result.add('masqueradeId');
+    if (object.masqueradeId == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.clientId,
-          specifiedType: const FullType(String)));
-    }
-    result.add('clientSecret');
-    if (object.clientSecret == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.clientSecret,
+      result.add(serializers.serialize(object.masqueradeId,
           specifiedType: const FullType(String)));
     }
     return result;
@@ -69,25 +59,17 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
           result.domain = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'clientId':
-          result.clientId = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'clientSecret':
-          result.clientSecret = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
         case 'accessToken':
           result.accessToken = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
-          break;
-        case 'refreshToken':
-          result.refreshToken = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
         case 'user':
           result.user.replace(serializers.deserialize(value,
               specifiedType: const FullType(User)) as User);
+          break;
+        case 'masqueradeId':
+          result.masqueradeId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
           break;
       }
     }
@@ -102,27 +84,17 @@ class _$Login extends Login {
   @override
   final String domain;
   @override
-  final String clientId;
-  @override
-  final String clientSecret;
-  @override
   final String accessToken;
   @override
-  final String refreshToken;
-  @override
   final User user;
+  @override
+  final String masqueradeId;
 
   factory _$Login([void Function(LoginBuilder) updates]) =>
       (new LoginBuilder()..update(updates)).build();
 
   _$Login._(
-      {this.uuid,
-      this.domain,
-      this.clientId,
-      this.clientSecret,
-      this.accessToken,
-      this.refreshToken,
-      this.user})
+      {this.uuid, this.domain, this.accessToken, this.user, this.masqueradeId})
       : super._() {
     if (uuid == null) {
       throw new BuiltValueNullFieldError('Login', 'uuid');
@@ -132,9 +104,6 @@ class _$Login extends Login {
     }
     if (accessToken == null) {
       throw new BuiltValueNullFieldError('Login', 'accessToken');
-    }
-    if (refreshToken == null) {
-      throw new BuiltValueNullFieldError('Login', 'refreshToken');
     }
     if (user == null) {
       throw new BuiltValueNullFieldError('Login', 'user');
@@ -154,25 +123,19 @@ class _$Login extends Login {
     return other is Login &&
         uuid == other.uuid &&
         domain == other.domain &&
-        clientId == other.clientId &&
-        clientSecret == other.clientSecret &&
         accessToken == other.accessToken &&
-        refreshToken == other.refreshToken &&
-        user == other.user;
+        user == other.user &&
+        masqueradeId == other.masqueradeId;
   }
 
   @override
   int get hashCode {
     return $jf($jc(
         $jc(
-            $jc(
-                $jc(
-                    $jc($jc($jc(0, uuid.hashCode), domain.hashCode),
-                        clientId.hashCode),
-                    clientSecret.hashCode),
+            $jc($jc($jc(0, uuid.hashCode), domain.hashCode),
                 accessToken.hashCode),
-            refreshToken.hashCode),
-        user.hashCode));
+            user.hashCode),
+        masqueradeId.hashCode));
   }
 
   @override
@@ -180,11 +143,9 @@ class _$Login extends Login {
     return (newBuiltValueToStringHelper('Login')
           ..add('uuid', uuid)
           ..add('domain', domain)
-          ..add('clientId', clientId)
-          ..add('clientSecret', clientSecret)
           ..add('accessToken', accessToken)
-          ..add('refreshToken', refreshToken)
-          ..add('user', user))
+          ..add('user', user)
+          ..add('masqueradeId', masqueradeId))
         .toString();
   }
 }
@@ -200,25 +161,17 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
   String get domain => _$this._domain;
   set domain(String domain) => _$this._domain = domain;
 
-  String _clientId;
-  String get clientId => _$this._clientId;
-  set clientId(String clientId) => _$this._clientId = clientId;
-
-  String _clientSecret;
-  String get clientSecret => _$this._clientSecret;
-  set clientSecret(String clientSecret) => _$this._clientSecret = clientSecret;
-
   String _accessToken;
   String get accessToken => _$this._accessToken;
   set accessToken(String accessToken) => _$this._accessToken = accessToken;
 
-  String _refreshToken;
-  String get refreshToken => _$this._refreshToken;
-  set refreshToken(String refreshToken) => _$this._refreshToken = refreshToken;
-
   UserBuilder _user;
   UserBuilder get user => _$this._user ??= new UserBuilder();
   set user(UserBuilder user) => _$this._user = user;
+
+  String _masqueradeId;
+  String get masqueradeId => _$this._masqueradeId;
+  set masqueradeId(String masqueradeId) => _$this._masqueradeId = masqueradeId;
 
   LoginBuilder() {
     Login._initializeBuilder(this);
@@ -228,11 +181,9 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
     if (_$v != null) {
       _uuid = _$v.uuid;
       _domain = _$v.domain;
-      _clientId = _$v.clientId;
-      _clientSecret = _$v.clientSecret;
       _accessToken = _$v.accessToken;
-      _refreshToken = _$v.refreshToken;
       _user = _$v.user?.toBuilder();
+      _masqueradeId = _$v.masqueradeId;
       _$v = null;
     }
     return this;
@@ -259,11 +210,9 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
           new _$Login._(
               uuid: uuid,
               domain: domain,
-              clientId: clientId,
-              clientSecret: clientSecret,
               accessToken: accessToken,
-              refreshToken: refreshToken,
-              user: user.build());
+              user: user.build(),
+              masqueradeId: masqueradeId);
     } catch (_) {
       String _$failedField;
       try {
