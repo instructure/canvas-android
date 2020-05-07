@@ -81,12 +81,6 @@ class ApiPrefs {
 
   static String getAuthToken() => getCurrentLogin()?.accessToken;
 
-  static String getRefreshToken() => getCurrentLogin()?.refreshToken;
-
-  static String getClientId() => getCurrentLogin()?.clientId;
-
-  static String getClientSecret() => getCurrentLogin()?.clientSecret;
-
   static Map<String, String> getHeaderMap({
     bool forceDeviceLanguage = false,
     String token,
