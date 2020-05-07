@@ -20,7 +20,8 @@ import org.hamcrest.Matchers.allOf
 
 class CalendarPage: BasePage(R.id.calendarPage) {
 
-    private val toolbar by OnViewWithId(R.id.toolbar)
+    // TODO: Get this working with embedded Flutter
+    /*private val toolbar by OnViewWithId(R.id.toolbar)
     private val listview by OnViewWithId(R.id.listview, autoAssert = false)
 
     fun selectDesiredCalendarsAndDismiss(vararg courseNames: String) {
@@ -57,7 +58,7 @@ class CalendarPage: BasePage(R.id.calendarPage) {
         // Shouldn't be necessary given that the line above passed.  Also, this line can
         // fail (after the line above passes!) for no apparent reason.
         // Espresso.onView(matcher).assertDisplayed()
-    }
+    }*/
 
 //    fun waitForRender() {
 //        toolbar.assertDisplayed()

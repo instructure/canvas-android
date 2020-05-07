@@ -49,7 +49,10 @@ class CanvasAuthenticator : Authenticator {
         val refreshTokenResponse =  OAuthManager.refreshToken()
 
         refreshTokenResponse.onSuccess {
-            refreshTokenResponse.dataOrNull?.accessToken?.let { ApiPrefs.accessToken = it }
+            refreshTokenResponse.dataOrNull?.accessToken?.let {
+                ApiPrefs.accessToken = it
+                EventBus.getDefault().post(CanvasTokenRefreshedEvent())
+            }
 
             return response.request().newBuilder()
                 .header(AUTH_HEADER, OAuthAPI.authBearer(ApiPrefs.accessToken))
@@ -75,3 +78,6 @@ class CanvasAuthenticator : Authenticator {
         Analytics.logEvent(eventString, bundle)
     }
 }
+
+/** An event sent via the event bus whenever the user's Canvas authentication token has been refreshed */
+class CanvasTokenRefreshedEvent
