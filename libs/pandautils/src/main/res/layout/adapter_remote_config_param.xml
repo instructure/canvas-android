@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:minHeight="48dp"
+        android:inputType="textNoSuggestions"
         android:id="@+id/param_value"/>
 
 </LinearLayout>
