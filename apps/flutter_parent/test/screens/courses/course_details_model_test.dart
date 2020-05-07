@@ -270,8 +270,9 @@ void main() {
       final itemA = ScheduleItem((s) => s..title = 'A');
       final itemB = ScheduleItem((s) => s..title = 'B');
 
-      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, any)).thenAnswer((_) async => [itemA]);
-      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, any)).thenAnswer((_) async => [itemB]);
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeCalendar, any)).thenAnswer((_) async => [itemA]);
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeAssignment, any))
+          .thenAnswer((_) async => [itemB]);
 
       // Use the model
       final model = CourseDetailsModel.withCourse(_student, _course);
@@ -280,8 +281,8 @@ void main() {
       final actual = await model.loadSummary(refresh: true);
 
       expect(actual, expected);
-      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, true));
-      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, true));
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeCalendar, true));
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeAssignment, true));
     });
   });
 

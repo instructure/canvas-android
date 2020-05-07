@@ -253,8 +253,12 @@ class AppLocalizations {
         desc: 'Message displayed when calendar events could not be loaded for the current student',
       );
 
-  String get calendarTapToFavoriteDesc => Intl.message('Tap to favorite the courses you want to see on the Calendar.',
-      desc: 'Description text on calendar filter screen.');
+  String get calendarTapToFavoriteDesc =>
+      Intl.message('Tap to favorite the courses you want to see on the Calendar. Select up to 10.',
+          desc: 'Description text on calendar filter screen.');
+
+  String get tooManyCalendarsError => Intl.message('You may only choose 10 calendars to display',
+      desc: 'Error text when trying to select more than 10 calendars');
 
   String get plannerNote => Intl.message('Planner Note', desc: 'Label used for notes in the planner');
 

@@ -148,7 +148,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeCalendar
+      ..type = ScheduleItem.apiTypeCalendar
       ..title = 'Calendar Event'
       ..startAt = DateTime.now());
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
@@ -165,7 +165,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Normal Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -188,7 +188,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Discussion Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -211,7 +211,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Quiz Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -234,7 +234,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Locked Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -258,7 +258,7 @@ void main() {
     final model = _MockModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Undated Assignment'
       ..startAt = null);
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
@@ -273,7 +273,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Tapping assignment item loads assignment details', (tester) async {
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Normal Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -313,7 +313,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Tapping calendar event item loads event details', (tester) async {
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeCalendar
+      ..type = ScheduleItem.apiTypeCalendar
       ..title = 'Normal Event'
       ..startAt = DateTime.now());
 

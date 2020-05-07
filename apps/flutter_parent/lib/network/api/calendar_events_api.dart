@@ -13,14 +13,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/models/schedule_item.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
 class CalendarEventsApi {
   Future<List<ScheduleItem>> getAllCalendarEvents({
     bool allEvents = false,
-    String type = ScheduleItem.typeCalendar,
+    String type = ScheduleItem.apiTypeCalendar,
     String startDate = null,
     String endDate = null,
     List<String> contexts = const [],
@@ -49,8 +48,6 @@ class CalendarEventsApi {
     bool forceRefresh = false,
   }) async {
     var dio = canvasDio(forceRefresh: forceRefresh, pageSize: PageSize.canvasMax);
-
-    print('Token: ${ApiPrefs.getCurrentLogin().accessToken}');
 
     return fetchList(
         dio.get('users/$userId/calendar_events',

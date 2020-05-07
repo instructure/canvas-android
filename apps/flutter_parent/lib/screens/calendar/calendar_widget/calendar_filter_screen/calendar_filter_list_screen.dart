@@ -36,6 +36,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   Future<List<Course>> _coursesFuture;
   Set<String> selectedContextIds = {}; // Public, to allow for testing
   final GlobalKey<RefreshIndicatorState> _refreshCoursesKey = new GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool selectAllIfEmpty = true;
   int courseLength = -1;
 
@@ -49,12 +50,14 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // An empty list is interpreted as all courses selected
-        Navigator.pop(context, courseLength == selectedContextIds.length ? <String>{} : selectedContextIds);
+        // An empty list is interpreted as all courses selected TODO - change back for planner api
+        //Navigator.pop(context, courseLength == selectedContextIds.length ? <String>{} : selectedContextIds);
+        Navigator.pop(context, selectedContextIds);
         return false;
       },
       child: DefaultParentTheme(
         builder: (context) => Scaffold(
+          key: _scaffoldKey,
           appBar: AppBar(
             title: Text(L10n(context).calendars),
             bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
@@ -93,7 +96,8 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
               // Note: As unlikely as it is, if the user deselects all contexts then all contexts will be returned in the calendar
 
               // List will be empty when all courses are selected (on first load)
-              selectedContextIds.addAll(_courses.map((c) => 'course_${c.id}').toList());
+              final tempList = _courses.map((c) => 'course_${c.id}').toList();
+              selectedContextIds.addAll(tempList.length > 10 ? tempList.sublist(0, 10) : tempList);
               selectAllIfEmpty = false;
             }
             _body = (_courses == null || _courses.isEmpty)
@@ -104,7 +108,10 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                   )
                 : _courseList(_courses);
           } else {
-            selectedContextIds.addAll(widget._selectedCourses);
+            // This is a user with a filter from before the api migration, make sure we trim their list down.
+            selectedContextIds.addAll(widget._selectedCourses.length > 10
+                ? widget._selectedCourses.toList().sublist(0, 10)
+                : widget._selectedCourses);
             if (selectedContextIds.isNotEmpty) {
               // The list isn't empty so we don't want to continue checking if the list is empty above, and
               // select everything again (though if the user doesn't select anything and they go back, everything will be
@@ -137,9 +144,18 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                 value: selectedContextIds.contains(c.contextFilterId()),
                 onChanged: (bool newValue) {
                   setState(() {
-                    newValue
-                        ? selectedContextIds.add(c.contextFilterId())
-                        : selectedContextIds.remove(c.contextFilterId());
+                    if (newValue) {
+                      if (selectedContextIds.length <= 9) {
+                        selectedContextIds.add(c.contextFilterId());
+                      } else {
+                        // We are full, show an error and do nothing
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState
+                            .showSnackBar(SnackBar(content: Text(L10n(context).tooManyCalendarsError)));
+                      }
+                    } else {
+                      selectedContextIds.remove(c.contextFilterId());
+                    }
                   });
                 }),
           ))

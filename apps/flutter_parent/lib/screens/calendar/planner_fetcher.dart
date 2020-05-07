@@ -18,6 +18,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/calendar_filter.dart';
+import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
@@ -26,9 +27,12 @@ import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class PlannerFetcher extends ChangeNotifier {
-  final Map<String, AsyncSnapshot<List<ScheduleItem>>> daySnapshots = {};
+  final Map<String, AsyncSnapshot<List<PlannerItem>>> daySnapshots = {};
 
   final Map<String, bool> failedMonths = {};
+
+  // Maps observee ids to a map of course ids to names
+  final Map<String, Map<String, String>> courseNameMap = {};
 
   final String userDomain;
 
@@ -49,10 +53,18 @@ class PlannerFetcher extends ChangeNotifier {
       userId,
       _observeeId,
     );
-    if (calendarFilter == null) {
+    if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId].isEmpty)) {
       // Fetch them courses and fill the filters
       var courses = await locator<CoursesInteractor>().getCourses(isRefresh: true);
-      Set<String> courseSet = Set.from(courses.map((course) => course.contextFilterId()).toList());
+
+      if (courseNameMap[_observeeId] == null) {
+        courseNameMap[_observeeId] = {};
+      }
+      // Add the names to our map so we can fill those in later
+      // We have to handle the case where their filter is from before the api migration, so we trim it down.
+      courses.forEach((course) => courseNameMap[_observeeId][course.id] = course.name);
+      var tempCourseList = courses.map((course) => course.contextFilterId()).toList();
+      Set<String> courseSet = Set.from(tempCourseList.length > 10 ? tempCourseList.sublist(0, 10) : tempCourseList);
 
       CalendarFilter filter = CalendarFilter((b) => b
         ..userDomain = userDomain
@@ -67,9 +79,9 @@ class PlannerFetcher extends ChangeNotifier {
     }
   }
 
-  AsyncSnapshot<List<ScheduleItem>> getSnapshotForDate(DateTime date) {
+  AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) {
     final dayKey = dayKeyForDate(date);
-    AsyncSnapshot<List<ScheduleItem>> daySnapshot = daySnapshots[dayKey];
+    AsyncSnapshot<List<PlannerItem>> daySnapshot = daySnapshots[dayKey];
     if (daySnapshot != null) return daySnapshot;
     _beginMonthFetch(date);
     return daySnapshots[dayKey];
@@ -86,36 +98,17 @@ class PlannerFetcher extends ChangeNotifier {
     } else {
       // Just retry the single day
       if (hasError) {
-        daySnapshots[dayKey] = AsyncSnapshot<List<ScheduleItem>>.nothing().inState(ConnectionState.waiting);
+        daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.nothing().inState(ConnectionState.waiting);
       } else {
         daySnapshots[dayKey] = daySnapshots[dayKey].inState(ConnectionState.waiting);
       }
       notifyListeners();
       try {
         final contexts = await getContexts();
-        List<List<ScheduleItem>> tempItems = await Future.wait([
-          locator<CalendarEventsApi>().getUserCalendarItems(
-            _observeeId,
-            date.withStartOfDay(),
-            date.withEndOfDay(),
-            ScheduleItem.typeAssignment,
-            contexts: contexts,
-            forceRefresh: true,
-          ),
-          locator<CalendarEventsApi>().getUserCalendarItems(
-            _observeeId,
-            date.withStartOfDay(),
-            date.withEndOfDay(),
-            ScheduleItem.typeCalendar,
-            contexts: contexts,
-            forceRefresh: true,
-          ),
-        ]);
-
-        List<ScheduleItem> items = tempItems[0] + tempItems[1];
-        daySnapshots[dayKey] = AsyncSnapshot<List<ScheduleItem>>.withData(ConnectionState.done, items);
+        List<PlannerItem> items = await _fetchPlannerItems(date.withStartOfDay(), date.withEndOfDay(), contexts, true);
+        daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, items);
       } catch (e) {
-        daySnapshots[dayKey] = AsyncSnapshot<List<ScheduleItem>>.withError(ConnectionState.done, e);
+        daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withError(ConnectionState.done, e);
       } finally {
         notifyListeners();
       }
@@ -126,7 +119,7 @@ class PlannerFetcher extends ChangeNotifier {
     final lastDayOfMonth = date.withEndOfMonth().day;
     for (int i = 1; i <= lastDayOfMonth; i++) {
       var dayKey = dayKeyForYearMonthDay(date.year, date.month, i);
-      daySnapshots[dayKey] = AsyncSnapshot<List<ScheduleItem>>.nothing().inState(ConnectionState.waiting);
+      daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.nothing().inState(ConnectionState.waiting);
     }
     _fetchMonth(date, refresh);
   }
@@ -134,46 +127,53 @@ class PlannerFetcher extends ChangeNotifier {
   _fetchMonth(DateTime date, bool refresh) async {
     try {
       final contexts = await getContexts();
-      List<List<ScheduleItem>> tempItems = await Future.wait([
-        locator<CalendarEventsApi>().getUserCalendarItems(
-          _observeeId,
-          date.withStartOfMonth(),
-          date.withEndOfMonth(),
-          ScheduleItem.typeAssignment,
-          contexts: contexts,
-          forceRefresh: true,
-        ),
-        locator<CalendarEventsApi>().getUserCalendarItems(
-          _observeeId,
-          date.withStartOfMonth(),
-          date.withEndOfMonth(),
-          ScheduleItem.typeCalendar,
-          contexts: contexts,
-          forceRefresh: true,
-        ),
-      ]);
-
-      List<ScheduleItem> items = tempItems[0] + tempItems[1];
+      List<PlannerItem> items =
+          await _fetchPlannerItems(date.withStartOfMonth(), date.withEndOfMonth(), contexts, refresh);
       _completeMonth(items, date);
     } catch (e) {
       _failMonth(e, date);
     }
   }
 
-  _completeMonth(List<ScheduleItem> items, DateTime date) {
+  Future<List<PlannerItem>> _fetchPlannerItems(
+      DateTime startDate, DateTime endDate, Set<String> contexts, bool refresh) async {
+    List<List<ScheduleItem>> tempItems = await Future.wait([
+      locator<CalendarEventsApi>().getUserCalendarItems(
+        _observeeId,
+        startDate,
+        endDate,
+        ScheduleItem.apiTypeAssignment,
+        contexts: contexts,
+        forceRefresh: refresh,
+      ),
+      locator<CalendarEventsApi>().getUserCalendarItems(
+        _observeeId,
+        startDate,
+        endDate,
+        ScheduleItem.apiTypeCalendar,
+        contexts: contexts,
+        forceRefresh: refresh,
+      ),
+    ]);
+
+    List<ScheduleItem> scheduleItems = tempItems[0] + tempItems[1];
+    return scheduleItems.map((item) => item.toPlannerItem(courseNameMap[_observeeId][item.getContextId()])).toList();
+  }
+
+  _completeMonth(List<PlannerItem> items, DateTime date) {
     failedMonths[monthKeyForDate(date)] = false;
-    final Map<String, List<ScheduleItem>> dayItems = {};
+    final Map<String, List<PlannerItem>> dayItems = {};
     final lastDayOfMonth = date.withEndOfMonth().day;
     for (int i = 1; i <= lastDayOfMonth; i++) {
       dayItems[dayKeyForYearMonthDay(date.year, date.month, i)] = [];
     }
     items.forEach((item) {
-      String dayKey = dayKeyForDate(item.startAt.toLocal());
+      String dayKey = dayKeyForDate(item.plannableDate.toLocal());
       dayItems[dayKey].add(item);
     });
 
     dayItems.forEach((dayKey, items) {
-      daySnapshots[dayKey] = AsyncSnapshot<List<ScheduleItem>>.withData(ConnectionState.done, items);
+      daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, items);
     });
     notifyListeners();
   }
