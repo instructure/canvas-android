@@ -59,7 +59,7 @@ class TestApp extends StatefulWidget {
   ///     tester,
   ///     (context) => ErrorReportDialog.asDialog(context),
   ///     locale: Locale('ar'),
-  ///     config: PlatformConfig(initWebView: true, initLoggedInUser: login, initRemoteConfig: mockRemoteConfig),
+  ///     config: PlatformConfig(initWebView: true, initLoggedInUser: login),
   ///     configBlock: () async {
   ///       await ApiPrefs.setCurrentStudent(student);
   ///     }

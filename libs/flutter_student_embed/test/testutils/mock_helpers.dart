@@ -14,9 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Create a mocked RemoteConfig object.
-// If valueSettings != null, then (1) a mocked settings fetch will occur, and (2) the retrieved
-// settings will correspond the specified values.
 import 'dart:io';
 
 import 'package:dio/dio.dart';
