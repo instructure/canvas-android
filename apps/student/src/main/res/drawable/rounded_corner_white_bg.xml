@@ -24,7 +24,7 @@
         android:color="@color/white" >
     </solid>
     <stroke
-        android:color="@color/caldroid_lighter_gray"
+        android:color="@color/divider"
         android:width="2dp"/>
 
     <padding

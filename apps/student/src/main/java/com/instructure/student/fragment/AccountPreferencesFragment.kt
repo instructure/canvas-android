@@ -33,7 +33,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.fragment_account_preferences.*
 import kotlinx.android.synthetic.main.settings_spinner.view.*
 import java.util.*
@@ -72,7 +71,6 @@ class AccountPreferencesFragment : ParentFragment() {
         toolbar.title = title()
         toolbar.setupAsBackButton(this)
         ViewStyler.themeToolbar(requireActivity(), toolbar, Color.WHITE, Color.BLACK, false)
-        ViewStyler.themeSwitch(requireContext(), mondayToggle, ThemePrefs.brandColor)
     }
 
     private fun setupViews() {
@@ -86,9 +84,6 @@ class AccountPreferencesFragment : ParentFragment() {
             }
             languageSpinner.adapter = SettingsSpinnerAdapter(languages.map { it.second }.toTypedArray())
         }
-
-        mondayToggle.isChecked = StudentPrefs.weekStartsOnMonday
-        mondayToggle.setOnCheckedChangeListener { _, isChecked -> StudentPrefs.weekStartsOnMonday = isChecked }
     }
 
     private inner class SettingsSpinnerAdapter<String>(val items: Array<String>) : BaseAdapter() {

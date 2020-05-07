@@ -171,7 +171,7 @@ public class ModuleUtility {
                 topicId = getIdFromUrl(url, index);
             }
         }
-        return DiscussionDetailsFragment.makeRoute(course, topicId);
+        return DiscussionDetailsFragment.makeRoute(course, topicId, null);
     }
 
     ///////////////////////////////////////////////////////////////////////////

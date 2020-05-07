@@ -237,6 +237,7 @@ class ModuleUtilityTest : TestCase() {
         val expectedBundle = Bundle()
         expectedBundle.putParcelable(Const.CANVAS_CONTEXT, course)
         expectedBundle.putLong(DiscussionDetailsFragment.DISCUSSION_TOPIC_HEADER_ID, 123456789)
+        expectedBundle.putString(DiscussionDetailsFragment.DISCUSSION_TITLE, null)
         val parentFragment = callGetFragment(moduleItem, course, null)
         TestCase.assertNotNull(parentFragment)
         TestCase.assertEquals(DiscussionDetailsFragment::class.java, parentFragment!!.javaClass)
