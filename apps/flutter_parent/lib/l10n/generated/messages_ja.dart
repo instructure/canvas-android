@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ja';
 
-  static m0(version) => "バージョン ${version}";
+  static m0(userName) => "あなたは${userName}として機能しています";
 
-  static m1(threshold) => "${threshold} 点を超える課題成績";
+  static m1(version) => "バージョン ${version}";
 
-  static m2(threshold) => "${threshold} 点未満の課題成績";
+  static m2(threshold) => "${threshold} 点を超える課題成績";
 
-  static m3(moduleName) => "この課題はモジュール \"${moduleName}\" によってロックされています。";
+  static m3(threshold) => "${threshold} 点未満の課題成績";
 
-  static m4(studentName, assignmentName) => "Re：${studentName}、課題 - ${assignmentName}";
+  static m4(moduleName) => "この課題はモジュール \"${moduleName}\" によってロックされています。";
 
-  static m5(points) => "${points} 点";
+  static m5(studentName, assignmentName) => "Re：${studentName}、課題 - ${assignmentName}";
 
   static m6(points) => "${points} 点";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName}から他 1 人', other: '${authorName}から他 ${howMany} 人')}";
+  static m7(points) => "${points} 点";
 
-  static m8(authorName, recipientName) => "${authorName}から${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName}から他 1 人', other: '${authorName}から他 ${howMany} 人')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName}から${recipientName}と他 1 人', other: '${authorName} から${recipientName}と他 ${howMany} 人')}";
+  static m9(authorName, recipientName) => "${authorName}から${recipientName}";
 
-  static m10(count) => "${count} 以上";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName}から${recipientName}と他 1 人', other: '${authorName} から${recipientName}と他 ${howMany} 人')}";
 
-  static m11(score, pointsPossible) => "${pointsPossible} 点中 ${score} 点";
+  static m11(count) => "${count} 以上";
 
-  static m12(studentShortName) => "${studentShortName}用";
+  static m12(score, pointsPossible) => "${pointsPossible} 点中 ${score} 点";
 
-  static m13(threshold) => "${threshold} 点を超えるコース成績";
+  static m13(studentShortName) => "${studentShortName}用";
 
-  static m14(threshold) => "${threshold} 点未満のコース成績";
+  static m14(threshold) => "${threshold} 点を超えるコース成績";
 
-  static m15(date, time) => "${date}、${time}";
+  static m15(threshold) => "${threshold} 点未満のコース成績";
 
-  static m16(canvasGuides, canvasSupport) => "アクセスしようとしている学校または学区の名前を検索してみてください (「Smith Private School」または「Smith County Schools」など)。「Smith.instructure.com」などの Canvas ドメインを直接入力することもできます。\n\n教育機関の Canvas アカウントの検索に関する詳細については、${canvasGuides}にアクセスする、${canvasSupport}に問い合わせる、または学校に問い合わせてサポートを受けることができます。";
+  static m16(date, time) => "${date}、${time}";
 
-  static m17(date, time) => "${date}、${time} 期限";
+  static m17(canvasGuides, canvasSupport) => "アクセスしようとしている学校または学区の名前を検索してみてください (「Smith Private School」または「Smith County Schools」など)。「Smith.instructure.com」などの Canvas ドメインを直接入力することもできます。\n\n教育機関の Canvas アカウントの検索に関する詳細については、${canvasGuides}にアクセスする、${canvasSupport}に問い合わせる、または学校に問い合わせてサポートを受けることができます。";
 
-  static m18(studentName, eventTitle) => "Re：${studentName}、イベント - ${eventTitle}";
+  static m18(date, time) => "${date}、${time} 期限";
 
-  static m19(startAt, endAt) => "${startAt} ～ ${endAt}";
+  static m19(userName) => "${userName}として機能することを停止して、ログアウトされます。";
 
-  static m20(grade) => "最終成績：${grade}";
+  static m20(userName) => "${userName}として機能することを停止して、元のアカウントに戻ります。";
 
-  static m21(studentName) => "Re：${studentName}、フロントページ";
+  static m21(studentName, eventTitle) => "Re：${studentName}、イベント - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} ～ ${endAt}";
 
-  static m23(studentName) => "Re：${studentName}、成績";
+  static m23(grade) => "最終成績：${grade}";
 
-  static m24(pointsLost) => "提出遅れペナルティ (-${pointsLost})";
+  static m24(studentName) => "Re：${studentName}、フロントページ";
 
-  static m25(studentName, linkUrl) => "Re：${studentName}さん、${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "${percentage} を超える必要があります";
+  static m26(studentName) => "Re：${studentName}、成績";
 
-  static m27(percentage) => "${percentage} 未満にする必要があります";
+  static m27(pointsLost) => "提出遅れペナルティ (-${pointsLost})";
 
-  static m28(month) => "来月：${month}";
+  static m28(studentName, linkUrl) => "Re：${studentName}さん、${linkUrl}";
 
-  static m29(date) => "${date} から始まる翌週";
+  static m29(percentage) => "${percentage} を超える必要があります";
 
-  static m30(query) => "\"${query}\"に一致する学校が見つかりません";
+  static m30(percentage) => "${percentage} 未満にする必要があります";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: '1 ポイントから', other: '${points} ポイントから')}";
+  static m31(month) => "来月：${month}";
 
-  static m32(count) => "+ ${count}";
+  static m32(date) => "${date} から始まる翌週";
 
-  static m33(points) => "${points} の可能なポイント";
+  static m33(query) => "\"${query}\"に一致する学校が見つかりません";
 
-  static m34(month) => "前月：${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: '1 ポイントから', other: '${points} ポイントから')}";
 
-  static m35(date) => "${date} から始まる前週";
+  static m35(count) => "+ ${count}";
 
-  static m36(month) => "${month} 月";
+  static m36(points) => "${points} の可能なポイント";
 
-  static m37(date, time) => "この課題は ${date} の ${time} に提出され、採点中です";
+  static m37(month) => "前月：${month}";
 
-  static m38(studentName) => "Re：${studentName}、シラバス";
+  static m38(date) => "${date} から始まる前週";
 
-  static m39(count) => "未読 ${count} 件";
+  static m39(month) => "${month} 月";
+
+  static m40(date, time) => "この課題は ${date} の ${time} に提出され、採点中です";
+
+  static m41(studentName) => "Re：${studentName}、シラバス";
+
+  static m42(count) => "未読 ${count} 件";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"機能する\"とは、基本的にパスワードなしでこのユーザーとしてログインすることです。このユーザーであるかのようにアクションを実行することができ、他のユーザーからは、このユーザーがそれらを実行したように見えますが、監査ログには、あなたがこのユーザーの代わりにアクションを実行したことが記録されます。"),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("説明は必須です。"),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("件名は必須です。"),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("ユーザーとして機能する"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("受講生を追加"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("添付ファイルを追加する"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("新しい受講生を追加する"),
@@ -143,13 +151,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("説明"),
     "Device" : MessageLookupByLibrary.simpleMessage("デバイス"),
     "Device model" : MessageLookupByLibrary.simpleMessage("デバイスモデル"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("ドメイン"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("ドメイン："),
     "Done" : MessageLookupByLibrary.simpleMessage("終了"),
     "Download" : MessageLookupByLibrary.simpleMessage("ダウンロード"),
-    "Due" : MessageLookupByLibrary.simpleMessage("締切日"),
+    "Due" : MessageLookupByLibrary.simpleMessage("期限"),
     "EXTREME CRITICAL EMERGENCY!!" : MessageLookupByLibrary.simpleMessage("緊急事態です！"),
     "Email Address" : MessageLookupByLibrary.simpleMessage("E メールアドレス"),
-    "Email:" : MessageLookupByLibrary.simpleMessage("Eメール："),
+    "Email:" : MessageLookupByLibrary.simpleMessage("E メール："),
     "Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired" : MessageLookupByLibrary.simpleMessage("提供されている受講生ペアリングコードを入力してください。ペアリングコードが機能しない場合は、有効期限が切れているかもしれません"),
     "Event" : MessageLookupByLibrary.simpleMessage("イベント"),
     "Excused" : MessageLookupByLibrary.simpleMessage("免除"),
@@ -175,18 +184,23 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("学校のお知らせ"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("学校のお知らせ"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("指示"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("このページでのやり取りは、学校によって制限されています。"),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("休息をとってリラックスし、充電するためにぴったりな日のようです。"),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("このスペースでは、まだ課題が作成されていないようです。"),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("ちょっとした疑問、コメント、アイデア、提案です…"),
     "Late" : MessageLookupByLibrary.simpleMessage("提出遅れ"),
     "Launch External Tool" : MessageLookupByLibrary.simpleMessage("外部ツールを起動する"),
-    "Legal" : MessageLookupByLibrary.simpleMessage("法務"),
+    "Legal" : MessageLookupByLibrary.simpleMessage("法令"),
     "Light Mode" : MessageLookupByLibrary.simpleMessage("ライトモード"),
     "Link Error" : MessageLookupByLibrary.simpleMessage("リンクエラー"),
     "Locale:" : MessageLookupByLibrary.simpleMessage("ロケール："),
     "Location" : MessageLookupByLibrary.simpleMessage("場所"),
     "Locked" : MessageLookupByLibrary.simpleMessage("ロックされています"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("ログアウト"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("ログインフロー：Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("ログインフロー：標準"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("ログインフロー：サイト管理者"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("ログインフロー：モバイル検証を省略する"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("受講生を管理する"),
     "Message" : MessageLookupByLibrary.simpleMessage("メッセージ"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("メッセージの件名"),
@@ -218,7 +232,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Open In Browser" : MessageLookupByLibrary.simpleMessage("ブラウザで開く"),
     "Open with another app" : MessageLookupByLibrary.simpleMessage("別のアプリで開く"),
     "Pairing Code" : MessageLookupByLibrary.simpleMessage("ペアリングコード"),
-    "Preparing…" : MessageLookupByLibrary.simpleMessage("準備中…"),
+    "Preparing…" : MessageLookupByLibrary.simpleMessage("準備しています…"),
     "Previous Logins" : MessageLookupByLibrary.simpleMessage("以前のログイン"),
     "Privacy Policy" : MessageLookupByLibrary.simpleMessage("個人情報保護方針"),
     "Privacy policy, terms of use, open source" : MessageLookupByLibrary.simpleMessage("プライバシーポリシー、利用規約、オープンソース"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("メッセージを送信する"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("このイベントの通知を受ける日付と時間を設定します。"),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("この特定の課題について通知を受ける日付と時間を設定します。"),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("リマインダスイッチを設定する"),
     "Settings" : MessageLookupByLibrary.simpleMessage("設定"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("アプリへの愛を共有しましょう"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("何かが機能していないのですが、必要なことはそれを使わずに実行できます。"),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("ユーザーとしての機能を停止する"),
     "Student" : MessageLookupByLibrary.simpleMessage("受講者"),
     "Subject" : MessageLookupByLibrary.simpleMessage("件名"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("提出済み"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("受講生の予定表のロード中にエラーが発生しました"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("受講生のロード中にエラーが発生しました。"),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("受講生のコースのロード中にエラーが発生しました"),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("このユーザーとして機能しようとしてエラーが発生しました。ドメインとユーザー ID をチェックしてから、再試行してください。"),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("通知する事柄はまだ何もありません。"),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("このアプリは使用を許可されていません。"),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("このコースには、まだ課題または予定表イベントがありません。"),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("サポートされないファイル"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("ファイルをアップロードする"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("カメラを使用する"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("ユーザー ID"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("ユーザー ID："),
     "Version Number" : MessageLookupByLibrary.simpleMessage("バージョン番号"),
     "View error details" : MessageLookupByLibrary.simpleMessage("エラーの詳細を表示"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("何が起こったかはわかりませんが、問題が発生したようです。問題が解決されない場合は、Canvas までお問い合わせください。"),
     "Yes" : MessageLookupByLibrary.simpleMessage("はい"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("どの受講生もオブザーブしていません。"),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("ユーザー ID を入力する必要があります"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("有効なドメインを入力する必要があります"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("…にこの課題に関する通知を受けます。"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("次の予定でこのイベントに関する通知を受けます…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("コードが間違っているか、期限が切れています。"),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("受講生のコースはまだ公開されていない可能性があります"),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("コンテンツは以上です！"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("アラート"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("予定表"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas ガイド"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas ロゴ"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas サポート"),
     "collapse" : MessageLookupByLibrary.simpleMessage("折りたたむ"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("折りたたみ"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("コース"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("取り下げる"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("私の学校または学区はどのように見つければよいですか？"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("学校名または学区を入力してください…"),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("さらに表示する"),
     "expanded" : MessageLookupByLibrary.simpleMessage("拡大"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("学校を探す"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("私"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("マイナス"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("次へ"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("送信"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("未読"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

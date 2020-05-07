@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'sl';
 
-  static m0(version) => "r. ${version}";
+  static m0(userName) => "Nastopate v vlogi ${userName}";
 
-  static m1(threshold) => "Ocena pri nalogi višja od ${threshold}";
+  static m1(version) => "r. ${version}";
 
-  static m2(threshold) => "Ocena pri nalogi nižja od ${threshold}";
+  static m2(threshold) => "Ocena pri nalogi višja od ${threshold}";
 
-  static m3(moduleName) => "To nalogo je zaklenil modul »${moduleName}«.";
+  static m3(threshold) => "Ocena pri nalogi nižja od ${threshold}";
 
-  static m4(studentName, assignmentName) => "Zadeva: ${studentName}, Naloga – ${assignmentName}";
+  static m4(moduleName) => "To nalogo je zaklenil modul »${moduleName}«.";
 
-  static m5(points) => "${points} točk";
+  static m5(studentName, assignmentName) => "Zadeva: ${studentName}, Naloga – ${assignmentName}";
 
   static m6(points) => "${points} točk";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} do 1 drugi', other: '${authorName} do ${howMany} drugih')}";
+  static m7(points) => "${points} točk";
 
-  static m8(authorName, recipientName) => "${authorName} do ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} do 1 drugi', other: '${authorName} do ${howMany} drugih')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} do ${recipientName} in 1 drugi', other: '${authorName} do ${recipientName} in ${howMany} drugih')}";
+  static m9(authorName, recipientName) => "${authorName} do ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} do ${recipientName} in 1 drugi', other: '${authorName} do ${recipientName} in ${howMany} drugih')}";
 
-  static m11(score, pointsPossible) => "${score} od ${pointsPossible} točk";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "za ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} od ${pointsPossible} točk";
 
-  static m13(threshold) => "Ocena pri predmetu višja od ${threshold}";
+  static m13(studentShortName) => "za ${studentShortName}";
 
-  static m14(threshold) => "Ocena pri predmetu nižja od ${threshold}";
+  static m14(threshold) => "Ocena pri predmetu višja od ${threshold}";
 
-  static m15(date, time) => "${date} ob ${time}";
+  static m15(threshold) => "Ocena pri predmetu nižja od ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Poskusite poiskati ime šole ali okrožja, do katerega poskušate dostopati, na primer »Smith Private School« ali »Smith County Schools«. V domeno sistema Canvas lahko vstopite neposredno, na primer »smith.instructure.com«.\n\nZa več informacij o iskanju računa Canvas vaše ustanove, obiščite spletno mesto ${canvasGuides} in se za pomoč obrnite na ${canvasSupport} ali na šolo.";
+  static m16(date, time) => "${date} ob ${time}";
 
-  static m17(date, time) => "Roki ${date} ob ${time}";
+  static m17(canvasGuides, canvasSupport) => "Poskusite poiskati ime šole ali okrožja, do katerega poskušate dostopati, na primer »Smith Private School« ali »Smith County Schools«. V domeno sistema Canvas lahko vstopite neposredno, na primer »smith.instructure.com«.\n\nZa več informacij o iskanju računa Canvas vaše ustanove, obiščite spletno mesto ${canvasGuides} in se za pomoč obrnite na ${canvasSupport} ali na šolo.";
 
-  static m18(studentName, eventTitle) => "Zadeva: ${studentName}, Dogodek – ${eventTitle}";
+  static m18(date, time) => "Roki ${date} ob ${time}";
 
-  static m19(startAt, endAt) => "${startAt} – ${endAt}";
+  static m19(userName) => "Prenehali boste nastopati v vlogi ${userName} in boste odjavljeni.";
 
-  static m20(grade) => "Končna ocena: ${grade}";
+  static m20(userName) => "Prenehali boste nastopati v vlogi ${userName} in se vrnili v svoj prvotni račun.";
 
-  static m21(studentName) => "Zadeva: ${studentName}, Prva stran";
+  static m21(studentName, eventTitle) => "Zadeva: ${studentName}, Dogodek – ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score}/${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} – ${endAt}";
 
-  static m23(studentName) => "Zadeva: ${studentName}, Ocene";
+  static m23(grade) => "Končna ocena: ${grade}";
 
-  static m24(pointsLost) => "Kazen za zamudo (-${pointsLost})";
+  static m24(studentName) => "Zadeva: ${studentName}, Prva stran";
 
-  static m25(studentName, linkUrl) => "Zadeva: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score}/${pointsPossible}";
 
-  static m26(percentage) => "Mora biti višje od ${percentage}";
+  static m26(studentName) => "Zadeva: ${studentName}, Ocene";
 
-  static m27(percentage) => "Mora biti nižje od ${percentage}";
+  static m27(pointsLost) => "Kazen za zamudo (-${pointsLost})";
 
-  static m28(month) => "Naslednji mesec: ${month}";
+  static m28(studentName, linkUrl) => "Zadeva: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Naslednji teden z začetkom ${date}";
+  static m29(percentage) => "Mora biti višje od ${percentage}";
 
-  static m30(query) => "Ni mogoče najti šol, ki se ujemajo s/z »${query}«";
+  static m30(percentage) => "Mora biti nižje od ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Od 1 točke', other: 'Od ${points} točk')}";
+  static m31(month) => "Naslednji mesec: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Naslednji teden z začetkom ${date}";
 
-  static m33(points) => "${points} možnih točk";
+  static m33(query) => "Ni mogoče najti šol, ki se ujemajo s/z »${query}«";
 
-  static m34(month) => "Predhodni mesec: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Od 1 točke', other: 'Od ${points} točk')}";
 
-  static m35(date) => "Predhodni teden z začetkom ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Mesec ${month}";
+  static m36(points) => "${points} možnih točk";
 
-  static m37(date, time) => "Ta naloga je bila poslana dne ${date} ob ${time} in čaka na ocenjevanje";
+  static m37(month) => "Predhodni mesec: ${month}";
 
-  static m38(studentName) => "Zadeva: ${studentName}, Učni načrt predmeta";
+  static m38(date) => "Predhodni teden z začetkom ${date}";
 
-  static m39(count) => "${count} neprebranih";
+  static m39(month) => "Mesec ${month}";
+
+  static m40(date, time) => "Ta naloga je bila poslana dne ${date} ob ${time} in čaka na ocenjevanje";
+
+  static m41(studentName) => "Zadeva: ${studentName}, Učni načrt predmeta";
+
+  static m42(count) => "${count} neprebranih";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("»Nastopajoči v vlogi« se v osnovi prijavlja kot ta uporabnik brez gesla. Lahko boste izvedli katero koli dejanje, kot bi bili ta uporabnik, z vidika drugih uporabnikov pa bo videti, kot da je dejanja izvedel ta uporabnik. Vendar dnevniki dogodkov beležijo, da ste v imenu tega uporabnika dejanja izvedli vi."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Opis je obvezen."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Polje za zadevo mora biti izpolnjeno."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Prevzemi vlogo uporabnika"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Dodaj študenta"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Dodaj prilogo"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Dodaj novega študenta"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Opis"),
     "Device" : MessageLookupByLibrary.simpleMessage("Naprava"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Model naprave"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Domena"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Domena:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Dokončano"),
     "Download" : MessageLookupByLibrary.simpleMessage("Prenesi"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Obvestilo ustanove"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Obvestila ustanove"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Navodila"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Interakcije na tej strani omejuje vaša ustanova."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Videti je, da je to krasen dan za počitek, sprostitev in regeneracijo."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Videti je, da v tem prostoru naloge še niso bile ustvarjene."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Samo neobvezno vprašanje, komentar, zamisel, predlog ..."),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Mesto"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Zaklenjeno"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Odjava"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Potek prijave: Sistem Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Potek prijave: Aktivno"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Potek prijave: Skrbnik mesta"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Potek prijave: Preskoči mobilno potrditev"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Uredi študente"),
     "Message" : MessageLookupByLibrary.simpleMessage("Sporočilo"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Zadeva sporočila"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Pošlji sporočilo"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Nastavite datum in čas obvestila o tem dogodku."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Nastavite datum in čas obvestila o tej določeni nalogi."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Nastavi preklop opomnika"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Nastavitve"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Delite svoje navdušenje nad aplikacijo"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Nekaj ne deluje, a znam to rešiti, da dokončam, kar je treba."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Opustite vlogo uporabnika"),
     "Student" : MessageLookupByLibrary.simpleMessage("Študent"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Zadeva"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Poslano"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Pri nalaganju koledarja vašega študenta je prišlo do napake"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Pri nalaganju vaših študentov je prišlo do napake."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Pri nalaganju predmetov vašega študenta je prišlo do napake."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Prišlo je do napake pri prevzemanju vloge tega uporabnika. Preverite domeno in ID uporabnika ter poskusite znova."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Ni ničesar, o čemer bi bilo treba obveščati."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Te aplikacije ni dovoljeno uporabljati."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Ta predmet še nima nalog ali koledarskih dogodkov."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Nepodprta datoteka"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Naloži datoteko"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Uporabi fotoaparat"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("ID uporabnika"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("ID uporabnika:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Številka različice"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Prikaz podrobnosti o napaki"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Nismo prepričano, kaj se je zgodilo, ni pa bilo dobro. Če se napaka ponovi, nas kontaktirajte."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Da"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Ne opazujete nobenega študenta."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Vnesti morate ID uporabnika"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Vnesti morate veljavno domeno"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("O tej nalogi boste obveščeni dne ..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("O tem dogodku boste obveščeni dne ..."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Vaša koda je nepravilna ali potekla."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Predmeti vašega študenta morda še niso objavljeni."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Seznanjeni ste z vsem!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Opozorila"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Koledar"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Vodniki po sistemu Canvas"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Logotip sistema Canvas"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Podpora za sistem Canvas"),
     "collapse" : MessageLookupByLibrary.simpleMessage("strni"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("strnjeno"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Predmeti"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("opusti"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Kako najdem svojo šolo ali okrožje?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Vnos imena šole ali okrožja ..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("razširi"),
     "expanded" : MessageLookupByLibrary.simpleMessage("razširjeno"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Poišči šolo"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("jaz"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("minus"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Naprej"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("V redu"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("pošlji"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("neprebrano"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

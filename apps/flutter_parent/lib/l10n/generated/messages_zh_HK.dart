@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'zh_HK';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "您正在作為 ${userName}";
 
-  static m1(threshold) => "作業評分高於 ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "作業評分低於 ${threshold}";
+  static m2(threshold) => "作業評分高於 ${threshold}";
 
-  static m3(moduleName) => "此作業由單元 \"${moduleName}\" 鎖定。";
+  static m3(threshold) => "作業評分低於 ${threshold}";
 
-  static m4(studentName, assignmentName) => "關於：${studentName}，作業 - ${assignmentName}";
+  static m4(moduleName) => "此作業由單元 \"${moduleName}\" 鎖定。";
 
-  static m5(points) => "${points} 分";
+  static m5(studentName, assignmentName) => "關於：${studentName}，作業 - ${assignmentName}";
 
   static m6(points) => "${points} 分";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} 到 1 個其他', other: '${authorName} 到 ${howMany} 其他')}";
+  static m7(points) => "${points} 分";
 
-  static m8(authorName, recipientName) => "${authorName} 至 ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} 到 1 個其他', other: '${authorName} 到 ${howMany} 其他')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} 到 ${recipientName} 和 1 個其他', other: '${authorName} 到 ${recipientName} 和 ${howMany} 其他')}";
+  static m9(authorName, recipientName) => "${authorName} 至 ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} 到 ${recipientName} 和 1 個其他', other: '${authorName} 到 ${recipientName} 和 ${howMany} 其他')}";
 
-  static m11(score, pointsPossible) => "得分為 ${score}，滿分為 ${pointsPossible}";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "針對 ${studentShortName}";
+  static m12(score, pointsPossible) => "得分為 ${score}，滿分為 ${pointsPossible}";
 
-  static m13(threshold) => "課程評分高於 ${threshold}";
+  static m13(studentShortName) => "針對 ${studentShortName}";
 
-  static m14(threshold) => "課程評分低於 ${threshold}";
+  static m14(threshold) => "課程評分高於 ${threshold}";
 
-  static m15(date, time) => "日期 ${date}，時間 ${time}";
+  static m15(threshold) => "課程評分低於 ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "嘗試搜尋您試著存取的學校或地區的名稱，例如“Smith Private School”或“Smith County Schools”。您也可以直接輸入 Canvas 網域，例如“smith.instructure.com”。\n\n如需更多有關尋找您的機構的 Canvas 帳戶的資訊，您可以瀏覽 ${canvasGuides}、連線到 ${canvasSupport} 或聯絡您的學校尋求協助。";
+  static m16(date, time) => "日期 ${date}，時間 ${time}";
 
-  static m17(date, time) => "截止於 ${date} 的 ${time}";
+  static m17(canvasGuides, canvasSupport) => "嘗試搜尋您試著存取的學校或地區的名稱，例如“Smith Private School”或“Smith County Schools”。您也可以直接輸入 Canvas 網域，例如“smith.instructure.com”。\n\n如需更多有關尋找您的機構的 Canvas 帳戶的資訊，您可以瀏覽 ${canvasGuides}、連線到 ${canvasSupport} 或聯絡您的學校尋求協助。";
 
-  static m18(studentName, eventTitle) => "關於：${studentName}，活動 - ${eventTitle}";
+  static m18(date, time) => "截止於 ${date} 的 ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "您將會停止作為 ${userName} 並登出。";
 
-  static m20(grade) => "最終評分：${grade}";
+  static m20(userName) => "您將會停止作為 ${userName} 並返回到您的原有帳戶。";
 
-  static m21(studentName) => "關於：${studentName}，封面頁";
+  static m21(studentName, eventTitle) => "關於：${studentName}，活動 - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "關於：${studentName}，成績";
+  static m23(grade) => "最終評分：${grade}";
 
-  static m24(pointsLost) => "逾期懲罰 (-${pointsLost})";
+  static m24(studentName) => "關於：${studentName}，封面頁";
 
-  static m25(studentName, linkUrl) => "關於：${studentName}，${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "必須高於 ${percentage}";
+  static m26(studentName) => "關於：${studentName}，成績";
 
-  static m27(percentage) => "必須低於 ${percentage}";
+  static m27(pointsLost) => "逾期懲罰 (-${pointsLost})";
 
-  static m28(month) => "下個月：${month}";
+  static m28(studentName, linkUrl) => "關於：${studentName}，${linkUrl}";
 
-  static m29(date) => "下一週開始 ${date}";
+  static m29(percentage) => "必須高於 ${percentage}";
 
-  static m30(query) => "找不到符合 \"${query}\" 的學校";
+  static m30(percentage) => "必須低於 ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: '滿分為 1 分', other: '滿分為 ${points} 分')}";
+  static m31(month) => "下個月：${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "下一週開始 ${date}";
 
-  static m33(points) => "可能的分數 ${points}";
+  static m33(query) => "找不到符合 \"${query}\" 的學校";
 
-  static m34(month) => "上個月：${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: '滿分為 1 分', other: '滿分為 ${points} 分')}";
 
-  static m35(date) => "上一週開始 ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "${month} 的月份";
+  static m36(points) => "可能的分數 ${points}";
 
-  static m37(date, time) => "此作業在 ${date} 的 ${time} 上已提交，並且正在等待評分";
+  static m37(month) => "上個月：${month}";
 
-  static m38(studentName) => "關於：${studentName}，課程大綱";
+  static m38(date) => "上一週開始 ${date}";
 
-  static m39(count) => "${count} 則未讀";
+  static m39(month) => "${month} 的月份";
+
+  static m40(date, time) => "此作業在 ${date} 的 ${time} 上已提交，並且正在等待評分";
+
+  static m41(studentName) => "關於：${studentName}，課程大綱";
+
+  static m42(count) => "${count} 則未讀";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("「作為」本質上是以此使用者身份登錄，沒有密碼。您將能夠進行任何操作，就好像您就是此使用者一樣，並且，其他使用者也會認為是此使用者執行了操作。然而，活動紀錄會記錄事實，即您是代表此使用者執行操作的人。"),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("描述必填。"),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("主題必填。"),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("作為使用者"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("添加學生"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("添加附件"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("添加新學生"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("描述"),
     "Device" : MessageLookupByLibrary.simpleMessage("裝置"),
     "Device model" : MessageLookupByLibrary.simpleMessage("裝置機型"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("網域"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("網域："),
     "Done" : MessageLookupByLibrary.simpleMessage("已完成"),
     "Download" : MessageLookupByLibrary.simpleMessage("下載"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("機構通告"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("機構的告"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("教學"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("本頁面的互動受您所在機構的限制。"),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("看來是適合休息、放鬆和充電的一天。"),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("此空間中尚未建立任何作業。"),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("只是隨意提問、評論、想法、建議……"),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("位置"),
     "Locked" : MessageLookupByLibrary.simpleMessage("已鎖定"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("登出"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("登入流態：Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("登入流態：正常"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("登入流態：網站管理員"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("登入流態：跳過流動認證"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("管理學生"),
     "Message" : MessageLookupByLibrary.simpleMessage("訊息"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("訊息主題"),
@@ -222,7 +236,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Previous Logins" : MessageLookupByLibrary.simpleMessage("先前登入"),
     "Privacy Policy" : MessageLookupByLibrary.simpleMessage("隱私政策"),
     "Privacy policy, terms of use, open source" : MessageLookupByLibrary.simpleMessage("隱私政策，使用條款，開放源碼"),
-    "QR Code" : MessageLookupByLibrary.simpleMessage("二維碼"),
+    "QR Code" : MessageLookupByLibrary.simpleMessage("QR 碼"),
     "Recipients" : MessageLookupByLibrary.simpleMessage("收件人"),
     "Remind Me" : MessageLookupByLibrary.simpleMessage("提醒我"),
     "Reminders" : MessageLookupByLibrary.simpleMessage("提醒"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("傳送訊息"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("設定通知此活動的日期和時間。"),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("設定通知此指定作業的日期和時間。"),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("設定提醒開關"),
     "Settings" : MessageLookupByLibrary.simpleMessage("設定"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("分享您對於本應用程式的喜愛"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("有些地方出現了問題，但我能繞過問題實現我的目的。"),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("停止作為使用者"),
     "Student" : MessageLookupByLibrary.simpleMessage("學生"),
     "Subject" : MessageLookupByLibrary.simpleMessage("主題"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("已提交"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("載入您的學生的行事曆時發生錯誤"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("載入您的學生時發生錯誤。"),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("載入您的學生的課程時發生錯誤。"),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("嘗試作為此使用者時出現錯誤。請檢查網域及使用者 ID 然後重試。"),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("尚未有任何通知。尚未有任何通知。"),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("該 app 程式未獲得使用權限。"),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("此課程還沒有任何作業列表或行事曆。"),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("不支援的檔案"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("上傳檔案"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("使用攝影機"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("使用者 ID"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("使用者 ID："),
     "Version Number" : MessageLookupByLibrary.simpleMessage("版本編號"),
     "View error details" : MessageLookupByLibrary.simpleMessage("檢視錯誤詳細資料"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("不確定發生什麼事，但不是好事。如果持續發生，請聯絡我們。"),
     "Yes" : MessageLookupByLibrary.simpleMessage("是"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("您未正在觀察任何學生。"),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("您必須輸入使用者 ID"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("您必須輸入有效的網域"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("將在以下時間通知您關於此作業…"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("將在以下時間通知您關於此沽動…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("您的代碼錯誤或到期。"),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("您的學生的課程可能尚未發佈。"),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("您已讀完所有新訊息！"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("提醒"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("行事曆"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas 指南"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas 標誌"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas 支援"),
     "collapse" : MessageLookupByLibrary.simpleMessage("收起"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("收起"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("課程"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("忽略"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("如何找到我的學校？"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("輸入學校名稱或地區…"),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("展開"),
     "expanded" : MessageLookupByLibrary.simpleMessage("展開"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("尋找學校"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("我"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("減"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("下一個"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("確定"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("傳送"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("未讀"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }
