@@ -98,7 +98,10 @@ class ToDoDetailsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Center(
-                    child: Text(L10n(context).noToDoDescription, style: Theme.of(context).textTheme.caption),
+                    child: Text(
+                      L10n(context).noToDoDescription,
+                      style: Theme.of(context).textTheme.caption.copyWith(color: StudentColors.licorice),
+                    ),
                   ),
                 ),
               if (toDo.plannable.details != null) Text(toDo.plannable.details),
