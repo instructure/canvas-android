@@ -73,6 +73,7 @@ import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
@@ -202,6 +203,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun initialCoreDataLoadingComplete() {
+        // Send updated info to Flutter
+        FlutterComm.sendUpdatedLogin()
+        FlutterComm.sendUpdatedTheme()
+
         // We are ready to load our UI
         if (currentFragment == null) {
             loadLandingPage(true)

@@ -69,7 +69,7 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
         navigatorObservers: [NativeComm.routeTracker],
         localizationsDelegates: const [
           AppLocalizations.delegate,
-          // Material components use these delegate to provide default localization
+          // Material components use these delegates to provide default localization
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],

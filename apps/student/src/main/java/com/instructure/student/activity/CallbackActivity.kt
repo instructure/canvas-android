@@ -60,9 +60,6 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
-            // Update Flutter with the login info
-            FlutterComm.sendUpdatedLogin()
-
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -93,9 +90,6 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             } else {
                 ThemePrefs.applyCanvasTheme(awaitApi { ThemeManager.getTheme(it, true) })
             }
-
-            // Update Flutter with the theme
-            FlutterComm.sendUpdatedTheme()
 
             // Refresh pandata info if null or expired
             if (ApiPrefs.pandataInfo?.isValid != true) {
