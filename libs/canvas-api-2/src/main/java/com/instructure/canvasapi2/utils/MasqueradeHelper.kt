@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
+import com.jakewharton.processphoenix.ProcessPhoenix;
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
@@ -135,14 +136,10 @@ object MasqueradeHelper {
     private fun <ACTIVITY : Activity> restartApplication(startingClass: Class<ACTIVITY>) {
         // Totally restart the app so the masquerading will apply
         val startupIntent = Intent(ContextKeeper.appContext, startingClass)
-        startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, startupIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
 
-        // Delays the exit long enough for all the shared preferences to be saved and caches to be cleared.
+        // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
         Handler().postDelayed({
-            exitProcess(0)
+            ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent);
         }, 500)
     }
 
