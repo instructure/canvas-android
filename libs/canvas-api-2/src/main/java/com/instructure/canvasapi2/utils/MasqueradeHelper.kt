@@ -135,7 +135,7 @@ object MasqueradeHelper {
     private fun <ACTIVITY : Activity> restartApplication(startingClass: Class<ACTIVITY>) {
         // Totally restart the app so the masquerading will apply
         val startupIntent = Intent(ContextKeeper.appContext, startingClass)
-        startupIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, startupIntent, PendingIntent.FLAG_CANCEL_CURRENT)
         val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
