@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ht';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "W ap aji tankou ${userName}";
 
-  static m1(threshold) => "Nòt Devwa Plis Pase ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "Nòt Devwa Mwens Pase ${threshold}";
+  static m2(threshold) => "Nòt Devwa Plis Pase ${threshold}";
 
-  static m3(moduleName) => "Modil \"${moduleName}\" bloke devwa sa a.";
+  static m3(threshold) => "Nòt Devwa Mwens Pase ${threshold}";
 
-  static m4(studentName, assignmentName) => "Konsènan: ${studentName}, Devwa - ${assignmentName}";
+  static m4(moduleName) => "Modil \"${moduleName}\" bloke devwa sa a.";
 
-  static m5(points) => "${points} pwen";
+  static m5(studentName, assignmentName) => "Konsènan: ${studentName}, Devwa - ${assignmentName}";
 
   static m6(points) => "${points} pwen";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} a 1 lòt', other: '${authorName} a ${howMany} lòt')}";
+  static m7(points) => "${points} pwen";
 
-  static m8(authorName, recipientName) => "${authorName} a ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} a 1 lòt', other: '${authorName} a ${howMany} lòt')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} a ${recipientName} & 1 lòt', other: '${authorName} a ${recipientName} & ${howMany} lòt')}";
+  static m9(authorName, recipientName) => "${authorName} a ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} a ${recipientName} & 1 lòt', other: '${authorName} a ${recipientName} & ${howMany} lòt')}";
 
-  static m11(score, pointsPossible) => "${score} sou ${pointsPossible} pwen";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "pou ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} sou ${pointsPossible} pwen";
 
-  static m13(threshold) => "Nòt Kou Plis Pase ${threshold}";
+  static m13(studentShortName) => "pou ${studentShortName}";
 
-  static m14(threshold) => "Nòt Kou Mwens Pase ${threshold}";
+  static m14(threshold) => "Nòt Kou Plis Pase ${threshold}";
 
-  static m15(date, time) => "${date} a ${time}";
+  static m15(threshold) => "Nòt Kou Mwens Pase ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Eseye chèche non lekòl oswa distri ou vle ale sou li a, pa egzanp “Smith Private School” or “Smith County Schools.” Ou kapab antre yon domèn Canvas dirèkteman, tankou pa egzanp “smith.instructure.com.”\n\nPou plis enfòmasyon pou jwenn kont Canvas enstitisyon ou an, ou ka vizite ${canvasGuides}, ale sou ${canvasSupport}, oswa pran kontak ak lekòl ou a pou plis asistans.";
+  static m16(date, time) => "${date} a ${time}";
 
-  static m17(date, time) => "Delè ${date} a ${time}";
+  static m17(canvasGuides, canvasSupport) => "Eseye chèche non lekòl oswa distri ou vle ale sou li a, pa egzanp “Smith Private School” or “Smith County Schools.” Ou kapab antre yon domèn Canvas dirèkteman, tankou pa egzanp “smith.instructure.com.”\n\nPou plis enfòmasyon pou jwenn kont Canvas enstitisyon ou an, ou ka vizite ${canvasGuides}, ale sou ${canvasSupport}, oswa pran kontak ak lekòl ou a pou plis asistans.";
 
-  static m18(studentName, eventTitle) => "Konsènan: ${studentName}, Aktivite - ${eventTitle}";
+  static m18(date, time) => "Delè ${date} a ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "W ap sispann pase pou ${userName} epi w ap dekonekte.";
 
-  static m20(grade) => "Nòt Final: ${grade}";
+  static m20(userName) => "W ap sispann pase pou ${userName} epi retounen sou kont orijinal ou.";
 
-  static m21(studentName) => "Konsènan: ${studentName}, Premye Paj";
+  static m21(studentName, eventTitle) => "Konsènan: ${studentName}, Aktivite - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Konsènan: ${studentName}, Nòt";
+  static m23(grade) => "Nòt Final: ${grade}";
 
-  static m24(pointsLost) => "Penalite pou reta (-${pointsLost})";
+  static m24(studentName) => "Konsènan: ${studentName}, Premye Paj";
 
-  static m25(studentName, linkUrl) => "Konsènan: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "Dwe siperyè a ${percentage}";
+  static m26(studentName) => "Konsènan: ${studentName}, Nòt";
 
-  static m27(percentage) => "Dwe enferyè a ${percentage}";
+  static m27(pointsLost) => "Penalite pou reta (-${pointsLost})";
 
-  static m28(month) => "Pwochen mwa: ${month}";
+  static m28(studentName, linkUrl) => "Konsènan: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Semenn pwochen kòmanse ${date}";
+  static m29(percentage) => "Dwe siperyè a ${percentage}";
 
-  static m30(query) => "Nou paka jwenn lekòl ki koresponn a \"${query}\"";
+  static m30(percentage) => "Dwe enferyè a ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Sou 1 pwen', other: 'Sou ${points} pwen')}";
+  static m31(month) => "Pwochen mwa: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Semenn pwochen kòmanse ${date}";
 
-  static m33(points) => "${points} pwen posib";
+  static m33(query) => "Nou paka jwenn lekòl ki koresponn a \"${query}\"";
 
-  static m34(month) => "Mwa pase: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Sou 1 pwen', other: 'Sou ${points} pwen')}";
 
-  static m35(date) => "Semenn pase kòmanse ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Mwa ${month}";
+  static m36(points) => "${points} pwen posib";
 
-  static m37(date, time) => "Devwa sa a te soumèt nan dat ${date} a ${time} li an atant pou yo evalye li";
+  static m37(month) => "Mwa pase: ${month}";
 
-  static m38(studentName) => "Konsènan: ${studentName}, Pwogram";
+  static m38(date) => "Semenn pase kòmanse ${date}";
 
-  static m39(count) => "${count} poko li";
+  static m39(month) => "Mwa ${month}";
+
+  static m40(date, time) => "Devwa sa a te soumèt nan dat ${date} a ${time} li an atant pou yo evalye li";
+
+  static m41(studentName) => "Konsènan: ${studentName}, Pwogram";
+
+  static m42(count) => "${count} poko li";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Aji tankou\" se koneksyon an tan ke moun sa a san modpas. W ap kapab fè nenpòt bagay kòmsi ou te itilizatè sa a, e pou lòt moun yo, se kòmsi se itilizatè sa a ki t ap fè yo. Men, jounal odit yo endike ke se te ou menm ki te fè aksyon yo nan non itilizatè sa a."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Yon deskripsyon obligatwa."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Yon sijè obligatwa."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Pase pou Itilizatè"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Ajoute Elèv"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Ajoute atachman"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Ajoute nouvo elèv"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Deskripsyon"),
     "Device" : MessageLookupByLibrary.simpleMessage("Aparèy"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Modèl aparèy"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Domèn"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Domèn:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Fini"),
     "Download" : MessageLookupByLibrary.simpleMessage("Telechaje"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Anons Enstitisyon"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Anons Enstitisyon"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Enstriksyon"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Enstitisyon ou an limite entèaksyon sou paj sa a."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Sanble yon bon jou pou repoze w, amize w epi mete enèji.."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Ta sanble poko gen devwa ki kreye nan espas sa a."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Sèlman yon kesyon, yon kòmantè, yon ide... enfòmèl"),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Anplasman"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Bloke"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Dekonekte"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Flux koneksyon: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Flux koneksyon: Nòmal"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Flux koneksyon: Administratè Sit"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Flux koneksyon: Sote verifikasyon mobil"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Jere Elèv"),
     "Message" : MessageLookupByLibrary.simpleMessage("Mesaj"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Sijè mesaj"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Voye mesaj"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Antre yon dat ak yon lè pou yo raple w aktivite sa a."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Antre yon dat ak yon lè pou yo raple w devwa espesyal sa a."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Regle entèriptè rapèl"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Paramèt"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Pataje lanmou ou genyen pou App la"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Gen yon entèripsyon men mwen ka kontounen li pou mwen jwenn sa mwen bezwen an."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Sispann Pase pou Itilizatè"),
     "Student" : MessageLookupByLibrary.simpleMessage("Elèv"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Sijè"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Soumèt"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Te gen yon erè nan chajman kalandriye elèv ou a"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Te gen yon erè nan chajman elèv ou yo."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Te gen yon erè nan chajman kou elèv ou a."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Te gen yon erè pandan w ap eseye pase pou itilizatè sa a. Tanpri verifye Domèn nan ak ID Itilizatè a epi eseye ankò."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Poko gen anyen ki merite pou yo avèti w."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Pa gen otorizasyon pou itilize app sa a."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Kou sa a poko gen devwa oswa kalandriye aktivite."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Fichye pa pran an chaj"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Transfere Fichye"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Itilize Kamera"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("ID Itilizatè"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("Non Itilizatè:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Nimewo Vèsyon"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Afiche detay erè"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Nou pa twò konnen kisa k pase a, men li pa enteresan. Pran kontak ak nou si sa repwodui."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Wi"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Ou pa p obsève okenn elèv."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Ou dwe antre yon ID itilizatè"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Ou dwe antre yon domèn valid"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Y ap raple w devwa sa a le..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Y ap raple w de aktivite sa a le..."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Kòd ou a enkòrèk oswa li ekspire."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Kou elèv ou a ta dwe gentan pibliye."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Yo pran w!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Alèt"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Kalandriye"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Gid Canvas"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Logo Canvas"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Sipò Canvas"),
     "collapse" : MessageLookupByLibrary.simpleMessage("ratresi"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("retresi"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Kou"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("rejte"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Kijan mwen kapab jwenn lekòl oswa distri mwen an?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Antre non lekòl la oswa distri a..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("elaji"),
     "expanded" : MessageLookupByLibrary.simpleMessage("elaji"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Jwenn Lekòl"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("mwen menm"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("mwens"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Pwochen"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("DAKO"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("voye"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("poko li"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

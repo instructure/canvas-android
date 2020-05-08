@@ -19,85 +19,85 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'da_instk12';
 
-  static m0(version) => "v. ${version}";
+  static m1(version) => "v. ${version}";
 
-  static m1(threshold) => "Opgavevurdering over ${threshold}";
+  static m2(threshold) => "Opgavevurdering over ${threshold}";
 
-  static m2(threshold) => "Opgavevurdering under ${threshold}";
+  static m3(threshold) => "Opgavevurdering under ${threshold}";
 
-  static m3(moduleName) => "Denne opgave er låst af forløbet \"${moduleName}\".";
+  static m4(moduleName) => "Denne opgave er låst af forløbet \"${moduleName}\".";
 
-  static m4(studentName, assignmentName) => "Vedrørende: ${studentName}, Opgave - ${assignmentName}";
-
-  static m5(points) => "${points} point";
+  static m5(studentName, assignmentName) => "Vedrørende: ${studentName}, Opgave - ${assignmentName}";
 
   static m6(points) => "${points} point";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} til 1 anden', other: '${authorName} til ${howMany} andre')}";
+  static m7(points) => "${points} point";
 
-  static m8(authorName, recipientName) => "${authorName} til ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} til 1 anden', other: '${authorName} til ${howMany} andre')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} til ${recipientName} & 1 anden', other: '${authorName} til ${recipientName} & ${howMany} andre')}";
+  static m9(authorName, recipientName) => "${authorName} til ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} til ${recipientName} & 1 anden', other: '${authorName} til ${recipientName} & ${howMany} andre')}";
 
-  static m11(score, pointsPossible) => "${score} ud af ${pointsPossible} point";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "for ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} ud af ${pointsPossible} point";
 
-  static m13(threshold) => "Fagvurdering oven ${threshold}";
+  static m13(studentShortName) => "for ${studentShortName}";
 
-  static m14(threshold) => "Fagvurdering under ${threshold}";
+  static m14(threshold) => "Fagvurdering oven ${threshold}";
 
-  static m15(date, time) => "${date} kl. ${time}";
+  static m15(threshold) => "Fagvurdering under ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Prøv at søge efter navnet på den skole eller det distrikt, du forsøger at få adgang til, fx “Smith Private School” eller “Smith County Schools.” Du kan også indtaste et Canvas-domæne direkte, som fx “smith.instructure.com.”\n\nFor mere information om hvordan du finder din institutions Canvas-konto, kan du besøge ${canvasGuides}, kontakte ${canvasSupport} eller kontakte din skole for at få hjælp.";
+  static m16(date, time) => "${date} kl. ${time}";
 
-  static m17(date, time) => "Forfalder d. ${date} kl. ${time}";
+  static m17(canvasGuides, canvasSupport) => "Prøv at søge efter navnet på den skole eller det distrikt, du forsøger at få adgang til, fx “Smith Private School” eller “Smith County Schools.” Du kan også indtaste et Canvas-domæne direkte, som fx “smith.instructure.com.”\n\nFor mere information om hvordan du finder din institutions Canvas-konto, kan du besøge ${canvasGuides}, kontakte ${canvasSupport} eller kontakte din skole for at få hjælp.";
 
-  static m18(studentName, eventTitle) => "Vedrørende: ${studentName}, Begivenhed - ${eventTitle}";
+  static m18(date, time) => "Forfalder d. ${date} kl. ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m21(studentName, eventTitle) => "Vedrørende: ${studentName}, Begivenhed - ${eventTitle}";
 
-  static m20(grade) => "Endelig vurdering: ${grade}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m21(studentName) => "Vedrørende: ${studentName}, Forside";
+  static m23(grade) => "Endelig vurdering: ${grade}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m24(studentName) => "Vedrørende: ${studentName}, Forside";
 
-  static m23(studentName) => "Vedrørende: ${studentName}, Vurderinger";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m24(pointsLost) => "Straf for sen aflevering (-${pointsLost})";
+  static m26(studentName) => "Vedrørende: ${studentName}, Vurderinger";
 
-  static m25(studentName, linkUrl) => "Vedrørende: ${studentName}, ${linkUrl}";
+  static m27(pointsLost) => "Straf for sen aflevering (-${pointsLost})";
 
-  static m26(percentage) => "Skal være over ${percentage}";
+  static m28(studentName, linkUrl) => "Vedrørende: ${studentName}, ${linkUrl}";
 
-  static m27(percentage) => "Skal være under ${percentage}";
+  static m29(percentage) => "Skal være over ${percentage}";
 
-  static m28(month) => "Næste måned: ${month}";
+  static m30(percentage) => "Skal være under ${percentage}";
 
-  static m29(date) => "Næste uge, der starter ${date}";
+  static m31(month) => "Næste måned: ${month}";
 
-  static m30(query) => "Kan ikke finde skoler, der matcher \"${query}\"";
+  static m32(date) => "Næste uge, der starter ${date}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Ud af 1 point', other: 'Ud af ${points} point')}";
+  static m33(query) => "Kan ikke finde skoler, der matcher \"${query}\"";
 
-  static m32(count) => "+${count}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Ud af 1 point', other: 'Ud af ${points} point')}";
 
-  static m33(points) => "${points} mulige point";
+  static m35(count) => "+${count}";
 
-  static m34(month) => "Forrige måned: ${month}";
+  static m36(points) => "${points} mulige point";
 
-  static m35(date) => "Forrige uge, der starter ${date}";
+  static m37(month) => "Forrige måned: ${month}";
 
-  static m36(month) => "Måneden ${month}";
+  static m38(date) => "Forrige uge, der starter ${date}";
 
-  static m37(date, time) => "Denne opgave blev afleveret den ${date} kl. ${time} og venter på at blive bedømt";
+  static m39(month) => "Måneden ${month}";
 
-  static m38(studentName) => "Vedrørende: ${studentName}, Fagplan";
+  static m40(date, time) => "Denne opgave blev afleveret den ${date} kl. ${time} og venter på at blive bedømt";
 
-  static m39(count) => "${count} ulæst";
+  static m41(studentName) => "Vedrørende: ${studentName}, Fagplan";
+
+  static m42(count) => "${count} ulæst";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -241,7 +241,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Send besked"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Indstil en dato og tid for, hvornår der skal meddeles om denne begivenhed."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Indstil en dato og tid for at blive meddelt om denne specifikke opgave."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Sæt påmindelsesskifter"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Indstillinger"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Del din kærlighed for denne app"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Der er noget, der ikke virker, men jeg kan godt få det gjort, jeg skal gøre."),
@@ -310,64 +309,63 @@ class MessageLookup extends MessageLookupByLibrary {
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Din elevs fag kan muligvis ikke offentliggøres endnu."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Du har set det hele!"),
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Varslinger"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Kalender"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas-vejledningerne"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas-logo"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas-support"),
     "collapse" : MessageLookupByLibrary.simpleMessage("skjul"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("skjult"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Fag"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("afvis"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Hvordan finder jeg min skole eller distrikt?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Indtast skolens navn eller distrikt ..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("udvid"),
     "expanded" : MessageLookupByLibrary.simpleMessage("udvidet"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Find skole"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("mig"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("minus"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Næste"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("send"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("ulæst"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }
