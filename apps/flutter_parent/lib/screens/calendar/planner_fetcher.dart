@@ -18,6 +18,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/models/calendar_filter.dart';
+import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/network/api/calendar_events_api.dart';
@@ -38,6 +39,9 @@ class PlannerFetcher extends ChangeNotifier {
 
   final String userId;
 
+  Future<List<Course>> courseListFuture;
+  bool firstFilterUpdateFlag;
+
   String _observeeId;
 
   String get observeeId => _observeeId;
@@ -47,6 +51,7 @@ class PlannerFetcher extends ChangeNotifier {
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
   }
 
+  // TODO - wire up a "refresh" here for course refresh
   Future<Set<String>> getContexts() async {
     CalendarFilter calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
       userDomain,
@@ -55,23 +60,33 @@ class PlannerFetcher extends ChangeNotifier {
     );
     if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId].isEmpty)) {
       // Fetch them courses and fill the filters
-      var courses = await locator<CoursesInteractor>().getCourses(isRefresh: true);
+
+      if (courseListFuture == null) {
+        courseListFuture = locator<CoursesInteractor>().getCourses(isRefresh: true);
+      }
+
+      var courses = await courseListFuture;
 
       if (courseNameMap[_observeeId] == null) {
         courseNameMap[_observeeId] = {};
       }
+
       // Add the names to our map so we can fill those in later
       // We have to handle the case where their filter is from before the api migration, so we trim it down.
       courses.forEach((course) => courseNameMap[_observeeId][course.id] = course.name);
       var tempCourseList = courses.map((course) => course.contextFilterId()).toList();
       Set<String> courseSet = Set.from(tempCourseList.length > 10 ? tempCourseList.sublist(0, 10) : tempCourseList);
 
-      CalendarFilter filter = CalendarFilter((b) => b
-        ..userDomain = userDomain
-        ..userId = userId
-        ..observeeId = _observeeId
-        ..filters = SetBuilder(courseSet));
-      locator<CalendarFilterDb>().insertOrUpdate(filter);
+      // This DB insert only needs to happen once, prevent the multiple month loads from repeating it
+      if (firstFilterUpdateFlag == false) {
+        CalendarFilter filter = CalendarFilter((b) => b
+          ..userDomain = userDomain
+          ..userId = userId
+          ..observeeId = _observeeId
+          ..filters = SetBuilder(courseSet));
+        locator<CalendarFilterDb>().insertOrUpdate(filter);
+        firstFilterUpdateFlag = true;
+      }
 
       return courseSet;
     } else {

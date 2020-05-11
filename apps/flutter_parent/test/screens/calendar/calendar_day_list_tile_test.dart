@@ -17,7 +17,6 @@ import 'dart:convert';
 import 'package:built_value/json_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
@@ -26,7 +25,6 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
-import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
@@ -40,7 +38,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
-import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
@@ -74,15 +71,6 @@ void main() {
       await tester.pump();
 
       expect(find.text(contextName), findsOneWidget);
-    });
-
-    testWidgetsWithAccessibilityChecks('shows "Planner Note" as context name for planner notes', (tester) async {
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(_createPlannerItem(contextName: null, plannableType: 'planner_note')),
-      ));
-      await tester.pump();
-
-      expect(find.text(AppLocalizations().plannerNote), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('shows due date', (tester) async {
@@ -210,6 +198,20 @@ void main() {
       expect(icon.icon, CanvasIcons.quiz);
     });
 
+    testWidgetsWithAccessibilityChecks('shows calendar event icon for calendar events', (tester) async {
+      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'calendar_event');
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+      ));
+      await tester.pump();
+
+      var icon = tester.widget<Icon>(find.byType(Icon));
+
+      expect(icon.icon, CanvasIcons.calendar_day);
+    });
+
+    /*
     testWidgetsWithAccessibilityChecks('shows announcement icon for announcements', (tester) async {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'announcement');
 
@@ -223,18 +225,15 @@ void main() {
       expect(icon.icon, CanvasIcons.announcement);
     });
 
-    testWidgetsWithAccessibilityChecks('shows calendar event icon for calendar events', (tester) async {
-      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'calendar_event');
-
+    testWidgetsWithAccessibilityChecks('shows "Planner Note" as context name for planner notes', (tester) async {
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem),
+        CalendarDayListTile(_createPlannerItem(contextName: null, plannableType: 'planner_note')),
       ));
       await tester.pump();
 
-      var icon = tester.widget<Icon>(find.byType(Icon));
-
-      expect(icon.icon, CanvasIcons.calendar_day);
+      expect(find.text(AppLocalizations().plannerNote), findsOneWidget);
     });
+     */
   });
 
   group('Interaction', () {
@@ -257,27 +256,6 @@ void main() {
       await tester.pump();
 
       expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
-    });
-
-    testWidgetsWithAccessibilityChecks('tapping announcement plannable navigates to announcement details screen',
-        (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'announcement', contextName: 'Tap me');
-
-      setupTestLocator((locator) => locator
-        ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
-
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
-      ));
-      await tester.pump();
-
-      await tester.tap(find.text('Tap me'));
-      await tester.pump();
-      await tester.pump();
-
-      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('tapping quiz assignment plannable navigates to assignment details screen',
@@ -303,6 +281,49 @@ void main() {
       await tester.pump();
 
       expect(find.byType(AssignmentDetailsScreen), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to event details screen',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'calendar_event', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerFactory<EventDetailsInteractor>(() => _MockEventDetailsInteractor()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(EventDetailsScreen), findsOneWidget);
+    });
+
+    /*
+    testWidgetsWithAccessibilityChecks('tapping announcement plannable navigates to announcement details screen',
+        (tester) async {
+      var plannerItem = _createPlannerItem(plannableType: 'announcement', contextName: 'Tap me');
+
+      setupTestLocator((locator) => locator
+        ..registerFactory<QuickNav>(() => QuickNav())
+        ..registerFactory<AnnouncementDetailsInteractor>(() => _MockAnnouncementDetailsInteractor()));
+
+      await tester.pumpWidget(TestApp(
+        CalendarDayListTile(plannerItem),
+        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      ));
+      await tester.pump();
+
+      await tester.tap(find.text('Tap me'));
+      await tester.pump();
+      await tester.pump();
+
+      expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('tapping quiz plannable launches mobile browser', (tester) async {
@@ -370,27 +391,7 @@ void main() {
 
       expect(find.byType(AnnouncementDetailScreen), findsOneWidget);
     });
-
-    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to event details screen',
-        (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'calendar_event', contextName: 'Tap me');
-
-      setupTestLocator((locator) => locator
-        ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerFactory<EventDetailsInteractor>(() => _MockEventDetailsInteractor()));
-
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem),
-        platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
-      ));
-      await tester.pump();
-
-      await tester.tap(find.text('Tap me'));
-      await tester.pump();
-      await tester.pump();
-
-      expect(find.byType(EventDetailsScreen), findsOneWidget);
-    });
+     */
   });
 }
 
@@ -416,6 +417,7 @@ PlannerItem _createPlannerItem(
       ..plannableType = plannableType ?? 'assignment'
       ..plannableDate = DateTime.now()
       ..htmlUrl = htmlUrl ?? ''
+      ..submissionStatus = submission != null ? submission.toBuilder() : null
       ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);
 
 class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

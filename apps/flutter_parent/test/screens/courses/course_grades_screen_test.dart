@@ -26,6 +26,7 @@ import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
@@ -695,7 +696,9 @@ Assignment _mockAssignment({
     ..assignmentGroupId = groupId
     ..position = int.parse(id)
     ..dueAt = dueAt
-    ..submissionList = BuiltList<Submission>(submission != null ? [submission] : []).toBuilder()
+    ..submissionList = SubmissionWrapper(
+            (b) => b..submissionList = BuiltList<Submission>.from(submission != null ? [submission] : []).toBuilder())
+        .toBuilder()
     ..pointsPossible = pointsPossible
     ..published = true);
 }

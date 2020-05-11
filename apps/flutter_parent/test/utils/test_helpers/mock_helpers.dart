@@ -25,6 +25,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/network/api/course_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/error_report_api.dart';
@@ -32,6 +33,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -73,9 +75,13 @@ class MockAuthApi extends Mock implements AuthApi {}
 
 class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}
 
+class MockCalendarApi extends Mock implements CalendarEventsApi {}
+
 class MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
 class MockCourseApi extends Mock implements CourseApi {}
+
+class MockCoursesInteractor extends Mock implements CoursesInteractor {}
 
 class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
 

@@ -19,8 +19,6 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class CoursesInteractor {
   Future<List<Course>> getCourses({bool isRefresh = false, String studentId = null}) async {
-    print('TOKEN: ${ApiPrefs.getCurrentLogin().accessToken}');
-
     var courses = await locator<CourseApi>().getObserveeCourses(forceRefresh: isRefresh);
     var currentStudentId = studentId;
     if (currentStudentId == null) currentStudentId = ApiPrefs.getCurrentStudent().id;

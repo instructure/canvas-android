@@ -15,33 +15,49 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_parent/models/calendar_filter.dart';
+import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/planner_item.dart';
-import 'package:flutter_parent/network/api/planner_api.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
+import 'package:flutter_parent/network/api/calendar_events_api.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
+import 'package:flutter_parent/screens/courses/courses_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  PlannerApi api = _MockPlannerApi();
-  CalendarFilterDb filterDb = _MockCalendarFilterDb();
+  CalendarEventsApi api = MockCalendarApi();
+  CalendarFilterDb filterDb = MockCalendarFilterDb();
+  CoursesInteractor interactor = MockCoursesInteractor();
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
   final String observeeId = 'observee_123';
   final Set<String> contexts = {'course_123'};
+  final course = Course((b) => b
+    ..id = '123'
+    ..enrollments = BuiltList.of([
+      Enrollment((enrollment) => enrollment
+        ..userId = '123'
+        ..courseId = '123'
+        ..enrollmentState = 'active')
+    ]).toBuilder());
 
   setupTestLocator((locator) {
-    locator.registerLazySingleton<PlannerApi>(() => api);
+    locator.registerLazySingleton<CalendarEventsApi>(() => api);
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
+    locator.registerFactory<CoursesInteractor>(() => interactor);
   });
 
-  setUp(() {
+  setUp(() async {
     // Reset APi mock
     reset(api);
+    reset(interactor);
 
     // Reset db mock
     reset(filterDb);
@@ -52,6 +68,8 @@ void main() {
         ..observeeId = observeeId
         ..filters = SetBuilder(contexts));
     });
+
+    when(interactor.getCourses(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => Future.value(List.of([course])));
   });
 
   test('fetches month for date', () async {
@@ -60,14 +78,32 @@ void main() {
 
     fetcher.getSnapshotForDate(date);
     await untilCalled(
-      api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    );
+
+    await untilCalled(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
     );
 
     verify(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
         observeeId,
         DateTime(2000), // Start of day Jan 1 2000
         DateTime(2000, 1, 31, 23, 59, 59, 999), // End of day Jan 31 2000
+        ScheduleItem.apiTypeAssignment,
+        contexts: contexts,
+        forceRefresh: false,
+      ),
+    );
+
+    verify(
+      api.getUserCalendarItems(
+        observeeId,
+        DateTime(2000), // Start of day Jan 1 2000
+        DateTime(2000, 1, 31, 23, 59, 59, 999), // End of day Jan 31 2000
+        ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: false,
       ),
@@ -81,14 +117,32 @@ void main() {
     PlannerFetcher(userId: userId, userDomain: userDomain, observeeId: observeeId, fetchFirst: date);
 
     await untilCalled(
-      api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    );
+
+    await untilCalled(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
     );
 
     verify(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
         observeeId,
         date.withStartOfMonth(),
         date.withEndOfMonth(),
+        ScheduleItem.apiTypeAssignment,
+        contexts: contexts,
+        forceRefresh: false,
+      ),
+    );
+
+    verify(
+      api.getUserCalendarItems(
+        observeeId,
+        date.withStartOfMonth(),
+        date.withEndOfMonth(),
+        ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: false,
       ),
@@ -107,7 +161,8 @@ void main() {
     expect(snapshot, expectedSnapshot);
 
     verifyNever(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
+        any,
         any,
         any,
         any,
@@ -127,14 +182,32 @@ void main() {
     fetcher.refreshItemsForDate(date);
 
     await untilCalled(
-      api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    );
+
+    await untilCalled(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
     );
 
     verify(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
         observeeId,
         date.withStartOfDay(),
         date.withEndOfDay(),
+        ScheduleItem.apiTypeAssignment,
+        contexts: contexts,
+        forceRefresh: true,
+      ),
+    );
+
+    verify(
+      api.getUserCalendarItems(
+        observeeId,
+        date.withStartOfDay(),
+        date.withEndOfDay(),
+        ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: true,
       ),
@@ -152,14 +225,32 @@ void main() {
     fetcher.refreshItemsForDate(date);
 
     await untilCalled(
-      api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    );
+
+    await untilCalled(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
     );
 
     verify(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
         observeeId,
         date.withStartOfDay(),
         date.withEndOfDay(),
+        ScheduleItem.apiTypeAssignment,
+        contexts: contexts,
+        forceRefresh: true,
+      ),
+    );
+
+    verify(
+      api.getUserCalendarItems(
+        observeeId,
+        date.withStartOfDay(),
+        date.withEndOfDay(),
+        ScheduleItem.apiTypeCalendar,
         contexts: contexts,
         forceRefresh: true,
       ),
@@ -177,14 +268,32 @@ void main() {
     fetcher.refreshItemsForDate(date);
 
     await untilCalled(
-      api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    );
+
+    await untilCalled(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
     );
 
     verify(
-      api.getUserPlannerItems(
+      api.getUserCalendarItems(
         observeeId,
         date.withStartOfMonth(),
         date.withEndOfMonth(),
+        ScheduleItem.apiTypeCalendar,
+        contexts: contexts,
+        forceRefresh: true,
+      ),
+    );
+
+    verify(
+      api.getUserCalendarItems(
+        observeeId,
+        date.withStartOfMonth(),
+        date.withEndOfMonth(),
+        ScheduleItem.apiTypeAssignment,
         contexts: contexts,
         forceRefresh: true,
       ),
@@ -195,7 +304,8 @@ void main() {
     final date = DateTime.now();
     final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain, observeeId: observeeId);
 
-    when(api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+    when(api.getUserCalendarItems(any, any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) async => throw Error);
 
     final existingSnapshot = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, []);
@@ -279,7 +389,3 @@ void main() {
     verify(filterDb.insertOrUpdate(expectedFilterData));
   });
 }
-
-class _MockPlannerApi extends Mock implements PlannerApi {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}

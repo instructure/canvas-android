@@ -23,6 +23,7 @@ import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/reminder.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
@@ -246,12 +247,14 @@ void main() {
       ..userId = studentId
       ..submittedAt = DateTime.now());
 
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer((_) async =>
+        AssignmentDetails(
             assignment: assignment.rebuild((b) => b
               ..name = assignmentName
               ..pointsPossible = 1.0
-              ..submissionList = BuiltList.of([submission]).toBuilder()
+              ..submissionList =
+                  SubmissionWrapper((b) => b..submissionList = BuiltList<Submission>.from([submission]).toBuilder())
+                      .toBuilder()
               ..dueAt = dueDate)));
 
     await tester.pumpWidget(TestApp(
@@ -283,12 +286,13 @@ void main() {
     final assignmentName = 'Testing Assignment';
     final dueDate = DateTime.utc(2000);
 
-    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId))
-        .thenAnswer((_) async => AssignmentDetails(
+    when(interactor.loadAssignmentDetails(any, courseId, assignmentId, studentId)).thenAnswer((_) async =>
+        AssignmentDetails(
             assignment: assignment.rebuild((b) => b
               ..name = assignmentName
               ..pointsPossible = 1.0
-              ..submissionList = BuiltList<Submission>.of([]).toBuilder()
+              ..submissionList =
+                  SubmissionWrapper((b) => b..submissionList = BuiltList<Submission>.from([]).toBuilder()).toBuilder()
               ..submissionTypes = ListBuilder([SubmissionTypes.none])
               ..dueAt = dueDate)));
 
