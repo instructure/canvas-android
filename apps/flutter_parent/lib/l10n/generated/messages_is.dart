@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'is';
 
-  static m0(version) => "útg. ${version}";
+  static m0(userName) => "Þú virkar sem ${userName}";
 
-  static m1(threshold) => "Verkefnaeinkunn fyrir ofan ${threshold}";
+  static m1(version) => "útg. ${version}";
 
-  static m2(threshold) => "Verkefnaeinkunn fyrir neðan ${threshold}";
+  static m2(threshold) => "Verkefnaeinkunn fyrir ofan ${threshold}";
 
-  static m3(moduleName) => "Verkefninu er læst af einingu \"${moduleName}\".";
+  static m3(threshold) => "Verkefnaeinkunn fyrir neðan ${threshold}";
 
-  static m4(studentName, assignmentName) => "Varðandi: ${studentName}, Verkefni - ${assignmentName}";
+  static m4(moduleName) => "Verkefninu er læst af einingu \"${moduleName}\".";
 
-  static m5(points) => "${points} punktar";
+  static m5(studentName, assignmentName) => "Varðandi: ${studentName}, Verkefni - ${assignmentName}";
 
   static m6(points) => "${points} punktar";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} til 1 annars', other: '${authorName} til ${howMany} annarra')}";
+  static m7(points) => "${points} punktar";
 
-  static m8(authorName, recipientName) => "${authorName} til ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} til 1 annars', other: '${authorName} til ${howMany} annarra')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} til ${recipientName} og 1 annars', other: '${authorName} til ${recipientName} og ${howMany} annarra')}";
+  static m9(authorName, recipientName) => "${authorName} til ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} til ${recipientName} og 1 annars', other: '${authorName} til ${recipientName} og ${howMany} annarra')}";
 
-  static m11(score, pointsPossible) => "${score} af ${pointsPossible} stigum";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "fyrir ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} af ${pointsPossible} stigum";
 
-  static m13(threshold) => "Námskeiðseinkunn fyrir ofan ${threshold}";
+  static m13(studentShortName) => "fyrir ${studentShortName}";
 
-  static m14(threshold) => "Námskeiðseinkunn fyrir neðan ${threshold}";
+  static m14(threshold) => "Námskeiðseinkunn fyrir ofan ${threshold}";
 
-  static m15(date, time) => "${date} klukkan ${time}";
+  static m15(threshold) => "Námskeiðseinkunn fyrir neðan ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Prufaðu að leita að nafni skólans eða umdæmisins sem þú reyndir að opna, eins og „Smith Private School“ eða „Smith County Schools.“ Þú getur einnig sett inn Canvas-lén beint, eins og “smith.instructure.com.”\n\nFyrir frekari upplýsingar um hvernig þú finnur Canvas reikning stofnunar þinnar, geturðu farið á ${canvasGuides}, haft samband við ${canvasSupport}, eða hafðu samband við skólann þinn til að fá aðstoð.";
+  static m16(date, time) => "${date} klukkan ${time}";
 
-  static m17(date, time) => "Skiladagur ${date} þann ${time}";
+  static m17(canvasGuides, canvasSupport) => "Prufaðu að leita að nafni skólans eða umdæmisins sem þú reyndir að opna, eins og „Smith Private School“ eða „Smith County Schools.“ Þú getur einnig sett inn Canvas-lén beint, eins og “smith.instructure.com.”\n\nFyrir frekari upplýsingar um hvernig þú finnur Canvas reikning stofnunar þinnar, geturðu farið á ${canvasGuides}, haft samband við ${canvasSupport}, eða hafðu samband við skólann þinn til að fá aðstoð.";
 
-  static m18(studentName, eventTitle) => "Varðandi: ${studentName}, Viðburður - ${eventTitle}";
+  static m18(date, time) => "Skiladagur ${date} þann ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "Þú hættir að bregðast við sem ${userName} og verður skráð(ur) út.";
 
-  static m20(grade) => "Lokaeinkunn: ${grade}";
+  static m20(userName) => "Þú hættir að bregðast við sem ${userName} og ferð aftur í upprunalegan reikning þinn.";
 
-  static m21(studentName) => "Varðandi: ${studentName}, Forsíða";
+  static m21(studentName, eventTitle) => "Varðandi: ${studentName}, Viðburður - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Varðandi: ${studentName}, Einkunnir";
+  static m23(grade) => "Lokaeinkunn: ${grade}";
 
-  static m24(pointsLost) => "Viðurlög vegna of seinna skila (-${pointsLost})";
+  static m24(studentName) => "Varðandi: ${studentName}, Forsíða";
 
-  static m25(studentName, linkUrl) => "Varðandi: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "Verður að vera yfir ${percentage}";
+  static m26(studentName) => "Varðandi: ${studentName}, Einkunnir";
 
-  static m27(percentage) => "Verður að vera undir ${percentage}";
+  static m27(pointsLost) => "Viðurlög vegna of seinna skila (-${pointsLost})";
 
-  static m28(month) => "Næsti mánuður: ${month}";
+  static m28(studentName, linkUrl) => "Varðandi: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Næsta vika hefst ${date}";
+  static m29(percentage) => "Verður að vera yfir ${percentage}";
 
-  static m30(query) => "Ekki tókst að finna skóla sem pössuðu við \"${query}\"";
+  static m30(percentage) => "Verður að vera undir ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Af 1 stigi', other: 'Af ${points} stigum')}";
+  static m31(month) => "Næsti mánuður: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Næsta vika hefst ${date}";
 
-  static m33(points) => "${points} punktar mögulegir";
+  static m33(query) => "Ekki tókst að finna skóla sem pössuðu við \"${query}\"";
 
-  static m34(month) => "Fyrri mánuður: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Af 1 stigi', other: 'Af ${points} stigum')}";
 
-  static m35(date) => "Fyrri vika hefst ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "${month} mánuði";
+  static m36(points) => "${points} punktar mögulegir";
 
-  static m37(date, time) => "Þetta verkefni var sent inn þann ${date} klukkan ${time} og bíður einkunnar";
+  static m37(month) => "Fyrri mánuður: ${month}";
 
-  static m38(studentName) => "Varðandi: ${studentName}, Kennsluáætlun";
+  static m38(date) => "Fyrri vika hefst ${date}";
 
-  static m39(count) => "${count} ólesið";
+  static m39(month) => "${month} mánuði";
+
+  static m40(date, time) => "Þetta verkefni var sent inn þann ${date} klukkan ${time} og bíður einkunnar";
+
+  static m41(studentName) => "Varðandi: ${studentName}, Kennsluáætlun";
+
+  static m42(count) => "${count} ólesið";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Bregðast við sem\" er í raun og veru að skrá sig inn sem þessi notandi án lykilorðs. Þú munt getað gripið til allra aðgerða eins og að þú værir viðkomandi notandi, frá sjónarhóli annarra notenda, þá mun það vera eins og þessi notandi hafi framkvæmt viðkomandi aðgerðir. Samt sem áður sýna endurskoðaðar skrár að það varst þú sem framkvæmdir aðgerðirnar fyrir hönd þessa notanda."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Lýsingar er krafist."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Efni er áskilið."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Bregðast við sem notandi"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Bæta við nemanda"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Bæta við viðhengi"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Bæta við nýjum nemanda"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Lýsing"),
     "Device" : MessageLookupByLibrary.simpleMessage("Tæki"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Gerð tækis"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Lén"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Lén:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Lokið"),
     "Download" : MessageLookupByLibrary.simpleMessage("Hlaða niður"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Stofnana tilkynning"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Stofnana tilkynningar"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Fyrirmæli"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Samskipti á þessari síðu eru takmörkuð af stofnun þinni."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Þetta virðist vera góður dagur til að hvílast, slaka á og hlaða batteríin."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Það virðast ekki vera nein verkefni búin til í þessu rými enn."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Bara almenn spurning, athugasemd, hugmynd, tillaga…"),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Staðsetning"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Læst"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Útskráning"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Innskráningarflæði: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Innskráningarflæði: Venjulegt"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Innskráningarflæði: Svæðisstjórnandi"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Innskráningarflæði: Sleppa sannreyningu farsíma"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Stjórna nemendum"),
     "Message" : MessageLookupByLibrary.simpleMessage("Skilaboð"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Efni skilaboða"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Senda skilaboð"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Stilltu inn dagsetningu og tíma til að fá áminningu um þennan viðburð."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Stilltu inn dagsetningu og tíma til að fá áminningu um þetta tiltekna verkefni."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Stilla inn áminningarrofa"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Stillingar"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Deildu ást þinni á appinu"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Eitthvað er í ólagi en ég get samt unnið í kringum það til að ljúka því sem ég þarf að ljúka."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Hætta að bregðast við sem notandi"),
     "Student" : MessageLookupByLibrary.simpleMessage("Nemandi"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Efni"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Skilað"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Villa kom upp við að sækja dagatal nemanda"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Villa kom upp við að sækja nemendur þína."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Villa kom upp við að sækja námskeið nemanda þíns."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Villa kom upp við að bregðast við sem þessi notandi. Athugaðu lén og auðkenni notanda og reyndu aftur."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Það er ekkert tilkynningavert enn."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Þetta app er ekki heimilt til notkunar."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Þetta námskeið er ekki með nein verkefni eða dagatalsviðburði enn."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Óstudd skrá"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Hlaða upp skrá"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Nota myndavél"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("Auðkenni notanda"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("Auðkenni notanda:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Útgáfa númer"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Skoða upplýsingar um villu"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Við erum ekki viss um hvað gerðist, en það var ekki gott. Hafðu samband við okkur ef þetta heldur áfram að gerast."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Já"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Þú fylgist ekki með neinum nemendum."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Þú verður að setja inn auðkenni notanda"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Þú verður að setja inn rétt lén"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Þú færð áminningu um þetta verkefni þann…"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Þú færð áminningu um þennan viðburð þann…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Kóðinn þinn er rangur eða útrunninn."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Námskeið nemanda þíns eru ef til vill ekki birt enn."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Þú ert búin(n) með allt!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Viðvaranir"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Dagatal"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas leiðarvísar"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas myndmerki"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas stuðningur"),
     "collapse" : MessageLookupByLibrary.simpleMessage("fella saman"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("fellt saman"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Námskeið"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("vísa frá"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Hvernig finn ég skólann minn eða umdæmið?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Settu inn nafn skóla eða umdæmis…"),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("víkka"),
     "expanded" : MessageLookupByLibrary.simpleMessage("víkkað"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Finna skóla"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("ég"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("mínus"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Næsti"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("Í lagi"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("sendi"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("ólesið"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

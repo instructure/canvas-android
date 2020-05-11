@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'cy';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "Rydych chi’n gweithredu fel ${userName}";
 
-  static m1(threshold) => "Gradd yr Aseiniad yn Uwch na ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "Gradd yr Aseiniad yn Is na ${threshold}";
+  static m2(threshold) => "Gradd yr Aseiniad yn Uwch na ${threshold}";
 
-  static m3(moduleName) => "Mae\'r aseiniad hwn wedi\'i gloi gan y modiwl \"${moduleName}\".";
+  static m3(threshold) => "Gradd yr Aseiniad yn Is na ${threshold}";
 
-  static m4(studentName, assignmentName) => "Ynghylch: ${studentName}, Aseiniad - ${assignmentName}";
+  static m4(moduleName) => "Mae\'r aseiniad hwn wedi\'i gloi gan y modiwl \"${moduleName}\".";
 
-  static m5(points) => "${points} pwynt";
+  static m5(studentName, assignmentName) => "Ynghylch: ${studentName}, Aseiniad - ${assignmentName}";
 
   static m6(points) => "${points} pwynt";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} i 1 arall', other: '${authorName} i ${howMany} arall')}";
+  static m7(points) => "${points} pwynt";
 
-  static m8(authorName, recipientName) => "${authorName} i ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} i 1 arall', other: '${authorName} i ${howMany} arall')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} i ${recipientName} ac 1 arall', other: '${authorName} i ${recipientName} a ${howMany} arall')}";
+  static m9(authorName, recipientName) => "${authorName} i ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} i ${recipientName} ac 1 arall', other: '${authorName} i ${recipientName} a ${howMany} arall')}";
 
-  static m11(score, pointsPossible) => "${score} allan o ${pointsPossible} pwynt";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "ar gyfer ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} allan o ${pointsPossible} pwynt";
 
-  static m13(threshold) => "Gradd y Cwrs yn Uwch na ${threshold}";
+  static m13(studentShortName) => "ar gyfer ${studentShortName}";
 
-  static m14(threshold) => "Gradd y Cwrs yn Is na ${threshold}";
+  static m14(threshold) => "Gradd y Cwrs yn Uwch na ${threshold}";
 
-  static m15(date, time) => "${date} at ${time}";
+  static m15(threshold) => "Gradd y Cwrs yn Is na ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Ceisiwch chwilio am enw’r ysgol neu’r ardal rydych chi’n ceisio cael mynediad atynt, fel “Smith Private School” neu “Smith County Schools.” Gallwch chi hefyd roi parth Canvas yn uniongyrchol, fel “smith.instructure.com.”\n\nI gael rhagor o wybodaeth ynglŷn â chanfod cyfrif Canvas eich sefydliad, ewch i ${canvasGuides}, gofynnwch i ${canvasSupport}, neu cysylltwch â’ch ysgol i gael help.";
+  static m16(date, time) => "${date} at ${time}";
 
-  static m17(date, time) => "Erbyn ${date} am ${time}";
+  static m17(canvasGuides, canvasSupport) => "Ceisiwch chwilio am enw’r ysgol neu’r ardal rydych chi’n ceisio cael mynediad atynt, fel “Smith Private School” neu “Smith County Schools.” Gallwch chi hefyd roi parth Canvas yn uniongyrchol, fel “smith.instructure.com.”\n\nI gael rhagor o wybodaeth ynglŷn â chanfod cyfrif Canvas eich sefydliad, ewch i ${canvasGuides}, gofynnwch i ${canvasSupport}, neu cysylltwch â’ch ysgol i gael help.";
 
-  static m18(studentName, eventTitle) => "Ynghylch: ${studentName}, Digwyddiad - ${eventTitle}";
+  static m18(date, time) => "Erbyn ${date} am ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "Byddwch chi’n stopio gweithredu fel ${userName} ac yn cael eich allgofnodi.";
 
-  static m20(grade) => "Gradd Derfynol: ${grade}";
+  static m20(userName) => "Byddwch chi’n stopio gweithredu fel ${userName} ac yn dychwelyd i’ch cyfrif gwreiddiol.";
 
-  static m21(studentName) => "Ynghylch: ${studentName}, Tudalen Flaen";
+  static m21(studentName, eventTitle) => "Ynghylch: ${studentName}, Digwyddiad - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Ynghylch: ${studentName}, Graddau";
+  static m23(grade) => "Gradd Derfynol: ${grade}";
 
-  static m24(pointsLost) => "Cosb am fod yn hwyr (-${pointsLost})";
+  static m24(studentName) => "Ynghylch: ${studentName}, Tudalen Flaen";
 
-  static m25(studentName, linkUrl) => "Ynghylch: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "Rhaid bod yn uwch na ${percentage}";
+  static m26(studentName) => "Ynghylch: ${studentName}, Graddau";
 
-  static m27(percentage) => "Rhaid bod yn is na ${percentage}";
+  static m27(pointsLost) => "Cosb am fod yn hwyr (-${pointsLost})";
 
-  static m28(month) => "Mis nesaf: ${month}";
+  static m28(studentName, linkUrl) => "Ynghylch: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Wythnos nesaf yn cychwyn ${date}";
+  static m29(percentage) => "Rhaid bod yn uwch na ${percentage}";
 
-  static m30(query) => "Doedd dim modd dod o hyd i ysgolion yn cyfateb â \"${query}\"";
+  static m30(percentage) => "Rhaid bod yn is na ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Allan o 1 pwynt', other: 'Allan o ${points} pwynt')}";
+  static m31(month) => "Mis nesaf: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Wythnos nesaf yn cychwyn ${date}";
 
-  static m33(points) => "${points} pwynt yn bosib";
+  static m33(query) => "Doedd dim modd dod o hyd i ysgolion yn cyfateb â \"${query}\"";
 
-  static m34(month) => "Mis blaenorol: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Allan o 1 pwynt', other: 'Allan o ${points} pwynt')}";
 
-  static m35(date) => "Wythnos flaenorol yn cychwyn ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Mis ${month}";
+  static m36(points) => "${points} pwynt yn bosib";
 
-  static m37(date, time) => "Cafodd yr aseiniad hwn ei gyflwyno ar ${date} am ${time} ac mae’n aros i gael ei raddio";
+  static m37(month) => "Mis blaenorol: ${month}";
 
-  static m38(studentName) => "Ynghylch: ${studentName}, Maes Llafur";
+  static m38(date) => "Wythnos flaenorol yn cychwyn ${date}";
 
-  static m39(count) => "${count} heb eu darllen";
+  static m39(month) => "Mis ${month}";
+
+  static m40(date, time) => "Cafodd yr aseiniad hwn ei gyflwyno ar ${date} am ${time} ac mae’n aros i gael ei raddio";
+
+  static m41(studentName) => "Ynghylch: ${studentName}, Maes Llafur";
+
+  static m42(count) => "${count} heb eu darllen";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("Bydd \"Gweithredu fel\" yn golygu eich bod yn mewngofnodi fel y defnyddiwr hwn heb gyfrinair. Byddwch chi’n gallu gwneud unrhyw beth fel petai chi yw’r defnyddiwr hwn. O safbwynt defnyddwyr eraill, bydd yn edrych fel mai’r defnyddiwr hwn sydd wedi gwneud hynny. Ond, bydd logiau archwilio’n cofnodi mai chi wnaeth hynny ar ran y defnyddiwr hwn."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Rhaid rhoi disgrifiad."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Rhaid rhoi pwnc."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Gweithredu fel Defnyddiwr"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Ychwanegu Myfyriwr"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Ychwanegu atodiad"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Ychwanegu myfyriwr newydd"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Disgrifiad"),
     "Device" : MessageLookupByLibrary.simpleMessage("Dyfais"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Model o’r ddyfais"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Parth"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Parth:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Wedi gorffen"),
     "Download" : MessageLookupByLibrary.simpleMessage("Llwytho i Lawr"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Cyhoeddiad Sefydliad"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Cyhoeddiadau Sefydliadau"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Cyfarwyddiadau"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Mae achosion o ryngweithio ar y dudalen hon wedi’u cyfyngu gan eich sefydliad."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Mae’n edrych fel diwrnod gwych i orffwys, ymlacio a dod at eich hun."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Mae’n ymddangos nad oes aseiniadau wedi cael eu creu yn y gofod hwn eto."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Dim ond awgrym, syniad, sylw neu gwestiwn anffurfiol..."),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Lleoliad"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Wedi Cloi"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Allgofnodi"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Llif Mewngofnodi: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Llif Mewngofnodi: Arferol"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Llif Mewngofnodi: Gweinyddwr Safle"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Llif Mewngofnodi: Anwybyddu cadarnhau symudol"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Rheoli Myfyrwyr"),
     "Message" : MessageLookupByLibrary.simpleMessage("Neges"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Pwnc y neges"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Anfon neges"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Gosod dyddiad ac amser i gael eich atgoffa am y digwyddiad hwn."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Gosod dyddiad ac amser i gael eich atgoffa am yr aseiniad penodol hwn."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Gosod switsh atgoffa"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Gosodiadau"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Rhowch eich barn am yr ap"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Mae rhywbeth wedi mynd o’i le, ond fe alla i ddal i wneud yr hyn rydw i angen ei wneud."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Stopio Gweithredu fel Defnyddiwr"),
     "Student" : MessageLookupByLibrary.simpleMessage("Myfyriwr"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Pwnc"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Wedi Cyflwyno"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Gwall wrth lwytho calendr eich myfyriwr"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Gwall wrth lwytho’ch myfyrwyr."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Gwall wrth lwytho cyrsiau eich myfyriwr."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Gwall wrth geisio gweithredu fel y defnyddiwr hwn. Gwnewch yn sîwr bod y Parth a’r ID Defnyddiwr yn iawn a rhoi cynnig arall arni."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Does dim i’w hysbysu eto."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Dydi’r ap hwn ddim wedi’i awdurdodi i’w ddefnyddio."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Does gan y cwrs hwn ddim aseiniadau neu ddigwyddiadau calendr eto."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Ffeil Anghydnaws"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Llwytho Ffeil i Fyny"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Defnyddio Camera"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("ID Defnyddiwr"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("ID Defnyddiwr:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Rhif Fersiwn"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Gweld manylion gwall"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Dydyn ni ddim yn siŵr beth ddigwyddodd, ond doedd o ddim yn dd. Cysylltwch â ni os ydy hyn yn parhau i ddigwydd."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Iawn"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Dydych chi ddim yn arsyllu unrhyw fyfyrwyr."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Mae’n rhaid i chi roi ID defnyddiwr"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Mae’n rhaid i chi roi parth dilys"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Byddwch chi’n cael eich hysbysu am yr aseiniad hwn ar..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Byddwch chi’n cael eich hysbysu am y digwyddiad hwn ar..."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Mae eich cod yn anghywir neu mae wedi dod i ben."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Efallai nad yw cyrsiau eich myfyriwr wedi cael eu cyhoeddi eto."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Rydych chi wedi dal i fyny!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Negeseuon Hysbysu"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Calendr"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canllawiau Canvas"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Logo Canvas"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Cymorth Canvas"),
     "collapse" : MessageLookupByLibrary.simpleMessage("crebachu"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("wedi crebachu"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Cyrsiau"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("diystyru"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Sut ydw i’n dod o hyd i fy ysgol neu ardal?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Rhowch ardal neu enw’r ysgol..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("ehangu"),
     "expanded" : MessageLookupByLibrary.simpleMessage("wedi ehangu"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Dod o hyd i Ysgol"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("fi"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("minws"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Nesaf"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("Iawn"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("anfon"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("heb eu darllen"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

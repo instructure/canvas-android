@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'fi';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "Toimit käyttäjänä ${userName}";
 
-  static m1(threshold) => "Tehtävän arvosana yllä ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "Tehtävän arvosana alla ${threshold}";
+  static m2(threshold) => "Tehtävän arvosana yllä ${threshold}";
 
-  static m3(moduleName) => "Tehtävä on lukittu moduulilla \"${moduleName}\".";
+  static m3(threshold) => "Tehtävän arvosana alla ${threshold}";
 
-  static m4(studentName, assignmentName) => "Koskee: ${studentName}, Tehtävä - ${assignmentName}";
+  static m4(moduleName) => "Tehtävä on lukittu moduulilla \"${moduleName}\".";
 
-  static m5(points) => "${points} pistettä";
+  static m5(studentName, assignmentName) => "Koskee: ${studentName}, Tehtävä - ${assignmentName}";
 
   static m6(points) => "${points} pistettä";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} 1 muu', other: '${authorName} ${howMany} muuhun')}";
+  static m7(points) => "${points} pistettä";
 
-  static m8(authorName, recipientName) => "${authorName} - ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} 1 muu', other: '${authorName} ${howMany} muuhun')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} ${recipientName} ja 1 muu', other: '${authorName} ${recipientName} ja ${howMany} muuta')}";
+  static m9(authorName, recipientName) => "${authorName} - ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} ${recipientName} ja 1 muu', other: '${authorName} ${recipientName} ja ${howMany} muuta')}";
 
-  static m11(score, pointsPossible) => "${score}/${pointsPossible} pistettä";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "${studentShortName}";
+  static m12(score, pointsPossible) => "${score}/${pointsPossible} pistettä";
 
-  static m13(threshold) => "Kurssin arvosana yllä ${threshold}";
+  static m13(studentShortName) => "${studentShortName}";
 
-  static m14(threshold) => "Kurssin arvosana alla ${threshold}";
+  static m14(threshold) => "Kurssin arvosana yllä ${threshold}";
 
-  static m15(date, time) => "${date} kohteessa ${time}";
+  static m15(threshold) => "Kurssin arvosana alla ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Yritä etsiä sen koulun tai alueen nimeä, jolle yrität mennä, kuten “Smithin yksityiskoulu” tai “Smithin kunnan koulut”. Voit myös syöttää Canvasin verkko-osoitteen suoraan, kuten “smith.instructure.com”.\n\nLisätietoja laitoksesi Canvas-tilin etsimisestä löytyy seuraavasta ${canvasGuides}, ota yhteyttä ${canvasSupport}, tai pyydä apua koulustasi.";
+  static m16(date, time) => "${date} kohteessa ${time}";
 
-  static m17(date, time) => "Määräpäivä ${date} kohteessa ${time}";
+  static m17(canvasGuides, canvasSupport) => "Yritä etsiä sen koulun tai alueen nimeä, jolle yrität mennä, kuten “Smithin yksityiskoulu” tai “Smithin kunnan koulut”. Voit myös syöttää Canvasin verkko-osoitteen suoraan, kuten “smith.instructure.com”.\n\nLisätietoja laitoksesi Canvas-tilin etsimisestä löytyy seuraavasta ${canvasGuides}, ota yhteyttä ${canvasSupport}, tai pyydä apua koulustasi.";
 
-  static m18(studentName, eventTitle) => "Koskee: ${studentName}, Tapahtuma - ${eventTitle}";
+  static m18(date, time) => "Määräpäivä ${date} kohteessa ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "Lopetat toimimasta käyttäjänä ${userName} ja sinut kirjataan ulos.";
 
-  static m20(grade) => "Lopullinen arvosana: ${grade}";
+  static m20(userName) => "Lopetat toimimasta käyttäjänä ${userName} ja palaat alkuperäiselle tilillesi.";
 
-  static m21(studentName) => "Koskee: ${studentName}, Etusivu";
+  static m21(studentName, eventTitle) => "Koskee: ${studentName}, Tapahtuma - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score}/${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Koskee: ${studentName}, Arvosanat";
+  static m23(grade) => "Lopullinen arvosana: ${grade}";
 
-  static m24(pointsLost) => "Rangaistus myöhästymisestä (-${pointsLost})";
+  static m24(studentName) => "Koskee: ${studentName}, Etusivu";
 
-  static m25(studentName, linkUrl) => "Koskee: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score}/${pointsPossible}";
 
-  static m26(percentage) => "Täytyy olla yli ${percentage}";
+  static m26(studentName) => "Koskee: ${studentName}, Arvosanat";
 
-  static m27(percentage) => "Täytyy olla alle ${percentage}";
+  static m27(pointsLost) => "Rangaistus myöhästymisestä (-${pointsLost})";
 
-  static m28(month) => "Seuraava kuukausi: ${month}";
+  static m28(studentName, linkUrl) => "Koskee: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Seuraava viikko alkaen ${date}";
+  static m29(percentage) => "Täytyy olla yli ${percentage}";
 
-  static m30(query) => "Ei löydy kouluja, jotka täsmäävät haun \"${query}\" kanssa";
+  static m30(percentage) => "Täytyy olla alle ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: '/1 piste', other: '/${points} pistettä')}";
+  static m31(month) => "Seuraava kuukausi: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Seuraava viikko alkaen ${date}";
 
-  static m33(points) => "${points} pistettä mahdollista";
+  static m33(query) => "Ei löydy kouluja, jotka täsmäävät haun \"${query}\" kanssa";
 
-  static m34(month) => "Edellinen kuukausi: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: '/1 piste', other: '/${points} pistettä')}";
 
-  static m35(date) => "Edellinen viikko alkaen ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Kuukausi ${month}";
+  static m36(points) => "${points} pistettä mahdollista";
 
-  static m37(date, time) => "Tämä tehtävä lähetettiin ${date} ${time} ja odottaa arvosanan antoa";
+  static m37(month) => "Edellinen kuukausi: ${month}";
 
-  static m38(studentName) => "Koskee: ${studentName}, Opinto-ohjelma";
+  static m38(date) => "Edellinen viikko alkaen ${date}";
 
-  static m39(count) => "${count} lukematon";
+  static m39(month) => "Kuukausi ${month}";
+
+  static m40(date, time) => "Tämä tehtävä lähetettiin ${date} ${time} ja odottaa arvosanan antoa";
+
+  static m41(studentName) => "Koskee: ${studentName}, Opinto-ohjelma";
+
+  static m42(count) => "${count} lukematon";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Toimi käyttäjänä\" kirjautuu periaatteessa sisään tänä käyttäjänä ilman salasanaa. Voit ryhtyä mihin tahansa toimenpiteeseen ikään kuin olisit tämä käyttäjä, ja muiden käyttäjien näkökulmasta näyttäisi siltä, että sinä olisit suorittanut nämä toimenpiteet. Tarkistuslokeihin kuitenkin kirjataan kuitenkin, että sinä suoritit toimenpiteet tämän käyttäjän puolesta."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Kuvaus vaaditaan."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Vaaditaan aihe."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Toimi käyttäjänä"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Lisää opiskelija"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Lisää liite"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Lisää uusi opiskelija"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Kuvaus"),
     "Device" : MessageLookupByLibrary.simpleMessage("Laite"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Laitteen malli"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Verkkotunnus"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Verkkotunnus:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Valmis"),
     "Download" : MessageLookupByLibrary.simpleMessage("Lataa"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Laitoksen ilmoitus"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Laitoksen ilmoitukset"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Rubriikki"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Vuorovaikutukset on rajoitettu tällä sivulla laitoksesi puolesta."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Näyttää olevan hyvä päivä levätä, rentoutua ja latautua."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Näyttää siltä kuin tehtäviä ei vielä olisi luotu tässä tilassa."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Vain satunnainen kysymys, kommentti, idea, ehdotus..."),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Sijainti"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Lukittu"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Kirjaudu ulos"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Sisäänkirjautumisen kulku: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Sisäänkirjautumisen kulku: Normaali"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Sisäänkirjautumisen kulku: Sivuston pääkäyttäjä"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Sisäänkirjautumisen kulku: Ohita mobiilivahvistus"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Hallitse opiskelijoita"),
     "Message" : MessageLookupByLibrary.simpleMessage("Viesti"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Viestin otsikko"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Lähetä viesti"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Määritä päivämäärä ja aika, jolloin sinulle ilmoitetaan tästä tapahtumasta."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Määritä päivämäärä ja aika, jolloin sinulle ilmoitetaan tästä määrätystä tehtävästä."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Aseta muistuttimen kytkin"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Asetukset"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Jaa rakkautesi sovellusta kohtaan"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Jotakin on rikki, mutta löydän tavan saada tehdyksi, mitä minun pitää saada tehdyksi."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Lopeta toimiminen käyttäjänä"),
     "Student" : MessageLookupByLibrary.simpleMessage("Opiskelija"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Aihe"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Lähetetty"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Opiskelijakalenterin latauksessa ilmeni virhe"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Opiskelijoidesi latauksessa ilmeni virhe."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Opiskelijasi kurssien latauksessa ilmeni virhe."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Ilmeni virhe yritettäessä toimia tänä käyttäjänä. Tarkista verkkotunnus ja käyttäjän tunnus ja yritä uudelleen."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Ei ole vielä mitään ilmoitettavaa."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Tätä sovellusta ei ole valtuutettu käyttöön."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Kurssilla ei ole vielä tehtäviä tai kalenterin tehtäviä."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Tukematon tiedosto"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Lataa tiedosto"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Käytä kameraa"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("Käyttäjätunnus"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("Käyttäjätunnus:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Version numero"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Näytä virhetiedot"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Emme ole varmoja, mitä tapahtui, mutta se ei ollut hyvä. Ota meihin yhteyttä, jos tätä tapahtuu edelleen."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Kyllä"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Et tarkkaile yhtään opiskelijaa."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Sinun on annettava voimassa oleva tunnus"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Määritä kelvollinen toimialue"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Saat ilmoituksen tästä tehtävästä..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Saat ilmoituksen tästä tapahtumasta..."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Koodisi on virheellinen tai vanhentunut."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Tämän opiskelijan kursseja ei ehkä ole vielä julkaistu."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Olet ajan tasalla!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Hälytykset"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Kalenteri"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas-oppaat"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas-logo"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas-tuki"),
     "collapse" : MessageLookupByLibrary.simpleMessage("kutista"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("kutistettu"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Kurssit"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("hylkää"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Miten löydän kouluni tai alueeni?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Kirjoita koulun nimi tai alue..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("laajenna"),
     "expanded" : MessageLookupByLibrary.simpleMessage("laajennettu"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Etsi koulu"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("minä"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("miinus"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Seuraava"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("lähettää"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("lukematon"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

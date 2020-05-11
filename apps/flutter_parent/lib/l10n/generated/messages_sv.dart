@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'sv';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "Du agerar som ${userName}";
 
-  static m1(threshold) => "Uppgiftsomdöme över ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "Uppgiftsomdöme under ${threshold}";
+  static m2(threshold) => "Uppgiftsomdöme över ${threshold}";
 
-  static m3(moduleName) => "Den här uppgiften har låsts av modulen \"${moduleName}\".";
+  static m3(threshold) => "Uppgiftsomdöme under ${threshold}";
 
-  static m4(studentName, assignmentName) => "Angående : ${studentName}, uppgift – ${assignmentName}";
+  static m4(moduleName) => "Den här uppgiften har låsts av modulen \"${moduleName}\".";
 
-  static m5(points) => "${points} poäng";
+  static m5(studentName, assignmentName) => "Angående : ${studentName}, uppgift – ${assignmentName}";
 
   static m6(points) => "${points} poäng";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} till 1 annan', other: '${authorName} till ${howMany} andra')}";
+  static m7(points) => "${points} poäng";
 
-  static m8(authorName, recipientName) => "${authorName} till ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} till 1 annan', other: '${authorName} till ${howMany} andra')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} till ${recipientName} och 1 annan', other: '${authorName} till ${recipientName} och ${howMany} andra')}";
+  static m9(authorName, recipientName) => "${authorName} till ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} till ${recipientName} och 1 annan', other: '${authorName} till ${recipientName} och ${howMany} andra')}";
 
-  static m11(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "för ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
 
-  static m13(threshold) => "Kursomdöme över ${threshold}";
+  static m13(studentShortName) => "för ${studentShortName}";
 
-  static m14(threshold) => "Kursomdöme under ${threshold}";
+  static m14(threshold) => "Kursomdöme över ${threshold}";
 
-  static m15(date, time) => "${date} kl. ${time}";
+  static m15(threshold) => "Kursomdöme under ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
+  static m16(date, time) => "${date} kl. ${time}";
 
-  static m17(date, time) => "Ska lämnas in ${date} klockan ${time}";
+  static m17(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
 
-  static m18(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
+  static m18(date, time) => "Ska lämnas in ${date} klockan ${time}";
 
-  static m19(startAt, endAt) => "${startAt}/${endAt}";
+  static m19(userName) => "Du kommer att sluta agera som ${userName} och loggas ut.";
 
-  static m20(grade) => "Totalt omdöme: ${grade}";
+  static m20(userName) => "Du kommer att sluta agera som ${userName} och återgå till ditt ursprungliga konto.";
 
-  static m21(studentName) => "Angående : ${studentName}, framsida";
+  static m21(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score}/${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt}/${endAt}";
 
-  static m23(studentName) => "Angående : ${studentName}, omdömen";
+  static m23(grade) => "Totalt omdöme: ${grade}";
 
-  static m24(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
+  static m24(studentName) => "Angående : ${studentName}, framsida";
 
-  static m25(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score}/${pointsPossible}";
 
-  static m26(percentage) => "Måste vara över ${percentage}";
+  static m26(studentName) => "Angående : ${studentName}, omdömen";
 
-  static m27(percentage) => "Måste vara under ${percentage}";
+  static m27(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
 
-  static m28(month) => "Nästa månad: ${month}";
+  static m28(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Nästa vecka börjar ${date}";
+  static m29(percentage) => "Måste vara över ${percentage}";
 
-  static m30(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
+  static m30(percentage) => "Måste vara under ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
+  static m31(month) => "Nästa månad: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Nästa vecka börjar ${date}";
 
-  static m33(points) => "${points} möjliga poäng";
+  static m33(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
 
-  static m34(month) => "Föregående månad: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
 
-  static m35(date) => "Föregående vecka startade ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Månaden ${month}";
+  static m36(points) => "${points} möjliga poäng";
 
-  static m37(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
+  static m37(month) => "Föregående månad: ${month}";
 
-  static m38(studentName) => "Angående : ${studentName}, kursöversikt";
+  static m38(date) => "Föregående vecka startade ${date}";
 
-  static m39(count) => "${count} olästa";
+  static m39(month) => "Månaden ${month}";
+
+  static m40(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
+
+  static m41(studentName) => "Angående : ${studentName}, kursöversikt";
+
+  static m42(count) => "${count} olästa";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Att uppträda som\", loggar huvudsakligen in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du var den här användaren, och från andra användares synpunkter kommer det att upplevas som om den här användaren utförde dem. I historik-loggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Beskrivning är obligatorisk."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Ämne är obligatoriskt."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Agera som användare"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Lägg till student"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Lägg till bilaga"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Lägg till ny student"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Beskrivning"),
     "Device" : MessageLookupByLibrary.simpleMessage("Enhet"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Enhetsmodell"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Domän"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Domän:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Klar"),
     "Download" : MessageLookupByLibrary.simpleMessage("Ladda ned"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Institutionsmeddelande"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Institutionsannonseringar"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Instruktioner"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Interaktioner på den här sidan har begränsats av din institution."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Det verkar vara en bra dag för vila, avslappning och omladdning."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Det verkar som om inga uppgifter har skapats för den här platsen än."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Bara en vanlig fråga, kommentar, idé, förslag ..."),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Plats"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Låst"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Logga ut"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Inloggningsflöde: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Inloggningsflöde: Normal"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Inloggningsflöde: Webbplatsadmin"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Inloggningsflöde: Hoppa över mobilverifiering"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Hantera studenter"),
     "Message" : MessageLookupByLibrary.simpleMessage("Meddelande"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Meddelandeämne"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Skicka meddelandet"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Ange ett datum och tid för att få en notis för den här händelsen."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Ange ett datum och tid för att få en notis för den här specifika uppgiften."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Ange påminnelse"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Inställningar"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Dela din kärlek till appen"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Det är något som inte fungerar men jag kan göra det jag ska ändå."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Sluta att agera som en användare"),
     "Student" : MessageLookupByLibrary.simpleMessage("Student"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Ämne"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Skickad"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din studentkalender."),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in dina studenter."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din students kurser."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Ett fel inträffade under Agera som den här användaren. Kontrollera domänen och användar-ID:t och försök igen."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Det finns inget att avisera om än."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Den här appen har inte auktoriserats för användning."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Den här kursen har inga uppgifter eller kalenderhändelser än."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Filtyp som inte stöds"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Ladda upp fil"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Använd kamera"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("Användar-ID"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("Användar-ID:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Versionsnummer"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Visa felinformation"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Vi vet inte vad som hände, men det fungerar inte. Kontakta oss om detta fortsätter att inträffa."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Ja"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Du observerar inga studenter."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Du måste ange ett giltigt användar-ID"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Du måste ange en giltig domän"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Du kommer att få en notis om den här uppgiften på..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Du kommer att få en notis om den här händelsen den..."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Din kod är fel eller har gått ut."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Dina studentkurser kanske inte publicerats än."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Du är helt i kapp!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Notiser"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Kalender"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas-guider"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas-logotyp"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas Support"),
     "collapse" : MessageLookupByLibrary.simpleMessage("dölj"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("minimerad"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Kurser"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("avvisa"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Hur hittar jag min skola eller distrikt?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Ange skolans namn eller distrikt..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("visa"),
     "expanded" : MessageLookupByLibrary.simpleMessage("expanderad"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Sök skola"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("jag"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("minus"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Nästa"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("skicka"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("olästa"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

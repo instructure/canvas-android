@@ -19,85 +19,85 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'mi';
 
-  static m0(version) => "v. ${version}";
+  static m1(version) => "v. ${version}";
 
-  static m1(threshold) => "Kōeke Whakataunga Runga ${threshold}";
+  static m2(threshold) => "Kōeke Whakataunga Runga ${threshold}";
 
-  static m2(threshold) => "Kōeke Whakataunga Raro ${threshold}";
+  static m3(threshold) => "Kōeke Whakataunga Raro ${threshold}";
 
-  static m3(moduleName) => "Kua rakaina tō whakataunga e te kōwai \"${moduleName}\"";
+  static m4(moduleName) => "Kua rakaina tō whakataunga e te kōwai \"${moduleName}\"";
 
-  static m4(studentName, assignmentName) => "E pā ana: ${studentName}, Whakataunga: ${assignmentName}";
-
-  static m5(points) => "${points} ngā koinga";
+  static m5(studentName, assignmentName) => "E pā ana: ${studentName}, Whakataunga: ${assignmentName}";
 
   static m6(points) => "${points} ngā koinga";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} ki 1 tētahi atu', other: '${authorName} kī ${howMany} ētahi atu')}";
+  static m7(points) => "${points} ngā koinga";
 
-  static m8(authorName, recipientName) => "${authorName} ki te ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} ki 1 tētahi atu', other: '${authorName} kī ${howMany} ētahi atu')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} kī ${recipientName} & 1 tētahi atu', other: '${authorName} kī ${recipientName} & ${howMany} ētahi atu')}";
+  static m9(authorName, recipientName) => "${authorName} ki te ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} kī ${recipientName} & 1 tētahi atu', other: '${authorName} kī ${recipientName} & ${howMany} ētahi atu')}";
 
-  static m11(score, pointsPossible) => "${score} waho ō ${pointsPossible} ngā koinga";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "mo ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} waho ō ${pointsPossible} ngā koinga";
 
-  static m13(threshold) => "Kōeke Akoranga Runga ${threshold}";
+  static m13(studentShortName) => "mo ${studentShortName}";
 
-  static m14(threshold) => "Kōeke Akoranga Raro ${threshold}";
+  static m14(threshold) => "Kōeke Akoranga Runga ${threshold}";
 
-  static m15(date, time) => "${date} ī ${time}";
+  static m15(threshold) => "Kōeke Akoranga Raro ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Ngana ki te rapu haere te ingoa o te kura, rohe rānei e hiahia ana koe ki te whakauru, “Smith Kura Tūmataiti” “Smith Kura Rohe” rānei. Ka taea e koe te whwkauru he Canvas rohe hāngai tonu pēnei “smith.instructure.com”.\n\nMō ētahi atu pūrongo hei rapu i tō whakanōhanga pūkete Canvas, ka taea e koe te haere ki te ${canvasGuides} whakapā atu kī ${canvasSupport} are whakapā ki te kura hei āwhina.";
+  static m16(date, time) => "${date} ī ${time}";
 
-  static m17(date, time) => "Rā tika ${date} ī ${time}";
+  static m17(canvasGuides, canvasSupport) => "Ngana ki te rapu haere te ingoa o te kura, rohe rānei e hiahia ana koe ki te whakauru, “Smith Kura Tūmataiti” “Smith Kura Rohe” rānei. Ka taea e koe te whwkauru he Canvas rohe hāngai tonu pēnei “smith.instructure.com”.\n\nMō ētahi atu pūrongo hei rapu i tō whakanōhanga pūkete Canvas, ka taea e koe te haere ki te ${canvasGuides} whakapā atu kī ${canvasSupport} are whakapā ki te kura hei āwhina.";
 
-  static m18(studentName, eventTitle) => "E pā ana: ${studentName}, Tawhainga: ${eventTitle}";
+  static m18(date, time) => "Rā tika ${date} ī ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m21(studentName, eventTitle) => "E pā ana: ${studentName}, Tawhainga: ${eventTitle}";
 
-  static m20(grade) => "Kōeke whakamutunga: ${grade}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m21(studentName) => "E pā ana: ${studentName}, Whārangi Mua";
+  static m23(grade) => "Kōeke whakamutunga: ${grade}";
 
-  static m22(score, pointsPossible) => "${score} / ${score}";
+  static m24(studentName) => "E pā ana: ${studentName}, Whārangi Mua";
 
-  static m23(studentName) => "E pā ana: ${studentName}, Ngā Kōeke";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m24(pointsLost) => "Whiu tōmuri (-${pointsLost})";
+  static m26(studentName) => "E pā ana: ${studentName}, Ngā Kōeke";
 
-  static m25(studentName, linkUrl) => "E pā ana: ${studentName}, ${linkUrl}";
+  static m27(pointsLost) => "Whiu tōmuri (-${pointsLost})";
 
-  static m26(percentage) => "Me runga ake ${percentage}";
+  static m28(studentName, linkUrl) => "E pā ana: ${studentName}, ${linkUrl}";
 
-  static m27(percentage) => "Me raro iho ${percentage}";
+  static m29(percentage) => "Me runga ake ${percentage}";
 
-  static m28(month) => "Marama i muri mai: ${month}";
+  static m30(percentage) => "Me raro iho ${percentage}";
 
-  static m29(date) => "Tīmata te wiki e heke mai nei ${date}";
+  static m31(month) => "Marama i muri mai: ${month}";
 
-  static m30(query) => "Kaore e taea te kitea ngā kura ōrite \"${query}\"";
+  static m32(date) => "Tīmata te wiki e heke mai nei ${date}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'I waho i te 1 koinga', other: 'I waho i te ${points} ngā kōinga')}";
+  static m33(query) => "Kaore e taea te kitea ngā kura ōrite \"${query}\"";
 
-  static m32(count) => "+${count}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'I waho i te 1 koinga', other: 'I waho i te ${points} ngā kōinga')}";
 
-  static m33(points) => "${points} ngā koinga e taea";
+  static m35(count) => "+${count}";
 
-  static m34(month) => "Marama o muri nei: ${month}";
+  static m36(points) => "${points} ngā koinga e taea";
 
-  static m35(date) => "Tīmata  te wiki o muri ${date}";
+  static m37(month) => "Marama o muri nei: ${month}";
 
-  static m36(month) => "Marama ō ${month}";
+  static m38(date) => "Tīmata  te wiki o muri ${date}";
 
-  static m37(date, time) => "I tukuna tēnei whakataunga i runga i ${date} kī ${time} ana kei te tatari ki te kōeketia";
+  static m39(month) => "Marama ō ${month}";
 
-  static m38(studentName) => "E pā ana: ${studentName}, Marautanga";
+  static m40(date, time) => "I tukuna tēnei whakataunga i runga i ${date} kī ${time} ana kei te tatari ki te kōeketia";
 
-  static m39(count) => "${count} kaore i pānuihia";
+  static m41(studentName) => "E pā ana: ${studentName}, Marautanga";
+
+  static m42(count) => "${count} kaore i pānuihia";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -112,6 +112,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Alert me when…" : MessageLookupByLibrary.simpleMessage("Matohi ahau ina..."),
     "All Grading Periods" : MessageLookupByLibrary.simpleMessage("Takiwā kōeke katoa"),
     "An email address is required." : MessageLookupByLibrary.simpleMessage("He whakaaturanga e hiahiatia ana."),
+    "An error occurred when trying to display this link" : MessageLookupByLibrary.simpleMessage("He hapa i puta i te wā e ngana ana ki te whakātu i tēnei hono"),
     "An unexpected error occurred" : MessageLookupByLibrary.simpleMessage("He hapa ohorere i puta"),
     "Android OS version" : MessageLookupByLibrary.simpleMessage("Android OS Putanga"),
     "Appearance" : MessageLookupByLibrary.simpleMessage("Āhua"),
@@ -181,6 +182,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Launch External Tool" : MessageLookupByLibrary.simpleMessage("Neke Taputapu Waho"),
     "Legal" : MessageLookupByLibrary.simpleMessage("Ture"),
     "Light Mode" : MessageLookupByLibrary.simpleMessage("Aratau Mārama"),
+    "Link Error" : MessageLookupByLibrary.simpleMessage("He hapa hono"),
     "Locale:" : MessageLookupByLibrary.simpleMessage("Tauwāhi:"),
     "Location" : MessageLookupByLibrary.simpleMessage("Wāhi"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Kua rakaina"),
@@ -213,6 +215,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "OS Version" : MessageLookupByLibrary.simpleMessage("OS Putanga"),
     "Observer" : MessageLookupByLibrary.simpleMessage("Kaimātakitaki"),
     "One of our other apps might be a better fit. Tap one to visit the Play Store." : MessageLookupByLibrary.simpleMessage("Ko tētahi atu o a mātou taupānga pea he pai ake te uru. Pātō kotahi ki te toro atu ki te Toa Tākaro."),
+    "Open In Browser" : MessageLookupByLibrary.simpleMessage("Tuwhera I roto i te Pūtirotiro"),
     "Open with another app" : MessageLookupByLibrary.simpleMessage("Tuwhera me tētahi atu taupānga"),
     "Pairing Code" : MessageLookupByLibrary.simpleMessage("Waihere Hono"),
     "Preparing…" : MessageLookupByLibrary.simpleMessage("E whakareri ana..."),
@@ -238,7 +241,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Tuku karere"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Whakatau he rā me te wā hei whakamōhiotia mo tēnei tauwhainga."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Whakatau he rā me te wā hei whakamōhiotia mo tēnei whakataunga ake."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Whakatakotoria takahuri whakamaumahara"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Ngā Tautuhinga"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Tuari Tō Aroha mō te Taupānga"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Kua pakaru tētahi mea ēngari ka taea e ahau te mahi a tawhio noa ki a oti ai ngā mea e hiahia ana ahau."),
@@ -251,6 +253,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Syllabus" : MessageLookupByLibrary.simpleMessage("Marautanga"),
     "TA" : MessageLookupByLibrary.simpleMessage("TA"),
     "TEACHER" : MessageLookupByLibrary.simpleMessage("KAIAKO"),
+    "Tap to favorite the courses you want to see on the Calendar." : MessageLookupByLibrary.simpleMessage("Pātō ki tō akoranga e hiahia ana koe ki te kite i te Maramataka"),
     "Tap to pair with a new student" : MessageLookupByLibrary.simpleMessage("Pātō ki te hono me tētahi ākonga hou"),
     "Tap to select this student" : MessageLookupByLibrary.simpleMessage("Pātō ki te tīpako i tēnei ākonga"),
     "Tap to show student selector" : MessageLookupByLibrary.simpleMessage("Pātō ki te whakātu te kaitīpako o te ākonga"),
@@ -294,6 +297,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Version Number" : MessageLookupByLibrary.simpleMessage("Whakāturanga Tau"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Tirohia ngā hapa taipitopito"),
     "We are currently building this feature for your viewing pleasure." : MessageLookupByLibrary.simpleMessage("Kei te hanga mātou i tēnei āhuatanga kia pai ai tō mātakitaki."),
+    "We are unable to display this link, it may belong to an institution you currently aren\'t logged in to." : MessageLookupByLibrary.simpleMessage("Kaore e taea e mātou te whakātu i tēnei hono, ekene e mau ana i tētahi wharekōhanga kaore koe i te takiuru i tēnei wā."),
     "We couldn\'t find any students associated with this account" : MessageLookupByLibrary.simpleMessage("Kaore i kitea e mātou ngā ākonga e hono ana ki tēnei pūkete"),
     "We were unable to verify the server for use with this app." : MessageLookupByLibrary.simpleMessage("I taea e mātou ki te manatoko i te tūmau mō te whakamahi ki tenei taupānga matou."),
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Kaore mātou i te tino mōhio he aha te mahi, ngari kaore i te pai. Whakapā mai ki a mātou mehemea ka mahi pēnei tonu tēnei."),
@@ -305,64 +309,63 @@ class MessageLookup extends MessageLookupByLibrary {
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Kaore e pānuitia ō ākonga akoranga i tēnei wā."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Kua mau katoa koe!"),
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("He whakamataara"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Maramataka"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas Kaiārahi"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas moko"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas Tautoko"),
     "collapse" : MessageLookupByLibrary.simpleMessage("hinga"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("hinga"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Ngā Akoranga"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("pana"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Me pehea e kitea ai e ahau taku kura rohe rānei?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Whakauru kura ingoa rohe rānei..."),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("whakawhānui"),
     "expanded" : MessageLookupByLibrary.simpleMessage("whakawhānui"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Kimihia taku kura"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("ahau"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("tango"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("E haere ake nei"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("Ae"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("tukua"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("kaore i pānuitia"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

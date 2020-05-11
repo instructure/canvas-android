@@ -73,8 +73,8 @@ object FlutterComm {
             put("uuid", "")
             put("domain", ApiPrefs.fullDomain)
             put("accessToken", ApiPrefs.getValidToken())
-            put("refreshToken", ApiPrefs.refreshToken)
             put("user", userJson)
+            if (ApiPrefs.isMasquerading) put("masqueradeId", ApiPrefs.masqueradeId.toString())
         }
         channel.invokeMethod(METHOD_UPDATE_LOGIN_DATA, loginJson.toString())
     }

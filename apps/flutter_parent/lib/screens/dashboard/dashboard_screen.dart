@@ -464,10 +464,13 @@ class DashboardState extends State<DashboardScreen> {
     locator<QuickNav>().pushRoute(context, PandaRouter.conversations());
   }
 
-  _navigateToManageStudents(context) {
+  _navigateToManageStudents(context) async {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-    locator<QuickNav>().push(context, ManageStudentsScreen(_students));
+    var _addedStudentFuture = await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
+    if (_addedStudentFuture) {
+      _addStudent();
+    }
   }
 
   _navigateToSettings(context) {
