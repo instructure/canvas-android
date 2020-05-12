@@ -185,7 +185,7 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
             ApiType.API -> {
                 val oldLocale = ApiPrefs.effectiveLocale
                 // This has a habit of running after we've retrieved the Test user account when in Student View, which then
-                // overrides the Test user info in ApiPrefs. We only want to override if we're not in Student view, or
+                // overrides the Test user info in ApiPrefs. We only want to override if we're not in Student view, and
                 // the user in ApiPrefs is null.
                 if (!ApiPrefs.isStudentView && ApiPrefs.user == null)
                     ApiPrefs.user = user
