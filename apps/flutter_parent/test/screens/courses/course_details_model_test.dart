@@ -30,6 +30,7 @@ import 'package:test/test.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 const _studentId = '123';
 const _studentName = 'billy jean';
@@ -42,7 +43,7 @@ final _student = User((b) => b
 final _course = Course((b) => b..id = _courseId);
 
 void main() {
-  final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
+  final interactor = MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => interactor);
@@ -546,5 +547,3 @@ void main() {
     });
   });
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}

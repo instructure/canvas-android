@@ -22,24 +22,20 @@ import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_list_tile.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/events/event_details_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final studentId = '1337';
@@ -243,7 +239,7 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
+        ..registerFactory<AssignmentDetailsInteractor>(() => MockAssignmentDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -268,7 +264,7 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor()));
+        ..registerFactory<AssignmentDetailsInteractor>(() => MockAssignmentDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -289,7 +285,7 @@ void main() {
 
       setupTestLocator((locator) => locator
         ..registerFactory<QuickNav>(() => QuickNav())
-        ..registerFactory<EventDetailsInteractor>(() => _MockEventDetailsInteractor()));
+        ..registerFactory<EventDetailsInteractor>(() => MockEventDetailsInteractor()));
 
       await tester.pumpWidget(TestApp(
         CalendarDayListTile(plannerItem),
@@ -420,14 +416,9 @@ PlannerItem _createPlannerItem(
       ..submissionStatus = submission != null ? submission.toBuilder() : null
       ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);
 
-class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
-
+/*
 class _MockAnnouncementDetailsInteractor extends Mock implements AnnouncementDetailsInteractor {}
-
-class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
-
 class _MockUrlLauncher extends Mock implements UrlLauncher {}
-
 class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
-
 class _MockAnalytics extends Mock implements Analytics {}
+ */

@@ -21,6 +21,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
@@ -33,18 +34,26 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
+import 'package:flutter_parent/screens/events/event_details_interactor.dart';
+import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
+import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -71,6 +80,8 @@ class MockAlertCountNotifier extends Mock implements AlertCountNotifier {}
 
 class MockAssignmentApi extends Mock implements AssignmentApi {}
 
+class MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
+
 class MockAuthApi extends Mock implements AuthApi {}
 
 class MockBarcodeScanner extends Mock implements BarcodeScanVeneer {}
@@ -79,11 +90,19 @@ class MockCalendarApi extends Mock implements CalendarEventsApi {}
 
 class MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
 
+class MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
+
 class MockCourseApi extends Mock implements CourseApi {}
+
+class MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
 
 class MockCoursesInteractor extends Mock implements CoursesInteractor {}
 
+class MockCourseModel extends Mock implements CourseDetailsModel {}
+
 class MockCourseRoutingShellInteractor extends Mock implements CourseRoutingShellInteractor {}
+
+class MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}
 
 class MockDatabase extends Mock implements Database {}
 
@@ -95,6 +114,8 @@ class MockErrorReportApi extends Mock implements ErrorReportApi {}
 
 class MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
 
+class MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
+
 class MockHttpClient extends Mock implements HttpClient {}
 
 class MockHttpClientRequest extends Mock implements HttpClientRequest {}
@@ -104,6 +125,10 @@ class MockHttpClientResponse extends Mock implements HttpClientResponse {}
 class MockHttpHeaders extends Mock implements HttpHeaders {}
 
 class MockInboxApi extends Mock implements InboxApi {}
+
+class MockNav extends Mock implements QuickNav {}
+
+class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 class MockNotificationUtil extends Mock implements NotificationUtil {}
 
@@ -116,6 +141,8 @@ class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
 class MockReminderDb extends Mock implements ReminderDb {}
 
 class MockRemoteConfig extends Mock implements RemoteConfig {}
+
+class MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
 
 class MockUrlLauncher extends Mock implements UrlLauncher {}
 

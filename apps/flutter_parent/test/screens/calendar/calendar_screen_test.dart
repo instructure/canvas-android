@@ -44,12 +44,13 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  CalendarEventsApi calendarApi = _MockCalendarApi();
-  CalendarFilterDb filterDb = _MockCalendarFilterDb();
-  CalendarFilterListInteractor filterInteractor = _MockCalendarFilterListInteractor();
-  CoursesInteractor coursesInteractor = _MockCourseInteractor();
+  CalendarEventsApi calendarApi = MockCalendarApi();
+  CalendarFilterDb filterDb = MockCalendarFilterDb();
+  CalendarFilterListInteractor filterInteractor = MockCalendarFilterListInteractor();
+  CoursesInteractor coursesInteractor = MockCoursesInteractor();
 
   when(filterDb.getByObserveeId(any, any, any))
       .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = SetBuilder({'course_123'}))));
@@ -127,7 +128,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('filter screen returns updated contexts', (tester) async {
       var completer = Completer<List<Course>>();
 
-      final observer = _MockNavigatorObserver();
+      final observer = MockNavigatorObserver();
 
       when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => completer.future);
@@ -172,7 +173,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('planner updated if user filtered different contexts', (tester) async {
       var completer = Completer<List<Course>>();
 
-      final observer = _MockNavigatorObserver();
+      final observer = MockNavigatorObserver();
 
       when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => completer.future);
@@ -218,7 +219,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('planner not updated if user did not change filtered contexts', (tester) async {
       var completer = Completer<List<Course>>();
 
-      final observer = _MockNavigatorObserver();
+      final observer = MockNavigatorObserver();
 
       when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => completer.future);
@@ -408,13 +409,3 @@ List<Course> _mockCoursesBigList() {
       ..name = 'Course3'),
   ];
 }
-
-class _MockCalendarApi extends Mock implements CalendarEventsApi {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
-
-class _MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
-
-class _MockCourseInteractor extends Mock implements CoursesInteractor {}
-
-class _MockNavigatorObserver extends Mock implements NavigatorObserver {}

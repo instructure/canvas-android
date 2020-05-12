@@ -53,8 +53,9 @@ import '../utils/accessibility_utils.dart';
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
-final _analytics = _MockAnalytics();
+final _analytics = MockAnalytics();
 
 void main() {
   final String _domain = 'https://test.instructure.com';
@@ -64,10 +65,10 @@ void main() {
     ..accessToken = 'token'
     ..user = user.toBuilder());
 
-  final _mockNav = _MockNav();
-  final _mockWebContentInteractor = _MockWebContentInteractor();
-  final _mockSnackbar = _MockSnackbar();
-  final _mockLauncher = _MockUrlLauncher();
+  final _mockNav = MockNav();
+  final _mockWebContentInteractor = MockWebViewInteractor();
+  final _mockSnackbar = MockSnackbar();
+  final _mockLauncher = MockUrlLauncher();
 
   setUpAll(() async {
     PandaRouter.init();
@@ -601,13 +602,3 @@ Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}
 
   return widget;
 }
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockNav extends Mock implements QuickNav {}
-
-class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
-
-class _MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}

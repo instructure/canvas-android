@@ -46,6 +46,7 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 const _studentId = '123';
 const _courseId = '321';
@@ -57,11 +58,11 @@ final _student = User((b) => b
   ..name = _studentName);
 
 void main() {
-  final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
+  final interactor = MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => interactor);
-    locator.registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor());
+    locator.registerFactory<AssignmentDetailsInteractor>(() => MockAssignmentDetailsInteractor());
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
@@ -720,7 +721,3 @@ Widget _testableWidget(CourseDetailsModel model, {PlatformConfig platformConfig 
     platformConfig: platformConfig,
   );
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
-
-class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

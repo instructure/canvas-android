@@ -46,6 +46,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final courseId = '123';
@@ -55,8 +56,8 @@ void main() {
   final assignmentName = 'Instructure 101';
   final assignmentUrl = 'https://www.instructure.com';
 
-  final interactor = _MockAssignmentDetailsInteractor();
-  final convoInteractor = _MockCreateConversationInteractor();
+  final interactor = MockAssignmentDetailsInteractor();
+  final convoInteractor = MockCreateConversationInteractor();
 
   final student = User((b) => b
     ..id = studentId
@@ -613,7 +614,3 @@ void main() {
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
   });
 }
-
-class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
-
-class _MockCreateConversationInteractor extends Mock implements CreateConversationInteractor {}
