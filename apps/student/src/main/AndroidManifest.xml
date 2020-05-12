@@ -102,7 +102,6 @@
 
             <intent-filter>
                 <action android:name="com.instructure.student.ROUTING_ACTIVITY"/>
-                <action android:name="com.instructure.student.STUDENT_VIEW"/>
 
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
@@ -265,15 +264,26 @@
         </activity>
         <activity android:name=".activity.StudentLoginWithQRActivity" />
 
-        <service android:name="com.instructure.pandautils.services.NotoriousUploadService"
-            android:exported="false"/>
+        <activity
+            android:name=".activity.StudentViewStarterActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="com.instructure.student.STUDENT_VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
-        <service android:name=".util.FileDownloadJobIntentService"
+        <service
+            android:name="com.instructure.pandautils.services.NotoriousUploadService"
+            android:exported="false" />
+
+        <service
+            android:name=".util.FileDownloadJobIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".receivers.InitializeReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />

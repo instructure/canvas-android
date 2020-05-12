@@ -134,11 +134,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                                 RouteMatcher.routeUrl(this@NavigationActivity, it.url!!)
                             }, route)
                 }
-                R.id.navigationDrawerItem_changeUser -> StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                R.id.navigationDrawerItem_changeUser -> {
+                    StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
-                            .setPositiveButton(android.R.string.yes) { _, _ -> StudentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+                            .setPositiveButton(android.R.string.yes) { _, _ ->
+                                StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                            }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
                             .show()
@@ -207,9 +211,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             loadLandingPage(true)
         }
 
-        // Make sure we are either masquerading or we aren't - there's a case where we are in the middle of getting the Test User, or the user we want to masquerade as,
-        // and we do the above check if the user is null and logging out before getting the User information back
-        if (ApiPrefs.user == null && ((ApiPrefs.isMasquerading && ApiPrefs.isStudentView) || (!ApiPrefs.isMasquerading && !ApiPrefs.isStudentView))) {
+        if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
             StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()

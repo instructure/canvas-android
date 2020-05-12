@@ -26,6 +26,7 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs

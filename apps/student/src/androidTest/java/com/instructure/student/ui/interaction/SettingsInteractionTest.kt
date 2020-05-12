@@ -26,6 +26,8 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -246,6 +248,8 @@ class SettingsInteractionTest : StudentTest() {
 
         setUpAndSignIn()
 
+        // Enable pairing
+        RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, "true")
         ApiPrefs.canGeneratePairingCode = true
         dashboardPage.launchSettingsPage()
         settingsPage.launchPairObserverPage()
