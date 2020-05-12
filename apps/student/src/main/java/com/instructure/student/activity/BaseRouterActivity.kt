@@ -21,7 +21,6 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
