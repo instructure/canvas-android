@@ -30,7 +30,7 @@ class PlannerFetcher extends ChangeNotifier {
 
   final String userDomain;
 
-  final String userId;
+  String userId;
 
   PlannerFetcher({DateTime fetchFirst, @required this.userDomain, @required this.userId}) {
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
@@ -154,6 +154,11 @@ class PlannerFetcher extends ChangeNotifier {
       ..userId = userId
       ..filters = SetBuilder(contexts));
     await locator<CalendarFilterDb>().insertOrUpdate(filter);
+    reset();
+  }
+
+  void setUserId(String newUserId) {
+    this.userId = newUserId;
     reset();
   }
 

@@ -212,7 +212,7 @@ class AppLocalizations {
       );
 
   String get errorLoadingEvents => Intl.message(
-        'There was an error loading your student\'s calendar',
+        'There was an error loading your calendar',
         desc: 'Message displayed when calendar events could not be loaded for the current student',
       );
 

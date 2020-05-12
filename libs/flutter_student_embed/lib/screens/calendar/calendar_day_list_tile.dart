@@ -26,11 +26,18 @@ class CalendarDayListTile extends StatelessWidget {
 
   CalendarDayListTile(this._item, this.onItemSelected);
 
+  // I needed some way to grab a context when someone clicked on a tile,
+  // and this was the best way that I found.
+  // (I.e., widget.globalKeyForTesting.currentContext)
+  @visibleForTesting
+  GlobalKey global_key_for_testing = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final contextColor = StudentTheme.of(context).getCanvasContextColor(_item.contextCode());
     Widget tile = InkWell(
+      key: global_key_for_testing,
       onTap: () => onItemSelected(_item),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
