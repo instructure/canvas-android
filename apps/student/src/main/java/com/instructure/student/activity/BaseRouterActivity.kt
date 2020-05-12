@@ -151,14 +151,15 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
             // switch out the current user
             if (ApiPrefs.user != null) {
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                ApiPrefs.isStudentView = true
+
                 // Totally restart the app so the masquerading will apply
                 // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
                 Handler().postDelayed({
                     ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, intent)
-                }, 500)
+                }, 700)
 
-                StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
-                ApiPrefs.isStudentView = true
                 return
             }
 
