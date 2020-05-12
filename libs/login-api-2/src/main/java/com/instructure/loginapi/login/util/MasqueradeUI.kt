@@ -94,8 +94,6 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         MasqueradeHelper.stopMasquerading(startingClass)
-                        // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
-                        if (ApiPrefs.isStudentView) (context as? AppCompatActivity)?.finish()
                     }
                     .show()
             }

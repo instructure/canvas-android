@@ -145,42 +145,6 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
 
         val extras = intent.extras!!
         Logger.logBundle(extras)
-        
-        if (intent.action == Const.INTENT_ACTION_STUDENT_VIEW) {
-            // If someone is logged in, create a pending intent to launch into masquerading, then
-            // switch out the current user
-            if (ApiPrefs.user != null) {
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
-                ApiPrefs.isStudentView = true
-
-                // Totally restart the app so the masquerading will apply
-                // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
-                Handler().postDelayed({
-                    ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, intent)
-                }, 700)
-
-                return
-            }
-
-            // This is an intent from the Teacher app for viewing a course as a student
-            val domain: String = extras.getString(Const.DOMAIN, "")
-            val token: String = extras.getString(Const.TOKEN, "")
-            val clientId = extras.getString(Const.CLIENT_ID, ApiPrefs.clientId)
-            val clientSecret = extras.getString(Const.CLIENT_SECRET, ApiPrefs.clientSecret)
-            val courseId = extras.getLong(Const.COURSE_ID)
-
-            MasqueradeHelper.startMasquerading(
-                masqueradingUserId = -1, // This will be retrieved when we get the test user
-                masqueradingDomain = domain,
-                startingClass = NavigationActivity::class.java,
-                masqueradeToken = token,
-                masqueradeClientId = clientId,
-                masqueradeClientSecret = clientSecret,
-                courseId = courseId
-            )
-            return
-        }
 
         if (extras.containsKey(Route.ROUTE)) {
             handleRoute(extras.getParcelable(Route.ROUTE) as Route)

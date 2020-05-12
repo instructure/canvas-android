@@ -136,16 +136,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 }
                 R.id.navigationDrawerItem_changeUser -> {
                     StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
-                    // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
-                    if (ApiPrefs.isStudentView) finish()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
                                 StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
-                                // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
-                                if (ApiPrefs.isStudentView) finish()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -156,8 +152,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 }
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
-                    // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
-                    if (ApiPrefs.isStudentView) finish()
                 }
                 R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
@@ -217,9 +211,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             loadLandingPage(true)
         }
 
-        // Make sure we are either masquerading or we aren't - there's a case where we are in the middle of getting the Test User, or the user we want to masquerade as,
-        // and we do the above check if the user is null and logging out before getting the User information back
-        if (ApiPrefs.user == null && ((ApiPrefs.isMasquerading && ApiPrefs.isStudentView) || (!ApiPrefs.isMasquerading && !ApiPrefs.isStudentView))) {
+        if (ApiPrefs.user == null ) {
             // Hard case to repro but it's possible for a user to force exit the app before we finish saving the user but they will still launch into the app
             // If that happens, log out
             StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()

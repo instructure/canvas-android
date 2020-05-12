@@ -16,8 +16,6 @@
 package com.instructure.canvasapi2.utils
 
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -27,15 +25,13 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
-import com.jakewharton.processphoenix.ProcessPhoenix;
+import com.jakewharton.processphoenix.ProcessPhoenix
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
-import kotlin.system.exitProcess
 
 object MasqueradeHelper {
-
     var masqueradeLogoutTask: Runnable? = null
 
     @JvmStatic
@@ -51,7 +47,6 @@ object MasqueradeHelper {
         ApiPrefs.domain = ""
         ApiPrefs.masqueradeDomain = ""
         ApiPrefs.masqueradeUser = null
-        ApiPrefs.accessToken = ""
         ApiPrefs.clientSecret = ""
         ApiPrefs.clientId = ""
         cleanupMasquerading(ContextKeeper.appContext)
