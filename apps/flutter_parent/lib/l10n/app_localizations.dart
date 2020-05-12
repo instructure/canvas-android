@@ -260,6 +260,9 @@ class AppLocalizations {
   String get tooManyCalendarsError => Intl.message('You may only choose 10 calendars to display',
       desc: 'Error text when trying to select more than 10 calendars');
 
+  String get minimumCalendarsError => Intl.message('You must select at least one calendar to display',
+      desc: 'Error text when trying to de-select all calendars');
+
   String get plannerNote => Intl.message('Planner Note', desc: 'Label used for notes in the planner');
 
   String get gotoTodayButtonLabel =>

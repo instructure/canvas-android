@@ -154,7 +154,14 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                             .showSnackBar(SnackBar(content: Text(L10n(context).tooManyCalendarsError)));
                       }
                     } else {
-                      selectedContextIds.remove(c.contextFilterId());
+                      if (selectedContextIds.length == 1) {
+                        // The list cannot be empty, the calendar wouldn't do anything!
+                        _scaffoldKey.currentState.removeCurrentSnackBar();
+                        _scaffoldKey.currentState
+                            .showSnackBar(SnackBar(content: Text(L10n(context).minimumCalendarsError)));
+                      } else {
+                        selectedContextIds.remove(c.contextFilterId());
+                      }
                     }
                   });
                 }),

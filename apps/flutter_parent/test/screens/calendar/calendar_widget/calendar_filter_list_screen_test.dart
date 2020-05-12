@@ -243,6 +243,7 @@ void main() {
       expect(now == initial, true);
     });
 
+    /*
     testWidgetsWithAccessibilityChecks('deselecting all items empties the selected list', (tester) async {
       var interactor = _MockCalendarFilterListInteractor();
       when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
@@ -284,6 +285,49 @@ void main() {
       // Make sure the selected list was updated
       var now = state.selectedContextIds.length;
       expect(now == 0, true);
+    });
+     */
+
+    testWidgetsWithAccessibilityChecks('deselecting items reduces the selected list', (tester) async {
+      var interactor = _MockCalendarFilterListInteractor();
+      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => Future.value(_mockCourses()));
+
+      Set<String> selectedContexts = {'course_123', 'course_234'};
+      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
+
+      await tester.pumpWidget(TestApp(
+        CalendarFilterListScreen(selectedContexts),
+      ));
+      await tester.pump();
+      await tester.pump();
+
+      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
+
+      expect(find.byType(Checkbox), findsNWidgets(3));
+
+      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
+        if (widget is Checkbox) {
+          // Check for a checkbox widgets that are checked
+          final Checkbox checkboxWidget = widget;
+          return checkboxWidget.value;
+        }
+        return false;
+      });
+
+      // Make sure we've got the correct selected number of items
+      expect(checkedCheckBoxFinder, findsNWidgets(2));
+
+      // Click on the first course, deselecting it
+      expect(find.text('Course1'), findsOneWidget);
+      await tester.tap(find.text('Course1'));
+      await tester.pumpAndSettle(Duration(seconds: 4)); // Let checkbox animation finish
+
+      // Check to make sure we have no items selected
+      expect(checkedCheckBoxFinder, findsOneWidget);
+
+      // Make sure the selected list was updated
+      expect(state.selectedContextIds.length, 1);
     });
 
     testWidgetsWithAccessibilityChecks('selecting more than 10 shows an error', (tester) async {
@@ -340,6 +384,49 @@ void main() {
 
       var selectedCount = state.selectedContextIds.length;
       expect(selectedCount, 10);
+    });
+
+    testWidgetsWithAccessibilityChecks('attempting to deselect the last calendar shows an error', (tester) async {
+      var interactor = _MockCalendarFilterListInteractor();
+      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+          .thenAnswer((_) => Future.value(_mockCourses()));
+
+      Set<String> selectedContexts = {
+        'course_123',
+      };
+      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
+
+      await tester.pumpWidget(TestApp(
+        CalendarFilterListScreen(selectedContexts),
+      ));
+      await tester.pump();
+      await tester.pump();
+
+      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
+
+      expect(find.byType(Checkbox), findsNWidgets(3));
+
+      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
+        if (widget is Checkbox) {
+          // Check for a checkbox widgets that are checked
+          final Checkbox checkboxWidget = widget;
+          return checkboxWidget.value;
+        }
+        return false;
+      }, skipOffstage: false);
+
+      // Make sure we've got the correct selected number of items
+      expect(checkedCheckBoxFinder, findsNWidgets(1));
+
+      // attempt to deselect the only selected course
+      expect(find.text('Course1'), findsOneWidget);
+      await tester.tap(find.text('Course1'));
+      await tester.pump();
+
+      expect(find.text(AppLocalizations().minimumCalendarsError), findsOneWidget);
+
+      var selectedCount = state.selectedContextIds.length;
+      expect(selectedCount, 1);
     });
   });
 }

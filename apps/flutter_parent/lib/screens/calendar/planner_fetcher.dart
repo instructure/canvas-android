@@ -78,8 +78,11 @@ class PlannerFetcher extends ChangeNotifier {
       var tempCourseList = courses.map((course) => course.contextFilterId()).toList();
       Set<String> courseSet = Set.from(tempCourseList.length > 10 ? tempCourseList.sublist(0, 10) : tempCourseList);
 
-      // This initial DB insert only needs to happen once, prevent the multiple month loads from repeating it
-      if (firstFilterUpdateFlag == false && calendarFilter == null) {
+      if (calendarFilter != null) {
+        return calendarFilter.filters.toSet();
+      } else if (firstFilterUpdateFlag == false) {
+        // This initial DB insert only needs to happen once for fresh users,
+        // prevent the multiple month loads from repeating it
         CalendarFilter filter = CalendarFilter((b) => b
           ..userDomain = userDomain
           ..userId = userId
