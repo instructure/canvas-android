@@ -17,12 +17,11 @@
 
 package com.instructure.student.activity
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -41,11 +40,11 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.fragment.AllCoursesFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.FileUtils
+import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.coroutines.Job
 
 //Intended to handle all routing to fragments from links both internal and external
@@ -69,7 +68,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
             parse(intent)
         }
 
-        LoaderUtils.restoreLoaderFromBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+        LoaderUtils.restoreLoaderFromBundle(
             LoaderManager.getInstance(this), savedInstanceState, loaderCallbacks, R.id.openMediaLoaderID, Const.OPEN_MEDIA_LOADER_BUNDLE)
 
         if (savedInstanceState?.getBundle(Const.OPEN_MEDIA_LOADER_BUNDLE) != null) {
@@ -152,13 +151,15 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
             // If someone is logged in, create a pending intent to launch into masquerading, then
             // switch out the current user
             if (ApiPrefs.user != null) {
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 // Totally restart the app so the masquerading will apply
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-                val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
+                // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
+                Handler().postDelayed({
+                    ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, intent)
+                }, 500)
 
                 StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                ApiPrefs.isStudentView = true
                 return
             }
 

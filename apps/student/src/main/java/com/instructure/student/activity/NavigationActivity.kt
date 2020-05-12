@@ -134,11 +134,19 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                                 RouteMatcher.routeUrl(this@NavigationActivity, it.url!!)
                             }, route)
                 }
-                R.id.navigationDrawerItem_changeUser -> StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                R.id.navigationDrawerItem_changeUser -> {
+                    StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                    // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
+                    if (ApiPrefs.isStudentView) finish()
+                }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
-                            .setPositiveButton(android.R.string.yes) { _, _ -> StudentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
+                            .setPositiveButton(android.R.string.yes) { _, _ ->
+                                StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                                // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
+                                if (ApiPrefs.isStudentView) finish()
+                            }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
                             .show()
@@ -148,6 +156,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 }
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
+                    // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
+                    if (ApiPrefs.isStudentView) finish()
                 }
                 R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }

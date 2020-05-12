@@ -124,7 +124,7 @@ dependencies {
     /* Date/time/calendar */
     api 'com.jakewharton.threetenabp:threetenabp:1.1.2'
 
-    implementation 'com.jakewharton:process-phoenix:2.0.0'
+    api 'com.jakewharton:process-phoenix:2.0.0'
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT

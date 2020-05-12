@@ -26,6 +26,7 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -93,6 +94,8 @@ private fun Window.showMasqueradeNotification(startingClass: Class<Activity>? = 
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(android.R.string.ok) { _, _ ->
                         MasqueradeHelper.stopMasquerading(startingClass)
+                        // Prevents the Student view intent being relaunched by the system when opening up the app after it has been killed
+                        if (ApiPrefs.isStudentView) (context as? AppCompatActivity)?.finish()
                     }
                     .show()
             }

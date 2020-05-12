@@ -35,7 +35,6 @@ import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import java.io.File
-import java.lang.Exception
 
 abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
 
@@ -105,14 +104,19 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
             // Go to login page
             if (type != Type.LOGOUT_NO_LOGIN_FLOW) {
                 // If this was triggered by a QR switch, we need a different intent to include the URI
-                val intent = if(type == Type.QR_CODE_SWITCH && uri != null) createQRLoginIntent(ContextKeeper.appContext, uri) else createLoginIntent(ContextKeeper.appContext)
-                intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                val intent = if (type == Type.QR_CODE_SWITCH && uri != null)
+                    createQRLoginIntent(ContextKeeper.appContext, uri)
+                else
+                    createLoginIntent(ContextKeeper.appContext)
                 ContextKeeper.appContext.startActivity(intent)
             }
         }
     }
 
     private fun removeUser() {
+        // Don't want to inadvertently invalidate a Teacher's token
+        if (ApiPrefs.isStudentView) return
+
         // Remove SignedInUser
         PreviousUsersUtils.removeByToken(ContextKeeper.appContext, ApiPrefs.getValidToken(), ApiPrefs.refreshToken)
         // Delete token from server. Fire and forget.
