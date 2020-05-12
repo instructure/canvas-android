@@ -46,6 +46,11 @@ class CalendarDayListTile extends StatelessWidget {
             locator<QuickNav>()
                 .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
             break;
+          case 'discussion_topic':
+            // This is a discussion assignment, go to the assignment page
+            locator<QuickNav>()
+                .pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.assignmentId));
+            break;
 //          case 'quiz': TODO - keep in place for potentially moving back to planner api
 //            if (_item.plannable.assignmentId != null) {
           // This is a quiz assignment, go to the assignment page

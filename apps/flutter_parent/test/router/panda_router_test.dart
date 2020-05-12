@@ -255,15 +255,14 @@ void main() {
 
     test('discussionDetails returns announcement details screen', () {
       final courseId = '123';
-      final topicId = '321';
+      final assignmentId = '321';
       final widget = _getWidgetFromRoute(
-        PandaRouter.discussionDetails(courseId, topicId),
-      ) as AnnouncementDetailScreen;
+        PandaRouter.discussionDetails(courseId, assignmentId),
+      ) as AssignmentDetailsScreen;
 
-      expect(widget, isA<AnnouncementDetailScreen>());
+      expect(widget, isA<AssignmentDetailsScreen>());
       expect(widget.courseId, courseId);
-      expect(widget.announcementId, topicId);
-      expect(widget.announcementType, AnnouncementType.COURSE);
+      expect(widget.assignmentId, assignmentId);
     });
 
     test('RouterErrorScreen returns RouterErrorScreen', () {

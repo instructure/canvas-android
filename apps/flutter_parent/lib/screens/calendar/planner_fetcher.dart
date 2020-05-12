@@ -40,7 +40,7 @@ class PlannerFetcher extends ChangeNotifier {
   final String userId;
 
   Future<List<Course>> courseListFuture;
-  bool firstFilterUpdateFlag;
+  bool firstFilterUpdateFlag = false;
 
   String _observeeId;
 
@@ -51,7 +51,6 @@ class PlannerFetcher extends ChangeNotifier {
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
   }
 
-  // TODO - wire up a "refresh" here for course refresh
   Future<Set<String>> getContexts() async {
     CalendarFilter calendarFilter = await locator<CalendarFilterDb>().getByObserveeId(
       userDomain,
@@ -59,10 +58,8 @@ class PlannerFetcher extends ChangeNotifier {
       _observeeId,
     );
     if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId].isEmpty)) {
-      // Fetch them courses and fill the filters
-
       if (courseListFuture == null) {
-        courseListFuture = locator<CoursesInteractor>().getCourses(isRefresh: true);
+        courseListFuture = locator<CoursesInteractor>().getCourses(isRefresh: true, studentId: _observeeId);
       }
 
       var courses = await courseListFuture;
@@ -79,6 +76,7 @@ class PlannerFetcher extends ChangeNotifier {
 
       // This DB insert only needs to happen once, prevent the multiple month loads from repeating it
       if (firstFilterUpdateFlag == false) {
+        // TODO this is a problem
         CalendarFilter filter = CalendarFilter((b) => b
           ..userDomain = userDomain
           ..userId = userId
@@ -223,6 +221,9 @@ class PlannerFetcher extends ChangeNotifier {
 
   void setObserveeId(String observeeId) {
     this._observeeId = observeeId;
+    // Reset the flag for first time DB inserts
+    this.firstFilterUpdateFlag = false;
+    this.courseListFuture = null;
     reset();
   }
 

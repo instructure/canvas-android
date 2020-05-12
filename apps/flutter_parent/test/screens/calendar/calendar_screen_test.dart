@@ -212,7 +212,9 @@ void main() {
 
       // Verify that the list of selected items was updated correctly
       expect(result, ['course_123', 'course_234']);
-      verify(filterDb.insertOrUpdate(any)).called(1);
+      // The DB will be updated twice, first when we fetch courses for the first time, and again
+      // when we return from the updated context list.
+      verify(filterDb.insertOrUpdate(any)).called(2);
     });
 
     testWidgetsWithAccessibilityChecks('planner not updated if user did not change filtered contexts', (tester) async {

@@ -161,6 +161,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
           ))
     ];
     return ListView.builder(
+        key: Key('calendar_filter_list_key'),
         physics: AlwaysScrollableScrollPhysics(),
         itemCount: _listItems.length, // Add one for the Courses header
         itemBuilder: (context, index) {
@@ -169,7 +170,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
   }
 
   Widget _listHeader(String title) => Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: Text(
           title,
           style: Theme.of(context).textTheme.overline,

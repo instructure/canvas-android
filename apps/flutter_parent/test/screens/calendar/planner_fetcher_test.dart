@@ -41,6 +41,7 @@ void main() {
   final Set<String> contexts = {'course_123'};
   final course = Course((b) => b
     ..id = '123'
+    ..name = 'hodor'
     ..enrollments = BuiltList.of([
       Enrollment((enrollment) => enrollment
         ..userId = '123'
@@ -387,5 +388,21 @@ void main() {
       ..observeeId = observeeId
       ..filters = SetBuilder(newContexts));
     verify(filterDb.insertOrUpdate(expectedFilterData));
+  });
+
+  test('getContexts fetches courses and sets courseNameMap', () async {
+    when(filterDb.getByObserveeId(any, any, any)).thenAnswer((_) => null);
+
+    final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain, observeeId: observeeId);
+
+    final newContexts = await fetcher.getContexts();
+
+    await untilCalled(interactor.getCourses(isRefresh: anyNamed('isRefresh')));
+
+    verify(interactor.getCourses(isRefresh: anyNamed('isRefresh')));
+
+    expect(newContexts, contexts);
+    expect(fetcher.courseNameMap[observeeId], isNotNull);
+    expect(fetcher.courseNameMap[observeeId][course.id], course.name);
   });
 }
