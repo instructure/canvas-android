@@ -21,7 +21,7 @@ import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -177,33 +177,23 @@ class _EventDetails extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 16),
-              Text(event.title ?? '', style: textTheme.display1),
-              SizedBox(height: 16),
-              Divider(),
-              _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2),
-              Divider(),
-              _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
-              Divider(),
-              _SimpleHeader(label: l10n.assignmentRemindMeLabel),
-              _RemindMe(event, courseId, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
-              Divider(),
-              _SimpleHeader(label: l10n.assignmentDescriptionLabel),
-            ],
-          ),
-        ),
-        // No external padding for the webview, defined via the html in the web view
-        CanvasWebView(
-          content: event.description,
-          horizontalPadding: 16,
-          fullScreen: false,
-        ),
+        SizedBox(height: 16),
+        Text(event.title ?? '', style: textTheme.display1),
+        SizedBox(height: 16),
+        Divider(),
+        _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2),
+        Divider(),
+        _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
+        Divider(),
+        _SimpleHeader(label: l10n.assignmentRemindMeLabel),
+        _RemindMe(event, courseId, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
+        Divider(),
+        HtmlDescriptionTile(html: event.description),
+        // Don't show the bottom divider if there's no content (no empty message shown either)
+        if (event.description != null && event.description.isNotEmpty)
+          Divider(),
       ],
     );
   }

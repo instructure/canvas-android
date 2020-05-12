@@ -40,6 +40,7 @@ import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interac
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
@@ -107,6 +108,8 @@ class MockPageApi extends Mock implements PageApi {}
 
 class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
 
+class MockQuickNav extends Mock implements QuickNav {}
+
 class MockReminderDb extends Mock implements ReminderDb {}
 
 class MockRemoteConfig extends Mock implements RemoteConfig {}
@@ -115,4 +118,4 @@ class MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
 
-class MockWebViewInteractor extends Mock implements WebContentInteractor {}
+class MockWebContentInteractor extends Mock implements WebContentInteractor {}

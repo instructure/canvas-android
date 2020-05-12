@@ -23,14 +23,13 @@ import 'package:flutter_parent/screens/announcements/announcement_details_screen
 import 'package:flutter_parent/screens/announcements/announcement_view_state.dart';
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../utils/accessibility_utils.dart';
-import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 
 void main() {
@@ -128,7 +127,7 @@ void main() {
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
       expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
-      expect(find.byType(WebView), findsOneWidget);
+      expect(find.byType(HtmlDescriptionTile), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Shows course announcement with attachment', (tester) async {
@@ -154,7 +153,7 @@ void main() {
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(courseName), findsOneWidget);
       expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
-      expect(find.byType(WebView), findsOneWidget);
+      expect(find.byType(HtmlDescriptionTile), findsOneWidget);
       var attachmentWidget = find.byType(AttachmentIndicatorWidget);
       expect(attachmentWidget, findsOneWidget);
       await tester.tap(attachmentWidget);
@@ -179,7 +178,7 @@ void main() {
       expect(find.text(announcementSubject), findsOneWidget);
       expect(find.text(toolbarTitle), findsOneWidget);
       expect(find.text(postedAt.l10nFormat(AppLocalizations().dateAtTime)), findsOneWidget);
-      expect(find.byType(WebView), findsOneWidget);
+      expect(find.byType(HtmlDescriptionTile), findsOneWidget);
     });
   });
 }
@@ -191,7 +190,6 @@ Widget _testableWidget(String announcementId, AnnouncementType type, String cour
         return AnnouncementDetailScreen(announcementId, type, courseId, context);
       },
     ),
-    platformConfig: PlatformConfig(initWebview: true),
   );
 }
 

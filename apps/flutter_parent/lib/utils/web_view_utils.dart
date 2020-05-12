@@ -71,7 +71,8 @@ String _addProtocolToLinks(String html) {
 /// Due to the Gesture Arena currently favoring basically but the WebView,
 /// this will tell the arena to respect vertical swipe gestures on the WebView
 /// so it can scroll
-/// Code taken from:
+/// Code taken from: https://github.com/flutter/flutter/issues/35394
+/// Fallback to handling accepting pointers with this stack overflow post if problems arise again
 ///   https://stackoverflow.com/questions/57069716/scrolling-priority-when-combining-horizontal-scrolling-with-webview/57150906#57150906
 /// Related issues:
 ///   https://github.com/flutter/flutter/issues/36304
@@ -79,32 +80,6 @@ String _addProtocolToLinks(String html) {
 class WebViewGestureRecognizer extends VerticalDragGestureRecognizer {
   WebViewGestureRecognizer({PointerDeviceKind kind}) : super(kind: kind);
 
-  Offset _dragDistance = Offset.zero;
-
   @override
-  void addPointer(PointerEvent event) {
-    startTrackingPointer(event.pointer);
-  }
-
-  @override
-  void handleEvent(PointerEvent event) {
-    _dragDistance = _dragDistance + event.delta;
-    if (event is PointerMoveEvent) {
-      final double dy = _dragDistance.dy.abs();
-      final double dx = _dragDistance.dx.abs();
-
-      if (dy > dx && dy > kTouchSlop) {
-        // Vertical drag - accept
-        resolve(GestureDisposition.accepted);
-        _dragDistance = Offset.zero;
-      } else if (dx > kTouchSlop && dx > dy) {
-        // horizontal drag - stop tracking
-        stopTrackingPointer(event.pointer);
-        _dragDistance = Offset.zero;
-      }
-    }
-  }
-
-  @override
-  void didStopTrackingLastPointer(int pointer) {}
+  get onUpdate => (_) {};
 }

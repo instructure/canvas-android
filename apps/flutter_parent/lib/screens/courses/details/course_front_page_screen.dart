@@ -18,7 +18,7 @@ import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseFrontPageScreen extends StatefulWidget {
@@ -68,8 +68,11 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
           } else if (!snapshot.hasData) {
             return LoadingIndicator();
           } else {
-            return CanvasHtml(snapshot.data.body,
-                emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound);
+            return CanvasWebView(
+              content: snapshot.data.body,
+              emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound,
+              horizontalPadding: 16,
+            );
           }
         },
       ),

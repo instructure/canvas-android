@@ -31,6 +31,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
@@ -40,7 +41,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -215,8 +215,7 @@ void main() {
         courseId: courseId,
         assignmentId: assignmentId,
       ),
-      platformConfig: PlatformConfig(
-          initWebview: true, mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
+      platformConfig: PlatformConfig(mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(student))}),
     ));
 
     // Pump for a duration since we're delaying webview load for the animation
@@ -232,8 +231,8 @@ void main() {
         ParentColors.ash);
     expect(find.text(AppLocalizations().assignmentRemindMeDescription), findsOneWidget);
     expect((tester.widget(find.byType(Switch)) as Switch).value, false);
-    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsOneWidget);
-    expect(find.byType(WebView), findsOneWidget);
+    expect(find.text(AppLocalizations().descriptionTitle), findsOneWidget);
+    expect(find.byType(HtmlDescriptionTile), findsOneWidget);
 
     expect(find.text(AppLocalizations().assignmentLockLabel), findsNothing);
   });
@@ -351,7 +350,7 @@ void main() {
 
     expect(find.byType(SvgPicture), findsOneWidget); // Show the locked panda
     expect(find.text(AppLocalizations().assignmentDueLabel), findsNothing); // Fully locked, no due date
-    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsNothing); // Fully locked, no description
+    expect(find.text(AppLocalizations().descriptionTitle), findsNothing); // Fully locked, no description
   });
 
   testWidgetsWithAccessibilityChecks('shows lock info with unlock date', (tester) async {
@@ -381,7 +380,7 @@ void main() {
 
     expect(find.byType(SvgPicture), findsOneWidget); // Show the locked panda
     expect(find.text(AppLocalizations().assignmentDueLabel), findsNothing); // Fully locked, no due date
-    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsNothing); // Fully locked, no description
+    expect(find.text(AppLocalizations().descriptionTitle), findsNothing); // Fully locked, no description
   });
 
   testWidgetsWithAccessibilityChecks('shows lock info with lock_explanation', (tester) async {
@@ -407,7 +406,7 @@ void main() {
     expect(find.text(AppLocalizations().assignmentLockLabel), findsOneWidget);
     expect(find.text(explanation), findsOneWidget);
     expect(find.text(AppLocalizations().assignmentDueLabel), findsOneWidget); // Not fully locked, show due date
-    expect(find.text(AppLocalizations().assignmentDescriptionLabel), findsOneWidget); // Not fully locked, show desc
+    expect(find.text(AppLocalizations().descriptionTitle), findsOneWidget); // Not fully locked, show desc
 
     expect(find.byType(SvgPicture), findsNothing); // Should not show the locked panda
   });
@@ -452,7 +451,7 @@ void main() {
     // Pump for a duration since we're delaying webview load for the animation
     await tester.pumpAndSettle(Duration(seconds: 1));
 
-    expect(find.text(AppLocalizations().assignmentNoDescriptionBody), findsOneWidget);
+    expect(find.text(AppLocalizations().noDescriptionBody), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows Assignment instruction if quiz', (tester) async {

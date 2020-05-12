@@ -19,7 +19,7 @@ import 'package:flutter_parent/screens/announcements/announcement_view_state.dar
 import 'package:flutter_parent/utils/common_widgets/attachment_indicator_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -103,12 +103,11 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
           announcementViewState.postedAt.l10nFormat(L10n(context).dateAtTime),
           style: Theme.of(context).textTheme.caption,
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 16),
         Divider(),
-        CanvasWebView(
-          content: announcementViewState.announcementMessage,
-          fullScreen: false,
-        ),
+        HtmlDescriptionTile(html: announcementViewState.announcementMessage),
+        Divider(),
+        SizedBox(height: 16),
         _attachmentsWidget(context, announcementViewState.attachment),
       ],
     );

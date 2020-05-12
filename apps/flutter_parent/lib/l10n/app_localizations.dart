@@ -716,14 +716,8 @@ class AppLocalizations {
   String get assignmentRemindMeSet =>
       Intl.message('You will be notified about this assignment on…', desc: 'Description for when a reminder is set');
 
-  String get assignmentDescriptionLabel =>
-      Intl.message('Description', desc: 'Label for the description of the assignment');
-
   String get assignmentInstructionsLabel =>
       Intl.message('Instructions', desc: 'Label for the description of the assignment when it has quiz instructions');
-
-  String get assignmentNoDescriptionBody =>
-      Intl.message('No description', desc: 'Message used when the assignment has no description');
 
   String get assignmentMessageHint => Intl.message(
         'Send a message about this assignment',
@@ -1333,6 +1327,11 @@ class AppLocalizations {
 
   String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
+  String get viewDescription => Intl.message(
+        'View Description',
+        desc: 'Button to view the description for an event or assignment',
+      );
+
   String get allyExpanded => Intl.message(
         'expanded',
         desc: 'Description for the accessibility reader for list groups that are expanded',
@@ -1344,6 +1343,14 @@ class AppLocalizations {
       );
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
+
+  String get descriptionTitle => Intl.message(
+        'Description',
+        desc: 'Title for screens that contain only a description from Canavs',
+      );
+
+  String get noDescriptionBody =>
+      Intl.message('There\'s no description yet', desc: 'Message used when the assignment has no description');
 
   String get launchExternalTool => Intl.message(
         'Launch External Tool',
