@@ -58,8 +58,12 @@ class PlannerFetcher extends ChangeNotifier {
       _observeeId,
     );
     if (calendarFilter == null || (courseNameMap[_observeeId] == null || courseNameMap[_observeeId].isEmpty)) {
+      // We need to fetch the courses for a couple of reasons:
+      // First, scheduleItems don't have a context name.
+      // Second, calendar is opposite planner, in that 0 contexts means no calendar items. In order to deal with that
+      // case we have to load all courses and set the first ten as filters for the first load
       if (courseListFuture == null) {
-        courseListFuture = locator<CoursesInteractor>().getCourses(isRefresh: true, studentId: _observeeId);
+        courseListFuture = locator<CoursesInteractor>().getCourses(isRefresh: true);
       }
 
       var courses = await courseListFuture;
@@ -74,9 +78,8 @@ class PlannerFetcher extends ChangeNotifier {
       var tempCourseList = courses.map((course) => course.contextFilterId()).toList();
       Set<String> courseSet = Set.from(tempCourseList.length > 10 ? tempCourseList.sublist(0, 10) : tempCourseList);
 
-      // This DB insert only needs to happen once, prevent the multiple month loads from repeating it
-      if (firstFilterUpdateFlag == false) {
-        // TODO this is a problem
+      // This initial DB insert only needs to happen once, prevent the multiple month loads from repeating it
+      if (firstFilterUpdateFlag == false && calendarFilter == null) {
         CalendarFilter filter = CalendarFilter((b) => b
           ..userDomain = userDomain
           ..userId = userId
