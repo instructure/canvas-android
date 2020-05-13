@@ -81,6 +81,7 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
                   key: Key("${student.shortName}_text"),
                   style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
