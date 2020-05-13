@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.displayType
 import com.instructure.canvasapi2.utils.isValid
@@ -42,6 +43,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_people_details.*
 import java.util.ArrayList
@@ -74,9 +76,13 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
         compose.setIconDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.vd_send, Color.WHITE))
         compose.setOnClickListener {
-            val participants = ArrayList<BasicUser>()
-            participants.add(BasicUser.userToBasicUser(user!!))
-            val route = InboxComposeMessageFragment.makeRoute(canvasContext, participants)
+            // Messaging other users is not available in Student view
+            val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {
+                val participants = ArrayList<BasicUser>()
+                participants.add(BasicUser.userToBasicUser(user!!))
+                InboxComposeMessageFragment.makeRoute(canvasContext, participants)
+            }
+
             RouteMatcher.route(requireContext(), route)
         }
         when {
