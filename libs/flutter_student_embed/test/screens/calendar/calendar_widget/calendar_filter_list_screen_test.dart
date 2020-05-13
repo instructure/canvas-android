@@ -26,12 +26,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../testutils/accessibility_utils.dart';
+import '../../../testutils/mock_helpers.dart';
 import '../../../testutils/test_app.dart';
 
 void main() {
   group('Render', () {
     testWidgetsWithAccessibilityChecks('shows loading indicator', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
@@ -47,7 +48,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows empty panda screen', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
@@ -68,7 +69,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows error panda screen', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
@@ -89,7 +90,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('shows appbar title', (tester) async {
       Set<String> selectedCourses = {'course_123', 'course_234', 'course_345'};
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -105,7 +106,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows description', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -121,7 +122,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('shows course list with header item', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -138,7 +139,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('empty selected list selects all items', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -161,7 +162,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('items in initial selected list are selected', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -186,7 +187,7 @@ void main() {
 
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('clicking list item updates selected list', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -238,7 +239,7 @@ void main() {
     });
 
     testWidgetsWithAccessibilityChecks('deselecting all items empties the selected list', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
+      var interactor = MockCalendarFilterListInteractor();
       when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
@@ -295,5 +296,3 @@ List<Course> _mockCourses() {
       ..name = 'Course3')
   ];
 }
-
-class _MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}

@@ -32,20 +32,21 @@ import 'package:mockito/mockito.dart';
 
 import '../../testutils/accessibility_utils.dart';
 import '../../testutils/canvas_model_utils.dart';
+import '../../testutils/mock_helpers.dart';
 import '../../testutils/platform_config.dart';
 import '../../testutils/test_app.dart';
 
 void main() {
   final studentId = '1337';
   final studentName = 'Instructure Panda';
-  _MockCalendarScreenChannel mockChannel;
+  MockCalendarScreenChannel mockChannel;
 
   final student = User((b) => b
     ..id = studentId
     ..name = studentName);
 
   setUp(() {
-    mockChannel = _MockCalendarScreenChannel();
+    mockChannel = MockCalendarScreenChannel();
   });
 
   group('Render', () {
@@ -405,5 +406,3 @@ Function(PlannerItem) _getItemClickHandler(WidgetTester tester, CalendarScreenCh
     }
   };
 }
-
-class _MockCalendarScreenChannel extends Mock implements CalendarScreenChannel {}

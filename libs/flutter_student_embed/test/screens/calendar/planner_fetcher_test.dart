@@ -23,11 +23,12 @@ import 'package:flutter_student_embed/utils/db/calendar_filter_db.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
+import '../../testutils/mock_helpers.dart';
 import '../../testutils/test_app.dart';
 
 void main() {
-  PlannerApi api = _MockPlannerApi();
-  CalendarFilterDb filterDb = _MockCalendarFilterDb();
+  PlannerApi api = MockPlannerApi();
+  CalendarFilterDb filterDb = MockCalendarFilterDb();
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
@@ -226,29 +227,6 @@ void main() {
     expect(fetcher.failedMonths, isEmpty);
   });
 
-  test('setObserveeId resets fetcher and notifies listeners', () {
-    final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain);
-    fetcher.daySnapshots['ABC'] = null;
-    fetcher.failedMonths['JAN'] = true;
-
-    int notifyCount = 0;
-    fetcher.addListener(() {
-      notifyCount++;
-    });
-
-    expect(fetcher.userId, userId);
-    expect(fetcher.daySnapshots, isNotEmpty);
-    expect(fetcher.failedMonths, isNotEmpty);
-
-    final newUserId = 'new-user-id';
-    fetcher.setUserId(newUserId);
-
-    expect(notifyCount, 1);
-    expect(fetcher.userId, newUserId);
-    expect(fetcher.daySnapshots, isEmpty);
-    expect(fetcher.failedMonths, isEmpty);
-  });
-
   test('setContexts calls insertOrUpdate on database, resets fetcher, and notifies listeners', () async {
     final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain);
     fetcher.daySnapshots['ABC'] = null;
@@ -277,7 +255,3 @@ void main() {
     verify(filterDb.insertOrUpdate(expectedFilterData));
   });
 }
-
-class _MockPlannerApi extends Mock implements PlannerApi {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}

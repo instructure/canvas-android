@@ -31,6 +31,7 @@ import 'package:provider/provider.dart';
 
 import '../../testutils/accessibility_utils.dart';
 import '../../testutils/canvas_model_utils.dart';
+import '../../testutils/mock_helpers.dart';
 import '../../testutils/test_app.dart';
 
 void main() {
@@ -40,7 +41,7 @@ void main() {
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
       setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
-        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
 
       PlannerFetcher fetcher = PlannerFetcher(userId: student.id, userDomain: '');
@@ -63,7 +64,7 @@ void main() {
       var student = CanvasModelTestUtils.mockUser(name: 'Panda');
       setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
-        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
 
       PlannerFetcher fetcher = PlannerFetcher(userId: student.id, userDomain: '');
@@ -91,7 +92,7 @@ void main() {
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
-        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
 
       PlannerFetcher fetcher = PlannerFetcher(userId: student.id, userDomain: '');
@@ -125,7 +126,7 @@ void main() {
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
-        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
 
       PlannerFetcher fetcher = PlannerFetcher(userId: student.id, userDomain: '');
@@ -158,7 +159,7 @@ void main() {
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<PlannerApi>(() => api);
-        locator.registerLazySingleton<CalendarFilterDb>(() => _MockCalendarFilterDb());
+        locator.registerLazySingleton<CalendarFilterDb>(() => MockCalendarFilterDb());
       });
 
       PlannerFetcher fetcher = PlannerFetcher(userId: student.id, userDomain: '');
@@ -201,7 +202,3 @@ PlannerItem _createPlannerItem({String contextName}) => PlannerItem((b) => b
   ..contextName = contextName ?? ''
   ..htmlUrl = ''
   ..plannableType = 'assignment');
-
-class MockPlannerApi extends Mock implements PlannerApi {}
-
-class _MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
