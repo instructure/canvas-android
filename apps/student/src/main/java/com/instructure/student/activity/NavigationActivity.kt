@@ -287,8 +287,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     addFragment(NotificationListFragment.newInstance(route), route)
                 }
                 AppShortcutManager.APP_SHORTCUT_INBOX -> {
-                    val route = InboxFragment.makeRoute()
-                    addFragment(InboxFragment.newInstance(route), route)
+                    if (ApiPrefs.isStudentView) {
+                        // Inbox not available in Student View
+                        val route = NothingToSeeHereFragment.makeRoute()
+                        addFragment(NothingToSeeHereFragment.newInstance(), route)
+                    } else {
+                        val route = InboxFragment.makeRoute()
+                        addFragment(InboxFragment.newInstance(route), route)
+                    }
                 }
             }
         }
@@ -487,15 +493,21 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 addFragment(NotificationListFragment.newInstance(route), route)
             }
             R.id.bottomNavigationInbox -> {
-                val route = InboxFragment.makeRoute()
-                addFragment(InboxFragment.newInstance(route), route)
+                if (ApiPrefs.isStudentView) {
+                    // Inbox not available in Student View
+                    val route = NothingToSeeHereFragment.makeRoute()
+                    addFragment(NothingToSeeHereFragment.newInstance(), route)
+                } else {
+                    val route = InboxFragment.makeRoute()
+                    addFragment(InboxFragment.newInstance(route), route)
+                }
             }
         }
         true
     }
 
     private val bottomBarItemReselectedListener = BottomNavigationView.OnNavigationItemReselectedListener { item: MenuItem ->
-        //if the top fragment != courses, calendar, to-do, notifications, inbox then load the item
+        // If the top fragment != courses, calendar, to-do, notifications, inbox then load the item
 
         var abortReselect = true
         topFragment?.let {
@@ -522,8 +534,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     addFragment(NotificationListFragment.newInstance(route), route)
                 }
                 R.id.bottomNavigationInbox -> {
-                    val route = InboxFragment.makeRoute()
-                    addFragment(InboxFragment.newInstance(route), route)
+                    if (ApiPrefs.isStudentView) {
+                        // Inbox not available in Student View
+                        val route = NothingToSeeHereFragment.makeRoute()
+                        addFragment(NothingToSeeHereFragment.newInstance(), route)
+                    } else {
+                        val route = InboxFragment.makeRoute()
+                        addFragment(InboxFragment.newInstance(route), route)
+                    }
                 }
             }
         }
@@ -629,7 +647,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun handleRoute(route: Route) {
-        if(routeJob?.isActive == true) return
+        if (routeJob?.isActive == true) return
 
         routeJob = tryWeave {
             if(route.routeContext == RouteContext.EXTERNAL) showLoadingIndicator()
