@@ -20,6 +20,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/network/api/course_api.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
+import 'package:flutter_student_embed/utils/db/calendar_filter_db.dart';
 import 'package:flutter_student_embed/utils/quick_nav.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
@@ -43,3 +45,7 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 class MockPlannerApi extends Mock implements PlannerApi {}
 
 class MockQuickNav extends Mock implements QuickNav {}
+
+class MockCalendarFilterDb extends Mock implements CalendarFilterDb {}
+
+class MockCalendarFilterListInteractor extends Mock implements CalendarFilterListInteractor {}
