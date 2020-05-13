@@ -30,6 +30,7 @@ import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.da
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -95,7 +96,8 @@ void main() {
     await tester.drag(matchedWidget, const Offset(0, 200));
     await tester.pumpAndSettle(); // Loading indicator takes a lot of frames, pump and settle to wait
 
-    verify(courseInteractor.loadCourse(courseId)).called(2); // Once for initial load, another for the refresh
+    // Once for initial load, another for the refresh
+    verify(courseInteractor.loadCourse(courseId, forceRefresh: anyNamed('forceRefresh'))).called(2);
   });
 
   testWidgetsWithAccessibilityChecks('Shows course name when given a course', (tester) async {
@@ -136,6 +138,7 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
+    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
   });
@@ -152,6 +155,7 @@ void main() {
 
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsOneWidget);
+    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
   });
@@ -168,6 +172,7 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
+    expect(find.byIcon(CanvasIcons.refresh), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Clicking grades tab shows the grades screen', (tester) async {
@@ -402,6 +407,28 @@ void main() {
 
     // Check that we have the correct subject line
     expect(find.text(AppLocalizations().gradesSubjectMessage(studentName)), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Can refresh using app bar button', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..homePage = HomePage.wiki
+      ..name = 'Course Name');
+
+    when(courseInteractor.loadCourse(courseId, forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value(course));
+    when(courseInteractor.loadFrontPage(courseId)).thenAnswer((_) async => CanvasPage((b) => b
+      ..id = '1'
+      ..body = 'hodor'));
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    await tester.tap(find.byIcon(CanvasIcons.refresh));
+    await tester.pumpAndSettle();
+
+    verify(courseInteractor.loadCourse(courseId, forceRefresh: true)).called(1); // Refresh load
   });
 }
 

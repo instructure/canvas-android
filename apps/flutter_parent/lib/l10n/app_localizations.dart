@@ -1327,6 +1327,8 @@ class AppLocalizations {
 
   String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
+  String get refresh => Intl.message('Refresh', desc: 'Label for button to refresh data from the web');
+
   String get viewDescription => Intl.message(
         'View Description',
         desc: 'Button to view the description for an event or assignment',

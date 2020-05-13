@@ -44,8 +44,9 @@ class CourseDetailsModel extends BaseModel {
   Future<void> loadData({bool refreshCourse = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously
-      final courseFuture =
-          (refreshCourse || course == null) ? _interactor().loadCourse(courseId) : Future.value(course);
+      final courseFuture = (refreshCourse || course == null)
+          ? _interactor().loadCourse(courseId, forceRefresh: refreshCourse)
+          : Future.value(course);
 
       // Always force a refresh of tabs, it's small enough that we can do this every time
       final tabsFuture = _interactor().loadCourseTabs(courseId, forceRefresh: true);

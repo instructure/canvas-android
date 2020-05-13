@@ -70,12 +70,12 @@ void main() {
 
     test('refreshes course if course refresh forced', () async {
       final expected = null;
-      when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
+      when(interactor.loadCourse(_courseId, forceRefresh: true)).thenAnswer((_) => Future.value(expected));
       final model = CourseDetailsModel.withCourse(_student, _course);
 
       await model.loadData(refreshCourse: true);
 
-      verify(interactor.loadCourse(_courseId)).called(1);
+      verify(interactor.loadCourse(_courseId, forceRefresh: true)).called(1);
       expect(model.course, expected);
     });
 

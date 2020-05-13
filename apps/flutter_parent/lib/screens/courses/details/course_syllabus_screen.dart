@@ -19,8 +19,8 @@ import 'package:provider/provider.dart';
 
 class CourseSyllabusScreen extends StatefulWidget {
   final String _syllabus;
-  final String _courseName;
-  CourseSyllabusScreen(this._syllabus, this._courseName);
+
+  CourseSyllabusScreen(this._syllabus);
 
   @override
   _CourseSyllabusScreenState createState() => _CourseSyllabusScreenState();
