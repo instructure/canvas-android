@@ -135,7 +135,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
+                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
