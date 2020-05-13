@@ -167,7 +167,7 @@ void main() {
 
     test('PlannerSubmission returns submitted false for null submission', () {
       final newAssignment =
-          assignment.rebuild((b) => b..submissionList = SubmissionWrapper((b) => b..submission = null).toBuilder());
+          assignment.rebuild((b) => b..submissionWrapper = SubmissionWrapper((b) => b..submission = null).toBuilder());
 
       final item = scheduleItem.rebuild((b) => b..assignment = newAssignment.toBuilder());
 
@@ -179,7 +179,7 @@ void main() {
 
     test('returns valid PlannerSubmission for valid submission', () {
       final newAssignment = assignment.rebuild(
-          (b) => b..submissionList = SubmissionWrapper((b) => b..submission = submission.toBuilder()).toBuilder());
+          (b) => b..submissionWrapper = SubmissionWrapper((b) => b..submission = submission.toBuilder()).toBuilder());
 
       final item = scheduleItem.rebuild((b) => b..assignment = newAssignment.toBuilder());
 
@@ -199,7 +199,7 @@ void main() {
       final newAssignment = assignment.rebuild((b) => b
         ..pointsPossible = 20.0
         ..dueAt = date
-        ..submissionList = SubmissionWrapper((b) => b..submission = submission.toBuilder()).toBuilder());
+        ..submissionWrapper = SubmissionWrapper((b) => b..submission = submission.toBuilder()).toBuilder());
 
       final item = scheduleItem.rebuild((b) => b
         ..effectiveContextCode = '${contextType}_$contextId'

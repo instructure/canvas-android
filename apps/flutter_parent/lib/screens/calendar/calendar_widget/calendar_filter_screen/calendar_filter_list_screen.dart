@@ -97,7 +97,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
 
               // List will be empty when all courses are selected (on first load)
               final tempList = _courses.map((c) => 'course_${c.id}').toList();
-              selectedContextIds.addAll(tempList.length > 10 ? tempList.sublist(0, 10) : tempList);
+              selectedContextIds.addAll(tempList.take(10));
               selectAllIfEmpty = false;
             }
             _body = (_courses == null || _courses.isEmpty)
@@ -109,9 +109,7 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
                 : _courseList(_courses);
           } else {
             // This is a user with a filter from before the api migration, make sure we trim their list down.
-            selectedContextIds.addAll(widget._selectedCourses.length > 10
-                ? widget._selectedCourses.toList().sublist(0, 10)
-                : widget._selectedCourses);
+            selectedContextIds.addAll(widget._selectedCourses.take(10));
             if (selectedContextIds.isNotEmpty) {
               // The list isn't empty so we don't want to continue checking if the list is empty above, and
               // select everything again (though if the user doesn't select anything and they go back, everything will be

@@ -229,7 +229,7 @@ Assignment _mockAssignment({
     ..assignmentGroupId = ''
     ..position = 0
     ..dueAt = dueAt
-    ..submissionList = submissionWrapper.toBuilder()
+    ..submissionWrapper = submissionWrapper.toBuilder()
     ..submissionTypes = BuiltList<SubmissionTypes>(types).toBuilder());
 }
 

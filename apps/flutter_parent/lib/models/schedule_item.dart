@@ -148,7 +148,9 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
   PlannerSubmission getPlannerSubmission() {
     if (assignment == null) return null;
 
-    final submission = assignment?.submissionList?.submission;
+    // We are only worried about fetching the single submission here, as the calendar request is
+    // for a specific user.
+    final submission = assignment?.submissionWrapper?.submission;
     if (submission == null) return PlannerSubmission((b) => b..submitted = false);
 
     return PlannerSubmission((b) => b

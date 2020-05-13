@@ -253,7 +253,7 @@ void main() {
             assignment: assignment.rebuild((b) => b
               ..name = assignmentName
               ..pointsPossible = 1.0
-              ..submissionList =
+              ..submissionWrapper =
                   SubmissionWrapper((b) => b..submissionList = BuiltList<Submission>.from([submission]).toBuilder())
                       .toBuilder()
               ..dueAt = dueDate)));
@@ -292,7 +292,7 @@ void main() {
             assignment: assignment.rebuild((b) => b
               ..name = assignmentName
               ..pointsPossible = 1.0
-              ..submissionList =
+              ..submissionWrapper =
                   SubmissionWrapper((b) => b..submissionList = BuiltList<Submission>.from([]).toBuilder()).toBuilder()
               ..submissionTypes = ListBuilder([SubmissionTypes.none])
               ..dueAt = dueDate)));

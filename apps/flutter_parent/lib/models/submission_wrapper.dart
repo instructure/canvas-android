@@ -49,7 +49,7 @@ class SubmissionWrapperSerializer implements StructuredSerializer<SubmissionWrap
     // Initialize an empty builder
     final result = new SubmissionWrapperBuilder();
 
-    if (serialized.first == 'id') {
+    if (serialized.first == 'id' || serialized.first is String) {
       // This is the single submission case
       Submission submission =
           jsonSerializers.deserializeWith(jsonSerializers.serializerForType(Submission), serialized);

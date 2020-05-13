@@ -697,7 +697,7 @@ Assignment _mockAssignment({
     ..assignmentGroupId = groupId
     ..position = int.parse(id)
     ..dueAt = dueAt
-    ..submissionList = SubmissionWrapper(
+    ..submissionWrapper = SubmissionWrapper(
             (b) => b..submissionList = BuiltList<Submission>.from(submission != null ? [submission] : []).toBuilder())
         .toBuilder()
     ..pointsPossible = pointsPossible
