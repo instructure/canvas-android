@@ -47,9 +47,6 @@ void main() {
   final String userId = 'user_123';
   final Set<String> contexts = {'course_123'};
 
-  when(filterDb.getForUser(any, any))
-      .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = SetBuilder({'course_123'}))));
-
   setupTestLocator((locator) {
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
     locator.registerLazySingleton<CalendarFilterListInteractor>(() => filterInteractor);

@@ -22,31 +22,26 @@ import 'package:flutter_student_embed/models/planner_submission.dart';
 import 'package:flutter_student_embed/models/serializers.dart';
 import 'package:flutter_student_embed/models/user.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_day_list_tile.dart';
-import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
-import 'package:flutter_student_embed/screens/to_do/to_do_details_screen.dart';
 import 'package:flutter_student_embed/utils/design/canvas_icons.dart';
 import 'package:flutter_student_embed/utils/quick_nav.dart';
-import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import '../../testutils/accessibility_utils.dart';
 import '../../testutils/canvas_model_utils.dart';
-import '../../testutils/mock_helpers.dart';
 import '../../testutils/platform_config.dart';
 import '../../testutils/test_app.dart';
 
 void main() {
   final studentId = '1337';
   final studentName = 'Instructure Panda';
-  MockCalendarScreenChannel mockChannel;
+  _FakePlannerItemClickCallback itemClickCallHandler;
 
   final student = User((b) => b
     ..id = studentId
     ..name = studentName);
 
   setUp(() {
-    mockChannel = MockCalendarScreenChannel();
+    itemClickCallHandler = _FakePlannerItemClickCallback();
   });
 
   group('Render', () {
@@ -55,7 +50,7 @@ void main() {
       var plannable = _createPlannable(title: title);
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(_createPlannerItem(plannable: plannable), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(plannable: plannable), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -66,7 +61,7 @@ void main() {
       var contextName = 'Instructure';
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(_createPlannerItem(contextName: contextName), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(contextName: contextName), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -75,8 +70,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('shows "Planner Note" as context name for planner notes', (tester) async {
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(_createPlannerItem(contextName: null, plannableType: 'planner_note'),
-            _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(contextName: null, plannableType: 'planner_note'), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -88,8 +82,7 @@ void main() {
       var date = DateTime.parse('2020-04-08 11:59:00');
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(
-            _createPlannerItem(plannable: _createPlannable(dueAt: date)), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(plannable: _createPlannable(dueAt: date)), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -103,7 +96,7 @@ void main() {
         CalendarDayListTile(
             _createPlannerItem(
                 plannable: _createPlannable(dueAt: null, pointsPossible: pointsPossible), submission: status),
-            _getItemClickHandler(tester, mockChannel)),
+            itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -118,7 +111,7 @@ void main() {
       var submissionStatus = PlannerSubmission();
       await tester.pumpWidget(TestApp(CalendarDayListTile(
           _createPlannerItem(plannable: _createPlannable(pointsPossible: pointsPossible), submission: submissionStatus),
-          _getItemClickHandler(tester, mockChannel))));
+          itemClickCallHandler)));
       await tester.pump();
 
       expect(find.text(AppLocalizations().assignmentTotalPoints('10')), findsOneWidget);
@@ -129,7 +122,7 @@ void main() {
       var pointsPossible = null;
       await tester.pumpWidget(TestApp(CalendarDayListTile(
           _createPlannerItem(contextName: 'blank', plannable: _createPlannable(pointsPossible: pointsPossible)),
-          _getItemClickHandler(tester, mockChannel))));
+          itemClickCallHandler)));
       await tester.pump();
 
       // Check for a text widget that has the 'pts' substring
@@ -146,8 +139,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows \'excused\' status', (tester) async {
       var submissionStatus = PlannerSubmission((b) => b.excused = true);
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(
-            _createPlannerItem(submission: submissionStatus), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(submission: submissionStatus), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -157,8 +149,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows \'missing\' status', (tester) async {
       var submissionStatus = PlannerSubmission((b) => b.missing = true);
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(
-            _createPlannerItem(submission: submissionStatus), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(submission: submissionStatus), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -168,8 +159,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows \'graded\' status', (tester) async {
       var submissionStatus = PlannerSubmission((b) => b.graded = true);
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(
-            _createPlannerItem(submission: submissionStatus), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(submission: submissionStatus), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -179,8 +169,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows \'submitted\' status', (tester) async {
       var submissionStatus = PlannerSubmission((b) => b.needsGrading = true);
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(
-            _createPlannerItem(submission: submissionStatus), _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(_createPlannerItem(submission: submissionStatus), itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -191,7 +180,7 @@ void main() {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'assignment');
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -204,7 +193,7 @@ void main() {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'quiz');
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -217,7 +206,7 @@ void main() {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'announcement');
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -230,7 +219,7 @@ void main() {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'calendar_event');
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
       ));
       await tester.pump();
 
@@ -247,7 +236,7 @@ void main() {
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
         platformConfig: PlatformConfig(),
       ));
       await tester.pump();
@@ -256,7 +245,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(mockChannel.nativeRouteToItem(plannerItem)).called(1);
+      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
+      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
     });
 
     testWidgetsWithAccessibilityChecks('tapping announcement plannable emits correct channel call', (tester) async {
@@ -265,7 +255,7 @@ void main() {
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
         platformConfig: PlatformConfig(),
       ));
       await tester.pump();
@@ -274,7 +264,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(mockChannel.nativeRouteToItem(plannerItem)).called(1);
+      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
+      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
     });
 
     testWidgetsWithAccessibilityChecks('tapping quiz assignment plannable emits correct channel call', (tester) async {
@@ -287,7 +278,7 @@ void main() {
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
         platformConfig: PlatformConfig(),
       ));
       await tester.pump();
@@ -296,7 +287,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(mockChannel.nativeRouteToItem(plannerItem)).called(1);
+      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
+      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
     });
 
     testWidgetsWithAccessibilityChecks('tapping quiz plannable emits correct channel call', (tester) async {
@@ -313,7 +305,7 @@ void main() {
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
         platformConfig: PlatformConfig(
           initLoggedInUser: login,
         ),
@@ -324,7 +316,8 @@ void main() {
       await tester.tap(find.text('Tap me'));
       await tester.pump();
 
-      verify(mockChannel.nativeRouteToItem(plannerItem)).called(1);
+      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
+      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
     });
 
     testWidgetsWithAccessibilityChecks('tapping discussion plannable emits correct channel call', (tester) async {
@@ -333,7 +326,7 @@ void main() {
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
       await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
+        CalendarDayListTile(plannerItem, itemClickCallHandler),
         platformConfig: PlatformConfig(),
       ));
       await tester.pump();
@@ -342,27 +335,8 @@ void main() {
       await tester.pump();
       await tester.pump();
 
-      verify(mockChannel.nativeRouteToItem(plannerItem)).called(1);
-    });
-
-    testWidgetsWithAccessibilityChecks('tapping calendar event plannable navigates to ToDo details screen',
-        (tester) async {
-      var plannerItem = _createPlannerItem(
-          plannableType: 'planner_note', contextName: 'Tap me', plannable: _createPlannable(dueAt: DateTime.now()));
-
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
-
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, _getItemClickHandler(tester, mockChannel)),
-        platformConfig: PlatformConfig(),
-      ));
-      await tester.pump();
-
-      await tester.tap(find.text('Tap me To Do')); // 'Tap me' won't do the trick
-      await tester.pump();
-      await tester.pump();
-
-      expect(find.byType(ToDoDetailsScreen), findsOneWidget);
+      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
+      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
     });
   });
 }
@@ -392,17 +366,11 @@ PlannerItem _createPlannerItem(
       ..htmlUrl = htmlUrl ?? ''
       ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);
 
-// Logic borrowed from the onItemSelected definition set forth in CalendarScreenState.
-Function(PlannerItem) _getItemClickHandler(WidgetTester tester, CalendarScreenChannel channel) {
-  return (PlannerItem item) async {
-    var widget = tester.element(find.byType(CalendarDayListTile)).widget as CalendarDayListTile;
-    var context = widget.global_key_for_testing.currentContext;
-    if (item.plannableType == 'planner_note') {
-      // Display planner to-do details in flutter, refreshing changed dates if necessary
-      var updatedDates = await locator<QuickNav>().push(context, ToDoDetailsScreen(item));
-      //_refreshDates(updatedDates); // Not necessary for tests
-    } else {
-      channel.nativeRouteToItem(item);
-    }
-  };
+class _FakePlannerItemClickCallback {
+  int callCount = 0;
+  PlannerItem plannerItem;
+  call(PlannerItem item) {
+    callCount += 1;
+    plannerItem = item;
+  }
 }

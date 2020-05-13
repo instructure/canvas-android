@@ -293,6 +293,40 @@ void main() {
   });
 
   group('Set day/week/month', () {
+    testWidgetsWithAccessibilityChecks('onTodaySelected working', (tester) async {
+      DateTime dateForDayBuilder = null;
+      bool isTodaySelectedValue = false;
+      await tester.pumpWidget(
+        calendarTestApp(
+          CalendarWidget(
+            dayBuilder: (_, day) {
+              dateForDayBuilder = day;
+              return Container();
+            },
+            fetcher: _FakeFetcher(),
+            onTodaySelected: (isTodaySelected) {
+              isTodaySelectedValue = isTodaySelected;
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      isTodaySelectedValue = true; // Just to make sure that it actually changes below
+
+      DateTime targetDate = DateTime(2000, 1, 1);
+      await goToDate(tester, targetDate);
+
+      // "isTodaySelected" should be false
+      expect(isTodaySelectedValue, false, reason: "isTodaySelected should be false");
+
+      targetDate = DateTime.now();
+      await goToDate(tester, targetDate);
+
+      // "isTodaySelected" should be true
+      expect(isTodaySelectedValue, true, reason: "isTodaySelected should be true");
+    });
+
     testWidgetsWithAccessibilityChecks('Jumps to selected date', (tester) async {
       DateTime dateForDayBuilder = null;
       await tester.pumpWidget(
