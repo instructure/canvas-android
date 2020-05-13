@@ -321,7 +321,8 @@ void main() {
       expect(isTodaySelectedValue, false, reason: "isTodaySelected should be false");
 
       targetDate = DateTime.now();
-      await goToDate(tester, targetDate);
+      CalendarWidgetState state = await goToDate(tester, targetDate);
+      print("selectedDay: ${state.selectedDay}, today: ${DateTime.now()}");
 
       // "isTodaySelected" should be true
       expect(isTodaySelectedValue, true, reason: "isTodaySelected should be true");
