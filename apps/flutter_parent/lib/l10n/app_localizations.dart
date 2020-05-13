@@ -515,7 +515,7 @@ class AppLocalizations {
       Intl.message('Your student\’s courses might not be published yet.', desc: 'Message for having no courses');
 
   String get errorLoadingCourses => Intl.message(
-        'There was an error loading your your student\’s courses.',
+        'There was an error loading your student\’s courses.',
         desc: 'Message displayed when the list of student courses could not be loaded',
       );
 
