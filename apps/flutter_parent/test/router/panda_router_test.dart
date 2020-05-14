@@ -53,8 +53,9 @@ import '../utils/accessibility_utils.dart';
 import '../utils/canvas_model_utils.dart';
 import '../utils/platform_config.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
-final _analytics = _MockAnalytics();
+final _analytics = MockAnalytics();
 
 void main() {
   final String _domain = 'https://test.instructure.com';
@@ -64,10 +65,10 @@ void main() {
     ..accessToken = 'token'
     ..user = user.toBuilder());
 
-  final _mockNav = _MockNav();
-  final _mockWebContentInteractor = _MockWebContentInteractor();
-  final _mockSnackbar = _MockSnackbar();
-  final _mockLauncher = _MockUrlLauncher();
+  final _mockNav = MockNav();
+  final _mockWebContentInteractor = MockWebViewInteractor();
+  final _mockSnackbar = MockSnackbar();
+  final _mockLauncher = MockUrlLauncher();
 
   setUpAll(() async {
     PandaRouter.init();
@@ -255,15 +256,14 @@ void main() {
 
     test('discussionDetails returns announcement details screen', () {
       final courseId = '123';
-      final topicId = '321';
+      final assignmentId = '321';
       final widget = _getWidgetFromRoute(
-        PandaRouter.discussionDetails(courseId, topicId),
-      ) as AnnouncementDetailScreen;
+        PandaRouter.discussionDetails(courseId, assignmentId),
+      ) as AssignmentDetailsScreen;
 
-      expect(widget, isA<AnnouncementDetailScreen>());
+      expect(widget, isA<AssignmentDetailsScreen>());
       expect(widget.courseId, courseId);
-      expect(widget.announcementId, topicId);
-      expect(widget.announcementType, AnnouncementType.COURSE);
+      expect(widget.assignmentId, assignmentId);
     });
 
     test('RouterErrorScreen returns RouterErrorScreen', () {
@@ -602,13 +602,3 @@ Widget _getWidgetFromRoute(String route, {Map<String, List<String>> extraParams}
 
   return widget;
 }
-
-class _MockAnalytics extends Mock implements Analytics {}
-
-class _MockNav extends Mock implements QuickNav {}
-
-class _MockWebContentInteractor extends Mock implements WebContentInteractor {}
-
-class _MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
-
-class _MockUrlLauncher extends Mock implements UrlLauncher {}

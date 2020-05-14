@@ -107,8 +107,8 @@ class CourseDetailsModel extends BaseModel {
   Future<List<ScheduleItem>> loadSummary({bool refresh: false}) async {
     // Get all assignment and calendar events
     List<List<ScheduleItem>> results = await Future.wait([
-      _interactor().loadScheduleItems(courseId, ScheduleItem.typeCalendar, refresh),
-      _interactor().loadScheduleItems(courseId, ScheduleItem.typeAssignment, refresh),
+      _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeCalendar, refresh),
+      _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeAssignment, refresh),
     ]);
 
     // Potentially heavy list operations going on here, so we'll use a background isolate

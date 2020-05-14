@@ -45,6 +45,7 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 final studentId = '1234';
 final studentName = 'billy jean';
@@ -65,7 +66,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Loads data using model', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => []);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -75,7 +76,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays loading indicator', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     Completer<List<ScheduleItem>> completer = Completer();
     when(model.loadSummary(refresh: false)).thenAnswer((_) => completer.future);
@@ -87,7 +88,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays empty state', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => []);
 
     await tester.pumpWidget(_testableWidget(model));
@@ -99,7 +100,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays error state', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     when(model.loadSummary(refresh: false)).thenAnswer((_) => Future.error(''));
 
@@ -110,7 +111,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Refreshes from error state', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     when(model.loadSummary(refresh: false)).thenAnswer((_) => Future.error(''));
 
@@ -127,7 +128,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Refreshes from empty state', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => []);
 
@@ -145,10 +146,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for calendar event', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeCalendar
+      ..type = ScheduleItem.apiTypeCalendar
       ..title = 'Calendar Event'
       ..startAt = DateTime.now());
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
@@ -162,10 +163,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for assignment', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Normal Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -185,10 +186,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for discussion assignment', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Discussion Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -208,10 +209,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for quiz assignment', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Quiz Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -231,10 +232,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for locked assignment', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Locked Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -255,10 +256,10 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays details for undated assignment', (tester) async {
-    final model = _MockModel();
+    final model = MockCourseModel();
 
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Undated Assignment'
       ..startAt = null);
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
@@ -273,7 +274,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Tapping assignment item loads assignment details', (tester) async {
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeAssignment
+      ..type = ScheduleItem.apiTypeAssignment
       ..title = 'Normal Assignment'
       ..startAt = DateTime.now()
       ..assignment = (AssignmentBuilder()
@@ -283,18 +284,18 @@ void main() {
         ..position = 0
         ..submissionTypes = ListBuilder([])));
 
-    final model = _MockModel();
+    final model = MockCourseModel();
     when(model.courseId).thenReturn('course_123');
     when(model.student).thenReturn(student);
     when(model.course).thenReturn(Course((c) => c..courseCode = 'CRS 123'));
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
 
-    var interactor = _MockAssignmentDetailsInteractor();
+    var interactor = MockAssignmentDetailsInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<AssignmentDetailsInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
     });
-    var observer = _MockNavigatorObserver();
+    var observer = MockNavigatorObserver();
     await tester.pumpWidget(_testableWidget(
       model,
       observers: [observer],
@@ -313,15 +314,15 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Tapping calendar event item loads event details', (tester) async {
     final event = ScheduleItem((s) => s
-      ..type = ScheduleItem.typeCalendar
+      ..type = ScheduleItem.apiTypeCalendar
       ..title = 'Normal Event'
       ..startAt = DateTime.now());
 
-    final model = _MockModel();
+    final model = MockCourseModel();
     when(model.loadSummary(refresh: false)).thenAnswer((_) async => [event]);
     when(model.student).thenAnswer((_) => student);
 
-    var interactor = _MockEventDetailsInteractor();
+    var interactor = MockEventDetailsInteractor();
     setupTestLocator((locator) {
       locator.registerFactory<EventDetailsInteractor>(() => interactor);
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
@@ -350,11 +351,3 @@ Widget _testableWidget(CourseDetailsModel model,
     navigatorObservers: observers,
   );
 }
-
-class _MockModel extends Mock implements CourseDetailsModel {}
-
-class _MockNavigatorObserver extends Mock implements NavigatorObserver {}
-
-class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}
-
-class _MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}

@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
@@ -35,30 +34,42 @@ class CalendarDayListTile extends StatelessWidget {
       onTap: () {
         switch (_item.plannableType) {
           case 'assignment':
-            locator<QuickNav>().pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.id));
-            break;
-          case 'announcement':
-            // Observers don't get institutional announcements, so we're only dealing with course announcements
             locator<QuickNav>()
-                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
-            break;
-          case 'quiz':
-            if (_item.plannable.assignmentId != null) {
-              // This is a quiz assignment, go to the assignment page
-              locator<QuickNav>()
-                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
-            } else {
-              // No routes will match this url currently, so routing internally will throw it in an implicit intent
-              PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
-            }
-            break;
-          case 'discussion_topic':
-            locator<QuickNav>().pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.id));
+                .pushRoute(context, PandaRouter.assignmentDetails(_item.courseId, _item.plannable.assignmentId));
             break;
           case 'calendar_event':
             // Case where the observed user has a personal calendar event
             locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(_item.courseId, _item.plannable.id));
             break;
+          case 'quiz':
+            // This is a quiz assignment, go to the assignment page
+            locator<QuickNav>()
+                .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
+            break;
+          case 'discussion_topic':
+            // This is a discussion assignment, go to the assignment page
+            locator<QuickNav>()
+                .pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.assignmentId));
+            break;
+//          case 'quiz': TODO - keep in place for potentially moving back to planner api
+//            if (_item.plannable.assignmentId != null) {
+          // This is a quiz assignment, go to the assignment page
+//              locator<QuickNav>()
+//                  .pushRoute(context, PandaRouter.quizAssignmentDetails(_item.courseId, _item.plannable.assignmentId));
+//            } else {
+          // No routes will match this url currently, so routing internally will throw it in an implicit intent
+//              PandaRouter.routeInternally(context, ApiPrefs.getDomain() + _item.htmlUrl);
+//            }
+//            break;
+//          case 'discussion_topic':
+//            locator<QuickNav>()
+//                .pushRoute(context, PandaRouter.discussionDetails(_item.courseId, _item.plannable.assignmentId));
+//            break;
+//          case 'announcement':
+//           Observers don't get institutional announcements, so we're only dealing with course announcements
+//            locator<QuickNav>()
+//                .pushRoute(context, PandaRouter.courseAnnouncementDetails(_item.courseId, _item.plannable.id));
+//            break;
           default:
             // This is a type that we don't handle - do nothing
             break;
@@ -99,7 +110,8 @@ class CalendarDayListTile extends StatelessWidget {
     if (item.contextName != null) return item.contextName;
 
     // Planner notes don't have a context name so we'll use 'Planner Note'
-    if (item.plannableType == 'planner_note') return L10n(context).plannerNote;
+    // TODO - Keep in place for potentially moving back to planner api
+//    if (item.plannableType == 'planner_note') return L10n(context).plannerNote;
 
     return '';
   }
@@ -113,18 +125,19 @@ class CalendarDayListTile extends StatelessWidget {
       case 'quiz':
         icon = CanvasIcons.quiz;
         break;
-      case 'announcement':
-        icon = CanvasIcons.announcement;
-        break;
       case 'calendar_event':
         icon = CanvasIcons.calendar_day;
         break;
       case 'discussion_topic':
         icon = CanvasIcons.discussion;
         break;
-      case 'planner_note':
-        icon = CanvasIcons.note;
-        break;
+//      TODO - keep in place for potentially moving back to planner api
+//      case 'announcement':
+//        icon = CanvasIcons.announcement;
+//        break;
+//      case 'planner_note':
+//        icon = CanvasIcons.note;
+//        break;
     }
     return Icon(icon, size: 20, semanticLabel: '', color: Theme.of(context).accentColor);
   }

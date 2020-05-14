@@ -27,16 +27,17 @@ import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final assignmentId = '123';
   final courseId = '321';
   final studentId = '1337';
 
-  final assignmentApi = _MockAssignmentApi();
-  final courseApi = _MockCourseApi();
-  final reminderDb = _MockReminderDb();
-  final notificationUtil = _MockNotificationUtil();
+  final assignmentApi = MockAssignmentApi();
+  final courseApi = MockCourseApi();
+  final reminderDb = MockReminderDb();
+  final notificationUtil = MockNotificationUtil();
   final login = Login((b) => b
     ..domain = 'test-domain'
     ..user = User((u) => u..id = '123').toBuilder());
@@ -167,11 +168,3 @@ void main() {
     });
   });
 }
-
-class _MockAssignmentApi extends Mock implements AssignmentApi {}
-
-class _MockCourseApi extends Mock implements CourseApi {}
-
-class _MockReminderDb extends Mock implements ReminderDb {}
-
-class _MockNotificationUtil extends Mock implements NotificationUtil {}

@@ -17,6 +17,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/lock_info.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 
 import 'submission.dart';
 
@@ -66,12 +67,16 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
   @BuiltValueField(wireName: 'use_rubric_for_grading')
   bool get useRubricForGrading;
 
+  /// Wrapper object to handle observer and non-observer submission case
+  /// See SubmissionWrapper for more details
   @nullable
   @BuiltValueField(wireName: 'submission')
-  BuiltList<Submission> get submissionList;
+  SubmissionWrapper get submissionWrapper;
 
+  /// This is used specifically for the observer -> assignment list case (all observee submissions are returned)
+  /// If you are using the assignment/submission model for any other case use submissionWrapper.submission above.
   Submission submission(String studentId) =>
-      submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
+      submissionWrapper?.submissionList?.firstWhere((submission) => submission.userId == studentId, orElse: () => null);
 
   @BuiltValueField(wireName: 'assignment_group_id')
   String get assignmentGroupId;
