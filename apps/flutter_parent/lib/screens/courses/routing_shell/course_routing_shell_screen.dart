@@ -80,7 +80,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
               tooltip: L10n(context).refresh,
               icon: Icon(CanvasIcons.refresh),
               onPressed: () async {
-                return _refresh();
+                _refresh();
               },
             ),
           ],
