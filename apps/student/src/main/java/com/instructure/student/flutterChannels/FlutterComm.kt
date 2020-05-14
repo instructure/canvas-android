@@ -17,9 +17,11 @@
 package com.instructure.student.flutterChannels
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import io.flutter.embedding.engine.FlutterEngine
@@ -33,6 +35,7 @@ object FlutterComm {
 
     private const val METHOD_RESET = "reset"
     private const val METHOD_ROUTE_TO_CALENDAR = "routeToCalendar"
+    private const val METHOD_UPDATE_CALENDAR_DATES = "updateCalendarDates"
     private const val METHOD_UPDATE_LOGIN_DATA = "updateLoginData"
     private const val METHOD_UPDATE_SHOULD_POP = "updateShouldPop"
     private const val METHOD_UPDATE_THEME_DATA = "updateThemeData"
@@ -94,4 +97,10 @@ object FlutterComm {
     fun routeToCalendar(channelId: String) = channel.invokeMethod(METHOD_ROUTE_TO_CALENDAR, channelId)
 
     fun reset() = channel.invokeMethod(METHOD_RESET, null)
+
+    fun updateCalendarDates(dates: List<Date?>) {
+        val affectedDates = dates.filterNotNull().distinct() // Sanitize
+        val isoDates = affectedDates.map { it.toApiString() }
+        channel.invokeMethod(METHOD_UPDATE_CALENDAR_DATES, isoDates)
+    }
 }

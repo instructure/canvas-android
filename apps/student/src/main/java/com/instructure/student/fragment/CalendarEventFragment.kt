@@ -37,8 +37,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
-import com.instructure.student.events.CalendarEventDestroyed
-import com.instructure.student.events.post
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.calendar_event_layout.*
 import kotlinx.android.synthetic.main.fragment_calendar_event.*
@@ -106,7 +105,7 @@ class CalendarEventFragment : ParentFragment() {
 
     //region Fragment Interaction Overrides
     override fun applyTheme() {
-        if (scheduleItem?.contextId == ApiPrefs.user?.id) {
+        if (scheduleItem?.contextId ?: canvasContext.id == ApiPrefs.user?.id) {
             setupToolbarMenu(toolbar, R.menu.calendar_event_menu)
         }
 
@@ -241,7 +240,7 @@ class CalendarEventFragment : ParentFragment() {
 
                 toast(R.string.eventSuccessfulDeletion)
                 response.body()?.let {
-                    CalendarEventDestroyed(it).post()
+                    FlutterComm.updateCalendarDates(listOf(it.allDayDate, it.startDate, it.endDate))
                 }
                 requireActivity().onBackPressed()
             }
