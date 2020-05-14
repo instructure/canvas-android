@@ -111,4 +111,22 @@ void main() {
 
     verify(interactor.loadCourseShell(any, any)).called(2); // Once for initial load, another for the refresh
   });
+
+  testWidgetsWithAccessibilityChecks('Refresh displays loading indicator ', (tester) async {
+    final result = CourseShellData(course);
+    when(interactor.loadCourseShell(CourseShellType.syllabus, any)).thenAnswer((_) => Future.value(result));
+
+    await tester.pumpWidget(TestApp(CourseRoutingShellScreen(course.id, CourseShellType.syllabus),
+        platformConfig: PlatformConfig(initWebview: true)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(IconButton));
+    await tester.pumpAndSettle();
+
+    verify(interactor.loadCourseShell(any, any, forceRefresh: true)).called(1);
+    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(course.name), findsOneWidget);
+    expect(find.byType(CanvasWebView), findsOneWidget);
+    expect(find.text(AppLocalizations().unexpectedError), findsNothing);
+  });
 }
