@@ -89,7 +89,7 @@ class _ParentAppState extends State<ParentApp> {
         // If there is no user locale, they want the system locale. If there is a user locale, we should use it over the system locale
         Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale : _locale;
 
-        const fallback = Locale('en', '');
+        const fallback = Locale('en');
         Locale resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(newLocale, supportedLocales);
 

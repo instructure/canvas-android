@@ -225,15 +225,18 @@ class ApiPrefs {
     }
 
     List<String> localeParts = userLocale[0].split('-');
+    final countryCode = localeParts.length > 1 ? localeParts.last : null;
+
     if (userLocale.length == 1) {
-      return Locale(localeParts.first, localeParts.last);
+      return Locale(localeParts.first, countryCode);
     } else {
+      // Custom language pack
       return Locale.fromSubtags(
         languageCode: localeParts.first,
         scriptCode: userLocale[1].length < 5
             ? 'inst${userLocale[1]}' // da-k12 -> da-instk12 (can't be less than 4 characters)
             : userLocale[1].substring(0, min(8, userLocale[1].length)), // en-unimelb -> en-unimelb (no more than 8)
-        countryCode: localeParts.last,
+        countryCode: countryCode,
       );
     }
   }

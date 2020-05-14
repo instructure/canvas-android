@@ -43,7 +43,7 @@ void main() {
 
   group('isSupported', () {
     test('returns true for supported language', () {
-      final locale = Locale('en', '');
+      final locale = Locale('en');
       expect(AppLocalizations.delegate.isSupported(locale), true);
     });
 
@@ -58,13 +58,13 @@ void main() {
     });
 
     test('returns false for unsupported language', () {
-      final locale = Locale('aa', '');
+      final locale = Locale('aa');
       expect(AppLocalizations.delegate.isSupported(locale), false);
     });
 
     test('returns false for unsupported custom language pack', () {
       final locale = Locale.fromSubtags(languageCode: 'en', scriptCode: 'bleminu', countryCode: 'AU');
-      expect(AppLocalizations.delegate.isSupported(locale), true);
+      expect(AppLocalizations.delegate.isSupported(locale), false);
     });
 
     test('returns false for unsupported country', () {
@@ -77,66 +77,58 @@ void main() {
 
   group('resolution callback', () {
     test('returns locale when supported', () {
-      final fallback = Locale('en', '');
-      final locale = Locale('es', '');
+      final fallback = Locale('en');
+      final locale = Locale('es');
 
       _testLocaleResolution(fallback, locale, locale);
     });
 
     test('returns locale without country code when language with a country code is unsupported', () {
-      final fallback = Locale('en', '');
+      final fallback = Locale('en');
       final locale = Locale('pl', 'AA');
-      final expected = Locale('pl', '');
+      final expected = Locale('pl');
 
       _testLocaleResolution(fallback, locale, expected, matchCountry: false);
     });
 
     test('returns fallback when language with a country code is unsupported', () {
-      final fallback = Locale('en', '');
+      final fallback = Locale('en');
       final locale = Locale('pl', 'AA');
 
       _testLocaleResolution(fallback, locale, fallback);
     });
 
     test('eturns custom language locale when supported', () {
-      final fallback = Locale('en', '');
+      final fallback = Locale('en');
       final locale = Locale.fromSubtags(languageCode: 'en', scriptCode: 'unimelb', countryCode: 'AU');
 
       _testLocaleResolution(fallback, locale, locale);
     });
 
     test('returns custom language locale without a country code when supported', () {
-      final fallback = Locale('en', '');
+      final fallback = Locale('en');
       final locale = Locale.fromSubtags(languageCode: 'sv', scriptCode: 'instk12');
 
       _testLocaleResolution(fallback, locale, locale);
     });
 
     test('returns fallback locale when unsupported', () {
-      final fallback = Locale('en', '');
-      final locale = Locale('aa', '');
+      final fallback = Locale('en');
+      final locale = Locale('aa');
 
       _testLocaleResolution(fallback, locale, fallback);
     });
 
     test('returns fallback locale when custom language locale is unsupported', () {
-      final fallback = Locale('en', '');
+      final fallback = Locale('en');
       final locale = Locale.fromSubtags(languageCode: 'en', scriptCode: 'bleminu', countryCode: 'AU');
 
       _testLocaleResolution(fallback, locale, fallback);
     });
 
-    test('returns locale when custom language without a country code is unsupported', () {
-      final fallback = Locale('en', '');
-      final locale = Locale.fromSubtags(languageCode: 'sv', scriptCode: '12inst');
-      final expected = Locale('sv', '');
-
-      _testLocaleResolution(fallback, locale, expected);
-    });
-
     test('returns en locale when no fallback and locale is unsupported', () {
-      final locale = Locale('aa', '');
-      final expected = Locale('en', '');
+      final locale = Locale('aa');
+      final expected = Locale('en');
 
       _testLocaleResolution(null, locale, expected);
     });

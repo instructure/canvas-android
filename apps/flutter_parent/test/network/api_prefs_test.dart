@@ -272,7 +272,7 @@ void main() {
     final user = CanvasModelTestUtils.mockUser();
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale, user.effectiveLocale));
+    expect(ApiPrefs.effectiveLocale(), Locale(user.effectiveLocale));
   });
 
   test('effectiveLocale returns the users locale if effective locale is null', () async {
@@ -286,7 +286,7 @@ void main() {
 
     await ApiPrefs.setUser(user);
 
-    expect(ApiPrefs.effectiveLocale(), Locale(user.locale, user.locale));
+    expect(ApiPrefs.effectiveLocale(), Locale(user.locale));
   });
 
   test('effectiveLocale returns the users effective locale without inst if script is longer than 5', () async {
