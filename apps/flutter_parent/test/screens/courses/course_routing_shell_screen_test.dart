@@ -112,7 +112,7 @@ void main() {
     verify(interactor.loadCourseShell(any, any)).called(2); // Once for initial load, another for the refresh
   });
 
-  testWidgetsWithAccessibilityChecks('Refresh displays loading indicator ', (tester) async {
+  testWidgetsWithAccessibilityChecks('Refresh displays loading indicator and loads state', (tester) async {
     final result = CourseShellData(course);
     when(interactor.loadCourseShell(CourseShellType.syllabus, any, forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value(result));
@@ -122,6 +122,10 @@ void main() {
     await tester.pumpAndSettle();
 
     await tester.tap(find.byType(IconButton));
+    await tester.pump();
+
+    expect(find.byType(LoadingIndicator), findsOneWidget);
+
     await tester.pumpAndSettle();
 
     verify(interactor.loadCourseShell(any, any, forceRefresh: true)).called(1);
@@ -129,5 +133,6 @@ void main() {
     expect(find.text(course.name), findsOneWidget);
     expect(find.byType(CanvasWebView), findsOneWidget);
     expect(find.text(AppLocalizations().unexpectedError), findsNothing);
+    expect(find.byType(LoadingIndicator), findsNothing);
   });
 }
