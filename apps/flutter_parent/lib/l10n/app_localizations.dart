@@ -1352,7 +1352,7 @@ class AppLocalizations {
       );
 
   String get noDescriptionBody =>
-      Intl.message('There\'s no description yet', desc: 'Message used when the assignment has no description');
+      Intl.message('No description', desc: 'Message used when the assignment has no description');
 
   String get launchExternalTool => Intl.message(
         'Launch External Tool',

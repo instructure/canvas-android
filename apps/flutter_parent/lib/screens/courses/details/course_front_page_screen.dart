@@ -56,26 +56,21 @@ class _CourseFrontPageScreenState extends State<CourseFrontPageScreen> with Auto
   @override
   Widget build(BuildContext context) {
     super.build(context); // Required super call for AutomaticKeepAliveClientMixin
-    return RefreshIndicator(
-      onRefresh: () {
-        return _refreshPage();
+    return FutureBuilder(
+      future: _pageFuture,
+      builder: (context, AsyncSnapshot<CanvasPage> snapshot) {
+        if (snapshot.hasError) {
+          return ErrorPandaWidget(L10n(context).unexpectedError, () => _refreshPage());
+        } else if (!snapshot.hasData) {
+          return LoadingIndicator();
+        } else {
+          return CanvasWebView(
+            content: snapshot.data.body,
+            emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound,
+            horizontalPadding: 16,
+          );
+        }
       },
-      child: FutureBuilder(
-        future: _pageFuture,
-        builder: (context, AsyncSnapshot<CanvasPage> snapshot) {
-          if (snapshot.hasError) {
-            return ErrorPandaWidget(L10n(context).unexpectedError, () => _refreshPage());
-          } else if (!snapshot.hasData) {
-            return LoadingIndicator();
-          } else {
-            return CanvasWebView(
-              content: snapshot.data.body,
-              emptyDescription: snapshot.data.lockExplanation ?? L10n(context).noPageFound,
-              horizontalPadding: 16,
-            );
-          }
-        },
-      ),
     );
   }
 }
