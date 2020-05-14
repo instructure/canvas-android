@@ -26,6 +26,7 @@ import 'package:flutter_parent/models/grading_period.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
@@ -45,6 +46,7 @@ import 'package:provider/provider.dart';
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 const _studentId = '123';
 const _courseId = '321';
@@ -56,11 +58,11 @@ final _student = User((b) => b
   ..name = _studentName);
 
 void main() {
-  final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
+  final interactor = MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => interactor);
-    locator.registerFactory<AssignmentDetailsInteractor>(() => _MockAssignmentDetailsInteractor());
+    locator.registerFactory<AssignmentDetailsInteractor>(() => MockAssignmentDetailsInteractor());
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
@@ -695,7 +697,9 @@ Assignment _mockAssignment({
     ..assignmentGroupId = groupId
     ..position = int.parse(id)
     ..dueAt = dueAt
-    ..submissionList = BuiltList<Submission>(submission != null ? [submission] : []).toBuilder()
+    ..submissionWrapper = SubmissionWrapper(
+            (b) => b..submissionList = BuiltList<Submission>.from(submission != null ? [submission] : []).toBuilder())
+        .toBuilder()
     ..pointsPossible = pointsPossible
     ..published = true);
 }
@@ -717,7 +721,3 @@ Widget _testableWidget(CourseDetailsModel model, {PlatformConfig platformConfig 
     platformConfig: platformConfig,
   );
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}
-
-class _MockAssignmentDetailsInteractor extends Mock implements AssignmentDetailsInteractor {}

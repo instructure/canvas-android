@@ -49,7 +49,7 @@ void main() {
   final courseId = 'course_123';
   final baseEvent = ScheduleItem((b) => b
     ..id = eventId
-    ..type = ScheduleItem.typeCalendar);
+    ..type = ScheduleItem.apiTypeCalendar);
   final reminder = Reminder((b) => b
     ..id = 123
     ..userId = 'user-123'

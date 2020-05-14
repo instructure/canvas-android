@@ -113,7 +113,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       subtitle: Text(dateText),
       leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
       onTap: () {
-        if (item.type == ScheduleItem.typeCalendar) {
+        if (item.type == ScheduleItem.apiTypeCalendar) {
           locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(widget.model.courseId, item.id));
         } else {
           locator<QuickNav>()
@@ -124,7 +124,7 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
   }
 
   IconData _getIcon(ScheduleItem item) {
-    if (item.type == ScheduleItem.typeCalendar) return CanvasIcons.calendar_month;
+    if (item.type == ScheduleItem.apiTypeCalendar) return CanvasIcons.calendar_month;
     if (item.assignment?.lockedForUser == true) return CanvasIcons.lock;
     if (item.assignment?.isQuiz == true) return CanvasIcons.quiz;
     if (item.assignment?.isDiscussion == true) return CanvasIcons.discussion;

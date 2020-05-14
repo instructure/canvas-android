@@ -13,78 +13,58 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/calendar_filter.dart';
-import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/enrollment.dart';
-import 'package:flutter_parent/models/login.dart';
-import 'package:flutter_parent/models/serializers.dart';
-import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/api/calendar_events_api.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
-import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
-import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
-import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
-import 'package:flutter_parent/screens/courses/courses_interactor.dart';
-import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
-import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
-import 'package:flutter_parent/utils/quick_nav.dart';
+import 'package:flutter_student_embed/l10n/app_localizations.dart';
+import 'package:flutter_student_embed/models/calendar_filter.dart';
+import 'package:flutter_student_embed/models/course.dart';
+import 'package:flutter_student_embed/models/login.dart';
+import 'package:flutter_student_embed/models/user.dart';
+import 'package:flutter_student_embed/network/api/planner_api.dart';
+import 'package:flutter_student_embed/network/utils/api_prefs.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_widget.dart';
+import 'package:flutter_student_embed/utils/db/calendar_filter_db.dart';
+import 'package:flutter_student_embed/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
 
-import '../../utils/accessibility_utils.dart';
-import '../../utils/canvas_model_utils.dart';
-import '../../utils/platform_config.dart';
-import '../../utils/test_app.dart';
-import '../../utils/test_helpers/mock_helpers.dart';
+import '../../testutils/accessibility_utils.dart';
+import '../../testutils/canvas_model_utils.dart';
+import '../../testutils/mock_helpers.dart';
+import '../../testutils/platform_config.dart';
+import '../../testutils/test_app.dart';
 
 void main() {
-  CalendarEventsApi calendarApi = MockCalendarApi();
+  PlannerApi plannerApi = MockPlannerApi();
   CalendarFilterDb filterDb = MockCalendarFilterDb();
   CalendarFilterListInteractor filterInteractor = MockCalendarFilterListInteractor();
-  CoursesInteractor coursesInteractor = MockCoursesInteractor();
-
-  when(filterDb.getByObserveeId(any, any, any))
-      .thenAnswer((_) => Future.value(CalendarFilter((b) => b.filters = SetBuilder({'course_123'}))));
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
-  final String observeeId = 'observee_123';
   final Set<String> contexts = {'course_123'};
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
     locator.registerLazySingleton<CalendarFilterListInteractor>(() => filterInteractor);
-    locator.registerLazySingleton<CoursesInteractor>(() => coursesInteractor);
-    locator.registerLazySingleton<CalendarTodayClickNotifier>(() => CalendarTodayClickNotifier());
-    locator.registerLazySingleton<CalendarTodayNotifier>(() => CalendarTodayNotifier());
-    locator.registerLazySingleton<CalendarEventsApi>(() => calendarApi);
+    locator.registerLazySingleton<PlannerApi>(() => plannerApi);
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
   setUp(() {
-    reset(calendarApi);
+    reset(plannerApi);
 
     // Reset db mock
     reset(filterDb);
-    when(filterDb.getByObserveeId(any, any, any)).thenAnswer((_) async {
+    when(filterDb.getForUser(any, any)).thenAnswer((_) async {
       return CalendarFilter((b) => b
         ..userDomain = userDomain
         ..userId = userId
-        ..observeeId = observeeId
         ..filters = SetBuilder(contexts));
     });
-
-    when(coursesInteractor.getCourses(isRefresh: anyNamed('isRefresh')))
-        .thenAnswer((_) => Future.value(_mockCourses()));
   });
 
   tearDown(() {
@@ -96,7 +76,7 @@ void main() {
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-      when(calendarApi.getUserCalendarItems(any, any, any, any,
+      when(plannerApi.getUserPlannerItems(any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([]));
 
@@ -109,11 +89,11 @@ void main() {
       await tester.pumpWidget(_testableMaterialWidget());
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-      when(calendarApi.getUserCalendarItems(any, any, any, any,
+      when(plannerApi.getUserPlannerItems(any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([]));
 
-      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(filterInteractor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       // Tap on the calendar filter button
@@ -130,13 +110,12 @@ void main() {
 
       final observer = MockNavigatorObserver();
 
-      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(filterInteractor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(_testableMaterialWidget(observer: observer));
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-      when(calendarApi.getUserCalendarItems(any, any, any, any,
+      when(plannerApi.getUserPlannerItems(any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([]));
 
@@ -175,13 +154,12 @@ void main() {
 
       final observer = MockNavigatorObserver();
 
-      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(filterInteractor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(_testableMaterialWidget(observer: observer));
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-      when(calendarApi.getUserCalendarItems(any, any, any, any,
+      when(plannerApi.getUserPlannerItems(any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([]));
 
@@ -221,13 +199,12 @@ void main() {
 
       final observer = MockNavigatorObserver();
 
-      when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(filterInteractor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       await tester.pumpWidget(_testableMaterialWidget(observer: observer));
       await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-      when(calendarApi.getUserCalendarItems(any, any, any, any,
+      when(plannerApi.getUserPlannerItems(any, any, any,
               contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
           .thenAnswer((_) => Future.value([]));
 
@@ -259,19 +236,17 @@ void main() {
     });
   });
 
-  /*
   testWidgetsWithAccessibilityChecks('filter returns empty list if all items selected', (tester) async {
     var completer = Completer<List<Course>>();
 
-    final observer = _MockNavigatorObserver();
+    final observer = MockNavigatorObserver();
 
-    when(filterInteractor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-        .thenAnswer((_) => completer.future);
+    when(filterInteractor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
     await tester.pumpWidget(_testableMaterialWidget(observer: observer));
     await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
 
-    when(calendarApi.getUserCalendarItems(any, any, any, any,
+    when(plannerApi.getUserPlannerItems(any, any, any,
             contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
         .thenAnswer((_) => Future.value([]));
 
@@ -305,10 +280,9 @@ void main() {
     // Verify that the list of selected items was updated correctly
     expect(result, <String>[]);
   });
-   */
 }
 
-Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier = null, NavigatorObserver observer}) {
+Widget _testableMaterialWidget({Widget widget, NavigatorObserver observer}) {
   var login = Login((b) => b
     ..uuid = 'uuid'
     ..domain = 'domain'
@@ -316,21 +290,11 @@ Widget _testableMaterialWidget({Widget widget, SelectedStudentNotifier notifier 
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   return TestApp(
-    ChangeNotifierProvider<SelectedStudentNotifier>(
-      create: (context) => notifier ?? SelectedStudentNotifier()
-        ..value = _mockStudent('1'),
-      child: Consumer<SelectedStudentNotifier>(
-        builder: (context, model, _) {
-          return Scaffold(body: widget ?? CalendarScreen());
-        },
-      ),
-    ),
-    darkMode: true,
-    navigatorObservers: observer != null ? [observer] : [],
+    Scaffold(body: widget ?? CalendarScreen()),
     platformConfig: PlatformConfig(
       initLoggedInUser: login,
-      mockApiPrefs: {ApiPrefs.KEY_CURRENT_STUDENT: json.encode(serialize(_mockStudent('123')))},
     ),
+    navigatorObservers: observer != null ? [observer] : [],
   );
 }
 
@@ -340,72 +304,16 @@ User _mockStudent(String userId) => User((b) => b
   ..sortableName = 'Sortable Name'
   ..build());
 
-final _enrollment = Enrollment((b) => b
-  ..enrollmentState = 'active'
-  ..userId = '123');
-
 List<Course> _mockCourses() {
   return [
     Course((b) => b
       ..id = '123'
-      ..enrollments = ListBuilder([_enrollment])
       ..name = 'Course1'),
     Course((b) => b
       ..id = '234'
-      ..enrollments = ListBuilder([_enrollment])
       ..name = 'Course2'),
     Course((b) => b
       ..id = '345'
-      ..enrollments = ListBuilder([_enrollment])
       ..name = 'Course3')
-  ];
-}
-
-List<Course> _mockCoursesBigList() {
-  return [
-    Course((b) => b
-      ..id = '123'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course1'),
-    Course((b) => b
-      ..id = '234'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course2'),
-    Course((b) => b
-      ..id = '345'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '678'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '678'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '1234'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '2345'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '3456'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '4567'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '5678'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '6789'
-      ..enrollments = ListBuilder([_enrollment])
-      ..name = 'Course3'),
   ];
 }

@@ -15,19 +15,19 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/l10n/app_localizations.dart';
-import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
-import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
-import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
-import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
-import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_student_embed/l10n/app_localizations.dart';
+import 'package:flutter_student_embed/models/course.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
+import 'package:flutter_student_embed/utils/common_widgets/empty_panda_widget.dart';
+import 'package:flutter_student_embed/utils/common_widgets/error_panda_widget.dart';
+import 'package:flutter_student_embed/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-import '../../../utils/accessibility_utils.dart';
-import '../../../utils/test_app.dart';
-import '../../../utils/test_helpers/mock_helpers.dart';
+import '../../../testutils/accessibility_utils.dart';
+import '../../../testutils/mock_helpers.dart';
+import '../../../testutils/test_app.dart';
 
 void main() {
   group('Render', () {
@@ -35,14 +35,12 @@ void main() {
       var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        darkMode: true,
       ));
       await tester.pump();
 
@@ -53,14 +51,12 @@ void main() {
       var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        darkMode: true,
       ));
       await tester.pump();
 
@@ -76,14 +72,12 @@ void main() {
       var interactor = MockCalendarFilterListInteractor();
       var completer = Completer<List<Course>>();
 
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => completer.future);
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh'))).thenAnswer((_) => completer.future);
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
 
       await tester.pumpWidget(TestApp(
         CalendarFilterListScreen(<String>{}),
-        darkMode: true,
       ));
       await tester.pump();
 
@@ -97,7 +91,7 @@ void main() {
     testWidgetsWithAccessibilityChecks('shows appbar title', (tester) async {
       Set<String> selectedCourses = {'course_123', 'course_234', 'course_345'};
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
@@ -113,7 +107,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('shows description', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
@@ -129,7 +123,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('shows course list with header item', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
@@ -146,7 +140,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('empty selected list selects all items', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
@@ -169,7 +163,7 @@ void main() {
 
     testWidgetsWithAccessibilityChecks('items in initial selected list are selected', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
@@ -194,7 +188,7 @@ void main() {
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('clicking list item updates selected list', (tester) async {
       var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       Set<String> selectedContexts = {'course_123'};
@@ -244,10 +238,9 @@ void main() {
       expect(now == initial, true);
     });
 
-    /*
     testWidgetsWithAccessibilityChecks('deselecting all items empties the selected list', (tester) async {
-      var interactor = _MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
+      var interactor = MockCalendarFilterListInteractor();
+      when(interactor.getCoursesForUser(isRefresh: anyNamed('isRefresh')))
           .thenAnswer((_) => Future.value(_mockCourses()));
 
       Set<String> selectedContexts = {'course_123'};
@@ -287,148 +280,6 @@ void main() {
       var now = state.selectedContextIds.length;
       expect(now == 0, true);
     });
-     */
-
-    testWidgetsWithAccessibilityChecks('deselecting items reduces the selected list', (tester) async {
-      var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => Future.value(_mockCourses()));
-
-      Set<String> selectedContexts = {'course_123', 'course_234'};
-      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
-
-      await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(selectedContexts),
-      ));
-      await tester.pump();
-      await tester.pump();
-
-      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
-
-      expect(find.byType(Checkbox), findsNWidgets(3));
-
-      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
-        if (widget is Checkbox) {
-          // Check for a checkbox widgets that are checked
-          final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
-        }
-        return false;
-      });
-
-      // Make sure we've got the correct selected number of items
-      expect(checkedCheckBoxFinder, findsNWidgets(2));
-
-      // Click on the first course, deselecting it
-      expect(find.text('Course1'), findsOneWidget);
-      await tester.tap(find.text('Course1'));
-      await tester.pumpAndSettle(Duration(seconds: 4)); // Let checkbox animation finish
-
-      // Check to make sure we have no items selected
-      expect(checkedCheckBoxFinder, findsOneWidget);
-
-      // Make sure the selected list was updated
-      expect(state.selectedContextIds.length, 1);
-    });
-
-    testWidgetsWithAccessibilityChecks('selecting more than 10 shows an error', (tester) async {
-      var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => Future.value(_mockCoursesBigList()));
-
-      Set<String> selectedContexts = {
-        'course_1',
-        'course_2',
-        'course_3',
-        'course_4',
-        'course_5',
-        'course_6',
-        'course_7',
-        'course_8',
-        'course_9',
-        'course_10',
-      };
-      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
-
-      await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(selectedContexts),
-      ));
-      await tester.pump();
-      await tester.pump();
-
-      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
-
-      expect(find.byType(Checkbox, skipOffstage: false), findsNWidgets(11));
-
-      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
-        if (widget is Checkbox) {
-          // Check for a checkbox widgets that are checked
-          final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
-        }
-        return false;
-      }, skipOffstage: false);
-
-      // Make sure we've got the correct selected number of items
-      expect(checkedCheckBoxFinder, findsNWidgets(10));
-
-      var attachmentList = find.byKey(Key('calendar_filter_list_key'));
-      await tester.drag(attachmentList, Offset(0, -300));
-      await tester.pump();
-
-      // Click on the last course, the only unselected context, to add it to the selected list
-      expect(find.text('Course11', skipOffstage: false), findsOneWidget);
-      await tester.tap(find.text('Course11', skipOffstage: false));
-      await tester.pump();
-
-      expect(find.text(AppLocalizations().tooManyCalendarsError), findsOneWidget);
-
-      var selectedCount = state.selectedContextIds.length;
-      expect(selectedCount, 10);
-    });
-
-    testWidgetsWithAccessibilityChecks('attempting to deselect the last calendar shows an error', (tester) async {
-      var interactor = MockCalendarFilterListInteractor();
-      when(interactor.getCoursesForSelectedStudent(isRefresh: anyNamed('isRefresh')))
-          .thenAnswer((_) => Future.value(_mockCourses()));
-
-      Set<String> selectedContexts = {
-        'course_123',
-      };
-      setupTestLocator((locator) => locator.registerLazySingleton<CalendarFilterListInteractor>(() => interactor));
-
-      await tester.pumpWidget(TestApp(
-        CalendarFilterListScreen(selectedContexts),
-      ));
-      await tester.pump();
-      await tester.pump();
-
-      CalendarFilterListScreenState state = await tester.state(find.byType(CalendarFilterListScreen));
-
-      expect(find.byType(Checkbox), findsNWidgets(3));
-
-      var checkedCheckBoxFinder = find.byWidgetPredicate((widget) {
-        if (widget is Checkbox) {
-          // Check for a checkbox widgets that are checked
-          final Checkbox checkboxWidget = widget;
-          return checkboxWidget.value;
-        }
-        return false;
-      }, skipOffstage: false);
-
-      // Make sure we've got the correct selected number of items
-      expect(checkedCheckBoxFinder, findsNWidgets(1));
-
-      // attempt to deselect the only selected course
-      expect(find.text('Course1'), findsOneWidget);
-      await tester.tap(find.text('Course1'));
-      await tester.pump();
-
-      expect(find.text(AppLocalizations().minimumCalendarsError), findsOneWidget);
-
-      var selectedCount = state.selectedContextIds.length;
-      expect(selectedCount, 1);
-    });
   });
 }
 
@@ -443,43 +294,5 @@ List<Course> _mockCourses() {
     Course((b) => b
       ..id = '345'
       ..name = 'Course3')
-  ];
-}
-
-List<Course> _mockCoursesBigList() {
-  return [
-    Course((b) => b
-      ..id = '1'
-      ..name = 'Course1'),
-    Course((b) => b
-      ..id = '2'
-      ..name = 'Course2'),
-    Course((b) => b
-      ..id = '3'
-      ..name = 'Course3'),
-    Course((b) => b
-      ..id = '4'
-      ..name = 'Course4'),
-    Course((b) => b
-      ..id = '5'
-      ..name = 'Course5'),
-    Course((b) => b
-      ..id = '6'
-      ..name = 'Course6'),
-    Course((b) => b
-      ..id = '7'
-      ..name = 'Course7'),
-    Course((b) => b
-      ..id = '8'
-      ..name = 'Course8'),
-    Course((b) => b
-      ..id = '9'
-      ..name = 'Course9'),
-    Course((b) => b
-      ..id = '10'
-      ..name = 'Course10'),
-    Course((b) => b
-      ..id = '11'
-      ..name = 'Course11'),
   ];
 }

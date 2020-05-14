@@ -62,6 +62,7 @@ import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/section.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 import 'package:flutter_parent/models/term.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
 import 'package:flutter_parent/models/unread_count.dart';
@@ -145,9 +146,11 @@ part 'serializers.g.dart';
   Section,
   SchoolDomain,
   ScheduleItem,
+  Section,
   SeedContext,
   SeededUser,
   Submission,
+  SubmissionWrapper,
   Term,
   TermsOfService,
   UnreadCount,

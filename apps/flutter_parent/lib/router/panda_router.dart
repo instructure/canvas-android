@@ -78,7 +78,7 @@ class PandaRouter {
 
   static String dashboard() => '/dashboard';
 
-  static String discussionDetails(String courseId, String topicId) => courseAnnouncementDetails(courseId, topicId);
+  static String discussionDetails(String courseId, String assignmentId) => assignmentDetails(courseId, assignmentId);
 
   static String _domainSearch = '/domainSearch';
 
