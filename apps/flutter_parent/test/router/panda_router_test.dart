@@ -66,7 +66,7 @@ void main() {
     ..user = user.toBuilder());
 
   final _mockNav = MockNav();
-  final _mockWebContentInteractor = MockWebViewInteractor();
+  final _mockWebContentInteractor = MockWebContentInteractor();
   final _mockSnackbar = MockSnackbar();
   final _mockLauncher = MockUrlLauncher();
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2019 - present Instructure, Inc.
+// Copyright (C) 2020 - present Instructure, Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -11,33 +11,25 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import 'package:flutter/material.dart';
-import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_parent/utils/design/parent_theme.dart';
 
-class CourseSyllabusScreen extends StatefulWidget {
-  final String _syllabus;
+class HtmlDescriptionScreen extends StatelessWidget {
+  /// Html passed to a full screen web view
+  final String html;
 
-  CourseSyllabusScreen(this._syllabus);
-
-  @override
-  _CourseSyllabusScreenState createState() => _CourseSyllabusScreenState();
-}
-
-class _CourseSyllabusScreenState extends State<CourseSyllabusScreen> with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+  const HtmlDescriptionScreen(this.html, {Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required super call for AutomaticKeepAliveClientMixin
-    return Consumer<CourseDetailsModel>(
-      builder: (context, model, _) => CanvasWebView(
-        content: widget._syllabus,
-        horizontalPadding: 10,
+    return Scaffold(
+      appBar: AppBar(
+        bottom: ParentTheme.of(context).appBarDivider(),
+        title: Text(L10n(context).descriptionTitle),
       ),
+      body: CanvasWebView(content: html, horizontalPadding: 16),
     );
   }
 }

@@ -138,6 +138,8 @@ class MockPageApi extends Mock implements PageApi {}
 
 class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
 
+class MockQuickNav extends Mock implements QuickNav {}
+
 class MockReminderDb extends Mock implements ReminderDb {}
 
 class MockRemoteConfig extends Mock implements RemoteConfig {}
@@ -148,4 +150,4 @@ class MockUrlLauncher extends Mock implements UrlLauncher {}
 
 class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
 
-class MockWebViewInteractor extends Mock implements WebContentInteractor {}
+class MockWebContentInteractor extends Mock implements WebContentInteractor {}

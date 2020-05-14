@@ -26,7 +26,7 @@ import '../../test_app.dart';
 import '../../test_helpers/mock_helpers.dart';
 
 void main() {
-  final interactor = MockWebViewInteractor();
+  final interactor = MockWebContentInteractor();
 
   setupTestLocator((locator) => locator.registerFactory<WebContentInteractor>(() => interactor));
 

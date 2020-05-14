@@ -27,8 +27,8 @@ import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class CourseDetailsInteractor {
-  Future<Course> loadCourse(String courseId) {
-    return locator<CourseApi>().getCourse(courseId);
+  Future<Course> loadCourse(String courseId, {bool forceRefresh = false}) {
+    return locator<CourseApi>().getCourse(courseId, forceRefresh: forceRefresh);
   }
 
   Future<List<CourseTab>> loadCourseTabs(String courseId, {bool forceRefresh = false}) =>
