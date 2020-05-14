@@ -114,7 +114,8 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Refresh displays loading indicator ', (tester) async {
     final result = CourseShellData(course);
-    when(interactor.loadCourseShell(CourseShellType.syllabus, any)).thenAnswer((_) => Future.value(result));
+    when(interactor.loadCourseShell(CourseShellType.syllabus, any, forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value(result));
 
     await tester.pumpWidget(TestApp(CourseRoutingShellScreen(course.id, CourseShellType.syllabus),
         platformConfig: PlatformConfig(initWebview: true)));
