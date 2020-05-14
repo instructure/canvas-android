@@ -293,42 +293,47 @@ void main() {
   });
 
   group('Set day/week/month', () {
-    // Disabling this test for now, as it always passes locally and always fails on Bitrise.
-    // MBL-14416 is the ticket to fix this.
-//    testWidgetsWithAccessibilityChecks('onTodaySelected working', (tester) async {
-//      DateTime dateForDayBuilder = null;
-//      bool isTodaySelectedValue = false;
-//      await tester.pumpWidget(
-//        calendarTestApp(
-//          CalendarWidget(
-//            dayBuilder: (_, day) {
-//              dateForDayBuilder = day;
-//              return Container();
-//            },
-//            fetcher: _FakeFetcher(),
-//            onTodaySelected: (isTodaySelected) {
-//              isTodaySelectedValue = isTodaySelected;
-//            },
-//          ),
-//        ),
-//      );
-//      await tester.pumpAndSettle();
-//
-//      isTodaySelectedValue = true; // Just to make sure that it actually changes below
-//
-//      DateTime targetDate = DateTime(2000, 1, 1);
-//      await goToDate(tester, targetDate);
-//
-//      // "isTodaySelected" should be false
-//      expect(isTodaySelectedValue, false, reason: "isTodaySelected should be false");
-//
-//      targetDate = DateTime.now();
-//      CalendarWidgetState state = await goToDate(tester, targetDate);
-//      print("selectedDay: ${state.selectedDay}, today: ${DateTime.now()}");
-//
-//      // "isTodaySelected" should be true
-//      expect(isTodaySelectedValue, true, reason: "isTodaySelected should be true");
-//    });
+    testWidgetsWithAccessibilityChecks('onTodaySelected working', (tester) async {
+      DateTime dateForDayBuilder;
+      bool isTodaySelectedValue = false;
+      await tester.pumpWidget(
+        calendarTestApp(
+          CalendarWidget(
+            dayBuilder: (_, day) {
+              dateForDayBuilder = day;
+              return Container();
+            },
+            fetcher: _FakeFetcher(),
+            onTodaySelected: (isTodaySelected) {
+              isTodaySelectedValue = isTodaySelected;
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      isTodaySelectedValue = true; // Just to make sure that it actually changes below
+
+      // Go to some date that is decidedly not today.
+      DateTime targetDate = DateTime(2000, 1, 1);
+      await goToDate(tester, targetDate);
+
+      // "isTodaySelected" should be false
+      expect(isTodaySelectedValue, false, reason: "isTodaySelected should be false");
+
+      // Go to today
+      // Note that the calendar logic expects to deal in dates, not times.
+      // If the DateTime that you pass in includes a time component, there is
+      // some risk that the calendar logic will "round up" to the next day.
+      // (Time values past noon will cause round-up in CalendarWidgetState._dayIndexForDay().)
+      // So we'll pass in a time-less DateTime for our "today" value.
+      var rightNow = DateTime.now();
+      targetDate = DateTime(rightNow.year, rightNow.month, rightNow.day); // chop off time portion
+      await goToDate(tester, targetDate);
+
+      // "isTodaySelected" should be true
+      expect(isTodaySelectedValue, true, reason: "isTodaySelected should be true");
+    });
 
     testWidgetsWithAccessibilityChecks('Jumps to selected date', (tester) async {
       DateTime dateForDayBuilder = null;
