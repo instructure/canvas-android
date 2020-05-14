@@ -19,7 +19,8 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -74,6 +75,15 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
   Widget _scaffold(CourseShellType type, CourseShellData data) {
     return Scaffold(
         appBar: AppBar(
+          actions: <Widget>[
+            IconButton(
+              tooltip: L10n(context).refresh,
+              icon: Icon(CanvasIcons.refresh),
+              onPressed: () async {
+                return _refresh();
+              },
+            ),
+          ],
           title: _appBarTitle(
               (widget.type == CourseShellType.frontPage)
                   ? L10n(context).courseFrontPageLabel.toUpperCase()
@@ -85,14 +95,20 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
   }
 
   Widget _body(CourseShellData data) {
-    return RefreshIndicator(
-        onRefresh: () {
-          return _refresh();
-        },
-        child: widget.type == CourseShellType.frontPage
-            ? CanvasHtml(data.frontPage.body,
-                emptyDescription: data.frontPage.lockExplanation ?? L10n(context).noPageFound)
-            : CanvasHtml(data.course.syllabusBody));
+    return widget.type == CourseShellType.frontPage
+        ? _webView(data.frontPage.body, emptyDescription: data.frontPage.lockExplanation ?? L10n(context).noPageFound)
+        : _webView(data.course.syllabusBody);
+  }
+
+  Widget _webView(String html, {String emptyDescription}) {
+    return Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: CanvasWebView(
+          content: html,
+          emptyDescription: emptyDescription,
+          horizontalPadding: 16,
+          fullScreen: true,
+        ));
   }
 
   Widget _appBarTitle(String title, String subtitle) {
