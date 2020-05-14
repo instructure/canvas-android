@@ -293,8 +293,6 @@ void main() {
   });
 
   group('Set day/week/month', () {
-    // Disabling this test for now, as it always passes locally and always fails on Bitrise.
-    // MBL-14416 is the ticket to fix this.
     testWidgetsWithAccessibilityChecks('onTodaySelected working', (tester) async {
       DateTime dateForDayBuilder;
       bool isTodaySelectedValue = false;
@@ -324,9 +322,11 @@ void main() {
       expect(isTodaySelectedValue, false, reason: "isTodaySelected should be false");
 
       // Go to today
-      // Make sure that the "today" version of targetDate is in the morning.
-      // If it is past noon, this test will break due to rounding logic in
-      // CalendarWidgetState._dayIndexForDay().
+      // Note that the calendar logic expects to deal in dates, not times.
+      // If the DateTime that you pass in includes a time component, there is
+      // some risk that the calendar logic will "round up" to the next day.
+      // (Time values past noon will cause round-up in CalendarWidgetState._dayIndexForDay().)
+      // So we'll pass in a time-less DateTime for our "today" value.
       var rightNow = DateTime.now();
       targetDate = DateTime(rightNow.year, rightNow.month, rightNow.day); // chop off time portion
       await goToDate(tester, targetDate);
