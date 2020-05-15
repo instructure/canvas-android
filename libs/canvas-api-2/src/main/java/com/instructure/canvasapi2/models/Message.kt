@@ -35,7 +35,8 @@ data class Message(
         var attachments: List<Attachment> = ArrayList(),
         @SerializedName("media_comment")
         var mediaComment: MediaComment? = null,
-        var submission: Submission? = null,
+        // The submission field is not supported by the API, and not used in our code
+        //var submission: Submission? = null,
         @SerializedName("forwarded_messages")
         var forwardedMessages: List<Message> = ArrayList(),
         @SerializedName("participating_user_ids")
