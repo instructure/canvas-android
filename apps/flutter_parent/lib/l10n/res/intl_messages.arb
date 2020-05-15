@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-08T11:04:02.001630",
+  "@@last_modified": "2020-05-15T11:04:11.958548",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -164,9 +164,21 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Tap to favorite the courses you want to see on the Calendar.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Tap to favorite the courses you want to see on the Calendar. Select up to 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "You may only choose 10 calendars to display",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "You must select at least one calendar to display",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
     "type": "text",
     "placeholders": {}
   },
@@ -556,8 +568,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "There was an error loading your your student’s courses.",
-  "@There was an error loading your your student’s courses.": {
+  "There was an error loading your student’s courses.": "There was an error loading your student’s courses.",
+  "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
@@ -814,21 +826,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "Description": "Description",
-  "@Description": {
-    "description": "Label for the description of the assignment",
-    "type": "text",
-    "placeholders": {}
-  },
   "Instructions": "Instructions",
   "@Instructions": {
     "description": "Label for the description of the assignment when it has quiz instructions",
-    "type": "text",
-    "placeholders": {}
-  },
-  "No description": "No description",
-  "@No description": {
-    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -1470,6 +1470,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "Description": "Description",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders": {}
+  },
   "A description is required.": "A description is required.",
   "@A description is required.": {
     "description": "Error shown when the description field is empty",
@@ -1697,6 +1703,18 @@
     "type": "text",
     "placeholders": {}
   },
+  "Refresh": "Refresh",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View Description": "View Description",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders": {}
+  },
   "expanded": "expanded",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
@@ -1711,6 +1729,12 @@
   },
   "An unexpected error occurred": "An unexpected error occurred",
   "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No description": "No description",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
