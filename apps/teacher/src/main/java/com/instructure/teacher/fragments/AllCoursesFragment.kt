@@ -95,7 +95,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
         ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is CourseBrowserCallback) mCourseBrowserCallback = context
     }

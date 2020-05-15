@@ -972,7 +972,8 @@ void main() {
     });
   });
 
-  group('Right-to-Left', () {
+  // TODO: MBL-14395
+  /*group('Right-to-Left', () {
     testWidgetsWithAccessibilityChecks('Swipes to previous week in RTL', (tester) async {
       await tester.pumpWidget(
         calendarTestApp(
@@ -1162,7 +1163,7 @@ void main() {
       expect(monthWidget.year, 2000);
       expect(monthWidget.month, 1);
     });
-  });
+  });*/
 }
 
 class _FakeFetcher extends PlannerFetcher {

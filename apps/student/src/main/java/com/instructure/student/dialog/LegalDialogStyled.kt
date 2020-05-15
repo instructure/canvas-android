@@ -78,19 +78,19 @@ class LegalDialogStyled : AppCompatDialogFragment() {
 
             val intent = InternalWebViewActivity.createIntent(activity, "http://www.canvaslms.com/policies/terms-of-use", html, getString(R.string.termsOfUse), false)
             requireContext().startActivity(intent)
-            dialog.dismiss()
+            dialog?.dismiss()
         }
 
         view.privacyPolicy.onClick {
             val intent = InternalWebViewActivity.createIntent(activity, "https://www.instructure.com/policies/privacy/", getString(R.string.privacyPolicy), false)
             requireContext().startActivity(intent)
-            dialog.dismiss()
+            dialog?.dismiss()
         }
 
         view.openSource.onClick {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
             requireContext().startActivity(intent)
-            dialog.dismiss()
+            dialog?.dismiss()
         }
 
         return AlertDialog.Builder(context)
@@ -100,7 +100,7 @@ class LegalDialogStyled : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
-        if (dialog != null && retainInstance) dialog.setDismissMessage(null)
+        if (dialog != null && retainInstance) dialog?.setDismissMessage(null)
         super.onDestroyView()
     }
 

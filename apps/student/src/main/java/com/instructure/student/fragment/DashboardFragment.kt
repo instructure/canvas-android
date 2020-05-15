@@ -173,7 +173,7 @@ class DashboardFragment : ParentFragment() {
         // Styling done in attachNavigationDrawer
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -244,8 +244,8 @@ class DashboardFragment : ParentFragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.menu_favorite, menu)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_favorite, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

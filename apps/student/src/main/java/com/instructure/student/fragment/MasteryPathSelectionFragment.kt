@@ -105,7 +105,7 @@ class MasteryPathSelectionFragment : ParentFragment() {
         viewPager.currentItem = currentTab
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         tabLayout.tabMode = if (!isTablet && resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
             TabLayout.MODE_SCROLLABLE else TabLayout.MODE_FIXED
@@ -161,11 +161,12 @@ class MasteryPathSelectionFragment : ParentFragment() {
             super.destroyItem(container, position, `object`)
         }
 
-        override fun getItem(position: Int): Fragment? {
+        override fun getItem(position: Int): Fragment {
             val assignmentSet = masteryPath.assignmentSets!![position]
             val assignments = assignmentSet!!.assignments
             val route = MasteryPathOptionsFragment.makeRoute(canvasContext, assignments, assignmentSet, moduleObjectId, moduleItemId)
             return MasteryPathOptionsFragment.newInstance(route)
+                ?: throw IllegalStateException("MasteryPathOptionsFragment is null!")
         }
 
         override fun getCount(): Int = masteryPath.assignmentSets!!.size

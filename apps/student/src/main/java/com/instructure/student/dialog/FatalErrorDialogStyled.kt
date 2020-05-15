@@ -55,7 +55,7 @@ class FatalErrorDialogStyled : DialogFragment() {
 
     override fun onDestroyView() {
         if (dialog != null && retainInstance)
-            dialog.setDismissMessage(null)
+            dialog?.setDismissMessage(null)
         super.onDestroyView()
     }
 

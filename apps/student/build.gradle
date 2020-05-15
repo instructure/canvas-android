@@ -14,11 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import com.instructure.android.buildtools.transform.ProjectTransformer
-import com.instructure.android.buildtools.transform.MasqueradeUITransformer
-import com.instructure.android.buildtools.transform.PageViewTransformer
-import com.instructure.android.buildtools.transform.FlutterA11yOffsetTransformer
-import com.instructure.android.buildtools.transform.LocaleTransformer
+
+import com.instructure.android.buildtools.transform.*
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -193,7 +190,8 @@ android {
                     new MasqueradeUITransformer('com.instructure.student.activity.NavigationActivity.class'),
                     new PageViewTransformer(),
                     new LocaleTransformer(),
-                    new FlutterA11yOffsetTransformer()
+                    new FlutterA11yOffsetTransformer(),
+                    new FlutterTextureRenderModeFix()
             )
     )
 
