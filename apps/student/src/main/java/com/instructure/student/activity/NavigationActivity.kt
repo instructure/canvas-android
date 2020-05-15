@@ -314,7 +314,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         // Switching languages will trigger this, so we check for our Pending intent id
-        if (hasPendingLanguageIntent(intent.extras) || hasLocalNotificationLink(intent.extras)) {
+        if (hasPendingLanguageIntent(intent.extras) ||
+            hasLocalNotificationLink(intent.extras) ||
+            hasUnreadPushNotification(intent.extras)
+        ) {
             handlePushNotification(hasUnreadPushNotification(intent.extras))
         }
     }
@@ -849,7 +852,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
-        PushNotification.clearPushHistory()
+        PushNotification.remove(intent)
     }
 
     private fun hasLocalNotificationLink(extras: Bundle?): Boolean {

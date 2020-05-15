@@ -71,8 +71,6 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
                     // Synchronously delete channel, has to be done before we clear the user as it makes an API call
                     CommunicationChannelsManager.deletePushCommunicationChannelSynchronous(registrationId)
                 }
-                (ContextKeeper.appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-                    .cancel(PushNotification.NOTIFY_ID)
                 PushNotification.clearPushHistory()
 
                 when (type) {
