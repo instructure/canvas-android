@@ -17,12 +17,10 @@
 
 package com.instructure.student.activity
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
@@ -41,11 +39,11 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.fragment.AllCoursesFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.FileUtils
+import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.coroutines.Job
 
 //Intended to handle all routing to fragments from links both internal and external
@@ -69,7 +67,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
             parse(intent)
         }
 
-        LoaderUtils.restoreLoaderFromBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+        LoaderUtils.restoreLoaderFromBundle(
             LoaderManager.getInstance(this), savedInstanceState, loaderCallbacks, R.id.openMediaLoaderID, Const.OPEN_MEDIA_LOADER_BUNDLE)
 
         if (savedInstanceState?.getBundle(Const.OPEN_MEDIA_LOADER_BUNDLE) != null) {
@@ -147,39 +145,6 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
 
         val extras = intent.extras!!
         Logger.logBundle(extras)
-        
-        if (intent.action == Const.INTENT_ACTION_STUDENT_VIEW) {
-            // If someone is logged in, create a pending intent to launch into masquerading, then
-            // switch out the current user
-            if (ApiPrefs.user != null) {
-                // Totally restart the app so the masquerading will apply
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-                val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
-
-                StudentLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
-                return
-            }
-
-            // This is an intent from the Teacher app for viewing a course as a student
-            val domain: String = extras.getString(Const.DOMAIN, "")
-            val token: String = extras.getString(Const.TOKEN, "")
-            val clientId = extras.getString(Const.CLIENT_ID, ApiPrefs.clientId)
-            val clientSecret = extras.getString(Const.CLIENT_SECRET, ApiPrefs.clientSecret)
-            val courseId = extras.getLong(Const.COURSE_ID)
-
-            MasqueradeHelper.startMasquerading(
-                masqueradingUserId = -1, // This will be retrieved when we get the test user
-                masqueradingDomain = domain,
-                startingClass = NavigationActivity::class.java,
-                masqueradeToken = token,
-                masqueradeClientId = clientId,
-                masqueradeClientSecret = clientSecret,
-                courseId = courseId
-            )
-            return
-        }
 
         if (extras.containsKey(Route.ROUTE)) {
             handleRoute(extras.getParcelable(Route.ROUTE) as Route)

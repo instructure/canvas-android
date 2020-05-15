@@ -20,6 +20,7 @@ package com.instructure.canvasapi2
 import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Bundle
+import com.google.firebase.FirebaseApp
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasAuthError
@@ -36,6 +37,16 @@ abstract class AppManager : Application() {
 
     @SuppressLint("MissingPermission")
     override fun onCreate() {
+        /* ContextKeeper and FirebaseInitProvider are normally initialized as ContentProviders during app startup.
+         However, if the app has been restarted using ProcessPhoenix (e.g. for masquerading) then these will become
+         uninitialized and must be re-initialized here. */
+        try {
+            ContextKeeper.appContext
+        } catch (e: UninitializedPropertyAccessException) {
+            ContextKeeper.appContext = this
+        }
+        FirebaseApp.initializeApp(this) // No-op if already initialized
+
         super.onCreate()
         AndroidThreeTen.init(this)
         Paper.init(this)

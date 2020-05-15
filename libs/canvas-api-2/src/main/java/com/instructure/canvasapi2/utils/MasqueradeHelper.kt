@@ -16,8 +16,6 @@
 package com.instructure.canvasapi2.utils
 
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
@@ -27,23 +25,18 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
+import com.jakewharton.processphoenix.ProcessPhoenix
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
 import java.io.IOException
-import kotlin.system.exitProcess
 
 object MasqueradeHelper {
-
     var masqueradeLogoutTask: Runnable? = null
 
     @JvmStatic
     @JvmOverloads
     fun <ACTIVITY : Activity> stopMasquerading(startingClass: Class<ACTIVITY>? = null) {
-        if (ApiPrefs.isStudentView) {
-            // Clear out the Teacher's token so we don't invalidate it on logout
-            ApiPrefs.accessToken = ""
-        }
 
         if ((ApiPrefs.isMasqueradingFromQRCode || ApiPrefs.isStudentView) && masqueradeLogoutTask != null) {
             masqueradeLogoutTask?.run()
@@ -54,7 +47,6 @@ object MasqueradeHelper {
         ApiPrefs.domain = ""
         ApiPrefs.masqueradeDomain = ""
         ApiPrefs.masqueradeUser = null
-        ApiPrefs.accessToken = ""
         ApiPrefs.clientSecret = ""
         ApiPrefs.clientId = ""
         cleanupMasquerading(ContextKeeper.appContext)
@@ -135,14 +127,11 @@ object MasqueradeHelper {
     private fun <ACTIVITY : Activity> restartApplication(startingClass: Class<ACTIVITY>) {
         // Totally restart the app so the masquerading will apply
         val startupIntent = Intent(ContextKeeper.appContext, startingClass)
-        startupIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val pendingIntent = PendingIntent.getActivity(ContextKeeper.appContext, 6660, startupIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-        val alarmManager = ContextKeeper.appContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 1000, pendingIntent)
+        startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
-        // Delays the exit long enough for all the shared preferences to be saved and caches to be cleared.
+        // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
         Handler().postDelayed({
-            exitProcess(0)
+            ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent)
         }, 500)
     }
 
