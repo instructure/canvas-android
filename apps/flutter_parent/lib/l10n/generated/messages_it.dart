@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'it';
 
-  static m0(version) => "v. ${version}";
+  static m0(userName) => "Stai agendo come ${userName}";
 
-  static m1(threshold) => "Voto compito sopra ${threshold}";
+  static m1(version) => "v. ${version}";
 
-  static m2(threshold) => "Voto compito sotto ${threshold}";
+  static m2(threshold) => "Voto compito sopra ${threshold}";
 
-  static m3(moduleName) => "Questo compito è bloccato dal modulo  \"${moduleName}\".";
+  static m3(threshold) => "Voto compito sotto ${threshold}";
 
-  static m4(studentName, assignmentName) => "Su: ${studentName}, Compito - ${assignmentName}";
+  static m4(moduleName) => "Questo compito è bloccato dal modulo \"${moduleName}\".";
 
-  static m5(points) => "${points} pt.";
+  static m5(studentName, assignmentName) => "Su: ${studentName}, Compito - ${assignmentName}";
 
-  static m6(points) => "${points} punti";
+  static m6(points) => "${points} pt.";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} a 1 altro', other: '${authorName} ad altri ${howMany}')}";
+  static m7(points) => "${points} punti";
 
-  static m8(authorName, recipientName) => "${authorName} a ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} a 1 altro', other: '${authorName} ad altri ${howMany}')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} a ${recipientName} e 1 altro', other: '${authorName} a ${recipientName} e altri ${howMany}')}";
+  static m9(authorName, recipientName) => "${authorName} a ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} a ${recipientName} e 1 altro', other: '${authorName} a ${recipientName} e altri ${howMany}')}";
 
-  static m11(score, pointsPossible) => "${score} su ${pointsPossible} punti";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "per ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} su ${pointsPossible} punti";
 
-  static m13(threshold) => "Voto corso sopra ${threshold}";
+  static m13(studentShortName) => "per ${studentShortName}";
 
-  static m14(threshold) => "Voto corso sotto ${threshold}";
+  static m14(threshold) => "Voto corso sopra ${threshold}";
 
-  static m15(date, time) => "Il ${date} alle ${time}";
+  static m15(threshold) => "Voto corso sotto ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Prova a cercare il nome della scuola o del distretto a cui stai tentando di accedere, ad esempio “Scuola privata Rossi” o “Scuole statali Rossi”. Puoi anche entrare direttamente in un dominio Canvas, ad esempio “rossi.instructure.com.”\n\nPer ulteriori informazioni su come trovare l’account Canvas del tuo istituto, puoi visitare le ${canvasGuides}, contattare l’${canvasSupport} o la scuola per assistenza.";
+  static m16(date, time) => "Il ${date} alle ${time}";
 
-  static m17(date, time) => "Scade il ${date} alle ${time}";
+  static m17(canvasGuides, canvasSupport) => "Prova a cercare il nome della scuola o del distretto a cui stai tentando di accedere, ad esempio “Scuola privata Rossi” o “Scuole statali Rossi”. Puoi anche entrare direttamente in un dominio Canvas, ad esempio “rossi.instructure.com.”\n\nPer ulteriori informazioni su come trovare l’account Canvas del tuo istituto, puoi visitare le ${canvasGuides}, contattare l’${canvasSupport} o la scuola per assistenza.";
 
-  static m18(studentName, eventTitle) => "Su: ${studentName}, Evento - ${eventTitle}";
+  static m18(date, time) => "Scade il ${date} alle ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "Non agirai più come ${userName} e sarai disconnesso.";
 
-  static m20(grade) => "Voto finale: ${grade}";
+  static m20(userName) => "Non agirai più come ${userName} e tornerai al tuo account originale.";
 
-  static m21(studentName) => "Su: ${studentName}, Pagina iniziale";
+  static m21(studentName, eventTitle) => "Su: ${studentName}, Evento - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Su: ${studentName}, Voti";
+  static m23(grade) => "Voto finale: ${grade}";
 
-  static m24(pointsLost) => "Penale ritardo (-${pointsLost})";
+  static m24(studentName) => "Su: ${studentName}, Pagina iniziale";
 
-  static m25(studentName, linkUrl) => "Su: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "Deve essere sopra ${percentage}";
+  static m26(studentName) => "Su: ${studentName}, Voti";
 
-  static m27(percentage) => "Deve essere sotto ${percentage}";
+  static m27(pointsLost) => "Penale ritardo (-${pointsLost})";
 
-  static m28(month) => "Prossimo mese: ${month}";
+  static m28(studentName, linkUrl) => "Su: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Prossima settimana a partire da ${date}";
+  static m29(percentage) => "Deve essere sopra ${percentage}";
 
-  static m30(query) => "Impossibile trovare delle scuole corrispondenti a \"${query}\"";
+  static m30(percentage) => "Deve essere sotto ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Di 1 punto', other: 'Di ${points} punti')}";
+  static m31(month) => "Prossimo mese: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Prossima settimana a partire da ${date}";
 
-  static m33(points) => "${points} punti possibili";
+  static m33(query) => "Impossibile trovare delle scuole corrispondenti a \"${query}\"";
 
-  static m34(month) => "Mese precedente: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Di 1 punto', other: 'Di ${points} punti')}";
 
-  static m35(date) => "Settimana precedente a partire da ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Mese di ${month}";
+  static m36(points) => "${points} punti possibili";
 
-  static m37(date, time) => "Questo compito è stato inviato il ${date} alle ${time} ed è in attesa della valutazione";
+  static m37(month) => "Mese precedente: ${month}";
 
-  static m38(studentName) => "Su: ${studentName}, Piano di studio";
+  static m38(date) => "Settimana precedente a partire da ${date}";
 
-  static m39(count) => "${count} non letto";
+  static m39(month) => "Mese di ${month}";
+
+  static m40(date, time) => "Questo compito è stato inviato il ${date} alle ${time} ed è in attesa della valutazione";
+
+  static m41(studentName) => "Su: ${studentName}, Piano di studio";
+
+  static m42(count) => "${count} non letto";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("“Agisci come” consiste sostanzialmente nell\'effettuare l\'accesso assumendo l\'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("La descrizione è obbligatoria."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("L’argomento è obbligatorio."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Agisci come utente"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Aggiungi studente"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Aggiungi allegato"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Aggiungi nuovo studente"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Descrizione"),
     "Device" : MessageLookupByLibrary.simpleMessage("Dispositivo"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Modello dispositivo"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Dominio"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Dominio:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Fatto"),
     "Download" : MessageLookupByLibrary.simpleMessage("Download"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Annuncio istituto"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Annunci istituto"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Istruzioni"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Le interazioni su questa pagina sono limitate dal tuo istituto."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Ottima occasione per riposarsi, rilassarsi e ricaricare le batterie."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Sembra che i compiti non siano ancora stati creati in questo spazio."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Solo una domanda casuale, un commento, un\'idea, un suggerimento…"),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Posizione"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Bloccato"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Disconnetti"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Flusso di login: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Flusso di login: Normale"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Flusso di login: Amministratore del sito"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Flusso di login: Salta verifica dispositivo mobile"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Gestisci studenti"),
     "Message" : MessageLookupByLibrary.simpleMessage("Messaggio"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Oggetto del messaggio"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Invia messaggio"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Imposta una data e un’ora per ricevere la notifica su questo evento."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Imposta una data e un’ora per ricevere la notifica su questo compito specifico."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Imposta commutatore promemoria"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Impostazioni"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Condividi cosa ti piace dell’app"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Si è verificato un problema ma posso aggirarlo e fare ciò che devo."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Non agire più come utente"),
     "Student" : MessageLookupByLibrary.simpleMessage("Studente"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Oggetto"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Inviato"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Si è verificato un errore di caricamento del calendario del tuo studente"),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Si è verificato un errore durante il caricamento dei tuoi studenti."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Si è verificato un errore durante il caricamento dei corsi dello studente."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Si è verificato un errore durante il tentativo di agire come questo utente. Controlla il dominio e l’ID utente e riprova."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Non c’è ancora nulla su cui ricevere delle notifiche."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Questa app non è autorizzata per l’uso."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Questo corso non ha ancora alcun compito o eventi di calendario."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("File non supportato"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Carica File"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Usa videocamera"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("ID utente"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("ID utente:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Numero versione"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Visualizza dettagli errori"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Non siamo sicuri di cos’è successo, ma non è stata una cosa positiva. Contattaci se continua a succedere."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Sì"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Non stati monitorando alcuno studente."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Devi inserire un ID utente"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Devi inserire un dominio valido"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Riceverai una notifica su questo compito il…"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Riceverai una notifica su questo evento il…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Il tuo codice non è corretto o è scaduto."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("I corsi dello studente potrebbero non essere stati ancora pubblicati."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Sei in pari!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Avvisi"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Calendario"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Guide Canvas"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Logo Canvas"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Assistenza Canvas"),
     "collapse" : MessageLookupByLibrary.simpleMessage("comprimi"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("compresso"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Corsi"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("ignora"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Come posso trovare la mia scuola o il mio distretto?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Inserisci nome scuola o distretto…"),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("estendi"),
     "expanded" : MessageLookupByLibrary.simpleMessage("esteso"),
-    "finalGrade" : m20,
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Trova scuola"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("me"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("meno"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Successivo"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("invia"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("non letto"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

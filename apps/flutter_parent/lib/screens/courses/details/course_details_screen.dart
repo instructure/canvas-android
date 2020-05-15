@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_model.dart';
 import 'package:flutter_parent/screens/courses/details/course_front_page_screen.dart';
 import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -49,6 +51,7 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTickerProviderStateMixin {
   TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -81,24 +84,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
   }
 
   Widget _body(BuildContext context, CourseDetailsModel model) {
-    final tabCount = model.tabCount();
-    if (_tabController == null) _tabController = TabController(initialIndex: 0, length: tabCount, vsync: this);
+    if (_tabController == null) _tabController = TabController(initialIndex: 0, length: model.tabCount(), vsync: this);
     return Scaffold(
-      appBar: AppBar(
-          title: Text(model.course?.name ?? ''),
-          bottom: ParentTheme.of(context).appBarDivider(
-            bottom: (tabCount <= 1)
-                ? null // Don't show the tab bar if we only have one tab
-                : TabBar(
-                    controller: _tabController,
-                    tabs: [
-                      Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
-                      if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),
-                      if (model.hasHomePageAsSyllabus) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
-                      if (model.showSummary) Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
-                    ],
-                  ),
-          )),
+      appBar: _appBar(context, model),
       body: _tabBody(context, model),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _sendMessage(model.hasHomePageAsSyllabus),
@@ -109,6 +97,38 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
             child: Icon(CanvasIconsSolid.comment),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _appBar(BuildContext context, CourseDetailsModel model) {
+    final tabCount = model.tabCount();
+    return AppBar(
+      title: Text(model.course?.name ?? ''),
+      actions: <Widget>[
+        if (tabCount > 1)
+          IconButton(
+            tooltip: L10n(context).refresh,
+            icon: Icon(CanvasIcons.refresh),
+            onPressed: () async {
+              // Clear cache for the front page of this course, as a workaround to force a refresh
+              await DioConfig.canvas().clearCache(path: 'courses/${model.courseId}/front_page');
+              model.loadData(refreshCourse: true);
+            },
+          ),
+      ],
+      bottom: ParentTheme.of(context).appBarDivider(
+        bottom: (tabCount <= 1)
+            ? null // Don't show the tab bar if we only have one tab
+            : TabBar(
+                controller: _tabController,
+                tabs: [
+                  Tab(text: L10n(context).courseGradesLabel.toUpperCase()),
+                  if (model.hasHomePageAsFrontPage) Tab(text: L10n(context).courseFrontPageLabel.toUpperCase()),
+                  if (model.hasHomePageAsSyllabus) Tab(text: L10n(context).courseSyllabusLabel.toUpperCase()),
+                  if (model.showSummary) Tab(text: L10n(context).courseSummaryLabel.toUpperCase()),
+                ],
+              ),
       ),
     );
   }
@@ -128,7 +148,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
         children: [
           CourseGradesScreen(),
           if (model.hasHomePageAsFrontPage) CourseFrontPageScreen(courseId: model.courseId),
-          if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody, model.course.name),
+          if (model.hasHomePageAsSyllabus) CourseSyllabusScreen(model.course.syllabusBody),
           if (model.showSummary) CourseSummaryScreen(),
         ],
       );

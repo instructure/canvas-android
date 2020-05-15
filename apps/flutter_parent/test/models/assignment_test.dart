@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/lock_info.dart';
 import 'package:flutter_parent/models/locked_module.dart';
 import 'package:flutter_parent/models/submission.dart';
+import 'package:flutter_parent/models/submission_wrapper.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -216,15 +217,21 @@ Assignment _mockAssignment({
   DateTime dueAt,
   SubmissionBuilder submission,
   List<SubmissionTypes> types = const [SubmissionTypes.onlineTextEntry],
-}) =>
-    Assignment((b) => b
-      ..id = ''
-      ..courseId = ''
-      ..assignmentGroupId = ''
-      ..position = 0
-      ..dueAt = dueAt
-      ..submissionList = BuiltList<Submission>(submission != null ? [submission.build()] : []).toBuilder()
-      ..submissionTypes = BuiltList<SubmissionTypes>(types).toBuilder());
+}) {
+  List<Submission> submissionList = submission != null ? [submission.build()] : [];
+
+  SubmissionWrapper submissionWrapper =
+      SubmissionWrapper((b) => b..submissionList = BuiltList<Submission>.from(submissionList).toBuilder());
+
+  return Assignment((b) => b
+    ..id = ''
+    ..courseId = ''
+    ..assignmentGroupId = ''
+    ..position = 0
+    ..dueAt = dueAt
+    ..submissionWrapper = submissionWrapper.toBuilder()
+    ..submissionTypes = BuiltList<SubmissionTypes>(types).toBuilder());
+}
 
 Submission _mockSubmission(String studentId) => Submission((b) => b
   ..assignmentId = ''

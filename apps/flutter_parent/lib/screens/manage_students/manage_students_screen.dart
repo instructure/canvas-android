@@ -48,39 +48,48 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
+  // Used to tell the Dashboard screen if it needs to update its list of students
+  bool _addedStudentFlag = false;
+
   @override
   Widget build(BuildContext context) {
-    return DefaultParentTheme(
-      useNonPrimaryAppBar: false,
-      builder: (context) => Scaffold(
-        appBar: AppBar(
-          title: Text(L10n(context).manageStudents),
-          bottom: ParentTheme.of(context).appBarDivider(),
-        ),
-        body: FutureBuilder(
-          initialData: widget._students,
-          future: _studentsFuture,
-          builder: (context, AsyncSnapshot<List<User>> snapshot) {
-            // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context, _addedStudentFlag);
+        return Future.value(false);
+      },
+      child: DefaultParentTheme(
+        useNonPrimaryAppBar: false,
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: Text(L10n(context).manageStudents),
+            bottom: ParentTheme.of(context).appBarDivider(),
+          ),
+          body: FutureBuilder(
+            initialData: widget._students,
+            future: _studentsFuture,
+            builder: (context, AsyncSnapshot<List<User>> snapshot) {
+              // No wait view - users should be passed in on init, and the refresh indicator should handle the pull to refresh
 
-            // Get the view based on the state of the snapshot
-            Widget view;
-            if (snapshot.hasError) {
-              view = _error(context);
-            } else if (snapshot.data == null || snapshot.data.isEmpty) {
-              view = _empty(context);
-            } else {
-              view = _StudentsList(snapshot.data);
-            }
+              // Get the view based on the state of the snapshot
+              Widget view;
+              if (snapshot.hasError) {
+                view = _error(context);
+              } else if (snapshot.data == null || snapshot.data.isEmpty) {
+                view = _empty(context);
+              } else {
+                view = _StudentsList(snapshot.data);
+              }
 
-            return RefreshIndicator(
-              key: _refreshKey,
-              onRefresh: _refresh,
-              child: view,
-            );
-          },
+              return RefreshIndicator(
+                key: _refreshKey,
+                onRefresh: _refresh,
+                child: view,
+              );
+            },
+          ),
+          floatingActionButton: _createFloatingActionButton(context),
         ),
-        floatingActionButton: _createFloatingActionButton(context),
       ),
     );
   }
@@ -236,6 +245,9 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     // Can be null if popped by dismissing
     if (studentPaired == true) {
       _refreshKey.currentState.show();
+
+      // Set flag indicating we've added a student, handled in the Dashboard screen
+      _addedStudentFlag = true;
     }
   }
 

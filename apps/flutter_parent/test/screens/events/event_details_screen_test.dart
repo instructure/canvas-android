@@ -25,12 +25,12 @@ import 'package:flutter_parent/screens/events/event_details_screen.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../utils/accessibility_utils.dart';
 import '../../utils/platform_config.dart';
@@ -49,7 +49,7 @@ void main() {
   final courseId = 'course_123';
   final baseEvent = ScheduleItem((b) => b
     ..id = eventId
-    ..type = ScheduleItem.typeCalendar);
+    ..type = ScheduleItem.apiTypeCalendar);
   final reminder = Reminder((b) => b
     ..id = 123
     ..userId = 'user-123'
@@ -431,7 +431,7 @@ void main() {
     expect(find.text(title), findsOneWidget);
   });
 
-  testWidgetsWithAccessibilityChecks('shows webview', (tester) async {
+  testWidgetsWithAccessibilityChecks('shows description button', (tester) async {
     final description = 'test description';
     final event = baseEvent.rebuild((b) => b..description = description);
 
@@ -444,10 +444,11 @@ void main() {
     await tester.pump(); // Let the future finish
     await tester.pump(); // Let the webview future finish
 
-    expect(find.text(l10n.assignmentDescriptionLabel), findsOneWidget);
-    await ensureVisibleByScrolling(find.byType(WebView), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+    expect(find.text(l10n.descriptionTitle), findsOneWidget);
+    await ensureVisibleByScrolling(find.byType(HtmlDescriptionTile), tester,
+        scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
     await tester.pumpAndSettle();
-    expect(find.byType(WebView), findsOneWidget);
+    expect(find.byType(HtmlDescriptionTile), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('shows create conversation screen with correct subject', (tester) async {

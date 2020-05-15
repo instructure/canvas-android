@@ -22,7 +22,7 @@ import 'package:flutter_parent/screens/assignments/grade_cell.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/html_description_tile.dart';
 import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -216,8 +216,9 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
           ),
           Divider(),
           _descriptionContent(assignment, fullyLocked),
+          if (!fullyLocked)
+            Divider(),
           // TODO: Add in 'Learn more' feature
-//        Divider(),
 //        ..._rowTile(
 //          title: l10n.assignmentLearnMoreLabel,
 //          child: Text('nothing to learn here'),
@@ -231,8 +232,7 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   Widget _descriptionContent(Assignment assignment, bool fullyLocked) {
     final l10n = L10n(context);
 
-    if (fullyLocked)
-      // no good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
+    if (fullyLocked) {
       return FutureBuilder(
         future: _animationFuture,
         builder: (context, snapshot) {
@@ -243,25 +243,20 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             );
           }
 
+          // No good way to center this image vertically in a scrollable view's remaining space. Settling for padding for now
           return Padding(
             padding: const EdgeInsets.only(top: 32),
             child: Center(child: SvgPicture.asset('assets/svg/panda-locked.svg', excludeFromSemantics: true)),
           );
         },
       );
-    else {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: _rowTile(
-          title: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
-              ? l10n.assignmentInstructionsLabel
-              : l10n.assignmentDescriptionLabel,
-          child: CanvasWebView(
-            content: assignment.description,
-            emptyDescription: l10n.assignmentNoDescriptionBody,
-            fullScreen: false,
-          ),
-        ),
+    } else {
+      return HtmlDescriptionTile(
+        html: assignment.description,
+        emptyDescription: l10n.noDescriptionBody,
+        descriptionTitle: assignment.submissionTypes?.contains(SubmissionTypes.onlineQuiz) == true
+            ? l10n.assignmentInstructionsLabel
+            : l10n.descriptionTitle,
       );
     }
   }

@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-05-01T11:03:25.020395",
+  "@@last_modified": "2020-05-08T11:04:02.001630",
   "alertsLabel": "Alerts",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1611,6 +1611,48 @@
     "type": "text",
     "placeholders": {
       "userName": {}
+    }
+  },
+  "How are we doing?": "How are we doing?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Don't show again": "Don't show again",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "What can we do better?": "What can we do better?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send Feedback": "Send Feedback",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Suggestions for Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} star}other{{position} stars}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
     }
   },
   "Cancel": "Cancel",

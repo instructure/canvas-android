@@ -11,7 +11,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
@@ -63,21 +62,6 @@ void main() {
     expect(find.byType(ErrorPandaWidget), findsOneWidget);
     await tester.tap(find.text(l10n.retry));
     await tester.pump();
-
-    verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
-  });
-
-  testWidgetsWithAccessibilityChecks('can refresh', (tester) async {
-    when(_interactor.loadFrontPage(_courseId, forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) async => _page);
-
-    await tester.pumpWidget(TestApp(CourseFrontPageScreen(courseId: _courseId)));
-    await tester.pump(); // Wait for widget to build
-    await tester.pump(); // Wait for the future to finish
-
-    final refresh = find.byType(RefreshIndicator);
-    expect(refresh, findsOneWidget);
-    await tester.drag(refresh, const Offset(0, 200));
-    await tester.pumpAndSettle();
 
     verify(_interactor.loadFrontPage(_courseId, forceRefresh: true)).called(1);
   });

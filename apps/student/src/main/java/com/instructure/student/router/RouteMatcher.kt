@@ -142,8 +142,8 @@ object RouteMatcher : BaseRouteMatcher() {
 
 
         // Calendar
-        routes.add(Route("/calendar", CalendarListViewFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), CalendarListViewFragment::class.java))
+        routes.add(Route("/calendar", CalendarFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/calendar_events/:${RouterParams.EVENT_ID}"), CalendarFragment::class.java))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusFragment::class.java))
@@ -152,7 +152,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments"), AssignmentListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), NotificationListFragment::class.java, AssignmentDetailsFragment::class.java))
-        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarListViewFragment::class.java, AssignmentDetailsFragment::class.java))
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"), CalendarFragment::class.java, AssignmentDetailsFragment::class.java))
 
         // Studio
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}/resource_selection"), StudioWebViewFragment::class.java))

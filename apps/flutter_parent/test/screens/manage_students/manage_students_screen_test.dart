@@ -417,7 +417,130 @@ void main() {
       // Check for error message
       expect(find.text(AppLocalizations().errorPairingFailed), findsOneWidget);
     });
+
+    testWidgetsWithAccessibilityChecks('screen returns true when paired successfully', (tester) async {
+      var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy', id: "1771")];
+
+      // Mock return value for success when pairing a student
+      final interactor = _MockManageStudentsInteractor();
+      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+
+      // Mock retrieving students, also add an extra student to the list
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
+        observedStudent.add(CanvasModelTestUtils.mockUser(shortName: 'Trevor'));
+        return Future.value(observedStudent);
+      });
+
+      _setupLocator(interactor);
+
+      final observer = _MockNavigatorObserver();
+
+      // Setup page
+      await _pumpTestableWidgetWithBackButton(tester, ManageStudentsScreen(observedStudent), observer);
+
+      // Make sure we only have one student
+      expect(find.byType(ListTile), findsNWidgets(1));
+      expect(find.text('Billy'), findsOneWidget);
+
+      // Click FAB
+      await _clickFAB(tester);
+
+      // Click pairing code option
+      await tester.tap(find.text(AppLocalizations().pairingCode));
+      await tester.pumpAndSettle();
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
+
+      // Enter code
+      await tester.enterText(find.byType(TextFormField), 'canvas');
+      await tester.pumpAndSettle();
+
+      // Tap 'OK'
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+
+      // Make sure we made the call to get students
+      verify(interactor.getStudents(forceRefresh: true)).called(1);
+      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS)).called(1);
+      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
+
+      // Make sure the dialog is gone
+      expect(find.byType(AlertDialog), findsNothing);
+
+      // Check for two students in the list
+      expect(find.byType(ListTile), findsNWidgets(2));
+      expect(find.text('Billy'), findsOneWidget);
+      expect(find.text('Trevor'), findsOneWidget);
+
+      // Setup for getting the popped result from the Manage Students screen
+      bool studentAdded = false;
+      Route route = verify(observer.didPush(captureAny, any)).captured[1];
+      route.popped.then((value) => studentAdded = value);
+
+      // Go back to the widget with the back button
+      await tester.pageBack();
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      expect(studentAdded, true);
+    });
+
+    testWidgetsWithAccessibilityChecks('screen returns false when no pairing performed', (tester) async {
+      var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy', id: "1771")];
+
+      // Mock return value for success when pairing a student
+      final interactor = _MockManageStudentsInteractor();
+      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+
+      // Mock retrieving students, also add an extra student to the list
+      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
+        observedStudent.add(CanvasModelTestUtils.mockUser(shortName: 'Trevor'));
+        return Future.value(observedStudent);
+      });
+
+      _setupLocator(interactor);
+
+      final observer = _MockNavigatorObserver();
+
+      // Setup page
+      await _pumpTestableWidgetWithBackButton(tester, ManageStudentsScreen(observedStudent), observer);
+
+      // Make sure we only have one student
+      expect(find.byType(ListTile), findsNWidgets(1));
+      expect(find.text('Billy'), findsOneWidget);
+
+      // Setup for getting the popped result from the Manage Students screen
+      bool studentAdded = true;
+      Route route = verify(observer.didPush(captureAny, any)).captured[1];
+      route.popped.then((value) {
+        studentAdded = value;
+      });
+
+      // Go back to the widget with the back button
+      await tester.pageBack();
+      await tester.pumpAndSettle(Duration(seconds: 1));
+
+      expect(studentAdded, false);
+    });
   });
+}
+
+/// Load up a temp page with a button to navigate to our screen, that way the back button exists in the app bar
+Future<void> _pumpTestableWidgetWithBackButton(tester, Widget widget, _MockNavigatorObserver observer) async {
+  var mockObserver = _MockNavigatorObserver();
+  final app = TestApp(
+    Builder(
+      builder: (context) => FlatButton(
+        child: Semantics(label: 'test', child: const SizedBox()),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => widget)),
+      ),
+    ),
+    navigatorObservers: [mockObserver, if (observer != null) observer],
+  );
+
+  await tester.pumpWidget(app);
+  await tester.pumpAndSettle();
+  await tester.tap(find.byType(FlatButton));
+  await tester.pumpAndSettle();
+  verify(mockObserver.didPush(any, any)).called(2); // Twice, first for the initial page, then for the navigator route
 }
 
 class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
@@ -425,3 +548,5 @@ class _MockManageStudentsInteractor extends Mock implements ManageStudentsIntera
 class _MockAlertThresholdsInteractor extends Mock implements AlertThresholdsInteractor {}
 
 class _MockAnalytics extends Mock implements Analytics {}
+
+class _MockNavigatorObserver extends Mock implements NavigatorObserver {}

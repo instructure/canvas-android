@@ -30,6 +30,7 @@ import 'package:test/test.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 const _studentId = '123';
 const _studentName = 'billy jean';
@@ -42,7 +43,7 @@ final _student = User((b) => b
 final _course = Course((b) => b..id = _courseId);
 
 void main() {
-  final _MockCourseDetailsInteractor interactor = _MockCourseDetailsInteractor();
+  final interactor = MockCourseDetailsInteractor();
 
   setupTestLocator((locator) {
     locator.registerFactory<CourseDetailsInteractor>(() => interactor);
@@ -70,12 +71,12 @@ void main() {
 
     test('refreshes course if course refresh forced', () async {
       final expected = null;
-      when(interactor.loadCourse(_courseId)).thenAnswer((_) => Future.value(expected));
+      when(interactor.loadCourse(_courseId, forceRefresh: true)).thenAnswer((_) => Future.value(expected));
       final model = CourseDetailsModel.withCourse(_student, _course);
 
       await model.loadData(refreshCourse: true);
 
-      verify(interactor.loadCourse(_courseId)).called(1);
+      verify(interactor.loadCourse(_courseId, forceRefresh: true)).called(1);
       expect(model.course, expected);
     });
 
@@ -270,8 +271,9 @@ void main() {
       final itemA = ScheduleItem((s) => s..title = 'A');
       final itemB = ScheduleItem((s) => s..title = 'B');
 
-      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, any)).thenAnswer((_) async => [itemA]);
-      when(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, any)).thenAnswer((_) async => [itemB]);
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeCalendar, any)).thenAnswer((_) async => [itemA]);
+      when(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeAssignment, any))
+          .thenAnswer((_) async => [itemB]);
 
       // Use the model
       final model = CourseDetailsModel.withCourse(_student, _course);
@@ -280,8 +282,8 @@ void main() {
       final actual = await model.loadSummary(refresh: true);
 
       expect(actual, expected);
-      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeCalendar, true));
-      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.typeAssignment, true));
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeCalendar, true));
+      verify(interactor.loadScheduleItems(_courseId, ScheduleItem.apiTypeAssignment, true));
     });
   });
 
@@ -545,5 +547,3 @@ void main() {
     });
   });
 }
-
-class _MockCourseDetailsInteractor extends Mock implements CourseDetailsInteractor {}

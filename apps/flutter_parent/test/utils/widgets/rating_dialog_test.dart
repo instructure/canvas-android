@@ -208,7 +208,7 @@ void main() {
       await TestApp.showWidgetFromTap(
         tester,
         (context) => RatingDialog.showDialogIfPossible(context, false),
-        locale: Locale('ar'),
+        locale: Locale('ar', 'AR'),
         configBlock: () async {
           await ApiPrefs.setRatingNextShowDate(DateTime.now());
         },

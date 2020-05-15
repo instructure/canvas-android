@@ -19,91 +19,99 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ru';
 
-  static m0(version) => "в. ${version}";
+  static m0(userName) => "Вы действуете как ${userName}";
 
-  static m1(threshold) => "Оценка за задание выше ${threshold}";
+  static m1(version) => "в. ${version}";
 
-  static m2(threshold) => "Оценка за задание ниже ${threshold}";
+  static m2(threshold) => "Оценка за задание выше ${threshold}";
 
-  static m3(moduleName) => "Это задание заблокировано модулем \"${moduleName}\".";
+  static m3(threshold) => "Оценка за задание ниже ${threshold}";
 
-  static m4(studentName, assignmentName) => "Касательно: ${studentName}, задание - ${assignmentName}";
+  static m4(moduleName) => "Это задание заблокировано модулем \"${moduleName}\".";
 
-  static m5(points) => "${points} баллов";
+  static m5(studentName, assignmentName) => "Касательно: ${studentName}, задание - ${assignmentName}";
 
   static m6(points) => "${points} баллов";
 
-  static m7(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} до 1 другое', other: '${authorName} до ${howMany} другие')}";
+  static m7(points) => "${points} баллов";
 
-  static m8(authorName, recipientName) => "${authorName} до ${recipientName}";
+  static m8(authorName, howMany) => "${Intl.plural(howMany, one: '${authorName} до 1 другое', other: '${authorName} до ${howMany} другие')}";
 
-  static m9(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} до ${recipientName} и 1 другой', other: '${authorName} до ${recipientName} и ${howMany} другие')}";
+  static m9(authorName, recipientName) => "${authorName} до ${recipientName}";
 
-  static m10(count) => "${count}+";
+  static m10(authorName, recipientName, howMany) => "${Intl.plural(howMany, one: '${authorName} до ${recipientName} и 1 другой', other: '${authorName} до ${recipientName} и ${howMany} другие')}";
 
-  static m11(score, pointsPossible) => "${score} из ${pointsPossible} баллов";
+  static m11(count) => "${count}+";
 
-  static m12(studentShortName) => "для ${studentShortName}";
+  static m12(score, pointsPossible) => "${score} из ${pointsPossible} баллов";
 
-  static m13(threshold) => "Оценка за курс выше ${threshold}";
+  static m13(studentShortName) => "для ${studentShortName}";
 
-  static m14(threshold) => "Оценка за курс ниже ${threshold}";
+  static m14(threshold) => "Оценка за курс выше ${threshold}";
 
-  static m15(date, time) => "${date} в ${time}";
+  static m15(threshold) => "Оценка за курс ниже ${threshold}";
 
-  static m16(canvasGuides, canvasSupport) => "Попытайтесь выполнить поиск названия школы или округа, к которым вы пытаетесь получить доступ, например, «частная школа Смита» или «школа графства Смит». Также вы можете ввести название домена Canvas напрямую, например, «smith.instructure.com.»\n\nДля получения более подробной информации по поиску учетной записи учреждения Canvas вы можете посетить ${canvasGuides}, обратиться в ${canvasSupport} или в свою школу за поддержкой.";
+  static m16(date, time) => "${date} в ${time}";
 
-  static m17(date, time) => "Срок выполнения ${date} в ${time}";
+  static m17(canvasGuides, canvasSupport) => "Попытайтесь выполнить поиск названия школы или округа, к которым вы пытаетесь получить доступ, например, «частная школа Смита» или «школа графства Смит». Также вы можете ввести название домена Canvas напрямую, например, «smith.instructure.com.»\n\nДля получения более подробной информации по поиску учетной записи учреждения Canvas вы можете посетить ${canvasGuides}, обратиться в ${canvasSupport} или в свою школу за поддержкой.";
 
-  static m18(studentName, eventTitle) => "Касательно: ${studentName}, событие - ${eventTitle}";
+  static m18(date, time) => "Срок выполнения ${date} в ${time}";
 
-  static m19(startAt, endAt) => "${startAt} - ${endAt}";
+  static m19(userName) => "Функция «Действовать как ${userName}» будет отключена, и сеанс будет завершен.";
 
-  static m20(grade) => "Итоговая оценка: ${grade}";
+  static m20(userName) => "Функция «Действовать как ${userName}» будет отключена и вы вернетесь в свою исходную учетную запись.";
 
-  static m21(studentName) => "Касательно: ${studentName}, первая страница";
+  static m21(studentName, eventTitle) => "Касательно: ${studentName}, событие - ${eventTitle}";
 
-  static m22(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m22(startAt, endAt) => "${startAt} - ${endAt}";
 
-  static m23(studentName) => "Касательно: ${studentName}, оценки";
+  static m23(grade) => "Итоговая оценка: ${grade}";
 
-  static m24(pointsLost) => "Снижение оценки за опоздание (-${pointsLost})";
+  static m24(studentName) => "Касательно: ${studentName}, первая страница";
 
-  static m25(studentName, linkUrl) => "Касательно: ${studentName}, ${linkUrl}";
+  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(percentage) => "Должно быть больше ${percentage}";
+  static m26(studentName) => "Касательно: ${studentName}, оценки";
 
-  static m27(percentage) => "Должно быть меньше ${percentage}";
+  static m27(pointsLost) => "Снижение оценки за опоздание (-${pointsLost})";
 
-  static m28(month) => "Следующий месяц: ${month}";
+  static m28(studentName, linkUrl) => "Касательно: ${studentName}, ${linkUrl}";
 
-  static m29(date) => "Начало на следующей неделе ${date}";
+  static m29(percentage) => "Должно быть больше ${percentage}";
 
-  static m30(query) => "Невозможно найти школу, соответствующую \"${query}\"";
+  static m30(percentage) => "Должно быть меньше ${percentage}";
 
-  static m31(points, howMany) => "${Intl.plural(howMany, one: 'Из 1 балла', other: 'Из ${points} баллов')}";
+  static m31(month) => "Следующий месяц: ${month}";
 
-  static m32(count) => "+${count}";
+  static m32(date) => "Начало на следующей неделе ${date}";
 
-  static m33(points) => "${points} балла(-ов) возможно";
+  static m33(query) => "Невозможно найти школу, соответствующую \"${query}\"";
 
-  static m34(month) => "Предыдущий месяц: ${month}";
+  static m34(points, howMany) => "${Intl.plural(howMany, one: 'Из 1 балла', other: 'Из ${points} баллов')}";
 
-  static m35(date) => "Начало на предыдущей неделе ${date}";
+  static m35(count) => "+${count}";
 
-  static m36(month) => "Месяц из ${month}";
+  static m36(points) => "${points} балла(-ов) возможно";
 
-  static m37(date, time) => "Это задание было отправлено ${date} в ${time} и ожидает оценки";
+  static m37(month) => "Предыдущий месяц: ${month}";
 
-  static m38(studentName) => "Касательно: ${studentName}, содержание курса";
+  static m38(date) => "Начало на предыдущей неделе ${date}";
 
-  static m39(count) => "${count} непрочитанных";
+  static m39(month) => "Месяц из ${month}";
+
+  static m40(date, time) => "Это задание было отправлено ${date} в ${time} и ожидает оценки";
+
+  static m41(studentName) => "Касательно: ${studentName}, содержание курса";
+
+  static m42(count) => "${count} непрочитанных";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Действовать как пользователь\" является по существу входом в систему в качестве этого пользователя без пароля. Вы сможете совершать любые действия, как если бы вы были этим пользователем, а для других пользователей это будет выглядеть так, как будто эти действия совершил этот пользователь. Тем не менее, в контрольных журналах записывается информация от том, что именно вы выполняли указанные действия от имени этого пользователя."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Требуется описание."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Необходима тема."),
+    "Act As User" : MessageLookupByLibrary.simpleMessage("Действовать как пользователь"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Добавить студента"),
     "Add attachment" : MessageLookupByLibrary.simpleMessage("Добавить вложение"),
     "Add new student" : MessageLookupByLibrary.simpleMessage("Добавить нового студента"),
@@ -143,6 +151,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Description" : MessageLookupByLibrary.simpleMessage("Описание"),
     "Device" : MessageLookupByLibrary.simpleMessage("Устройство"),
     "Device model" : MessageLookupByLibrary.simpleMessage("Модель устройства"),
+    "Domain" : MessageLookupByLibrary.simpleMessage("Домен"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Домен:"),
     "Done" : MessageLookupByLibrary.simpleMessage("Готово"),
     "Download" : MessageLookupByLibrary.simpleMessage("Скачать"),
@@ -175,6 +184,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Объявление об учебном заведении"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Объявления заведения"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Инструкции"),
+    "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Взаимодействие на этой странице ограничено вашей организацией."),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Похоже, что сегодня можно отдохнуть, расслабиться и набраться сил."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Похоже, что в этом разделе пока что не было создано ни одного задания."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Просто обычный вопрос, комментарий, идея, предложение..."),
@@ -187,6 +197,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Location" : MessageLookupByLibrary.simpleMessage("Местоположение"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Заблокировано"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Выйти"),
+    "Login flow: Canvas" : MessageLookupByLibrary.simpleMessage("Процесс авторизации: Canvas"),
+    "Login flow: Normal" : MessageLookupByLibrary.simpleMessage("Процесс авторизации: Обычный"),
+    "Login flow: Site Admin" : MessageLookupByLibrary.simpleMessage("Процесс авторизации: Администратор сайта"),
+    "Login flow: Skip mobile verify" : MessageLookupByLibrary.simpleMessage("Процесс авторизации: Пропустить проверку мобильного устройства"),
     "Manage Students" : MessageLookupByLibrary.simpleMessage("Управление студентами"),
     "Message" : MessageLookupByLibrary.simpleMessage("Сообщение"),
     "Message subject" : MessageLookupByLibrary.simpleMessage("Тема сообщения"),
@@ -241,10 +255,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Send message" : MessageLookupByLibrary.simpleMessage("Отправить сообщение"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Задать дату и время уведомления об этом событии."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Задать дату и время уведомления об этом конкретном задании."),
-    "Set reminder switch" : MessageLookupByLibrary.simpleMessage("Установить напоминание"),
     "Settings" : MessageLookupByLibrary.simpleMessage("Настройки"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Поделитесь своей любовью к приложению"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Что-то не работает, но я могу обойтись без этого, чтобы получить то, что мне нужно сделать."),
+    "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Перестать действовать как пользователь"),
     "Student" : MessageLookupByLibrary.simpleMessage("Студент"),
     "Subject" : MessageLookupByLibrary.simpleMessage("Тема"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Отправлено"),
@@ -278,6 +292,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Произошла ошибка при загрузке календаря ваших учащихся."),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Произошла ошибка при загрузке ваших студентов."),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Произошла ошибка при загрузке календаря ваших учащихся."),
+    "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Произошла ошибка при попытке использования функции «Действовать как пользователь». Проверьте домен и идентификатор пользователя и повторите попытку."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("На данный момент оповещать не о чем."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Это приложение не авторизовано для использования."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Этот курс пока что не имеет никаких заданий или календарных событий."),
@@ -294,6 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Неподдерживаемый файл"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Загрузить файл"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Использование камеры"),
+    "User ID" : MessageLookupByLibrary.simpleMessage("Идентификатор пользователя"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("ID пользователя:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Номер версии"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Просмотр подробностей ошибки"),
@@ -304,70 +320,74 @@ class MessageLookup extends MessageLookupByLibrary {
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Мы не знаем точно, что произошло, но это нехорошо. Обратитесь к нам, если это происходит дальше."),
     "Yes" : MessageLookupByLibrary.simpleMessage("Да"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Вы не наблюдаете ни за одни студентом."),
+    "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Необходимо ввести идентификатор пользователя"),
+    "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Необходимо указать действительный домен"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Вы будете уведомлены об этом задании…"),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Вы будете уведомлены об этом событии…"),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Ваш код неверен, или истек срок его действия."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Курсы вашего студента пока еще не могут быть опубликованы."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Вы все нагнали!"),
+    "actingAsUser" : m0,
     "alertsLabel" : MessageLookupByLibrary.simpleMessage("Предупреждения"),
-    "appVersion" : m0,
-    "assignmentGradeAboveThreshold" : m1,
-    "assignmentGradeBelowThreshold" : m2,
-    "assignmentLockedModule" : m3,
-    "assignmentSubjectMessage" : m4,
-    "assignmentTotalPoints" : m5,
-    "assignmentTotalPointsAccessible" : m6,
-    "authorToNOthers" : m7,
-    "authorToRecipient" : m8,
-    "authorToRecipientAndNOthers" : m9,
-    "badgeNumberPlus" : m10,
+    "appVersion" : m1,
+    "assignmentGradeAboveThreshold" : m2,
+    "assignmentGradeBelowThreshold" : m3,
+    "assignmentLockedModule" : m4,
+    "assignmentSubjectMessage" : m5,
+    "assignmentTotalPoints" : m6,
+    "assignmentTotalPointsAccessible" : m7,
+    "authorToNOthers" : m8,
+    "authorToRecipient" : m9,
+    "authorToRecipientAndNOthers" : m10,
+    "badgeNumberPlus" : m11,
     "calendarLabel" : MessageLookupByLibrary.simpleMessage("Календарь"),
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Руководства Canvas"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Логотип Canvas"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Поддержка Canvas"),
     "collapse" : MessageLookupByLibrary.simpleMessage("свернуть"),
-    "collapsed" : MessageLookupByLibrary.simpleMessage("свернуто"),
-    "contentDescriptionScoreOutOfPointsPossible" : m11,
-    "courseForWhom" : m12,
-    "courseGradeAboveThreshold" : m13,
-    "courseGradeBelowThreshold" : m14,
+    "collapsed" : MessageLookupByLibrary.simpleMessage("в свернутом виде"),
+    "contentDescriptionScoreOutOfPointsPossible" : m12,
+    "courseForWhom" : m13,
+    "courseGradeAboveThreshold" : m14,
+    "courseGradeBelowThreshold" : m15,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Курсы"),
-    "dateAtTime" : m15,
-    "dismiss" : MessageLookupByLibrary.simpleMessage("исключить"),
-    "domainSearchHelpBody" : m16,
+    "dateAtTime" : m16,
+    "domainSearchHelpBody" : m17,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Как найти мою школу или округ?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Введите название школы или округа…"),
-    "dueDateAtTime" : m17,
-    "eventSubjectMessage" : m18,
-    "eventTime" : m19,
+    "dueDateAtTime" : m18,
+    "endMasqueradeLogoutMessage" : m19,
+    "endMasqueradeMessage" : m20,
+    "eventSubjectMessage" : m21,
+    "eventTime" : m22,
     "expand" : MessageLookupByLibrary.simpleMessage("развернуть"),
-    "expanded" : MessageLookupByLibrary.simpleMessage("развернуто"),
-    "finalGrade" : m20,
+    "expanded" : MessageLookupByLibrary.simpleMessage("в развернутом виде"),
+    "finalGrade" : m23,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Найти школу"),
-    "frontPageSubjectMessage" : m21,
-    "gradeFormatScoreOutOfPointsPossible" : m22,
-    "gradesSubjectMessage" : m23,
-    "latePenalty" : m24,
+    "frontPageSubjectMessage" : m24,
+    "gradeFormatScoreOutOfPointsPossible" : m25,
+    "gradesSubjectMessage" : m26,
+    "latePenalty" : m27,
     "me" : MessageLookupByLibrary.simpleMessage("меня"),
-    "messageLinkPostscript" : m25,
+    "messageLinkPostscript" : m28,
     "minus" : MessageLookupByLibrary.simpleMessage("минус"),
-    "mustBeAboveN" : m26,
-    "mustBeBelowN" : m27,
+    "mustBeAboveN" : m29,
+    "mustBeBelowN" : m30,
     "next" : MessageLookupByLibrary.simpleMessage("Далее"),
-    "nextMonth" : m28,
-    "nextWeek" : m29,
-    "noDomainResults" : m30,
+    "nextMonth" : m31,
+    "nextWeek" : m32,
+    "noDomainResults" : m33,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m31,
-    "plusRecipientCount" : m32,
-    "pointsPossible" : m33,
-    "previousMonth" : m34,
-    "previousWeek" : m35,
-    "selectedMonthLabel" : m36,
+    "outOfPoints" : m34,
+    "plusRecipientCount" : m35,
+    "pointsPossible" : m36,
+    "previousMonth" : m37,
+    "previousWeek" : m38,
+    "selectedMonthLabel" : m39,
     "send" : MessageLookupByLibrary.simpleMessage("отправить"),
-    "submissionStatusSuccessSubtitle" : m37,
-    "syllabusSubjectMessage" : m38,
+    "submissionStatusSuccessSubtitle" : m40,
+    "syllabusSubjectMessage" : m41,
     "unread" : MessageLookupByLibrary.simpleMessage("не прочитано"),
-    "unreadCount" : m39
+    "unreadCount" : m42
   };
 }

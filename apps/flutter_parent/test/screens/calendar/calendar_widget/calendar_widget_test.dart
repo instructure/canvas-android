@@ -922,7 +922,7 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -956,7 +956,7 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -990,7 +990,7 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1030,7 +1030,7 @@ void main() {
             dayBuilder: (_, day) => Container(),
             fetcher: _FakeFetcher(),
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1076,7 +1076,7 @@ void main() {
             },
             fetcher: _FakeFetcher(),
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();

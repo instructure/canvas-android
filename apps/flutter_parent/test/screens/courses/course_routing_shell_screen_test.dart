@@ -23,7 +23,7 @@ import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_interactor.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/common_widgets/web_view/canvas_html.dart';
+import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -66,7 +66,7 @@ void main() {
 
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(course.name), findsOneWidget);
-    expect(find.byType(CanvasHtml), findsOneWidget);
+    expect(find.byType(CanvasWebView), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('frontPage type loads frontPage', (tester) async {
@@ -79,7 +79,7 @@ void main() {
 
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsOneWidget);
     expect(find.text(course.name), findsOneWidget);
-    expect(find.byType(CanvasHtml), findsOneWidget);
+    expect(find.byType(CanvasWebView), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('loading state displays loading indicator', (tester) async {
@@ -110,5 +110,29 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(interactor.loadCourseShell(any, any)).called(2); // Once for initial load, another for the refresh
+  });
+
+  testWidgetsWithAccessibilityChecks('Refresh displays loading indicator and loads state', (tester) async {
+    final result = CourseShellData(course);
+    when(interactor.loadCourseShell(CourseShellType.syllabus, any, forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value(result));
+
+    await tester.pumpWidget(TestApp(CourseRoutingShellScreen(course.id, CourseShellType.syllabus),
+        platformConfig: PlatformConfig(initWebview: true)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(IconButton));
+    await tester.pump();
+
+    expect(find.byType(LoadingIndicator), findsOneWidget);
+
+    await tester.pumpAndSettle();
+
+    verify(interactor.loadCourseShell(any, any, forceRefresh: true)).called(1);
+    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(course.name), findsOneWidget);
+    expect(find.byType(CanvasWebView), findsOneWidget);
+    expect(find.text(AppLocalizations().unexpectedError), findsNothing);
+    expect(find.byType(LoadingIndicator), findsNothing);
   });
 }

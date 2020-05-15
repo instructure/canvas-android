@@ -15,6 +15,9 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';
+import 'package:flutter_parent/models/plannable.dart';
+import 'package:flutter_parent/models/planner_item.dart';
+import 'package:flutter_parent/models/planner_submission.dart';
 
 import 'assignment.dart';
 import 'assignment_override.dart';
@@ -27,9 +30,9 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
   @BuiltValueSerializer(serializeNulls: true) // Add this line to get nulls to serialize when we convert to JSON
   static Serializer<ScheduleItem> get serializer => _$scheduleItemSerializer;
 
-  static const typeCalendar = 'event';
+  static const apiTypeCalendar = 'event';
 
-  static const typeAssignment = 'assignment';
+  static const apiTypeAssignment = 'assignment';
 
   String get id;
 
@@ -92,7 +95,89 @@ abstract class ScheduleItem implements Built<ScheduleItem, ScheduleItemBuilder> 
 
   static void _initializeBuilder(ScheduleItemBuilder b) => b
     ..id = ''
-    ..type = typeCalendar
+    ..type = apiTypeCalendar
     ..isAllDay = false
     ..isHidden = false;
+
+  /// These values are used to map to the string event type names used by planner items
+  static const scheduleTypeAssignment = 'assignment';
+  static const scheduleTypeEvent = 'calendar_event';
+  static const scheduleTypeDiscussion = 'discussion_topic';
+  static const scheduleTypeQuiz = 'quiz';
+
+  ScheduleItemType getItemType() {
+    if (type == ScheduleItem.apiTypeCalendar) return ScheduleItemType.event;
+    if (assignment?.isQuiz == true) return ScheduleItemType.quiz;
+    if (assignment?.isDiscussion == true) return ScheduleItemType.discussion;
+    return ScheduleItemType.assignment;
+  }
+
+  String getItemTypeAsString() {
+    if (type == ScheduleItem.apiTypeCalendar) return scheduleTypeEvent;
+    if (assignment?.isQuiz == true) return scheduleTypeQuiz;
+    if (assignment?.isDiscussion == true) return scheduleTypeDiscussion;
+    return scheduleTypeAssignment;
+  }
+
+  String getContextId() {
+    if (effectiveContextCode != null) {
+      return _parseContextCode(effectiveContextCode);
+    } else {
+      return _parseContextCode(contextCode);
+    }
+  }
+
+  String getContextType() {
+    if (effectiveContextCode != null) {
+      return _parseContextType(effectiveContextCode);
+    } else {
+      return _parseContextType(contextCode);
+    }
+  }
+
+  String _parseContextCode(String code) {
+    final index = code.indexOf('_');
+    return code.substring(index + 1, code.length);
+  }
+
+  String _parseContextType(String code) {
+    final index = code.indexOf('_');
+    return code.substring(0, index);
+  }
+
+  PlannerSubmission getPlannerSubmission() {
+    if (assignment == null) return null;
+
+    // We are only worried about fetching the single submission here, as the calendar request is
+    // for a specific user.
+    final submission = assignment?.submissionWrapper?.submission;
+    if (submission == null) return PlannerSubmission((b) => b..submitted = false);
+
+    return PlannerSubmission((b) => b
+      ..submitted = submission.submittedAt != null
+      ..excused = submission.excused
+      ..graded = submission.isGraded()
+      ..late = submission.isLate
+      ..missing = submission.missing);
+  }
+
+  PlannerItem toPlannerItem(String courseName) {
+    final plannable = Plannable((b) => b
+      ..id = id
+      ..title = title
+      ..pointsPossible = assignment?.pointsPossible
+      ..dueAt = assignment?.dueAt
+      ..assignmentId = assignment?.id);
+    return PlannerItem((b) => b
+      ..courseId = getContextId()
+      ..contextType = getContextType()
+      ..contextName = courseName
+      ..plannableType = getItemTypeAsString()
+      ..plannable = plannable.toBuilder()
+      ..plannableDate = startAt
+      ..htmlUrl = htmlUrl
+      ..submissionStatus = getPlannerSubmission()?.toBuilder());
+  }
 }
+
+enum ScheduleItemType { event, quiz, assignment, discussion }

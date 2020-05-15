@@ -217,12 +217,11 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           specifiedType: const FullType(String)));
     }
     result.add('submission');
-    if (object.submissionList == null) {
+    if (object.submissionWrapper == null) {
       result.add(null);
     } else {
-      result.add(serializers.serialize(object.submissionList,
-          specifiedType:
-              const FullType(BuiltList, const [const FullType(Submission)])));
+      result.add(serializers.serialize(object.submissionWrapper,
+          specifiedType: const FullType(SubmissionWrapper)));
     }
     result.add('lock_at');
     if (object.lockAt == null) {
@@ -320,10 +319,9 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
               specifiedType: const FullType(bool)) as bool;
           break;
         case 'submission':
-          result.submissionList.replace(serializers.deserialize(value,
-                  specifiedType: const FullType(
-                      BuiltList, const [const FullType(Submission)]))
-              as BuiltList<Object>);
+          result.submissionWrapper.replace(serializers.deserialize(value,
+                  specifiedType: const FullType(SubmissionWrapper))
+              as SubmissionWrapper);
           break;
         case 'assignment_group_id':
           result.assignmentGroupId = serializers.deserialize(value,
@@ -503,7 +501,7 @@ class _$Assignment extends Assignment {
   @override
   final bool useRubricForGrading;
   @override
-  final BuiltList<Submission> submissionList;
+  final SubmissionWrapper submissionWrapper;
   @override
   final String assignmentGroupId;
   @override
@@ -556,7 +554,7 @@ class _$Assignment extends Assignment {
       this.url,
       this.quizId,
       this.useRubricForGrading,
-      this.submissionList,
+      this.submissionWrapper,
       this.assignmentGroupId,
       this.position,
       this.lockInfo,
@@ -653,7 +651,7 @@ class _$Assignment extends Assignment {
         url == other.url &&
         quizId == other.quizId &&
         useRubricForGrading == other.useRubricForGrading &&
-        submissionList == other.submissionList &&
+        submissionWrapper == other.submissionWrapper &&
         assignmentGroupId == other.assignmentGroupId &&
         position == other.position &&
         lockInfo == other.lockInfo &&
@@ -695,7 +693,7 @@ class _$Assignment extends Assignment {
                                                                     $jc(
                                                                         $jc(
                                                                             $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode), useRubricForGrading.hashCode),
-                                                                                submissionList.hashCode),
+                                                                                submissionWrapper.hashCode),
                                                                             assignmentGroupId.hashCode),
                                                                         position.hashCode),
                                                                     lockInfo.hashCode),
@@ -730,7 +728,7 @@ class _$Assignment extends Assignment {
           ..add('url', url)
           ..add('quizId', quizId)
           ..add('useRubricForGrading', useRubricForGrading)
-          ..add('submissionList', submissionList)
+          ..add('submissionWrapper', submissionWrapper)
           ..add('assignmentGroupId', assignmentGroupId)
           ..add('position', position)
           ..add('lockInfo', lockInfo)
@@ -802,11 +800,11 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   set useRubricForGrading(bool useRubricForGrading) =>
       _$this._useRubricForGrading = useRubricForGrading;
 
-  ListBuilder<Submission> _submissionList;
-  ListBuilder<Submission> get submissionList =>
-      _$this._submissionList ??= new ListBuilder<Submission>();
-  set submissionList(ListBuilder<Submission> submissionList) =>
-      _$this._submissionList = submissionList;
+  SubmissionWrapperBuilder _submissionWrapper;
+  SubmissionWrapperBuilder get submissionWrapper =>
+      _$this._submissionWrapper ??= new SubmissionWrapperBuilder();
+  set submissionWrapper(SubmissionWrapperBuilder submissionWrapper) =>
+      _$this._submissionWrapper = submissionWrapper;
 
   String _assignmentGroupId;
   String get assignmentGroupId => _$this._assignmentGroupId;
@@ -910,7 +908,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _url = _$v.url;
       _quizId = _$v.quizId;
       _useRubricForGrading = _$v.useRubricForGrading;
-      _submissionList = _$v.submissionList?.toBuilder();
+      _submissionWrapper = _$v.submissionWrapper?.toBuilder();
       _assignmentGroupId = _$v.assignmentGroupId;
       _position = _$v.position;
       _lockInfo = _$v.lockInfo?.toBuilder();
@@ -964,7 +962,7 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               url: url,
               quizId: quizId,
               useRubricForGrading: useRubricForGrading,
-              submissionList: _submissionList?.build(),
+              submissionWrapper: _submissionWrapper?.build(),
               assignmentGroupId: assignmentGroupId,
               position: position,
               lockInfo: lockInfo.build(),
@@ -986,8 +984,8 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
     } catch (_) {
       String _$failedField;
       try {
-        _$failedField = 'submissionList';
-        _submissionList?.build();
+        _$failedField = 'submissionWrapper';
+        _submissionWrapper?.build();
 
         _$failedField = 'lockInfo';
         lockInfo.build();

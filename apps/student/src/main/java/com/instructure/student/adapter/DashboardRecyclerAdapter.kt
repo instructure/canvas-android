@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.util.StudentPrefs
@@ -143,7 +144,10 @@ class DashboardRecyclerAdapter(
     override fun loadData() {
         mApiCalls?.cancel()
         mApiCalls = tryWeave {
-            if (isRefresh) ColorApiHelper.awaitSync()
+            if (isRefresh) {
+                ColorApiHelper.awaitSync()
+                FlutterComm.sendUpdatedTheme()
+            }
             val (rawCourses, groups, announcements) = awaitApis<List<Course>, List<Group>, List<AccountNotification>>(
                     { CourseManager.getCourses(isRefresh, it) },
                     { GroupManager.getAllGroups(it, isRefresh) },

@@ -24,34 +24,37 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale('en', ''), // First so it's our fallback
+      Locale('en'), // First so it's our fallback
 
       // Supported languages
-      Locale('ar', ''),
-      Locale('cy', ''),
-      Locale('da', ''),
-      Locale('de', ''),
+      Locale('ar'),
+      Locale('ca'),
+//      Locale('cy'), // Not supported by material localizations
+      Locale('da'),
+      Locale('de'),
       Locale('en', 'AU'),
+      Locale('en', 'CA'),
       Locale('en', 'CY'),
       Locale('en', 'GB'),
-      Locale('es', ''),
-      Locale('fi', ''),
-      Locale('fr', ''),
+      Locale('es'),
+      Locale('fi'),
+      Locale('fr'),
       Locale('fr', 'CA'),
-      Locale('ht', ''),
-      Locale('ja', ''),
-      Locale('mi', ''),
-      Locale('nb', ''),
-      Locale('nl', ''),
-      Locale('pl', ''),
-      Locale('pl', ''),
-      Locale('pl', 'BR'),
-      Locale('pl', 'PT'),
-      Locale('ru', ''),
-      Locale('sl', ''),
-      Locale('sv', ''),
-      Locale('zh', ''),
-      Locale('zh', 'HK'),
+//      Locale('ht'), // Not supported by material localizations
+      Locale('is'),
+      Locale('it'),
+      Locale('ja'),
+//      Locale('mi'), // Not supported by material localizations
+      Locale('nb'),
+      Locale('nl'),
+      Locale('pl'),
+      Locale('pt'),
+      Locale('pt', 'BR'),
+      Locale('ru'),
+      Locale('sl'),
+      Locale('sv'),
+      Locale('zh'),
+      Locale('zh', 'Hant'),
 
       // Custom language packs
       Locale.fromSubtags(languageCode: 'da', scriptCode: 'instk12'),
@@ -88,6 +91,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
     // Must match language code, must match country code if specified
     return supportedLocales.any((Locale supportedLocale) =>
         (supportedLocale.languageCode == locale.languageCode) &&
+        (locale.scriptCode == supportedLocale.scriptCode) &&
         ((supportedLocale.countryCode == locale.countryCode) ||
             (true != matchCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode.isEmpty))));
   }
@@ -103,7 +107,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
     if (supported.contains(locale)) {
       return locale;
     } else {
-      return Locale(locale.languageCode, '');
+      return Locale(locale.languageCode);
     }
   }
 }
@@ -253,8 +257,15 @@ class AppLocalizations {
         desc: 'Message displayed when calendar events could not be loaded for the current student',
       );
 
-  String get calendarTapToFavoriteDesc => Intl.message('Tap to favorite the courses you want to see on the Calendar.',
-      desc: 'Description text on calendar filter screen.');
+  String get calendarTapToFavoriteDesc =>
+      Intl.message('Tap to favorite the courses you want to see on the Calendar. Select up to 10.',
+          desc: 'Description text on calendar filter screen.');
+
+  String get tooManyCalendarsError => Intl.message('You may only choose 10 calendars to display',
+      desc: 'Error text when trying to select more than 10 calendars');
+
+  String get minimumCalendarsError => Intl.message('You must select at least one calendar to display',
+      desc: 'Error text when trying to de-select all calendars');
 
   String get plannerNote => Intl.message('Planner Note', desc: 'Label used for notes in the planner');
 
@@ -515,7 +526,7 @@ class AppLocalizations {
       Intl.message('Your student\’s courses might not be published yet.', desc: 'Message for having no courses');
 
   String get errorLoadingCourses => Intl.message(
-        'There was an error loading your your student\’s courses.',
+        'There was an error loading your student\’s courses.',
         desc: 'Message displayed when the list of student courses could not be loaded',
       );
 
@@ -716,14 +727,8 @@ class AppLocalizations {
   String get assignmentRemindMeSet =>
       Intl.message('You will be notified about this assignment on…', desc: 'Description for when a reminder is set');
 
-  String get assignmentDescriptionLabel =>
-      Intl.message('Description', desc: 'Label for the description of the assignment');
-
   String get assignmentInstructionsLabel =>
       Intl.message('Instructions', desc: 'Label for the description of the assignment when it has quiz instructions');
-
-  String get assignmentNoDescriptionBody =>
-      Intl.message('No description', desc: 'Message used when the assignment has no description');
 
   String get assignmentMessageHint => Intl.message(
         'Send a message about this assignment',
@@ -1333,6 +1338,13 @@ class AppLocalizations {
 
   String get done => Intl.message('Done', desc: 'Label for general done/finished actions');
 
+  String get refresh => Intl.message('Refresh', desc: 'Label for button to refresh data from the web');
+
+  String get viewDescription => Intl.message(
+        'View Description',
+        desc: 'Button to view the description for an event or assignment',
+      );
+
   String get allyExpanded => Intl.message(
         'expanded',
         desc: 'Description for the accessibility reader for list groups that are expanded',
@@ -1344,6 +1356,14 @@ class AppLocalizations {
       );
 
   String get unexpectedError => Intl.message('An unexpected error occurred');
+
+  String get descriptionTitle => Intl.message(
+        'Description',
+        desc: 'Title for screens that contain only a description from Canavs',
+      );
+
+  String get noDescriptionBody =>
+      Intl.message('No description', desc: 'Message used when the assignment has no description');
 
   String get launchExternalTool => Intl.message(
         'Launch External Tool',

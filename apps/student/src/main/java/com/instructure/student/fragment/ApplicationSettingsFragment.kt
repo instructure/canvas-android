@@ -81,7 +81,13 @@ class ApplicationSettingsFragment : ParentFragment() {
 
             addFragment(frag)
         }
-        accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
+
+        // Account Preferences currently only contains the debug language selector, so we'll hide it in prod
+        if (BuildConfig.DEBUG) {
+            accountPreferences.setVisible()
+            accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
+        }
+
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
         help.onClick { HelpDialogStyled.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented

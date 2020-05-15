@@ -1,0 +1,99 @@
+name: flutter_student_embed
+description: A new flutter module project.
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+#
+# This version is used _only_ for the Runner app, which is used if you just do
+# a `flutter run` or a `flutter make-host-app-editable`. It has no impact
+# on any other native host app that you embed your Flutter project into.
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: 1.12.13+hotfix.9
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  get_it: ^3.0.1
+  intl: ^0.16.0
+  provider: ^3.1.0+1
+  sqflite: 1.3.0
+  flutter_svg: 0.17.4
+  dio: 3.0.9
+  tuple: 1.0.3
+  dio_http_cache: 0.2.6
+  built_value: ^7.0.0
+  built_collection: 4.2.2
+  uuid: ^2.0.2
+  package_info: '>=0.4.0+16 <2.0.0'
+  shared_preferences: 0.5.7
+  collection: 1.14.11
+  device_info: 0.4.2+2
+  flutter_crashlytics: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Test dependencies
+  mockito: 4.1.1
+  test: any
+  transparent_image: 1.0.0
+
+  # Generators
+  build_resolvers: ^1.3.2
+  build_runner: ^1.7.2
+  built_value_generator: ^7.0.0
+  intl_translation: ^0.17.7
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  assets:
+    - assets/svg/
+    - assets/fonts/
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware.
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  fonts:
+    - family:  CanvasIcons
+      fonts:
+        - asset: assets/fonts/CanvasIcons.ttf
+    - family:  CanvasIconsSolid
+      fonts:
+        - asset: assets/fonts/CanvasIconsSolid.ttf
+
+
+  # This section identifies your Flutter project as a module meant for
+  # embedding in a native host app.  These identifiers should _not_ ordinarily
+  # be changed after generation - they are used to ensure that the tooling can
+  # maintain consistency when adding or modifying assets and plugins.
+  # They also do not have any bearing on your native host application's
+  # identifiers, which may be completely independent or the same as these.
+  module:
+    androidX: true
+    androidPackage: com.instructure.studentembed.flutter_student_embed
+    iosBundleIdentifier: com.instructure.studentembed.flutterStudentEmbed

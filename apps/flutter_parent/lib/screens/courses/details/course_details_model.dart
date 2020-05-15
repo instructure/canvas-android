@@ -44,8 +44,9 @@ class CourseDetailsModel extends BaseModel {
   Future<void> loadData({bool refreshCourse = false}) {
     return work(() async {
       // Declare the futures so we can let both run asynchronously
-      final courseFuture =
-          (refreshCourse || course == null) ? _interactor().loadCourse(courseId) : Future.value(course);
+      final courseFuture = (refreshCourse || course == null)
+          ? _interactor().loadCourse(courseId, forceRefresh: refreshCourse)
+          : Future.value(course);
 
       // Always force a refresh of tabs, it's small enough that we can do this every time
       final tabsFuture = _interactor().loadCourseTabs(courseId, forceRefresh: true);
@@ -107,8 +108,8 @@ class CourseDetailsModel extends BaseModel {
   Future<List<ScheduleItem>> loadSummary({bool refresh: false}) async {
     // Get all assignment and calendar events
     List<List<ScheduleItem>> results = await Future.wait([
-      _interactor().loadScheduleItems(courseId, ScheduleItem.typeCalendar, refresh),
-      _interactor().loadScheduleItems(courseId, ScheduleItem.typeAssignment, refresh),
+      _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeCalendar, refresh),
+      _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeAssignment, refresh),
     ]);
 
     // Potentially heavy list operations going on here, so we'll use a background isolate

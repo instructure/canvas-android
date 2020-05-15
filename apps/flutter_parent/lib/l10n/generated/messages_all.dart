@@ -16,6 +16,7 @@ import 'package:intl/message_lookup_by_library.dart';
 import 'package:intl/src/intl_helpers.dart';
 
 import 'messages_ar.dart' as messages_ar;
+import 'messages_ca.dart' as messages_ca;
 import 'messages_cy.dart' as messages_cy;
 import 'messages_da.dart' as messages_da;
 import 'messages_da_instk12.dart' as messages_da_instk12;
@@ -41,18 +42,19 @@ import 'messages_nb.dart' as messages_nb;
 import 'messages_nb_instk12.dart' as messages_nb_instk12;
 import 'messages_nl.dart' as messages_nl;
 import 'messages_pl.dart' as messages_pl;
+import 'messages_pt.dart' as messages_pt;
 import 'messages_pt_BR.dart' as messages_pt_br;
-import 'messages_pt_PT.dart' as messages_pt_pt;
 import 'messages_ru.dart' as messages_ru;
 import 'messages_sl.dart' as messages_sl;
 import 'messages_sv.dart' as messages_sv;
 import 'messages_sv_instk12.dart' as messages_sv_instk12;
 import 'messages_zh.dart' as messages_zh;
-import 'messages_zh_HK.dart' as messages_zh_hk;
+import 'messages_zh_Hant.dart' as messages_zh_hant;
 
 typedef Future<dynamic> LibraryLoader();
 Map<String, LibraryLoader> _deferredLibraries = {
   'ar': () => new Future.value(null),
+  'ca': () => new Future.value(null),
   'cy': () => new Future.value(null),
   'da': () => new Future.value(null),
   'da_instk12': () => new Future.value(null),
@@ -78,20 +80,22 @@ Map<String, LibraryLoader> _deferredLibraries = {
   'nb_instk12': () => new Future.value(null),
   'nl': () => new Future.value(null),
   'pl': () => new Future.value(null),
+  'pt': () => new Future.value(null),
   'pt_BR': () => new Future.value(null),
-  'pt_PT': () => new Future.value(null),
   'ru': () => new Future.value(null),
   'sl': () => new Future.value(null),
   'sv': () => new Future.value(null),
   'sv_instk12': () => new Future.value(null),
   'zh': () => new Future.value(null),
-  'zh_HK': () => new Future.value(null),
+  'zh_Hant': () => new Future.value(null),
 };
 
 MessageLookupByLibrary _findExact(String localeName) {
   switch (localeName) {
     case 'ar':
       return messages_ar.messages;
+    case 'ca':
+      return messages_ca.messages;
     case 'cy':
       return messages_cy.messages;
     case 'da':
@@ -142,10 +146,10 @@ MessageLookupByLibrary _findExact(String localeName) {
       return messages_nl.messages;
     case 'pl':
       return messages_pl.messages;
+    case 'pt':
+      return messages_pt.messages;
     case 'pt_BR':
       return messages_pt_br.messages;
-    case 'pt_PT':
-      return messages_pt_pt.messages;
     case 'ru':
       return messages_ru.messages;
     case 'sl':
@@ -156,8 +160,8 @@ MessageLookupByLibrary _findExact(String localeName) {
       return messages_sv_instk12.messages;
     case 'zh':
       return messages_zh.messages;
-    case 'zh_HK':
-      return messages_zh_hk.messages;
+    case 'zh_Hant':
+      return messages_zh_hant.messages;
     default:
       return null;
   }
@@ -165,10 +169,8 @@ MessageLookupByLibrary _findExact(String localeName) {
 
 /// User programs should call this before using [localeName] for messages.
 Future<bool> initializeMessages(String localeName) async {
-  var availableLocale = Intl.verifiedLocale(
-    localeName,
-    (locale) => _deferredLibraries[locale] != null,
-    onFailure: (_) => null);
+  var availableLocale =
+      Intl.verifiedLocale(localeName, (locale) => _deferredLibraries[locale] != null, onFailure: (_) => null);
   if (availableLocale == null) {
     return new Future.value(false);
   }
@@ -188,8 +190,7 @@ bool _messagesExistFor(String locale) {
 }
 
 MessageLookupByLibrary _findGeneratedMessagesFor(String locale) {
-  var actualLocale = Intl.verifiedLocale(locale, _messagesExistFor,
-      onFailure: (_) => null);
+  var actualLocale = Intl.verifiedLocale(locale, _messagesExistFor, onFailure: (_) => null);
   if (actualLocale == null) return null;
   return _findExact(actualLocale);
 }

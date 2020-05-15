@@ -20,7 +20,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.onTextChanged
 import com.instructure.pandautils.utils.setupAsBackButton
 import kotlinx.android.synthetic.main.fragment_remote_config_params.*
 
@@ -66,16 +64,21 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
             val valueEditText = findViewById<EditText>(R.id.param_value)
             nameLabel.text = param.rc_name + ": "
             valueEditText.setText(RemoteConfigPrefs.getString(param.rc_name, param.safeValueAsString))
-            valueEditText.setOnKeyListener() {view, id, event ->
-                if(event.action == KeyEvent.ACTION_UP) {
-                    Log.d("RemoteConfigPrefs", "onKeyListener ${param.rc_name} content ${(view as EditText).text}")
-                    RemoteConfigPrefs.putString(param.rc_name, (view as EditText).text.toString())
+            valueEditText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(s: Editable?) {
+                    Log.d("RemoteConfigPrefs", "afterTextChanged: ${param.rc_name} = ${s.toString()}")
+                    RemoteConfigPrefs.putString(param.rc_name, s.toString())
                 }
 
-                // Returning false allows, for example, the back-button to be handled by other logic.
-                return@setOnKeyListener false
-            }
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+            })
         }
     }
+
 
 }

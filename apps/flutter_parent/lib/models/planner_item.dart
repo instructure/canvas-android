@@ -17,7 +17,6 @@ import 'package:built_value/json_object.dart';
 import 'package:built_value/serializer.dart';
 import 'package:flutter_parent/models/plannable.dart';
 import 'package:flutter_parent/models/planner_submission.dart';
-import 'package:flutter_parent/models/serializers.dart';
 
 part 'planner_item.g.dart';
 
@@ -58,10 +57,13 @@ abstract class PlannerItem implements Built<PlannerItem, PlannerItemBuilder> {
   String get htmlUrl;
 
   @nullable
-  PlannerSubmission get submissionStatus {
-    if (submissionStatusRaw == null || submissionStatusRaw.isBool) return null;
-    return deserialize<PlannerSubmission>(submissionStatusRaw.value);
-  }
+  PlannerSubmission get submissionStatus;
+
+//  @nullable TODO - keep in place for potentially moving back to planner api
+//  PlannerSubmission get submissionStatus {
+//    if (submissionStatusRaw == null || submissionStatusRaw.isBool) return null;
+//    return deserialize<PlannerSubmission>(submissionStatusRaw.value);
+//  }
 
   factory PlannerItem([void Function(PlannerItemBuilder) updates]) = _$PlannerItem;
 }

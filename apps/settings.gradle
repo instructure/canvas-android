@@ -4,8 +4,14 @@ include ':teacher'
 include ':parent'
 include ':polling'
 
+/* Flutter embed modules */
+setBinding(new Binding([gradle: this]))
+
+evaluate(new File(settingsDir.parentFile, 'libs/flutter_student_embed/include_student_embed.groovy'))
+include ':flutter_student_embed'
+project(':flutter_student_embed').projectDir = new File(rootProject.projectDir, '/../libs/flutter_student_embed')
+
 /* Library modules */
-include ':androidcalendar'
 include ':annotations'
 include ':blueprint'
 include ':canvas-api-2'
@@ -23,7 +29,6 @@ include ':pandares'
 include ':panda_annotations'
 include ':panda_processor'
 
-project(':androidcalendar').projectDir = new File(rootProject.projectDir, '/../libs/androidcalendar')
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../libs/blueprint')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs/canvas-api-2')
