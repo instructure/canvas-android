@@ -46,7 +46,7 @@ class MasqueradingDialog : DialogFragment() {
         fun onStopMasquerading()
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         callback = context as? OnMasqueradingSet
                 ?: targetFragment as? OnMasqueradingSet

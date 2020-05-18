@@ -18,8 +18,8 @@ description: A new flutter module project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: 1.12.13+hotfix.9
+  sdk: ">=2.8.0 <3.0.0"
+  flutter: 1.17.1
 
 dependencies:
   flutter:
@@ -40,7 +40,7 @@ dependencies:
   uuid: ^2.0.2
   package_info: '>=0.4.0+16 <2.0.0'
   shared_preferences: 0.5.7
-  collection: 1.14.11
+  collection: ^1.14.11
   device_info: 0.4.2+2
   flutter_crashlytics: ^1.0.0
 

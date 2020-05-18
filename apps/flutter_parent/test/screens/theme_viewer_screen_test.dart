@@ -115,7 +115,7 @@ void main() {
     await tester.pumpAndSettle();
 
     StudentColorSet expected = StudentColorSet.raspberry;
-    Color actualColor() => (tester.widget<Container>(studentColor()).decoration as BoxDecoration).color;
+    Color actualColor() => tester.widget<Container>(studentColor()).color;
 
     // Light mode, normal contrast.
     expect(actualColor(), expected.light);

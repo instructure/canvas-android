@@ -88,7 +88,7 @@ class EditFavoritesFragment : ParentFragment() {
         if (requireContext().a11yManager.hasSpokenFeedback) listView.itemAnimator = null
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (recyclerAdapter!!.size() == 0) {
             emptyView.changeTextSize()

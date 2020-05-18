@@ -182,7 +182,7 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
         LoaderUtils.restoreLoaderFromBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(requireActivity().supportLoaderManager, savedInstanceState, loaderCallbacks, R.id.openMediaLoaderID, Const.OPEN_MEDIA_LOADER_BUNDLE)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(requireContext())
         setHasOptionsMenu(true)
     }
@@ -198,18 +198,6 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
         } catch (e: Exception) {
             LoggingUtility.Log(requireActivity(), Log.DEBUG, "An exception was thrown while trying to dismiss the keyboard: " + e.message)
         }
-
-        // Very important fix for the support library and child fragments.
-        try {
-            val childFragmentManager = Fragment::class.java.getDeclaredField("mChildFragmentManager")
-            childFragmentManager.isAccessible = true
-            childFragmentManager.set(this, null)
-        } catch (e: NoSuchFieldException) {
-            e.printStackTrace()
-        } catch (e: IllegalAccessException) {
-            e.printStackTrace()
-        }
-
         super.onDetach()
     }
 

@@ -97,7 +97,7 @@ class MasteryPathOptionsFragment : ParentFragment() {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
             view!!,

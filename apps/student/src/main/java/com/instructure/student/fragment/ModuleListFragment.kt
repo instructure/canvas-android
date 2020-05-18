@@ -88,7 +88,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         setupViews()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (recyclerAdapter.size() == 0) {
             emptyView.changeTextSize()

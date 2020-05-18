@@ -107,7 +107,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(rootView!!, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         emptyView.changeTextSize()

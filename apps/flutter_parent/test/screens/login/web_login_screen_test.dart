@@ -195,7 +195,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows a dialog when mobile verify failed', (tester) async {
     final domain = 'domain';
-    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.error(null));
+    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.error('Fake Error'));
 
     await tester.pumpWidget(TestApp(
       WebLoginScreen(domain),
@@ -210,7 +210,7 @@ void main() {
 
   testWidgetsWithAccessibilityChecks('Shows a dialog that can be closed', (tester) async {
     final domain = 'domain';
-    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.error(null));
+    when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.error('Fake Error'));
 
     await tester.pumpWidget(TestApp(WebLoginScreen(domain), platformConfig: PlatformConfig(initWebview: true)));
     await tester.pumpAndSettle();

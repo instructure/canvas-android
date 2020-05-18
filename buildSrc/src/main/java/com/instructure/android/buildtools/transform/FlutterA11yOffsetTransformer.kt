@@ -68,7 +68,8 @@ class FlutterA11yOffsetTransformer() : ClassTransformer() {
     private fun CtClass.transformAccessibilityBridge() {
         val method = declaredMethods.find { it.name == "updateSemantics" }
         if (method != null) {
-            method.insertAt(1273, """
+            // Insert at line "lastLeftFrameInset = insets.getSystemWindowInsetLeft();"
+            method.insertAt(1285, """
                 float topOffset = (float) insets.getSystemWindowInsetTop();
                 android.opengl.Matrix.translateM(identity, 0, 0f, topOffset, 0f);
             """.trimIndent())

@@ -172,7 +172,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     override fun handleBackPressed() = toolbar.closeSearch()
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         configureRecyclerView(
             view!!,

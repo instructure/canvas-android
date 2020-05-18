@@ -145,7 +145,7 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
         courseHeader.setVisible(useOverlay)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Set course image again after orientation change to ensure correct scale/crop
         (canvasContext as? Course)?.let { courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay) }

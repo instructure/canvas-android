@@ -92,7 +92,7 @@ class InboxFragment : ParentFragment() {
         EventBus.getDefault().unregister(this)
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(requireContext())
 
         try {
@@ -137,7 +137,7 @@ class InboxFragment : ParentFragment() {
         })
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         emptyInboxView.changeTextSize()
         if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {

@@ -57,10 +57,10 @@ object Libs {
 
     /* Support Libs */
     const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:${Versions.ANDROIDX}"
-    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:${Versions.ANDROIDX}"
+    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.0.2"
     const val ANDROIDX_BROWSER = "androidx.browser:browser:1.0.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:${Versions.ANDROIDX}"
-    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:1.1.2"
+    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:1.1.3"
     const val ANDROIDX_DESIGN = "com.google.android.material:material:${Versions.ANDROIDX}"
     const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:${Versions.ANDROIDX}"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.ANDROIDX}"
