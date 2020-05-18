@@ -145,6 +145,8 @@ fun assertMessagePopulated(
  * [includeContextName] should be set to false for non-GET operations (PUT, POST, etc...)
  * [includeMediaComment] and [includeAttachments] are passed through to the message object
  * if [includeMessages] is true.
+ * If [includeLastMessageData] is true, then we will check for fields last_message and
+ * last_message_at.  Only set to false for createConversation call.
  */
 data class PactConversationFieldConfig (
         val includeMessages: Boolean = false,
@@ -152,7 +154,8 @@ data class PactConversationFieldConfig (
         val state: String? = null, // null means "don't care about the value"
         val includeContextName: Boolean = true,
         val includeMediaComment: Boolean = false, // Only meaningful if includeMessages is true
-        val includeAttachments: Boolean = false // Only meaningful is includeMessages is true
+        val includeAttachments: Boolean = false, // Only meaningful is includeMessages is true
+        val includeLastMessageData: Boolean = true
 )
 
 fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFieldConfig) : LambdaDslObject {
@@ -160,8 +163,6 @@ fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFiel
     this
             .id("id")
             .stringType("subject")
-            .stringType("last_message")
-            .stringMatcher("last_message_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .stringMatcher("last_authored_message_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
             .id("message_count")
             .booleanType("subscribed")
@@ -173,6 +174,12 @@ fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFiel
                 obj.populateBasicUserFields()
             }
             .stringType("context_code")
+
+    if(fieldConfig.includeLastMessageData) {
+        this
+                .stringType("last_message")
+                .stringMatcher("last_message_at", PACT_TIMESTAMP_REGEX, "2020-01-23T00:00:00Z")
+    }
 
     if(fieldConfig.includeContextName) {
         this.stringType("context_name")
@@ -211,8 +218,6 @@ fun assertConversationPopulated(
     if(fieldConfig.state != null) {
         assertEquals("workflowState value", fieldConfig.state, conversation.workflowState!!.apiString)
     }
-    assertNotNull("$description + lastMessage", conversation.lastMessage)
-    assertNotNull("$description + lastMessageAt", conversation.lastMessageAt)
     assertNotNull("$description + lastAuthoredMessageAt", conversation.lastAuthoredMessageAt)
     assertNotNull("$description + messageCount", conversation.messageCount)
     assertNotNull("$description + isSubscribed", conversation.isSubscribed)
@@ -229,6 +234,10 @@ fun assertConversationPopulated(
         assertBasicUserPopulated("$description + participants[$i]", conversation.participants[i])
     }
     assertNotNull("$description + contextCode", conversation.contextCode)
+    if(fieldConfig.includeLastMessageData) {
+        assertNotNull("$description + lastMessage", conversation.lastMessage)
+        assertNotNull("$description + lastMessageAt", conversation.lastMessageAt)
+    }
     if(fieldConfig.includeContextName) {
         assertNotNull("$description + contextName", conversation.contextName)
     }

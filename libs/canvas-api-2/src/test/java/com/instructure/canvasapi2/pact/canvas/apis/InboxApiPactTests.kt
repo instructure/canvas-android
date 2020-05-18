@@ -38,6 +38,71 @@ class InboxApiPactTests : ApiPactTestBase() {
     }
 
     //
+    // region create a conversation
+    //
+
+    // "recipients[]=9": 9 is the id of the teacher defined in the provider state
+    // "context_code=course_3": 3 is the id of the course in which the teacher and student are enrolled.
+    val createConversationQuery = "group_conversation=true&recipients[]=9&body=Message&subject=Subject&context_code=course_3&bulk_message=0"
+    val createConversationPath = "/api/v1/conversations"
+    val createConversationFieldConfig = PactConversationFieldConfig(
+            includeMessages = true,
+            includeContextName = false,
+            includeLastMessageData = false)
+    val createConversationResponseBody = LambdaDsl.newJsonArray { arr ->
+        arr.`object`() { obj ->
+            obj.populateConversationFields(createConversationFieldConfig)
+        }
+    }.build()
+
+    @Pact(consumer = "android")
+    fun createConversationPact(builder: PactDslWithProvider): RequestResponsePact {
+        return builder
+                // Use a provider state with no existing conversations
+                .given("user enrollments existing in canvas")
+
+                .uponReceiving("Create a conversation")
+                .path(createConversationPath)
+                .method("POST")
+                .query(createConversationQuery)
+                .headers(DEFAULT_REQUEST_HEADERS)
+
+                .willRespondWith()
+                .status(201) // Appropriate for this POST request
+                .body(createConversationResponseBody)
+                .headers(DEFAULT_RESPONSE_HEADERS)
+
+                .toPact()
+    }
+
+    @Test
+    @PactVerification(fragment = "createConversationPact")
+    fun `create a conversation`() {
+        val service = createService()
+
+        val createConversationCall = service.createConversation(
+                recipients = listOf("9"),
+                message = "Message",
+                subject = "Subject",
+                contextCode = "course_3",
+                attachmentIds = longArrayOf(),
+                isBulk = 0)
+        val createConversationResult = createConversationCall.execute()
+
+        assertQueryParamsAndPath(createConversationCall, createConversationQuery, createConversationPath)
+
+        Assert.assertNotNull("Expected non-null response body", createConversationResult.body())
+        val conversations = createConversationResult.body()!!
+
+        assertTrue("Expected exactly one conversation returned", conversations.size == 1)
+
+        for(i in 0..conversations.size-1) {
+            assertConversationPopulated("Returned conversation $i", conversations[i], createConversationFieldConfig)
+        }
+    }
+    //endregion
+
+    //
     // region request all of a user's conversations
     //
 
