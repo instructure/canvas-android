@@ -551,13 +551,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
 
         @JavascriptInterface
-        fun onEditPressed(id: String) {
-            showUpdateReplyView(id.toLong())
-        }
-
-        @JavascriptInterface
-        fun onDeletePressed(id: String) {
-            deleteDiscussionEntry(id.toLong())
+        fun onMenuPressed(id: String) {
+            showOverflowMenu(id.toLong())
         }
 
         @JavascriptInterface
@@ -567,7 +562,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun onMoreRepliesPressed(id: String) {
-            val args = DiscussionsDetailsFragment.makeBundle(presenter.discussionTopicHeader, presenter.discussionTopic, id.toLong(), presenter.getSkipId())
+            val args = makeBundle(presenter.discussionTopicHeader, presenter.discussionTopic, id.toLong(), presenter.getSkipId())
             RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
         }
 
@@ -643,6 +638,22 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
+    private fun markAsUnread(id: Long) {
+        presenter.markAsUnread(id)
+    }
+
+    private fun showOverflowMenu(id: Long) {
+        fragmentManager?.let {
+            DiscussionBottomSheetMenuFragment.show(it) { choice ->
+                when (choice) {
+                    DiscussionBottomSheetChoice.MARK_AS_UNREAD -> markAsUnread(id)
+                    DiscussionBottomSheetChoice.EDIT -> showUpdateReplyView(id)
+                    DiscussionBottomSheetChoice.DELETE -> deleteDiscussionEntry(id)
+                }
+            }
+        }
+    }
+
     private fun showUpdateReplyView(id: Long) {
         if(APIHelper.hasNetworkConnection()) {
             val args = DiscussionsUpdateFragment.makeBundle(presenter.discussionTopicHeader.id, presenter.findEntry(id), mIsAnnouncements, presenter.discussionTopic)
@@ -679,8 +690,12 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun updateDiscussionsMarkedAsReadCompleted(markedAsReadIds: List<Long>) {
         markedAsReadIds.forEach {
-            discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')") }
+            discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsRead('$it')") }
         }
+    }
+
+    override fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long) {
+        discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
     /**

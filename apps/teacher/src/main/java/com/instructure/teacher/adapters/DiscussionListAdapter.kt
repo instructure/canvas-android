@@ -54,7 +54,7 @@ class DiscussionListAdapter(
         }
     }
 
-    override fun onBindHeaderHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder?, group: String, isExpanded: Boolean) {
+    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder?, group: String, isExpanded: Boolean) {
         if(!mIsAnnouncement) {
             context?.let {
                 (holder as DiscussionExpandableViewHolder).bind(isExpanded, holder, group) { discussionGroup ->

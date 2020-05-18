@@ -32,8 +32,7 @@ import com.instructure.teacher.viewinterface.DiscussionsDetailsView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import retrofit2.Response
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 
 class DiscussionsDetailsPresenter(
         var canvasContext: CanvasContext,
@@ -47,6 +46,7 @@ class DiscussionsDetailsPresenter(
     private var mApiCalls: Job? = null
     private var discussionEntryRatingCallback: StatusCallback<Void>? = null
     private var mDiscussionMarkAsReadApiCalls: Job? = null
+    private var mDiscussionMarkAsUnreadApiCalls: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
         viewCallback?.onRefreshStarted()
@@ -257,6 +257,27 @@ class DiscussionsDetailsPresenter(
         }
     }
 
+    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
+    fun markAsUnread(id: Long) {
+        if (mDiscussionMarkAsUnreadApiCalls != null && mDiscussionMarkAsUnreadApiCalls!!.isActive) return
+        mDiscussionMarkAsUnreadApiCalls = weave {
+            var markedAsUnreadId: Long = -1
+
+            val response = awaitApiResponse<Void>{ DiscussionManager.markDiscussionTopicEntryUnread(canvasContext, discussionTopicHeader.id, id, it) }
+            if (response.isSuccessful) {
+                markedAsUnreadId = id
+                val entry = findEntry(id)
+                entry?.unread = true
+                discussionTopic.unreadEntriesMap[id] = true
+                discussionTopic.unreadEntries.add(id)
+                discussionTopicHeader.unreadCount += 1
+            }
+
+            viewCallback?.updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId)
+            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+        }
+    }
+
     fun deleteDiscussionEntry(entryId: Long) {
         DiscussionManager.deleteDiscussionEntry(canvasContext, discussionTopicHeader.id, entryId, object: StatusCallback<Void>() {
             override fun onResponse(response: Response<Void>, linkHeaders: LinkHeaders, type: ApiType) {
@@ -285,6 +306,7 @@ class DiscussionsDetailsPresenter(
     override fun onDestroyed() {
         super.onDestroyed()
         mDiscussionMarkAsReadApiCalls?.cancel()
+        mDiscussionMarkAsUnreadApiCalls?.cancel()
         discussionEntryInitJob?.cancel()
     }
 }

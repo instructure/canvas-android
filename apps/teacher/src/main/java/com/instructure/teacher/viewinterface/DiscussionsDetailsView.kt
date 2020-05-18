@@ -28,6 +28,7 @@ interface DiscussionsDetailsView : FragmentViewInterface {
     fun updateDiscussionLiked(discussionEntry: DiscussionEntry)
     fun updateDiscussionUnliked(discussionEntry: DiscussionEntry)
     fun updateDiscussionsMarkedAsReadCompleted(markedAsReadIds: List<Long>)
+    fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long)
     fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry)
     fun updateDiscussionEntry(discussionEntry: DiscussionEntry)
 }

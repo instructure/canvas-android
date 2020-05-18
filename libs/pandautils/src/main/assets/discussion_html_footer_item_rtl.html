@@ -47,20 +47,14 @@
         window.event.stopPropagation();
     }
 
+     function onMenuPressed(id) {
+        accessor.onMenuPressed(id);
+        window.event.cancelBubble = true;
+        window.event.stopPropagation();
+    }
+
     function onLikePressed(id) {
         accessor.onLikePressed(id);
-        window.event.cancelBubble = true;
-        window.event.stopPropagation();
-    }
-
-    function onEditPressed(id) {
-        accessor.onEditPressed(id);
-        window.event.cancelBubble = true;
-        window.event.stopPropagation();
-    }
-
-    function onDeletePressed(id) {
-        accessor.onDeletePressed(id);
         window.event.cancelBubble = true;
         window.event.stopPropagation();
     }
@@ -116,6 +110,14 @@
         if(el) {
             accessor.logMessage("Changing class name from unread to read for: " + id);
             el.className = el.className.replace(/ *\bunread\b/g, " read");
+        }
+    }
+
+    function markAsUnread(id) {
+        var el = document.getElementById("unread_indicator_" + id);
+        if(el) {
+            accessor.logMessage("Changing class name from read to marked-unread for: " + id);
+            el.className = el.className.replace(/ *\bread\b/g, " marked-unread");
         }
     }
 

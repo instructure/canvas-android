@@ -41,23 +41,17 @@
                 __REPLY_TEXT__
             </div>
 
-            <div class="edit_vertical_divider" aria-hidden="true">__EDIT_DIVIDER__</div>
+            <div class="menu_vertical_divider" aria-hidden="true">__MENU_DIVIDER__</div>
 
-            <div class="edit_wrapper" id="edit___ENTRY_ID__" __EDIT_LISTENER__>
-                __EDIT_TEXT__
-            </div>
-
-            <div class="delete_vertical_divider" aria-hidden="true">__DELETE_DIVIDER__</div>
-
-            <div class="delete_wrapper" id="delete___ENTRY_ID__" __DELETE_LISTENER__>
-                __DELETE_TEXT__
+            <div class="menu_wrapper" id="menu___ENTRY_ID__" __MENU_LISTENER__>
+               __MENU_TEXT__
             </div>
 
             <div class="likes_wrapper___ENTRY_ID__" __LIKE_LISTENER__>
-                <div role="checkbox" aria-label="__LIKE_ARIA__" aria-checked="__LIKE_CHECKED_ARIA__" class="likes_icon_wrapper___ENTRY_ID__">
+                <div class="likes_count___ENTRY_ID__" aria-label="__LIKE_COUNT_ARIA__">__LIKE_COUNT__</div>
+                <div class="likes_icon_wrapper___ENTRY_ID__" role="checkbox" aria-label="__LIKE_ARIA__" aria-checked="__LIKE_CHECKED_ARIA__">
                     <img aria-hidden="true" class="likes_icon___ENTRY_ID__" src="__LIKE_ICON__">
                 </div>
-                <div class="likes_count___ENTRY_ID__" aria-label="__LIKE_COUNT_ARIA__">__LIKE_COUNT__</div>
             </div>
 
         </div>
@@ -182,6 +176,9 @@
             height: 30px;
             width: auto;
             float: right;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             __LIKE_ALLOWED__
         }
 
@@ -201,13 +198,6 @@
         	height: 17px;
         	width: 16px;
         	float: right;
-        }
-
-        .likes_icon_wrapper___ENTRY_ID__ {
-            display:inline-block;
-            height:100%;
-            vertical-align:middle;
-            float: right;
         }
 
         .lti_button {
