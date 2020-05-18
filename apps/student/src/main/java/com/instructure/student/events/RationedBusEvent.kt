@@ -139,12 +139,6 @@ class DiscussionTopicHeaderEvent(discussionTopicHeader: DiscussionTopicHeader, s
 /** A RationedBusEvent for updating pages. @see [RationedBusEvent] */
 class PageUpdatedEvent(page: Page, skipId: String? = null) : RationedBusEvent<Page>(page, skipId)
 
-/** A RationedBusEvent for updating the calendar list when events are created. @see [RationedBusEvent] */
-class CalendarEventCreated(scheduleItem: ScheduleItem, skipId: String? = null) : RationedBusEvent<ScheduleItem>(scheduleItem, skipId)
-
-/** A RationedBusEvent for updating the calendar list when events are deleted. @see [RationedBusEvent] */
-class CalendarEventDestroyed(scheduleItem: ScheduleItem, skipId: String? = null) : RationedBusEvent<ScheduleItem>(scheduleItem, skipId)
-
 /** A RationedBusEvent for updating modules. @see [RationedBusEvent] */
 class ModuleUpdatedEvent(moduleObject: ModuleObject, skipId: String? = null) : RationedBusEvent<ModuleObject>(moduleObject, skipId)
 

@@ -66,7 +66,10 @@ class CalendarDayPlannerState extends State<CalendarDayPlanner> {
     );
   }
 
-  Future<void> _refresh() => Provider.of<PlannerFetcher>(context).refreshItemsForDate(widget._day);
+  Future<void> _refresh() async {
+    PlannerFetcher.notifyDatesChanged([widget._day]);
+    await Provider.of<PlannerFetcher>(context).refreshItemsForDate(widget._day);
+  }
 }
 
 class CalendarDayList extends StatelessWidget {

@@ -157,7 +157,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
   void _refreshDates(@nullable List<DateTime> dates) {
     if (dates == null) return;
-    dates.forEach((date) => _fetcher.refreshItemsForDate(date.toLocal(), clearCaches: true));
+    PlannerFetcher.notifyDatesChanged(dates);
   }
 
   @override

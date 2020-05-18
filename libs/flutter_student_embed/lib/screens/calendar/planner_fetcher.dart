@@ -24,6 +24,8 @@ import 'package:flutter_student_embed/utils/db/calendar_filter_db.dart';
 import 'package:flutter_student_embed/utils/service_locator.dart';
 
 class PlannerFetcher extends ChangeNotifier {
+  static final ValueNotifier<List<DateTime>> _updateNotifier = ValueNotifier<List<DateTime>>([]);
+
   final Map<String, AsyncSnapshot<List<PlannerItem>>> daySnapshots = {};
 
   final Map<String, bool> failedMonths = {};
@@ -32,8 +34,18 @@ class PlannerFetcher extends ChangeNotifier {
 
   final String userId;
 
+  Function() _updateListener;
+
   PlannerFetcher({DateTime fetchFirst, @required this.userDomain, @required this.userId}) {
+    _updateListener = () {
+      _updateNotifier.value?.forEach((date) => refreshItemsForDate(date.toLocal(), clearCaches: true));
+    };
+    _updateNotifier.addListener(_updateListener);
     if (fetchFirst != null) getSnapshotForDate(fetchFirst);
+  }
+
+  static void notifyDatesChanged(List<DateTime> dates) {
+    _updateNotifier.value = dates;
   }
 
   Future<Set<String>> getContexts() async {
@@ -161,5 +173,11 @@ class PlannerFetcher extends ChangeNotifier {
     daySnapshots.clear();
     failedMonths.clear();
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _updateNotifier.removeListener(_updateListener);
+    super.dispose();
   }
 }
