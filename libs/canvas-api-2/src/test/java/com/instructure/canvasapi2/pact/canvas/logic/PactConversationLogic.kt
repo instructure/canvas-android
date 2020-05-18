@@ -20,10 +20,40 @@ package com.instructure.canvasapi2.pact.canvas.logic
 import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Message
 import io.pactfoundation.consumer.dsl.LambdaDslObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
+
+//
+// region MediaComment object support
+//
+
+fun LambdaDslObject.populateMediaCommentFields() : LambdaDslObject {
+    this
+            .stringType("media_id")
+            .stringType("display_name")
+            .stringType("url")
+            .stringMatcher("media_type", "audio|video", "audio")
+            .stringType("content-type")
+
+    return this
+}
+
+fun assertMediaCommentPopulated(description: String, mc: MediaComment) {
+    assertNotNull("$description + mediaId", mc.mediaId)
+    assertNotNull("$description + displayName", mc.displayName)
+    assertNotNull("$description + url", mc.url)
+    assertNotNull("$description + mediaType", mc.mediaType)
+    assertNotNull("$description + contentType", mc.contentType)
+}
+//endregion
+
+//
+// region BasicUser object support
+//
 
 fun LambdaDslObject.populateBasicUserFields() : LambdaDslObject {
     this
@@ -41,8 +71,16 @@ fun assertBasicUserPopulated(description: String, basicUser: BasicUser) {
     assertNotNull("$description + avatarUrl", basicUser.avatarUrl)
     assertNotNull("$description + pronouns", basicUser.pronouns)
 }
+// endregion
 
-fun LambdaDslObject.populateMessageFields() : LambdaDslObject {
+//
+// region Message object support
+//
+
+fun LambdaDslObject.populateMessageFields(
+        includeMediaComment: Boolean = false,
+        includeAttachments: Boolean = false
+) : LambdaDslObject {
 
     this
             .id("id")
@@ -50,28 +88,71 @@ fun LambdaDslObject.populateMessageFields() : LambdaDslObject {
             .stringType("body")
             .id("author_id")
             .booleanType("generated")
-    //TODO: attachments
-    //TODO: mediaComment
     // TODO: forwarded_messages
             .minArrayLike("participating_user_ids", 1, PactDslJsonRootValue.id(), 1)
 
+    if(includeMediaComment) {
+        this.`object`("media_comment") { obj ->
+            obj.populateMediaCommentFields()
+        }
+    }
+
+    if(includeAttachments) {
+        this.minArrayLike("attachments", 1) { obj ->
+            obj.populateAttachmentFields()
+        }
+    }
     return this
 }
 
-fun assertMessagePopulated(description: String, message: Message) {
+fun assertMessagePopulated(
+        description: String,
+        message: Message,
+        includeMediaComment: Boolean = false,
+        includeAttachments: Boolean = false
+) {
     assertNotNull("$description + id", message.id)
     assertNotNull("$description + createdAt", message.createdAt)
     assertNotNull("$description + body", message.body)
     assertNotNull("$description + authorId", message.authorId)
     assertNotNull("$description + isGenerated", message.isGenerated)
     assertNotNull("$description + participatingUserIds", message.participatingUserIds)
+    if(includeMediaComment) {
+        assertNotNull("$description + participatingUserIds", message.mediaComment)
+        assertMediaCommentPopulated("$description + mediaComment", message.mediaComment!!)
+    }
+    if(includeAttachments) {
+        assertNotNull("$description + attachments", message.attachments)
+        assertTrue("$description: Expected at least one attachment", message.attachments.size > 0)
+        for(i in 0..message.attachments.size-1) {
+            assertAttachmentPopulated("$description + attachments[$i]", message.attachments[i])
+        }
+    }
 }
+// endregion
 
+//
+// region Conversation object support
+//
+
+/**
+ * Pact Conversation object configuration instructions
+ *
+ * [includeMessages] should only be set to true if you are retrieving a specific conversation or
+ * adding a message to an existing conversation.
+ * Set [starred] to a non-null value if you want to check for a specific value in the starred field.
+ * Set [state] to a non-null value if you want to check for a specific value in the workflow_state field.
+ * [includeContextName] should be set to false for non-GET operations (PUT, POST, etc...)
+ * [includeMediaComment] and [includeAttachments] are passed through to the message object
+ * if [includeMessages] is true.
+ */
 data class PactConversationFieldConfig (
         val includeMessages: Boolean = false,
         val starred: Boolean? = null, // null means "don't care about the value"
         val state: String? = null, // null means "don't care about the value"
-        val includeContextName: Boolean = true
+        val includeContextName: Boolean = true,
+        val includeMediaComment: Boolean = false, // Only meaningful if includeMessages is true
+        val includeAttachments: Boolean = false // Only meaningful is includeMessages is true
 )
 
 fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFieldConfig) : LambdaDslObject {
@@ -93,7 +174,6 @@ fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFiel
             }
             .stringType("context_code")
 
-    // Conditionals
     if(fieldConfig.includeContextName) {
         this.stringType("context_name")
     }
@@ -114,13 +194,17 @@ fun LambdaDslObject.populateConversationFields(fieldConfig: PactConversationFiel
 
     if(fieldConfig.includeMessages) {
         this.minArrayLike("messages", 1) { obj ->
-            obj.populateMessageFields()
+            obj.populateMessageFields(fieldConfig.includeMediaComment, fieldConfig.includeAttachments)
         }
     }
     return this
 }
 
-fun assertConversationPopulated(description: String, conversation: Conversation, fieldConfig: PactConversationFieldConfig) {
+fun assertConversationPopulated(
+        description: String,
+        conversation: Conversation,
+        fieldConfig: PactConversationFieldConfig
+) {
     assertNotNull("$description + id", conversation.id)
     assertNotNull("$description + subject", conversation.subject)
     assertNotNull("$description + workflowState", conversation.workflowState)
@@ -152,8 +236,14 @@ fun assertConversationPopulated(description: String, conversation: Conversation,
     if(fieldConfig.includeMessages) {
         assertNotNull("$description + messages", conversation.messages)
         for (i in 0..conversation.messages.size - 1) {
-            assertMessagePopulated("$description + messages[$i]", conversation.messages[i])
+            assertMessagePopulated(
+                    "$description + messages[$i]",
+                    conversation.messages[i],
+                    fieldConfig.includeMediaComment,
+                    fieldConfig.includeAttachments
+            )
         }
     }
 
 }
+//endregion

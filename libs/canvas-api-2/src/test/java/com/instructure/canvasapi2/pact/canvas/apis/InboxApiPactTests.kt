@@ -149,10 +149,17 @@ class InboxApiPactTests : ApiPactTestBase() {
     //
     // region request a specific conversation
     //
+    // Assumes that ALL conversation objects have the messages array populated,
+    // and ALL nested messages have the media_comment field and attachments array
+    // populated.  Make sure that the provider_state is set up accordingly.
+    //
 
     val getOneConversationQuery = "include[]=participant_avatars"
     val getOneConversationPath = "/api/v1/conversations/1"
-    val getOneConversationFieldConfig = PactConversationFieldConfig(includeMessages = true)
+    val getOneConversationFieldConfig = PactConversationFieldConfig(
+            includeMessages = true,
+            includeMediaComment = true,
+            includeAttachments = true)
     val getOneConversationResponseBody = LambdaDsl.newJsonBody { obj ->
         obj.populateConversationFields(getOneConversationFieldConfig)
     }.build()
@@ -240,7 +247,7 @@ class InboxApiPactTests : ApiPactTestBase() {
     // region add a message to a conversation
     //
 
-    val addMessageQuery = "group_conversation=true&recipients[]=8&recipients[]=9&body=addedMessageBody&attachment_ids[]=1"
+    val addMessageQuery = "group_conversation=true&recipients[]=8&recipients[]=9&body=addedMessageBody"
     val addMessagePath = "/api/v1/conversations/1/add_message"
     val addMessageFieldConfig = PactConversationFieldConfig(includeMessages = true, includeContextName = false)
     val addMessageResponseBody = LambdaDsl.newJsonBody { obj ->
@@ -276,7 +283,7 @@ class InboxApiPactTests : ApiPactTestBase() {
                 recipientIds = listOf("8","9"),
                 body="addedMessageBody",
                 includedMessageIds=longArrayOf(),
-                attachmentIds=longArrayOf(1))
+                attachmentIds=longArrayOf())
         val addMessageResult = addMessageCall.execute()
 
         assertQueryParamsAndPath(addMessageCall, addMessageQuery, addMessagePath)
