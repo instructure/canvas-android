@@ -100,7 +100,7 @@ class LegalDialogStyled : AppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
-        if (dialog != null && retainInstance) dialog?.setDismissMessage(null)
+        if (retainInstance) dialog?.setDismissMessage(null)
         super.onDestroyView()
     }
 
