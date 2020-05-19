@@ -24,16 +24,11 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.utils.dismissExisting
 import com.instructure.teacher.R
+import com.instructure.teacher.events.DiscussionOverflowMenuClickedEvent
 import kotlinx.android.synthetic.main.bottom_sheet_discussion_menu.view.*
+import org.greenrobot.eventbus.EventBus
 
 class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
-    lateinit var callback: (DiscussionBottomSheetChoice) -> Unit
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_discussion_menu, container, false)
     }
@@ -41,30 +36,31 @@ class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.markAsUnread.setOnClickListener {
-            callback(DiscussionBottomSheetChoice.MARK_AS_UNREAD)
+            EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.MARK_AS_UNREAD, entryId))
             this.dismiss()
         }
+
         view.edit.setOnClickListener {
-            callback(DiscussionBottomSheetChoice.EDIT)
+            EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.EDIT, entryId))
             this.dismiss()
         }
+
         view.delete.setOnClickListener {
-            callback(DiscussionBottomSheetChoice.DELETE)
+            EventBus.getDefault().post(DiscussionOverflowMenuClickedEvent(DiscussionBottomSheetChoice.DELETE, entryId))
             this.dismiss()
         }
     }
 
     companion object {
-        fun newInstance(clickCallback: (DiscussionBottomSheetChoice) -> Unit): DiscussionBottomSheetMenuFragment {
-            return DiscussionBottomSheetMenuFragment().apply {
-                callback = clickCallback
-            }
-        }
+        var entryId: Long = -1
+
+        fun newInstance(): DiscussionBottomSheetMenuFragment = DiscussionBottomSheetMenuFragment()
 
         @JvmStatic
-        fun show(manager: FragmentManager, callback: (DiscussionBottomSheetChoice) -> Unit) {
+        fun show(manager: FragmentManager, id: Long) {
+            entryId = id
             manager.dismissExisting<DiscussionBottomSheetMenuFragment>()
-            val dialog = newInstance(callback)
+            val dialog = newInstance()
             dialog.show(manager, DiscussionBottomSheetMenuFragment::class.java.simpleName)
         }
     }

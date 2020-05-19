@@ -21,6 +21,7 @@ package com.instructure.teacher.events
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
+import com.instructure.teacher.fragments.DiscussionBottomSheetChoice
 import com.instructure.teacher.utils.EditDateGroups
 import org.greenrobot.eventbus.EventBus
 
@@ -204,3 +205,5 @@ class SectionsUpdatedEvent
 class SubmissionFilterChangedEvent(val filterIndex: Int = -1, val canvasContext: ArrayList<CanvasContext>? = null)
 
 class CourseColorOverlayToggledEvent
+
+class DiscussionOverflowMenuClickedEvent(val type: DiscussionBottomSheetChoice, val entryId: Long)

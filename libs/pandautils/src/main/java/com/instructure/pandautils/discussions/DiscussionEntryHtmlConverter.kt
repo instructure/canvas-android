@@ -68,7 +68,8 @@ class DiscussionEntryHtmlConverter {
         var date = ""
         var content = getContentHTML(discussionEntry.getMessage(""))
         val reply = formatReplyText(context, canReply)
-        val menu = formatMenuText(canEdit, canDelete)
+        val menu = formatMenuText(context, canEdit, canDelete)
+
         val menuDivider = formatMenuDividerText(canEdit, canDelete)
         val userId: String
         val replyButtonWrapperStyle: String
@@ -214,6 +215,7 @@ class DiscussionEntryHtmlConverter {
                 .replace("__ENTRY_ID__", discussionEntry.id.toString())
                 .replace("__USER_ID__", userId)
                 .replace("__REPLY_TEXT__", reply)
+                .replace("__REPLY_BUTTON_LABEL__", reply)
                 .replace("__MENU_TEXT__", menu)
                 .replace("__MENU_DIVIDER__", menuDivider)
                 .replace("__DETAILS_WRAPPER__", detailsWrapperStyle)
@@ -258,14 +260,15 @@ class DiscussionEntryHtmlConverter {
         return ""
     }
 
-    private fun formatMenuText(canEdit: Boolean, canDelete: Boolean): String {
+    private fun formatMenuText(context: Context, canEdit: Boolean, canDelete: Boolean): String {
         if (canEdit && canDelete) {
+            val menuLabel = context.getString(R.string.utils_contentDescriptionDiscussionsOverflow)
             return """
             <div class="meatball_wrapper menu">
-                <div>
-                    <div class="meatball"></div>
-                    <div class="meatball"></div>
-                    <div class="meatball"></div>
+                <div aria-label="$menuLabel" role="button">
+                    <div class="meatball" aria-hidden="true"></div>
+                    <div class="meatball" aria-hidden="true"></div>
+                    <div class="meatball" aria-hidden="true"></div>
                 </div>
             </div>
             """.trimIndent()

@@ -648,13 +648,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     private fun showOverflowMenu(id: Long) {
         fragmentManager?.let {
-            DiscussionBottomSheetMenuFragment.show(it) { choice ->
-                when (choice) {
-                    DiscussionBottomSheetChoice.MARK_AS_UNREAD -> markAsUnread(id)
-                    DiscussionBottomSheetChoice.EDIT -> showUpdateReplyView(id)
-                    DiscussionBottomSheetChoice.DELETE -> deleteDiscussionEntry(id)
-                }
-            }
+            DiscussionBottomSheetMenuFragment.show(it, id)
         }
     }
 
@@ -755,6 +749,17 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             } else if(activity is FullScreenInteractions) {
                 requireActivity().finish()
             }
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOverFlowMenuClicked(event: DiscussionOverflowMenuClickedEvent) {
+        val id = event.entryId
+        when(event.type) {
+            DiscussionBottomSheetChoice.MARK_AS_UNREAD -> markAsUnread(id)
+            DiscussionBottomSheetChoice.EDIT -> showUpdateReplyView(id)
+            DiscussionBottomSheetChoice.DELETE -> deleteDiscussionEntry(id)
         }
     }
 
