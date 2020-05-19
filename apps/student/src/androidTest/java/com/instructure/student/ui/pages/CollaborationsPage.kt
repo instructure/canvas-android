@@ -17,11 +17,14 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.checkRepeat
+import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.student.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
@@ -32,28 +35,28 @@ import org.hamcrest.Matchers.containsString
 object CollaborationsPage {
 
     fun assertCurrentCollaborationsHeaderPresent() {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.CLASS_NAME, "collaborations-header"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Current Collaborations") ))
     }
 
     fun assertStartANewCollaborationPresent() {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2")) // lucky there is only one of these!
                 .perform(DriverAtoms.webScrollIntoView())
-                .check(webMatches(getText(), containsString("Start a New Collaboration") ))
+                .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 10)
     }
 
     fun assertGoogleDocsChoicePresent() {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "collaboration_collaboration_type"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Google Docs") ))
     }
 
     fun assertGoogleDocsExplanationPresent() {
-        Web.onWebView(Matchers.allOf(ViewMatchers.withId(R.id.canvasWebView), ViewMatchers.isDisplayed()))
+        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "google_docs_description"))
                 .perform(DriverAtoms.webScrollIntoView())
                 .check(webMatches(getText(), containsString("Google Docs is a great place to collaborate") ))

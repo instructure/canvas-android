@@ -27,6 +27,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.canvasapi2.models.DiscussionEntry
@@ -77,6 +78,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun scrollToRepliesWebview() {
+        waitForMatcherWithSleeps(withId(R.id.discussionRepliesWebView), waitMs = 10000)
         onView(withId(R.id.discussionRepliesWebView)).scrollTo()
     }
 
@@ -185,6 +187,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
                 .perform(webClick())
+        waitForMatcherWithSleeps(withId(R.id.rce_webView), waitMs = 10000)
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
     }
