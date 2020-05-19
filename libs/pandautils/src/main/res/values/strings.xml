@@ -388,7 +388,7 @@
     <string name="notificationChannelNamePrimary">General Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
     <plurals name="notificationGroupContent">
-        <!--Will always be 2 or more, but some languages to specific formatting for 2 items-->
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
         <item quantity="other">%d new notifications</item>
     </plurals>
 

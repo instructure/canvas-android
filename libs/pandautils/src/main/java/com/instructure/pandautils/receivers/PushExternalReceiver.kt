@@ -137,7 +137,7 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
             channelId: String,
             notification: PushNotification
         ): Notification {
-            // Use the app name is we're marshmallow or lower, as it won't display the app name for us. On later versions,
+            // Use the app name if we're marshmallow or lower, as it won't display the app name for us. On later versions,
             // we'll still want a title, but it will already have our app name so instead we'll use this notification title
             val title =
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) appName else context.getString(R.string.notificationPrimaryInboxTitle)
