@@ -45,14 +45,11 @@ object CollaborationsPage {
 
     fun assertStartANewCollaborationPresent() {
         onView(withId(R.id.canvasWebView)).perform(swipeUp())
-        Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
-                .withElement(DriverAtoms.findElement(Locator.ID, "collaboration_collaboration_type"))
-                .perform(DriverAtoms.webScrollIntoView())
 
         Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2")) // lucky there is only one of these!
                 .perform(DriverAtoms.webScrollIntoView())
-                .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 10)
+                .checkRepeat(webMatches(getText(), containsString("Start a New Collaboration") ), 30)
     }
 
     fun assertGoogleDocsChoicePresent() {
