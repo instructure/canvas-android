@@ -249,12 +249,12 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
 
             discussionRepliesWebView.setInvisible()
-            if(CanvasWebView.containsLTI(html, "UTF-8")) {
+            if (html.contains("<iframe")) {
                 discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
                     val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
                     RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
                 }, "accessor")
-                repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithLTIs(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies)
+                repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies)
             } else {
                 discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "utf-8", null)
             }
@@ -404,12 +404,12 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
 
         //if the html has an lti url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsLTI(discussionTopicHeader.message.orEmpty(), "UTF-8")) {
+        if (discussionTopicHeader.message?.contains("<iframe") == true) {
             discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, "accessor")
-            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithLTIs(requireContext(), isTablet, discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic)
+            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet, discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic)
         } else {
             discussionTopicHeaderWebView.loadHtml(discussionTopicHeader.message, discussionTopicHeader.title)
         }

@@ -280,12 +280,12 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         // Load description
 
         // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsLTI(description.orEmpty(), "UTF-8")) {
+        if (description?.contains("<iframe") == true) {
             descriptionWebView.addJavascriptInterface(JsExternalToolInterface {
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), requireContext().getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
             }, "accessor")
-            loadHtmlJob = descriptionWebView.loadHtmlWithLTIs(requireContext(), isTablet, description.orEmpty(), ::loadAssignmentHTML)
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(), ::loadAssignmentHTML)
         } else {
             descriptionWebView.loadHtml(description, name)
         }

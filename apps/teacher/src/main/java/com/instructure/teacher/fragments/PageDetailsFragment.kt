@@ -169,12 +169,12 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         mPage = page
-        if (CanvasWebView.containsLTI(page.body.orEmpty(), "UTF-8")) {
+        if (page.body?.contains("<iframe") == true) {
             canvasWebView.addJavascriptInterface(JsExternalToolInterface {
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, "accessor")
-            loadHtmlJob = canvasWebView.loadHtmlWithLTIs(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
+            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
         } else {
             loadPageHtml(page.body.orEmpty())
         }

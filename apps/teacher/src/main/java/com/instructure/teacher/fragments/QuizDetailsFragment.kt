@@ -363,8 +363,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         instructionsWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        if (CanvasWebView.containsLTI(quiz.description ?: "", "UTF-8")) {
-            loadHtmlJob = instructionsWebView.loadHtmlWithLTIs(requireContext(), isTablet, quiz.description ?: "", ::loadQuizHTML)
+        if (quiz.description?.contains("<iframe") == true) {
+            loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet, quiz.description ?: "", ::loadQuizHTML)
         } else {
             loadQuizHTML(quiz.description ?: "")
         }

@@ -16,13 +16,11 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
-import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.crashlytics.android.Crashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.HttpHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -31,46 +29,54 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionHtmlTemplates
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.runBlocking
-import org.json.JSONObject
 import java.net.URLEncoder
 import java.util.regex.Pattern
 
-fun WebView.loadHtmlWithLTIs(context: Context, isTablet: Boolean, html: String, loadHtml: (newUrl: String) -> Unit): Job? {
+/**
+ * Webview helper function for handling all iframe related cases
+ *
+ * This currently handles three iframe cases:
+ *   -cnvs_content src authentication
+ *   -lti iframe src auth and launch button
+ *   -new rce videos in iframes
+ *
+ * We should now be able to call this function, preceded by a simple check for iframes, for all html webview content
+ */
+fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: String, loadHtml: (newHtml: String) -> Unit): Job? {
     return this.tryWeave {
         var newHTML: String = html
 
         // First we need to find LTIs by looking for iframes
         val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
-        while (iframeMatcher.find()) { // TODO find fix for duplicates?
+        while (iframeMatcher.find()) {
             val iframe = iframeMatcher.group(0)
-            if (iframe.contains("external_tool")) {
-                // We found an LTI tool, we need to do a few things...
-                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
-                // First we find the src
-                if (matcher.find()) {
-                    val url = matcher.group(1)
-                    // Make sure this REALLY is an LTI src, this check might need to be upgraded in the future...
-                    if (url.contains("external_tools")) {
-                        // We need to authenticate the src url and replace it within the iframe
-                        var authenticatedUrl: String? = null
-                        val ltiUrl = URLEncoder.encode(url, "UTF-8")
+            // We found an iframe, we need to do a few things...
+            val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
+            // First we find the src
+            if (matcher.find()) {
+                // Snag that src
+                val srcUrl = matcher.group(1)
 
-                        inBackground {
-                            authenticatedUrl = authenticateLTIUrl(url)
-                        }
+                if (srcUrl.contains("external_tools")) {
+                    // Handle the LTI case
+                    val newIframe = inBackground { externalToolIframe(srcUrl, iframe, context); }
+                    newHTML = newHTML.replace(iframe, newIframe)
+                } else if(srcUrl.contains("media_objects_iframe")) {
+                    // Handle the new RCE iframe case
+                    val dataMediaIdMatcher = Pattern.compile("data-media-id=\"([^\"]+)\"").matcher(iframe)
+                    if (dataMediaIdMatcher.find()) {
+                        val dataMediaId = dataMediaIdMatcher.group(1)
 
-                        // Now we need to replace the iframes src url with the authenticated url
-                        val newIframe = iframe.replace(url.orEmpty(), authenticatedUrl.orEmpty())
-
-                        // With that done, we need to make the LTI launch button
-                        val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
-                        val htmlButton = String.format(button, ltiUrl, context.resources.getString(R.string.utils_launchExternalTool))
-
-                        // Now we add the launch button along with the new iframe with the updated URL
-                        newHTML = newHTML.replace(iframe, newIframe + htmlButton)
+                        val newIframe = newRceVideoElement(dataMediaId);
+                        newHTML = newHTML.replace(iframe, newIframe)
                     }
+                } else if(iframe.contains("id=\"cnvs_content\"")) {
+                    // Handle the cnvs_content special case for some schools
+                    val authenticatedUrl = inBackground { authenticateLTIUrl(srcUrl) }
+                    val newIframe = iframe.replace(srcUrl, authenticatedUrl)
+
+                    newHTML = newHTML.replace(iframe, newIframe)
                 }
             }
         }
@@ -82,14 +88,44 @@ fun WebView.loadHtmlWithLTIs(context: Context, isTablet: Boolean, html: String, 
 
         loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML))
     } catch {
-        Logger.e("loadHtmlWithLTIs caught an exception: " + it.message)
+        Crashlytics.logException(it)
+        Logger.e("loadHtmlWithIframe caught an exception: " + it.message)
     }
+}
+
+suspend fun externalToolIframe(srcUrl: String, iframe: String, context: Context): String {
+    // We need to authenticate the src url and replace it within the iframe
+    val ltiUrl = URLEncoder.encode(srcUrl, "UTF-8")
+
+    val authenticatedUrl = authenticateLTIUrl(srcUrl)
+
+    // Now we need to replace the iframes src url with the authenticated url
+    val newIframe = iframe.replace(srcUrl, authenticatedUrl)
+
+    // With that done, we need to make the LTI launch button
+    val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
+    val htmlButton = String.format(button, ltiUrl, context.resources.getString(R.string.utils_launchExternalTool))
+
+    // Now we add the launch button along with the new iframe with the updated URL
+    return newIframe + htmlButton
+}
+
+fun newRceVideoElement(dataMediaId: String): String {
+    // We need to make a new src url with the dataMediaId
+    val newSrcUrl = "/users/self/media_download?entryId=$dataMediaId&media_type=video&redirect=1"
+
+    // We can't just update the src url in the iframe, as iframes always auto load/play the src
+    return """
+        <video controls poster=/media_objects/$dataMediaId/thumbnail?width=550&height=448'>
+            <source src="$newSrcUrl" type="video/mp4">
+        </video>
+    """.trimIndent()
 }
 
 fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String): String {
     var newHtml = html
-    for(holder in placeHolderList) {
-        if(newHtml.contains(holder.placeHolderHtml)) {
+    for (holder in placeHolderList) {
+        if (newHtml.contains(holder.placeHolderHtml)) {
             newHtml = newHtml.replace(holder.placeHolderHtml, holder.iframeHtml)
         }
     }
