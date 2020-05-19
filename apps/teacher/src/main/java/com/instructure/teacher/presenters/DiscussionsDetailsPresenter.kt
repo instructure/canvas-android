@@ -22,9 +22,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.teacher.events.DiscussionTopicEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderEvent
 import com.instructure.teacher.events.post
@@ -238,7 +236,7 @@ class DiscussionsDetailsPresenter(
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun markAsRead(ids: List<Long>) {
         if(mDiscussionMarkAsReadApiCalls != null && mDiscussionMarkAsReadApiCalls!!.isActive) return
-        mDiscussionMarkAsReadApiCalls = weave {
+        mDiscussionMarkAsReadApiCalls = tryWeave {
             val markedAsReadIds: MutableList<Long> = ArrayList()
             ids.forEach { entryId ->
                 val response = awaitApiResponse<Void>{ DiscussionManager.markDiscussionTopicEntryRead(canvasContext, discussionTopicHeader.id, entryId, it) }
@@ -254,13 +252,15 @@ class DiscussionsDetailsPresenter(
 
             viewCallback?.updateDiscussionsMarkedAsReadCompleted(markedAsReadIds)
             DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+        } catch {
+            // Do nothing
         }
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun markAsUnread(id: Long) {
         if (mDiscussionMarkAsUnreadApiCalls != null && mDiscussionMarkAsUnreadApiCalls!!.isActive) return
-        mDiscussionMarkAsUnreadApiCalls = weave {
+        mDiscussionMarkAsUnreadApiCalls = tryWeave {
             var markedAsUnreadId: Long = -1
 
             val response = awaitApiResponse<Void>{ DiscussionManager.markDiscussionTopicEntryUnread(canvasContext, discussionTopicHeader.id, id, it) }
@@ -275,6 +275,8 @@ class DiscussionsDetailsPresenter(
 
             viewCallback?.updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId)
             DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+        } catch {
+            // Do nothing
         }
     }
 

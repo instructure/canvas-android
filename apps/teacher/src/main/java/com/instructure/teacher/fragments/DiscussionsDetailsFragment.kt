@@ -630,7 +630,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun showReplyView(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsReplyFragment.makeBundle(presenter.discussionTopicHeader.id, id, mIsAnnouncements)
             RouteMatcher.route(requireContext(), Route(DiscussionsReplyFragment::class.java, presenter.canvasContext, args))
         } else {
@@ -639,7 +639,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun markAsUnread(id: Long) {
-        presenter.markAsUnread(id)
+        if (APIHelper.hasNetworkConnection()) {
+            presenter.markAsUnread(id)
+        } else {
+            NoInternetConnectionDialog.show(requireFragmentManager())
+        }
     }
 
     private fun showOverflowMenu(id: Long) {
@@ -655,7 +659,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun showUpdateReplyView(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsUpdateFragment.makeBundle(presenter.discussionTopicHeader.id, presenter.findEntry(id), mIsAnnouncements, presenter.discussionTopic)
             RouteMatcher.route(requireContext(), Route(DiscussionsUpdateFragment::class.java, presenter.canvasContext, args))
         } else {
@@ -664,7 +668,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun deleteDiscussionEntry(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.discussions_delete_warning)
             builder.setPositiveButton(android.R.string.yes) { _, _ ->
@@ -702,7 +706,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
      * Checks to see if the webview element is within the viewable bounds of the scrollview.
      */
     private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean {
-        if(discussionsScrollView == null) return false
+        if (discussionsScrollView == null) return false
         val scrollBounds = Rect().apply{ discussionsScrollView.getDrawingRect(this) }
 
         val discussionRepliesHeight = discussionRepliesWebView.height
@@ -717,13 +721,13 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun viewAttachments(remoteFiles: List<RemoteFile>) {
         val attachments = ArrayList<Attachment>()
         remoteFiles.forEach { attachments.add(it.mapToAttachment()) }
-        if(attachments.isNotEmpty()) {
-            if(attachments.size > 1) {
+        if (attachments.isNotEmpty()) {
+            if (attachments.size > 1) {
                 AttachmentPickerDialog.show(requireFragmentManager(), attachments) { attachment ->
                     AttachmentPickerDialog.hide(requireFragmentManager())
                     attachment.view(requireContext())
                 }
-            } else if(attachments.size == 1) {
+            } else if (attachments.size == 1) {
                 attachments[0].view(requireContext())
             }
         }

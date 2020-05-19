@@ -29,6 +29,11 @@ import kotlinx.android.synthetic.main.bottom_sheet_discussion_menu.view.*
 class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
     lateinit var callback: (DiscussionBottomSheetChoice) -> Unit
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = true
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.bottom_sheet_discussion_menu, container, false)
     }
