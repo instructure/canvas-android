@@ -32,7 +32,7 @@ import org.junit.Test
 class SubmissionsApiPactTests : ApiPactTestBase() {
 
     // Common logic
-    private fun createService(pathPrefix: String = "/api/v1/"): SubmissionAPI.SubmissionInterface {
+    private fun createService(pathPrefix: String = DEFAULT_PATH_PREFIX): SubmissionAPI.SubmissionInterface {
         val client = getClient(pathPrefix = pathPrefix)
         return client.create(SubmissionAPI.SubmissionInterface::class.java)
     }
