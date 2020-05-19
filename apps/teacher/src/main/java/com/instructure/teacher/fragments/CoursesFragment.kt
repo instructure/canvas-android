@@ -61,7 +61,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
 
     override fun getPresenterFactory() = CoursesPresenterFactory()
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is CourseListCallback) mCourseListCallback = context
         if (context is AllCoursesFragment.CourseBrowserCallback) mCourseBrowserCallback = context

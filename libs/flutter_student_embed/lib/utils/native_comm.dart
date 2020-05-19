@@ -21,6 +21,7 @@ import 'package:flutter_student_embed/models/login.dart';
 import 'package:flutter_student_embed/models/serializers.dart';
 import 'package:flutter_student_embed/network/utils/api_prefs.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
+import 'package:flutter_student_embed/screens/calendar/planner_fetcher.dart';
 
 import 'design/student_colors.dart';
 
@@ -29,6 +30,7 @@ class NativeComm {
 
   static const methodReset = 'reset';
   static const methodRouteToCalendar = 'routeToCalendar';
+  static const methodUpdateCalendarDates = 'updateCalendarDates';
   static const methodUpdateLoginData = 'updateLoginData';
   static const methodUpdateShouldPop = 'updateShouldPop';
   static const methodUpdateThemeData = 'updateThemeData';
@@ -62,6 +64,9 @@ class NativeComm {
           break;
         case methodReset:
           _performReset();
+          break;
+        case methodUpdateCalendarDates:
+          _updateCalendarDates(methodCall.arguments);
           break;
         default:
           throw 'Channel method not implemented: ${methodCall.method}';
@@ -101,6 +106,11 @@ class NativeComm {
       print('Error updating theme data!');
       FlutterError.dumpErrorToConsole(e);
     }
+  }
+
+  static void _updateCalendarDates(dynamic rawDates) {
+    List<DateTime> dates = (rawDates as List<dynamic>).map((it) => DateTime.parse(it as String).toLocal()).toList();
+    PlannerFetcher.notifyDatesChanged(dates);
   }
 
   static void _performReset() {

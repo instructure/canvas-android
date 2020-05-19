@@ -121,7 +121,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
         ViewStyler.themeToolbar(requireActivity(), toolbar, course)
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         view?.let { configureRecyclerView(it, requireContext(), recyclerAdapter, R.id.swipeRefreshLayout, R.id.gradesEmptyView, R.id.listView) }
     }

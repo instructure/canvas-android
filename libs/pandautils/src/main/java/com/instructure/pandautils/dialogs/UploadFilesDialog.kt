@@ -107,7 +107,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         super.onStop()
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration?) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         dialog?.window?.let { setDialogMargins(it) }
     }

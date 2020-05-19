@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.AppManager
 import io.flutter.embedding.android.FlutterFragment
-import io.flutter.embedding.android.FlutterView
+import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
@@ -37,7 +37,7 @@ class FlutterCalendarFragment : FlutterFragment() {
     override fun provideFlutterEngine(context: Context): FlutterEngine? = AppManager.flutterEngine
 
     // Use texture mode instead of surface mode so the FlutterView doesn't render on top of the nav drawer and a11y borders
-    override fun getRenderMode() = FlutterView.RenderMode.texture
+    override fun getRenderMode() = RenderMode.texture
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         FlutterComm.routeToCalendar(calendarScreenChannel.channelId)

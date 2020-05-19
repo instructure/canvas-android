@@ -68,7 +68,7 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
     }
 
     private fun updateCanvasContexts(courses: List<Course>, groups: List<Group>) {
-        dialog.recyclerView.adapter = CanvasContextDialogAdapter(getCanvasContextList(requireContext(), courses, groups)) {
+        dialog?.recyclerView?.adapter = CanvasContextDialogAdapter(getCanvasContextList(requireContext(), courses, groups)) {
             dismiss()
             selectedCallback(it)
         }
@@ -90,7 +90,7 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
 
     private fun loadData(forceNetwork: Boolean) {
         apiCalls = tryWeave {
-            dialog.emptyView.setLoading()
+            dialog?.emptyView?.setLoading()
             val (courses, groups) = awaitApis<List<Course>, List<Group>>(
                 { CourseManager.getCourses(forceNetwork, it) },
                 { GroupManager.getFavoriteGroups(it, forceNetwork) }
@@ -99,7 +99,7 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
             val courseMap = validCourses.associateBy { it.id }
             val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
             updateCanvasContexts(validCourses, validGroups)
-            dialog.emptyView.setGone()
+            dialog?.emptyView?.setGone()
         } catch {
             activity?.toast(R.string.errorOccurred)
             dismiss()

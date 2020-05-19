@@ -109,13 +109,12 @@ class CalendarScreenState extends State<CalendarScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).buttonColor,
-          onPressed: () async {
-            var updatedDates =
-                await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay));
-            _refreshDates(updatedDates);
-          },
-          child: Icon(Icons.add, semanticLabel: L10n(context).newToDo)),
+        onPressed: () async {
+          var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay));
+          _refreshDates(updatedDates);
+        },
+        child: Icon(Icons.add, semanticLabel: L10n(context).newToDo),
+      ),
       body: CalendarWidget(
         key: _calendarKey,
         fetcher: _fetcher,
@@ -157,7 +156,7 @@ class CalendarScreenState extends State<CalendarScreen> {
 
   void _refreshDates(@nullable List<DateTime> dates) {
     if (dates == null) return;
-    dates.forEach((date) => _fetcher.refreshItemsForDate(date.toLocal(), clearCaches: true));
+    PlannerFetcher.notifyDatesChanged(dates);
   }
 
   @override

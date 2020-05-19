@@ -125,6 +125,10 @@ class _StudentThemeState extends State<StudentTheme> {
       iconTheme: IconThemeData(color: onSurfaceColor),
       primaryIconTheme: IconThemeData(color: primaryTextColor),
       accentIconTheme: IconThemeData(color: Colors.white),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: buttonColor,
+        foregroundColor: Colors.white,
+      ),
       dividerColor: StudentColors.tiara,
       buttonColor: buttonColor,
       hintColor: StudentColors.ash,

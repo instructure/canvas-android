@@ -13,23 +13,32 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/calendar_filter.dart';
 import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/login.dart';
-import 'package:flutter_student_embed/models/user.dart';
+import 'package:flutter_student_embed/models/plannable.dart';
+import 'package:flutter_student_embed/models/planner_item.dart';
+import 'package:flutter_student_embed/models/serializers.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
 import 'package:flutter_student_embed/network/utils/api_prefs.dart';
+import 'package:flutter_student_embed/screens/calendar/calendar_day_planner.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_widget.dart';
+import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen.dart';
+import 'package:flutter_student_embed/screens/to_do/to_do_details_screen.dart';
+import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/db/calendar_filter_db.dart';
 import 'package:flutter_student_embed/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../testutils/accessibility_utils.dart';
@@ -51,7 +60,6 @@ void main() {
     locator.registerLazySingleton<CalendarFilterDb>(() => filterDb);
     locator.registerLazySingleton<CalendarFilterListInteractor>(() => filterInteractor);
     locator.registerLazySingleton<PlannerApi>(() => plannerApi);
-    locator.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
   setUp(() {
@@ -65,6 +73,9 @@ void main() {
         ..userId = userId
         ..filters = SetBuilder(contexts));
     });
+
+    // Some tests use a mocked QuickNav, so we reset to default implementation here
+    GetIt.instance.registerLazySingleton<QuickNav>(() => QuickNav());
   });
 
   tearDown(() {
@@ -280,9 +291,261 @@ void main() {
     // Verify that the list of selected items was updated correctly
     expect(result, <String>[]);
   });
+
+  testWidgetsWithAccessibilityChecks('Calls method channel: open drawer', (tester) async {
+    String channelId = 'CalendarScreenChannel';
+
+    MethodCall methodCall;
+
+    await tester.pumpWidget(_testableMaterialWidget(channelId: channelId));
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      methodCall = call;
+      return null;
+    });
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([]));
+
+    // Tap on the hamburger menu button
+    await tester.tap(find.byIcon(Icons.menu));
+    await tester.pump();
+
+    expect(methodCall.method, 'openDrawer');
+    expect(methodCall.arguments, isNull);
+  });
+
+  testWidgetsWithAccessibilityChecks('Calls method channel: route to native item', (tester) async {
+    String channelId = 'CalendarScreenChannel';
+
+    PlannerItem item = PlannerItem((b) => b
+      ..plannableType = 'test_type'
+      ..plannableDate = DateTime.now().toUtc()
+      ..plannable = Plannable((p) => p
+        ..id = 'plannable_123'
+        ..title = 'Plannable 123').toBuilder());
+
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([item]));
+
+    await tester.pumpWidget(_testableMaterialWidget(channelId: channelId));
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    MethodCall methodCall;
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      methodCall = call;
+      return null;
+    });
+
+    // Tap on the planner item
+    await tester.tap(find.text(item.plannable.title));
+    await tester.pump();
+
+    expect(methodCall.method, 'routeToItem');
+
+    var payload = json.encode(serialize<PlannerItem>(item));
+    expect(methodCall.arguments, payload);
+  });
+
+  testWidgetsWithAccessibilityChecks('Today button moves calendar to the current date', (tester) async {
+    DateTime today = DateTime.now().withTimeAtMidnight();
+    DateTime tomorrow = DateTime(today.year, today.month, today.day + 1);
+
+    PlannerItem todayItem = PlannerItem((b) => b
+      ..plannableType = 'test_type'
+      ..plannableDate = today
+      ..plannable = Plannable((p) => p
+        ..id = 'today_item'
+        ..title = 'Today Item').toBuilder());
+
+    PlannerItem tomorrowItem = PlannerItem((b) => b
+      ..plannableType = 'test_type'
+      ..plannableDate = tomorrow
+      ..plannable = Plannable((p) => p
+        ..id = 'tomorrow_item'
+        ..title = 'Tomorrow Item').toBuilder());
+
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) async => [todayItem, tomorrowItem]);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    // Should show today's item
+    expect(find.text(todayItem.plannable.title), findsOneWidget);
+    expect(find.text(tomorrowItem.plannable.title), findsNothing);
+
+    // Should not show the 'today' button
+    expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsNothing);
+
+    // Swipe to tomorrow
+    await tester.fling(find.byType(CalendarDayPlanner), Offset(-50, 0), 300);
+    await tester.pumpAndSettle();
+
+    // Should show tomorrows's item
+    expect(find.text(todayItem.plannable.title), findsNothing);
+    expect(find.text(tomorrowItem.plannable.title), findsOneWidget);
+
+    // Should show the 'today' button
+    expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsOneWidget);
+
+    // Tapping the 'today' button should move back to today
+    await tester.tap(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel));
+    await tester.pumpAndSettle();
+
+    // Should show today's item
+    expect(find.text(todayItem.plannable.title), findsOneWidget);
+    expect(find.text(tomorrowItem.plannable.title), findsNothing);
+
+    // Should not show the 'today' button
+    expect(find.bySemanticsLabel(AppLocalizations().gotoTodayButtonLabel), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping FAB routes to create To Do screen', (tester) async {
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([]));
+
+    QuickNav nav = MockQuickNav();
+    GetIt.instance.registerLazySingleton<QuickNav>(() => nav);
+
+    when(nav.push(any, any)).thenAnswer((_) => Completer<Set<String>>().future);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    verify(nav.push(any, argThat(isA<CreateUpdateToDoScreen>())));
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping planner note routes to details', (tester) async {
+    PlannerItem item = PlannerItem((b) => b
+      ..plannableType = 'planner_note'
+      ..plannableDate = DateTime.now().toUtc()
+      ..plannable = Plannable((p) => p
+        ..id = 'plannable_note_123'
+        ..title = 'Planner Note').toBuilder());
+
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([item]));
+
+    QuickNav nav = MockQuickNav();
+    GetIt.instance.registerLazySingleton<QuickNav>(() => nav);
+
+    when(nav.push(any, any)).thenAnswer((_) => Completer<List<DateTime>>().future);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    // Tap the item
+    await tester.tap(find.text(item.plannable.title));
+    await tester.pumpAndSettle();
+
+    verify(nav.push(any, argThat(isA<ToDoDetailsScreen>())));
+  });
+
+  testWidgetsWithAccessibilityChecks('New planner notes propagate to other calendar screen instances', (tester) async {
+    PlannerItem item = PlannerItem((b) => b
+      ..plannableType = 'test_type'
+      ..plannableDate = DateTime.now().toUtc()
+      ..plannable = Plannable((p) => p
+        ..id = 'plannable_123'
+        ..title = 'Plannable 123').toBuilder());
+
+    // Return nothing from API at first
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([]));
+
+    QuickNav nav = MockQuickNav();
+    when(nav.push(any, any)).thenAnswer((_) async => [item.plannableDate]);
+    GetIt.instance.registerLazySingleton<QuickNav>(() => nav);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    // Push second CalendarScreen
+    BuildContext context = tester.state(find.byType(CalendarScreen)).context;
+    QuickNav().push(context, CalendarScreen());
+    await tester.pumpAndSettle();
+
+    // Now start returning the 'newly created' item from the API
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([item]));
+
+    // Tap the FAB to fake 'creating' the new item
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    // Should have refreshed to show new item
+    expect(find.text(item.plannable.title), findsOneWidget);
+
+    // Go back to fist calendar screen
+    TestApp.navigatorKey.currentState.pop();
+    await tester.pumpAndSettle();
+
+    // First calendar screen should also show new item
+    expect(find.byType(CalendarScreen), findsOneWidget);
+    expect(find.text(item.plannable.title), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Planner note updates propagate to other calendar screens', (tester) async {
+    PlannerItem oldItem = PlannerItem((b) => b
+      ..plannableType = 'planner_note'
+      ..plannableDate = DateTime.now().toUtc()
+      ..plannable = Plannable((p) => p
+        ..id = 'planner_note'
+        ..title = 'Old Title').toBuilder());
+
+    PlannerItem newItem =
+        oldItem.rebuild((b) => b..plannable = oldItem.plannable.rebuild((p) => p..title = 'New Title').toBuilder());
+
+    // Return old item from API at first
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([oldItem]));
+
+    QuickNav nav = MockQuickNav();
+    when(nav.push(any, any)).thenAnswer((_) async => [oldItem.plannableDate]);
+    GetIt.instance.registerLazySingleton<QuickNav>(() => nav);
+
+    await tester.pumpWidget(_testableMaterialWidget());
+    await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
+
+    // Push second CalendarScreen
+    BuildContext context = tester.state(find.byType(CalendarScreen)).context;
+    QuickNav().push(context, CalendarScreen());
+    await tester.pumpAndSettle();
+
+    // Now start returning the updated item from the API
+    when(plannerApi.getUserPlannerItems(any, any, any,
+            contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([newItem]));
+
+    // Tap the item and fake 'updating' it
+    await tester.tap(find.text(oldItem.plannable.title));
+    await tester.pumpAndSettle();
+
+    // Should have refreshed to show new item
+    expect(find.text(newItem.plannable.title), findsOneWidget);
+
+    // Go back to fist calendar screen
+    TestApp.navigatorKey.currentState.pop();
+    await tester.pumpAndSettle();
+
+    // First calendar screen should also show new item
+    expect(find.byType(CalendarScreen), findsOneWidget);
+    expect(find.text(newItem.plannable.title), findsOneWidget);
+  });
 }
 
-Widget _testableMaterialWidget({Widget widget, NavigatorObserver observer}) {
+Widget _testableMaterialWidget({Widget widget, NavigatorObserver observer, String channelId}) {
   var login = Login((b) => b
     ..uuid = 'uuid'
     ..domain = 'domain'
@@ -290,19 +553,13 @@ Widget _testableMaterialWidget({Widget widget, NavigatorObserver observer}) {
     ..user = CanvasModelTestUtils.mockUser().toBuilder());
 
   return TestApp(
-    Scaffold(body: widget ?? CalendarScreen()),
+    Scaffold(body: widget ?? CalendarScreen(channelId: channelId)),
     platformConfig: PlatformConfig(
       initLoggedInUser: login,
     ),
     navigatorObservers: observer != null ? [observer] : [],
   );
 }
-
-User _mockStudent(String userId) => User((b) => b
-  ..id = userId
-  ..name = 'UserName'
-  ..sortableName = 'Sortable Name'
-  ..build());
 
 List<Course> _mockCourses() {
   return [
