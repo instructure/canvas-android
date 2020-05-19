@@ -44,7 +44,9 @@ object CollaborationsPage {
     }
 
     fun assertStartANewCollaborationPresent() {
-        onView(withId(R.id.canvasWebView)).perform(swipeUp())
+
+        // Debug maneuver to help see what was being displayed
+        //onView(withId(R.id.canvasWebView)).perform(swipeUp())
 
         Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.TAG_NAME, "h2")) // lucky there is only one of these!
