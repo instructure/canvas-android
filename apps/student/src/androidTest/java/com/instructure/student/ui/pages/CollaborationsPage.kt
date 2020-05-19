@@ -16,6 +16,8 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.swipeUp
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -42,6 +44,7 @@ object CollaborationsPage {
     }
 
     fun assertStartANewCollaborationPresent() {
+        onView(withId(R.id.canvasWebView)).perform(swipeUp())
         Web.onWebView(Matchers.allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(DriverAtoms.findElement(Locator.ID, "collaboration_collaboration_type"))
                 .perform(DriverAtoms.webScrollIntoView())
