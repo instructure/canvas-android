@@ -16,120 +16,138 @@
 
 package com.instructure.pandautils.models
 
-import android.text.TextUtils
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.BuildConfig
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.PandaPrefs
 import java.util.*
 
 data class PushNotification(
-    var htmlUrl: String = "",
-    var from: String = "",
-    var alert: String = "",
-    var collapseKey: String = "",
-    var userId: String = ""
+    val from: String = "",
+    val htmlUrl: String = "",
+    val alert: String = "",
+    val collapseKey: String = "",
+    val userId: String = "",
+    val notificationId: Int = 0
 ) {
-    /**
-     * Basic idea is that we STORE push notification info based on the incoming PUSH data.
-     * But we RETRIEVE push notification info based on the current users data.
-     *
-     * If we store it correctly then it can be retrieved correctly.
-     *
-     * The HTML url has the domain as part of the url and the users id, the users id also has the shard so we
-     * have to strip off the shard so we have the actual user id. With the domain and user id we can make
-     * a key to store push notifications with.
-     */
-    fun PushNotification(
-        html_url: String,
-        from: String,
-        alert: String,
-        collapse_key: String,
-        user_id: String
-    ): PushNotification {
-        this.htmlUrl = html_url
-        this.from = from
-        this.alert = alert
-        this.collapseKey = collapse_key
-        this.userId = user_id
-
-        return this
-    }
 
     companion object {
-        const val HTML_URL: String = "html_url"
-        const val FROM: String = "from"
-        const val ALERT: String = "alert"
-        const val COLLAPSE_KEY: String = "collapse_key"
-        const val USER_ID: String = "user_id"
-        const val NOTIFY_ID = 555443
+        const val GROUP_ID = 344555
 
-        private const val PUSH_NOTIFICATIONS_KEY = "pushNotificationsKey"
+        const val HTML_URL: String = "html_url" // Used to pass around destination in intents
+
+        private const val ALERT: String = "alert"
+        private const val COLLAPSE_KEY: String = "collapse_key"
+        private const val USER_ID: String = "user_id"
+
+        private const val PUSH_NOTIFICATIONS_KEY = "pandaNotificationsKey"
+
+        @Deprecated("Starting with MBL-12556, notifications require an id to separate out instead of being a single inbox notification")
+        private const val OLD_PUSH_NOTIFICATIONS_KEY = "pushNotificationsKey"
+
+        fun fromData(from: String, data: Map<String, String>?): PushNotification {
+            val notificationId = (getPushNotifications().lastOrNull()?.notificationId ?: 0) + 1
+
+            return PushNotification(
+                from = from,
+                htmlUrl = data?.get(HTML_URL) ?: "",
+                alert = data?.get(ALERT) ?: "",
+                collapseKey = data?.get(COLLAPSE_KEY) ?: "",
+                userId = data?.get(USER_ID) ?: "",
+                notificationId = notificationId
+
+            )
+        }
 
         fun store(push: PushNotification) {
-            val pushes = getPushNotifications(PUSH_NOTIFICATIONS_KEY)
+            val pushes = getPushNotifications()
             pushes.add(push)
 
             PandaPrefs.putString(PUSH_NOTIFICATIONS_KEY, Gson().toJson(pushes))
         }
 
-        fun clearPushHistory() {
-            // Delete the old notifications keyed off of user/domain (deprecated)
-            getPushStoreKey()?.let { key -> PandaPrefs.remove(key) }
+        fun remove(intent: Intent) {
+            val notificationId = intent.getIntExtra(PushExternalReceiver.ID_PUSH_NOTIFICATION, GROUP_ID)
+            if (notificationId == GROUP_ID) {
+                PandaPrefs.remove(PUSH_NOTIFICATIONS_KEY)
+                return
+            }
 
-            // Delete the new notifications (no longer filtering)
+            val pushes = getPushNotifications()
+
+            // Remove only the notification matching the ID
+            pushes.removeAll { push -> push.notificationId == notificationId }
+            PandaPrefs.putString(PUSH_NOTIFICATIONS_KEY, Gson().toJson(pushes))
+
+            // If we only have no notifications left, we don't need a group summary anymore
+            if (pushes.size == 0) {
+                (ContextKeeper.appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                    .cancel(GROUP_ID)
+            }
+        }
+
+        fun clearPushHistory() {
+            val nm = (ContextKeeper.appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+
+            // Cancel the group summary
+            nm.cancel(GROUP_ID)
+
+            // Cancel all other pushes
+            val pushes = getPushNotifications()
+            pushes.forEach { push ->
+                nm.cancel(push.notificationId)
+            }
+
+            // Delete the stored notifications
             PandaPrefs.remove(PUSH_NOTIFICATIONS_KEY)
         }
 
+        /**
+         * Helper function to retrieve all stored push notifications.
+         *
+         * This will migrate over old pushes so that each stored push will show as its own notification.
+         */
         fun getAllStoredPushes(): ArrayList<PushNotification> {
             val pushes = ArrayList<PushNotification>()
 
-            // Combine both the old and new notifications to display to the user
-            pushes.addAll(getPushNotifications(getPushStoreKey()))
-            pushes.addAll(getPushNotifications(PUSH_NOTIFICATIONS_KEY))
+            val notifications = getPushNotifications()
+            val oldNotifications = getPushNotifications(OLD_PUSH_NOTIFICATIONS_KEY)
+
+            // Migrate old notifications to new notifications
+            var id = notifications.lastOrNull()?.notificationId ?: 0
+            oldNotifications.forEach { push ->
+                pushes.add(push.copy(notificationId = ++id))
+            }
+
+            pushes.addAll(notifications)
+
+            // Update stored pushes if we migrated, removing the old notifications
+            if (oldNotifications.isNotEmpty()) {
+                PandaPrefs.putString(PUSH_NOTIFICATIONS_KEY, Gson().toJson(pushes))
+                PandaPrefs.remove(OLD_PUSH_NOTIFICATIONS_KEY)
+            }
 
             return pushes
         }
 
         /**
-         * A helper function introduced in MBL-13725 to help retrieve notifications. This supports the old keys that are
-         * unique per user id and domain (that is now deprecated), as well as the single key PUSH_NOTIFICATIONS_KEY that
-         * should be used since filtering is no longer happening.
+         * A helper function introduced in MBL-12556 to help retrieve notifications. This supports the old key that is
+         * for the single notification (OLD_PUSH_NOTIFICATIONS_KEY that is now deprecated), as well as the
+         * PUSH_NOTIFICATIONS_KEY that should be used since separating out pushes into their own notifications.
          */
-        private fun getPushNotifications(key: String?): ArrayList<PushNotification> {
-            if (!key.isNullOrBlank()) {
-                val json = PandaPrefs.getString(key, "")
-                if (!json.isNullOrBlank()) {
-                    val type = object : TypeToken<List<PushNotification>>() {}.type
-                    return Gson().fromJson(json, type) ?: ArrayList()
-                }
+        private fun getPushNotifications(key: String = PUSH_NOTIFICATIONS_KEY): ArrayList<PushNotification> {
+            val json = PandaPrefs.getString(key, "")
+            if (!json.isNullOrBlank()) {
+                val type = object : TypeToken<List<PushNotification>>() {}.type
+                return Gson().fromJson(json, type) ?: ArrayList()
             }
 
+            // Return an empty list if nothing was stored before
             return ArrayList()
-        }
-
-        private fun getPushStorePrefix(): String? {
-            val user = ApiPrefs.user
-            var domain = ApiPrefs.domain
-
-            if (user == null || TextUtils.isEmpty(domain)) {
-                return null
-            }
-
-            if (BuildConfig.IS_DEBUG) {
-                domain = domain.replaceFirst(".beta".toRegex(), "")
-            }
-
-            return user.id.toString() + "___" + domain + "___"
-        }
-
-        // TODO: Remove this in a future release from the version that this was deprecated (MBL-13725) and clean up some
-        //  comments in this file (and inline getPushNotifications into getAllStoredPushes)
-        @Deprecated("Push notifications are no longer filtered by user/domain, going forward should just use PUSH_NOTIFICATIONS_KEY")
-        private fun getPushStoreKey(): String? {
-            val prefix = getPushStorePrefix() ?: return null
-            return prefix + PUSH_NOTIFICATIONS_KEY
         }
     }
 }

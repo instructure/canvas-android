@@ -25,6 +25,6 @@ class PushDeleteReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         //Clears the history of the push notification when swiped away by the user
-        PushNotification.clearPushHistory()
+        PushNotification.remove(intent)
     }
 }

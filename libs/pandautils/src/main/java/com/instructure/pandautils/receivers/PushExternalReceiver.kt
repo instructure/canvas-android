@@ -47,22 +47,25 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
         val data = message?.data ?: return
 
         val from = message.from ?: ""
-        val alert = getMessage(data)
-        val userId = getUserId(data)
-        val htmlUrl = getHtmlUrl(data)
-        val collapseKey = getCollapseKey(data)
 
-        val push = PushNotification(htmlUrl, from, alert, collapseKey, userId)
+        val push = PushNotification.fromData(from, data)
         PushNotification.store(push)
-        postNotification(this, data, getAppName(this), getStartingActivityClass(), getAppColor())
+        postNotifications(this, getStartingActivityClass(), getAppName(this), getAppColor(), push)
     }
 
     companion object {
 
         const val NEW_PUSH_NOTIFICATION = "newPushNotification"
+        const val ID_PUSH_NOTIFICATION = "idPushNotification"
         private const val CHANNEL_PUSH_GENERAL = "generalNotifications"
 
-        fun postNotification(context: Context, data: Map<String, String>?, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
+        private fun postNotifications(
+            context: Context,
+            startingActivity: Class<out Activity>,
+            appName: String,
+            @ColorRes appColor: Int,
+            vararg notifications: PushNotification
+        ) {
             val loginId = ApiPrefs.user?.loginId
 
             if (loginId == null) {
@@ -70,87 +73,127 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
                 return
             }
 
-            // Only the first few lines get shown in the notification, and taking all could result in a crash (given an EXTREMELY large amount)
-            val pushes = PushNotification.getAllStoredPushes().takeLast(10)
-
-            if (pushes.isEmpty() && data == null) {
-                // Nothing to post, situation would occur from the BootReceiver
-                Logger.e("PushExternalReceiver: No notifications to show")
-                return
-            }
-
-            val contentIntent = Intent(context, startingActivity)
-            contentIntent.putExtra(NEW_PUSH_NOTIFICATION, true)
-            data?.forEach { contentIntent.putExtra(it.key, it.value) }
-
-            val deleteIntent = Intent(context, PushDeleteReceiver::class.java)
-
-            val contentPendingIntent = PendingIntent.getActivity(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-            val deletePendingIntent = PendingIntent.getBroadcast(context, 0, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
-
             val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            val inboxStyle = NotificationCompat.InboxStyle()
-            inboxStyle.setBigContentTitle(context.getString(R.string.notificationPrimaryInboxTitle))
-            for (push in pushes) {
-                inboxStyle.addLine(push.alert)
-            }
-
-            val notification = NotificationCompat.Builder(context, CHANNEL_PUSH_GENERAL)
-                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
-                .setColor(ContextCompat.getColor(context, appColor))
-                .setContentTitle(appName)
-                .setContentText(getMessage(data))
-                .setContentIntent(contentPendingIntent)
-                .setDeleteIntent(deletePendingIntent)
-                .setAutoCancel(true)
-                .setStyle(inboxStyle)
-                .build()
-
             createNotificationChannel(context, CHANNEL_PUSH_GENERAL, loginId, nm)
 
-            nm.notify(PushNotification.NOTIFY_ID, notification)
-        }
+            notifications.forEach { push ->
+                nm.notify(
+                    push.notificationId,
+                    createNotification(context, startingActivity, appName, appColor, CHANNEL_PUSH_GENERAL, push)
+                )
+            }
 
-        private fun createNotificationChannel(context: Context, channelId: String, userEmail: String, nm: NotificationManager) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
-
-            // Prevents recreation of notification channel if it exists.
-            val channelList = nm.notificationChannels
-            for (channel in channelList) {
-                if (channelId == channel.id) {
-                    return
+            // Only show group notification on higher than M, otherwise lower APIs will dismiss individual notifications
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                // If the passed notifications is greater than 1, we're showing from boot so we don't need to retrieve
+                // all stored notifications
+                val allPushes =
+                    if (notifications.size > 1) notifications.toList() else PushNotification.getAllStoredPushes()
+                if (allPushes.size > 1) {
+                    nm.notify(PushNotification.GROUP_ID, createGroup(context, appColor, CHANNEL_PUSH_GENERAL))
                 }
             }
+        }
+
+        private fun createContentIntent(
+            context: Context,
+            startingActivity: Class<out Activity>,
+            notification: PushNotification
+        ): PendingIntent? {
+            val contentIntent = Intent(context, startingActivity)
+            contentIntent.putExtra(NEW_PUSH_NOTIFICATION, true)
+            contentIntent.putExtra(ID_PUSH_NOTIFICATION, notification.notificationId)
+            contentIntent.putExtra(PushNotification.HTML_URL, notification.htmlUrl)
+            return PendingIntent.getActivity(
+                context,
+                notification.notificationId,
+                contentIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
+
+        private fun createDeleteIntent(context: Context, notificationId: Int): PendingIntent? {
+            val deleteIntent = Intent(context, PushDeleteReceiver::class.java)
+            deleteIntent.putExtra(ID_PUSH_NOTIFICATION, notificationId)
+            return PendingIntent.getBroadcast(context, notificationId, deleteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        }
+
+        private fun createGroup(context: Context, @ColorRes appColor: Int, channelId: String): Notification? {
+            return NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+                .setColor(ContextCompat.getColor(context, appColor))
+                .setDeleteIntent(createDeleteIntent(context, PushNotification.GROUP_ID))
+                .setAutoCancel(true)
+                .setGroup(channelId)
+                .setGroupSummary(true)
+                .build()
+        }
+
+        private fun createNotification(
+            context: Context,
+            startingActivity: Class<out Activity>,
+            appName: String,
+            @ColorRes appColor: Int,
+            channelId: String,
+            notification: PushNotification
+        ): Notification {
+            // Use the app name if we're marshmallow or lower, as it won't display the app name for us. On later versions,
+            // we'll still want a title, but it will already have our app name so instead we'll use this notification title
+            val title =
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) appName else context.getString(R.string.notificationPrimaryInboxTitle)
+            return NotificationCompat.Builder(context, channelId)
+                .setContentTitle(title)
+                .setContentText(notification.alert)
+                .setSmallIcon(R.drawable.ic_notification_canvas_logo)
+                .setColor(ContextCompat.getColor(context, appColor))
+                .setContentIntent(createContentIntent(context, startingActivity, notification))
+                .setDeleteIntent(createDeleteIntent(context, notification.notificationId))
+                .setAutoCancel(true)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(notification.alert))
+                .setGroup(channelId)
+                .build()
+        }
+
+        private fun createNotificationChannel(
+            context: Context,
+            channelId: String,
+            loginId: String,
+            nm: NotificationManager
+        ) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
 
             val name = context.getString(R.string.notificationChannelNamePrimary)
             val description = context.getString(R.string.notificationChannelDescriptionPrimary)
 
             // Create a group for the user, this enables support for multiple users
-            nm.createNotificationChannelGroup(NotificationChannelGroup(userEmail, name))
+            nm.createNotificationChannelGroup(NotificationChannelGroup(loginId, name)) // This name is the subtitle
 
             // Create the channel and add the group
             val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(channelId, name, importance)
+            val channel = NotificationChannel(channelId, name, importance) // This name is the actual title
             channel.description = description
             channel.enableLights(false)
             channel.enableVibration(false)
-            channel.group = userEmail
+            channel.group = loginId
 
             // Create the channel
             nm.createNotificationChannel(channel)
         }
 
-        private fun getMessage(data: Map<String, String>?) = data?.get(PushNotification.ALERT) ?: ""
+        fun postStoredNotifications(
+            context: Context,
+            appName: String,
+            startingActivity: Class<out Activity>,
+            @ColorRes appColor: Int
+        ) {
+            val pushes = PushNotification.getAllStoredPushes()
+            if (pushes.isEmpty()) {
+                // Nothing to post, situation would occur from the BootReceiver
+                Logger.v("PushExternalReceiver: No notifications to show")
+                return
+            }
 
-        private fun getUserId(data: Map<String, String>?) = data?.get(PushNotification.USER_ID) ?: ""
-
-        private fun getHtmlUrl(data: Map<String, String>?) = data?.get(PushNotification.HTML_URL) ?: ""
-
-        private fun getCollapseKey(data: Map<String, String>?) = data?.get(PushNotification.COLLAPSE_KEY) ?: ""
-
-        fun postStoredNotifications(context: Context, appName: String, startingActivity: Class<out Activity>, @ColorRes appColor: Int) {
-            postNotification(context, null, appName, startingActivity, appColor)
+            postNotifications(context, startingActivity, appName, appColor, *pushes.toTypedArray())
         }
     }
 }
