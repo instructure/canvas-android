@@ -89,6 +89,13 @@ class _ParentAppState extends State<ParentApp> {
         // If there is no user locale, they want the system locale. If there is a user locale, we should use it over the system locale
         Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale : _locale;
 
+        if (newLocale == Locale('zh', 'Hant')) {
+          // Special case Traditional Chinese (server sends us zh-Hant but translators give us zh-HK)
+          newLocale = Locale('zh', 'HK');
+        } else if (newLocale == Locale('pt')) {
+          // Special case base Portuguese (server sends us pt but translators give us pt-PT)
+          newLocale = Locale('pt', 'PT');
+        }
         const fallback = Locale('en');
         Locale resolvedLocale =
             AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(newLocale, supportedLocales);
