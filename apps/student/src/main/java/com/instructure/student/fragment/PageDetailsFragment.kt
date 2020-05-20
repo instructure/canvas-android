@@ -206,10 +206,10 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 }, "accessor")
 
                 // Load the html with the helper function to handle iframe cases
-                loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
+                loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, page.title)
             } else {
                 // Fall back to just populating the WebView like normal
-                loadPageHtml(page.body.orEmpty())
+                loadPageHtml(page.body.orEmpty(), page.title)
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
@@ -220,8 +220,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         checkCanEdit()
     }
 
-    private fun loadPageHtml(html: String) {
-        canvasWebView.loadHtml(html, page.title)
+    private fun loadPageHtml(html: String, contentDescrption: String?) {
+        canvasWebView.loadHtml(html, contentDescrption)
     }
 
     /**

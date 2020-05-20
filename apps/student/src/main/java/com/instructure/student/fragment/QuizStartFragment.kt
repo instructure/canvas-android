@@ -39,6 +39,7 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_quiz_start.*
+import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -65,6 +66,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
 
     private var webViewClientCallback: CanvasWebView.CanvasWebViewClientCallback? = null
     private var embeddedWebViewCallback: CanvasWebView.CanvasEmbeddedWebViewCallback? = null
+    private var loadHtmlJob: Job? = null
 
     @PageViewUrlParam(name = "quizId")
     fun getQuizIdentifier(): Long = quiz.id
@@ -143,7 +145,12 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         quiz_title.text = quiz.title
         toolbar.title = title()
 
-        quiz_details.loadHtml(quiz.description, "")
+        if(quiz.description?.contains("<iframe") == true) {
+            loadHtmlJob = quiz_details.loadHtmlWithIframes(requireContext(), isTablet,
+                    quiz.description.orEmpty(), ::loadQuizHtml, quiz.title)
+        } else {
+            loadQuizHtml(quiz.description.orEmpty(), quiz.title)
+        }
         quiz_details.setBackgroundColor(Color.TRANSPARENT)
         // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new InternalWebViewFragment
         quiz_details.canvasEmbeddedWebViewCallback = embeddedWebViewCallback
@@ -176,6 +183,10 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         } else {
             quiz_time_limit_container.setGone()
         }
+    }
+
+    private fun loadQuizHtml(html: String, contentDescription: String?) {
+        quiz_details.loadHtml(html, contentDescription)
     }
 
     private fun setupCallbacks() {

@@ -41,6 +41,7 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.calendar_event_layout.*
 import kotlinx.android.synthetic.main.fragment_calendar_event.*
+import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,6 +57,8 @@ class CalendarEventFragment : ParentFragment() {
 
     private lateinit var scheduleItemCallback: StatusCallback<ScheduleItem>
     private lateinit var deleteItemCallback: StatusCallback<ScheduleItem>
+
+    private var loadHtmlJob: Job? = null
 
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -101,6 +104,12 @@ class CalendarEventFragment : ParentFragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loadHtmlJob?.cancel()
+    }
+
     //endregion
 
     //region Fragment Interaction Overrides
@@ -215,11 +224,20 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                calendarEventWebView.setVisible()
-                calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.canvasBackgroundLight))
-                calendarEventWebView.formatHTML(content, it.title)
+                if(content.contains("<iframe")) {
+                    loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
+                            ::loadCalendarHtml, it.title)
+                } else {
+                    loadCalendarHtml(content, it.title)
+                }
             }
         }
+    }
+
+    private fun loadCalendarHtml(html: String, contentDescription: String?) {
+        calendarEventWebView.setVisible()
+        calendarEventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.canvasBackgroundLight))
+        calendarEventWebView.loadHtml(html, contentDescription)
     }
 
     private fun setUpCallback() {

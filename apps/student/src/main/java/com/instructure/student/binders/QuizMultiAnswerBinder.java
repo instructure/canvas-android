@@ -68,7 +68,7 @@ public class QuizMultiAnswerBinder {
                 super.onPageFinished(view, url);
             }
         });
-        holder.question.formatHTML(quizSubmissionQuestion.getQuestionText(), "");
+        holder.question.loadHtml(quizSubmissionQuestion.getQuestionText(), "");
 
         holder.questionNumber.setText(quizSubmissionQuestion.getQuestionName());
 
@@ -97,7 +97,7 @@ public class QuizMultiAnswerBinder {
 
                 final String html = StringUtilities.trimTrailingWhitespace(answer.getHtml()).toString();
 
-                webView.formatHTML(html, "");
+                webView.loadHtml(html, "");
 
                 webView.setBackgroundColor(Color.TRANSPARENT);
                 // We only care about marking the answers if they can actually answer

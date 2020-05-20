@@ -228,7 +228,7 @@ class AssignmentFragment : ParentFragment(), TimePickerFragment.TimePickerFragme
             description = getString(R.string.no_description)
         }
 
-        assignmentWebView.formatHTML(description, assignment.name)
+        assignmentWebView.loadHtml(description, assignment.name)
 
     }
 

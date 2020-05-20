@@ -285,14 +285,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), requireContext().getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
             }, "accessor")
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(), ::loadAssignmentHTML)
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(), ::loadAssignmentHTML, mAssignment.name)
         } else {
-            descriptionWebView.loadHtml(description, name)
+            loadAssignmentHTML(description.orEmpty(), name)
         }
     }
 
-    private fun loadAssignmentHTML(html: String) {
-        descriptionWebView.loadHtml(html, mAssignment.name)
+    private fun loadAssignmentHTML(html: String, contentDescription: String?) {
+        descriptionWebView.loadHtml(html, contentDescription)
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(assignment) {

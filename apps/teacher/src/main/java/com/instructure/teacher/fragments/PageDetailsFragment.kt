@@ -174,15 +174,15 @@ class PageDetailsFragment : BasePresenterFragment<
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, "accessor")
-            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
+            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, mPage.title)
         } else {
-            loadPageHtml(page.body.orEmpty())
+            loadPageHtml(page.body.orEmpty(), mPage.title)
         }
         setupToolbar()
     }
 
-    private fun loadPageHtml(html: String) {
-        canvasWebView.loadHtml(html, mPage.title)
+    private fun loadPageHtml(html: String, contentDescription: String?) {
+        canvasWebView.loadHtml(html, contentDescription)
     }
 
     override fun onError(stringId: Int) {

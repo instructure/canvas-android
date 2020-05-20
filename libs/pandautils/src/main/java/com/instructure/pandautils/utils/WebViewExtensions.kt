@@ -33,7 +33,7 @@ import java.net.URLEncoder
 import java.util.regex.Pattern
 
 /**
- * Webview helper function for handling all iframe related cases
+ * WebView helper function for handling all iframe related cases
  *
  * This currently handles three iframe cases:
  *   -cnvs_content src authentication
@@ -42,7 +42,7 @@ import java.util.regex.Pattern
  *
  * We should now be able to call this function, preceded by a simple check for iframes, for all html webview content
  */
-fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: String, loadHtml: (newHtml: String) -> Unit): Job? {
+fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: String, loadHtml: (newHtml: String, contentDescription: String?) -> Unit, contentDescription: String? = null): Job? {
     return this.tryWeave {
         var newHTML: String = html
 
@@ -86,7 +86,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
         newHTML = newHTML.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
         newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
 
-        loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML))
+        loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
     } catch {
         Crashlytics.logException(it)
         Logger.e("loadHtmlWithIframe caught an exception: " + it.message)

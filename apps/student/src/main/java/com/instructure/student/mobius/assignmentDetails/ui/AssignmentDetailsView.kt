@@ -56,6 +56,7 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
+import kotlinx.coroutines.Job
 
 class AssignmentDetailsView(
     val canvasContext: CanvasContext,
@@ -67,6 +68,8 @@ class AssignmentDetailsView(
         inflater,
         parent
     ) {
+
+    private var loadHtmlJob: Job? = null
 
     init {
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -174,10 +177,18 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            descriptionWebView.formatHTML(state.description, state.assignmentName)
+            if (state.description.contains("<iframe")) {
+                loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml, state.assignmentName)
+            } else {
+                loadDescriptionHtml(state.description, state.assignmentName)
+            }
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
+    }
+
+    private fun loadDescriptionHtml(html: String, contentDescrption: String?) {
+        descriptionWebView.loadHtml(html, contentDescrption)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
@@ -202,6 +213,7 @@ class AssignmentDetailsView(
     }
 
     override fun onDispose() {
+        loadHtmlJob?.cancel()
         descriptionWebView.stopLoading()
     }
 

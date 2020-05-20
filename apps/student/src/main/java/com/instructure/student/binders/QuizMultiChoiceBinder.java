@@ -62,7 +62,7 @@ public class QuizMultiChoiceBinder {
 
         holder.question.setCanvasWebViewClientCallback(webViewClientCallback);
 
-        holder.question.formatHTML(quizSubmissionQuestion.getQuestionText(), "");
+        holder.question.loadHtml(quizSubmissionQuestion.getQuestionText(), "");
         holder.question.setCanvasEmbeddedWebViewCallback(embeddedWebViewCallback);
 
         holder.questionNumber.setText(context.getString(R.string.question) + " " + (position + 1));
@@ -92,7 +92,7 @@ public class QuizMultiChoiceBinder {
 
                 final String html = StringUtilities.trimTrailingWhitespace(answer.getHtml()).toString();
 
-                webView.formatHTML(html, "");
+                webView.loadHtml(html, "");
 
                 webView.setBackgroundColor(Color.TRANSPARENT);
                 // We only care about marking the answers if they can actually answer

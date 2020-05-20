@@ -409,18 +409,19 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
                 val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, "accessor")
-            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet, discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic)
+            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                    discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, presenter.discussionTopicHeader.title)
         } else {
-            discussionTopicHeaderWebView.loadHtml(discussionTopicHeader.message, discussionTopicHeader.title)
+            loadHTMLTopic(discussionTopicHeader.message.orEmpty(), discussionTopicHeader.title)
         }
         discussionRepliesWebView.loadHtml("", "")
     }
 
-    private fun loadHTMLTopic(html: String) {
-        discussionTopicHeaderWebView.loadHtml(html, presenter.discussionTopicHeader.title)
+    private fun loadHTMLTopic(html: String, contentDescription: String?) {
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
     }
 
-    private fun loadHTMLReplies(html: String) {
+    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
         discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
     }
 

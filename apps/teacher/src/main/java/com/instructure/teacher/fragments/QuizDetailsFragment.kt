@@ -342,6 +342,7 @@ class QuizDetailsFragment : BasePresenterFragment<
             override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
+
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
             override fun routeInternallyCallback(url: String?) {
@@ -364,14 +365,15 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         // Load instructions
         if (quiz.description?.contains("<iframe") == true) {
-            loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet, quiz.description ?: "", ::loadQuizHTML)
+            loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                    quiz.description.orEmpty(), ::loadQuizHTML, presenter.mQuiz.title)
         } else {
-            loadQuizHTML(quiz.description ?: "")
+            loadQuizHTML(quiz.description.orEmpty(), presenter.mQuiz.title)
         }
     }
 
-    private fun loadQuizHTML(html: String) {
-        instructionsWebView.loadHtml(html, presenter.mQuiz.title)
+    private fun loadQuizHTML(html: String, contentDescription: String?) {
+        instructionsWebView.loadHtml(html, contentDescription)
     }
 
     private fun setupListeners(quiz: Quiz) {
