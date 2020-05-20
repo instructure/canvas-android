@@ -28,9 +28,7 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingStart="16dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -46,6 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             android:text="@string/markAsUnread"
             android:textColor="#2D3B45"
             android:textSize="16sp" />
@@ -58,9 +58,7 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingStart="16dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -75,13 +73,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             android:text="@string/edit"
             android:textColor="#2D3B45"
             android:textSize="16sp" />
 
-
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/delete"
@@ -89,9 +87,7 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp">
+        android:paddingStart="16dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -106,6 +102,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
             android:text="@string/delete"
             android:textColor="#2D3B45"
             android:textSize="16sp" />
