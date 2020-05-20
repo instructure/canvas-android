@@ -24,7 +24,8 @@ import kotlinx.android.parcel.Parcelize
 @JvmSuppressWildcards
 @Parcelize
 data class MediaComment(
-        var id: Long = 0,
+        // Not provided by API, not used in our code
+        //var id: Long = 0,
         @SerializedName("media_id")
         var mediaId: String? = null,
         @SerializedName("display_name")

@@ -595,7 +595,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun setPushNotificationAsRead() {
         intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
-        PushNotification.clearPushHistory()
+        PushNotification.remove(intent)
     }
 
     //endregion
