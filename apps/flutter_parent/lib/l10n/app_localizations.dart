@@ -24,7 +24,8 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale('en'), // First so it's our fallback
+      // First so it's our fallback
+      Locale('en'),
 
       // Supported languages
       Locale('ar'),
@@ -38,8 +39,9 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       Locale('en', 'GB'),
       Locale('es'),
       Locale('fi'),
-      Locale('fr'),
+      // Country has to be first so it can be matched before the general language
       Locale('fr', 'CA'),
+      Locale('fr'),
 //      Locale('ht'), // Not supported by material localizations
       Locale('is'),
       Locale('it'),
@@ -48,13 +50,15 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       Locale('nb'),
       Locale('nl'),
       Locale('pl'),
-      Locale('pt'),
+      // Has to match translators naming (pt-PT instead of just pt)
+      Locale('pt', 'PT'),
       Locale('pt', 'BR'),
       Locale('ru'),
       Locale('sl'),
       Locale('sv'),
+      // Country has to be first so it can be matched before the general language. Also has to match translators naming (zh-HK instead of zh-Hant)
+      Locale('zh', 'HK'),
       Locale('zh'),
-      Locale('zh', 'Hant'),
 
       // Custom language packs
       Locale.fromSubtags(languageCode: 'da', scriptCode: 'instk12'),
@@ -66,7 +70,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => _isSupported(locale, true);
+  bool isSupported(Locale locale) => _isSupported(locale, true) != null;
 
   @override
   Future<AppLocalizations> load(Locale locale) => AppLocalizations._load(locale);
@@ -83,32 +87,30 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   ///
   /// Returns true if the specified locale is supported, false otherwise.
   ///
-  bool _isSupported(Locale locale, bool matchCountry) {
+  Locale _isSupported(Locale locale, bool shouldMatchCountry) {
     if (locale == null) {
-      return false;
+      return null;
     }
 
-    // Must match language code, must match country code if specified
-    return supportedLocales.any((Locale supportedLocale) =>
-        (supportedLocale.languageCode == locale.languageCode) &&
-        (locale.scriptCode == supportedLocale.scriptCode) &&
-        ((supportedLocale.countryCode == locale.countryCode) ||
-            (true != matchCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode.isEmpty))));
+    // Must match language code and script code.
+    // Must match country code if specified or will fall back to the generic language pack if we don't match country code.
+    // i.e., match a passed in 'zh-Hans' to the supported 'zh' if [matchCountry] is false
+    return supportedLocales.firstWhere((Locale supportedLocale) {
+      final matchLanguage = (supportedLocale.languageCode == locale.languageCode);
+      final matchScript = (locale.scriptCode == supportedLocale.scriptCode);
+      final matchCountry = (supportedLocale.countryCode == locale.countryCode);
+      final matchCountryFallback =
+          (true != shouldMatchCountry && (supportedLocale.countryCode == null || supportedLocale.countryCode.isEmpty));
+
+      return matchLanguage && matchScript && (matchCountry || matchCountryFallback);
+    }, orElse: () => null);
   }
 
   ///
   /// Internal method to resolve a locale from a list of locales.
   ///
   Locale _resolve(Locale locale, Locale fallback, Iterable<Locale> supported, bool matchCountry) {
-    if (locale == null || !_isSupported(locale, matchCountry)) {
-      return fallback ?? supported.first;
-    }
-
-    if (supported.contains(locale)) {
-      return locale;
-    } else {
-      return Locale(locale.languageCode);
-    }
+    return _isSupported(locale, matchCountry) ?? fallback ?? supported.first;
   }
 }
 
