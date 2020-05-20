@@ -1,5 +1,5 @@
 {
-  "@@last_modified": "2020-04-30T15:04:17.066688",
+  "@@last_modified": "2020-05-20T19:55:26.842139",
   "coursesLabel": "Courses",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
@@ -90,8 +90,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your student's calendar": "There was an error loading your student's calendar",
-  "@There was an error loading your student's calendar": {
+  "There was an error loading your calendar": "There was an error loading your calendar",
+  "@There was an error loading your calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders": {}
