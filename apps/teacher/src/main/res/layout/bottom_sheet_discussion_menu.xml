@@ -16,66 +16,100 @@
   ~
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:id="@+id/markAsUnread"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableStart="@drawable/vd_checkmark"
-        android:drawablePadding="32dp"
-        android:drawableTint="#2D3B45"
-        android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:paddingStart="18dp"
-        android:paddingTop="26dp"
-        android:paddingBottom="18dp"
-        android:text="@string/markAsUnread"
-        android:textColor="#2D3B45"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingTop="8dp">
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="34dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_checkmark"
+            android:tint="#2D3B45" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/markAsUnreadText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:text="@string/markAsUnread"
+            android:textColor="#2D3B45"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableStart="@drawable/vd_edit"
-        android:drawablePadding="32dp"
-        android:drawableTint="#2D3B45"
-        android:gravity="center_vertical"
-        android:paddingStart="18dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:text="@string/edit"
-        android:textColor="#2D3B45"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/markAsUnread" />
+        android:orientation="horizontal"
+        android:paddingStart="18dp">
 
-    <TextView
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="34dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_edit"
+            android:tint="#2D3B45" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:text="@string/edit"
+            android:textColor="#2D3B45"
+            android:textSize="16sp" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
         android:id="@+id/delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?selectableItemBackground"
-        android:drawableStart="@drawable/vd_trash"
-        android:drawablePadding="32dp"
-        android:drawableTint="#2D3B45"
-        android:gravity="center_vertical"
-        android:paddingStart="18dp"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:text="@string/delete"
-        android:textColor="#2D3B45"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit" />
+        android:orientation="horizontal"
+        android:paddingStart="18dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="34dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/vd_trash"
+            android:tint="#2D3B45" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:text="@string/delete"
+            android:textColor="#2D3B45"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

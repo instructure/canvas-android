@@ -215,7 +215,6 @@ class DiscussionEntryHtmlConverter {
                 .replace("__ENTRY_ID__", discussionEntry.id.toString())
                 .replace("__USER_ID__", userId)
                 .replace("__REPLY_TEXT__", reply)
-                .replace("__REPLY_BUTTON_LABEL__", reply)
                 .replace("__MENU_TEXT__", menu)
                 .replace("__MENU_DIVIDER__", menuDivider)
                 .replace("__DETAILS_WRAPPER__", detailsWrapperStyle)
