@@ -151,11 +151,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         swipeRefreshLayout.isRefreshing = false
 
         EventBus.getDefault().getStickyEvent(DiscussionTopicHeaderEvent::class.java)?.get {
-            //After we load the data we look to see if anything is out of date and update it. Only used on phones typically.
+            // After we load the data we look to see if anything is out of date and update it. Only used on phones typically.
             adapter.addOrUpdateItem(it)
         }
 
-        //Fix for when loading groups and pinned items don't show up in the first api call.
+        // Fix for when loading groups and pinned items don't show up in the first api call.
         recyclerView.scrollToPosition(0)
         createNewDiscussion.setVisible()
     }

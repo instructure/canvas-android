@@ -22,9 +22,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.awaitApiResponse
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.teacher.events.DiscussionTopicEvent
 import com.instructure.teacher.events.DiscussionTopicHeaderEvent
 import com.instructure.teacher.events.post
@@ -32,8 +30,7 @@ import com.instructure.teacher.viewinterface.DiscussionsDetailsView
 import instructure.androidblueprint.FragmentPresenter
 import kotlinx.coroutines.Job
 import retrofit2.Response
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 
 class DiscussionsDetailsPresenter(
         var canvasContext: CanvasContext,
@@ -47,6 +44,7 @@ class DiscussionsDetailsPresenter(
     private var mApiCalls: Job? = null
     private var discussionEntryRatingCallback: StatusCallback<Void>? = null
     private var mDiscussionMarkAsReadApiCalls: Job? = null
+    private var mDiscussionMarkAsUnreadApiCalls: Job? = null
 
     override fun loadData(forceNetwork: Boolean) {
         viewCallback?.onRefreshStarted()
@@ -238,7 +236,7 @@ class DiscussionsDetailsPresenter(
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun markAsRead(ids: List<Long>) {
         if(mDiscussionMarkAsReadApiCalls != null && mDiscussionMarkAsReadApiCalls!!.isActive) return
-        mDiscussionMarkAsReadApiCalls = weave {
+        mDiscussionMarkAsReadApiCalls = tryWeave {
             val markedAsReadIds: MutableList<Long> = ArrayList()
             ids.forEach { entryId ->
                 val response = awaitApiResponse<Void>{ DiscussionManager.markDiscussionTopicEntryRead(canvasContext, discussionTopicHeader.id, entryId, it) }
@@ -254,6 +252,31 @@ class DiscussionsDetailsPresenter(
 
             viewCallback?.updateDiscussionsMarkedAsReadCompleted(markedAsReadIds)
             DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+        } catch {
+            // Do nothing
+        }
+    }
+
+    @Suppress("EXPERIMENTAL_FEATURE_WARNING")
+    fun markAsUnread(id: Long) {
+        if (mDiscussionMarkAsUnreadApiCalls != null && mDiscussionMarkAsUnreadApiCalls!!.isActive) return
+        mDiscussionMarkAsUnreadApiCalls = tryWeave {
+            var markedAsUnreadId: Long = -1
+
+            val response = awaitApiResponse<Void>{ DiscussionManager.markDiscussionTopicEntryUnread(canvasContext, discussionTopicHeader.id, id, it) }
+            if (response.isSuccessful) {
+                markedAsUnreadId = id
+                val entry = findEntry(id)
+                entry?.unread = true
+                discussionTopic.unreadEntriesMap[id] = true
+                discussionTopic.unreadEntries.add(id)
+                discussionTopicHeader.unreadCount += 1
+            }
+
+            viewCallback?.updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId)
+            DiscussionTopicHeaderEvent(discussionTopicHeader).post()
+        } catch {
+            // Do nothing
         }
     }
 
@@ -285,6 +308,7 @@ class DiscussionsDetailsPresenter(
     override fun onDestroyed() {
         super.onDestroyed()
         mDiscussionMarkAsReadApiCalls?.cancel()
+        mDiscussionMarkAsUnreadApiCalls?.cancel()
         discussionEntryInitJob?.cancel()
     }
 }

@@ -551,13 +551,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
 
         @JavascriptInterface
-        fun onEditPressed(id: String) {
-            showUpdateReplyView(id.toLong())
-        }
-
-        @JavascriptInterface
-        fun onDeletePressed(id: String) {
-            deleteDiscussionEntry(id.toLong())
+        fun onMenuPressed(id: String) {
+            showOverflowMenu(id.toLong())
         }
 
         @JavascriptInterface
@@ -567,7 +562,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         @JavascriptInterface
         fun onMoreRepliesPressed(id: String) {
-            val args = DiscussionsDetailsFragment.makeBundle(presenter.discussionTopicHeader, presenter.discussionTopic, id.toLong(), presenter.getSkipId())
+            val args = makeBundle(presenter.discussionTopicHeader, presenter.discussionTopic, id.toLong(), presenter.getSkipId())
             RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
         }
 
@@ -635,7 +630,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun showReplyView(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsReplyFragment.makeBundle(presenter.discussionTopicHeader.id, id, mIsAnnouncements)
             RouteMatcher.route(requireContext(), Route(DiscussionsReplyFragment::class.java, presenter.canvasContext, args))
         } else {
@@ -643,8 +638,22 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
+    private fun markAsUnread(id: Long) {
+        if (APIHelper.hasNetworkConnection()) {
+            presenter.markAsUnread(id)
+        } else {
+            NoInternetConnectionDialog.show(requireFragmentManager())
+        }
+    }
+
+    private fun showOverflowMenu(id: Long) {
+        fragmentManager?.let {
+            DiscussionBottomSheetMenuFragment.show(it, id)
+        }
+    }
+
     private fun showUpdateReplyView(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val args = DiscussionsUpdateFragment.makeBundle(presenter.discussionTopicHeader.id, presenter.findEntry(id), mIsAnnouncements, presenter.discussionTopic)
             RouteMatcher.route(requireContext(), Route(DiscussionsUpdateFragment::class.java, presenter.canvasContext, args))
         } else {
@@ -653,7 +662,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     }
 
     private fun deleteDiscussionEntry(id: Long) {
-        if(APIHelper.hasNetworkConnection()) {
+        if (APIHelper.hasNetworkConnection()) {
             val builder = AlertDialog.Builder(requireContext())
             builder.setMessage(R.string.discussions_delete_warning)
             builder.setPositiveButton(android.R.string.yes) { _, _ ->
@@ -679,15 +688,19 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
     override fun updateDiscussionsMarkedAsReadCompleted(markedAsReadIds: List<Long>) {
         markedAsReadIds.forEach {
-            discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsRead" + "('" + it.toString() + "')") }
+            discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsRead('$it')") }
         }
+    }
+
+    override fun updateDiscussionsMarkedAsUnreadCompleted(markedAsUnreadId: Long) {
+        discussionRepliesWebView.post { discussionRepliesWebView.loadUrl("javascript:markAsUnread('$markedAsUnreadId')") }
     }
 
     /**
      * Checks to see if the webview element is within the viewable bounds of the scrollview.
      */
     private fun isElementInViewPortWithinScrollView(elementHeight: Int, topOffset: Int): Boolean {
-        if(discussionsScrollView == null) return false
+        if (discussionsScrollView == null) return false
         val scrollBounds = Rect().apply{ discussionsScrollView.getDrawingRect(this) }
 
         val discussionRepliesHeight = discussionRepliesWebView.height
@@ -702,13 +715,13 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     private fun viewAttachments(remoteFiles: List<RemoteFile>) {
         val attachments = ArrayList<Attachment>()
         remoteFiles.forEach { attachments.add(it.mapToAttachment()) }
-        if(attachments.isNotEmpty()) {
-            if(attachments.size > 1) {
+        if (attachments.isNotEmpty()) {
+            if (attachments.size > 1) {
                 AttachmentPickerDialog.show(requireFragmentManager(), attachments) { attachment ->
                     AttachmentPickerDialog.hide(requireFragmentManager())
                     attachment.view(requireContext())
                 }
-            } else if(attachments.size == 1) {
+            } else if (attachments.size == 1) {
                 attachments[0].view(requireContext())
             }
         }
@@ -736,6 +749,17 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             } else if(activity is FullScreenInteractions) {
                 requireActivity().finish()
             }
+        }
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onOverFlowMenuClicked(event: DiscussionOverflowMenuClickedEvent) {
+        val id = event.entryId
+        when(event.type) {
+            DiscussionBottomSheetChoice.MARK_AS_UNREAD -> markAsUnread(id)
+            DiscussionBottomSheetChoice.EDIT -> showUpdateReplyView(id)
+            DiscussionBottomSheetChoice.DELETE -> deleteDiscussionEntry(id)
         }
     }
 
