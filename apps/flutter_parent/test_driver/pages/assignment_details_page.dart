@@ -14,6 +14,7 @@
 
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_parent/models/assignment.dart';
+import 'package:flutter_parent/models/dataseeding/quiz.dart';
 import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
@@ -29,7 +30,7 @@ class AssignmentDetailsPage {
     var statusText = await driver.getText(find.byValueKey("assignment_details_status"));
     expect(statusText, "Graded", reason: "Expected status to be Graded");
 
-    _validateDueDate(driver, assignment);
+    _validateDueDate(driver, assignment.dueAt);
 
     await driver.scrollIntoView(find.byValueKey('grade-cell-graded-container'));
     var gradeText = await driver.getText(find.byValueKey('grade-cell-score'));
@@ -47,7 +48,7 @@ class AssignmentDetailsPage {
     var statusText = await driver.getText(find.byValueKey("assignment_details_status"));
     expect(statusText, "Submitted", reason: "Expected status to be Submitted");
 
-    _validateDueDate(driver, assignment);
+    _validateDueDate(driver, assignment.dueAt);
 
     await driver.scrollIntoView(find.byValueKey('grade-cell-submitted-container'));
     var submittedStatus = await driver.getText(find.byValueKey('grade-cell-submit-status'));
@@ -65,11 +66,25 @@ class AssignmentDetailsPage {
     var statusText = await driver.getText(find.byValueKey("assignment_details_status"));
     expect(statusText, "Not Submitted", reason: "Expected status to be Not Submitted");
 
-    _validateDueDate(driver, assignment);
+    _validateDueDate(driver, assignment.dueAt);
   }
 
-  static Future<void> _validateDueDate(FlutterDriver driver, Assignment assignment) async {
-    var localDate = assignment.dueAt.toLocal();
+  static Future<void> validateUnsubmittedQuiz(FlutterDriver driver, Quiz quiz) async {
+    await driver.waitFor(find.text(quiz.title)); // No key to use here
+
+    var pointTotalText = await driver.getText(find.byValueKey("assignment_details_total_points"));
+    var pointTotalExpected = quiz.pointsPossible.toInt().toString();
+    expect(pointTotalText.contains(pointTotalExpected), true,
+        reason: "Expected total points to include $pointTotalExpected");
+
+    var statusText = await driver.getText(find.byValueKey("assignment_details_status"));
+    expect(statusText, "Not Submitted", reason: "Expected status to be Not Submitted");
+
+    _validateDueDate(driver, quiz.dueAt);
+  }
+
+  static Future<void> _validateDueDate(FlutterDriver driver, DateTime dueAt) async {
+    var localDate = dueAt.toLocal();
     String date = (DateFormat.MMMd()).format(localDate);
     String time = (DateFormat.jm()).format(localDate);
     var dueDateText = await driver.getText(find.byValueKey("assignment_details_due_date"));

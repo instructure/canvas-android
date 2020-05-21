@@ -108,10 +108,16 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
       dateText = date.l10nFormat(L10n(context).dateAtTime);
     }
 
+    // Compute itemId for use with key values, which are used for testing
+    var itemId = item.id;
+    if (item.type == ScheduleItem.apiTypeAssignment && item.assignment != null) {
+      itemId = item.assignment.isQuiz ? item.assignment.quizId : item.assignment.id;
+    }
+
     return ListTile(
-      title: Text(item.title),
-      subtitle: Text(dateText),
-      leading: Icon(_getIcon(item), color: Theme.of(context).accentColor),
+      title: Text(item.title, key: ValueKey('summary_item_title_$itemId')),
+      subtitle: Text(dateText, key: ValueKey('summary_item_subtitle_$itemId')),
+      leading: Icon(_getIcon(item), color: Theme.of(context).accentColor, key: ValueKey('summary_item_icon_$itemId')),
       onTap: () {
         if (item.type == ScheduleItem.apiTypeCalendar) {
           locator<QuickNav>().pushRoute(context, PandaRouter.eventDetails(widget.model.courseId, item.id));

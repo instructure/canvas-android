@@ -22,6 +22,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 
 import 'apis/assignment_seed_api.dart';
 import 'apis/calendar_seed_api.dart';
+import 'apis/quiz_seed_api.dart';
 import 'app_seed_utils.dart';
 
 void main() async {
@@ -30,19 +31,16 @@ void main() async {
   // Initialize our ApiPrefs
   await ApiPrefs.init();
 
-  // Create a parent, a student and 2 courses.
-  var data = await AppSeedUtils.seed(nParents: 1, nStudents: 1, nCourses: 2);
+  // Seed our data
+  var data = await AppSeedUtils.seed(nStudents: 1, nCourses: 1);
+  var course = data.courses[0];
   var parent = data.parents[0];
-  var student = data.students[0];
-  var course1 = data.courses[0];
-  var course2 = data.courses[1];
-  var assignment1 =
-      await AssignmentSeedApi.createAssignment(course1.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
-  var assignment2 =
-      await AssignmentSeedApi.createAssignment(course2.id, dueAt: DateTime.now().subtract(Duration(days: 1)).toUtc());
-  var event2 = await CalendarSeedApi.createCalendarEvent(course2.id, "Calendar Event", DateTime.now().toUtc(),
-      allDay: true, locationName: "Location Name", locationAddress: "Location Address");
-  // TODO: Add graded quiz
+
+  var assignment =
+      await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
+  var quiz = await QuizSeedApi.createQuiz(course.id, "EZ Quiz", DateTime.now().add(Duration(days: 1)).toUtc());
+  var calendarEvent = await CalendarSeedApi.createCalendarEvent(course.id, "Calendar Event", DateTime.now().toUtc(),
+      description: "Description", allDay: true, locationName: "Location Name", locationAddress: "Location Address");
 
   // Sign in the parent
   await AppSeedUtils.signIn(parent);
@@ -50,12 +48,10 @@ void main() async {
   // Let the test driver know that seeding has completed
   AppSeedUtils.markSeedingComplete(MapBuilder({
     "parent": json.encode(serialize(parent)),
-    "student": json.encode(serialize(student)),
-    "course1": json.encode(serialize(course1)),
-    "course2": json.encode(serialize(course2)),
-    "assignment1": json.encode(serialize(assignment1)),
-    "assignment2": json.encode(serialize(assignment2)),
-    "event2": json.encode(serialize(event2)),
+    "course": json.encode(serialize(course)),
+    "assignment": json.encode(serialize(assignment)),
+    "quiz": json.encode(serialize(quiz)),
+    "event": json.encode(serialize(calendarEvent)),
   }));
 
   // Call app.main(), which should bring up the dashboard.
