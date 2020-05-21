@@ -50,8 +50,11 @@ do
         # Allow for a single retry for a failed test
         if [ $? -ne 0 ]
         then
+          # Stop the clock
+          endTime=`date +"%s"`
+          ((runSecs=endTime-startTime))
           echo "Aggregator: $driver failed; retrying..."
-          emitTestResult $driver retry
+          emitTestResult $driver retry $runSecs
           startTime=`date +"%s"` # restart the clock
           flutter drive --target=$target # rerun the test
         fi
