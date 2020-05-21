@@ -1,5 +1,5 @@
 // DO NOT EDIT. This is code generated via package:intl/generate_localized.dart
-// This is a library that provides messages for a en locale. All the
+// This is a library that provides messages for a zh locale. All the
 // messages from the main program should be duplicated here with the same
 // function name.
 
@@ -17,7 +17,7 @@ final messages = new MessageLookup();
 typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 
 class MessageLookup extends MessageLookupByLibrary {
-  String get localeName => 'en';
+  String get localeName => 'zh';
 
   static m0(points) => "${points} pts";
 
@@ -45,8 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "Application version" : MessageLookupByLibrary.simpleMessage("Application version"),
     "Are You Sure?" : MessageLookupByLibrary.simpleMessage("Are You Sure?"),
     "Are you sure you wish to close this page? Your unsaved changes will be lost." : MessageLookupByLibrary.simpleMessage("Are you sure you wish to close this page? Your unsaved changes will be lost."),
-    "Calendar" : MessageLookupByLibrary.simpleMessage("Calendar"),
-    "Calendars" : MessageLookupByLibrary.simpleMessage("Calendars"),
+    "Calendar" : MessageLookupByLibrary.simpleMessage("CalendarZH"),
+    "Calendars" : MessageLookupByLibrary.simpleMessage("CalendarsZH"),
     "Cancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "Course (optional)" : MessageLookupByLibrary.simpleMessage("Course (optional)"),
     "Date" : MessageLookupByLibrary.simpleMessage("Date"),
