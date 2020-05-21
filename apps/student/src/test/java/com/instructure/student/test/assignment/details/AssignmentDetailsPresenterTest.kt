@@ -72,7 +72,8 @@ class AssignmentDetailsPresenterTest : Assert() {
             submissionTypes = true,
             submissionStatus = true,
             description = true,
-            submissionAndRubricButton = true
+            submissionAndRubricButton = true,
+            submitButtonEnabled = true
         )
         baseSubmission = Submission(
             attempt = 1,
@@ -1020,6 +1021,79 @@ class AssignmentDetailsPresenterTest : Assert() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), quizResult = DataResult.Success(baseQuiz))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
         assertTrue(state.visibilities.submissionStatus)
+    }
+
+    @Test
+    fun `Shows enabled submit button when assignment has no submission`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = -1,
+            submission = null
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.submitButton)
+        assertTrue(actual.submitButtonEnabled)
+    }
+
+    @Test
+    fun `Shows enabled submit button when submissions are allowed with unlimited attempts`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = -1
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.submitButton)
+        assertTrue(actual.submitButtonEnabled)
+    }
+
+    @Test
+    fun `Shows enabled submit button when submissions attempts are less than allowed attempts`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = 2,
+            submission = baseSubmission.copy(attempt = 1)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.submitButton)
+        assertTrue(actual.submitButtonEnabled)
+    }
+
+    @Test
+    fun `Shows disabled submit button when submissions attempts reach allowed attempts`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = 1,
+            submission = baseSubmission.copy(attempt = 1)
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.submitButton)
+        assertFalse(actual.submitButtonEnabled)
+    }
+
+    @Test
+    fun `Shows attempt details when assignment limits allowed attempts`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = 1
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertTrue(actual.allowedAttempts)
+    }
+
+    @Test
+    fun `Hides attempt details when assignment has unlimited allowed attempts`() {
+        val assignment = baseAssignment.copy(
+            submissionTypesRaw = listOf("online_text_entry"),
+            allowedAttempts = -1
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertFalse(actual.allowedAttempts)
     }
 
 

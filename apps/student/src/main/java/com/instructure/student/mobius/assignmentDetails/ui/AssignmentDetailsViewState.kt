@@ -36,6 +36,8 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val lockMessage: String = "",
         val submissionTypes: String = "",
         val fileTypes: String = "",
+        val allowedAttempts: Long,
+        val usedAttempts: Long,
         val description: String = "",
         val descriptionLabel: String = "",
         val submitButtonText: String = "",
@@ -62,6 +64,8 @@ data class AssignmentDetailsVisibilities (
     var noDescriptionLabel: Boolean = false,
     var description: Boolean = false,
     var submitButton: Boolean = false,
+    var submitButtonEnabled: Boolean = false, // Set to true for unlimited attempts or below the attempt count
+    var allowedAttempts: Boolean = false,
     var submissionUploadStatus: Boolean = false,
     var quizDetails: Boolean = false,
     var discussionTopicHeader: Boolean = false,

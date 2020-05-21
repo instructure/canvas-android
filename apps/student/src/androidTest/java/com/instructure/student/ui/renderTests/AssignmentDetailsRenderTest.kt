@@ -685,6 +685,50 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         assignmentDetailsRenderPage.assertSubmissionStatusVisibility(true)
     }
 
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun showsAllowedAttempts() {
+        val allowed = 35L
+        val used = 20L
+        val submission = Submission(workflowState = "submitted", submittedAt = Date(), attempt = used)
+        val assignment = Assignment(
+            name = "Test Assignment",
+            allowedAttempts = allowed,
+            submission = submission
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertAssignmentAttempts(allowed, used, true)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun showsAllowedAttemptsWithDisabledButton() {
+        val allowed = 35L
+        val used = 35L
+        val submission = Submission(workflowState = "submitted", submittedAt = Date(), attempt = used)
+        val assignment = Assignment(
+            name = "Test Assignment",
+            allowedAttempts = allowed,
+            submission = submission
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertAssignmentAttempts(allowed, used, false)
+    }
+
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER)
+    fun hidesAllowedAttemptsWhenNotSet() {
+        val assignment = Assignment(
+            name = "Test Assignment",
+            allowedAttempts = -1 // Represents unlimited attempts
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.assertAssignmentAttemptsGone()
+    }
+
     private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission.Impl(
         123L,
         null,
