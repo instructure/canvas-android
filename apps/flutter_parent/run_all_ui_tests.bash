@@ -56,17 +56,20 @@ do
           flutter drive --target=$target # rerun the test
         fi
 
-        # Stop the clock
-        endTime=`date +"%s"`
-        ((runSecs=endTime-startTime))
-
         # Record test result
         if [ $? -eq 0 ]
         then
+          # Stop the clock
+          endTime=`date +"%s"`
+          ((runSecs=endTime-startTime))
           echo Aggregator: $driver Passed, secs=$runSecs
           ((passed=passed+1))
           emitTestResult $driver passed $runSecs
         else
+          # Stop the clock
+          endTime=`date +"%s"`
+          ((runSecs=endTime-startTime))
+          echo Aggregator: $driver FAILED, secs=$runSecs
           ((failed=failed+1))
           failures=("${failures[@]}" $driver)
           emitTestResult $driver failed $runSecs
