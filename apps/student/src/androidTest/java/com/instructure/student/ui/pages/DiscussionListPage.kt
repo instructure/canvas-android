@@ -24,6 +24,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
@@ -84,6 +85,7 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
                         withText(topicTitle)
                 )))
 
+        waitForMatcherWithRefreshes(matcher)
         scrollRecyclerView(R.id.discussionRecyclerView, matcher)
         onView(matcher).assertDisplayed() // probably redundant
 
