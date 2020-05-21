@@ -853,8 +853,15 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     // chooser params so other LTI's can also be used (like turnitin).
     private void startFileChooser(final int requestCode, WebChromeClient.FileChooserParams fileChooserParams) {
         Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        String[] extraMimeTypes = fileChooserParams.getAcceptTypes();
+        if (extraMimeTypes.length > 0 && !extraMimeTypes[0].trim().isEmpty()) {
+            // An array with one blank element will clear out the allowed mime types,
+            // so we only want to add extra mime types if we are given any valid types
+            fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, extraMimeTypes);
+        }
+
         fileIntent.setType("*/*");
-        fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, fileChooserParams.getAcceptTypes());
 
         // Determine if we can upload video files so we can add the camera to the list of choices
         boolean allowRecording = false;
