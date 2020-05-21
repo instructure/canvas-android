@@ -73,7 +73,7 @@ void main() {
   });
 
   // TODO: MBL-14395
-  /*testWidgetsWithAccessibilityChecks('Displays correctly for German locale', (tester) async {
+  testWidgetsWithAccessibilityChecks('Displays correctly for German locale', (tester) async {
     // Weekday names in expected display order
     final allDays = [
       find.text('Mo'),
@@ -173,5 +173,5 @@ void main() {
       final textColor = tester.widget<Text>(day).style.color;
       expect(textColor, StudentColors.ash);
     });
-  });*/
+  });
 }
