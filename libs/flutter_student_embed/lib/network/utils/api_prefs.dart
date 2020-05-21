@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -53,20 +54,26 @@ class ApiPrefs {
   static Locale effectiveLocale() {
     _checkInit();
     User user = getUser();
-    List<String> userLocale = (user?.effectiveLocale ?? user?.locale ?? ui.window.locale.toLanguageTag()).split('-x-');
+    List<String> userLocale =
+        (user?.effectiveLocale ?? user?.locale ?? ui.window.locale?.toLanguageTag() ?? '').split('-x-');
 
     if (userLocale[0].isEmpty) {
       return null;
     }
 
     List<String> localeParts = userLocale[0].split('-');
+    final countryCode = localeParts.length > 1 ? localeParts.last : null;
+
     if (userLocale.length == 1) {
-      return Locale(localeParts.first, localeParts.last);
+      return Locale(localeParts.first, countryCode);
     } else {
+      // Custom language pack
       return Locale.fromSubtags(
         languageCode: localeParts.first,
-        scriptCode: userLocale[1],
-        countryCode: localeParts.last,
+        scriptCode: userLocale[1].length < 5
+            ? 'inst${userLocale[1]}' // da-k12 -> da-instk12 (can't be less than 4 characters)
+            : userLocale[1].substring(0, min(8, userLocale[1].length)), // en-unimelb -> en-unimelb (no more than 8)
+        countryCode: countryCode,
       );
     }
   }

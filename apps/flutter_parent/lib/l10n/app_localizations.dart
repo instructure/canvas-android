@@ -110,6 +110,14 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   /// Internal method to resolve a locale from a list of locales.
   ///
   Locale _resolve(Locale locale, Locale fallback, Iterable<Locale> supported, bool matchCountry) {
+    if (locale == Locale('zh', 'Hant')) {
+      // Special case Traditional Chinese (server sends us zh-Hant but translators give us zh-HK)
+      locale = Locale('zh', 'HK');
+    } else if (locale == Locale('pt')) {
+      // Special case base Portuguese (server sends us pt but translators give us pt-PT)
+      locale = Locale('pt', 'PT');
+    }
+
     return _isSupported(locale, matchCountry) ?? fallback ?? supported.first;
   }
 }
