@@ -3,6 +3,7 @@ import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
 import 'package:flutter_parent/models/dataseeding/quiz.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:test/test.dart';
 
 import '../flutter_driver_extensions.dart';
@@ -35,6 +36,14 @@ class CalendarPage {
 
   static Future<void> verifyQuizNotDisplayed(FlutterDriver driver, Quiz quiz) async {
     await _absentHelper(driver, quiz.dueAt, quiz.title);
+  }
+
+  static Future<void> verifyEventDisplayed(FlutterDriver driver, ScheduleItem event) async {
+    await _presentHelper(driver, event.isAllDay ? event.allDayDate : event.startAt, event.title);
+  }
+
+  static Future<void> verifyEventNotDisplayed(FlutterDriver driver, ScheduleItem event) async {
+    await _absentHelper(driver, event.isAllDay ? event.allDayDate : event.startAt, event.title);
   }
 
   static Future<void> toggleFilter(FlutterDriver driver, Course course) async {

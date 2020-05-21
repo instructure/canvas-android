@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
@@ -112,8 +114,17 @@ class CourseDetailsModel extends BaseModel {
       _interactor().loadScheduleItems(courseId, ScheduleItem.apiTypeAssignment, refresh),
     ]);
 
-    // Potentially heavy list operations going on here, so we'll use a background isolate
-    return compute(processSummaryItems, Tuple2(results, student.id));
+    // Flutter does not spin up its isolates in flutter-driver test mode, so a
+    // call to compute() will never return.  So make the processSummaryItems() call
+    // directly in debug builds.
+    if (kDebugMode) {
+      return Future(() {
+        return processSummaryItems(Tuple2(results, student.id));
+      });
+    } else {
+      // Potentially heavy list operations going on here, so we'll use a background isolate
+      return compute(processSummaryItems, Tuple2(results, student.id));
+    }
   }
 
   @visibleForTesting
