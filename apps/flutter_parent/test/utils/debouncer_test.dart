@@ -24,7 +24,7 @@ void main() {
       called = true;
     });
 
-    await Future.delayed(const Duration(seconds: 20), () {});
+    await Future.delayed(const Duration(milliseconds: 20), () {});
     expect(called, true);
   });
 
