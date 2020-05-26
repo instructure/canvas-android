@@ -201,7 +201,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
                 val args = LTIWebViewFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+                        URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, page.title)
         } else if (page.body == null || page.body?.endsWith("") == true) {

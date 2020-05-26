@@ -150,7 +150,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         loadHtmlJob = quiz_details.loadHtmlWithIframes(requireContext(), isTablet,
                 quiz.description.orEmpty(), ::loadQuizHtml, {
             val args = LTIWebViewFragment.makeLTIBundle(
-                    URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
             RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
         }, quiz.title)
 

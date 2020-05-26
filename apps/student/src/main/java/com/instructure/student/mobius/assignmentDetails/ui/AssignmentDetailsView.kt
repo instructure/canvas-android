@@ -190,7 +190,7 @@ class AssignmentDetailsView(
             descriptionLabel.text = state.descriptionLabel
             loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{
                 val args = LTIWebViewFragment.makeLTIBundle(
-                        URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, canvasContext, args))
             }, state.assignmentName)
         }

@@ -228,7 +228,7 @@ class CalendarEventFragment : ParentFragment() {
                 loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
                         ::loadCalendarHtml, { url ->
                     val args = LTIWebViewFragment.makeLTIBundle(
-                            URLDecoder.decode(url, "utf-8"), "LTI Launch", true)
+                            URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                     RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
                 }, it.title)
             }
