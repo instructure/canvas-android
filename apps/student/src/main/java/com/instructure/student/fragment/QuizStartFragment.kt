@@ -43,6 +43,7 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
+import java.net.URLDecoder
 import java.util.*
 
 @PageView(url = "{canvasContext}/quizzes/{quizId}")
@@ -92,6 +93,7 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         quizStartResponseCallback?.cancel()
         quizSubmissionTimeCanvasCallback?.cancel()
         quizSubmissionTimeCanvasCallback?.cancel()
+        loadHtmlJob?.cancel()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -145,12 +147,13 @@ class QuizStartFragment : ParentFragment(), Bookmarkable {
         quiz_title.text = quiz.title
         toolbar.title = title()
 
-        if(quiz.description?.contains("<iframe") == true) {
-            loadHtmlJob = quiz_details.loadHtmlWithIframes(requireContext(), isTablet,
-                    quiz.description.orEmpty(), ::loadQuizHtml, quiz.title)
-        } else {
-            loadQuizHtml(quiz.description.orEmpty(), quiz.title)
-        }
+        loadHtmlJob = quiz_details.loadHtmlWithIframes(requireContext(), isTablet,
+                quiz.description.orEmpty(), ::loadQuizHtml, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, quiz.title)
+
         quiz_details.setBackgroundColor(Color.TRANSPARENT)
         // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new InternalWebViewFragment
         quiz_details.canvasEmbeddedWebViewCallback = embeddedWebViewCallback

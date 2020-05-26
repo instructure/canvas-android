@@ -190,47 +190,10 @@ object DiscussionUtils {
     //endregion
 
     //region Discussion Topic Header
-
-    fun createDiscussionTopicHeaderHtml(context: Context, isTablet: Boolean, contentHtml: String, ltiToolUrl: String? = null): String {
-        val document = DiscussionHtmlTemplates.getTopicHeader(context)
-        Logger.d("LTIURL: $ltiToolUrl")
-        val html = addLaunchLtiToolButton(context, contentHtml, ltiToolUrl)
-        var result = document.replace("__HEADER_CONTENT__", html)
-        result = result.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
-        result = result.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
-        return CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(result)
-    }
-
     fun createLTIPlaceHolders(context: Context, contentHtml: String, callback: (id: String, placeholder: Placeholder) -> Unit): String {
         val document = getAssetsFile(context, "lti_placeholder_template.html")
         val html = addLTIPlaceHolder(context, contentHtml, callback)
         return CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(document.replace("__HEADER_CONTENT__", html))
-    }
-
-    /**
-     * Adds a Launch External Tools button below an iframe if we know the iframe is an External Tool
-     * At the time of writing we made a decision not to add the launch to browser button for discussion details.
-     */
-    private fun addLaunchLtiToolButton(context: Context, contentHtml: String, ltiToolUrl: String? = null): String {
-        if (ltiToolUrl == null) return contentHtml
-        var html = contentHtml
-        // Append a open in browser button for the LTI tool
-        val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
-        try {
-            while (iframeMatcher.find()) {
-                val iframe = iframeMatcher.group(0)
-                if (iframe.contains("external_tools") && iframe.contains(ltiToolUrl)) {
-                    //Append the html button for viewing externally
-                    val ltiUrl = URLEncoder.encode(ltiToolUrl, "UTF-8")
-                    val button = "</br><p><div class=\"lti_button\" onClick=\"onLtiToolButtonPressed('%s')\">%s</div></p>"
-                    val htmlButton = String.format(button, ltiUrl, context.resources.getString(R.string.utils_launchExternalTool))
-                    html = html.replace(iframe, iframe + htmlButton)
-                }
-            }
-        } catch (e: Throwable) {
-            // Pattern match not found.
-        }
-        return html
     }
 
     /**
@@ -485,13 +448,6 @@ object DiscussionUtils {
         paint.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         canvas.drawBitmap(mutableBitmap, 0f, 0f, paint)
         return mutableBitmap
-    }
-
-    fun getRGBColorString(color: Int): String {
-        val r = color shr 16 and 0xFF
-        val g = color shr 8 and 0xFF
-        val b = color shr 0 and 0xFF
-        return "rgb($r,$g,$b)"
     }
 
     fun getHexColorString(color: Int): String {

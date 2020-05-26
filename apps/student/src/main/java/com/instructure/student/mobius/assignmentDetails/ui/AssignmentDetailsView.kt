@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
@@ -57,6 +58,7 @@ import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
 import kotlinx.coroutines.Job
+import java.net.URLDecoder
 
 class AssignmentDetailsView(
     val canvasContext: CanvasContext,
@@ -186,11 +188,11 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            if (state.description.contains("<iframe")) {
-                loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml, state.assignmentName)
-            } else {
-                loadDescriptionHtml(state.description, state.assignmentName)
-            }
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{
+                val args = LTIWebViewFragment.makeLTIBundle(
+                        URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+                RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, canvasContext, args))
+            }, state.assignmentName)
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)

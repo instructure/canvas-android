@@ -667,13 +667,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
-        if (discussionTopicHeader.message?.contains("<iframe") == true) {
-            loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                    discussionTopicHeader.message.orEmpty(), ::loadHTMLTopic, discussionTopicHeader.title)
-        } else {
-            loadHTMLTopic(discussionTopicHeader.message.orEmpty(), discussionTopicHeader.title)
-        }
+        loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                discussionTopicHeader.message.orEmpty(), ::loadHTMLTopic, null, discussionTopicHeader.title)
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
@@ -685,12 +680,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionRepliesWebView.setVisible()
         discussionProgressBar.setGone()
 
-        if (html.contains("<iframe")) {
-            loadRepliesHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                    html, ::loadHTMLReplies)
-        } else {
-            loadHTMLReplies(html, "")
-        }
+        loadRepliesHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                html, ::loadHTMLReplies)
+
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
         postBeforeViewingRepliesTextView.setGone()

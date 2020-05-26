@@ -46,6 +46,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import retrofit2.Response
+import java.net.URLDecoder
 import java.util.*
 
 class CalendarEventFragment : ParentFragment() {
@@ -224,12 +225,12 @@ class CalendarEventFragment : ParentFragment() {
             }
 
             if (content?.isNotEmpty() == true) {
-                if(content.contains("<iframe")) {
-                    loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
-                            ::loadCalendarHtml, it.title)
-                } else {
-                    loadCalendarHtml(content, it.title)
-                }
+                loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, content,
+                        ::loadCalendarHtml, { url ->
+                    val args = LTIWebViewFragment.makeLTIBundle(
+                            URLDecoder.decode(url, "utf-8"), "LTI Launch", true)
+                    RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+                }, it.title)
             }
         }
     }

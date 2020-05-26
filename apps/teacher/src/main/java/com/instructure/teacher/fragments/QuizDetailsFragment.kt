@@ -54,6 +54,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
+import java.net.URLDecoder
 import java.util.*
 
 class QuizDetailsFragment : BasePresenterFragment<
@@ -364,12 +365,12 @@ class QuizDetailsFragment : BasePresenterFragment<
         instructionsWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        if (quiz.description?.contains("<iframe") == true) {
-            loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                    quiz.description.orEmpty(), ::loadQuizHTML, presenter.mQuiz.title)
-        } else {
-            loadQuizHTML(quiz.description.orEmpty(), presenter.mQuiz.title)
-        }
+        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                quiz.description.orEmpty(), ::loadQuizHTML, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, quiz.title)
     }
 
     private fun loadQuizHTML(html: String, contentDescription: String?) {

@@ -262,9 +262,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
+
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-            override fun routeInternallyCallback(url: String?) { RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true) }
+            override fun routeInternallyCallback(url: String?) {
+                RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true)
+            }
+
             override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
         }
 
@@ -278,17 +282,14 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         descriptionWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load description
-
-        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
-        if (description?.contains("<iframe") == true) {
-            descriptionWebView.addJavascriptInterface(JsExternalToolInterface {
-                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), requireContext().getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
-            }, "accessor")
-            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(), ::loadAssignmentHTML, mAssignment.name)
-        } else {
-            loadAssignmentHTML(description.orEmpty(), name)
-        }
+        loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
+                ::loadAssignmentHTML, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"),
+                    requireContext().getString(R.string.utils_externalToolTitle),
+                    true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
+        }, name)
     }
 
     private fun loadAssignmentHTML(html: String, contentDescription: String?) {

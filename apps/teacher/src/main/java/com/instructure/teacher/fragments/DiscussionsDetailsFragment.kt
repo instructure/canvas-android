@@ -249,15 +249,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
 
             discussionRepliesWebView.setInvisible()
-            if (html.contains("<iframe")) {
-                discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
-                    val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-                }, "accessor")
-                repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies)
-            } else {
-                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "utf-8", null)
-            }
+
+            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies, {
+                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+            })
 
             delay(300)
             discussionsScrollView.post {
@@ -403,17 +399,15 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             showReplyView(presenter.discussionTopicHeader.id)
         }
 
-        //if the html has an lti url, we want to authenticate so the user doesn't have to login again
-        if (discussionTopicHeader.message?.contains("<iframe") == true) {
-            discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
-                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-            }, "accessor")
-            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
-                    discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, presenter.discussionTopicHeader.title)
-        } else {
-            loadHTMLTopic(discussionTopicHeader.message.orEmpty(), discussionTopicHeader.title)
-        }
+        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(
+                    this@DiscussionsDetailsFragment.requireContext(),
+                    Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, discussionTopicHeader.title)
+
         discussionRepliesWebView.loadHtml("", "")
     }
 

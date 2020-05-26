@@ -42,54 +42,67 @@ import java.util.regex.Pattern
  *
  * We should now be able to call this function, preceded by a simple check for iframes, for all html webview content
  */
-fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: String, loadHtml: (newHtml: String, contentDescription: String?) -> Unit, contentDescription: String? = null): Job? {
-    return this.tryWeave {
-        var newHTML: String = html
+fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: String, loadHtml: (newHtml: String, contentDescription: String?) -> Unit, jsCallback: ((ltiUrl: String) -> Unit)? = null, contentDescription: String? = null): Job? {
+    if(html.contains("<iframe")) {
+        return this.tryWeave {
+            var hasLtiTool = false
+            var newHTML: String = html
 
-        // First we need to find LTIs by looking for iframes
-        val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
+            // First we need to find LTIs by looking for iframes
+            val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
-        while (iframeMatcher.find()) {
-            val iframe = iframeMatcher.group(0)
-            // We found an iframe, we need to do a few things...
-            val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
-            // First we find the src
-            if (matcher.find()) {
-                // Snag that src
-                val srcUrl = matcher.group(1)
+            while (iframeMatcher.find()) {
+                val iframe = iframeMatcher.group(0)
+                // We found an iframe, we need to do a few things...
+                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
+                // First we find the src
+                if (matcher.find()) {
+                    // Snag that src
+                    val srcUrl = matcher.group(1)
 
-                if (srcUrl.contains("external_tools")) {
-                    // Handle the LTI case
-                    val newIframe = inBackground { externalToolIframe(srcUrl, iframe, context); }
-                    newHTML = newHTML.replace(iframe, newIframe)
-                } else if(srcUrl.contains("media_objects_iframe")) {
-                    // Handle the new RCE iframe case
-                    val dataMediaIdMatcher = Pattern.compile("data-media-id=\"([^\"]+)\"").matcher(iframe)
-                    if (dataMediaIdMatcher.find()) {
-                        val dataMediaId = dataMediaIdMatcher.group(1)
+                    if (srcUrl.contains("external_tools")) {
+                        // Handle the LTI case
+                        hasLtiTool = true
+                        val newIframe = inBackground { externalToolIframe(srcUrl, iframe, context); }
+                        newHTML = newHTML.replace(iframe, newIframe)
+                    } else if(srcUrl.contains("media_objects_iframe")) {
+                        // Handle the new RCE iframe case
+                        val dataMediaIdMatcher = Pattern.compile("data-media-id=\"([^\"]+)\"").matcher(iframe)
+                        if (dataMediaIdMatcher.find()) {
+                            val dataMediaId = dataMediaIdMatcher.group(1)
 
-                        val newIframe = newRceVideoElement(dataMediaId);
+                            val newIframe = newRceVideoElement(dataMediaId);
+                            newHTML = newHTML.replace(iframe, newIframe)
+                        }
+                    } else if(iframe.contains("id=\"cnvs_content\"")) {
+                        // Handle the cnvs_content special case for some schools
+                        val authenticatedUrl = inBackground { authenticateLTIUrl(srcUrl) }
+                        val newIframe = iframe.replace(srcUrl, authenticatedUrl)
+
                         newHTML = newHTML.replace(iframe, newIframe)
                     }
-                } else if(iframe.contains("id=\"cnvs_content\"")) {
-                    // Handle the cnvs_content special case for some schools
-                    val authenticatedUrl = inBackground { authenticateLTIUrl(srcUrl) }
-                    val newIframe = iframe.replace(srcUrl, authenticatedUrl)
-
-                    newHTML = newHTML.replace(iframe, newIframe)
                 }
             }
+
+            val document = DiscussionHtmlTemplates.getTopicHeader(context)
+            newHTML = document.replace("__HEADER_CONTENT__", newHTML)
+            newHTML = newHTML.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
+            newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
+
+            // Add the JS interface
+            if(hasLtiTool && jsCallback != null) {
+                // Its possible, i.e. for discussions, that the js interface is already configured
+                this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
+            }
+
+            loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
+        } catch {
+            Crashlytics.logException(it)
+            Logger.e("loadHtmlWithIframe caught an exception: " + it.message)
         }
-
-        val document = DiscussionHtmlTemplates.getTopicHeader(context)
-        newHTML = document.replace("__HEADER_CONTENT__", newHTML)
-        newHTML = newHTML.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
-        newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
-
-        loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
-    } catch {
-        Crashlytics.logException(it)
-        Logger.e("loadHtmlWithIframe caught an exception: " + it.message)
+    } else {
+        loadHtml(html, contentDescription)
+        return null
     }
 }
 
@@ -138,7 +151,6 @@ suspend fun authenticateLTIUrl(ltiUrl: String): String {
 }
 
 data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)
-
 
 class JsExternalToolInterface(val callback: (ltiUrl: String) -> Unit) {
     @Suppress("UNUSED_PARAMETER")

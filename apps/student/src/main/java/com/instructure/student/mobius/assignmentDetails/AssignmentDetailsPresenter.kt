@@ -150,12 +150,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         // Description
         val description = if (assignment.turnInType == Assignment.TurnInType.DISCUSSION && getDiscussionText(assignment.discussionTopicHeader!!).isNotEmpty()) {
             visibilities.description = true
-            DiscussionUtils.createDiscussionTopicHeaderHtml(
-                context,
-                context.resources.getBoolean(R.bool.isDeviceTablet),
-                getDiscussionText(assignment.discussionTopicHeader!!),
-                null
-            )
+            getDiscussionText(assignment.discussionTopicHeader!!)
         } else if (assignment.description.isValid()) {
             visibilities.description = true
             if (Locale.getDefault().isRtl) {
