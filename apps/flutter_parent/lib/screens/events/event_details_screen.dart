@@ -180,12 +180,16 @@ class _EventDetails extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: [
         SizedBox(height: 16),
-        Text(event.title ?? '', style: textTheme.display1),
+        Text(event.title ?? '', style: textTheme.display1, key: ValueKey('event_details_title')),
         SizedBox(height: 16),
         Divider(),
-        _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2),
+        _SimpleTile(label: l10n.eventDateLabel, line1: dateLine1, line2: dateLine2, keyPrefix: 'event_details_date'),
         Divider(),
-        _SimpleTile(label: l10n.eventLocationLabel, line1: locationLine1, line2: locationLine2),
+        _SimpleTile(
+            label: l10n.eventLocationLabel,
+            line1: locationLine1,
+            line2: locationLine2,
+            keyPrefix: 'event_details_location'),
         Divider(),
         _SimpleHeader(label: l10n.assignmentRemindMeLabel),
         _RemindMe(event, courseId, [dateLine1, dateLine2].where((it) => it != null).join('\n')),
@@ -307,9 +311,9 @@ class _RemindMeState extends State<_RemindMe> {
 }
 
 class _SimpleTile extends StatelessWidget {
-  final String label, line1, line2;
+  final String label, line1, line2, keyPrefix;
 
-  const _SimpleTile({Key key, this.label, this.line1, this.line2}) : super(key: key);
+  const _SimpleTile({Key key, this.label, this.line1, this.line2, this.keyPrefix}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -319,9 +323,9 @@ class _SimpleTile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SimpleHeader(label: label),
-        Text(line1 ?? '', style: textTheme.subhead),
+        Text(line1 ?? '', style: textTheme.subhead, key: ValueKey('${keyPrefix}_line1')),
         if (line2 != null) SizedBox(height: 8),
-        if (line2 != null) Text(line2, style: textTheme.subhead),
+        if (line2 != null) Text(line2, style: textTheme.subhead, key: ValueKey('${keyPrefix}_line2')),
         SizedBox(height: 16),
       ],
     );

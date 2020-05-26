@@ -88,6 +88,9 @@ object DiscussionAPI {
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
 
+        @DELETE("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
+        fun markDiscussionTopicEntryUnread(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long): Call<Void>
+
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}")
         fun pinDiscussion(@Path("contextType") contextType: String, @Path("contextId") courseId: Long, @Path("topicId") topicId: Long, @Query("pinned") pinned: Boolean, @Body body: String): Call<DiscussionTopicHeader>
 
@@ -267,6 +270,11 @@ object DiscussionAPI {
     fun markDiscussionTopicEntryRead(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
         val contextType = CanvasContext.getApiContext(canvasContext)
         callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicEntryRead(contextType, canvasContext.id, topicId, entryId)).enqueue(callback)
+    }
+
+    fun markDiscussionTopicEntryUnread(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, entryId: Long, callback: StatusCallback<Void>, params: RestParams) {
+        val contextType = CanvasContext.getApiContext(canvasContext)
+        callback.addCall(adapter.build(DiscussionInterface::class.java, params).markDiscussionTopicEntryUnread(contextType, canvasContext.id, topicId, entryId)).enqueue(callback)
     }
 
     fun pinDiscussion(adapter: RestBuilder, canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<DiscussionTopicHeader>, params: RestParams) {

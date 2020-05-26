@@ -17,27 +17,19 @@
 package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
-import com.instructure.espresso.assertHasContentDescription
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertVisible
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.AssignmentDetailsPage
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.containsString
+import org.hamcrest.Matchers.*
 
 class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
 
@@ -58,7 +50,11 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     val quizDetails by OnViewWithId(R.id.quizDetails)
     val questionCountText by OnViewWithId(R.id.questionCountText)
     val timeLimitText by OnViewWithId(R.id.timeLimitText)
+    val allowedQuizAttemptsText by OnViewWithId(R.id.allowedQuizAttemptsText)
+    val allowedAttemptsContainer by OnViewWithId(R.id.allowedAttemptsContainer)
+    val allowedAttemptsLabel by OnViewWithId(R.id.allowedAttemptsLabel)
     val allowedAttemptsText by OnViewWithId(R.id.allowedAttemptsText)
+    val usedAttemptsText by OnViewWithId(R.id.usedAttemptsText)
     val discussionTopicHeaderContainer by OnViewWithId(R.id.discussionTopicHeaderContainer)
     val authorAvatar by OnViewWithId(R.id.authorAvatar)
     val authorName by OnViewWithId(R.id.authorName)
@@ -149,24 +145,44 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
         onWebView().withElement(findElement(Locator.ID, "header_content")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
     }
 
+    fun assertAssignmentAttemptsGone() {
+        allowedAttemptsContainer.assertGone()
+        allowedAttemptsLabel.assertGone()
+        allowedAttemptsText.assertGone()
+        usedAttemptsText.assertGone()
+    }
+
+    fun assertAssignmentAttempts(allowedAttempts: Long, usedAttempts: Long, enabled: Boolean) {
+        allowedAttemptsContainer.assertVisible()
+        allowedAttemptsLabel.assertVisible()
+        allowedAttemptsText.assertHasText(allowedAttempts.toString())
+        usedAttemptsText.assertHasText(usedAttempts.toString())
+        if (enabled) {
+            submitButton.waitForCheck(matches(isEnabled()))
+        } else {
+            submitButton.waitForCheck(matches(not(isEnabled())))
+        }
+        submitButton.click()
+    }
+
     fun assertQuizDescription(timeLimit: String, allowedAttempts: String, questionCount: String) {
         quizDetails.assertVisible()
         questionCountText.assertHasText(questionCount)
-        allowedAttemptsText.assertHasText(allowedAttempts)
+        allowedQuizAttemptsText.assertHasText(allowedAttempts)
         timeLimitText.assertHasText(timeLimit)
     }
 
     fun assertQuizDescription(timeLimit: Int, allowedAttempts: String, questionCount: String) {
         quizDetails.assertVisible()
         questionCountText.assertHasText(questionCount)
-        allowedAttemptsText.assertHasText(allowedAttempts)
+        allowedQuizAttemptsText.assertHasText(allowedAttempts)
         timeLimitText.assertHasText(timeLimit)
     }
 
     fun assertQuizDescription(timeLimit: String, allowedAttempts: Int, questionCount: String) {
         quizDetails.assertVisible()
         questionCountText.assertHasText(questionCount)
-        allowedAttemptsText.assertHasText(allowedAttempts)
+        allowedQuizAttemptsText.assertHasText(allowedAttempts)
         timeLimitText.assertHasText(timeLimit)
     }
 

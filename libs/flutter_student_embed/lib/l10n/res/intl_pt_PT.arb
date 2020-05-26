@@ -1,18 +1,18 @@
 {
-  "@@last_modified": "2020-05-22T11:03:37.722827",
+  "@@last_modified": "2020-04-30T15:04:17.066688",
   "coursesLabel": "Courses",
   "@coursesLabel": {
     "description": "The label for the Courses tab",
     "type": "text",
     "placeholders": {}
   },
-  "Calendar": "Calendar",
+  "Calendar": "CalendarPT",
   "@Calendar": {
     "description": "Title of the calendar screen",
     "type": "text",
     "placeholders": {}
   },
-  "Calendars": "Calendars",
+  "Calendars": "CalendarsPT",
   "@Calendars": {
     "description": "Label for button that lets users select which calendars to display",
     "type": "text",
@@ -90,8 +90,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your calendar": "There was an error loading your calendar",
-  "@There was an error loading your calendar": {
+  "There was an error loading your student's calendar": "There was an error loading your student's calendar",
+  "@There was an error loading your student's calendar": {
     "description": "Message displayed when calendar events could not be loaded for the current student",
     "type": "text",
     "placeholders": {}

@@ -15,11 +15,10 @@
 // Imports the Flutter Driver API.
 
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:flutter_parent/models/announcement.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/course.dart';
-import 'package:flutter_parent/models/dataseeding/quiz.dart';
 import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
+import 'package:flutter_parent/models/schedule_item.dart';
 import 'package:test/test.dart';
 
 import 'driver_seed_utils.dart';
@@ -61,17 +60,15 @@ void main() {
     var courses = [seedContext.getNamedObject<Course>("course1"), seedContext.getNamedObject<Course>("course2")];
     var assignment1 = seedContext.getNamedObject<Assignment>("assignment1"); // From first course
     var assignment2 = seedContext.getNamedObject<Assignment>("assignment2"); // From second course
-    var quiz1 = seedContext.getNamedObject<Quiz>("quiz1"); // From first course
-    var announcement1 = seedContext.getNamedObject<Announcement>("announcement1"); // From first course
+    var event2 = seedContext.getNamedObject<ScheduleItem>("event2"); // From second course
 
     // Let's check that all of our assignments, quizzes and announcements are displayed
     await DashboardPage.waitForRender(driver);
     await DashboardPage.goToCalendar(driver);
     await CalendarPage.waitForRender(driver);
-    await CalendarPage.verifyAnnouncementDisplayed(driver, announcement1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment2);
-    await CalendarPage.verifyQuizDisplayed(driver, quiz1);
+    await CalendarPage.verifyEventDisplayed(driver, event2);
 
     // Let's try opening an assignment
     await CalendarPage.openAssignment(driver, assignment1);
@@ -80,17 +77,15 @@ void main() {
 
     // Let's filter out the first course and try again
     await CalendarPage.toggleFilter(driver, courses[0]);
-    await CalendarPage.verifyAnnouncementNotDisplayed(driver, announcement1);
     await CalendarPage.verifyAssignmentNotDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment2);
-    await CalendarPage.verifyQuizNotDisplayed(driver, quiz1);
+    await CalendarPage.verifyEventDisplayed(driver, event2);
 
     // Let's re-enable the first course and filter out the second, and try again
     await CalendarPage.toggleFilter(driver, courses[0]);
     await CalendarPage.toggleFilter(driver, courses[1]);
-    await CalendarPage.verifyAnnouncementDisplayed(driver, announcement1);
     await CalendarPage.verifyAssignmentDisplayed(driver, assignment1);
     await CalendarPage.verifyAssignmentNotDisplayed(driver, assignment2);
-    await CalendarPage.verifyQuizDisplayed(driver, quiz1);
+    await CalendarPage.verifyEventNotDisplayed(driver, event2);
   }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 secs
 }

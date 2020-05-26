@@ -73,7 +73,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "Submitted" : MessageLookupByLibrary.simpleMessage("Submitted"),
     "Tap to favorite the courses you want to see on the Calendar." : MessageLookupByLibrary.simpleMessage("Tap to favorite the courses you want to see on the Calendar."),
     "There was an error deleting this To Do. Please check your connection and try again." : MessageLookupByLibrary.simpleMessage("There was an error deleting this To Do. Please check your connection and try again."),
-    "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("There was an error loading your student\'s calendar"),
     "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("There was an error loading your your student’s courses."),
     "There was an error saving this To Do. Please check your connection and try again." : MessageLookupByLibrary.simpleMessage("There was an error saving this To Do. Please check your connection and try again."),
     "There\'s no description yet" : MessageLookupByLibrary.simpleMessage("There\'s no description yet"),

@@ -79,9 +79,8 @@ void main() {
     // Back to main dashboard
     await driver.tap(find.pageBack());
 
-    // These actions/checks are disabled until we fix MBL-14319.
     // Switch students and verify that new student's course is showing
-//    await DashboardPage.changeStudent(driver, students[1]);
-//    await DashboardPage.verifyCourse(driver, courses[1]);
+    await DashboardPage.changeStudent(driver, students[1]);
+    await DashboardPage.verifyCourse(driver, courses[1]);
   }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
 }

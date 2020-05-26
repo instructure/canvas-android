@@ -25,6 +25,10 @@ class CourseDetailsPage {
     await driver.tap(find.text("GRADES"));
   }
 
+  static Future<void> selectSummary(FlutterDriver driver) async {
+    await driver.tap(find.text("SUMMARY"));
+  }
+
   static Future<void> initiateCreateEmail(FlutterDriver driver) async {
     await driver.tap(find.byType('FloatingActionButton'));
   }

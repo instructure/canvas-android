@@ -55,11 +55,10 @@ class DiscussionEntryHtmlConverter {
 
         val htmlListener = getItemClickListener(discussionEntry.id.toString())
         val replyListener = getReplyListener(discussionEntry.id.toString())
+        val menuListener = getMenuListener(discussionEntry.id.toString())
         val likeListener = getLikeListener(discussionEntry.id.toString())
         val avatarListener = getAvatarListener(discussionEntry.id.toString())
         val attachmentListener = getAttachmentListener(discussionEntry.id.toString())
-        val editListener = getEditListener(discussionEntry.id.toString())
-        val deleteListener = getDeleteListener(discussionEntry.id.toString())
         val moreRepliesListener = getMoreRepliesListener(discussionEntry.id.toString())
 
         val ltiButtonWidth = if(isTablet) "320px" else "100%"
@@ -69,10 +68,9 @@ class DiscussionEntryHtmlConverter {
         var date = ""
         var content = getContentHTML(discussionEntry.getMessage(""))
         val reply = formatReplyText(context, canReply)
-        val edit = formatEditText(context, canEdit)
-        val delete = formatDeleteText(context, canDelete)
-        val editDivider = formatEditDividerText(canEdit)
-        val deleteDivider = formatDeleteDividerText(canDelete)
+        val menu = formatMenuText(context, canEdit, canDelete)
+
+        val menuDivider = formatMenuDividerText(canEdit, canDelete)
         val userId: String
         val replyButtonWrapperStyle: String
         var detailsWrapperStyle = "display: block;"
@@ -83,7 +81,7 @@ class DiscussionEntryHtmlConverter {
         var indentDisplay5 = "display: none;"
         val attachments = getAttachments(discussionEntry)
 
-        val liking = if(allowLiking) "display: inline;" else "display: none;"
+        val liking = if(allowLiking) "display: flex;" else "display: none;"
         val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum.localized + ")"
         val likingIcon = if(discussionEntry._hasRated) likeImage else "file:///android_asset/discussion_unliked.png"
         val likingColor = if(discussionEntry._hasRated) brandColor else likeColor
@@ -200,9 +198,8 @@ class DiscussionEntryHtmlConverter {
                 .replace("__AVATAR_LISTENER__", avatarListener)
                 .replace("__ATTACHMENT_LISTENER__", attachmentListener)
                 .replace("__REPLY_LISTENER__", replyListener)
-                .replace("__EDIT_LISTENER__", editListener)
+                .replace("__MENU_LISTENER__", menuListener)
                 .replace("__LIKE_LISTENER__", likeListener)
-                .replace("__DELETE_LISTENER__", deleteListener)
                 .replace("__MORE_REPLIES_LISTENER__", moreRepliesListener)
 
                 .replace("", "")
@@ -218,10 +215,8 @@ class DiscussionEntryHtmlConverter {
                 .replace("__ENTRY_ID__", discussionEntry.id.toString())
                 .replace("__USER_ID__", userId)
                 .replace("__REPLY_TEXT__", reply)
-                .replace("__EDIT_TEXT__", edit)
-                .replace("__DELETE_TEXT__", delete)
-                .replace("__EDIT_DIVIDER__", editDivider)
-                .replace("__DELETE_DIVIDER__", deleteDivider)
+                .replace("__MENU_TEXT__", menu)
+                .replace("__MENU_DIVIDER__", menuDivider)
                 .replace("__DETAILS_WRAPPER__", detailsWrapperStyle)
                 .replace("__REPLY_BUTTON_WRAPPER__", replyButtonWrapperStyle)
                 .replace("__READ_STATE__", getReadState(discussionEntry))
@@ -242,11 +237,10 @@ class DiscussionEntryHtmlConverter {
 
     private fun getItemClickListener(id: String): String = " onClick=\"onItemPressed('$id')\""
     private fun getReplyListener(id: String): String = " onClick=\"onReplyPressed('$id')\""
+    private fun getMenuListener(id: String): String = " onClick=\"onMenuPressed('$id')\""
     private fun getAvatarListener(id: String): String = " onClick=\"onAvatarPressed('$id')\""
     private fun getLikeListener(id: String): String = " onClick=\"onLikePressed('$id')\""
     private fun getAttachmentListener(id: String): String = " onClick=\"onAttachmentPressed('$id')\""
-    private fun getEditListener(id: String): String = " onClick=\"onEditPressed('$id')\""
-    private fun getDeleteListener(id: String): String = " onClick=\"onDeletePressed('$id')\""
     private fun getMoreRepliesListener(id: String): String = " onClick=\"onMoreRepliesPressed('$id')\""
 
     fun getReadState(discussionEntry: DiscussionEntry): String {
@@ -265,29 +259,24 @@ class DiscussionEntryHtmlConverter {
         return ""
     }
 
-    private fun formatEditText(context: Context, canReply: Boolean): String {
-        if (canReply) {
-            return String.format("<div class=\"edit\">%s</div>", context.getString(R.string.utils_discussionsEdit))
+    private fun formatMenuText(context: Context, canEdit: Boolean, canDelete: Boolean): String {
+        if (canEdit && canDelete) {
+            val menuLabel = context.getString(R.string.utils_contentDescriptionDiscussionsOverflow)
+            return """
+            <div class="meatball_wrapper menu">
+                <div aria-label="$menuLabel" role="button">
+                    <div class="meatball" aria-hidden="true"></div>
+                    <div class="meatball" aria-hidden="true"></div>
+                    <div class="meatball" aria-hidden="true"></div>
+                </div>
+            </div>
+            """.trimIndent()
         }
         return ""
     }
 
-    private fun formatDeleteText(context: Context, canDelete: Boolean): String {
-        if (canDelete) {
-            return String.format("<div class=\"delete\">%s</div>", context.getString(R.string.utils_delete))
-        }
-        return ""
-    }
-
-    private fun formatEditDividerText(canReply: Boolean): String {
-        if (canReply) {
-            return String.format("<div class=\"edit_vertical_divider\">%s</div>", "|")
-        }
-        return ""
-    }
-
-    private fun formatDeleteDividerText(canDelete: Boolean): String {
-        if (canDelete) {
+    private fun formatMenuDividerText(canEdit: Boolean, canDelete: Boolean): String {
+        if (canEdit && canDelete) {
             return String.format("<div class=\"delete_vertical_divider\">%s</div>", "|")
         }
         return ""

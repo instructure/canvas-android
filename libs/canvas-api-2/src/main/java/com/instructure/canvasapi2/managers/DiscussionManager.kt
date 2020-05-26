@@ -154,6 +154,18 @@ object DiscussionManager {
     }
 
     @JvmStatic
+    fun markDiscussionTopicEntryUnread(
+        canvasContext: CanvasContext,
+        topicId: Long,
+        entryId: Long,
+        callback: StatusCallback<Void>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+        DiscussionAPI.markDiscussionTopicEntryUnread(adapter, canvasContext, topicId, entryId, callback, params)
+    }
+
+    @JvmStatic
     fun replyToDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,

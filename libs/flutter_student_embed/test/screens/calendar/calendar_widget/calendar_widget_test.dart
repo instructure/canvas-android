@@ -973,7 +973,7 @@ void main() {
   });
 
   // TODO: MBL-14395
-  /*group('Right-to-Left', () {
+  group('Right-to-Left', () {
     testWidgetsWithAccessibilityChecks('Swipes to previous week in RTL', (tester) async {
       await tester.pumpWidget(
         calendarTestApp(
@@ -982,7 +982,7 @@ void main() {
             fetcher: _FakeFetcher(),
             onTodaySelected: (whatever) {},
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1017,7 +1017,7 @@ void main() {
             fetcher: _FakeFetcher(),
             onTodaySelected: (whatever) {},
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1052,7 +1052,7 @@ void main() {
             fetcher: _FakeFetcher(),
             onTodaySelected: (whatever) {},
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1093,7 +1093,7 @@ void main() {
             fetcher: _FakeFetcher(),
             onTodaySelected: (whatever) {},
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1140,7 +1140,7 @@ void main() {
             fetcher: _FakeFetcher(),
             onTodaySelected: (whatever) {},
           ),
-          locale: Locale('ar'),
+          locale: Locale('ar', 'AR'),
         ),
       );
       await tester.pumpAndSettle();
@@ -1163,7 +1163,7 @@ void main() {
       expect(monthWidget.year, 2000);
       expect(monthWidget.month, 1);
     });
-  });*/
+  });
 }
 
 class _FakeFetcher extends PlannerFetcher {

@@ -18,7 +18,7 @@ import 'package:flutter_parent/models/dataseeding/seeded_user.dart';
 class ConversationCreatePage {
   static Future<void> verifyRecipientListed(FlutterDriver driver, SeededUser user) async {
     var keyString = 'user_chip_${user.id}';
-    await driver.getText(find.descendant(of: find.byValueKey(keyString), matching: find.text(user.shortName)));
+    await driver.waitFor(find.descendant(of: find.byValueKey(keyString), matching: find.text(user.shortName)));
   }
 
   static Future<void> verifySubject(FlutterDriver driver, String subject) async {

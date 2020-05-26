@@ -175,13 +175,13 @@
 				border-left: thin solid #EBEDEE;
 			}
 
-			.likes_wrapper, .reply_wrapper, .edit_wrapper, .delete_wrapper, .comments_count_wrapper {
+			.likes_wrapper, .reply_wrapper, .comments_count_wrapper, .menu_wrapper {
 				float:left;
 				height: 30px;
 				text-align: center;
 			}
 
-			.reply, .edit, .likes, .delete {
+			.reply, .likes, .delete, .menu {
             	color: #8B969E;
 				width: 100%;
 				height: 30px;
@@ -285,6 +285,23 @@
 
         	/* makes the videos in fullscreen black */
             :-webkit-full-screen-ancestor:not(iframe) { background-color: black }
+
+			.meatball {
+				width: 4px;
+				height: 4px;
+				margin: 2px;
+				background: #8B969E;
+				border-radius: 50%;
+				display: block;
+			}
+
+			.meatball_wrapper > div {
+			  width: 100%;
+			  height: 100%;
+			  display: flex;
+			  justify-constent: start;
+			  align-items: center;
+			}
 
 		</style>
 	</head>

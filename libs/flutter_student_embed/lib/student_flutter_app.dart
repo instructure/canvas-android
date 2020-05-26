@@ -17,6 +17,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
+import 'package:flutter_student_embed/network/utils/api_prefs.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
 import 'package:flutter_student_embed/utils/design/student_theme.dart';
 import 'package:flutter_student_embed/utils/native_comm.dart';
@@ -27,7 +28,7 @@ class StudentFlutterApp extends StatefulWidget {
 }
 
 class _StudentFlutterAppState extends State<StudentFlutterApp> {
-  Locale _locale = Locale('en', ''); // will be updated by the localeResolutionCallback
+  Locale _locale = Locale('en'); // will be updated by the localeResolutionCallback
 
   GlobalKey<NavigatorState> _navKey = GlobalKey();
 
@@ -64,7 +65,8 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
       builder: (context, themeData) => MaterialApp(
         debugShowCheckedModeBanner: false,
         navigatorKey: _navKey,
-        title: '', // No title since this will be embedded and will not represent a full-screen component
+        title: '',
+        // No title since this will be embedded and will not represent a full-screen component
         locale: _locale,
         navigatorObservers: [NativeComm.routeTracker],
         localizationsDelegates: const [
@@ -83,9 +85,12 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
 
   // Get notified when there's a new system locale so we can rebuild the app with the new language
   LocaleResolutionCallback _localeCallback() => (locale, supportedLocales) {
-        const fallback = Locale('en', '');
+        // If there is no user locale, they want the system locale. If there is a user locale, we should use it over the system locale
+        Locale newLocale = ApiPrefs.getUser()?.locale == null ? locale : ApiPrefs.effectiveLocale();
+
+        const fallback = Locale('en');
         Locale resolvedLocale =
-            AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(locale, supportedLocales);
+            AppLocalizations.delegate.resolution(fallback: fallback, matchCountry: false)(newLocale, supportedLocales);
 
         // Update the state if the locale changed
         if (_locale != resolvedLocale) {

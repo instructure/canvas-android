@@ -184,6 +184,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.fileTypes = assignment.allowedExtensions.isNotEmpty() && assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)
         val fileTypes = assignment.allowedExtensions.joinToString(", ")
 
+        // Handle attempt limits (only show attempt details if it's not unlimited, disable the submit button if they're out of attempts)
+        visibilities.allowedAttempts = assignment.allowedAttempts != -1L
+        visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
         //Configure stickied submit button visibility state,
         visibilities.submitButton = when(assignment.turnInType) {
@@ -194,7 +197,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Configure stickied submit button
-        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType)
+        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType, visibilities.submitButtonEnabled)
 
         // Configure description label
         val descriptionLabel = when(assignment.turnInType) {
@@ -242,7 +245,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             assignmentDetailsVisibilities = visibilities,
             isExternalToolSubmission = isExternalToolSubmission,
             quizDescriptionViewState = quizDescriptionViewState,
-            discussionHeaderViewState = discussionHeaderViewState
+            discussionHeaderViewState = discussionHeaderViewState,
+            allowedAttempts = assignment.allowedAttempts,
+            usedAttempts = assignment.submission?.attempt ?: 0
         )
     }
 
@@ -276,7 +281,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             submittedStateColor = submittedColor,
             submittedStateIcon = submittedIconRes,
             lockMessage = lockMessage,
-            assignmentDetailsVisibilities = visibilities
+            assignmentDetailsVisibilities = visibilities,
+            allowedAttempts = assignment.allowedAttempts,
+            usedAttempts = assignment.submission?.attempt ?: 0
         )
     }
 
@@ -328,9 +335,10 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
     }
 
-    private fun getSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean, turnInType: Assignment.TurnInType): String {
+    private fun getSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean, turnInType: Assignment.TurnInType, submitEnabled: Boolean): String {
         return context.getString(
                 when {
+                    !submitEnabled -> R.string.noAttemptsLeft
                     turnInType == Assignment.TurnInType.QUIZ -> R.string.viewQuiz
                     turnInType == Assignment.TurnInType.DISCUSSION -> R.string.viewDiscussion
                     isExternalToolSubmission -> R.string.launchExternalTool

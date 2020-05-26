@@ -145,6 +145,13 @@ class AssignmentDetailsView(
             lockImageContainer.setVisible(visibilities.lockedImage)
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)
+            allowedAttemptsContainer.setVisible(visibilities.allowedAttempts)
+            submitButton.isEnabled = visibilities.submitButtonEnabled
+            if (visibilities.submitButtonEnabled) {
+                submitButton.alpha = 1f
+            } else {
+                submitButton.alpha = 0.2f
+            }
             submitButton.setVisible(visibilities.submitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
@@ -173,6 +180,8 @@ class AssignmentDetailsView(
         lockMessageTextView.text = state.lockMessage
         submissionTypesTextView.text = state.submissionTypes
         fileTypesTextView.text = state.fileTypes
+        allowedAttemptsText.text = state.allowedAttempts.toString()
+        usedAttemptsText.text = state.usedAttempts.toString()
         gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
@@ -194,7 +203,7 @@ class AssignmentDetailsView(
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
         questionCountText.text = quizDescriptionViewState.questionCount
         timeLimitText.text = quizDescriptionViewState.timeLimit
-        allowedAttemptsText.text = quizDescriptionViewState.allowedAttempts
+        allowedQuizAttemptsText.text = quizDescriptionViewState.allowedAttempts
     }
 
     private fun renderDiscussionTopicHeader(discussionHeaderViewState: DiscussionHeaderViewState) {
