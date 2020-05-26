@@ -477,6 +477,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
     }
 
+    /*  MBL-14440
     // Tests that we can make a threaded reply with an attachment
     // It is a whole other gear to manually specify an attachment the same way that a user would,
     // so we add the attachments programmatically.
@@ -535,6 +536,7 @@ class DiscussionsInteractionTest : StudentTest() {
                 WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
 
     }
+     */
 
     //
     // Utilities
