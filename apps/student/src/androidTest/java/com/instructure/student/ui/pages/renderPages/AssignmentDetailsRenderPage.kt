@@ -162,6 +162,7 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
         } else {
             submitButton.waitForCheck(matches(not(isEnabled())))
         }
+        submitButton.click()
     }
 
     fun assertQuizDescription(timeLimit: String, allowedAttempts: String, questionCount: String) {

@@ -1056,7 +1056,10 @@ class AssignmentDetailsPresenterTest : Assert() {
             submission = baseSubmission.copy(attempt = 1)
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val actual = state.visibilities
+
+        assertEquals("Resubmit Assignment", state.submitButtonText)
         assertTrue(actual.submitButton)
         assertTrue(actual.submitButtonEnabled)
     }
@@ -1069,7 +1072,10 @@ class AssignmentDetailsPresenterTest : Assert() {
             submission = baseSubmission.copy(attempt = 1)
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
-        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        val actual = state.visibilities
+
+        assertEquals("No attempts left", state.submitButtonText)
         assertTrue(actual.submitButton)
         assertFalse(actual.submitButtonEnabled)
     }

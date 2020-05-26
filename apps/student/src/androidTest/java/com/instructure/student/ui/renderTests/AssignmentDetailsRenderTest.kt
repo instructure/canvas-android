@@ -694,7 +694,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         val assignment = Assignment(
             name = "Test Assignment",
             allowedAttempts = allowed,
-            submission = submission
+            submission = submission,
+            submissionTypesRaw = listOf("online_text_entry")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)
@@ -710,7 +711,8 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         val assignment = Assignment(
             name = "Test Assignment",
             allowedAttempts = allowed,
-            submission = submission
+            submission = submission,
+            submissionTypesRaw = listOf("online_text_entry")
         )
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         loadPageWithModel(model)

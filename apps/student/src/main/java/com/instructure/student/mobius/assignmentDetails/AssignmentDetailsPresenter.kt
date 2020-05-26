@@ -197,7 +197,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
 
         // Configure stickied submit button
-        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType)
+        val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType, visibilities.submitButtonEnabled)
 
         // Configure description label
         val descriptionLabel = when(assignment.turnInType) {
@@ -335,9 +335,10 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         }
     }
 
-    private fun getSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean, turnInType: Assignment.TurnInType): String {
+    private fun getSubmitButtonText(context: Context, isExternalToolSubmission: Boolean, submitted: Boolean, turnInType: Assignment.TurnInType, submitEnabled: Boolean): String {
         return context.getString(
                 when {
+                    !submitEnabled -> R.string.noAttemptsLeft
                     turnInType == Assignment.TurnInType.QUIZ -> R.string.viewQuiz
                     turnInType == Assignment.TurnInType.DISCUSSION -> R.string.viewDiscussion
                     isExternalToolSubmission -> R.string.launchExternalTool

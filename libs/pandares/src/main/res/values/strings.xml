@@ -53,6 +53,7 @@
     <string name="attempts">Attempts</string>
     <string name="attemptsAllowedLabel">Attempts Allowed</string>
     <string name="attemptsUsedLabel">Attempts Used</string>
+    <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
