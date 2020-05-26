@@ -432,7 +432,6 @@
     <string name="modified">Senast ändrad:</string>
     <string name="lastModified">Senast ändrad: %1$s</string>
 
-    <string name="masqueradeUserId">Agera som användar-ID</string>
     <string name="startMasquerading">Påbörja agerande som</string>
     <string name="stopMasquerading">Stoppa agerande som</string>
     <string name="userId">Användar-ID</string>

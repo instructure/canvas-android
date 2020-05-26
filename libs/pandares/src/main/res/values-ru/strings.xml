@@ -447,7 +447,6 @@
     <string name="modified">Последнее изменение:</string>
     <string name="lastModified">Последнее изменение: %1$s</string>
 
-    <string name="masqueradeUserId">Подмена ID пользователя</string>
     <string name="startMasquerading">Начать подмену</string>
     <string name="stopMasquerading">Остановить подмену</string>
     <string name="userId">Идентификатор пользователя</string>

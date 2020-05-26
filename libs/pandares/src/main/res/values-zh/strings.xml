@@ -424,7 +424,6 @@
     <string name="modified">上一次更改：</string>
     <string name="lastModified">上一次更改：%1$s</string>
 
-    <string name="masqueradeUserId">伪装的用户ID</string>
     <string name="startMasquerading">开始伪装</string>
     <string name="stopMasquerading">停止伪装</string>
     <string name="userId">用户ID</string>

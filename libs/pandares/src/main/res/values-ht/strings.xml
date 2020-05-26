@@ -430,7 +430,6 @@
     <string name="modified">Dènye Modifikasyon:</string>
     <string name="lastModified">Dènye Modifikasyon: %1$s</string>
 
-    <string name="masqueradeUserId">Non Itilizatè pou Degize</string>
     <string name="startMasquerading">Kòmanse Degizman</string>
     <string name="stopMasquerading">Kanpe Degizman</string>
     <string name="userId">ID Itilizatè</string>

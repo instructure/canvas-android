@@ -424,7 +424,6 @@
     <string name="modified">最後の変更:</string>
     <string name="lastModified">最後の変更:%1$s</string>
 
-    <string name="masqueradeUserId">マスカレード ユーザーID</string>
     <string name="startMasquerading">マスカレードを開始する</string>
     <string name="stopMasquerading">マスカレードを停止</string>
     <string name="userId">ユーザーID</string>

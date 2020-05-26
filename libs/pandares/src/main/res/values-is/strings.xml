@@ -435,7 +435,6 @@
     <string name="modified">Síðast breytt:</string>
     <string name="lastModified">Síðast breytt: %1$s</string>
 
-    <string name="masqueradeUserId">Dul auðkenni</string>
     <string name="startMasquerading">Byrjaðu að dyljast</string>
     <string name="stopMasquerading">Hætta að dyljast</string>
     <string name="userId">Auðkenni notanda</string>
