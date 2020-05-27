@@ -453,7 +453,6 @@
     <string name="modified">تاريخ آخر تعديل:</string>
     <string name="lastModified">تاريخ آخر تعديل: %1$s</string>
 
-    <string name="masqueradeUserId">إخفاء معرف المستخدم</string>
     <string name="startMasquerading">بدء الإخفاء</string>
     <string name="stopMasquerading">إيقاف إخفاء الأسماء</string>
     <string name="userId">معرف المستخدم</string>

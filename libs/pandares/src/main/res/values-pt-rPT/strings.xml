@@ -430,7 +430,6 @@
     <string name="modified">Última Modificação:</string>
     <string name="lastModified">Última Modificação: %1$s</string>
 
-    <string name="masqueradeUserId">ID de Utilizador Dissimulado</string>
     <string name="startMasquerading">Iniciar Dissimulação</string>
     <string name="stopMasquerading">Parar de se mascarar</string>
     <string name="userId">ID do utilizador</string>

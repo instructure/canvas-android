@@ -424,7 +424,6 @@
     <string name="modified">上次修改於：</string>
     <string name="lastModified">上次修改於：%1$s</string>
 
-    <string name="masqueradeUserId">以其他身份檢視的使用者 ID</string>
     <string name="startMasquerading">開始以其他身份檢視</string>
     <string name="stopMasquerading">停止以其他身份檢視</string>
     <string name="userId">使用者 ID</string>

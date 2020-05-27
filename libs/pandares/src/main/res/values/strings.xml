@@ -423,11 +423,10 @@
     <string name="modified">Last Modified:</string>
     <string name="lastModified">Last Modified: %1$s</string>
 
-    <string name="masqueradeUserId">Masquerade User ID</string>
-    <string name="startMasquerading">Start Masquerading</string>
-    <string name="stopMasquerading">Stop Masquerading</string>
+    <string name="startMasquerading">Start Acting As User</string>
+    <string name="stopMasquerading">Stop Acting As User</string>
     <string name="userId">User ID</string>
-    <string name="masqueradeFail">There was an error when trying to masquerade</string>
+    <string name="masqueradeFail">There was an error when trying to act as user</string>
 
     <string name="emptyId">The ID cannot be blank</string>
 

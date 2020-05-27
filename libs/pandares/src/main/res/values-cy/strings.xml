@@ -430,7 +430,6 @@
     <string name="modified">Addaswyd Ddiwethaf:</string>
     <string name="lastModified">Addaswyd Ddiwethaf: %1$s</string>
 
-    <string name="masqueradeUserId">ID Defnyddiwr Ffug</string>
     <string name="startMasquerading">Dechrau Ffugio</string>
     <string name="stopMasquerading">Stopio Ffugio</string>
     <string name="userId">ID Defnyddiwr</string>

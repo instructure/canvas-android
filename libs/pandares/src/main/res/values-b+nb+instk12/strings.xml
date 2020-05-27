@@ -435,7 +435,6 @@
     <string name="modified">Sist endret:</string>
     <string name="lastModified">Sist endret: %1$s</string>
 
-    <string name="masqueradeUserId">Maskerade bruker-ID</string>
     <string name="startMasquerading">Start maskerade</string>
     <string name="stopMasquerading">Stopp forkledning</string>
     <string name="userId">Bruker-ID</string>

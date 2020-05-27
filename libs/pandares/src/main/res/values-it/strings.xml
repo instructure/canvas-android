@@ -435,7 +435,6 @@
     <string name="modified">Ultima modifica:</string>
     <string name="lastModified">Ultima modifica: %1$s</string>
 
-    <string name="masqueradeUserId">Esegui mascheramento ID utente</string>
     <string name="startMasquerading">Avvia mascheramento</string>
     <string name="stopMasquerading">Arresta mascheramento</string>
     <string name="userId">ID utente</string>

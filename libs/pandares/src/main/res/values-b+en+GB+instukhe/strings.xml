@@ -355,7 +355,6 @@
     <string name="modified">Last modified:</string>
     <string name="lastModified">Last modified: %1$s</string>
 
-    <string name="masqueradeUserId">Masquerade user ID</string>
     <string name="startMasquerading">Start masquerading</string>
     <string name="stopMasquerading">Stop masquerading</string>
     <string name="userId">User ID</string>
