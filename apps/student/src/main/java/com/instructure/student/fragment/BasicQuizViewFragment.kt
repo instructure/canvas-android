@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -24,6 +25,7 @@ import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.*
@@ -32,9 +34,12 @@ import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.LockInfoHTMLHelper
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class BasicQuizViewFragment : InternalWebviewFragment() {
 
@@ -71,6 +76,9 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                 loadUrl(authenticatedUrl ?: targetUrl)
             }
         }
+
+        // Make sure we are prepared to handle file uploads for quizzes that allow them
+        setupFilePicker()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -117,6 +125,44 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                 super.onPageFinished(view, url)
                 getCanvasLoading()?.visibility = View.GONE
             }
+        }
+    }
+
+    private fun setupFilePicker() {
+        getCanvasWebView()?.setCanvasWebChromeClientShowFilePickerCallback(object : CanvasWebView.VideoPickerCallback {
+            override fun requestStartActivityForResult(intent: Intent, requestCode: Int) {
+                startActivityForResult(intent, requestCode)
+            }
+
+            override fun permissionsGranted(): Boolean {
+                return if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    true
+                } else {
+                    requestFilePermissions()
+                    false
+                }
+            }
+        })
+    }
+
+    private fun requestFilePermissions() {
+        requestPermissions(
+            PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE, PermissionUtils.CAMERA),
+            PermissionUtils.PERMISSION_REQUEST_CODE
+        )
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRequestPermissionsResult(result: PermissionRequester.PermissionResult) {
+        if (PermissionUtils.allPermissionsGrantedResultSummary(result.grantResults)) {
+            getCanvasWebView()?.clearPickerCallback()
+            Toast.makeText(requireContext(), R.string.pleaseTryAgain, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if ((getCanvasWebView()?.handleOnActivityResult(requestCode, resultCode, data)) != true) {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
