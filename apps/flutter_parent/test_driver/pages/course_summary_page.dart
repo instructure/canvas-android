@@ -73,8 +73,8 @@ class CourseSummaryPage {
       var localDate = dueDate.toLocal();
       String date = (DateFormat.MMMd()).format(localDate);
       String time = (DateFormat.jm()).format(localDate);
-      expect(text.contains(date), true, reason: "Expected due date to contain $date");
-      expect(text.contains(time), true, reason: "Expected due date to contain $time");
+      expect(text.contains(date), true, reason: "Expected due date ($text) to contain $date");
+      expect(text.contains(time), true, reason: "Expected due date ($text) to contain $time");
     }
   }
 }
