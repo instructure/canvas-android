@@ -42,6 +42,7 @@ class AlertThresholdsScreen extends StatefulWidget {
 
 class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Future<List<AlertThreshold>> _thresholdsFuture;
+  Future<bool> _canDeleteStudentFuture;
 
   Future<List<AlertThreshold>> _loadThresholds() =>
       locator<AlertThresholdsInteractor>().getAlertThresholdsForStudent(widget._student.id);
@@ -50,6 +51,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   @override
   void initState() {
     _thresholdsFuture = _loadThresholds();
+    _canDeleteStudentFuture = locator<AlertThresholdsInteractor>().canDeleteStudent(widget._student.id);
     super.initState();
   }
 
@@ -61,6 +63,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
         appBar: AppBar(
           title: Text(L10n(context).alertSettings),
           bottom: ParentTheme.of(context).appBarDivider(),
+          actions: <Widget>[_deleteOption()],
         ),
         body: FutureBuilder(
           future: _thresholdsFuture,
@@ -78,6 +81,89 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
           },
         ),
       ),
+    );
+  }
+
+  Widget _deleteOption() {
+    return FutureBuilder<bool>(
+      future: _canDeleteStudentFuture,
+      builder: (context, snapshot) {
+        if (snapshot.data != true) return Container();
+        return PopupMenuButton<int>(
+          key: Key('overflow-menu'),
+          onSelected: (_) {
+            showDeleteDialog(context);
+          },
+          itemBuilder: (_) => [PopupMenuItem(value: 0, child: Text(L10n(context).delete))],
+        );
+      },
+    );
+  }
+
+  void showDeleteDialog(BuildContext context) {
+    bool busy = false;
+    bool error = false;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            return AlertDialog(
+              title: Text(L10n(context).delete),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(L10n(context).confirmDeleteStudentMessage),
+                  if (error)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Text(
+                        L10n(context).deleteStudentFailure,
+                        style: Theme.of(context).textTheme.bodyText1.copyWith(color: ParentColors.failure),
+                      ),
+                    )
+                ],
+              ),
+              actions: <Widget>[
+                if (!busy)
+                  FlatButton(
+                    child: Text(L10n(context).cancel.toUpperCase()),
+                    onPressed: () => Navigator.of(context).pop(),
+                    textColor: ParentColors.ash,
+                  ),
+                if (!busy)
+                  FlatButton(
+                    child: Text(L10n(context).delete.toUpperCase()),
+                    onPressed: () async {
+                      setState(() {
+                        busy = true;
+                        error = false;
+                      });
+                      var success = await locator<AlertThresholdsInteractor>().deleteStudent(widget._student.id);
+                      if (success) {
+                        // Pop dialog
+                        Navigator.of(context).pop();
+                        // Pop screen with 'true' so ManageStudentScreen knows to refresh itself
+                        Navigator.of(context).pop(true);
+                      } else {
+                        setState(() {
+                          busy = false;
+                          error = true;
+                        });
+                      }
+                    },
+                  ),
+                if (busy)
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Container(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                  ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 

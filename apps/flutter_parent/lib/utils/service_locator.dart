@@ -51,6 +51,8 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
@@ -126,6 +128,7 @@ void setupLocator() {
   locator.registerFactory<HelpScreenInteractor>(() => HelpScreenInteractor());
   locator.registerFactory<ManageStudentsInteractor>(() => ManageStudentsInteractor());
   locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
+  locator.registerFactory<PairingInteractor>(() => PairingInteractor());
   locator.registerFactory<QRLoginTutorialScreenInteractor>(() => QRLoginTutorialScreenInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
@@ -149,5 +152,7 @@ void setupLocator() {
   locator.registerLazySingleton<InboxCountNotifier>(() => InboxCountNotifier());
   locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<OldAppMigration>(() => OldAppMigration());
+  locator.registerLazySingleton<PairingUtil>(() => PairingUtil());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
+  locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
 }

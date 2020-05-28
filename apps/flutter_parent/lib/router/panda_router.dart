@@ -37,6 +37,7 @@ import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/screens/pairing/qr_pairing_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -120,6 +121,13 @@ class PandaRouter {
 
   static String qrTutorial() => '/qr_tutorial';
 
+  static String _qrPairing = '/qr_pairing';
+
+  static String qrPairing({String pairingUri}) {
+    if (pairingUri == null) return _qrPairing;
+    return '$_qrPairing?${_RouterKeys.qrPairingInfo}=${Uri.encodeQueryComponent(pairingUri)}';
+  }
+
   static final String _rootWithExternalUrl = 'external';
 
   static final String _routerError = '/error';
@@ -172,6 +180,7 @@ class PandaRouter {
           handler: _assignmentDetailsHandler);
       router.define(_qrLogin, handler: _qrLoginHandler);
       router.define(qrTutorial(), handler: _qrTutorialHandler);
+      router.define(_qrPairing, handler: _qrPairingHandler);
       router.define(_routerError, handler: _routerErrorHandler);
       router.define(settings(), handler: _settingsHandler);
       router.define(_simpleWebView, handler: _simpleWebViewHandler);
@@ -304,6 +313,15 @@ class PandaRouter {
     return QRLoginTutorialScreen();
   });
 
+  static Handler _qrPairingHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    var pairingInfo = QRUtils.parsePairingInfo(params[_RouterKeys.qrPairingInfo]?.elementAt(0));
+    if (pairingInfo is QRPairingInfo) {
+      return QRPairingScreen(pairingInfo: pairingInfo);
+    } else {
+      return QRPairingScreen();
+    }
+  });
+
   static Handler _rootSplashHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return SplashScreen();
   });
@@ -340,6 +358,13 @@ class PandaRouter {
     var qrUri = QRUtils.verifySSOLogin(link);
     if (qrUri != null) {
       link = qrLogin(link);
+    }
+
+    // QR Pairing
+    var pairingParseResult = QRUtils.parsePairingInfo(link);
+    QRPairingInfo pairingInfo = pairingParseResult is QRPairingInfo ? pairingParseResult : null;
+    if (pairingInfo != null) {
+      link = qrPairing(pairingUri: link);
     }
 
     final urlRouteWrapper = getRouteWrapper(link);
@@ -444,6 +469,7 @@ class _RouterKeys {
   static final infoText = 'infoText';
   static final loginFlow = 'loginFlow';
   static final qrLoginUrl = 'qrLoginUrl';
+  static final qrPairingInfo = 'qrPairingInfo';
   static final quizId = 'quizId';
   static final topicId = 'topicId';
   static final url = 'url'; // NOTE: This has to match MainActivity.kt in the Android code

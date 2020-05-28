@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
@@ -98,6 +99,37 @@ void main() {
       expect(_percentageThresholdFinder(AppLocalizations().assignmentGradeAbove), findsOneWidget);
       expect(_switchThresholdFinder(AppLocalizations().courseAnnouncements), findsOneWidget);
       expect(_switchThresholdFinder(AppLocalizations().institutionAnnouncements), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('shows delete option if student can be deleted', (tester) async {
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
+      when(interactor.canDeleteStudent(any)).thenAnswer((_) async => true);
+
+      await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
+      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
+
+      var overflow = find.byKey(Key('overflow-menu'));
+      expect(overflow, findsOneWidget);
+
+      await tester.tap(overflow);
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppLocalizations().delete), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('hides delete option if student cannot be deleted', (tester) async {
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
+      when(interactor.canDeleteStudent(any)).thenAnswer((_) async => false);
+
+      await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
+      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
+
+      var overflow = find.byKey(Key('overflow-menu'));
+      expect(overflow, findsNothing);
     });
   });
 
@@ -196,6 +228,73 @@ void main() {
       // Make sure switched is on
       expect(_switchThresholdFinder(AppLocalizations().assignmentMissing, switchedOn: true), findsOneWidget);
     });
+
+    testWidgetsWithAccessibilityChecks('Pops screen after deleting student', (tester) async {
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
+      when(interactor.canDeleteStudent(any)).thenAnswer((_) async => true);
+      when(interactor.deleteStudent(any)).thenAnswer((_) async => true);
+
+      dynamic popValue;
+
+      await tester.pumpWidget(
+        TestApp(
+          Builder(builder: (context) {
+            return Material(
+              child: FlatButton(
+                onPressed: () async {
+                  popValue = await QuickNav().push(
+                    context,
+                    AlertThresholdsScreen(CanvasModelTestUtils.mockUser(name: 'Panda')),
+                  );
+                },
+                child: Text("Tap me"),
+              ),
+            );
+          }),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byType(FlatButton));
+      await tester.pumpAndSettle();
+
+      // Tap overflow menu
+      await tester.tap(find.byKey(Key('overflow-menu')));
+      await tester.pumpAndSettle();
+
+      // Tap 'Delete' menu option
+      await tester.tap(find.text(AppLocalizations().delete));
+      await tester.pumpAndSettle();
+
+      // Tap 'DELETE' dialog button
+      await tester.tap(find.text(AppLocalizations().delete.toUpperCase()));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertThresholdsScreen), findsNothing);
+      expect(popValue, isTrue);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays error message when deleting student fails', (tester) async {
+      when(interactor.getAlertThresholdsForStudent(any)).thenAnswer((_) => Future.value([]));
+      when(interactor.canDeleteStudent(any)).thenAnswer((_) async => true);
+      when(interactor.deleteStudent(any)).thenAnswer((_) async => false);
+
+      await _setupScreen(tester, CanvasModelTestUtils.mockUser(name: 'Panda'));
+      await tester.pumpAndSettle();
+
+      // Tap overflow menu
+      await tester.tap(find.byKey(Key('overflow-menu')));
+      await tester.pumpAndSettle();
+
+      // Tap 'Delete' menu option
+      await tester.tap(find.text(AppLocalizations().delete));
+      await tester.pumpAndSettle();
+
+      // Tap 'DELETE' dialog button
+      await tester.tap(find.text(AppLocalizations().delete.toUpperCase()));
+      await tester.pumpAndSettle();
+
+      expect(find.text(AppLocalizations().deleteStudentFailure), findsOneWidget);
+    });
   });
 
   group('Interaction Results', () {
@@ -259,11 +358,7 @@ Finder _switchThresholdFinder(String title, {bool switchedOn}) => find.byWidgetP
 
 void _setupScreen(WidgetTester tester, [User student]) async {
   var user = student ?? CanvasModelTestUtils.mockUser();
-  var screen = TestApp(
-    AlertThresholdsScreen(user),
-    darkMode: true,
-  );
-
+  var screen = TestApp(AlertThresholdsScreen(user));
   await tester.pumpWidget(screen);
 }
 

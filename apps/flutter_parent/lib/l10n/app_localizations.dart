@@ -1078,12 +1078,17 @@ class AppLocalizations {
 
   String get pairingCode => Intl.message('Pairing Code');
 
+  String get pairingCodeDescription => Intl.message('Students can obtain a pairing code through the Canvas website');
+
   String get pairingCodeEntryExplanation => Intl.message(
       'Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired');
 
   String get errorPairingFailed => Intl.message('Your code is incorrect or expired.');
 
   String get qrCode => Intl.message('QR Code');
+
+  String get qrCodeDescription =>
+      Intl.message('Students can create a QR code using the Canvas Student app on their mobile device');
 
   String get addNewStudent =>
       Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
@@ -1330,6 +1335,69 @@ class AppLocalizations {
         examples: const {'position': 1},
       );
 
+  /// QR Pairing
+
+  String get qrPairingTitle => Intl.message(
+        'Student Pairing',
+        desc: 'Title for the screen where users can pair to students using a QR code',
+      );
+
+  String get qrPairingTutorialTitle => Intl.message(
+        'Open Canvas Student',
+        desc: 'Title for QR pairing tutorial screen instructing users to open the Canvas Student app',
+      );
+
+  String get qrPairingTutorialMessage => Intl.message(
+        'You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.',
+        desc: 'Message explaining how QR code pairing works',
+      );
+
+  String get qrPairingScreenshotContentDescription => Intl.message(
+        'Screenshot showing location of pairing QR code generation in the Canvas Student app',
+        desc: 'Content Description for qr pairing tutorial screenshot',
+      );
+
+  String get qrPairingFailedTitle => Intl.message(
+        'Expired QR Code',
+        desc: 'Error title shown when the users scans a QR code that has expired',
+      );
+
+  String get qrPairingFailedSubtitle => Intl.message(
+        'The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.',
+      );
+
+  String get qrPairingNetworkError => Intl.message(
+        'A network error occurred when adding this student. Check your connection and try again.',
+      );
+
+  String get qrPairingInvalidCodeTitle => Intl.message(
+        'Invalid QR Code',
+        desc: 'Error title shown when the user scans an invalid QR code',
+      );
+
+  String get qrPairingWrongDomainTitle => Intl.message(
+        'Incorrect Domain',
+        desc: 'Error title shown when the users scane a QR code for a student that belongs to a different domain',
+      );
+
+  String get qrPairingWrongDomainSubtitle => Intl.message(
+        'The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.',
+      );
+
+  String get qrPairingCameraPermissionTitle => Intl.message(
+        'Camera Permission',
+        desc: 'Error title shown when the user wans to scan a QR code but has denied the camera permission',
+      );
+
+  String get confirmDeleteStudentMessage => Intl.message(
+        'This will unpair and remove all enrollments for this student from your account.',
+        desc: 'Confirmation message shown when the user tries to delete a student from their account',
+      );
+
+  String get deleteStudentFailure => Intl.message(
+        'There was a problem removing this student from your account. Please check your connection and try again.',
+      );
+
   /// Miscellaneous
 
   String get cancel => Intl.message('Cancel');
@@ -1478,5 +1546,5 @@ class AppLocalizations {
           desc: 'Content Description for qr login tutorial screenshot');
 
   String get qrCodeNoCameraError =>
-      Intl.message('QR scanning requires camera access.', desc: 'placeholder for camera error for QR code scan');
+      Intl.message('QR scanning requires camera access', desc: 'placeholder for camera error for QR code scan');
 }

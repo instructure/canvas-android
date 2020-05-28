@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interac
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -32,10 +33,12 @@ import '../../utils/accessibility_utils.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/network_image_response.dart';
 import '../../utils/test_app.dart';
+import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   mockNetworkImageResponse();
   final analytics = _MockAnalytics();
+  final MockPairingUtil pairingUtil = MockPairingUtil();
 
   _setupLocator([_MockManageStudentsInteractor interactor]) {
     final locator = GetIt.instance;
@@ -48,19 +51,16 @@ void main() {
     locator.registerFactory<ManageStudentsInteractor>(() => interactor ?? _MockManageStudentsInteractor());
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Analytics>(() => analytics);
+    locator.registerLazySingleton<PairingUtil>(() => pairingUtil);
   }
 
   setUp(() {
     reset(analytics);
+    reset(pairingUtil);
   });
 
   void _clickFAB(WidgetTester tester) async {
     await tester.tap(find.byType(FloatingActionButton));
-    await tester.pumpAndSettle();
-  }
-
-  void _clickQR(WidgetTester tester) async {
-    await tester.tap(find.text(AppLocalizations().qrCode));
     await tester.pumpAndSettle();
   }
 
@@ -256,81 +256,51 @@ void main() {
   });
 
   group('Add Student', () {
-    // TODO: Uncomment when we have QR code option and bottom sheet in place
-    /*testWidgetsWithAccessibilityChecks('Tapping FAB opens bottom sheet', (tester) async {
-      _setupLocator();
+    testWidgetsWithAccessibilityChecks('Displays FAB when pairing is allowed', (tester) async {
+      var interactor = _MockManageStudentsInteractor();
+      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
+      _setupLocator(interactor);
 
-      var observedStudents = [
-        CanvasModelTestUtils.mockUser(name: 'Billy', pronouns: 'he/him'),
-      ];
-
-      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
-      await tester.pumpAndSettle();
-
-      await _clickFAB(tester);
-
-      // Check if we are showing the header text of the bottom sheet
-      expect(find.text(AppLocalizations().addStudentWith), findsOneWidget);
-    });*/
-
-    // TODO: Remove when we have QR code option and bottom sheet in place
-    testWidgetsWithAccessibilityChecks('Tapping FAB opens dialog', (tester) async {
-      _setupLocator();
-
-      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
-
-      // Start the page in high contrast mode with a single user
-      // (the bottom sheet header text doesn't pass our a11y contrast ratio test by default)
       await tester.pumpWidget(TestApp(
-        ManageStudentsScreen(observedStudents),
+        ManageStudentsScreen([]),
       ));
       await tester.pumpAndSettle();
 
-      await _clickFAB(tester);
-      await tester.pumpAndSettle();
-
-      // Check for the dialog
-      expect(find.byType(Dialog), findsOneWidget);
+      // Should display FAB
+      expect(find.byType(FloatingActionButton), findsOneWidget);
     });
 
-    // TODO: Uncomment when we have QR code reading in place
-//    testWidgetsWithAccessibilityChecks('QR code tap calls into QR reader via interactor', (tester) async {
-//      final interactor = _MockManageStudentsInteractor();
-//      when(interactor.getQrReading()).thenAnswer((_) => Future.value(''));
-//
-//      _setupLocator(interactor);
-//
-//      await tester.pumpWidget(TestApp(ManageStudentsScreen([CanvasModelTestUtils.mockUser(name: 'Canvas')])));
-//      await tester.pumpAndSettle();
-//
-//      await _clickFAB(tester);
-//
-//      await _clickQR(tester);
-//
-//      verify(interactor.getQrReading());
-//    });
+    testWidgetsWithAccessibilityChecks('Hides FAB when pairing is not allowed', (tester) async {
+      var interactor = _MockManageStudentsInteractor();
+      when(interactor.shouldAllowPairing()).thenAnswer((_) async => false);
+      _setupLocator(interactor);
 
-    testWidgetsWithAccessibilityChecks('Pairing Code opens dialog', (tester) async {
-      _setupLocator();
+      await tester.pumpWidget(TestApp(
+        ManageStudentsScreen([]),
+      ));
+      await tester.pumpAndSettle();
+
+      // Should not display FAB
+      expect(find.byType(FloatingActionButton), findsNothing);
+    });
+
+    testWidgetsWithAccessibilityChecks('Tapping FAB calls PairingUtil', (tester) async {
+      var interactor = _MockManageStudentsInteractor();
+      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
+      _setupLocator(interactor);
 
       var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
 
-      // Start the page in high contrast mode with a single user
-      // (the bottom sheet header text doesn't pass our a11y contrast ratio test by default)
       await tester.pumpWidget(TestApp(
         ManageStudentsScreen(observedStudents),
       ));
       await tester.pumpAndSettle();
 
       await _clickFAB(tester);
-
-      // Click pairing code option
-      // TODO: Uncomment when we have QR code option and bottom sheet in place
-//      await tester.tap(find.text(AppLocalizations().pairingCode));
       await tester.pumpAndSettle();
 
-      // Check for the dialog
-      expect(find.byType(Dialog), findsOneWidget);
+      // Verify that PairingUtil was called
+      verify(pairingUtil.pairNewStudent(any, any));
     });
 
     testWidgetsWithAccessibilityChecks('Refresh list on success', (tester) async {
@@ -338,7 +308,8 @@ void main() {
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
-      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
+      when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
@@ -358,27 +329,10 @@ void main() {
 
       // Click FAB
       await _clickFAB(tester);
-
-      // Click pairing code option
-      await tester.tap(find.text(AppLocalizations().pairingCode));
-      await tester.pumpAndSettle();
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
-
-      // Enter code
-      await tester.enterText(find.byType(TextFormField), 'canvas');
-      await tester.pumpAndSettle();
-
-      // Tap 'OK'
-      await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
 
       // Make sure we made the call to get students
       verify(interactor.getStudents(forceRefresh: true)).called(1);
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS)).called(1);
-      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
-
-      // Make sure the dialog is gone
-      expect(find.byType(AlertDialog), findsNothing);
 
       // Check for two students in the list
       expect(find.byType(ListTile), findsNWidgets(2));
@@ -386,44 +340,13 @@ void main() {
       expect(find.text('Trevor'), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Show error on fail', (tester) async {
-      var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
-
-      // Set the interactor to return false when trying to pair with a student
-      final interactor = _MockManageStudentsInteractor();
-      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(false));
-      _setupLocator(interactor);
-
-      // Setup the main widget
-      await tester.pumpWidget(TestApp(
-        ManageStudentsScreen(observedStudents),
-      ));
-      await tester.pumpAndSettle();
-
-      // Click FAB
-      await _clickFAB(tester);
-
-      // Click on the pairing code option in bottom sheet
-      await tester.tap(find.text(AppLocalizations().pairingCode));
-      await tester.pumpAndSettle();
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
-
-      // Click OK in Add Student Dialog
-      await tester.tap(find.text(AppLocalizations().ok));
-      await tester.pumpAndSettle();
-      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE)).called(1);
-
-      // Check for error message
-      expect(find.text(AppLocalizations().errorPairingFailed), findsOneWidget);
-    });
-
     testWidgetsWithAccessibilityChecks('screen returns true when paired successfully', (tester) async {
       var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy', id: "1771")];
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
-      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
+      when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
       when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
@@ -444,27 +367,10 @@ void main() {
 
       // Click FAB
       await _clickFAB(tester);
-
-      // Click pairing code option
-      await tester.tap(find.text(AppLocalizations().pairingCode));
-      await tester.pumpAndSettle();
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS)).called(1);
-
-      // Enter code
-      await tester.enterText(find.byType(TextFormField), 'canvas');
-      await tester.pumpAndSettle();
-
-      // Tap 'OK'
-      await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
 
       // Make sure we made the call to get students
       verify(interactor.getStudents(forceRefresh: true)).called(1);
-      verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS)).called(1);
-      verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
-
-      // Make sure the dialog is gone
-      expect(find.byType(AlertDialog), findsNothing);
 
       // Check for two students in the list
       expect(find.byType(ListTile), findsNWidgets(2));
@@ -481,44 +387,6 @@ void main() {
       await tester.pumpAndSettle(Duration(seconds: 1));
 
       expect(studentAdded, true);
-    });
-
-    testWidgetsWithAccessibilityChecks('screen returns false when no pairing performed', (tester) async {
-      var observedStudent = [CanvasModelTestUtils.mockUser(shortName: 'Billy', id: "1771")];
-
-      // Mock return value for success when pairing a student
-      final interactor = _MockManageStudentsInteractor();
-      when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
-
-      // Mock retrieving students, also add an extra student to the list
-      when(interactor.getStudents(forceRefresh: anyNamed('forceRefresh'))).thenAnswer((_) {
-        observedStudent.add(CanvasModelTestUtils.mockUser(shortName: 'Trevor'));
-        return Future.value(observedStudent);
-      });
-
-      _setupLocator(interactor);
-
-      final observer = _MockNavigatorObserver();
-
-      // Setup page
-      await _pumpTestableWidgetWithBackButton(tester, ManageStudentsScreen(observedStudent), observer);
-
-      // Make sure we only have one student
-      expect(find.byType(ListTile), findsNWidgets(1));
-      expect(find.text('Billy'), findsOneWidget);
-
-      // Setup for getting the popped result from the Manage Students screen
-      bool studentAdded = true;
-      Route route = verify(observer.didPush(captureAny, any)).captured[1];
-      route.popped.then((value) {
-        studentAdded = value;
-      });
-
-      // Go back to the widget with the back button
-      await tester.pageBack();
-      await tester.pumpAndSettle(Duration(seconds: 1));
-
-      expect(studentAdded, false);
     });
   });
 }
