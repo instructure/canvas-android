@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.Navigation
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.RecordingMediaType
@@ -56,6 +57,8 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.dialog_submission_picker.*
 import kotlinx.android.synthetic.main.dialog_submission_picker_media.*
 import kotlinx.android.synthetic.main.fragment_assignment_details.*
+import kotlinx.coroutines.Job
+import java.net.URLDecoder
 
 class AssignmentDetailsView(
     val canvasContext: CanvasContext,
@@ -67,6 +70,8 @@ class AssignmentDetailsView(
         inflater,
         parent
     ) {
+
+    private var loadHtmlJob: Job? = null
 
     init {
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -183,10 +188,18 @@ class AssignmentDetailsView(
         submitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
-            descriptionWebView.formatHTML(state.description, state.assignmentName)
+            loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{
+                val args = LTIWebViewFragment.makeLTIBundle(
+                        URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, canvasContext, args))
+            }, state.assignmentName)
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
+    }
+
+    private fun loadDescriptionHtml(html: String, contentDescrption: String?) {
+        descriptionWebView.loadHtml(html, contentDescrption)
     }
 
     private fun renderQuizDetails(quizDescriptionViewState: QuizDescriptionViewState) {
@@ -211,6 +224,7 @@ class AssignmentDetailsView(
     }
 
     override fun onDispose() {
+        loadHtmlJob?.cancel()
         descriptionWebView.stopLoading()
     }
 

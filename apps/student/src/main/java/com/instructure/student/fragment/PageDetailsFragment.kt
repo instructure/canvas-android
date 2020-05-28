@@ -198,21 +198,12 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 page.body = "<body dir=\"rtl\">${page.body}</body>"
             }
 
-            if (CanvasWebView.containsLTI(page.body.orEmpty(), "UTF-8")) {
-                canvasWebView.addJavascriptInterface(JsExternalToolInterface {
-                    val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
-                    RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-                }, "accessor")
-                loadHtmlJob = canvasWebView.loadHtmlWithLTIs(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
-            } else {
-                loadHtmlJob = tryWeave {
-                    page.body = addAuthForIframeIfNecessary(page.body.orEmpty())
-                    loadPageHtml(page.body.orEmpty())
-                } catch {
-                    // Fall back to just populating the WebView like normal
-                    loadPageHtml(page.body.orEmpty())
-                }
-            }
+            // Load the html with the helper function to handle iframe cases
+            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
+                val args = LTIWebViewFragment.makeLTIBundle(
+                        URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+            }, page.title)
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
         }
@@ -222,8 +213,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         checkCanEdit()
     }
 
-    private fun loadPageHtml(html: String) {
-        canvasWebView.loadHtml(html, page.title)
+    private fun loadPageHtml(html: String, contentDescrption: String?) {
+        canvasWebView.loadHtml(html, contentDescrption)
     }
 
     /**

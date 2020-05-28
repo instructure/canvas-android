@@ -193,7 +193,7 @@ public class QuizMultipleDropdownBinder {
 
         finalHTML = quizSubmissionQuestion.getQuestionText() + getJavascript();
 
-        holder.question.formatHTML(finalHTML, "");
+        holder.question.loadHtml(finalHTML, "");
         holder.question.setCanvasEmbeddedWebViewCallback(embeddedWebViewCallback);
 
         holder.questionNumber.setText(context.getString(R.string.question) + " " + (position + 1));
@@ -219,7 +219,7 @@ public class QuizMultipleDropdownBinder {
                         if (Long.toString(match.getId()).equals(matchId)) {
                             // Modify the correct answer to be selected
                             finalHTML = finalHTML.replace("value=\"" + matchId + "\"", "value=\"" + matchId + "\" selected");
-                            questionWebView.formatHTML(finalHTML, "");
+                            questionWebView.loadHtml(finalHTML, "");
                             break;
                         }
                     }

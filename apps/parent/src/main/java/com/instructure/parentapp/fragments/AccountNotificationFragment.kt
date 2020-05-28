@@ -114,7 +114,7 @@ class AccountNotificationFragment : ParentFragment() {
         }
 
 
-        accountNotificationWebView.formatHTML(accountNotification.message, accountNotification.subject)
+        accountNotificationWebView.loadHtml(accountNotification.message, accountNotification.subject)
 
     }
 

@@ -252,7 +252,7 @@ class EventFragment : ParentFragment(), TimePickerFragment.TimePickerFragmentLis
             } else {
                 eventWebView.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.canvasBackgroundLight))
             }
-            eventWebView.formatHTML(content, scheduleItem.title)
+            eventWebView.loadHtml(content, scheduleItem.title)
         }
     }
 

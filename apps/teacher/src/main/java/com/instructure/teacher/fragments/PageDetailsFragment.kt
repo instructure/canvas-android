@@ -169,20 +169,15 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         mPage = page
-        if (CanvasWebView.containsLTI(page.body.orEmpty(), "UTF-8")) {
-            canvasWebView.addJavascriptInterface(JsExternalToolInterface {
-                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), "LTI Launch", true)
-                RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-            }, "accessor")
-            loadHtmlJob = canvasWebView.loadHtmlWithLTIs(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml)
-        } else {
-            loadPageHtml(page.body.orEmpty())
-        }
+        loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
+            val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, page.title)
         setupToolbar()
     }
 
-    private fun loadPageHtml(html: String) {
-        canvasWebView.loadHtml(html, mPage.title)
+    private fun loadPageHtml(html: String, contentDescription: String?) {
+        canvasWebView.loadHtml(html, contentDescription)
     }
 
     override fun onError(stringId: Int) {

@@ -75,6 +75,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private var discussionMarkAsReadJob: Job? = null
     private var discussionLikeJob: Job? = null
     private var discussionsLoadingJob: WeaveJob? = null
+    private var loadHeaderHtmlJob: Job? = null
+    private var loadRepliesHtmlJob: Job? = null
 
     // Bundle args
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
@@ -87,7 +89,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private var scrollPosition: Int = 0
     private var authenticatedSessionURL: String? = null
-    private var headerLoadHtmlJob: Job? = null
 
     //region Analytics
     @Suppress("unused")
@@ -160,7 +161,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionMarkAsReadJob?.cancel()
         discussionLikeJob?.cancel()
         discussionsLoadingJob?.cancel()
-        headerLoadHtmlJob?.cancel()
+        loadHeaderHtmlJob?.cancel()
+        loadRepliesHtmlJob?.cancel()
+
         discussionTopicHeaderWebView?.destroy()
         discussionRepliesWebView?.destroy()
     }
@@ -524,12 +527,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     //region Loading
-    private fun loadHTMLTopic(html: String, ltiUrl: String? = null) {
+    private fun loadHTMLTopic(html: String, contentDescription: String?) {
         setupHeaderWebView()
-        discussionTopicHeaderWebView.loadHtml(DiscussionUtils.createDiscussionTopicHeaderHtml(requireContext(), isTablet, html, ltiUrl), discussionTopicHeader.title)
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
     }
 
-    private fun loadHTMLReplies(html: String) {
+    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
         discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
     }
 
@@ -664,13 +667,8 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions!!.reply)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsStudioLTI(discussionTopicHeader.message.orEmpty(), "UTF-8")) {
-            // We are only handling Studio because there is not a predictable way for use to determine if a URL is and LTI launch
-            getAuthenticatedURL(discussionTopicHeader.message.orEmpty()) { authenticatedHtml, originalUrl -> loadHTMLTopic(authenticatedHtml, originalUrl) }
-        } else {
-            loadHTMLTopic(discussionTopicHeader.message ?: "")
-        }
+        loadHeaderHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                discussionTopicHeader.message.orEmpty(), ::loadHTMLTopic, null, discussionTopicHeader.title)
 
         attachmentIcon.setVisible(!discussionTopicHeader.attachments.isEmpty())
         attachmentIcon.onClick { _ ->
@@ -681,9 +679,10 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun loadDiscussionTopicViews(html: String) {
         discussionRepliesWebView.setVisible()
         discussionProgressBar.setGone()
-        // We are only handling Studio because there is not a predictable way for use to determine if a URL is an LTI launch
-        if (CanvasWebView.containsStudioLTI(html, "UTF-8")) getAuthenticatedURL(html) { authenticatedHtml, _ -> loadHTMLReplies(authenticatedHtml) }
-        else discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "UTF-8", null)
+
+        loadRepliesHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                html, ::loadHTMLReplies)
+
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)
         postBeforeViewingRepliesTextView.setGone()

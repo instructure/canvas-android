@@ -48,7 +48,7 @@ class QuizNumericalViewHolder(v: View) : RecyclerView.ViewHolder(v) {
     ) = with(itemView) {
         question.loadUrl("about:blank")
         question.canvasWebViewClientCallback = webViewClientCallback
-        question.formatHTML(quizSubmissionQuestion.questionText, "")
+        question.loadHtml(quizSubmissionQuestion.questionText, "")
         question.setBackgroundColor(Color.TRANSPARENT)
         question.canvasEmbeddedWebViewCallback = callback
         questionNumber.text = context.getString(R.string.question) + " " + (position + 1)

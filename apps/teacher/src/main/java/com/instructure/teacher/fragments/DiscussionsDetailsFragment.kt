@@ -249,15 +249,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             }
 
             discussionRepliesWebView.setInvisible()
-            if(CanvasWebView.containsLTI(html, "UTF-8")) {
-                discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
-                    val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
-                    RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-                }, "accessor")
-                repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithLTIs(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies)
-            } else {
-                discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(), html, "text/html", "utf-8", null)
-            }
+
+            repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies, {
+                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+            })
 
             delay(300)
             discussionsScrollView.post {
@@ -403,24 +399,23 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             showReplyView(presenter.discussionTopicHeader.id)
         }
 
-        //if the html has an lti url, we want to authenticate so the user doesn't have to login again
-        if (CanvasWebView.containsLTI(discussionTopicHeader.message.orEmpty(), "UTF-8")) {
-            discussionTopicHeaderWebView.addJavascriptInterface(JsExternalToolInterface {
-                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
-            }, "accessor")
-            headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithLTIs(requireContext(), isTablet, discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic)
-        } else {
-            discussionTopicHeaderWebView.loadHtml(discussionTopicHeader.message, discussionTopicHeader.title)
-        }
+        headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(
+                    this@DiscussionsDetailsFragment.requireContext(),
+                    Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, discussionTopicHeader.title)
+
         discussionRepliesWebView.loadHtml("", "")
     }
 
-    private fun loadHTMLTopic(html: String) {
-        discussionTopicHeaderWebView.loadHtml(html, presenter.discussionTopicHeader.title)
+    private fun loadHTMLTopic(html: String, contentDescription: String?) {
+        discussionTopicHeaderWebView.loadHtml(html, contentDescription)
     }
 
-    private fun loadHTMLReplies(html: String) {
+    private fun loadHTMLReplies(html: String, contentDescription: String? = null) {
         discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "utf-8", null)
     }
 

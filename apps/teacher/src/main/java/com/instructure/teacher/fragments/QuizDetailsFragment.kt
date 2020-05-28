@@ -54,6 +54,7 @@ import org.greenrobot.eventbus.ThreadMode
 import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
+import java.net.URLDecoder
 import java.util.*
 
 class QuizDetailsFragment : BasePresenterFragment<
@@ -342,6 +343,7 @@ class QuizDetailsFragment : BasePresenterFragment<
             override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
+
             override fun onPageStartedCallback(webView: WebView?, url: String?) {}
             override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
             override fun routeInternallyCallback(url: String?) {
@@ -363,15 +365,16 @@ class QuizDetailsFragment : BasePresenterFragment<
         instructionsWebView.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        if (CanvasWebView.containsLTI(quiz.description ?: "", "UTF-8")) {
-            loadHtmlJob = instructionsWebView.loadHtmlWithLTIs(requireContext(), isTablet, quiz.description ?: "", ::loadQuizHTML)
-        } else {
-            loadQuizHTML(quiz.description ?: "")
-        }
+        loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
+                quiz.description.orEmpty(), ::loadQuizHTML, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, quiz.title)
     }
 
-    private fun loadQuizHTML(html: String) {
-        instructionsWebView.loadHtml(html, presenter.mQuiz.title)
+    private fun loadQuizHTML(html: String, contentDescription: String?) {
+        instructionsWebView.loadHtml(html, contentDescription)
     }
 
     private fun setupListeners(quiz: Quiz) {

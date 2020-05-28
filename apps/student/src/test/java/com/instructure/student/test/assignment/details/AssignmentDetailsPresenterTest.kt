@@ -827,12 +827,14 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Description contains discussion topic header message when assignment is discussion`() {
+        // This test no longer needs to find the baseDiscussion html text, as that formatting now happens when the
+        // description is loaded into the webview.
         val assignment = baseAssignment.copy(submissionTypesRaw = listOf("discussion_topic"), discussionTopicHeader = baseDiscussion)
 
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
 
-        assertEquals(discussionHtml, state.description)
+        assertEquals(baseDiscussion.message, state.description)
     }
 
     @Test
