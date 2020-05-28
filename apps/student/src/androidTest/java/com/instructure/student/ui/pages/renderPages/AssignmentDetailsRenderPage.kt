@@ -142,7 +142,7 @@ class AssignmentDetailsRenderPage : AssignmentDetailsPage() {
     fun assertDisplaysDiscussionDescription(text: String) {
         descriptionWebView.assertVisible()
         noDescription.assertGone()
-        onWebView().withElement(findElement(Locator.ID, "header_content")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
+        onWebView().withElement(findElement(Locator.ID, "content")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
     }
 
     fun assertAssignmentAttemptsGone() {
