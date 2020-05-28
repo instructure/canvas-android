@@ -260,6 +260,16 @@ fun waitForMatcherWithRefreshes(target: Matcher<View>) {
     }
 }
 
+/**
+ * Refresh the current screen via pull-to-refresh.
+ * Assumes that a SwipeRefreshLayout element is visible.
+ */
+fun refresh() {
+    val swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
+    onView(swipeRefreshLayoutMatcher)
+            .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
+}
+
 /** A better version of the shared espresso lib's WaitForViewMatcher.waitForView()
  *  for a couple of reasons:
  *    (1) It allows the caller to specify the wait time

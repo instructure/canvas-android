@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
@@ -263,7 +264,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertLikeCount(discussionEntry, 0)
         discussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "like" to propagate
-        discussionDetailsPage.assertLikeCount(discussionEntry, 1)
+        discussionDetailsPage.assertLikeCount(discussionEntry, 1, refreshesAllowed = 2)
         discussionDetailsPage.clickLikeOnEntry(discussionEntry)
         sleep(1000) // Small wait to allow "unlike" to propagate
         discussionDetailsPage.assertLikeCount(discussionEntry, 0)
@@ -389,7 +390,7 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyText = "I'm a reply"
         discussionDetailsPage.sendReply(replyText)
         val discussionEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
-        discussionDetailsPage.assertReplyDisplayed(discussionEntry)
+        discussionDetailsPage.assertReplyDisplayed(discussionEntry, refreshesAllowed = 2)
     }
 
     // Tests replying with an attachment.
@@ -467,17 +468,19 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyText = "I'm a reply"
         discussionDetailsPage.sendReply(replyText)
 
+        // Verify that our reply has made it to the screen
+        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
         discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
 
         // And verify that our reply-to-reply is showing
         val replyReplyEntry = findDiscussionEntry(data, topicHeader.title!!, replyReplyText)
-        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry)
+        discussionDetailsPage.assertReplyDisplayed(replyReplyEntry, refreshesAllowed = 2)
     }
 
-    /*  MBL-14440
     // Tests that we can make a threaded reply with an attachment
     // It is a whole other gear to manually specify an attachment the same way that a user would,
     // so we add the attachments programmatically.
@@ -502,9 +505,12 @@ class DiscussionsInteractionTest : StudentTest() {
         val replyText = "I'm a reply"
         discussionDetailsPage.sendReply(replyText)
 
+        // Make sure that the reply is displayed, so that we can reply to it
+        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
+        discussionDetailsPage.assertReplyDisplayed(replyEntry, refreshesAllowed = 2)
+
         // Now let's reply to the reply (i.e., threaded reply)
         val replyReplyText = "Threaded Reply"
-        val replyEntry = findDiscussionEntry(data, topicHeader.title!!, replyText)
         discussionDetailsPage.replyToReply(replyEntry,replyReplyText)
 
         // And verify that our reply-to-reply is showing
@@ -536,7 +542,6 @@ class DiscussionsInteractionTest : StudentTest() {
                 WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
 
     }
-     */
 
     //
     // Utilities

@@ -27,6 +27,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvas.espresso.withElementRepeat
@@ -108,9 +109,25 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onView(withId(R.id.menu_send)).click()
     }
 
-    fun assertReplyDisplayed(reply: DiscussionEntry) {
-        // It can take a *long* time for the reply to get rendered to the webview on
-        // tablets (in FTL, anyway).  We'll compensate by giving it up to 30 seconds to render.
+    fun assertReplyDisplayed(reply: DiscussionEntry, refreshesAllowed: Int = 0) {
+
+        // Allow up to refreshesAllowed attempt/refresh cycles
+        for(i in 0..refreshesAllowed-1) {
+            try {
+                onWebView(withId(R.id.discussionRepliesWebView))
+                        .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
+                        .check(webMatches(getText(),containsString(reply.message)))
+                return
+            }
+            catch(t: Throwable) {
+                refresh()
+            }
+        }
+
+        // If we have not yet seen the desired reply, try one more time, allowing up to
+        // 30 seconds for the page to render and the reply to appear.
+        // (It can take a *long* time for the reply to get rendered to the webview on
+        // tablets (in FTL, anyway).)
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 30)
                 .check(webMatches(getText(),containsString(reply.message)))
@@ -143,8 +160,23 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                 .perform(webClick())
     }
 
-    fun assertLikeCount(reply: DiscussionEntry, count: Int) {
+    fun assertLikeCount(reply: DiscussionEntry, count: Int, refreshesAllowed: Int = 0) {
         if(count > 0) {
+
+            for(i in 0..refreshesAllowed-1) {
+                try {
+                    onWebView(withId(R.id.discussionRepliesWebView))
+                            .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
+                            .check(webMatches(getText(), containsString(count.toString())))
+                    return
+                }
+                catch(t: Throwable) {
+                    refresh()
+                }
+            }
+
+            // If we haven't verified our info by now, let's make one last call to either
+            // (1) succeed or (2) throw a sensible error.
             onWebView(withId(R.id.discussionRepliesWebView))
                     .withElement(findElement(Locator.CLASS_NAME, "likes_count_${reply.id}"))
                     .check(webMatches(getText(), containsString(count.toString())))
@@ -174,6 +206,9 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
                 .perform(webClick())
+
+        waitForMatcherWithRefreshes(withId(R.id.canvasWebView))
+
         for(check in checks) {
             onWebView(withId(R.id.canvasWebView))
                     .withElement(findElement(check.locatorType, check.locatorValue))
@@ -187,7 +222,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         onWebView(withId(R.id.discussionRepliesWebView))
                 .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
                 .perform(webClick())
-        waitForMatcherWithSleeps(withId(R.id.rce_webView), waitMs = 10000)
+        waitForMatcherWithSleeps(withId(R.id.rce_webView), waitMs = 10000, sleepMs = 1000)
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
     }
