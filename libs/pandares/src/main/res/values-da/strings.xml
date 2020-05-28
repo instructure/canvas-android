@@ -430,7 +430,6 @@
     <string name="modified">Sidst redigeret:</string>
     <string name="lastModified">Sidst redigeret: %1$s</string>
 
-    <string name="masqueradeUserId">Maskering af bruger-ID</string>
     <string name="startMasquerading">Start maskring</string>
     <string name="stopMasquerading">Stop maskering</string>
     <string name="userId">Bruger-id</string>

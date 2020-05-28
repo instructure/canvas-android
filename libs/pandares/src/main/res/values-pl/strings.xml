@@ -447,7 +447,6 @@
     <string name="modified">Ostatnia modyfikacja:</string>
     <string name="lastModified">Ostatnia modyfikacja: %1$s</string>
 
-    <string name="masqueradeUserId">Identyfikator użytkownika maskowanego</string>
     <string name="startMasquerading">Rozpocznij maskaradę</string>
     <string name="stopMasquerading">Zatrzymaj maskowanie</string>
     <string name="userId">ID użytkownika</string>

@@ -114,7 +114,7 @@ class AnnouncementFragment : ParentFragment() {
         if (announcement.attachments != null && announcement.attachments.size > 0) {
             formatHTMLWithAttachment()
         } else {
-            announcementWebView.formatHTML(announcement.message, announcement.title)
+            announcementWebView.loadHtml(announcement.message, announcement.title)
         }
 
 
@@ -124,7 +124,7 @@ class AnnouncementFragment : ParentFragment() {
         val attachment = announcement.attachments[0]
         val html = announcement.message + "<p><a href=\"" + attachment.url + "\" >" + attachment.fileName + "</a></p>"
 
-        announcementWebView.formatHTML(html, announcement.title)
+        announcementWebView.loadHtml(html, announcement.title)
     }
 
     companion object {

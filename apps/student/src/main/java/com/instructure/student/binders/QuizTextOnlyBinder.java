@@ -28,6 +28,6 @@ public class QuizTextOnlyBinder {
             return;
         }
 
-        holder.text.formatHTML(quizSubmissionQuestion.getQuestionText(), "");
+        holder.text.loadHtml(quizSubmissionQuestion.getQuestionText(), "");
     }
 }

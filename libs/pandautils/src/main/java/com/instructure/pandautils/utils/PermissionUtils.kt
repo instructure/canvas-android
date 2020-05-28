@@ -181,7 +181,9 @@ class PermissionRequester(private val permissionStrings: Set<String>) {
 class PermissionReceiver : ActivityCompat.OnRequestPermissionsResultCallback {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if (requestCode != PermissionRequester.REQUEST_CODE) return
+        // When nesting fragments, the request code from a permission request gets mangled (https://stackoverflow.com/questions/36170324/receive-incorrect-resultcode-in-activitys-onrequestpermissionsresult-when-reque/36186666)
+        // using a bitwise '&'' with 0xff gets us the code we want
+        if (requestCode != PermissionRequester.REQUEST_CODE && (requestCode and 0xff) != PermissionUtils.PERMISSION_REQUEST_CODE) return
         EventBus.getDefault().post(PermissionRequester.PermissionResult(requestCode, permissions, grantResults))
     }
 

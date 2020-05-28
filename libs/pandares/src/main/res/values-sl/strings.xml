@@ -430,7 +430,6 @@
     <string name="modified">Nazadnje prilagojeno:</string>
     <string name="lastModified">Nazadnje prilagojeno: %1$s</string>
 
-    <string name="masqueradeUserId">ID uporabnika v prevzeti vlogi</string>
     <string name="startMasquerading">Začetek prevzemanja vloge</string>
     <string name="stopMasquerading">Konec prevzemanja vloge</string>
     <string name="userId">ID uporabnika</string>

@@ -665,25 +665,43 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
      *       Back history will not work with multiple pages. This allows for formatHtml to be called several times without causing the user to
      *          press back 2 or 3 times.
      *
-     * @param content
-     * @param title
+     * @param html
+     * @param contentDescription
      * @return
      */
-    public String formatHTML(String content, String title) {
-        String html = FileUtils.getAssetsFile(mContext, "html_wrapper.html");
-
-        content = CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(content);
-        content = CanvasWebView.addProtocolToLinks(content);
-
-        content = checkForMathTags(content);
-        String result = html.replace("{$CONTENT$}", content);
-
-        // BaseURL is set as Referer. Referer needed for some vimeo videos to play
+    public String loadHtml(String html, String contentDescription) {
+        String result = formatHtml(html);
         this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
-
-        setupAccessibilityContentDescription(result, title);
-
+        setupAccessibilityContentDescription(result, contentDescription);
         return result;
+    }
+
+    /**
+     * Helper function that makes html content somewhat suitable for mobile
+     */
+    public String formatHtml(String html) {
+        String htmlWrapper = FileUtils.getAssetsFile(mContext, "html_wrapper.html");
+        html = CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(html);
+        html = CanvasWebView.addProtocolToLinks(html);
+        html = checkForMathTags(html);
+        return htmlWrapper.replace("{$CONTENT$}", html);
+    }
+
+    /**
+     * Loads the provided HTML string without modification
+     * @param html The raw HTML to load
+     * @param contentDescription The content description of the HTML
+     */
+    public void loadRawHtml(String html, String contentDescription) {
+        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", encoding, getHtmlAsUrl(html, encoding));
+        setupAccessibilityContentDescription(html, contentDescription);
+    }
+
+    /*
+     *  Work around for API 16 devices (and perhaps others). When pressing back the webview was loading 'about:blank' instead of the custom html
+     */
+    private String getHtmlAsUrl(String html, String encoding) {
+        return String.format("data:text/html; charset=%s, %s", encoding, html);
     }
 
     @NonNull
@@ -724,41 +742,6 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             if (URLDecoder.decode(sanitized, encoding).contains("/external_tools/retrieve")) return true;
         } catch (UnsupportedEncodingException e) { /* do nothing */ }
         return false;
-    }
-
-    public String loadHtml(String html, String contentDescription) {
-        String result = formatHtml(html);
-        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result, encoding));
-        setupAccessibilityContentDescription(result, contentDescription);
-        return result;
-    }
-
-    /**
-     * Makes html content somewhat suitable for mobile
-     */
-    public String formatHtml(String html) {
-        String htmlWrapper = FileUtils.getAssetsFile(mContext, "html_wrapper.html");
-        html = CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(html);
-        html = CanvasWebView.addProtocolToLinks(html);
-        html = checkForMathTags(html);
-        return htmlWrapper.replace("{$CONTENT$}", html);
-    }
-
-    /**
-     * Loads the provided HTML string without modification
-     * @param html The raw HTML to load
-     * @param contentDescription The content description of the HTML
-     */
-    public void loadRawHtml(String html, String contentDescription) {
-        this.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", encoding, getHtmlAsUrl(html, encoding));
-        setupAccessibilityContentDescription(html, contentDescription);
-    }
-
-    /*
-     *  Work around for API 16 devices (and perhaps others). When pressing back the webview was loading 'about:blank' instead of the custom html
-     */
-    private String getHtmlAsUrl(String html, String encoding) {
-        return String.format("data:text/html; charset=%s, %s", encoding, html);
     }
 
     /**
@@ -853,8 +836,15 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
     // chooser params so other LTI's can also be used (like turnitin).
     private void startFileChooser(final int requestCode, WebChromeClient.FileChooserParams fileChooserParams) {
         Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+
+        String[] extraMimeTypes = fileChooserParams.getAcceptTypes();
+        if (extraMimeTypes.length > 0 && !extraMimeTypes[0].trim().isEmpty()) {
+            // An array with one blank element will clear out the allowed mime types,
+            // so we only want to add extra mime types if we are given any valid types
+            fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, extraMimeTypes);
+        }
+
         fileIntent.setType("*/*");
-        fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, fileChooserParams.getAcceptTypes());
 
         // Determine if we can upload video files so we can add the camera to the list of choices
         boolean allowRecording = false;

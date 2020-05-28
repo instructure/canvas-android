@@ -430,7 +430,6 @@
     <string name="modified">Whakarerekētanga Mutunga:</string>
     <string name="lastModified">Whakarerekētanga Mutunga: %1$s</string>
 
-    <string name="masqueradeUserId">Whakāhua kē ID Kaiwhakamahi</string>
     <string name="startMasquerading">tīmata whakāhua kē</string>
     <string name="stopMasquerading">Kāti e whakāhua kē ana</string>
     <string name="userId">Kaiwhakamahi ID</string>

@@ -51,7 +51,9 @@ class MainActivity : FlutterActivity() {
         if (newIntent) {
             flutterEngine?.navigationChannel?.pushRoute(route)
         } else {
-            this.intent = intent.putExtra("initial_route", route)
+            this.intent = intent.putExtra("route", route)
+//            this.intent = intent.putExtra(FlutterActivityLaunchConfigs.EXTRA_INITIAL_ROUTE, route) // Package private, can't use directly but is exactly what we want. Leaving in for future reference
+//            flutterEngine?.navigationChannel?.setInitialRoute(route) // Doesn't actually work, not implemented flutter side ¯\_(ツ)_/¯
         }
     }
 }

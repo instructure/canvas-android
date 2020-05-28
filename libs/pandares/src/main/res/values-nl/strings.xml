@@ -430,7 +430,6 @@
     <string name="modified">Laatst gewijzigd:</string>
     <string name="lastModified">Laatst gewijzigd: %1$s</string>
 
-    <string name="masqueradeUserId">Gebruikers-ID verbergen</string>
     <string name="startMasquerading">Begin te verbergen</string>
     <string name="stopMasquerading">Maskeren stoppen</string>
     <string name="userId">Gebruikers-ID:</string>

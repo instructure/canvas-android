@@ -436,7 +436,6 @@
     <string name="modified">Data de la darrera modificació:</string>
     <string name="lastModified">Data de la darrera modificació: %1$s</string>
 
-    <string name="masqueradeUserId">·Emmascara l\'ID d\'usuari</string>
     <string name="startMasquerading">Inicia l\'emmascarament</string>
     <string name="stopMasquerading">Atura l\'emmascarament</string>
     <string name="userId">ID d\'usuari</string>

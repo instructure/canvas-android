@@ -42,7 +42,7 @@ public class QuizEssayBinder {
         }
         holder.question.loadUrl("about:blank");
         holder.question.setCanvasWebViewClientCallback(webViewClientCallback);
-        holder.question.formatHTML(quizSubmissionQuestion.getQuestionText(), "");
+        holder.question.loadHtml(quizSubmissionQuestion.getQuestionText(), "");
         holder.question.setBackgroundColor(Color.TRANSPARENT);
         holder.question.setCanvasEmbeddedWebViewCallback(callback);
         holder.questionNumber.setText(context.getString(R.string.question) + " " + (position + 1));

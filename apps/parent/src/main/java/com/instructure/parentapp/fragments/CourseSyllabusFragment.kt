@@ -119,7 +119,7 @@ class CourseSyllabusFragment : ParentFragment() {
             return
         }
 
-        description.formatHTML(syllabus?.description, syllabus?.title)
+        description.loadHtml(syllabus?.description, syllabus?.title)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

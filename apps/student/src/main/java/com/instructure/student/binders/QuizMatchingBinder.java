@@ -173,7 +173,7 @@ public class QuizMatchingBinder {
         } else if(context instanceof ContextThemeWrapper) {
             holder.question.addJavascriptInterface(new WebAppInterface((Activity)(((ContextThemeWrapper) context).getBaseContext()), holder.question), "MyApp");
         }
-        holder.question.formatHTML(quizSubmissionQuestion.getQuestionText(), "");
+        holder.question.loadHtml(quizSubmissionQuestion.getQuestionText(), "");
         holder.question.setCanvasEmbeddedWebViewCallback(embeddedWebViewCallback);
 
         holder.questionNumber.setText(context.getString(R.string.question) + " " + (position + 1));

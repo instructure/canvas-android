@@ -435,7 +435,6 @@
     <string name="modified">Viimeksi muokattu:</string>
     <string name="lastModified">Viimeksi muokattu: %1$s</string>
 
-    <string name="masqueradeUserId">Naamioi käyttäjätunnus</string>
     <string name="startMasquerading">Aloita naamiointi</string>
     <string name="stopMasquerading">Lopeta naamiointi.</string>
     <string name="userId">Käyttäjätunnus</string>

@@ -32,15 +32,18 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.synthetic.main.fragment_assignment_basic.*
+import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.net.URLDecoder
 import java.util.*
 
 class AssignmentBasicFragment : ParentFragment() {
 
     private var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
     private var assignment: Assignment by ParcelableArg()
+    private var loadHtmlJob: Job? = null
 
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -70,6 +73,12 @@ class AssignmentBasicFragment : ParentFragment() {
         super.onStop()
         EventBus.getDefault().unregister(this)
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        loadHtmlJob?.cancel()
+    }
+
     //endregion
 
     //region Setup
@@ -126,7 +135,16 @@ class AssignmentBasicFragment : ParentFragment() {
             description = "<p>" + getString(R.string.noDescription) + "</p>"
         }
 
-        assignmentWebView.formatHTML(description, assignment.name)
+        loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
+                ::loadDescriptionHtml, {
+            val args = LTIWebViewFragment.makeLTIBundle(
+                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+        }, assignment.name)
+    }
+
+    private fun loadDescriptionHtml(html: String, contentDescription: String?) {
+        assignmentWebView.loadHtml(html, contentDescription)
     }
     //endregion
 

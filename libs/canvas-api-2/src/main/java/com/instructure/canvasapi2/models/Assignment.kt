@@ -94,6 +94,8 @@ data class Assignment(
         val moderatedGrading: Boolean = false,
         @SerializedName("anonymous_grading")
         val anonymousGrading: Boolean = false,
+        @SerializedName("allowed_attempts")
+        val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
         var isStudioEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate

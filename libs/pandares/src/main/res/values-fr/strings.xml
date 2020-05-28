@@ -430,7 +430,6 @@
     <string name="modified">Dernièrement modifié :</string>
     <string name="lastModified">Dernièrement modifié : %1$s</string>
 
-    <string name="masqueradeUserId">Personnifier l\'identifiant d\'utilisateur</string>
     <string name="startMasquerading">Commencer la personnification</string>
     <string name="stopMasquerading">Cesser de personnifier</string>
     <string name="userId">ID utilisateur</string>
