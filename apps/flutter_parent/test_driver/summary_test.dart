@@ -63,10 +63,11 @@ void main() {
 
     // Check that our various items are present
     // (Will also click-through to verify that the details pages are shown correctly.)
-    print("assignment.dueAt = ${assignment.dueAt}");
+    print("assignment.dueAt = ${assignment.dueAt}\n");
     await CourseSummaryPage.verifyAssignmentPresent(driver, assignment);
-    print("quiz.dueAt = ${quiz.dueAt}");
+    print("quiz.dueAt = ${quiz.dueAt}\n");
     await CourseSummaryPage.verifyQuizPresent(driver, quiz);
+    print("event startAt = ${event.startAt} allDayDate = ${event.allDayDate}\n");
     await CourseSummaryPage.verifyEventPresent(driver, event);
   }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 secs
 }
