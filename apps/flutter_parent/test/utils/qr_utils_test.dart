@@ -14,8 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
+import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+
+import 'test_app.dart';
+import 'test_helpers/mock_helpers.dart';
 
 void main() {
   String _getQRUrl(
@@ -24,28 +31,126 @@ void main() {
         '&$domain=mobiledev.instructure.com';
   }
 
-  test('verifySSOLogin returns true with valid Uri', () {
-    var verified = QRUtils.verifySSOLogin(_getQRUrl());
-    expect(verified, isNotNull);
+  group('verifySSOLogin', () {
+    test('verifySSOLogin returns true with valid Uri', () {
+      var verified = QRUtils.verifySSOLogin(_getQRUrl());
+      expect(verified, isNotNull);
+    });
+
+    test('verifySSOLogin returns false with null Uri', () {
+      var verified = QRUtils.verifySSOLogin(null);
+      expect(verified, isNull);
+    });
+
+    test('verifySSOLogin returns false with invalid host param', () {
+      var verified = QRUtils.verifySSOLogin(_getQRUrl(host: 'hodor'));
+      expect(verified, isNull);
+    });
+
+    test('verifySSOLogin returns false with missing domain param', () {
+      var verified = QRUtils.verifySSOLogin(_getQRUrl(domain: 'hodor'));
+      expect(verified, isNull);
+    });
+
+    test('verifySSOLogin returns false with missing auth code param', () {
+      var verified = QRUtils.verifySSOLogin(_getQRUrl(code: 'hodor'));
+      expect(verified, isNull);
+    });
   });
 
-  test('verifySSOLogin returns false with null Uri', () {
-    var verified = QRUtils.verifySSOLogin(null);
-    expect(verified, isNull);
+  group('parsePairingInfo', () {
+    test('parsePairingInfo returns invalidCode error for null input', () {
+      var result = QRUtils.parsePairingInfo(null);
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns invalidCode error for empty input', () {
+      var result = QRUtils.parsePairingInfo('');
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns invalidCode error for invalid input', () {
+      var result = QRUtils.parsePairingInfo('invalid input');
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns invalidCode error if input has wrong host', () {
+      var input = 'canvas-parent://addStudent?pairing_code=abcd&pairing_domain=test.instructure.com';
+      var result = QRUtils.parsePairingInfo(input);
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns invalidCode error if input is missing pairing code', () {
+      var input = 'canvas-parent://addObservee?pairing_domain=test.instructure.com';
+      var result = QRUtils.parsePairingInfo(input);
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns invalidCode error if input is missing pairing domain', () {
+      var input = 'canvas-parent://addObservee?pairing_code=aBc123';
+      var result = QRUtils.parsePairingInfo(input);
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('parsePairingInfo returns QRPairingInfo on successful parse', () {
+      var input = 'canvas-parent://addObservee?pairing_code=aBc123&pairing_domain=test.instructure.com';
+      var result = QRUtils.parsePairingInfo(input);
+      expect(result, isA<QRPairingInfo>());
+      expect((result as QRPairingInfo).domain, 'test.instructure.com');
+      expect((result as QRPairingInfo).code, 'aBc123');
+    });
   });
 
-  test('verifySSOLogin returns false with invalid host param', () {
-    var verified = QRUtils.verifySSOLogin(_getQRUrl(host: 'hodor'));
-    expect(verified, isNull);
-  });
+  group('scanPairingCode', () {
+    BarcodeScanVeneer barcodeScanner = MockBarcodeScanner();
+    setupTestLocator((locator) => locator.registerLazySingleton<BarcodeScanVeneer>(() => barcodeScanner));
 
-  test('verifySSOLogin returns false with missing domain param', () {
-    var verified = QRUtils.verifySSOLogin(_getQRUrl(domain: 'hodor'));
-    expect(verified, isNull);
-  });
+    setUp(() {
+      reset(barcodeScanner);
+    });
 
-  test('verifySSOLogin returns false with missing auth code param', () {
-    var verified = QRUtils.verifySSOLogin(_getQRUrl(code: 'hodor'));
-    expect(verified, isNull);
+    test('scanPairingCode returns QRPairingInfo on successful scan of a valid code', () async {
+      var validCode = 'canvas-parent://addObservee?pairing_code=aBc123&pairing_domain=test.instructure.com';
+      when(barcodeScanner.scanBarcode()).thenAnswer((_) async => ScanResult(rawContent: validCode));
+      var result = await QRUtils.scanPairingCode();
+      expect(result, isA<QRPairingInfo>());
+      expect((result as QRPairingInfo).domain, 'test.instructure.com');
+      expect((result as QRPairingInfo).code, 'aBc123');
+    });
+
+    test('scanPairingCode returns canceled result if scan was canceled', () async {
+      when(barcodeScanner.scanBarcode()).thenAnswer((_) async => ScanResult(type: ResultType.Cancelled));
+      var result = await QRUtils.scanPairingCode();
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.canceled);
+    });
+
+    test('scanPairingCode returns invalidCode error if there was a scan error', () async {
+      when(barcodeScanner.scanBarcode()).thenAnswer((_) async => ScanResult(type: ResultType.Error));
+      var result = await QRUtils.scanPairingCode();
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
+    });
+
+    test('scanPairingCode returns camera error if camera permission was denied', () async {
+      var exception = PlatformException(code: BarcodeScanner.cameraAccessDenied);
+      when(barcodeScanner.scanBarcode()).thenAnswer((_) async => throw exception);
+      var result = await QRUtils.scanPairingCode();
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.cameraError);
+    });
+
+    test('scanPairingCode returns unknown error if camera permission was denied', () async {
+      when(barcodeScanner.scanBarcode()).thenAnswer((_) async => throw 'Fake Exception');
+      var result = await QRUtils.scanPairingCode();
+      expect(result, isA<QRPairingScanError>());
+      expect((result as QRPairingScanError).type, QRPairingScanErrorType.unknown);
+    });
   });
 }

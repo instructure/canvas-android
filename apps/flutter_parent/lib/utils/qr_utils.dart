@@ -14,12 +14,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
+
 class QRUtils {
+  // QR Login
   static const String QR_DOMAIN = 'domain';
   static const String QR_AUTH_CODE = 'code_android_parent';
   static const String QR_HOST = 'sso.canvaslms.com';
   static const String QR_HOST_BETA = 'sso.beta.canvaslms.com';
   static const String QR_HOST_TEST = 'sso.test.canvaslms.com';
+
+  // QR Pairing
+  static const String QR_PAIR_HOST = 'addobservee';
+  static const String QR_PAIR_PARAM_CODE = 'pairing_code';
+  static const String QR_PAIR_PARAM_DOMAIN = 'pairing_domain';
 
   static Uri verifySSOLogin(String url) {
     try {
@@ -37,4 +48,63 @@ class QRUtils {
       return null;
     }
   }
+
+  /// Opens the bar code scanner and attempts to scan for a pairing QR code
+  static Future<QRPairingScanResult> scanPairingCode() async {
+    try {
+      ScanResult scanResult = await locator<BarcodeScanVeneer>().scanBarcode();
+      switch (scanResult.type) {
+        case ResultType.Barcode:
+          return QRUtils.parsePairingInfo(scanResult.rawContent);
+        case ResultType.Cancelled:
+          return QRPairingScanResult.error(QRPairingScanErrorType.canceled);
+        case ResultType.Error:
+          return QRPairingScanResult.error(QRPairingScanErrorType.invalidCode);
+      }
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
+        return QRPairingScanResult.error(QRPairingScanErrorType.cameraError);
+      }
+    } catch (e) {
+      // Intentionally left blank
+    }
+    return QRPairingScanResult.error(QRPairingScanErrorType.unknown);
+  }
+
+  /// Attempts to parse and return QR pairing information from the provided uri. Returns null if parsing failed.
+  static QRPairingScanResult parsePairingInfo(String rawUri) {
+    try {
+      var uri = Uri.parse(rawUri);
+      var params = uri.queryParameters;
+      if (QR_PAIR_HOST == uri.host && params[QR_PAIR_PARAM_CODE] != null && params[QR_PAIR_PARAM_DOMAIN] != null) {
+        return QRPairingScanResult.success(params[QR_PAIR_PARAM_CODE], params[QR_PAIR_PARAM_DOMAIN]);
+      }
+    } catch (e) {
+      // Intentionally left blank
+    }
+    return QRPairingScanResult.error(QRPairingScanErrorType.invalidCode);
+  }
 }
+
+class QRPairingScanResult {
+  QRPairingScanResult._();
+
+  factory QRPairingScanResult.success(String code, String domain) = QRPairingInfo._;
+
+  factory QRPairingScanResult.error(QRPairingScanErrorType type) = QRPairingScanError._;
+}
+
+class QRPairingInfo extends QRPairingScanResult {
+  final String code;
+  final String domain;
+
+  QRPairingInfo._(this.code, this.domain) : super._();
+}
+
+class QRPairingScanError extends QRPairingScanResult {
+  final QRPairingScanErrorType type;
+
+  QRPairingScanError._(this.type) : super._();
+}
+
+enum QRPairingScanErrorType { invalidCode, cameraError, canceled, unknown }

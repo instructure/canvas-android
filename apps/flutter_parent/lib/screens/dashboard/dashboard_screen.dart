@@ -30,6 +30,7 @@ import 'package:flutter_parent/screens/dashboard/student_expansion_widget.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/dropdown_arrow.dart';
@@ -88,6 +89,8 @@ class DashboardState extends State<DashboardScreen> {
   @visibleForTesting
   Map<String, Object> currentDeepLinkParams;
 
+  Function() _onStudentAdded;
+
   @override
   void initState() {
     scaffoldKey = GlobalKey<ScaffoldState>();
@@ -105,6 +108,8 @@ class DashboardState extends State<DashboardScreen> {
     } else {
       _loadStudents();
     }
+    _onStudentAdded = () => _addStudent();
+    locator<StudentAddedNotifier>().addListener(_onStudentAdded);
     super.initState();
 
     _interactor.getInboxCountNotifier().update();
@@ -114,6 +119,12 @@ class DashboardState extends State<DashboardScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       RatingDialog.asDialog(context);
     });
+  }
+
+  @override
+  void dispose() {
+    locator<StudentAddedNotifier>().removeListener(_onStudentAdded);
+    super.dispose();
   }
 
   void _loadSelf() {

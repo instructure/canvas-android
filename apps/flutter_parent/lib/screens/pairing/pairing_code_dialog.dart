@@ -15,24 +15,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-import 'manage_students_interactor.dart';
-
-class AddStudentDialog extends StatefulWidget {
-  final _interactor = locator<ManageStudentsInteractor>();
+class PairingCodeDialog extends StatefulWidget {
+  final _interactor = locator<PairingInteractor>();
 
   final String _pairingCode;
 
-  AddStudentDialog(this._pairingCode, {Key key});
+  PairingCodeDialog(this._pairingCode, {Key key});
 
   @override
-  State<StatefulWidget> createState() => AddStudentDialogState();
+  State<StatefulWidget> createState() => PairingCodeDialogState();
 }
 
-class AddStudentDialogState extends State<AddStudentDialog> {
+class PairingCodeDialogState extends State<PairingCodeDialog> {
   var _pairingCodeError = false;
   var _makingApiCall = false;
   FocusScopeNode _focusScopeNode = FocusScopeNode();
@@ -71,7 +70,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
                 autovalidate: false,
                 initialValue: widget._pairingCode,
                 onChanged: (value) {
-                  _showParingCodeError(false);
+                  _showPairingCodeError(false);
                 },
                 validator: (text) {
                   if (_pairingCodeError) {
@@ -85,16 +84,16 @@ class AddStudentDialogState extends State<AddStudentDialog> {
                     _makingApiCall = true;
                   });
 
-                  _showParingCodeError(false);
+                  _showPairingCodeError(false);
 
                   var successful = await widget._interactor.pairWithStudent(code);
-                  if (successful) {
+                  if (successful == true) {
                     // Close dialog - return 'true' to represent that a student was paired
                     locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS);
                     Navigator.of(context).pop(true);
                   } else {
                     locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE);
-                    _showParingCodeError(true);
+                    _showPairingCodeError(true);
                   }
 
                   // Enable OK and Cancel buttons
@@ -132,7 +131,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
             onPressed: _makingApiCall
                 ? null
                 : () async {
-                    _showParingCodeError(false);
+                    _showPairingCodeError(false);
                     _formKey.currentState.save();
                   },
           ),
@@ -141,7 +140,7 @@ class AddStudentDialogState extends State<AddStudentDialog> {
     );
   }
 
-  void _showParingCodeError(bool show) {
+  void _showPairingCodeError(bool show) {
     _formKey.currentState.validate();
     // Update the UI with the error state
     setState(() {

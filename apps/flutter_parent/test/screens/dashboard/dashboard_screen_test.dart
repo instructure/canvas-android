@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/help_link.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
@@ -46,6 +47,7 @@ import 'package:flutter_parent/screens/manage_students/manage_students_interacto
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/badges.dart';
@@ -93,6 +95,8 @@ void main() {
       locator.registerLazySingleton<PlannerApi>(() => MockPlannerApi());
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
       locator.registerLazySingleton<SelectedStudentNotifier>(() => SelectedStudentNotifier());
+      locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
+      locator.registerLazySingleton<AccountsApi>(() => MockAccountsApi());
     });
   }
 

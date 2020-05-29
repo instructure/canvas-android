@@ -14,6 +14,7 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as Material show showDialog;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -62,4 +63,19 @@ class QuickNav {
     locator<Analytics>().logMessage(message);
     locator<Analytics>().setCurrentScreen(widgetName);
   }
+
+  Future<T> showDialog<T>({
+    @required BuildContext context,
+    bool barrierDismissible = true,
+    WidgetBuilder builder,
+    bool useRootNavigator = true,
+    RouteSettings routeSettings,
+  }) =>
+      Material.showDialog(
+        context: context,
+        barrierDismissible: barrierDismissible,
+        builder: builder,
+        useRootNavigator: useRootNavigator,
+        routeSettings: routeSettings,
+      );
 }

@@ -14,6 +14,7 @@
 
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -30,10 +31,7 @@ class ManageStudentsInteractor {
 
   void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName.compareTo(user2.sortableName));
 
-  Future<bool> pairWithStudent(String pairingCode) => _enrollmentsApi().pairWithStudent(pairingCode);
-
   EnrollmentsApi _enrollmentsApi() => locator<EnrollmentsApi>();
 
-  // TODO: Find a good QR lib to use here
-  Future<String> getQrReading() async => Future.value('');
+  Future<bool> shouldAllowPairing() => locator<AccountsApi>().getPairingAllowed();
 }

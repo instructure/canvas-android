@@ -16,6 +16,7 @@ import 'dart:math';
 
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:mockito/mockito.dart';
@@ -26,13 +27,16 @@ import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   final api = MockEnrollmentsApi();
+  final AccountsApi accountsApi = MockAccountsApi();
 
   setupTestLocator((locator) {
     locator.registerLazySingleton<EnrollmentsApi>(() => api);
+    locator.registerLazySingleton<AccountsApi>(() => accountsApi);
   });
 
   setUp(() {
     reset(api);
+    reset(accountsApi);
   });
 
   test('getStudents returns a list of students', () async {
@@ -90,15 +94,12 @@ void main() {
     expect(result, expectedSortedList);
   });
 
-  test('pairWithStudent calls through to enrollment api', () {
-    final pairingCode = '123';
-    ManageStudentsInteractor().pairWithStudent(pairingCode);
-    verify(api.pairWithStudent(pairingCode)).called(1);
-  });
+  test('shouldAllowPairing calls AccountsApi', () async {
+    when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
+    var result = await ManageStudentsInteractor().shouldAllowPairing();
 
-  // TODO: Implement this test once we get QR pairing
-  test('get QR reading does nothing', () async {
-    expect(await ManageStudentsInteractor().getQrReading(), '');
+    verify(accountsApi.getPairingAllowed());
+    expect(result, isTrue);
   });
 }
 

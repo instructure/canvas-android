@@ -15,8 +15,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
@@ -25,7 +25,6 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-import 'add_student_dialog.dart';
 import 'manage_students_interactor.dart';
 
 /// It is assumed that this page will not be deep linked, so
@@ -44,12 +43,19 @@ class ManageStudentsScreen extends StatefulWidget {
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
   Future<List<User>> _studentsFuture;
+  Future<bool> _allowPairingFuture;
   Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   // Used to tell the Dashboard screen if it needs to update its list of students
   bool _addedStudentFlag = false;
+
+  @override
+  void initState() {
+    _allowPairingFuture = locator<ManageStudentsInteractor>().shouldAllowPairing();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +117,12 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
             style: Theme.of(context).textTheme.subhead,
           ),
         ),
-        onTap: () {
-          locator.get<QuickNav>().push(context, AlertThresholdsScreen(students[index]));
+        onTap: () async {
+          var needsRefresh = await locator.get<QuickNav>().push(context, AlertThresholdsScreen(students[index]));
+          if (needsRefresh == true) {
+            _refreshKey.currentState.show();
+            _addedStudentFlag = true;
+          }
         },
       ),
     );
@@ -133,122 +143,28 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     );
   }
 
-  /// Dialog for pairing with a new student
-  /// Optional [pairingCode] for QR reader results
-  Future<bool> _addStudentDialog(BuildContext context, {String pairingCode = ''}) async {
-    return showDialog<bool>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AddStudentDialog(pairingCode);
-        });
-  }
-
   Widget _createFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      child: Icon(
-        Icons.add,
-        semanticLabel: L10n(context).addNewStudent,
-      ),
-      onPressed: () async {
-        _showAddStudentDialog();
-        // TODO: Uncomment when we're ready with a QR code reader lib
-        /*showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return Row(
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 10.0),
-                      child: Wrap(
-                        direction: Axis.vertical,
-                        children: <Widget>[
-                          Container(
-                            height: 40,
-                            alignment: Alignment.centerLeft,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Text(
-                                L10n(context).addStudentWith,
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ),
-                          ),
-                          _qrCode(),
-                          _pairingCode(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            });*/
+    return FutureBuilder(
+      future: _allowPairingFuture,
+      builder: (context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.data != true) return Container();
+        return FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            semanticLabel: L10n(context).addNewStudent,
+          ),
+          onPressed: () {
+            locator<PairingUtil>().pairNewStudent(
+              context,
+              () {
+                _refreshKey.currentState.show();
+                _addedStudentFlag = true;
+              },
+            );
+          },
+        );
       },
     );
-  }
-
-  Widget _qrCode() {
-    return InkWell(
-        child: Container(
-          width: 10000,
-          height: 48,
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              L10n(context).qrCode,
-              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
-            ),
-          ),
-        ),
-        onTap: () async {
-          Navigator.of(context).pop();
-          // ignore: unused_local_variable, will use when we get the QR reader in place
-          String cameraScanResult = await widget._interactor.getQrReading();
-//          print('Camera results: $cameraScanResult');
-//          if (cameraScanResult != null && cameraScanResult.isNotEmpty && cameraScanResult != '-1') {
-//            bool studentPaired = await _addStudentDialog(context, pairingCode: cameraScanResult);
-//            if (studentPaired) {
-//              _refresh();
-//            }
-//          }
-        });
-  }
-
-//  padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 10.0),
-  Widget _pairingCode() {
-    return InkWell(
-        child: Container(
-          width: 10000,
-          height: 48,
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              L10n(context).pairingCode,
-              style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
-            ),
-          ),
-        ),
-        onTap: () async {
-          Navigator.of(context).pop();
-          _showAddStudentDialog();
-        });
-  }
-
-  void _showAddStudentDialog() async {
-    locator<Analytics>().logEvent(AnalyticsEventConstants.ADD_STUDENT_MANAGE_STUDENTS);
-    bool studentPaired = await _addStudentDialog(context);
-    // Can be null if popped by dismissing
-    if (studentPaired == true) {
-      _refreshKey.currentState.show();
-
-      // Set flag indicating we've added a student, handled in the Dashboard screen
-      _addedStudentFlag = true;
-    }
   }
 
   /// Force widget to reload with a refreshed future

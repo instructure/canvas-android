@@ -54,11 +54,37 @@ class EnrollmentsApi {
     );
   }
 
+  /// Attempts to pair a student and observer using the given pairing code. The returned future will produce true if
+  /// successful, false if the code is invalid or expired, and null if there was a network issue.
   Future<bool> pairWithStudent(String pairingCode) async {
     try {
       var pairingResponse = await canvasDio().post(ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees'),
           queryParameters: {'pairing_code': pairingCode});
       return (pairingResponse.statusCode == 200 || pairingResponse.statusCode == 201);
+    } on DioError catch (e) {
+      // The API returns status code 422 on pairing failure
+      if (e.type == DioErrorType.RESPONSE && e.response.statusCode == 422) return false;
+      return null;
+    }
+  }
+
+  Future<bool> unpairStudent(String studentId) async {
+    try {
+      var response = await canvasDio().delete(
+        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
+      );
+      return (response.statusCode == 200 || response.statusCode == 201);
+    } on DioError {
+      return false;
+    }
+  }
+
+  Future<bool> canUnpairStudent(String studentId) async {
+    try {
+      var response = await canvasDio().get(
+        ApiPrefs.getApiUrl(path: 'users/${ApiPrefs.getUser().id}/observees/$studentId'),
+      );
+      return response.statusCode == 200;
     } on DioError {
       return false;
     }

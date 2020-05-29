@@ -31,4 +31,10 @@ class AccountsApi {
   Future<AccountPermissions> getAccountPermissions() {
     return fetch(canvasDio().get('accounts/self/permissions'));
   }
+
+  Future<bool> getPairingAllowed() async {
+    var response = await canvasDio().get('accounts/self/authentication_providers/canvas');
+    var selfRegistration = response.data['self_registration'];
+    return selfRegistration == 'observer' || selfRegistration == 'all';
+  }
 }

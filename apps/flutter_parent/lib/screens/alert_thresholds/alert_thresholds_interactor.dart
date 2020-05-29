@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class AlertThresholdsInteractor {
@@ -51,4 +52,8 @@ class AlertThresholdsInteractor {
         return api.deleteAlert(threshold);
     }
   }
+
+  Future<bool> deleteStudent(String studentId) => locator<EnrollmentsApi>().unpairStudent(studentId);
+
+  Future<bool> canDeleteStudent(String studentId) => locator<EnrollmentsApi>().canUnpairStudent(studentId);
 }

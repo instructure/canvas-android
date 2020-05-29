@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/alert.dart';
 import 'package:flutter_parent/models/alert_threshold.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -29,13 +30,16 @@ void main() {
     ..build());
 
   final api = MockAlertsApi();
+  final enrollmentsApi = MockEnrollmentsApi();
 
   setupTestLocator((locator) {
     locator.registerFactory<AlertsApi>(() => api);
+    locator.registerFactory<EnrollmentsApi>(() => enrollmentsApi);
   });
 
   setUp(() {
     reset(api);
+    reset(enrollmentsApi);
   });
 
   test('Switch created api call', () async {
@@ -95,5 +99,21 @@ void main() {
     await AlertThresholdsInteractor().getAlertThresholdsForStudent(studentId, forceRefresh: true);
 
     verify(api.getAlertThresholds(studentId, true)).called(1);
+  });
+
+  test('canDeleteStudent calls through to the api', () async {
+    var studentId = '1234';
+
+    await AlertThresholdsInteractor().canDeleteStudent(studentId);
+
+    verify(enrollmentsApi.canUnpairStudent(studentId));
+  });
+
+  test('deleteStudent calls through to the api', () async {
+    var studentId = '1234';
+
+    await AlertThresholdsInteractor().deleteStudent(studentId);
+
+    verify(enrollmentsApi.unpairStudent(studentId));
   });
 }

@@ -23,6 +23,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/assignment_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
@@ -43,6 +44,8 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/events/event_details_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
@@ -69,6 +72,8 @@ MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null
 
   return mockRemoteConfig;
 }
+
+class MockAccountsApi extends Mock implements AccountsApi {}
 
 class MockAnalytics extends Mock implements Analytics {}
 
@@ -134,9 +139,13 @@ class MockNotificationUtil extends Mock implements NotificationUtil {}
 
 class MockOAuthApi extends Mock implements OAuthApi {}
 
+class MockPairingInteractor extends Mock implements PairingInteractor {}
+
 class MockPageApi extends Mock implements PageApi {}
 
 class MockPlugin extends Mock implements FlutterLocalNotificationsPlugin {}
+
+class MockPairingUtil extends Mock implements PairingUtil {}
 
 class MockQuickNav extends Mock implements QuickNav {}
 
@@ -145,6 +154,8 @@ class MockReminderDb extends Mock implements ReminderDb {}
 class MockRemoteConfig extends Mock implements RemoteConfig {}
 
 class MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
+
+class MockStudentAddedNotifier extends Mock implements StudentAddedNotifier {}
 
 class MockUrlLauncher extends Mock implements UrlLauncher {}
 

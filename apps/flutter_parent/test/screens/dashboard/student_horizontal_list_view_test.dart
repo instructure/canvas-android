@@ -14,12 +14,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
-import 'package:flutter_parent/screens/manage_students/add_student_dialog.dart';
-import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -39,9 +39,15 @@ void main() {
       var student3 = CanvasModelTestUtils.mockUser(shortName: 'Trevor');
       var students = [student1, student2, student3];
 
+      AccountsApi accountsApi = MockAccountsApi();
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<AccountsApi>(() => accountsApi);
+      });
+      when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
+
       // Setup the widget
       await tester.pumpWidget(TestApp(StudentHorizontalListView(students)));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Check for the names of the students and the add student button
       expect(find.text(student1.shortName), findsOneWidget);
@@ -69,12 +75,13 @@ void main() {
       setupTestLocator((locator) {
         locator.registerLazySingleton<SelectedStudentNotifier>(() => notifier);
         locator.registerLazySingleton<AlertCountNotifier>(() => alertNotifier);
+        locator.registerLazySingleton<AccountsApi>(() => MockAccountsApi());
       });
 
       // Setup the widget
       await tester
           .pumpWidget(SelectedStudentNotifierTestApp(StudentHorizontalListView(students, onTap: tapped), notifier));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       // Check the initial value of the student notifier
       expect(notifier.value, null);
@@ -102,18 +109,23 @@ void main() {
       verify(alertNotifier.update(student2.id)).called(1);
     });
 
-    testWidgetsWithAccessibilityChecks('add student tap shows add student dialog', (tester) async {
+    testWidgetsWithAccessibilityChecks('add student tap calls PairingUtil', (tester) async {
       var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
+
+      PairingUtil pairingUtil = MockPairingUtil();
+      AccountsApi accountsApi = MockAccountsApi();
 
       setupTestLocator((locator) {
         locator.registerLazySingleton<QuickNav>(() => QuickNav());
-        locator.registerLazySingleton<ManageStudentsInteractor>(() => _MockManageStudentsInteractor());
+        locator.registerLazySingleton<PairingUtil>(() => pairingUtil);
         locator.registerLazySingleton<Analytics>(() => MockAnalytics());
+        locator.registerLazySingleton<AccountsApi>(() => accountsApi);
       });
+      when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
 
       // Setup the widget
       await tester.pumpWidget(TestApp(StudentHorizontalListView([student1])));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text(AppLocalizations().addStudent), findsOneWidget);
 
@@ -121,8 +133,8 @@ void main() {
       await tester.tap(find.byType(RaisedButton));
       await tester.pump();
 
-      // Check for the screen
-      expect(find.byType(AddStudentDialog), findsOneWidget);
+      // Check that PairingUtil was called
+      verify(pairingUtil.pairNewStudent(any, any)).called(1);
     });
   });
 
@@ -130,15 +142,18 @@ void main() {
     var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
     var callbackCalled = false;
 
-    ManageStudentsInteractor interactor = _MockManageStudentsInteractor();
+    PairingUtil pairingUtil = MockPairingUtil();
+    AccountsApi accountsApi = MockAccountsApi();
     final analytics = _MockAnalytics();
 
-    when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(true));
+    when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
+    when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
     setupTestLocator((locator) {
       locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
+      locator.registerLazySingleton<PairingUtil>(() => pairingUtil);
       locator.registerLazySingleton<Analytics>(() => analytics);
+      locator.registerLazySingleton<AccountsApi>(() => accountsApi);
     });
 
     // Setup the widget
@@ -148,73 +163,17 @@ void main() {
         callbackCalled = true;
       },
     )));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text(AppLocalizations().addStudent), findsOneWidget);
 
     // Tap the 'Add Student' button and wait for any transition animations to finish
     await tester.tap(find.byType(RaisedButton));
-    await tester.pump();
-
-    verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD));
-
-    // Check for the screen
-    expect(find.byType(AddStudentDialog), findsOneWidget);
-
-    // Tap on the 'OK' button
-    await tester.tap(find.text(AppLocalizations().ok));
     await tester.pumpAndSettle();
 
     // Verify
     expect(callbackCalled, true);
-    verify(interactor.pairWithStudent((any))).called(1);
-    verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
-  });
-
-  testWidgetsWithAccessibilityChecks('failed pairing logs failure analytics', (tester) async {
-    var student1 = CanvasModelTestUtils.mockUser(name: 'Billy');
-    var callbackCalled = false;
-
-    ManageStudentsInteractor interactor = _MockManageStudentsInteractor();
-    final analytics = _MockAnalytics();
-
-    when(interactor.pairWithStudent(any)).thenAnswer((_) => Future.value(false));
-
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<QuickNav>(() => QuickNav());
-      locator.registerLazySingleton<ManageStudentsInteractor>(() => interactor);
-      locator.registerLazySingleton<Analytics>(() => analytics);
-    });
-
-    // Setup the widget
-    await tester.pumpWidget(TestApp(StudentHorizontalListView(
-      [student1],
-      onAddStudent: () {
-        callbackCalled = true;
-      },
-    )));
-    await tester.pump();
-
-    expect(find.text(AppLocalizations().addStudent), findsOneWidget);
-
-    // Tap the 'Add Student' button and wait for any transition animations to finish
-    await tester.tap(find.byType(RaisedButton));
-    await tester.pump();
-
-    verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_DASHBOARD));
-
-    // Check for add student dialog
-    expect(find.byType(AddStudentDialog), findsOneWidget);
-
-    // Tap on the 'OK' button
-    await tester.tap(find.text(AppLocalizations().ok));
-    await tester.pumpAndSettle();
-
-    // Verify
-    expect(callbackCalled, false);
-    verify(interactor.pairWithStudent((any))).called(1);
-    verifyNever(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_SUCCESS));
-    verify(analytics.logEvent(AnalyticsEventConstants.ADD_STUDENT_FAILURE));
+    verify(pairingUtil.pairNewStudent(any, any)).called(1);
   });
 }
 
@@ -233,8 +192,6 @@ class SelectedStudentNotifierTestApp extends StatelessWidget {
     );
   }
 }
-
-class _MockManageStudentsInteractor extends Mock implements ManageStudentsInteractor {}
 
 class _MockAnalytics extends Mock implements Analytics {}
 
