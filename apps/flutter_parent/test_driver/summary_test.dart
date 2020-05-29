@@ -67,6 +67,9 @@ void main() {
     await CourseSummaryPage.verifyAssignmentPresent(driver, assignment);
     print("quiz.dueAt = ${quiz.dueAt}\n");
     await CourseSummaryPage.verifyQuizPresent(driver, quiz);
+    var tzName = DateTime.now().timeZoneName;
+    var tzOffset = DateTime.now().timeZoneOffset;
+    print("timezone name=$tzName, offset=$tzOffset");
     print("event startAt = ${event.startAt} allDayDate = ${event.allDayDate}\n");
     await CourseSummaryPage.verifyEventPresent(driver, event);
   }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 secs
