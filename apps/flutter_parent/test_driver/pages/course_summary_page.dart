@@ -67,7 +67,6 @@ class CourseSummaryPage {
     var dateFinder = find.byValueKey('summary_item_subtitle_${itemId}');
     await driver.scrollIntoView(dateFinder);
     var text = await driver.getText(dateFinder);
-    print("date text: $text\n");
     if (dueDate == null) {
       expect(text, "No Due Date", reason: "Due date");
     } else {

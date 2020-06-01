@@ -43,7 +43,6 @@ void main() async {
   var calendarEvent = await CalendarSeedApi.createCalendarEvent(
       course.id, "Calendar Event", DateTime(now.year, now.month, now.day).toUtc(),
       description: "Description", allDay: true, locationName: "Location Name", locationAddress: "Location Address");
-  print("seeded CalendarEvent: $calendarEvent");
 
   // Sign in the parent
   await AppSeedUtils.signIn(parent);
