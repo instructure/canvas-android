@@ -16,6 +16,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:dio_retry/dio_retry.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/authentication_interceptor.dart';
@@ -31,6 +32,7 @@ class DioConfig {
   final bool forceRefresh;
   final PageSize pageSize;
   final Map<String, dynamic> extraQueryParams;
+  final int retries;
 
   DioConfig({
     this.baseUrl = '',
@@ -39,6 +41,7 @@ class DioConfig {
     this.forceRefresh = false,
     this.pageSize = PageSize.none,
     this.extraQueryParams,
+    this.retries = 0,
   })  : this.baseHeaders = baseHeaders ?? {},
         assert(baseUrl != null),
         assert(cacheMaxAge != null),
@@ -90,6 +93,15 @@ class DioConfig {
 
     // Authentication refresh interceptor
     dio.interceptors.add(AuthenticationInterceptor(dio));
+
+    // Handle retries if desired
+    if (retries > 0) {
+      dio.interceptors.add(RetryInterceptor(
+          dio: dio,
+          options: RetryOptions(
+            retries: retries,
+          )));
+    }
 
     // Cache manager
     if (cacheMaxAge != Duration.zero) {
@@ -219,6 +231,7 @@ const baseSeedingUrl = "https://mobileqa.beta.instructure.com/api/v1/";
 Dio seedingDio({String baseUrl = baseSeedingUrl}) {
   return DioConfig(
       baseUrl: baseUrl,
+      retries: 3, // Allow for retries in our seeding calls, because they can return 500s
       baseHeaders: ApiPrefs.getHeaderMap(
           forceDeviceLanguage: true,
           token: DATA_SEEDING_ADMIN_TOKEN,

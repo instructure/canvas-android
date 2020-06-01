@@ -75,6 +75,7 @@ dependencies:
   # Networking / Serialization
   dio: 3.0.5
   dio_http_cache: 0.2.5
+  dio_retry: 0.1.9-beta
   built_value: ^7.0.0
   built_collection: 4.2.2
 
