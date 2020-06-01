@@ -11,7 +11,7 @@ import '../flutter_driver_extensions.dart';
 class CalendarPage {
   static Future<void> waitForRender(FlutterDriver driver) async {
     var dayOfMonth = DateTime.now().toLocal().day;
-    await driver.waitFor(find.byValueKey('day_of_month_$dayOfMonth'), timeout: Duration(seconds: 5));
+    await driver.waitFor(find.byValueKey('day_of_month_$dayOfMonth'), timeout: Duration(milliseconds: 9998));
   }
 
   static Future<void> verifyAnnouncementDisplayed(FlutterDriver driver, Announcement announcement) async {
