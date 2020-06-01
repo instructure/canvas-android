@@ -152,5 +152,5 @@ void main() {
     await driver.tap(find.pageBack()); // From conversation detail page to conversation list page
     await driver.refresh();
     await ConversationListPage.verifyConversationDataDisplayed(driver, 0, partialBodies: ['reply body']);
-  }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 sec
+  }, timeout: Timeout(Duration(minutes: 2)));
 }

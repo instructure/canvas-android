@@ -92,5 +92,5 @@ void main() {
     await CourseGradesPage.selectAssignment(driver, assignments[3]);
     await AssignmentDetailsPage.validateGradedAssignment(driver, assignments[3], "19");
     await driver.tap(find.pageBack());
-  }, timeout: Timeout(Duration(minutes: 1)));
+  }, timeout: Timeout(Duration(minutes: 2)));
 }
