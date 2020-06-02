@@ -14,9 +14,14 @@
 
 import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/conversation.dart';
+import 'package:flutter_parent/models/course_permissions.dart';
+import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/message.dart';
+import 'package:flutter_parent/models/recipient.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:mockito/mockito.dart';
@@ -24,6 +29,7 @@ import 'package:test/test.dart';
 
 import '../../../utils/platform_config.dart';
 import '../../../utils/test_app.dart';
+import '../../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   setUp(() async {
@@ -55,11 +61,20 @@ void main() {
       verify(api.addMessage(conversation.id, body, ['author1'], attachmentIds, ['message4'])).called(1);
     });
 
-    test('for conversation reply all', () {
+    test('for conversation reply all', () async {
       var api = _MockInboxApi();
+      var enrollmentsApi = MockEnrollmentsApi();
+      var courseApi = MockCourseApi();
       setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
+        locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
+        locator.registerLazySingleton<CourseApi>(() => courseApi);
       });
+
+      when(enrollmentsApi.getObserveeEnrollments())
+          .thenAnswer((_) => Future.value([_mockEnrollment(_mockStudent('hodor', '123').toBuilder())]));
+      when(api.getRecipients(any)).thenAnswer((_) => Future.value([]));
+      when(courseApi.getCoursePermissions(any)).thenAnswer((_) => Future.value(CoursePermissions()));
 
       var interactor = ConversationReplyInteractor();
 
@@ -68,7 +83,7 @@ void main() {
       List<String> attachmentIds = ['a', 'b', 'c'];
       bool replyAll = true;
 
-      interactor.createReply(conversation, null, body, attachmentIds, replyAll);
+      await interactor.createReply(conversation, null, body, attachmentIds, replyAll);
 
       verify(api.addMessage(conversation.id, body, [], attachmentIds, [])).called(1);
     });
@@ -92,11 +107,28 @@ void main() {
       verify(api.addMessage(conversation.id, body, ['author2'], attachmentIds, ['message3'])).called(1);
     });
 
-    test('for message reply all', () {
+    test('for message reply all', () async {
       var api = _MockInboxApi();
+      var enrollmentsApi = MockEnrollmentsApi();
+      var courseApi = MockCourseApi();
       setupTestLocator((locator) {
         locator.registerLazySingleton<InboxApi>(() => api);
+        locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
+        locator.registerLazySingleton<CourseApi>(() => courseApi);
       });
+
+      when(enrollmentsApi.getObserveeEnrollments()).thenAnswer((_) => Future.value([]));
+
+      var recipientList = [
+        _makeRecipient('self', 'ObserverEnrollment'),
+        _makeRecipient('author1', 'TeacherEnrollment'),
+        _makeRecipient('author2', 'TaEnrollment'),
+        _makeRecipient('author3', 'TeacherEnrollment'),
+      ];
+      when(api.getRecipients(any)).thenAnswer((_) => Future.value(recipientList));
+
+      when(courseApi.getCoursePermissions(any))
+          .thenAnswer((_) => Future.value(CoursePermissions((b) => b..sendMessages = true)));
 
       var interactor = ConversationReplyInteractor();
 
@@ -106,10 +138,52 @@ void main() {
       bool replyAll = true;
       Message message = conversation.messages[3];
 
-      interactor.createReply(conversation, message, body, attachmentIds, replyAll);
+      await interactor.createReply(conversation, message, body, attachmentIds, replyAll);
 
       verify(
         api.addMessage(conversation.id, body, ['self', 'author1', 'author2', 'author3'], attachmentIds, ['message1']),
+      ).called(1);
+    });
+
+    test('for message reply all filters out non-observed students', () async {
+      var api = _MockInboxApi();
+      var enrollmentsApi = MockEnrollmentsApi();
+      var courseApi = MockCourseApi();
+      setupTestLocator((locator) {
+        locator.registerLazySingleton<InboxApi>(() => api);
+        locator.registerLazySingleton<EnrollmentsApi>(() => enrollmentsApi);
+        locator.registerLazySingleton<CourseApi>(() => courseApi);
+      });
+
+      var enrollmentsList = [_mockEnrollment(_mockStudent('student2', 'student2').toBuilder())];
+      when(enrollmentsApi.getObserveeEnrollments()).thenAnswer((_) => Future.value(enrollmentsList));
+
+      var recipientList = [
+        _makeRecipient('self', 'ObserverEnrollment'),
+        _makeRecipient('author1', 'TeacherEnrollment'),
+        _makeRecipient('author2', 'TaEnrollment'),
+        _makeRecipient('author3', 'TeacherEnrollment'),
+        _makeRecipient('student1', 'StudentEnrollment'),
+        _makeRecipient('student2', 'StudentEnrollment'),
+      ];
+      when(api.getRecipients(any)).thenAnswer((_) => Future.value(recipientList));
+
+      when(courseApi.getCoursePermissions(any))
+          .thenAnswer((_) => Future.value(CoursePermissions((b) => b..sendMessages = true)));
+
+      var interactor = ConversationReplyInteractor();
+
+      Conversation conversation = _makeConversation();
+      String body = 'This is a reply';
+      List<String> attachmentIds = ['a', 'b', 'c'];
+      bool replyAll = true;
+      Message message = conversation.messages[4];
+
+      await interactor.createReply(conversation, message, body, attachmentIds, replyAll);
+
+      verify(
+        api.addMessage(
+            conversation.id, body, ['self', 'author1', 'author2', 'author3', 'student2'], attachmentIds, ['message1']),
       ).called(1);
     });
 
@@ -220,6 +294,7 @@ void main() {
 Conversation _makeConversation() {
   return Conversation((c) => c
     ..id = 'conversation1'
+    ..contextCode = "course_123"
     ..messages = ListBuilder([
       Message((m) => m
         ..id = 'message4'
@@ -237,7 +312,30 @@ Conversation _makeConversation() {
         ..id = 'message1'
         ..authorId = 'author3'
         ..participatingUserIds = ListBuilder(['self', 'author1', 'author2', 'author3'])),
+      Message((m) => m
+        ..id = 'message1'
+        ..authorId = 'author3'
+        ..participatingUserIds = ListBuilder(['self', 'author1', 'author2', 'author3', 'student1', 'student2'])),
     ]));
+}
+
+User _mockStudent(String name, String id) => User((b) => b
+  ..id = id
+  ..sortableName = name
+  ..build());
+
+Enrollment _mockEnrollment(UserBuilder observedUser) => Enrollment((b) => b
+  ..enrollmentState = ''
+  ..observedUser = observedUser
+  ..build());
+
+Recipient _makeRecipient(String id, String type) {
+  return Recipient((b) => b
+    ..id = id
+    ..name = 'User $id'
+    ..commonCourses = MapBuilder<String, BuiltList<String>>({
+      '123': BuiltList<String>([type])
+    }));
 }
 
 class _MockInboxApi extends Mock implements InboxApi {}
