@@ -82,5 +82,5 @@ void main() {
     // Switch students and verify that new student's course is showing
     await DashboardPage.changeStudent(driver, students[1]);
     await DashboardPage.verifyCourse(driver, courses[1]);
-  }, timeout: Timeout(Duration(minutes: 1))); // Change timeout from 30 sec default to 1 min
+  }, timeout: Timeout(Duration(seconds: 90))); // Change timeout from 30 sec default to 90 secs
 }

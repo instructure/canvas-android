@@ -39,7 +39,9 @@ void main() async {
   var assignment =
       await AssignmentSeedApi.createAssignment(course.id, dueAt: DateTime.now().add(Duration(days: 1)).toUtc());
   var quiz = await QuizSeedApi.createQuiz(course.id, "EZ Quiz", DateTime.now().add(Duration(days: 1)).toUtc());
-  var calendarEvent = await CalendarSeedApi.createCalendarEvent(course.id, "Calendar Event", DateTime.now().toUtc(),
+  var now = DateTime.now();
+  var calendarEvent = await CalendarSeedApi.createCalendarEvent(
+      course.id, "Calendar Event", DateTime(now.year, now.month, now.day).toUtc(),
       description: "Description", allDay: true, locationName: "Location Name", locationAddress: "Location Address");
 
   // Sign in the parent

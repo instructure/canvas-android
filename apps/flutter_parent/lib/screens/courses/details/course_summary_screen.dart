@@ -102,6 +102,9 @@ class __CourseSummaryState extends State<_CourseSummary> with AutomaticKeepAlive
   Widget _buildListItem(ScheduleItem item) {
     String dateText;
     var date = item.startAt ?? item.allDayDate;
+    if (item.isAllDay) {
+      date = item.allDayDate ?? item.startAt;
+    }
     if (date == null) {
       dateText = L10n(context).noDueDate;
     } else {

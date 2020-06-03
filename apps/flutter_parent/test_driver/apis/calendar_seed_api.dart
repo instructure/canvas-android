@@ -26,7 +26,8 @@ class CalendarSeedApi {
     var queryParams = {
       'calendar_event[context_code]': 'course_$courseId',
       'calendar_event[title]': title,
-      'calendar_event[start_at]': startAt.toIso8601String(),
+      'calendar_event[start_at]':
+          allDay ? DateTime(startAt.year, startAt.month, startAt.day).toIso8601String() : startAt.toIso8601String(),
       'calendar_event[end_at]': endAt == null ? null : endAt.toIso8601String(),
       'calendar_event[description]': description,
       'calendar_event[all_day]': allDay,
