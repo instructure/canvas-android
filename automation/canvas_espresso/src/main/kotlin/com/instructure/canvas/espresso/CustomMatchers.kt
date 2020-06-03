@@ -18,6 +18,10 @@ package com.instructure.canvas.espresso
 
 import android.view.View
 import android.widget.TextView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -45,3 +49,17 @@ fun containsTextCaseInsensitive(textToMatch: String) : Matcher<View> {
         }
     }
 }
+
+/**
+ * Returns true if the element with the given resource id is currently displayed, false otherwise.
+ */
+fun isElementDisplayed(resourceId: Int) : Boolean {
+    try {
+        onView(withId(resourceId)).check(matches(isDisplayed()))
+        return true
+    }
+    catch(t: Throwable) {
+        return false
+    }
+}
+
