@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages
 
+import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
@@ -27,6 +28,7 @@ import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.isElementDisplayed
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -107,6 +109,8 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         clickReply()
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
+
+        sleep(3000) // wait out the toast message
     }
 
     fun assertReplyDisplayed(reply: DiscussionEntry, refreshesAllowed: Int = 0) {
@@ -203,11 +207,22 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun previewAndCheckReplyAttachment(reply: DiscussionEntry, vararg checks : WebViewTextCheck) {
-        onWebView(withId(R.id.discussionRepliesWebView))
-                .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
-                .perform(webClick())
 
-        waitForMatcherWithRefreshes(withId(R.id.canvasWebView))
+        // Sometimes clicking the attachment logo fails to do anything.
+        // We'll give it 3 chances.
+        var triesRemaining = 3;
+        while(!isElementDisplayed(R.id.canvasWebView) && triesRemaining > 0) {
+            if(triesRemaining < 3) {
+                refresh() // Maybe web content was incorrectly rendered?  Try again
+                sleep(1500) // Allow webview some time to render
+            }
+            onWebView(withId(R.id.discussionRepliesWebView))
+                    .withElementRepeat(findElement(Locator.CLASS_NAME, "attachments_${reply.id}"), 20)
+                    .perform(webClick())
+            triesRemaining -= 1
+        }
+
+        assertTrue("FAILED to bring up reply attachment", isElementDisplayed(R.id.canvasWebView));
 
         for(check in checks) {
             onWebView(withId(R.id.canvasWebView))
@@ -219,12 +234,27 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun replyToReply(reply: DiscussionEntry, replyMessage: String) {
-        onWebView(withId(R.id.discussionRepliesWebView))
-                .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
-                .perform(webClick())
-        waitForMatcherWithSleeps(withId(R.id.rce_webView), waitMs = 10000, sleepMs = 1000)
+
+        // It appears that sometimes the click to reply doesn't work.
+        // Let's give it 3 chances.
+        var triesRemaining = 3
+        while(!isElementDisplayed(R.id.rce_webView) && triesRemaining > 0) {
+            if(triesRemaining < 3) {
+                refresh() // maybe the html was rendered badly and needs refreshing?
+                sleep(2000) // A little time for the webview to render
+            }
+            onWebView(withId(R.id.discussionRepliesWebView))
+                    .withElementRepeat(findElement(Locator.ID, "reply_${reply.id}"), 20)
+                    .perform(webClick())
+            triesRemaining -= 1
+        }
+
+        assertTrue("FAILED to bring up rce / reply editor", isElementDisplayed(R.id.rce_webView));
+
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(replyMessage))
         onView(withId(R.id.menu_send)).click()
+
+        sleep(3000) // wait out the toast message
     }
 
     fun assertMainAttachmentDisplayed() {

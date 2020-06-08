@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
@@ -178,8 +177,8 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
         // From what I can tell, our self-generated HTML has a 2500 ms wait before it
         // sends the "read" call for the unread messages on the page.  So we'll wait for
-        // 3 seconds.
-        sleep(3000)
+        // a few seconds.
+        sleep(5000) // There have been instances where 3 seconds wasn't enough
         Espresso.pressBack() // Back to discussionListPage
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 0)
