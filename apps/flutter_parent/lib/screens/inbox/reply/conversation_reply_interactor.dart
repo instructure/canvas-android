@@ -15,6 +15,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/conversation.dart';
 import 'package:flutter_parent/models/message.dart';
+import 'package:flutter_parent/network/api/course_api.dart';
+import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/inbox/attachment_utils/attachment_handler.dart';
@@ -29,7 +31,7 @@ class ConversationReplyInteractor {
     String body,
     List<String> attachmentIds,
     bool replyAll,
-  ) {
+  ) async {
     Message replyMessage = message ?? conversation.messages[0];
     List<String> includedMessageIds = [if (message != null || !replyAll) replyMessage.id];
     List<String> recipientIds = [];
@@ -40,8 +42,35 @@ class ConversationReplyInteractor {
       } else {
         recipientIds = [replyMessage.authorId];
       }
-    } else if (message != null) {
-      recipientIds = replyMessage.participatingUserIds.toList();
+    } else {
+      // We need to make sure the recipients list doesn't contain any off limit users, such as non-observed students.
+      final courseId = conversation.getContextId();
+      final userId = ApiPrefs.getUser().id;
+      final enrollments = await locator<EnrollmentsApi>().getObserveeEnrollments();
+      final observeeIds = enrollments
+          .map((enrollment) => enrollment.observedUser)
+          .where((student) => student != null)
+          .toSet()
+          .map<String>((student) => student.id);
+      final permissions = await locator<CourseApi>().getCoursePermissions(courseId);
+      final recipients = await locator<InboxApi>().getRecipients(courseId);
+      recipients.retainWhere((recipient) {
+        // Allow self and any observed students as recipients if the sendMessages permission is granted
+        if (permissions.sendMessages == true && (observeeIds.contains(recipient.id) || recipient.id == userId))
+          return true;
+
+        // Always allow instructors (teachers and TAs) as recipients
+        var enrollments = recipient.commonCourses[courseId];
+        if (enrollments == null) return false;
+        return enrollments.contains('TeacherEnrollment') || enrollments.contains('TaEnrollment');
+      });
+
+      final filteredRecipientIds = recipients.map<String>((recipient) => recipient.id);
+
+      recipientIds = replyMessage.participatingUserIds
+          .toList()
+          .where((participantId) => filteredRecipientIds.contains(participantId))
+          .toList();
     }
 
     return locator<InboxApi>().addMessage(conversation.id, body, recipientIds, attachmentIds, includedMessageIds);

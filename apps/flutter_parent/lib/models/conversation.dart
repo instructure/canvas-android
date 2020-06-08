@@ -110,6 +110,11 @@ abstract class Conversation implements Built<Conversation, ConversationBuilder> 
     ..workflowState = ConversationWorkflowState.unread
     ..isStarred = false
     ..isVisible = false;
+
+  String getContextId() {
+    final index = contextCode.indexOf('_');
+    return contextCode.substring(index + 1, contextCode.length);
+  }
 }
 
 @BuiltValueEnum(wireName: 'workflow_state')
