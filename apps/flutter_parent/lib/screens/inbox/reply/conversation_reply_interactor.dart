@@ -43,8 +43,6 @@ class ConversationReplyInteractor {
         recipientIds = [replyMessage.authorId];
       }
     } else {
-      recipientIds = replyMessage.participatingUserIds.toList();
-
       // We need to make sure the recipients list doesn't contain any off limit users, such as non-observed students.
       final courseId = conversation.getContextId();
       final userId = ApiPrefs.getUser().id;
