@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
+import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_student_embed/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_student_embed/utils/common_widgets/loading_indicator.dart';
@@ -53,8 +54,11 @@ class CalendarFilterListScreenState extends State<CalendarFilterListScreen> {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(L10n(context).calendars),
+        appBar: dynamicStyleAppBar(
+          context: context,
+          appBar: AppBar(
+            title: Text(L10n(context).calendars),
+          ),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

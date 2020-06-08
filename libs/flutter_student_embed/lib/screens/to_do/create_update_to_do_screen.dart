@@ -17,6 +17,7 @@ import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen_interactor.dart';
+import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/core_extensions/string_extensions.dart';
 import 'package:flutter_student_embed/utils/design/student_colors.dart';
@@ -64,35 +65,38 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
       child: WhiteAppBarTheme(
         builder: (context) => Scaffold(
           key: _scaffoldKey,
-          appBar: AppBar(
-            title: Text(widget.editToDo == null ? L10n(context).newToDo : L10n(context).editToDo),
-            actions: <Widget>[
-              if (_saving)
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(right: 16),
-                  child: SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
-                      )),
-                ),
-              if (!_saving)
-                InkWell(
-                  onTap: _save,
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+          appBar: dynamicStyleAppBar(
+            context: context,
+            appBar: AppBar(
+              title: Text(widget.editToDo == null ? L10n(context).newToDo : L10n(context).editToDo),
+              actions: <Widget>[
+                if (_saving)
+                  Container(
                     alignment: Alignment.center,
-                    child: Text(
-                      L10n(context).save.toUpperCase(),
-                      style: Theme.of(context).textTheme.subhead.copyWith(color: Theme.of(context).buttonColor),
-                    ),
+                    padding: EdgeInsets.only(right: 16),
+                    child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
+                        )),
                   ),
-                )
-            ],
+                if (!_saving)
+                  InkWell(
+                    onTap: _save,
+                    child: Container(
+                      height: 48,
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      alignment: Alignment.center,
+                      child: Text(
+                        L10n(context).save.toUpperCase(),
+                        style: Theme.of(context).textTheme.subhead.copyWith(color: Theme.of(context).buttonColor),
+                      ),
+                    ),
+                  )
+              ],
+            ),
           ),
           body: SingleChildScrollView(
             child: Column(

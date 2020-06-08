@@ -27,6 +27,7 @@ import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_
 import 'package:flutter_student_embed/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen.dart';
 import 'package:flutter_student_embed/screens/to_do/to_do_details_screen.dart';
+import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/quick_nav.dart';
 import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -74,39 +75,42 @@ class CalendarScreenState extends State<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(L10n(context).calendar),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => _channel.openDrawer(),
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-        ),
-        actions: <Widget>[
-          if (_showTodayButton)
-            Tooltip(
-              message: L10n(context).gotoTodayButtonLabel,
-              child: InkResponse(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: SvgPicture.asset(
-                    'assets/svg/calendar-today.svg',
-                    width: 24,
-                    height: 24,
-                    color: Theme.of(context).primaryIconTheme.color,
+      appBar: dynamicStyleAppBar(
+        context: context,
+        appBar: AppBar(
+          title: Text(L10n(context).calendar),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () => _channel.openDrawer(),
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          ),
+          actions: <Widget>[
+            if (_showTodayButton)
+              Tooltip(
+                message: L10n(context).gotoTodayButtonLabel,
+                child: InkResponse(
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: SvgPicture.asset(
+                      'assets/svg/calendar-today.svg',
+                      width: 24,
+                      height: 24,
+                      color: Theme.of(context).primaryIconTheme.color,
+                    ),
                   ),
+                  onTap: () {
+                    var now = DateTime.now();
+                    _calendarKey.currentState.selectDay(
+                      DateTime(now.year, now.month, now.day),
+                      dayPagerBehavior: CalendarPageChangeBehavior.jump,
+                      weekPagerBehavior: CalendarPageChangeBehavior.animate,
+                      monthPagerBehavior: CalendarPageChangeBehavior.animate,
+                    );
+                  },
                 ),
-                onTap: () {
-                  var now = DateTime.now();
-                  _calendarKey.currentState.selectDay(
-                    DateTime(now.year, now.month, now.day),
-                    dayPagerBehavior: CalendarPageChangeBehavior.jump,
-                    weekPagerBehavior: CalendarPageChangeBehavior.animate,
-                    monthPagerBehavior: CalendarPageChangeBehavior.animate,
-                  );
-                },
-              ),
-            )
-        ],
+              )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
