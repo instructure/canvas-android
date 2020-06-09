@@ -17,6 +17,7 @@ import 'package:flutter/material.dart';
 const double tabletSmallestWidth = 600;
 const double appBarHeightTablet = 64;
 const double appBarHeightLandscape = 48;
+const double appBarFontSizeLandscape = 14;
 
 /// Wraps the provided [appBar] in a [PreferredSize] widget and modifies the height, font size, and padding to match
 /// the style of the native Toolbar according to device orientation and screen size.
@@ -42,9 +43,9 @@ PreferredSizeWidget dynamicStyleAppBar({@required BuildContext context, @require
   } else {
     // Portrait mode uses a short appbar and small font size
     appBarHeight = appBarHeightLandscape;
-    textTheme = (textTheme ?? TextTheme()).copyWith(
-      headline6: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-    );
+    var theme = textTheme ?? AppBarTheme.of(context).textTheme ?? Theme.of(context).primaryTextTheme ?? TextTheme();
+    var headline = (theme.headline6 ?? TextStyle()).copyWith(fontSize: appBarFontSizeLandscape);
+    textTheme = theme.copyWith(headline6: headline);
     padding = EdgeInsets.zero;
   }
 

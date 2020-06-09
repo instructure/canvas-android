@@ -14,12 +14,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
+import 'package:flutter_student_embed/utils/design/student_colors.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../testutils/accessibility_utils.dart';
 import '../../testutils/test_app.dart';
 
 void main() {
+  tearDown(() {
+    StudentColors.reset();
+  });
+
   testWidgetsWithAccessibilityChecks('Returns unmodified AppBar for portrait non-tablet', (tester) async {
     AppBar appBar = AppBar();
     Size screenSize = Size(300, 500); // Portrait
@@ -50,6 +55,22 @@ void main() {
 
     var fontSize = tester.getSize(find.text(title)).height;
     expect(fontSize, 14);
+  });
+
+  testWidgetsWithAccessibilityChecks('Uses correct text color for landscape', (tester) async {
+    Color expectedColor = Colors.orange;
+    StudentColors.primaryTextColor = expectedColor;
+    Size screenSize = Size(500, 300); // Landscape
+    String title = "AppBar Colored Title";
+    AppBar appBar = AppBar(title: Text(title));
+
+    await _pumpTestWidget(tester, appBar: appBar, size: screenSize);
+
+    // Apply ambient styling by finding the title element and building its widget
+    StatelessElement element = find.text(title).evaluate().first;
+    TextStyle titleStyle = (element.build() as RichText).text.style;
+
+    expect(titleStyle.color, expectedColor);
   });
 }
 
