@@ -69,10 +69,7 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
-import com.instructure.student.events.CoreDataFinishedLoading
-import com.instructure.student.events.CourseColorOverlayToggledEvent
-import com.instructure.student.events.ShowGradesToggledEvent
-import com.instructure.student.events.UserUpdatedEvent
+import com.instructure.student.events.*
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -944,6 +941,18 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
                 ColorUtils.colorIt(ContextCompat.getColor(context, R.color.electricBlueBadge), badge.background)
                 addView(badge)
+            }
+        }
+    }
+
+    /** Handles status bar color change events posted by FlutterComm */
+    @Subscribe
+    fun updateStatusBarColor(event: StatusBarColorChangeEvent) {
+        event.get { color ->
+            if (color == Color.WHITE) {
+                ViewStyler.setStatusBarLight(this)
+            } else {
+                ViewStyler.setStatusBarDark(this, color)
             }
         }
     }

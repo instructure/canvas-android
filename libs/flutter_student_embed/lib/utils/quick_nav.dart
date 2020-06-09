@@ -23,7 +23,9 @@ class QuickNav {
 
 /// A [MaterialPageRoute] that matches the native fragment transition with a 200ms 'fade' animation
 class QuickFadeRoute<T> extends MaterialPageRoute<T> {
-  QuickFadeRoute(Widget child) : super(builder: (_) => child);
+  final Widget child;
+
+  QuickFadeRoute(this.child) : super(builder: (_) => child);
 
   @override
   Duration get transitionDuration => Duration(milliseconds: 200);

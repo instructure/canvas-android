@@ -142,6 +142,8 @@ class PageUpdatedEvent(page: Page, skipId: String? = null) : RationedBusEvent<Pa
 /** A RationedBusEvent for updating modules. @see [RationedBusEvent] */
 class ModuleUpdatedEvent(moduleObject: ModuleObject, skipId: String? = null) : RationedBusEvent<ModuleObject>(moduleObject, skipId)
 
+/** A RationedBusEvent for updating the status bar color. @see [RationedBusEvent] */
+class StatusBarColorChangeEvent(color: Int, skipId: String? = null) : RationedBusEvent<Int>(color, skipId)
 
 object ShowGradesToggledEvent
 object CourseColorOverlayToggledEvent

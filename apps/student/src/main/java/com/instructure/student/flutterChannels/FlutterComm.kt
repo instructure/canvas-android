@@ -17,13 +17,17 @@
 package com.instructure.student.flutterChannels
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
+import android.view.Window
 import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.student.events.StatusBarColorChangeEvent
+import com.instructure.student.events.post
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -35,6 +39,7 @@ object FlutterComm {
 
     private const val METHOD_RESET = "reset"
     private const val METHOD_ROUTE_TO_CALENDAR = "routeToCalendar"
+    private const val METHOD_SET_STATUS_BAR_COLOR = "setStatusBarColor"
     private const val METHOD_UPDATE_CALENDAR_DATES = "updateCalendarDates"
     private const val METHOD_UPDATE_LOGIN_DATA = "updateLoginData"
     private const val METHOD_UPDATE_SHOULD_POP = "updateShouldPop"
@@ -45,6 +50,14 @@ object FlutterComm {
 
     var shouldPop: Boolean = true
         private set
+
+    var statusBarColor: Int = 0
+        private set(value) {
+            field = value
+            // We can't directly update the status bar color here because need an Activity reference. Instead, we'll
+            // post a bus event with the color information and subscribe to it in NavigationActivity.
+            StatusBarColorChangeEvent(value).post();
+        }
 
     fun init(flutterEngine: FlutterEngine, context: Context) {
         this.context = context
@@ -57,6 +70,10 @@ object FlutterComm {
             METHOD_UPDATE_SHOULD_POP -> {
                 shouldPop = call.arguments as? Boolean ?: true
                 result.success(null)
+            }
+            METHOD_SET_STATUS_BAR_COLOR -> {
+                val colorString = '#' + (call.arguments as String)
+                statusBarColor = Color.parseColor(colorString)
             }
         }
     }

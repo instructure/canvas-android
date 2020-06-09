@@ -22,6 +22,8 @@ import 'package:flutter_student_embed/models/serializers.dart';
 import 'package:flutter_student_embed/network/utils/api_prefs.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_screen.dart';
 import 'package:flutter_student_embed/screens/calendar/planner_fetcher.dart';
+import 'package:flutter_student_embed/utils/common_widgets/colored_status_bar.dart';
+import 'package:flutter_student_embed/utils/quick_nav.dart';
 
 import 'design/student_colors.dart';
 
@@ -30,6 +32,7 @@ class NativeComm {
 
   static const methodReset = 'reset';
   static const methodRouteToCalendar = 'routeToCalendar';
+  static const methodSetStatusBarColor = 'setStatusBarColor';
   static const methodUpdateCalendarDates = 'updateCalendarDates';
   static const methodUpdateLoginData = 'updateLoginData';
   static const methodUpdateShouldPop = 'updateShouldPop';
@@ -37,8 +40,9 @@ class NativeComm {
 
   static const channel = const MethodChannel(channelName);
 
-  static final ShouldPopTracker routeTracker = ShouldPopTracker((shouldPop) {
+  static final ShouldPopTracker routeTracker = ShouldPopTracker((shouldPop, statusBarColor) {
     channel.invokeMethod(methodUpdateShouldPop, shouldPop);
+    setStatusBarColor(statusBarColor);
   });
 
   /// Called when theme values have been updated and the widget tree should be rebuilt
@@ -124,17 +128,28 @@ class NativeComm {
     StudentColors.reset();
     if (onThemeUpdated != null) onThemeUpdated();
   }
+
+  static void setStatusBarColor(Color color) {
+    channel.invokeMethod(methodSetStatusBarColor, color.value.toRadixString(16));
+  }
 }
 
 /// Tracks whether the host app should pop it's current fragment on back press. Currently set up to only be
 /// true if the current route is a CalendarScreen.
 class ShouldPopTracker extends NavigatorObserver {
-  final Function(bool shouldPop) onUpdate;
+  final Function(bool shouldPop, Color statusBarColor) onUpdate;
 
   ShouldPopTracker(this.onUpdate);
 
   void update(Route route) {
-    onUpdate(route?.settings?.name == CalendarScreen.routeName);
+    var color = StudentColors.primaryColor;
+    if (route is QuickFadeRoute) {
+      Widget child = route.child;
+      if (child is ColoredStatusBar) {
+        color = child.getStatusBarColor();
+      }
+    }
+    onUpdate(route?.settings?.name == CalendarScreen.routeName, color);
   }
 
   @override

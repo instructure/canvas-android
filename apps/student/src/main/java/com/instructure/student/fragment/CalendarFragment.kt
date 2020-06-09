@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import kotlinx.android.extensions.CacheImplementation
@@ -42,7 +44,12 @@ class CalendarFragment : ParentFragment() {
     override fun title() = getString(R.string.calendar)
 
     override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        val color = FlutterComm.statusBarColor.takeUnless { it == 0 } ?: ThemePrefs.primaryColor
+        if (color == Color.WHITE) {
+            ViewStyler.setStatusBarLight(requireActivity())
+        } else {
+            ViewStyler.setStatusBarDark(requireActivity(), color)
+        }
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
