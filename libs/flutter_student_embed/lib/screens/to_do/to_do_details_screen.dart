@@ -18,6 +18,7 @@ import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen.dart';
+import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/design/student_colors.dart';
 import 'package:flutter_student_embed/utils/design/student_theme.dart';
@@ -36,22 +37,25 @@ class ToDoDetailsScreen extends StatelessWidget {
     Color contextColor = StudentTheme.of(context).getCanvasContextColor(toDo.contextCode());
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text(L10n(context).toDo),
-        actions: <Widget>[
-          PopupMenuButton<int>(
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem(value: 0, child: Text(L10n(context).edit)),
-                PopupMenuItem(value: 1, child: Text(L10n(context).delete)),
-              ];
-            },
-            onSelected: (option) {
-              if (option == 0) _edit(context);
-              if (option == 1) _delete(context);
-            },
-          ),
-        ],
+      appBar: dynamicStyleAppBar(
+        context: context,
+        appBar: AppBar(
+          title: Text(L10n(context).toDo),
+          actions: <Widget>[
+            PopupMenuButton<int>(
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(value: 0, child: Text(L10n(context).edit)),
+                  PopupMenuItem(value: 1, child: Text(L10n(context).delete)),
+                ];
+              },
+              onSelected: (option) {
+                if (option == 0) _edit(context);
+                if (option == 1) _delete(context);
+              },
+            ),
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
