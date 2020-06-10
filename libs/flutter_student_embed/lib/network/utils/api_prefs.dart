@@ -101,7 +101,7 @@ class ApiPrefs {
       'authorization': 'Bearer $token',
       'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
           .replaceAll('-', ','),
-      'user-ggent': getUserAgent(),
+      'user-agent': getUserAgent(),
     };
 
     if (extraHeaders != null) {
