@@ -12,21 +12,24 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/cupertino.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'calendar_filter_db.dart';
 
-List<OnDatabaseCreateFn> _creators = [
-  CalendarFilterDb.createTable,
-];
-
-List<OnDatabaseVersionChangeFn> _updaters = [
-  CalendarFilterDb.updateTable,
-];
-
 class DbUtil {
   static const dbVersion = 2;
   static const dbName = 'canvas_student_flutter.db';
+
+  @visibleForTesting
+  static List<OnDatabaseCreateFn> creators = [
+    CalendarFilterDb.createTable,
+  ];
+
+  @visibleForTesting
+  static List<OnDatabaseVersionChangeFn> updaters = [
+    CalendarFilterDb.updateTable,
+  ];
 
   static Database _db;
 
@@ -36,14 +39,16 @@ class DbUtil {
   }
 
   static Future<void> init() async {
-    _db = await openDatabase(dbName, version: dbVersion, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    _db = await openDatabase(dbName, version: dbVersion, onCreate: onCreate, onUpgrade: onUpgrade);
   }
 
-  static Future<void> _onCreate(Database db, int version) async {
-    _creators.forEach((creator) => creator(db, version));
+  @visibleForTesting
+  static Future<void> onCreate(Database db, int version) async {
+    creators.forEach((creator) => creator(db, version));
   }
 
-  static Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    _updaters.forEach((updater) => updater(db, oldVersion, newVersion));
+  @visibleForTesting
+  static Future<void> onUpgrade(Database db, int oldVersion, int newVersion) async {
+    updaters.forEach((updater) => updater(db, oldVersion, newVersion));
   }
 }
