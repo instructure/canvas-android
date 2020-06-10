@@ -56,6 +56,7 @@ class DioConfig {
     bool forceRefresh,
     PageSize pageSize,
     Map<String, dynamic> extraQueryParams,
+    int retries,
   }) {
     return DioConfig(
       baseUrl: baseUrl ?? this.baseUrl,
@@ -64,6 +65,7 @@ class DioConfig {
       forceRefresh: forceRefresh ?? this.forceRefresh,
       pageSize: pageSize ?? this.pageSize,
       extraQueryParams: extraQueryParams ?? this.extraQueryParams,
+      retries: retries ?? this.retries
     );
   }
 
