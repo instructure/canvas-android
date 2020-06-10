@@ -18,13 +18,14 @@ import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen_interactor.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
+import 'package:flutter_student_embed/utils/common_widgets/colored_status_bar.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/core_extensions/string_extensions.dart';
 import 'package:flutter_student_embed/utils/design/student_colors.dart';
 import 'package:flutter_student_embed/utils/design/student_theme.dart';
 import 'package:flutter_student_embed/utils/service_locator.dart';
 
-class CreateUpdateToDoScreen extends StatefulWidget {
+class CreateUpdateToDoScreen extends StatefulWidget with ColoredStatusBar {
   final DateTime initialDate;
   final PlannerItem editToDo;
 
