@@ -224,6 +224,7 @@ void main() {
         forceRefresh: true,
         pageSize: PageSize(13),
         extraQueryParams: {'param1': '123'},
+        retries: 1,
       );
 
       final copy = original.copyWith(
@@ -233,6 +234,7 @@ void main() {
         forceRefresh: false,
         pageSize: PageSize(123),
         extraQueryParams: {'param2': '321'},
+        retries: 2,
       );
 
       expect(copy.baseUrl, '123');
@@ -241,6 +243,7 @@ void main() {
       expect(copy.forceRefresh, false);
       expect(copy.pageSize, PageSize(123));
       expect(copy.extraQueryParams, {'param2': '321'});
+      expect(copy.retries, 2);
     });
   });
 }
