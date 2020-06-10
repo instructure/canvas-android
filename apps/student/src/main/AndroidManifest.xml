@@ -97,6 +97,7 @@
         <activity android:name=".activity.NavigationActivity"
             android:launchMode="singleTask"
             android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustResize"
             android:label="@string/canvas"
             android:theme="@style/CanvasMaterialTheme_Default">
 
