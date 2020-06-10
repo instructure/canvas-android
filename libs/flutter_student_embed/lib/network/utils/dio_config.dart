@@ -123,7 +123,7 @@ class DioConfig {
     Map<String, String> extraHeaders,
     PageSize pageSize: PageSize.none,
   }) {
-    String masqueradeId = ApiPrefs.getCurrentLogin().masqueradeId;
+    String masqueradeId = ApiPrefs.getCurrentLogin()?.masqueradeId;
     Map<String, dynamic> extraParams = masqueradeId == null ? null : {'as_user_id': masqueradeId};
     return DioConfig(
       baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',

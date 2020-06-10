@@ -98,10 +98,10 @@ class ApiPrefs {
     }
 
     var headers = {
-      'Authorization': 'Bearer $token',
+      'authorization': 'Bearer $token',
       'accept-language': (forceDeviceLanguage ? ui.window.locale.toLanguageTag() : effectiveLocale()?.toLanguageTag())
           .replaceAll('-', ','),
-      'User-Agent': getUserAgent(),
+      'user-agent': getUserAgent(),
     };
 
     if (extraHeaders != null) {
