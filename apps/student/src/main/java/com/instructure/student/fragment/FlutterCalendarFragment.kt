@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.AppManager
 import io.flutter.embedding.android.FlutterFragment
+import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -80,6 +81,14 @@ class FlutterCalendarFragment : FlutterFragment() {
 
         val resuming = !hidden
 
+        fun getFlutterView(): FlutterView {
+            val flutterViewField = delegate::class.java.getDeclaredField("flutterView")
+            flutterViewField.isAccessible = true
+            return flutterViewField.get(delegate) as FlutterView
+        }
+
+        if (resuming) getFlutterView().attachToFlutterEngine(AppManager.flutterEngine)
+
         val lifecycle1 = delegate::class.java.getDeclaredMethod(if (resuming) "onStart" else "onPause")
         lifecycle1.isAccessible = true
         lifecycle1.invoke(delegate)
@@ -87,6 +96,8 @@ class FlutterCalendarFragment : FlutterFragment() {
         val lifecycle2 = delegate::class.java.getDeclaredMethod(if (resuming) "onResume" else "onStop")
         lifecycle2.isAccessible = true
         lifecycle2.invoke(delegate)
+
+        if (!resuming) getFlutterView().detachFromFlutterEngine()
     }
 
     fun handleBackPressed(): Boolean {
@@ -109,7 +120,7 @@ class FlutterCalendarFragment : FlutterFragment() {
     }
 }
 
-class CalendarScreenChannel{
+class CalendarScreenChannel {
     val channelId: String = UUID.randomUUID().toString()
     private val channel = MethodChannel(AppManager.flutterEngine.dartExecutor.binaryMessenger, channelId)
 
@@ -119,7 +130,7 @@ class CalendarScreenChannel{
 
     init {
         channel.setMethodCallHandler { call, _ ->
-            when(call.method) {
+            when (call.method) {
                 "openDrawer" -> onOpenDrawer?.invoke()
                 "routeToItem" -> {
                     val item = Gson().fromJson(call.arguments as String, PlannerItem::class.java)
