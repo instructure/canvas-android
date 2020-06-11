@@ -19,11 +19,13 @@ package com.instructure.student.mobius.assignmentDetails
 import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
@@ -138,11 +140,25 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     private fun loadData(effect: AssignmentDetailsEffect.LoadData) {
         launch {
-            val assignmentResult = try {
-                val assignmentResponse = awaitApiResponse<Assignment> {
-                    AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+            val courseResult = try {
+                val courseResponse = awaitApiResponse<Course>{
+                    CourseManager.getCourseWithGrade(effect.courseId, it, true)
                 }
-                DataResult.Success(assignmentResponse.body()!!)
+                DataResult.Success(courseResponse.body()!!)
+            } catch(e: StatusCallbackError) {
+                DataResult.Fail(null)
+            }
+
+            val assignmentResult = try {
+                if(courseResult.isSuccess) {
+                    // TODO - check enrollments so we can get the right user id to make this request with
+                    val assignmentResponse = awaitApiResponse<Assignment> {
+                        AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    }
+                    DataResult.Success(assignmentResponse.body()!!)
+                } else {
+                    DataResult.Fail(null)
+                }
             } catch (e: StatusCallbackError) {
                 if (e.response?.code() == 401) {
                     DataResult.Fail(Failure.Authorization(e.response?.message()))
