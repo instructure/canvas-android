@@ -153,10 +153,23 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 if(courseResult.isSuccess && courseResult.dataOrNull != null) {
                     val enrollment = courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver }
 
-                    val assignmentResponse = awaitApiResponse<Assignment> {
-                        AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    if(enrollment != null) {
+                        val assignmentResponse = awaitApiResponse<ObserverAssignment> {
+                            AssignmentManager.getAssignmentForObserver(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                        }
+                        val assignmentWithObserverSubmission = assignmentResponse.body()!!.toAssignmentForObservee()
+                        if(assignmentWithObserverSubmission != null) {
+                            DataResult.Success(assignmentWithObserverSubmission)
+                        } else {
+                            DataResult.Fail(null)
+                        }
+                    } else {
+                        val assignmentResponse = awaitApiResponse<Assignment> {
+                            AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                        }
+                        DataResult.Success(assignmentResponse.body()!!)
                     }
-                    DataResult.Success(assignmentResponse.body()!!)
+
                 } else {
                     DataResult.Fail(null)
                 }
