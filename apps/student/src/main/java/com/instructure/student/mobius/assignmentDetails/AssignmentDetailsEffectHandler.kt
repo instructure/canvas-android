@@ -150,8 +150,9 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             }
 
             val assignmentResult = try {
-                if(courseResult.isSuccess) {
-                    // TODO - check enrollments so we can get the right user id to make this request with
+                if(courseResult.isSuccess && courseResult.dataOrNull != null) {
+                    val enrollment = courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver }
+
                     val assignmentResponse = awaitApiResponse<Assignment> {
                         AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
                     }
