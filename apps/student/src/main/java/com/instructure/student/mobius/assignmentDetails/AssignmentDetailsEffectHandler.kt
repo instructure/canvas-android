@@ -140,11 +140,9 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     private fun loadData(effect: AssignmentDetailsEffect.LoadData) {
         launch {
+            // In order to handle observers, we need to fetch the course and its enrollments
             val courseResult = try {
-                val courseResponse = awaitApiResponse<Course>{
-                    CourseManager.getCourseWithGrade(effect.courseId, it, true)
-                }
-                DataResult.Success(courseResponse.body()!!)
+                CourseManager.getCourseWithGradeAsync(effect.courseId, true).await()
             } catch(e: StatusCallbackError) {
                 DataResult.Fail(null)
             }
@@ -154,6 +152,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     val enrollment = courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver }
 
                     if(enrollment != null) {
+                        // Valid observer enrollment, this means we need to include observers in our assignment response
                         val assignmentResponse = awaitApiResponse<ObserverAssignment> {
                             AssignmentManager.getAssignmentForObserver(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
                         }
@@ -164,12 +163,12 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                             DataResult.Fail(null)
                         }
                     } else {
+                        // No observer enrollment, business as usual
                         val assignmentResponse = awaitApiResponse<Assignment> {
                             AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
                         }
                         DataResult.Success(assignmentResponse.body()!!)
                     }
-
                 } else {
                     DataResult.Fail(null)
                 }

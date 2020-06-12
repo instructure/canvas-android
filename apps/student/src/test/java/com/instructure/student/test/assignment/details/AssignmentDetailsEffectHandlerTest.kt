@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -103,6 +104,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection = effectHandler.connect(eventConsumer)
 
         Analytics.firebase = firebase
+
+        mockkObject(CourseManager)
+        every { CourseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course())
+        }
     }
 
     private fun mockkDatabase(data: List<Submission> = emptyList()) {
