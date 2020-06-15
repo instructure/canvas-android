@@ -71,11 +71,6 @@ android {
         buildConfigField "String", "NEWRELIC_APP_TOKEN", "\"$newRelicAppToken\""
 
         testBuildType = "debug"
-
-        ndk {
-            // Filter for architectures supported by Flutter.
-            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
-        }
     }
 
     bundle {
@@ -121,6 +116,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             ext.enableCrashlytics = false
             pseudoLocalesEnabled true
+
+            ndk {
+                // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
+            }
         }
 
         release {
@@ -130,6 +130,11 @@ android {
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            ndk {
+                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
         }
     }
 
