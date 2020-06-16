@@ -147,8 +147,9 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                 DataResult.Fail(null)
             }
 
+            val isObserver = courseResult.isSuccess && courseResult.dataOrNull != null && courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver } != null
             val assignmentResult = try {
-                if (courseResult.isSuccess && courseResult.dataOrNull != null && courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver } != null) {
+                if (isObserver) {
                     // Valid observer enrollment, this means we need to include observers in our assignment response
                     val assignmentResponse = awaitApiResponse<ObserveeAssignment> {
                         AssignmentManager.getAssignmentIncludeObservees(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
@@ -210,7 +211,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     studioLTITool,
                     ltiTool,
                     dbSubmission,
-                    quizResult
+                    quizResult,
+                    isObserver
                 )
             )
         }

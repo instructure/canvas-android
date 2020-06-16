@@ -343,6 +343,18 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
     }
 
     @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
+    fun neverDisplaysSubmitButtonForObserver() {
+        val assignment = Assignment(
+                name = "Test Assignment",
+                submissionTypesRaw = listOf("online_upload")
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), isObserver = true)
+        loadPageWithModel(model)
+        assignmentDetailsRenderPage.submitButton.assertGone()
+    }
+
+    @Test
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.QUIZZES)
     fun displaysViewQuizButton() {
         val quizId = 123L

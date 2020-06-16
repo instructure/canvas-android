@@ -117,7 +117,8 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 studioLTIToolResult = event.studioLTIToolResult,
                 ltiTool = event.ltiToolResult,
                 quizResult = event.quizResult,
-                databaseSubmission = dbSubmission
+                databaseSubmission = dbSubmission,
+                isObserver = event.isObserver
             )
 
             if (newModel.shouldRouteToSubmissionDetails) {

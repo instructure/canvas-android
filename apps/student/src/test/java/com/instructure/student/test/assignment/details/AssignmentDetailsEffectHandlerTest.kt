@@ -249,7 +249,8 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
                 DataResult.Fail(null),
                 DataResult.Success(ltiTool),
                 submission,
-                null
+                null,
+                true
         )
         val observerEnrollment = Enrollment(id = 1, role = Enrollment.EnrollmentType.Observer)
         val course = Course(id = courseId, enrollments = mutableListOf(observerEnrollment))

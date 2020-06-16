@@ -45,7 +45,8 @@ sealed class AssignmentDetailsEvent {
         val studioLTIToolResult: DataResult<LTITool>?,
         val ltiToolResult: DataResult<LTITool>?,
         val submission: Submission?,
-        val quizResult: DataResult<Quiz>?
+        val quizResult: DataResult<Quiz>?,
+        val isObserver: Boolean = false
     ) : AssignmentDetailsEvent()
     data class SubmissionStatusUpdated(val submission: Submission?) : AssignmentDetailsEvent()
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
@@ -92,5 +93,6 @@ data class AssignmentDetailsModel(
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null,
     val videoFileUri: Uri? = null,
-    var shouldRouteToSubmissionDetails: Boolean = false
+    var shouldRouteToSubmissionDetails: Boolean = false,
+    val isObserver: Boolean = false
 )

@@ -62,14 +62,15 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         val quiz = model.quizResult?.dataOrNull
 
         // Loaded state
-        return presentLoadedState(assignment, quiz, model.databaseSubmission, context)
+        return presentLoadedState(assignment, quiz, model.databaseSubmission, context, model.isObserver)
     }
 
     private fun presentLoadedState(
         assignment: Assignment,
         quiz: Quiz?,
         databaseSubmission: Submission?,
-        context: Context
+        context: Context,
+        isObserver: Boolean
     ): AssignmentDetailsViewState.Loaded {
         val visibilities = AssignmentDetailsVisibilities()
 
@@ -183,12 +184,17 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.allowedAttempts = assignment.allowedAttempts != -1L
         visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
-        //Configure stickied submit button visibility state,
-        visibilities.submitButton = when(assignment.turnInType) {
-            // We always show the button for quizzes and discussions, so the users can always route
-            Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-            Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
-            else -> false // On Paper / etc
+        if (isObserver) {
+            // Observers shouldn't see the submit button
+            visibilities.submitButton = false
+        } else {
+            //Configure stickied submit button visibility state,
+            visibilities.submitButton = when(assignment.turnInType) {
+                // We always show the button for quizzes and discussions, so the users can always route
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
+                else -> false // On Paper / etc
+            }
         }
 
         // Configure stickied submit button
