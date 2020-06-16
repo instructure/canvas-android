@@ -40,8 +40,8 @@ import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
 
 class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
-        EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
-        Query.Listener {
+    EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
+    Query.Listener {
 
     private var submissionQuery: Query<Submission>? = null
 
@@ -80,11 +80,11 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
                 val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
                 view?.showSubmitDialogView(
-                        effect.assignment,
-                        effect.course.id,
-                        getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled),
-                        studioUrl,
-                        effect.studioLTITool?.name
+                    effect.assignment,
+                    effect.course.id,
+                    getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled),
+                    studioUrl,
+                    effect.studioLTITool?.name
                 )
             }
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
@@ -97,19 +97,19 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> view?.showUploadStatusView(effect.submission.id)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
                         view?.showOnlineTextEntryView(
-                                effect.submission.assignmentId,
-                                effect.submission.assignmentName,
-                                effect.submission.submissionEntry,
-                                effect.submission.errorFlag
+                            effect.submission.assignmentId,
+                            effect.submission.assignmentName,
+                            effect.submission.submissionEntry,
+                            effect.submission.errorFlag
                         )
                     }
                     Assignment.SubmissionType.ONLINE_URL.apiString -> {
                         view?.showOnlineUrlEntryView(
-                                effect.submission.assignmentId,
-                                effect.submission.assignmentName,
-                                effect.submission.canvasContext,
-                                effect.submission.submissionEntry,
-                                effect.submission.errorFlag
+                            effect.submission.assignmentId,
+                            effect.submission.assignmentName,
+                            effect.submission.canvasContext,
+                            effect.submission.submissionEntry,
+                            effect.submission.errorFlag
                         )
                     }
                     else -> Unit
@@ -204,14 +204,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             logEvent(getAnalyticsString(quizResult, assignmentResult))
 
             consumer.accept(
-                    AssignmentDetailsEvent.DataLoaded(
-                            assignmentResult,
-                            isStudioEnabled,
-                            studioLTITool,
-                            ltiTool,
-                            dbSubmission,
-                            quizResult
-                    )
+                AssignmentDetailsEvent.DataLoaded(
+                    assignmentResult,
+                    isStudioEnabled,
+                    studioLTITool,
+                    ltiTool,
+                    dbSubmission,
+                    quizResult
+                )
             )
         }
     }
