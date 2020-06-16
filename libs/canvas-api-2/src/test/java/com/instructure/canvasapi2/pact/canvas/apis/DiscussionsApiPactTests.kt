@@ -39,7 +39,7 @@ class DiscussionsApiPactTests : ApiPactTestBase() {
     @Pact(consumer = "android")
     fun getCourseDiscussionTopicsPact(builder: PactDslWithProvider) : RequestResponsePact {
         return builder
-                .given("course with discussions")
+                .given("mobile course with discussions")
 
                 .uponReceiving("A request for course discussion topics")
                 .path(listDiscussionTopicsPath)
