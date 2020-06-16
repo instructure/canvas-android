@@ -236,7 +236,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
         val ltiTool = LTITool(url = "https://www.instructure.com")
-        val observerAssignment = ObserverAssignment(
+        val observerAssignment = ObserveeAssignment(
             id= assignmentId,
             courseId = courseId,
             submissionList = listOf(Submission(id = 9876L)),
@@ -255,7 +255,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val course = Course(id = courseId, enrollments = mutableListOf(observerEnrollment))
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
-        coEvery { awaitApiResponse<ObserverAssignment>(any()) } returns Response.success(observerAssignment)
+        coEvery { awaitApiResponse<ObserveeAssignment>(any()) } returns Response.success(observerAssignment)
 
         mockkObject(CourseManager)
         every { CourseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {

@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
-import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.awaitApiResponse
 import com.instructure.student.Submission
 import com.instructure.student.db.Db
@@ -41,8 +40,8 @@ import com.squareup.sqldelight.Query
 import kotlinx.coroutines.launch
 
 class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Long) :
-    EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
-    Query.Listener {
+        EffectHandler<AssignmentDetailsView, AssignmentDetailsEvent, AssignmentDetailsEffect>(),
+        Query.Listener {
 
     private var submissionQuery: Query<Submission>? = null
 
@@ -81,11 +80,11 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             is AssignmentDetailsEffect.ShowSubmitDialogView -> {
                 val studioUrl = effect.studioLTITool?.getResourceSelectorUrl(effect.course, effect.assignment)
                 view?.showSubmitDialogView(
-                    effect.assignment,
-                    effect.course.id,
-                    getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled),
-                    studioUrl,
-                    effect.studioLTITool?.name
+                        effect.assignment,
+                        effect.course.id,
+                        getSubmissionTypesVisibilities(effect.assignment, effect.isStudioEnabled),
+                        studioUrl,
+                        effect.studioLTITool?.name
                 )
             }
             is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
@@ -98,19 +97,19 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD.apiString, Assignment.SubmissionType.MEDIA_RECORDING.apiString -> view?.showUploadStatusView(effect.submission.id)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
                         view?.showOnlineTextEntryView(
-                            effect.submission.assignmentId,
-                            effect.submission.assignmentName,
-                            effect.submission.submissionEntry,
-                            effect.submission.errorFlag
+                                effect.submission.assignmentId,
+                                effect.submission.assignmentName,
+                                effect.submission.submissionEntry,
+                                effect.submission.errorFlag
                         )
                     }
                     Assignment.SubmissionType.ONLINE_URL.apiString -> {
                         view?.showOnlineUrlEntryView(
-                            effect.submission.assignmentId,
-                            effect.submission.assignmentName,
-                            effect.submission.canvasContext,
-                            effect.submission.submissionEntry,
-                            effect.submission.errorFlag
+                                effect.submission.assignmentId,
+                                effect.submission.assignmentName,
+                                effect.submission.canvasContext,
+                                effect.submission.submissionEntry,
+                                effect.submission.errorFlag
                         )
                     }
                     else -> Unit
@@ -130,7 +129,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD -> view?.showFileUploadView(effect.assignment)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     Assignment.SubmissionType.ONLINE_URL -> view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
-                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.ltiUrl ?: "", effect.assignment.name ?: "")
+                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.ltiUrl
+                            ?: "", effect.assignment.name ?: "")
                     else -> view?.showMediaRecordingView(effect.assignment) // Assignment.SubmissionType.MEDIA_RECORDING
                 }
             }
@@ -143,34 +143,28 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             // In order to handle observers, we need to fetch the course and its enrollments
             val courseResult = try {
                 CourseManager.getCourseWithGradeAsync(effect.courseId, true).await()
-            } catch(e: StatusCallbackError) {
+            } catch (e: StatusCallbackError) {
                 DataResult.Fail(null)
             }
 
             val assignmentResult = try {
-                if(courseResult.isSuccess && courseResult.dataOrNull != null) {
-                    val enrollment = courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver }
-
-                    if(enrollment != null) {
-                        // Valid observer enrollment, this means we need to include observers in our assignment response
-                        val assignmentResponse = awaitApiResponse<ObserverAssignment> {
-                            AssignmentManager.getAssignmentForObserver(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
-                        }
-                        val assignmentWithObserverSubmission = assignmentResponse.body()!!.toAssignmentForObservee()
-                        if(assignmentWithObserverSubmission != null) {
-                            DataResult.Success(assignmentWithObserverSubmission)
-                        } else {
-                            DataResult.Fail(null)
-                        }
+                if (courseResult.isSuccess && courseResult.dataOrNull != null && courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver } != null) {
+                    // Valid observer enrollment, this means we need to include observers in our assignment response
+                    val assignmentResponse = awaitApiResponse<ObserveeAssignment> {
+                        AssignmentManager.getAssignmentIncludeObservees(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    }
+                    val assignmentWithObserverSubmission = assignmentResponse.body()!!.toAssignmentForObservee()
+                    if (assignmentWithObserverSubmission != null) {
+                        DataResult.Success(assignmentWithObserverSubmission)
                     } else {
-                        // No observer enrollment, business as usual
-                        val assignmentResponse = awaitApiResponse<Assignment> {
-                            AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
-                        }
-                        DataResult.Success(assignmentResponse.body()!!)
+                        DataResult.Fail(null)
                     }
                 } else {
-                    DataResult.Fail(null)
+                    // Something went wrong with the course fetch, or there was no valid observer, so we fetch the student assignment as normal
+                    val assignmentResponse = awaitApiResponse<Assignment> {
+                        AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    }
+                    DataResult.Success(assignmentResponse.body()!!)
                 }
             } catch (e: StatusCallbackError) {
                 if (e.response?.code() == 401) {
@@ -190,7 +184,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
             // We need to know if they can make submissions through Studio, only for file uploads
             val studioLTITool: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-               effect.courseId.getStudioLTITool()
+                effect.courseId.getStudioLTITool()
             } else DataResult.Fail(null)
 
             val isStudioEnabled = studioLTITool.isSuccess
@@ -210,14 +204,14 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
             logEvent(getAnalyticsString(quizResult, assignmentResult))
 
             consumer.accept(
-                AssignmentDetailsEvent.DataLoaded(
-                    assignmentResult,
-                    isStudioEnabled,
-                    studioLTITool,
-                    ltiTool,
-                    dbSubmission,
-                    quizResult
-                )
+                    AssignmentDetailsEvent.DataLoaded(
+                            assignmentResult,
+                            isStudioEnabled,
+                            studioLTITool,
+                            ltiTool,
+                            dbSubmission,
+                            quizResult
+                    )
             )
         }
     }

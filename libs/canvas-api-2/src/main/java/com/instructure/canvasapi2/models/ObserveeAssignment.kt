@@ -19,8 +19,13 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
 
+/**
+ * This assignment model is a copy of the Assignment.kt model, with one change. Its 'submission' property is a list,
+ * instead of a single object. This change is necessary to handle the api response for getAssignmentIncludeObservees,
+ * due to the addition of `include[]=observed_users`.
+ */
 @Parcelize
-data class ObserverAssignment(
+data class ObserveeAssignment(
         override var id: Long = 0,
         var name: String? = null,
         val description: String? = null,
@@ -97,6 +102,10 @@ data class ObserverAssignment(
     override val comparisonDate get() = dueAt.toDate()
     override val comparisonString get() = dueAt
 
+    /**
+     * Converts an ObserveeAssignment to an Assignment, using the first submission found. Returns null if no submission
+     * is found.
+     */
     fun toAssignmentForObservee(): Assignment? {
         val submission = submissionList?.firstOrNull()
         if (submission != null) {

@@ -32,7 +32,7 @@ object AssignmentAPI {
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users")
-        fun getAssignmentForObservers(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserverAssignment>
+        fun getAssignmentIncludeObservees(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserveeAssignment>
 
         @GET("courses/{courseId}/assignment_groups/{assignmentGroupId}")
         fun getAssignmentGroup(
@@ -84,8 +84,8 @@ object AssignmentAPI {
         callback.addCall(adapter.build(AssignmentInterface::class.java, params).getAssignment(courseId, assignmentId)).enqueue(callback)
     }
 
-    fun getAssignmentForObserver(courseId: Long, assignmentId: Long, adapter: RestBuilder, callback: StatusCallback<ObserverAssignment>, params: RestParams) {
-        callback.addCall(adapter.build(AssignmentInterface::class.java, params).getAssignmentForObservers(courseId, assignmentId)).enqueue(callback)
+    fun getAssignmentIncludeObservees(courseId: Long, assignmentId: Long, adapter: RestBuilder, callback: StatusCallback<ObserveeAssignment>, params: RestParams) {
+        callback.addCall(adapter.build(AssignmentInterface::class.java, params).getAssignmentIncludeObservees(courseId, assignmentId)).enqueue(callback)
     }
 
     fun getAssignmentGroup(courseId: Long, assignmentGroupId: Long, adapter: RestBuilder, callback: StatusCallback<AssignmentGroup>, params: RestParams) {

@@ -36,10 +36,10 @@ object AssignmentManager {
     }
 
     @JvmStatic
-    fun getAssignmentForObserver(assignmentId: Long, courseId: Long, forceNetwork: Boolean, callback: StatusCallback<ObserverAssignment>) {
+    fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean, callback: StatusCallback<ObserveeAssignment>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        AssignmentAPI.getAssignmentForObserver(courseId, assignmentId, adapter, callback, params)
+        AssignmentAPI.getAssignmentIncludeObservees(courseId, assignmentId, adapter, callback, params)
     }
 
     fun getAssignmentAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean)
