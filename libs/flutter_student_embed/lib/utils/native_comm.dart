@@ -54,29 +54,32 @@ class NativeComm {
   /// Called when the native app is clearing its navigation back stack (e.g. logout) and requests that Flutter do the same
   static Function() resetRoute;
 
+  @visibleForTesting
+  static Future<dynamic> Function(MethodCall) methodCallHandler = (methodCall) async {
+    switch (methodCall.method) {
+      case methodUpdateLoginData:
+        _updateLogin(methodCall.arguments);
+        break;
+      case methodUpdateThemeData:
+        _updateTheme(methodCall.arguments);
+        break;
+      case methodRouteToCalendar:
+        if (routeToCalendar != null) routeToCalendar(methodCall.arguments as String);
+        break;
+      case methodReset:
+        _performReset();
+        break;
+      case methodUpdateCalendarDates:
+        _updateCalendarDates(methodCall.arguments);
+        break;
+      default:
+        throw 'Channel method not implemented: ${methodCall.method}';
+    }
+    return null;
+  };
+
   static void init() {
-    channel.setMethodCallHandler((methodCall) async {
-      switch (methodCall.method) {
-        case methodUpdateLoginData:
-          _updateLogin(methodCall.arguments);
-          break;
-        case methodUpdateThemeData:
-          _updateTheme(methodCall.arguments);
-          break;
-        case methodRouteToCalendar:
-          if (routeToCalendar != null) routeToCalendar(methodCall.arguments as String);
-          break;
-        case methodReset:
-          _performReset();
-          break;
-        case methodUpdateCalendarDates:
-          _updateCalendarDates(methodCall.arguments);
-          break;
-        default:
-          throw 'Channel method not implemented: ${methodCall.method}';
-      }
-      return null;
-    });
+    channel.setMethodCallHandler(methodCallHandler);
   }
 
   static void _updateLogin(dynamic loginData) {
@@ -89,7 +92,6 @@ class NativeComm {
       ApiPrefs.setLogin(login);
     } catch (e) {
       print('Error updating login!');
-      FlutterError.dumpErrorToConsole(e);
     }
   }
 
@@ -108,7 +110,6 @@ class NativeComm {
       if (onThemeUpdated != null) onThemeUpdated();
     } catch (e) {
       print('Error updating theme data!');
-      FlutterError.dumpErrorToConsole(e);
     }
   }
 

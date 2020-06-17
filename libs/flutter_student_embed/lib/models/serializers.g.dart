@@ -9,7 +9,6 @@ part of serializers;
 Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(Course.serializer)
       ..add(Enrollment.serializer)
-      ..add(HomePage.serializer)
       ..add(Login.serializer)
       ..add(Plannable.serializer)
       ..add(PlannerItem.serializer)

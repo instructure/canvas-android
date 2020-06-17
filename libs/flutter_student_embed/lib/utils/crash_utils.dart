@@ -15,8 +15,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_crashlytics/flutter_crashlytics.dart';
-import 'package:flutter_student_embed/crash_screen.dart';
 import 'package:flutter_student_embed/network/utils/api_prefs.dart';
+import 'package:flutter_student_embed/screens/crash_screen.dart';
 
 class CrashUtils {
   static Future<void> init() async {

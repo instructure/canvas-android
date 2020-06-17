@@ -6,40 +6,7 @@ part of course;
 // BuiltValueGenerator
 // **************************************************************************
 
-const HomePage _$homePageFeed = const HomePage._('feed');
-const HomePage _$homePageWiki = const HomePage._('wiki');
-const HomePage _$homePageModules = const HomePage._('modules');
-const HomePage _$homePageAssignments = const HomePage._('assignments');
-const HomePage _$homePageSyllabus = const HomePage._('syllabus');
-
-HomePage _$homePageValueOf(String name) {
-  switch (name) {
-    case 'feed':
-      return _$homePageFeed;
-    case 'wiki':
-      return _$homePageWiki;
-    case 'modules':
-      return _$homePageModules;
-    case 'assignments':
-      return _$homePageAssignments;
-    case 'syllabus':
-      return _$homePageSyllabus;
-    default:
-      return _$homePageSyllabus;
-  }
-}
-
-final BuiltSet<HomePage> _$homePageValues =
-    new BuiltSet<HomePage>(const <HomePage>[
-  _$homePageFeed,
-  _$homePageWiki,
-  _$homePageModules,
-  _$homePageAssignments,
-  _$homePageSyllabus,
-]);
-
 Serializer<Course> _$courseSerializer = new _$CourseSerializer();
-Serializer<HomePage> _$homePageSerializer = new _$HomePageSerializer();
 
 class _$CourseSerializer implements StructuredSerializer<Course> {
   @override
@@ -136,13 +103,6 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
       result.add(serializers.serialize(object.workflowState,
           specifiedType: const FullType(String)));
     }
-    result.add('default_view');
-    if (object.homePage == null) {
-      result.add(null);
-    } else {
-      result.add(serializers.serialize(object.homePage,
-          specifiedType: const FullType(HomePage)));
-    }
     return result;
   }
 
@@ -236,32 +196,11 @@ class _$CourseSerializer implements StructuredSerializer<Course> {
           result.workflowState = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
           break;
-        case 'default_view':
-          result.homePage = serializers.deserialize(value,
-              specifiedType: const FullType(HomePage)) as HomePage;
-          break;
       }
     }
 
     return result.build();
   }
-}
-
-class _$HomePageSerializer implements PrimitiveSerializer<HomePage> {
-  @override
-  final Iterable<Type> types = const <Type>[HomePage];
-  @override
-  final String wireName = 'default_view';
-
-  @override
-  Object serialize(Serializers serializers, HomePage object,
-          {FullType specifiedType = FullType.unspecified}) =>
-      object.name;
-
-  @override
-  HomePage deserialize(Serializers serializers, Object serialized,
-          {FullType specifiedType = FullType.unspecified}) =>
-      HomePage.valueOf(serialized as String);
 }
 
 class _$Course extends Course {
@@ -311,8 +250,6 @@ class _$Course extends Course {
   final bool restrictEnrollmentsToCourseDates;
   @override
   final String workflowState;
-  @override
-  final HomePage homePage;
 
   factory _$Course([void Function(CourseBuilder) updates]) =>
       (new CourseBuilder()..update(updates)).build();
@@ -340,8 +277,7 @@ class _$Course extends Course {
       this.hasWeightedGradingPeriods,
       this.hasGradingPeriods,
       this.restrictEnrollmentsToCourseDates,
-      this.workflowState,
-      this.homePage})
+      this.workflowState})
       : super._() {
     if (id == null) {
       throw new BuiltValueNullFieldError('Course', 'id');
@@ -417,8 +353,7 @@ class _$Course extends Course {
         hasGradingPeriods == other.hasGradingPeriods &&
         restrictEnrollmentsToCourseDates ==
             other.restrictEnrollmentsToCourseDates &&
-        workflowState == other.workflowState &&
-        homePage == other.homePage;
+        workflowState == other.workflowState;
   }
 
   @override
@@ -441,26 +376,26 @@ class _$Course extends Course {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode), id.hashCode),
-                                                                                name.hashCode),
-                                                                            originalName.hashCode),
-                                                                        courseCode.hashCode),
-                                                                    startAt.hashCode),
-                                                                endAt.hashCode),
-                                                            syllabusBody.hashCode),
-                                                        hideFinalGrades.hashCode),
-                                                    isPublic.hashCode),
-                                                enrollments.hashCode),
-                                            needsGradingCount.hashCode),
-                                        applyAssignmentGroupWeights.hashCode),
-                                    isFavorite.hashCode),
-                                accessRestrictedByDate.hashCode),
-                            imageDownloadUrl.hashCode),
-                        hasWeightedGradingPeriods.hashCode),
-                    hasGradingPeriods.hashCode),
-                restrictEnrollmentsToCourseDates.hashCode),
-            workflowState.hashCode),
-        homePage.hashCode));
+                                                                            $jc($jc($jc($jc($jc(0, currentScore.hashCode), finalScore.hashCode), currentGrade.hashCode), finalGrade.hashCode),
+                                                                                id.hashCode),
+                                                                            name.hashCode),
+                                                                        originalName.hashCode),
+                                                                    courseCode.hashCode),
+                                                                startAt.hashCode),
+                                                            endAt.hashCode),
+                                                        syllabusBody.hashCode),
+                                                    hideFinalGrades.hashCode),
+                                                isPublic.hashCode),
+                                            enrollments.hashCode),
+                                        needsGradingCount.hashCode),
+                                    applyAssignmentGroupWeights.hashCode),
+                                isFavorite.hashCode),
+                            accessRestrictedByDate.hashCode),
+                        imageDownloadUrl.hashCode),
+                    hasWeightedGradingPeriods.hashCode),
+                hasGradingPeriods.hashCode),
+            restrictEnrollmentsToCourseDates.hashCode),
+        workflowState.hashCode));
   }
 
   @override
@@ -489,8 +424,7 @@ class _$Course extends Course {
           ..add('hasGradingPeriods', hasGradingPeriods)
           ..add('restrictEnrollmentsToCourseDates',
               restrictEnrollmentsToCourseDates)
-          ..add('workflowState', workflowState)
-          ..add('homePage', homePage))
+          ..add('workflowState', workflowState))
         .toString();
   }
 }
@@ -603,10 +537,6 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
   set workflowState(String workflowState) =>
       _$this._workflowState = workflowState;
 
-  HomePage _homePage;
-  HomePage get homePage => _$this._homePage;
-  set homePage(HomePage homePage) => _$this._homePage = homePage;
-
   CourseBuilder() {
     Course._initializeBuilder(this);
   }
@@ -636,7 +566,6 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
       _hasGradingPeriods = _$v.hasGradingPeriods;
       _restrictEnrollmentsToCourseDates = _$v.restrictEnrollmentsToCourseDates;
       _workflowState = _$v.workflowState;
-      _homePage = _$v.homePage;
       _$v = null;
     }
     return this;
@@ -684,8 +613,7 @@ class CourseBuilder implements Builder<Course, CourseBuilder> {
               hasGradingPeriods: hasGradingPeriods,
               restrictEnrollmentsToCourseDates:
                   restrictEnrollmentsToCourseDates,
-              workflowState: workflowState,
-              homePage: homePage);
+              workflowState: workflowState);
     } catch (_) {
       String _$failedField;
       try {
