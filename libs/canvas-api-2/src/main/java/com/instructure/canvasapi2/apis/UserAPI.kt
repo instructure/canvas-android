@@ -43,6 +43,9 @@ object UserAPI {
         @GET("users/self/settings")
         fun getSelfSettings(): Call<UserSettings>
 
+        @GET("users/self/features")
+        fun getSelfFeatures(): Call<List<CanvasFeatureFlag>>
+
         @PUT("users/self/settings")
         fun setHideColorOverlaySetting(@Query("hide_dashcard_color_overlays") hideOverlay: Boolean): Call<UserSettings>
 
@@ -123,6 +126,10 @@ object UserAPI {
 
     fun getSelfSettings(adapter: RestBuilder, params: RestParams, callback: StatusCallback<UserSettings>) {
         callback.addCall(adapter.build(UsersInterface::class.java, params).getSelfSettings()).enqueue(callback)
+    }
+
+    fun getSelfFeatures(adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<CanvasFeatureFlag>>) {
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getSelfFeatures()).enqueue(callback)
     }
 
     fun setHideColorOverlaySetting(

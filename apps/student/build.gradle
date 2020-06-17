@@ -258,6 +258,7 @@ dependencies {
     /* Media Handling */
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation Libs.PHOTO_VIEW
+    implementation 'com.airbnb.android:lottie:3.4.1'
 
     /* Sliding Panel */
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
