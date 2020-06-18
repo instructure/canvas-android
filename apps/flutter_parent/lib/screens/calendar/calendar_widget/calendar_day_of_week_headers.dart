@@ -13,8 +13,9 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
-import 'package:intl/intl.dart' hide TextDirection;
+import 'package:intl/intl.dart';
 
 class DayOfWeekHeaders extends StatelessWidget {
   static const double headerHeight = 14;
@@ -24,7 +25,7 @@ class DayOfWeekHeaders extends StatelessWidget {
     final weekendTheme = Theme.of(context).textTheme.subtitle;
     final weekdayTheme = weekendTheme.copyWith(color: ParentTheme.of(context).onSurfaceColor);
 
-    final symbols = DateFormat().dateSymbols;
+    final symbols = DateFormat(null, supportedDateLocale).dateSymbols;
     final firstDayOfWeek = symbols.FIRSTDAYOFWEEK;
 
     return ExcludeSemantics(

@@ -288,7 +288,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           key: Key('expand-button'),
           onTap: _canExpandMonth ? _toggleExpanded : null,
           child: Semantics(
-            label: L10n(context).selectedMonthLabel(DateFormat.yMMMM().format(selectedDay)),
+            label: L10n(context).selectedMonthLabel(DateFormat.yMMMM(supportedDateLocale).format(selectedDay)),
             onTapHint: _isMonthExpanded ? L10n(context).monthTapCollapseHint : L10n(context).monthTapExpandHint,
             excludeSemantics: true,
             child: Padding(
@@ -296,10 +296,16 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(DateFormat.y().format(selectedDay), style: Theme.of(context).textTheme.overline),
+                  Text(
+                    DateFormat.y(supportedDateLocale).format(selectedDay),
+                    style: Theme.of(context).textTheme.overline,
+                  ),
                   Row(
                     children: <Widget>[
-                      Text(DateFormat.MMMM().format(selectedDay), style: Theme.of(context).textTheme.display1),
+                      Text(
+                        DateFormat.MMMM(supportedDateLocale).format(selectedDay),
+                        style: Theme.of(context).textTheme.display1,
+                      ),
                       SizedBox(width: 10),
                       Visibility(
                         visible: _canExpandMonth,
@@ -553,7 +559,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       index = _weekController.page.toInt();
     }
 
-    final format = DateFormat.MMMMd().add_y();
+    final format = DateFormat.MMMMd(supportedDateLocale).add_y();
 
     final previousWeek = _weekStartForIndex(index - 1);
     final previousWeekName = format.format(previousWeek);
@@ -587,7 +593,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       index = _monthController.page.toInt();
     }
 
-    final format = DateFormat.MMMM().add_y();
+    final format = DateFormat.MMMM(supportedDateLocale).add_y();
 
     final previousMonth = _yearAndMonthForIndex(index - 1);
     final previousMonthName = format.format(DateTime(previousMonth.item1, previousMonth.item2));
