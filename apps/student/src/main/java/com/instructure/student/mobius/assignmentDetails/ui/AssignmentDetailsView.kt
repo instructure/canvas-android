@@ -268,9 +268,9 @@ class AssignmentDetailsView(
         RouteMatcher.routeUrl(context, url, domain, extras)
     }
 
-    fun showSubmissionView(assignmentId: Long, course: Course) {
+    fun showSubmissionView(assignmentId: Long, course: Course, isObserver: Boolean = false) {
         logEvent(AnalyticsEventConstants.SUBMISSION_CELL_SELECTED)
-        RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId))
+        RouteMatcher.route(context, SubmissionDetailsFragment.makeRoute(course, assignmentId, isObserver))
     }
 
     fun showUploadStatusView(submissionId: Long) {

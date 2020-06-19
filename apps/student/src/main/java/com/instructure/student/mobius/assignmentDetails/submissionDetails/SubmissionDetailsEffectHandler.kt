@@ -107,7 +107,7 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
                 }
             } else null
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiUrl, isStudioEnabled, quizResult, studioLTIToolResult))
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiUrl, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver))
         }
     }
 

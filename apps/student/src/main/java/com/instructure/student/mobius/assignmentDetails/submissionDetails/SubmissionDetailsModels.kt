@@ -33,7 +33,7 @@ sealed class SubmissionDetailsEvent {
     data class AttachmentClicked(val file: Attachment) : SubmissionDetailsEvent()
     data class SubmissionClicked(val submissionAttempt: Long) : SubmissionDetailsEvent()
     data class SubmissionAndAttachmentClicked(val submissionAttempt: Long, val attachment: Attachment) : SubmissionDetailsEvent()
-    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmissionResult: DataResult<Submission>, val ltiUrlResult: DataResult<LTITool?>, val isStudioEnabled: Boolean, val quizResult: DataResult<Quiz>?, val studioLTIToolResult: DataResult<LTITool>?) :
+    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmissionResult: DataResult<Submission>, val ltiUrlResult: DataResult<LTITool?>, val isStudioEnabled: Boolean, val quizResult: DataResult<Quiz>?, val studioLTIToolResult: DataResult<LTITool>?, val isObserver: Boolean = false) :
         SubmissionDetailsEvent()
 }
 
@@ -45,7 +45,7 @@ sealed class SubmissionDetailsEffect {
     object MediaCommentDialogClosed : SubmissionDetailsEffect()
     data class ShowVideoRecordingPlayback(val file: File) : SubmissionDetailsEffect()
     data class UploadMediaComment(val file: File) : SubmissionDetailsEffect()
-    data class LoadData(val courseId: Long, val assignmentId: Long) : SubmissionDetailsEffect()
+    data class LoadData(val courseId: Long, val assignmentId: Long, val isObserver: Boolean = false) : SubmissionDetailsEffect()
     data class ShowSubmissionContentType(val submissionContentType: SubmissionDetailsContentType) :
         SubmissionDetailsEffect()
 }
@@ -60,7 +60,8 @@ data class SubmissionDetailsModel(
     val rootSubmissionResult: DataResult<Submission>? = null,
     val isStudioEnabled: Boolean? = null,
     val quizResult: DataResult<Quiz>? = null,
-    val studioLTIToolResult: DataResult<LTITool>? = null
+    val studioLTIToolResult: DataResult<LTITool>? = null,
+    val isObserver: Boolean = false
 )
 
 sealed class SubmissionDetailsContentType {
@@ -75,7 +76,7 @@ sealed class SubmissionDetailsContentType {
         val displayName: String?
     ) : SubmissionDetailsContentType()
 
-    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isStudioEnabled: Boolean, val quiz: Quiz? = null, val studioLTITool: LTITool? = null) : SubmissionDetailsContentType()
+    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isStudioEnabled: Boolean, val quiz: Quiz? = null, val studioLTITool: LTITool? = null, val isObserver: Boolean = false) : SubmissionDetailsContentType()
     object NoneContent : SubmissionDetailsContentType()
     data class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()

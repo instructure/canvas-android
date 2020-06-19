@@ -43,6 +43,7 @@ class SubmissionDetailsFragment :
 
     @get:PageViewUrlParam(name = "assignmentId")
     val assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
+    val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
 
     override fun makeEffectHandler() = SubmissionDetailsEffectHandler()
 
@@ -53,7 +54,7 @@ class SubmissionDetailsFragment :
 
     override fun makePresenter() = SubmissionDetailsPresenter
 
-    override fun makeInitModel() = SubmissionDetailsModel(canvasContext = canvasContext, assignmentId = assignmentId)
+    override fun makeInitModel() = SubmissionDetailsModel(canvasContext = canvasContext, assignmentId = assignmentId, isObserver = isObserver)
 
     override fun getExternalEventSources() = listOf(
         ChannelSource.getSource<SubmissionDetailsSharedEvent, SubmissionDetailsEvent> {
@@ -86,9 +87,11 @@ class SubmissionDetailsFragment :
 
     companion object {
         @JvmStatic
-        fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, isObserver: Boolean = false): Route {
             val bundle = course.makeBundle {
-                putLong(Const.ASSIGNMENT_ID, assignmentId) }
+                putLong(Const.ASSIGNMENT_ID, assignmentId)
+                putBoolean(Const.IS_OBSERVER, isObserver)
+            }
             return Route(null, SubmissionDetailsFragment::class.java, course, bundle)
         }
 

@@ -19,6 +19,7 @@ sealed class SubmissionDetailsEmptyContentViewState {
     data class Loaded(
         val isAllowedToSubmit: Boolean = true,
         val dueDateText: String = "",
-        val submitButtonText: String = ""
+        val submitButtonText: String = "",
+        val isObserver: Boolean = false
     ) : SubmissionDetailsEmptyContentViewState()
 }

@@ -70,6 +70,14 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
     }
 
     @Test
+    fun submitButtonIsHiddenWhenUserIsObserver() {
+        baseModel = baseModel.copy(isObserver = true)
+        loadPageWithModel(baseModel)
+
+        submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
+    }
+
+    @Test
     fun displaysDueYesterday() {
         val expectedText = "Due yesterday at 1:59 pm"
         loadPageWithModel(baseModel.copy(
