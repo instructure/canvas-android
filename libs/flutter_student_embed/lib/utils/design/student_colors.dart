@@ -27,6 +27,8 @@ class StudentColors {
   /// Default Canvas button color
   static const defaultButton = Color(0xFF007BC2);
 
+  static const defaultPrimaryText = Colors.white;
+
   /// The core 'dark' color used for text, icons, etc on light backgrounds
   static const licorice = Color(0xFF2D3B45);
 
@@ -86,7 +88,7 @@ class StudentColors {
 
   static Color buttonColor = defaultButton;
 
-  static Color primaryTextColor = Colors.white;
+  static Color primaryTextColor = defaultPrimaryText;
 
   static Color generateContextColor(String contextCode) {
     // TODO: Since context colors can be used for text on a white background, and not all of the defaultContextColors
@@ -101,9 +103,9 @@ class StudentColors {
   static void reset() {
     contextColors = {};
     primaryColor = defaultPrimary;
-    accentColor = defaultPrimary;
+    accentColor = defaultAccent;
     buttonColor = defaultButton;
-    primaryTextColor = Colors.white;
+    primaryTextColor = defaultPrimaryText;
   }
 
   /// Generates a [MaterialColor] swatch for a given color. For best results the source color should have a medium brightness.

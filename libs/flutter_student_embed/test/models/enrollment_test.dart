@@ -91,4 +91,38 @@ void main() {
       expect(enrollment.isTotalsForAllGradingPeriodsEnabled(), true);
     });
   });
+
+  group('isRole helpers', () {
+    _testIsRoles('ta', 'TaEnrollment', 'isTa', (it) => it.isTa());
+    _testIsRoles('student', 'StudentEnrollment', 'isStudent', (it) => it.isStudent());
+    _testIsRoles('teacher', 'TeacherEnrollment', 'isTeacher', (it) => it.isTeacher());
+    _testIsRoles('observer', 'ObserverEnrollment', 'isObserver', (it) => it.isObserver());
+    _testIsRoles('designer', 'DesignerEnrollment', 'isDesigner', (it) => it.isDesigner());
+  });
+}
+
+void _testIsRoles(String roleName1, String roleName2, String methodName, bool Function(Enrollment) method) {
+  group(methodName, () {
+    _testIsRole(roleName1, methodName, method);
+    _testIsRole(roleName2, methodName, method);
+  });
+}
+
+void _testIsRole(String roleName, String methodName, bool Function(Enrollment) method) {
+  test('$methodName returns true when type is "$roleName"', () {
+    Enrollment enrollment = Enrollment((b) => b..type = roleName);
+    expect(method(enrollment), isTrue);
+  });
+
+  test('$methodName returns true when role is "$roleName"', () {
+    Enrollment enrollment = Enrollment((b) => b..role = roleName);
+    expect(method(enrollment), isTrue);
+  });
+
+  test('$methodName returns false when neither type nor role is "$roleName"', () {
+    Enrollment enrollment = Enrollment((b) => b
+      ..role = 'test_value'
+      ..type = 'test_value');
+    expect(method(enrollment), isFalse);
+  });
 }

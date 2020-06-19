@@ -18,6 +18,7 @@ import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen_interactor.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
+import 'package:flutter_student_embed/utils/common_widgets/arrow_aware_focus_scope.dart';
 import 'package:flutter_student_embed/utils/common_widgets/colored_status_bar.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/core_extensions/string_extensions.dart';
@@ -43,6 +44,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
   TextEditingController _descriptionController;
   bool _saving = false;
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  FocusScopeNode _focusScopeNode = FocusScopeNode();
 
   @override
   void initState() {
@@ -64,168 +66,173 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: WhiteAppBarTheme(
-        builder: (context) => Scaffold(
-          key: _scaffoldKey,
-          appBar: dynamicStyleAppBar(
-            context: context,
-            appBar: AppBar(
-              title: Text(widget.editToDo == null ? L10n(context).newToDo : L10n(context).editToDo),
-              actions: <Widget>[
-                if (_saving)
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(right: 16),
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
-                        )),
-                  ),
-                if (!_saving)
-                  InkWell(
-                    onTap: _save,
-                    child: Container(
-                      height: 48,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
+        builder: (context) => ArrowAwareFocusScope(
+          node: _focusScopeNode,
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: dynamicStyleAppBar(
+              context: context,
+              appBar: AppBar(
+                title: Text(widget.editToDo == null ? L10n(context).newToDo : L10n(context).editToDo),
+                actions: <Widget>[
+                  if (_saving)
+                    Container(
                       alignment: Alignment.center,
-                      child: Text(
-                        L10n(context).save.toUpperCase(),
-                        style: Theme.of(context).textTheme.subhead.copyWith(color: Theme.of(context).buttonColor),
-                      ),
+                      padding: EdgeInsets.only(right: 16),
+                      child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
+                          )),
                     ),
-                  )
-              ],
-            ),
-          ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TextField(
-                  controller: _titleController,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(16),
-                    border: InputBorder.none,
-                    hintText: L10n(context).toDoTitleHint,
-                  ),
-                ),
-                Divider(height: 0),
-                FutureBuilder<List<Course>>(
-                  future: _coursesFuture,
-                  builder: (context, snapshot) {
-                    List<DropdownMenuItem<Course>> items = [];
-                    items.add(
-                      DropdownMenuItem(
-                        value: null,
+                  if (!_saving)
+                    InkWell(
+                      onTap: _save,
+                      child: Container(
+                        height: 48,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        alignment: Alignment.center,
                         child: Text(
-                          L10n(context).toDoCourseNone,
-                          style: TextStyle(color: StudentColors.ash),
+                          L10n(context).save.toUpperCase(),
+                          style: Theme.of(context).textTheme.subhead.copyWith(color: Theme.of(context).buttonColor),
                         ),
                       ),
-                    );
-                    if (snapshot.hasData) {
-                      items += snapshot.data
-                          .map((it) => DropdownMenuItem(
-                              value: it,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: 16,
-                                    height: 16,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: StudentTheme.of(context).getCanvasContextColor('course_${it.id}'),
+                    )
+                ],
+              ),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  TextField(
+                    key: Key('title-input'),
+                    controller: _titleController,
+                    textCapitalization: TextCapitalization.sentences,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(16),
+                      border: InputBorder.none,
+                      hintText: L10n(context).toDoTitleHint,
+                    ),
+                  ),
+                  Divider(height: 0),
+                  FutureBuilder<List<Course>>(
+                    future: _coursesFuture,
+                    builder: (context, snapshot) {
+                      List<DropdownMenuItem<Course>> items = [];
+                      items.add(
+                        DropdownMenuItem(
+                          value: null,
+                          child: Text(
+                            L10n(context).toDoCourseNone,
+                            style: TextStyle(color: StudentColors.ash),
+                          ),
+                        ),
+                      );
+                      if (snapshot.hasData) {
+                        items += snapshot.data
+                            .map((it) => DropdownMenuItem(
+                                value: it,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: StudentTheme.of(context).getCanvasContextColor('course_${it.id}'),
+                                      ),
                                     ),
+                                    SizedBox(width: 12),
+                                    Text(it.name),
+                                  ],
+                                )))
+                            .toList();
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: DropdownButton<Course>(
+                          isExpanded: true,
+                          value: _selectedCourse,
+                          underline: Container(),
+                          selectedItemBuilder: (context) {
+                            return items.map((it) {
+                              if (it.value == null) {
+                                return Container(
+                                  height: 48,
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    L10n(context).toDoCourseLabel,
+                                    style: it.value == null ? TextStyle(color: StudentColors.ash) : null,
                                   ),
-                                  SizedBox(width: 12),
-                                  Text(it.name),
-                                ],
-                              )))
-                          .toList();
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: DropdownButton<Course>(
-                        isExpanded: true,
-                        value: _selectedCourse,
-                        underline: Container(),
-                        selectedItemBuilder: (context) {
-                          return items.map((it) {
-                            if (it.value == null) {
+                                );
+                              }
+                              Course course = it.value;
                               return Container(
                                 height: 48,
                                 alignment: Alignment.centerLeft,
-                                child: Text(
-                                  L10n(context).toDoCourseLabel,
-                                  style: it.value == null ? TextStyle(color: StudentColors.ash) : null,
+                                child: Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width: 16,
+                                      height: 16,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: StudentTheme.of(context).getCanvasContextColor('course_${course.id}'),
+                                      ),
+                                    ),
+                                    SizedBox(width: 12),
+                                    Text(course.name,
+                                        style: it.value == null ? TextStyle(color: StudentColors.ash) : null),
+                                  ],
                                 ),
                               );
-                            }
-                            Course course = it.value;
-                            return Container(
-                              height: 48,
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: 16,
-                                    height: 16,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: StudentTheme.of(context).getCanvasContextColor('course_${course.id}'),
-                                    ),
-                                  ),
-                                  SizedBox(width: 12),
-                                  Text(course.name,
-                                      style: it.value == null ? TextStyle(color: StudentColors.ash) : null),
-                                ],
-                              ),
-                            );
-                          }).toList();
-                        },
-                        items: items,
-                        onChanged: (course) => setState(() => _selectedCourse = course),
+                            }).toList();
+                          },
+                          items: items,
+                          onChanged: (course) => setState(() => _selectedCourse = course),
+                        ),
+                      );
+                    },
+                  ),
+                  Divider(height: 0),
+                  InkWell(
+                    onTap: _setDate,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      height: 48,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            L10n(context).date,
+                            style: Theme.of(context).textTheme.subhead,
+                          ),
+                          Text(
+                            _date.l10nFormat(L10n(context).dateAtTime),
+                            style: Theme.of(context).textTheme.subhead,
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
-                Divider(height: 0),
-                InkWell(
-                  onTap: _setDate,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    height: 48,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          L10n(context).date,
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                        Text(
-                          _date.l10nFormat(L10n(context).dateAtTime),
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                      ],
                     ),
                   ),
-                ),
-                Divider(height: 0),
-                TextField(
-                  controller: _descriptionController,
-                  textCapitalization: TextCapitalization.sentences,
-                  style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
-                  minLines: 8,
-                  maxLines: 100,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(16),
-                      border: InputBorder.none,
-                      hintText: L10n(context).toDoDescriptionHint,
-                      hintStyle: TextStyle(color: StudentColors.ash)),
-                ),
-              ],
+                  Divider(height: 0),
+                  TextField(
+                    key: Key('description-input'),
+                    controller: _descriptionController,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: Theme.of(context).textTheme.body1.copyWith(fontSize: 16),
+                    minLines: 8,
+                    maxLines: 100,
+                    decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(16),
+                        border: InputBorder.none,
+                        hintText: L10n(context).toDoDescriptionHint,
+                        hintStyle: TextStyle(color: StudentColors.ash)),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

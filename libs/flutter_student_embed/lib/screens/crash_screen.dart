@@ -19,7 +19,7 @@ import 'package:flutter_student_embed/utils/design/student_theme.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:package_info/package_info.dart';
 
-import 'l10n/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 
 class CrashScreen extends StatelessWidget {
   final FlutterErrorDetails error;
