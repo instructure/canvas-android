@@ -25,8 +25,9 @@ import java.util.*
 @Parcelize
 data class DiscussionTopic(
         // The user can't see it unless they post a high level reply (requireinitialpost).
-        @SerializedName("forbidden")
-        val isForbidden: Boolean = false,
+        // NOT USED in our code
+        //@SerializedName("forbidden")
+        //val isForbidden: Boolean = false,
         // List of all the ids of the unread discussion entries.
         @SerializedName("unread_entries")
         val unreadEntries: MutableList<Long> = arrayListOf(),
