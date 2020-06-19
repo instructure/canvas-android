@@ -36,7 +36,7 @@
     <color name="notificationTintError">#EE0612</color>
     <color name="notificationTintWarning">#FC5E13</color>
     <color name="bottomBarNavigationColor">#C7CDD1</color>
-    <color name="bottomBarUnselectedItemColor">#73818C</color>
+    <color name="bottomBarUnselectedItemColor">#2D3B45</color>
     <color name="electricBlueBadge">#008EE2</color>
     <color name="lockedDiscussionColor">#73818C</color>
 

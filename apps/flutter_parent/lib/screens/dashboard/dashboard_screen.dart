@@ -293,6 +293,9 @@ class DashboardState extends State<DashboardScreen> {
               _students.isEmpty
                   ? Container()
                   : BottomNavigationBar(
+                      unselectedItemColor: ParentTheme.of(context).onSurfaceColor,
+                      selectedFontSize: 10,
+                      unselectedFontSize: 10,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       items: _bottomNavigationBarItems(),
                       currentIndex: this._currentIndex.index,
@@ -360,7 +363,10 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/courses-light-selected.svg',
           dark: 'assets/svg/bottom-nav/courses-dark-selected.svg',
         ),
-        title: Text(L10n(context).coursesLabel),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).coursesLabel),
+        ),
       ),
       BottomNavigationBarItem(
         icon: _navBarIcon(
@@ -371,7 +377,10 @@ class DashboardState extends State<DashboardScreen> {
           light: 'assets/svg/bottom-nav/calendar-light-selected.svg',
           dark: 'assets/svg/bottom-nav/calendar-dark-selected.svg',
         ),
-        title: Text(L10n(context).calendarLabel),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).calendarLabel),
+        ),
       ),
       BottomNavigationBarItem(
         icon: WidgetBadge(
@@ -392,7 +401,10 @@ class DashboardState extends State<DashboardScreen> {
           options: BadgeOptions(includeBorder: true),
           key: Key('alerts-count'),
         ),
-        title: Text(L10n(context).alertsLabel),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).alertsLabel),
+        ),
       ),
     ];
   }
@@ -401,8 +413,8 @@ class DashboardState extends State<DashboardScreen> {
     bool darkMode = ParentTheme.of(context).isDarkMode;
     return SvgPicture.asset(
       darkMode ? dark : light,
-      width: 28,
-      height: 28,
+      width: 24,
+      height: 24,
     );
   }
 
