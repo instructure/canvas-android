@@ -21,7 +21,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -59,7 +58,6 @@ import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
-
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
@@ -94,8 +92,10 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
     private fun showConfetti() {
         GlobalScope.launch {
             UserManager.getSelfFeatures().await().onSuccess { features ->
-                if (features.any { it.feature == "disable_celebrations" && it.flag.state == "off"}) {
-                    EventBus.getDefault().post(ShowConfettiEvent)
+                features.find { it.feature == "disable_celebrations" }?.let {
+                    if (it.flag.state == "off" || it.flag.state == "allowed") {
+                        EventBus.getDefault().post(ShowConfettiEvent)
+                    }
                 }
             }
         }
