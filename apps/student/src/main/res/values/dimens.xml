@@ -16,7 +16,7 @@
   ~
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <integer name="match_parent">-1</integer>
     <integer name="wrap_content">-2</integer>
@@ -156,6 +156,7 @@
     <dimen name="message_avatar_dimen">48dp</dimen>
     <dimen name="widgetListPreferredHeight">48dp</dimen>
 
-
+    <dimen name="design_bottom_navigation_text_size" tools:override="true">10sp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">10sp</dimen>
 
 </resources>

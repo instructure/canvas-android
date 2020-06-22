@@ -58,6 +58,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             app:elevation="0dp"
+            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_bar_menu"/>
 
     </LinearLayout>

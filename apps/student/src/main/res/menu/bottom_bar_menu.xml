@@ -22,7 +22,7 @@
     <item
         android:id="@+id/bottomNavigationCourses"
         android:enabled="true"
-        android:icon="@drawable/vd_dashboard"
+        android:icon="@drawable/bottom_nav_dashboard"
         android:title="@string/dashboard"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction" />
@@ -30,7 +30,7 @@
     <item
         android:id="@+id/bottomNavigationCalendar"
         android:enabled="true"
-        android:icon="@drawable/vd_calendar"
+        android:icon="@drawable/bottom_nav_calendar"
         android:title="@string/calendar"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -38,7 +38,7 @@
     <item
         android:id="@+id/bottomNavigationToDo"
         android:enabled="true"
-        android:icon="@drawable/vd_todo"
+        android:icon="@drawable/bottom_nav_todo"
         android:title="@string/Todo"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -46,7 +46,7 @@
     <item
         android:id="@+id/bottomNavigationNotifications"
         android:enabled="true"
-        android:icon="@drawable/vd_notifications"
+        android:icon="@drawable/bottom_nav_alerts"
         android:title="@string/notifications"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -54,7 +54,7 @@
     <item
         android:id="@+id/bottomNavigationInbox"
         android:enabled="true"
-        android:icon="@drawable/vd_inbox"
+        android:icon="@drawable/bottom_nav_inbox"
         android:title="@string/inbox"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>

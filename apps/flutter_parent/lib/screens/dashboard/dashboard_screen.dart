@@ -293,6 +293,9 @@ class DashboardState extends State<DashboardScreen> {
               _students.isEmpty
                   ? Container()
                   : BottomNavigationBar(
+                      unselectedItemColor: ParentTheme.of(context).onSurfaceColor,
+                      selectedFontSize: 10,
+                      unselectedFontSize: 10,
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       items: _bottomNavigationBarItems(),
                       currentIndex: this._currentIndex.index,
@@ -351,18 +354,68 @@ class DashboardState extends State<DashboardScreen> {
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.courses), title: Text(L10n(context).coursesLabel)),
-      BottomNavigationBarItem(icon: Icon(CanvasIcons.calendar_month), title: Text(L10n(context).calendarLabel)),
+      BottomNavigationBarItem(
+        icon: _navBarIcon(
+          light: 'assets/svg/bottom-nav/courses-light.svg',
+          dark: 'assets/svg/bottom-nav/courses-dark.svg',
+        ),
+        activeIcon: _navBarIcon(
+          light: 'assets/svg/bottom-nav/courses-light-selected.svg',
+          dark: 'assets/svg/bottom-nav/courses-dark-selected.svg',
+        ),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).coursesLabel),
+        ),
+      ),
+      BottomNavigationBarItem(
+        icon: _navBarIcon(
+          light: 'assets/svg/bottom-nav/calendar-light.svg',
+          dark: 'assets/svg/bottom-nav/calendar-dark.svg',
+        ),
+        activeIcon: _navBarIcon(
+          light: 'assets/svg/bottom-nav/calendar-light-selected.svg',
+          dark: 'assets/svg/bottom-nav/calendar-dark-selected.svg',
+        ),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).calendarLabel),
+        ),
+      ),
       BottomNavigationBarItem(
         icon: WidgetBadge(
-          Icon(CanvasIcons.alerts),
+          _navBarIcon(
+            light: 'assets/svg/bottom-nav/alerts-light.svg',
+            dark: 'assets/svg/bottom-nav/alerts-dark.svg',
+          ),
           countListenable: _interactor.getAlertCountNotifier(),
           options: BadgeOptions(includeBorder: true),
           key: Key('alerts-count'),
         ),
-        title: Text(L10n(context).alertsLabel),
+        activeIcon: WidgetBadge(
+          _navBarIcon(
+            light: 'assets/svg/bottom-nav/alerts-light-selected.svg',
+            dark: 'assets/svg/bottom-nav/alerts-dark-selected.svg',
+          ),
+          countListenable: _interactor.getAlertCountNotifier(),
+          options: BadgeOptions(includeBorder: true),
+          key: Key('alerts-count'),
+        ),
+        title: Padding(
+          padding: EdgeInsets.only(top: 4),
+          child: Text(L10n(context).alertsLabel),
+        ),
       ),
     ];
+  }
+
+  Widget _navBarIcon({@required String light, @required String dark}) {
+    bool darkMode = ParentTheme.of(context).isDarkMode;
+    return SvgPicture.asset(
+      darkMode ? dark : light,
+      width: 24,
+      height: 24,
+    );
   }
 
   Widget _navDrawer(User user) {

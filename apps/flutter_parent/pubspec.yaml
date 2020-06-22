@@ -123,6 +123,7 @@ flutter:
 
   assets:
     - assets/svg/
+    - assets/svg/bottom-nav/
     - assets/png/
     - assets/fonts/
     - assets/html/html_wrapper.html

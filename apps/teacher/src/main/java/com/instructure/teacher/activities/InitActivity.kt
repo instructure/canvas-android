@@ -120,8 +120,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
             val colors = intArrayOf(
                 ThemePrefs.brandColor,
-                getColorCompat(R.color.canvasDefaultTabUnselected),
-                getColorCompat(R.color.canvasDefaultTabUnselected)
+                getColorCompat(R.color.bottomBarUnselectedItemColor),
+                getColorCompat(R.color.bottomBarUnselectedItemColor)
             )
 
             return ColorStateList(states, colors)
