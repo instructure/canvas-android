@@ -45,7 +45,8 @@ sealed class AssignmentDetailsEvent {
         val studioLTIToolResult: DataResult<LTITool>?,
         val ltiToolResult: DataResult<LTITool>?,
         val submission: Submission?,
-        val quizResult: DataResult<Quiz>?
+        val quizResult: DataResult<Quiz>?,
+        val isObserver: Boolean = false
     ) : AssignmentDetailsEvent()
     data class SubmissionStatusUpdated(val submission: Submission?) : AssignmentDetailsEvent()
     data class InternalRouteRequested(val url: String) : AssignmentDetailsEvent()
@@ -70,7 +71,7 @@ sealed class AssignmentDetailsEffect {
     data class ShowQuizStartView(val quiz: Quiz, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionDetailView(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailsEffect()
     data class ShowDiscussionAttachment(val discussionAttachment: Attachment, val course: Course) : AssignmentDetailsEffect()
-    data class ShowSubmissionView(val assignmentId: Long, val course: Course) : AssignmentDetailsEffect()
+    data class ShowSubmissionView(val assignmentId: Long, val course: Course, val isObserver: Boolean = false) : AssignmentDetailsEffect()
     data class ShowUploadStatusView(val submission: Submission) : AssignmentDetailsEffect()
     data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiUrl: String? = null) : AssignmentDetailsEffect()
     data class LoadData(val assignmentId: Long, val courseId: Long, val forceNetwork: Boolean) : AssignmentDetailsEffect()
@@ -92,5 +93,6 @@ data class AssignmentDetailsModel(
     val ltiTool: DataResult<LTITool>? = null,
     val databaseSubmission: Submission? = null,
     val videoFileUri: Uri? = null,
-    var shouldRouteToSubmissionDetails: Boolean = false
+    var shouldRouteToSubmissionDetails: Boolean = false,
+    val isObserver: Boolean = false
 )

@@ -104,6 +104,7 @@ public class Const {
     public static final String IS_STARRED = "isStarred";
     public static final String IS_GROUP = "isGroup";
     public static final String IS_UNSUPPORTED_FEATURE ="isUnsupportedFeature";
+    public static final String IS_OBSERVER ="isObserver";
     public static final String ALLOW_UNSUPPORTED_ROUTING ="allowUnsupportedRouting";
     public static final String LAYOUT_ID = "layout_id";
     public static final String MASTERY_PATH = "mastery_path";

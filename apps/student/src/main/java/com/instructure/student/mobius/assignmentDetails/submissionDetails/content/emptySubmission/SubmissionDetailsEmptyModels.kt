@@ -60,5 +60,6 @@ data class SubmissionDetailsEmptyContentModel(
     val isStudioEnabled: Boolean,
     val quiz: Quiz? = null,
     val studioLTITool: LTITool? = null,
-    val videoFileUri: Uri? = null
+    val videoFileUri: Uri? = null,
+    val isObserver: Boolean = false
 )

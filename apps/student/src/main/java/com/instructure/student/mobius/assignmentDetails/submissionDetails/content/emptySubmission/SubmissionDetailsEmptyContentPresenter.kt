@@ -31,7 +31,8 @@ object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmpty
         return SubmissionDetailsEmptyContentViewState.Loaded(
             allowedToSubmit(model.assignment),
             model.assignment.getDueString(context),
-            getSubmitButtonTextResource(context, model.assignment)
+            getSubmitButtonTextResource(context, model.assignment),
+            model.isObserver
         )
     }
 

@@ -35,7 +35,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             model.copy(
                 isLoading = true
             ),
-            setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId))
+            setOf(SubmissionDetailsEffect.LoadData(model.canvasContext.id, model.assignmentId, model.isObserver))
         )
     }
 
@@ -57,7 +57,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                         model.isStudioEnabled,
                         null,
                         quiz = model.quizResult?.dataOrNull,
-                        studioLTITool = model.studioLTIToolResult?.dataOrNull
+                        studioLTITool = model.studioLTIToolResult?.dataOrNull,
+                        isObserver = model.isObserver
                     )
                     Next.next<SubmissionDetailsModel, SubmissionDetailsEffect>(
                         model.copy(
@@ -74,7 +75,9 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.isStudioEnabled,
                     event.ltiUrlResult.dataOrNull,
                     event.quizResult?.dataOrNull,
-                    event.studioLTIToolResult?.dataOrNull)
+                    event.studioLTIToolResult?.dataOrNull,
+                    event.isObserver
+                )
                 Next.next(
                     model.copy(
                         isLoading = false,
@@ -149,7 +152,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
         isStudioEnabled: Boolean?,
         ltiUrl: LTITool?,
         quiz: Quiz?,
-        studioLTITool: LTITool?
+        studioLTITool: LTITool?,
+        isObserver: Boolean = false
     ): SubmissionDetailsContentType {
         return when {
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw ?: emptyList() -> SubmissionDetailsContentType.NoneContent
@@ -159,7 +163,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "")
                 else SubmissionDetailsContentType.LockedContent
             }
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool)
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver)
             submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 

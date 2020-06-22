@@ -41,7 +41,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
             Next.dispatch<AssignmentDetailsModel, AssignmentDetailsEffect>(getSubmitClickedEffect(model.assignmentResult, model, submissionTypes))
         }
         AssignmentDetailsEvent.ViewSubmissionClicked -> {
-            Next.dispatch(setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course)))
+            Next.dispatch(setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course, model.isObserver)))
         }
         AssignmentDetailsEvent.DiscussionAttachmentClicked -> {
             // They can't click on an attachment if there aren't any present
@@ -117,12 +117,13 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                 studioLTIToolResult = event.studioLTIToolResult,
                 ltiTool = event.ltiToolResult,
                 quizResult = event.quizResult,
-                databaseSubmission = dbSubmission
+                databaseSubmission = dbSubmission,
+                isObserver = event.isObserver
             )
 
             if (newModel.shouldRouteToSubmissionDetails) {
                 Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(
-                    newModel.copy(shouldRouteToSubmissionDetails = false), setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course))
+                    newModel.copy(shouldRouteToSubmissionDetails = false), setOf(AssignmentDetailsEffect.ShowSubmissionView(model.assignmentId, model.course, model.isObserver))
                 )
             } else {
                 Next.next<AssignmentDetailsModel, AssignmentDetailsEffect>(newModel)

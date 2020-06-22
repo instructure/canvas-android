@@ -287,6 +287,15 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     }
 
     @Test
+    fun `Sets isObserver visible state when isObserver`() {
+        baseModel = baseModel.copy(isObserver = true)
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        assertTrue((actualState as Loaded).isObserver)
+    }
+
+
+    @Test
     fun `Submit button disabled if not allowed to submit when assignment is online upload`() {
         baseModel = baseModel.copy(Assignment(lockedForUser = true, submissionTypesRaw = listOf("online_upload")))
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)

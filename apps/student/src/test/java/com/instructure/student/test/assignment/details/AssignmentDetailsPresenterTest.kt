@@ -445,6 +445,16 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
+    fun `Never shows submit button when isObserver is true`() {
+        val assignment = baseAssignment.copy(
+                submissionTypesRaw = listOf("online_text_entry")
+        )
+        val model = baseModel.copy(assignmentResult = DataResult.Success(assignment), isObserver = true)
+        val actual = AssignmentDetailsPresenter.present(model, context).visibilities
+        assertFalse(actual.submitButton)
+    }
+
+    @Test
     fun `Submit button reads "Submit Assignment" if there are no existing submissions`() {
         val assignment = baseAssignment.copy(
             submissionTypesRaw = listOf("online_text_entry")
