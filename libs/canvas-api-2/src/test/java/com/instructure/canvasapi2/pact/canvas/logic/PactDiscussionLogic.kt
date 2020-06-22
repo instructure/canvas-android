@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.pact.canvas.logic
 
 import au.com.dius.pact.consumer.dsl.PactDslJsonRootValue
 import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
@@ -48,6 +49,34 @@ fun assertDiscussionTopicPermissionPopulated(description: String, permission: Di
 //endregion
 
 //
+// region DiscussionParticipant support
+//
+// Very similar to Author, but we type-specific support for population assertion
+//
+
+fun LambdaDslObject.populateDiscussionParticipantFields() : LambdaDslObject {
+    this
+
+            .id("id")
+            .stringType("display_name")
+            .stringType("pronouns")
+            .stringType("avatar_image_url")
+            .stringType("html_url")
+
+    return this
+}
+
+fun assertDiscussionParticipantPopulated(description: String, participant: DiscussionParticipant) {
+    assertNotNull("$description + id", participant.id)
+    assertNotNull("$description + id", participant.displayName)
+    assertNotNull("$description + id", participant.pronouns)
+    assertNotNull("$description + id", participant.avatarImageUrl)
+    assertNotNull("$description + id", participant.htmlUrl)
+}
+
+// endregion
+
+//
 // region DiscussionTopicHeader support
 //
 
@@ -73,7 +102,7 @@ fun LambdaDslObject.populateDiscussionTopicHeaderFields(config: DiscussionTopicH
             .id("position")
             .booleanType("pinned")
             .`object`("author") { obj ->
-                obj.populateAuthorFields()
+                obj.populateDiscussionParticipantFields()
             }
             .stringType("podcast_url")
             //.stringType("group_category_id") // PUNT
@@ -147,7 +176,7 @@ fun assertDiscussionTopicHeaderPopulated(description: String, header: Discussion
     assertNotNull("$description + position", header.position)
     assertNotNull("$description + pinned", header.pinned)
     assertNotNull("$description + author", header.author)
-    //assertAuthorPopulated("$description + author", header.author!!) // TODO
+    assertDiscussionParticipantPopulated("$description + author", header.author!!)
     assertNotNull("$description + podcastUrl", header.podcastUrl)
     //assertNotNull("$description + groupCategoryId", header.groupCategoryId) // PUNT
     //assertNotNull("$description + announcement", header.announcement) // PUNT
@@ -254,7 +283,7 @@ fun LambdaDslObject.populateDiscussionTopicFields() : LambdaDslObject {
             //.booleanType("forbidden")
             .minArrayLike("unread_entries", 1, PactDslJsonRootValue.integerType(), 1)
             .minArrayLike("participants", 1) { obj ->
-                obj.populateAuthorFields() // Supposed to be DiscussionParticipant, but Author is the same
+                obj.populateDiscussionParticipantFields()
             }
             .minArrayLike("view",1) { obj ->
                 obj.populateDiscussionEntryFields(hasRatings = true)
@@ -270,9 +299,9 @@ fun assertDiscussionTopicPopulated(description: String, topic: DiscussionTopic) 
     assertTrue("$description + unreadEntries: Expected at least one", topic.unreadEntries.size > 0)
     assertNotNull("$description + participants", topic.participants)
     assertTrue("$description + participants: Expected at least one", topic.participants!!.size > 0)
-//    for(i in 0..topic.participants!!.size-1) {
-//        // TODO
-//    }
+    for(i in 0..topic.participants!!.size-1) {
+        assertDiscussionParticipantPopulated("$description + participants[$i]", topic.participants!![i])
+    }
     assertNotNull("$description + views", topic.views)
     assertTrue("$description + views: Expected at least one", topic.views.size > 0)
     for(i in 0..topic.views.size-1) {
