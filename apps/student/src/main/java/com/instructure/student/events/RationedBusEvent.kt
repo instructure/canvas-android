@@ -145,7 +145,9 @@ class ModuleUpdatedEvent(moduleObject: ModuleObject, skipId: String? = null) : R
 /** A RationedBusEvent for updating the status bar color. @see [RationedBusEvent] */
 class StatusBarColorChangeEvent(color: Int, skipId: String? = null) : RationedBusEvent<Int>(color, skipId)
 
+
 object ShowGradesToggledEvent
 object CourseColorOverlayToggledEvent
 object RecipientsListModifiedEvent
 object CoreDataFinishedLoading
+object ShowConfettiEvent

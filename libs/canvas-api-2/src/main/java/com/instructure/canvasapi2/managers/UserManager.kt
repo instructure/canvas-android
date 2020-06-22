@@ -72,6 +72,14 @@ object UserManager {
         )
     }
 
+    fun getSelfFeatures(forceNetwork: Boolean = false) = apiAsync<List<CanvasFeatureFlag>> { callback ->
+        UserAPI.getSelfFeatures(
+            adapter = RestBuilder(callback),
+            params = RestParams(isForceReadFromNetwork = forceNetwork),
+            callback = callback
+        )
+    }
+
     fun setHideColorOverlay(hide: Boolean) = apiAsync<UserSettings> { callback ->
         UserAPI.setHideColorOverlaySetting(
             hide = hide,
