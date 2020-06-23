@@ -114,7 +114,7 @@ android {
     buildTypes {
 
         debug {
-            testCoverageEnabled = project.coverageEnabled
+            testCoverageEnabled = coverageEnabled
             debuggable true
             minifyEnabled false
             shrinkResources false
