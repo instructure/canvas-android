@@ -27,6 +27,12 @@ apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'newrelic'
 
+def coverageEnabled = project.hasProperty('coverage')
+
+if (coverageEnabled) {
+    apply from: '../../gradle/jacoco.gradle'
+}
+
 sqldelight {
     StudentDb {
         packageName = "com.instructure.student.db"
@@ -310,3 +316,36 @@ crashlytics {
 gradle.addListener new TimingsListener(project)
 
 apply plugin: 'com.google.gms.google-services'
+
+if (coverageEnabled) {
+    // ./gradlew -Pcoverage firebaseJacoco
+    task firebaseJacoco(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for Firebase test lab."
+
+        def productFlavor = 'qa'
+        def buildType = 'debug'
+
+        classDirectories = fileTree(
+                dir: "${project.buildDir}/intermediates/app_classes/${productFlavor}${buildType}",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*'],
+                //includes: ['**/com.instructure.*']
+        )
+
+        // project.buildDir is /canvas-android/apps/teacher/build
+        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData = fileTree(dir: "results", includes: ['**/*.ec'])
+
+        reports {
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+    }
+}
