@@ -405,7 +405,7 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
 }
 
 class _$GradingTypeSerializer implements PrimitiveSerializer<GradingType> {
-  static const Map<String, String> _toWire = const <String, String>{
+  static const Map<String, Object> _toWire = const <String, Object>{
     'passFail': 'pass_fail',
     'percent': 'percent',
     'letterGrade': 'letter_grade',
@@ -413,7 +413,7 @@ class _$GradingTypeSerializer implements PrimitiveSerializer<GradingType> {
     'gpaScale': 'gpa_scale',
     'notGraded': 'not_graded',
   };
-  static const Map<String, String> _fromWire = const <String, String>{
+  static const Map<Object, String> _fromWire = const <Object, String>{
     'pass_fail': 'passFail',
     'percent': 'percent',
     'letter_grade': 'letterGrade',
@@ -440,7 +440,7 @@ class _$GradingTypeSerializer implements PrimitiveSerializer<GradingType> {
 
 class _$SubmissionTypesSerializer
     implements PrimitiveSerializer<SubmissionTypes> {
-  static const Map<String, String> _toWire = const <String, String>{
+  static const Map<String, Object> _toWire = const <String, Object>{
     'discussionTopic': 'discussion_topic',
     'onlineQuiz': 'online_quiz',
     'onPaper': 'on_paper',
@@ -450,7 +450,7 @@ class _$SubmissionTypesSerializer
     'onlineUpload': 'online_upload',
     'mediaRecording': 'media_recording',
   };
-  static const Map<String, String> _fromWire = const <String, String>{
+  static const Map<Object, String> _fromWire = const <Object, String>{
     'discussion_topic': 'discussionTopic',
     'online_quiz': 'onlineQuiz',
     'on_paper': 'onPaper',
