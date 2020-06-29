@@ -14,6 +14,10 @@
 
 import 'package:intl/intl.dart';
 
+/// Returns a locale usable by DateTime formatters. This will generally be the current locale, but will fall back
+/// to the 'en' locale if the current locale is unsupported.
+String get supportedDateLocale => DateFormat.localeExists(Intl.getCurrentLocale()) ? Intl.getCurrentLocale() : 'en';
+
 extension Format on DateTime {
   /// Formats this [DateTime] for the current locale using the provided localization function
   String l10nFormat(
@@ -23,8 +27,8 @@ extension Format on DateTime {
   }) {
     if (this == null || localizer == null) return null;
     DateTime local = toLocal();
-    String date = (dateFormat ?? DateFormat.MMMd()).format(local);
-    String time = (timeFormat ?? DateFormat.jm()).format(local);
+    String date = (dateFormat ?? DateFormat.MMMd(supportedDateLocale)).format(local);
+    String time = (timeFormat ?? DateFormat.jm(supportedDateLocale)).format(local);
     return localizer(date, time);
   }
 
@@ -35,20 +39,20 @@ extension Format on DateTime {
 
   DateTime withFirstDayOfWeek() {
     if (this == null) return null;
-    final firstDay = DateFormat().dateSymbols.FIRSTDAYOFWEEK;
+    final firstDay = DateFormat(null, supportedDateLocale).dateSymbols.FIRSTDAYOFWEEK;
     var offset = (this.weekday - 1 - firstDay) % 7;
     return DateTime(this.year, this.month, this.day - offset);
   }
 
   int get localDayOfWeek {
     if (this == null) return null;
-    final firstDay = DateFormat().dateSymbols.FIRSTDAYOFWEEK;
+    final firstDay = DateFormat(null, supportedDateLocale).dateSymbols.FIRSTDAYOFWEEK;
     return (this.weekday - 1 - firstDay) % 7;
   }
 
   bool isWeekend() {
     if (this == null) return false;
-    return DateFormat().dateSymbols.WEEKENDRANGE.contains((this.weekday - 1) % 7);
+    return DateFormat(null, supportedDateLocale).dateSymbols.WEEKENDRANGE.contains((this.weekday - 1) % 7);
   }
 
   DateTime withStartOfDay() => this == null ? null : DateTime(year, month, day);

@@ -81,8 +81,11 @@ class CalendarDay extends StatelessWidget {
                 child: AnimatedDefaultTextStyle(
                   style: textStyle,
                   duration: Duration(milliseconds: 300),
-                  child: Text(date.day.toString(),
-                      semanticsLabel: DateFormat.MMMMEEEEd().format(date), key: ValueKey('day_of_month_${date.day}')),
+                  child: Text(
+                    date.day.toString(),
+                    semanticsLabel: DateFormat.MMMMEEEEd(supportedDateLocale).format(date),
+                    key: ValueKey('day_of_month_${date.day}'),
+                  ),
                 ),
               ),
             ),

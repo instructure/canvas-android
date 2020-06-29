@@ -80,7 +80,7 @@ abstract class GradeCellData implements Built<GradeCellData, GradeCellDataBuilde
         ..state = GradeCellState.submitted
         ..submissionText = submission.submittedAt.l10nFormat(
           l10n.submissionStatusSuccessSubtitle,
-          dateFormat: DateFormat.MMMMd(),
+          dateFormat: DateFormat.MMMMd(supportedDateLocale),
         ));
     }
 
