@@ -1143,7 +1143,6 @@ fun MockCanvas.addReplyToDiscussion(
             id = newItemId(),
             message = replyMessage,
             unread = true,
-            //userName = user.name,
             author = DiscussionParticipant(
                     id = user.id,
                     displayName = user.name
