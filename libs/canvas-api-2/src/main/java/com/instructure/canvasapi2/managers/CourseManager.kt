@@ -134,6 +134,10 @@ object CourseManager {
         CourseAPI.getCourseWithGrade(courseId, adapter, callback, params)
     }
 
+    fun getCourseWithGradeAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Course> {
+        getCourseWithGrade(courseId, it, forceNetwork)
+    }
+
     @JvmStatic
     fun getCourseStudent(courseId: Long, studentId: Long, callback: StatusCallback<User>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)

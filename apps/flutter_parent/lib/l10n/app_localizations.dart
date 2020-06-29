@@ -30,7 +30,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       // Supported languages
       Locale('ar'),
       Locale('ca'),
-//      Locale('cy'), // Not supported by material localizations
+      Locale('cy'), // Not yet supported by flutter_localizations; 'en' fallback will be used for Material localizations
       Locale('da'),
       Locale('de'),
       Locale('en', 'AU'),
@@ -42,11 +42,11 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
       // Country has to be first so it can be matched before the general language
       Locale('fr', 'CA'),
       Locale('fr'),
-//      Locale('ht'), // Not supported by material localizations
+      Locale('ht'), // Not yet supported by flutter_localizations; 'en' fallback will be used for Material localizations
       Locale('is'),
       Locale('it'),
       Locale('ja'),
-//      Locale('mi'), // Not supported by material localizations
+      Locale('mi'), // Not yet supported by flutter_localizations; 'en' fallback will be used for Material localizations
       Locale('nb'),
       Locale('nl'),
       Locale('pl'),

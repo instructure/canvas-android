@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
@@ -103,6 +104,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         connection = effectHandler.connect(eventConsumer)
 
         Analytics.firebase = firebase
+
+        mockkObject(CourseManager)
+        every { CourseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Course())
+        }
     }
 
     private fun mockkDatabase(data: List<Submission> = emptyList()) {
@@ -203,6 +209,59 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
         coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(SubmissionManager)
+        every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
+        }
+
+        confirmVerified(firebase)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `Successful LoadData for observer results in DataLoaded`() {
+        val courseId = 1L
+        val submission = mockkSubmission(9876L)
+        val ltiTool = LTITool(url = "https://www.instructure.com")
+        val observerAssignment = ObserveeAssignment(
+            id= assignmentId,
+            courseId = courseId,
+            submissionList = listOf(Submission(id = 9876L)),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
+            url = "https://www.instructure.com"
+        )
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+                DataResult.Success(observerAssignment.toAssignmentForObservee()!!),
+                false,
+                DataResult.Fail(null),
+                DataResult.Success(ltiTool),
+                submission,
+                null,
+                true
+        )
+        val observerEnrollment = Enrollment(id = 1, role = Enrollment.EnrollmentType.Observer)
+        val course = Course(id = courseId, enrollments = mutableListOf(observerEnrollment))
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<ObserveeAssignment>(any()) } returns Response.success(observerAssignment)
+
+        mockkObject(CourseManager)
+        every { CourseManager.getCourseWithGradeAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(course)
+        }
 
         mockkObject(SubmissionManager)
         every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {

@@ -236,6 +236,7 @@ void _initPlatformDeviceInfo() {
         'type': 'take-types',
         'isPhysicalDevice': false,
         'androidId': 'fake-androidId',
+        'systemFeatures': [],
       };
     }
     return null;

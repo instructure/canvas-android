@@ -203,11 +203,11 @@ class _EventDetails extends StatelessWidget {
   }
 
   String _dateFormat(DateTime time) {
-    return time == null ? null : DateFormat.EEEE().add_yMMMd().format(time.toLocal());
+    return time == null ? null : DateFormat.EEEE(supportedDateLocale).add_yMMMd().format(time.toLocal());
   }
 
   String _timeFormat(DateTime time) {
-    return time == null ? null : DateFormat.jm().format(time.toLocal());
+    return time == null ? null : DateFormat.jm(supportedDateLocale).format(time.toLocal());
   }
 }
 

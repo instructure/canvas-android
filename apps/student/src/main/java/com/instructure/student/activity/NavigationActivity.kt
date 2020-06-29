@@ -27,10 +27,10 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
+import android.util.Log
+import android.view.*
 import android.widget.CompoundButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -43,6 +43,8 @@ import androidx.core.view.MenuItemCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.airbnb.lottie.LottieAnimationView
+import com.airbnb.lottie.LottieComposition
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -954,6 +956,23 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             } else {
                 ViewStyler.setStatusBarDark(this, color)
             }
+        }
+    }
+
+    /** Handles showing confetti on a successful assignment submission */
+    @Subscribe
+    fun showConfetti(event: ShowConfettiEvent) {
+        runOnUiThread {
+            val root = window.decorView.rootView as ViewGroup
+            val animation = LottieAnimationView(this).apply {
+                setAnimation("confetti.json")
+                scaleType = ImageView.ScaleType.CENTER_CROP;
+            }
+            animation.addAnimatorUpdateListener {
+                if (it.animatedFraction >= 1.0) root.removeView(animation)
+            }
+            root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            animation.playAnimation()
         }
     }
 

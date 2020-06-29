@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails
 import android.app.Activity
 import android.content.Context
 import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.*
@@ -86,7 +87,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     effect.studioLTITool?.name
                 )
             }
-            is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course)
+            is AssignmentDetailsEffect.ShowSubmissionView -> view?.showSubmissionView(effect.assignmentId, effect.course, effect.isObserver)
             is AssignmentDetailsEffect.ShowQuizStartView -> view?.showQuizStartView(effect.course, effect.quiz)
             is AssignmentDetailsEffect.ShowDiscussionDetailView -> view?.showDiscussionDetailView(effect.course, effect.discussionTopicHeaderId)
             is AssignmentDetailsEffect.ShowDiscussionAttachment -> view?.showDiscussionAttachment(effect.course, effect.discussionAttachment)
@@ -128,7 +129,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     Assignment.SubmissionType.ONLINE_UPLOAD -> view?.showFileUploadView(effect.assignment)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     Assignment.SubmissionType.ONLINE_URL -> view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
-                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.ltiUrl ?: "", effect.assignment.name ?: "")
+                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, effect.ltiUrl
+                            ?: "", effect.assignment.name ?: "")
                     else -> view?.showMediaRecordingView(effect.assignment) // Assignment.SubmissionType.MEDIA_RECORDING
                 }
             }
@@ -138,11 +140,33 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
     private fun loadData(effect: AssignmentDetailsEffect.LoadData) {
         launch {
+            // In order to handle observers, we need to fetch the course and its enrollments
+            val courseResult = try {
+                CourseManager.getCourseWithGradeAsync(effect.courseId, true).await()
+            } catch (e: StatusCallbackError) {
+                DataResult.Fail(null)
+            }
+
+            val isObserver = courseResult.isSuccess && courseResult.dataOrNull != null && courseResult.dataOrNull!!.enrollments!!.firstOrNull { it.isObserver } != null
             val assignmentResult = try {
-                val assignmentResponse = awaitApiResponse<Assignment> {
-                    AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                if (isObserver) {
+                    // Valid observer enrollment, this means we need to include observers in our assignment response
+                    val assignmentResponse = awaitApiResponse<ObserveeAssignment> {
+                        AssignmentManager.getAssignmentIncludeObservees(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    }
+                    val assignmentWithObserverSubmission = assignmentResponse.body()!!.toAssignmentForObservee()
+                    if (assignmentWithObserverSubmission != null) {
+                        DataResult.Success(assignmentWithObserverSubmission)
+                    } else {
+                        DataResult.Fail(null)
+                    }
+                } else {
+                    // Something went wrong with the course fetch, or there was no valid observer, so we fetch the student assignment as normal
+                    val assignmentResponse = awaitApiResponse<Assignment> {
+                        AssignmentManager.getAssignment(effect.assignmentId, effect.courseId, effect.forceNetwork, it)
+                    }
+                    DataResult.Success(assignmentResponse.body()!!)
                 }
-                DataResult.Success(assignmentResponse.body()!!)
             } catch (e: StatusCallbackError) {
                 if (e.response?.code() == 401) {
                     DataResult.Fail(Failure.Authorization(e.response?.message()))
@@ -161,7 +185,7 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
 
             // We need to know if they can make submissions through Studio, only for file uploads
             val studioLTITool: DataResult<LTITool> = if (assignmentResult.isSuccess && assignmentResult.dataOrThrow.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD)) {
-               effect.courseId.getStudioLTITool()
+                effect.courseId.getStudioLTITool()
             } else DataResult.Fail(null)
 
             val isStudioEnabled = studioLTITool.isSuccess
@@ -187,7 +211,8 @@ class AssignmentDetailsEffectHandler(val context: Context, val assignmentId: Lon
                     studioLTITool,
                     ltiTool,
                     dbSubmission,
-                    quizResult
+                    quizResult,
+                    isObserver
                 )
             )
         }

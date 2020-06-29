@@ -18,15 +18,15 @@
 
     <item android:id="@+id/tab_courses"
         android:title="@string/tab_courses"
-        android:icon="@drawable/vd_courses"
+        android:icon="@drawable/bottom_nav_courses"
         android:checked="true" />
 
     <item android:id="@+id/tab_todo"
         android:title="@string/tab_todo"
-        android:icon="@drawable/vd_to_do" />
+        android:icon="@drawable/bottom_nav_todo" />
 
     <item android:id="@+id/tab_inbox"
         android:title="@string/tab_inbox"
-        android:icon="@drawable/vd_mail" />
+        android:icon="@drawable/bottom_nav_inbox" />
 
 </menu>

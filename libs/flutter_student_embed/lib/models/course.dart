@@ -110,10 +110,6 @@ abstract class Course implements Built<Course, CourseBuilder> {
   @BuiltValueField(wireName: 'workflow_state')
   String get workflowState;
 
-  @nullable
-  @BuiltValueField(wireName: 'default_view')
-  HomePage get homePage;
-
   static void _initializeBuilder(CourseBuilder b) => b
     ..id = ''
     ..enrollments = ListBuilder<Enrollment>()
@@ -129,27 +125,4 @@ abstract class Course implements Built<Course, CourseBuilder> {
     ..restrictEnrollmentsToCourseDates = false;
 
   String contextFilterId() => 'course_${this.id}';
-}
-
-@BuiltValueEnum(wireName: 'default_view')
-class HomePage extends EnumClass {
-  const HomePage._(String name) : super(name);
-
-  static BuiltSet<HomePage> get values => _$homePageValues;
-
-  static HomePage valueOf(String name) => _$homePageValueOf(name);
-
-  static Serializer<HomePage> get serializer => _$homePageSerializer;
-
-  static const HomePage feed = _$homePageFeed;
-
-  /// Front Page
-  static const HomePage wiki = _$homePageWiki;
-
-  static const HomePage modules = _$homePageModules;
-
-  static const HomePage assignments = _$homePageAssignments;
-
-  @BuiltValueEnumConst(fallback: true)
-  static const HomePage syllabus = _$homePageSyllabus;
 }

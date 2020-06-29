@@ -14,7 +14,7 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <integer name="match_parent">-1</integer>
     <integer name="wrap_content">-2</integer>
 
@@ -110,4 +110,8 @@
     <dimen name="profileCameraIconSize">48dp</dimen>
 
     <dimen name="rceEditorEmbeddedHeight">300dp</dimen>
+
+    <dimen name="design_bottom_navigation_text_size" tools:override="true">10sp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">10sp</dimen>
+
 </resources>

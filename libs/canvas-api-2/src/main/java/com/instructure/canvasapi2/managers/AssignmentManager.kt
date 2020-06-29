@@ -20,10 +20,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.AssignmentGroup
-import com.instructure.canvasapi2.models.GradeableStudent
-import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBodyWrapper
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
@@ -36,6 +33,13 @@ object AssignmentManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         AssignmentAPI.getAssignment(courseId, assignmentId, adapter, callback, params)
+    }
+
+    @JvmStatic
+    fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean, callback: StatusCallback<ObserveeAssignment>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        AssignmentAPI.getAssignmentIncludeObservees(courseId, assignmentId, adapter, callback, params)
     }
 
     fun getAssignmentAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean)

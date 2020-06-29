@@ -53,8 +53,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 210
-        versionName = '6.7.1'
+        versionCode = 213
+        versionName = '6.8.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -116,6 +116,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             ext.enableCrashlytics = false
             pseudoLocalesEnabled true
+
+            ndk {
+                // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64', 'x86'
+            }
         }
 
         release {
@@ -125,6 +130,11 @@ android {
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            ndk {
+                // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
         }
     }
 
@@ -258,6 +268,7 @@ dependencies {
     /* Media Handling */
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation Libs.PHOTO_VIEW
+    implementation 'com.airbnb.android:lottie:3.4.1'
 
     /* Sliding Panel */
     implementation 'com.sothree.slidinguppanel:library:3.4.0'

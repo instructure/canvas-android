@@ -24,10 +24,7 @@ import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.managers.FileUploadConfig
-import com.instructure.canvasapi2.managers.FileUploadManager
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
@@ -49,16 +46,17 @@ import com.instructure.student.db.Db
 import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import com.instructure.student.db.sqlColAdapters.Date
+import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.common.ChannelSource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.greenrobot.eventbus.EventBus
 import org.threeten.bp.OffsetDateTime
 import java.io.File
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
-
 
 class SubmissionService : IntentService(SubmissionService::class.java.simpleName) {
 
@@ -91,6 +89,18 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         }.exhaustive
     }
 
+    private fun showConfetti() {
+        GlobalScope.launch {
+            UserManager.getSelfFeatures().await().onSuccess { features ->
+                features.find { it.feature == "disable_celebrations" }?.let {
+                    if (it.flag.state == "off" || it.flag.state == "allowed") {
+                        EventBus.getDefault().post(ShowConfettiEvent)
+                    }
+                }
+            }
+        }
+    }
+
     private fun uploadText(db: StudentDb, submission: com.instructure.student.Submission) {
         showProgressNotification(submission.assignmentName, submission.id)
         val textToSubmit = try {
@@ -103,6 +113,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val uploadResult = result.await()
             uploadResult.onSuccess {
                 db.submissionQueries.deleteSubmissionById(submission.id)
+                if (!it.late) showConfetti()
             }.onFailure {
                 db.submissionQueries.setSubmissionError(true, submission.id)
                 showErrorNotification(this@SubmissionService, submission)
@@ -118,6 +129,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             val uploadResult = result.await()
             uploadResult.onSuccess {
                 db.submissionQueries.deleteSubmissionById(submission.id)
+                if (!it.late) showConfetti()
             }.onFailure {
                 db.submissionQueries.setSubmissionError(true, submission.id)
                 showErrorNotification(this@SubmissionService, submission)
@@ -148,7 +160,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
                 // Update the notification to show that we're doing the actual submission now
                 showProgressNotification(submission.assignmentName, submission.id, alertOnlyOnce = true)
-                try {
+                val uploadedSubmission = try {
                     awaitApi<Submission> { callback ->
                         SubmissionManager.postMediaSubmission(
                             submission.canvasContext,
@@ -171,7 +183,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
                 db.submissionQueries.deleteSubmissionById(submission.id)
 
                 detachForegroundNotification()
-                showCompleteNotification(this@SubmissionService, submission)
+                showCompleteNotification(this@SubmissionService, submission, uploadedSubmission.late)
             }.onFailure {
                 handleFileError(db, submission, 0, listOf(mediaFile), it?.message)
             }
@@ -194,7 +206,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             deleteSubmissionsForAssignment(submission.assignmentId, db)
 
             detachForegroundNotification()
-            showCompleteNotification(this, submission)
+            showCompleteNotification(this, submission, it.late)
         } ?: run {
             detachForegroundNotification()
             db.submissionQueries.setSubmissionError(true, submission.id)
@@ -543,7 +555,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
 
     private fun showCompleteNotification(
         context: Context,
-        submission: com.instructure.student.Submission
+        submission: com.instructure.student.Submission,
+        isLate: Boolean
     ) {
         val pendingIntent = getSubmissionIntent(context, submission.canvasContext, submission.assignmentId)
         val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
@@ -553,6 +566,7 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
             .setAutoCancel(true)
             .setOnlyAlertOnce(false)
         NotificationManagerCompat.from(context).notify(submission.id.toInt(), notificationBuilder.build())
+        if (!isLate) showConfetti()
     }
 
     // endregion
