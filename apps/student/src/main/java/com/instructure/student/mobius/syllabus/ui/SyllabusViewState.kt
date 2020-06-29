@@ -18,12 +18,17 @@ package com.instructure.student.mobius.syllabus.ui
 
 sealed class SyllabusViewState {
     object Loading : SyllabusViewState()
+
+    object LoadedNothing : SyllabusViewState()
+
     data class LoadedFull(
         val syllabus: String,
         val eventsState: EventsViewState
     ) : SyllabusViewState()
 
     data class LoadedNoSyllabus(val eventsState: EventsViewState) : SyllabusViewState()
+
+    data class LoadedNoEvents(val syllabus: String) : SyllabusViewState()
 }
 
 sealed class EventsViewState(val visibility: EventsVisibility) {

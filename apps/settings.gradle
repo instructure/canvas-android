@@ -1,8 +1,6 @@
 /* Top-level project modules */
 include ':student'
 include ':teacher'
-include ':parent'
-include ':polling'
 
 /* Flutter embed modules */
 setBinding(new Binding([gradle: this]))

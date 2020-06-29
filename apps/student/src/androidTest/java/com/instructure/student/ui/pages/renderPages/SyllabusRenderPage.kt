@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages.renderPages
 
 import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.action.ViewActions.swipeRight
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -37,7 +38,7 @@ class SyllabusRenderPage : SyllabusPage() {
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
     private val webView by WaitForViewWithId(R.id.syllabusWebView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecycler)
-    private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
+    private val emptyView by WaitForViewWithId(R.id.emptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)
 
     fun assertDisplaysToolbarTitle(text: String) {
@@ -50,17 +51,17 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun assertDoesNotDisplaySyllabus() {
         tabs.assertNotDisplayed()
-        webView.assertNotDisplayed()
+        onView(withId(R.id.syllabusWebView)).check(doesNotExist())
     }
 
-    fun assertDisplaysSyllabus(text: String) {
-        tabs.assertDisplayed()
+    fun assertDisplaysSyllabus(text: String, shouldDisplayTabs: Boolean = true) {
+        if (shouldDisplayTabs) tabs.assertDisplayed() else tabs.assertNotDisplayed()
         webView.assertDisplayed()
         onWebView().withElement(findElement(Locator.TAG_NAME, "p")).check(webMatches(getText(), Matchers.comparesEqualTo(text)))
     }
 
     fun assertDisplaysEmpty() {
-        eventsEmpty.assertDisplayed()
+        emptyView.assertDisplayed()
     }
 
     fun assertDisplaysError() {

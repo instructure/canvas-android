@@ -146,8 +146,8 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedNoSyllabus state with empty events when course model has no syllabus and no events`() {
-        val expectedState = SyllabusViewState.LoadedNoSyllabus(EventsViewState.Empty)
+    fun `Returns LoadedNothing state with empty events when course model has no syllabus and no events`() {
+        val expectedState = SyllabusViewState.LoadedNothing
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(emptyList())
@@ -176,6 +176,18 @@ class SyllabusPresenterTest : Assert() {
             }))
         val model =
             baseModel.copy(course = DataResult.Fail(), events = DataResult.Success(baseEvents))
+        val actualState = SyllabusPresenter.present(model, context)
+        assertEquals(expectedState, actualState)
+    }
+
+    @Test
+    fun `Returns LoadedNoEvents state with syllabus and no events`() {
+        val expectedState = SyllabusViewState.LoadedNoEvents("syllabus")
+        val model = baseModel.copy(
+            course = DataResult.Success(baseCourse),
+            events = DataResult.Success(emptyList()),
+            syllabus = ScheduleItem.createSyllabus(null, "syllabus")
+        )
         val actualState = SyllabusPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
