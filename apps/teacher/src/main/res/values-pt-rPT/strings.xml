@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Desculpado</string>
     <string name="last_login_format">Último login: %s</string>
 
+    <string name="muteGrades">Silenciar classificação</string>
+    <string name="unmuteGrades">Ativar som das notas</string>
+    <string name="gradesMutedLabel">Notas sem som</string>
     <string name="turnOnAnonymousGrading">Ativar classificação anónima</string>
     <string name="turnOffAnonymousGrading">Desativar classificação anónima</string>
     <string name="anonymousGradingLabel">Classificação Anónima</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Não é professor?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Um dos nossos outros aplicativos pode ser um ajuste melhor. Toque em um para visitar a App Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Nota</string>
+    <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentários</string>
     <string name="sg_tab_files">Ficheiros</string>
     <string name="filter_submissions">Submissões de Filtro</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d perguntas</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minuto</item>
-        <item quantity="other">%s minutos</item>
-    </plurals>
-
     <string name="discussion_details">Detalhes da discussão</string>
     <string name="discussions_pinned">Afixado</string>
     <string name="discussions_unpinned">Discussões</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Responder</string>
     <string name="discussions_edit">Editar</string>
     <string name="discussions_forbidden">As respostas apenas estão visíveis para aqueles que publicaram pelo menos uma resposta.</string>
-    <string name="discussions_unknown_author">Autor desconhecido</string>
     <string name="discussions_delete">Eliminar discussão</string>
     <string name="discussions_delete_title">Eliminar discussão?</string>
     <string name="discussions_delete_message">Isso eliminará toda a discussão e ligação.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Política de Privacidade</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Termos de uso</string>
-    <string name="openSource">Código Aberto</string>
     <string name="searchGuides">Procurar nos Guias do Canvas</string>
     <string name="searchGuidesDetails">Encontre respostas para perguntas comuns</string>
     <string name="reportProblem">Reportar um problema</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filtrar pessoas</string>
     <string name="loadMore">Carregar mais</string>
     <string name="latestStudentActivityAtFormatted">Última atividade em %1$s às %2$s.</string>
-    <string name="sectionFormatted">Seção: %s</string>
     <string name="errorLoadingStudentContextCard">Não foi possível carregar detalhes para este utilizador.</string>
     <string name="enrollmentTypeStudent">Aluno</string>
     <string name="enrollmentTypeTeacher">Professor</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Todas as seções</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Esta ferramenta LTI não pôde ser carregada neste momento.</string>
-    <string name="downloading">A descarregar...</string>
-
+    <string name="downloading">Descarregar...</string>
 </resources>

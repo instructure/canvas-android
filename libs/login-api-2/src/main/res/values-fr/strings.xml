@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">Vous devez entrer un identifiant utilisateur.</string>
     <string name="masqueradeErrorDomain">Vous devez saisir un domaine valide.</string>
-    <string name="masqueradeError">Erreur lors de la tentative de connexion sous une fausse identité.</string>
+    <string name="masqueradeError">Une erreur est survenue lors de la tentative d\'agir en tant qu\'utilisateur</string>
     <string name="masqueradeInfo">\"Act as\" (Agir en tant que) correspond à la connection en tant qu\'utilisateur sans mot de passe. Vous serez en mesure de prendre n\'importe quelle action comme si vous étiez cet utilisateur, et à partir des points de vue d\'autres utilisateurs, ce sera comme si cet utilisateur les exécutait. Cependant, les journaux d’audit enregistrent le fait que c’est vous qui avez effectué ces actions au nom de l’utilisateur.</string>
     <string name="masqueradingAs">Vous agissez en tant que %s</string>
     <string name="stopActingAsTitle">Cesser d\'agir en tant que...</string>

@@ -50,6 +50,10 @@
     <string name="submitted">Lähetetty</string>
     <string name="notSubmitted">Ei lähetetty</string>
     <string name="allowedFileTypes">Sallittavat tiedostotyypit</string>
+    <string name="attempts">Yritystä</string>
+    <string name="attemptsAllowedLabel">Yritystä sallittu</string>
+    <string name="attemptsUsedLabel">Yritystä käytetty</string>
+    <string name="noAttemptsLeft">Ei yrityksiä jäljellä</string>
     <string name="resubmitAssignment">Lähetä tehtävä uudelleen</string>
     <string name="launchExternalTool">Käynnistä ulkoinen työkalu</string>
     <string name="preview">Esikatsele</string>
@@ -222,28 +226,13 @@
     <string name="addMessage">Lisää viesti</string>
     <string name="monologue">Monologi</string>
     <string name="noItemsToDisplayShort">Ei näytettäviä kohteita</string>
-    <string name="emptyCalendarDate">Mitään ei ole suunniteltu</string>
-    <string name="emptyCalendarWeek">Mitään ei ole suunniteltu viikolle</string>
-    <string name="emptyCalendarMonth">Mitään ei ole suunniteltu kuukaudelle</string>
-    <string name="selectCanvasCalendars">Valitse enintään 10 kalenteria</string>
-    <string name="contentDesc_colored_calendar_indicator">Värillinen kalenteri-ilmaisin</string>
-    <string name="noDatesSelected">Ole hyvä ja valitse päivä</string>
     <string name="Todo">Tehtävä</string>
     <string name="todoFilter">Suodata kursseja</string>
     <string name="filterByEllipsis">Suodatustapa...</string>
     <string name="favoritedCoursesLabel">Suosikiksi merkitys kurssit</string>
     <string name="Event">Tapahtuma</string>
-    <string name="eventSuccessfulCreation">Tapahtuman luonti onnistui</string>
     <string name="eventSuccessfulDeletion">Tapahtuman poisto onnistui</string>
-    <string name="newEvent">Uusi tapahtuma</string>
-    <string name="enterTitle">Syötä otsikko</string>
-    <string name="enterLocation">Anna sijainti</string>
-    <string name="addNote">Lisää merkintä</string>
-    <string name="titleIconDescription">Otsikko-kuvake</string>
-    <string name="dateIconDescription">Päivämäärä-kuvake</string>
     <string name="timeIconDescription">Ajan kuvake</string>
-    <string name="locationIconDescription">Sijainti-kuvake</string>
-    <string name="noteIconDescription">Huomautus-kuvake</string>
     <string name="toDoTurnIn">Luovuttaminen</string>
     <string name="toDoNoDueDate">Ei määräpäivää</string>
 
@@ -400,7 +389,6 @@
     <string name="sendMessage">Lähetä viesti</string>
     <string name="userAvatar">Käyttäjän avatar</string>
 
-    <string name="calendarIcon">Kalenterikuvake</string>
     <string name="assignmentIcon">Tehtäväkuvake</string>
     <string name="announcementIcon">Ilmoituskuvake</string>
     <string name="conversationIcon">Keskustelukuvake</string>
@@ -435,11 +423,10 @@
     <string name="modified">Viimeksi muokattu:</string>
     <string name="lastModified">Viimeksi muokattu: %1$s</string>
 
-    <string name="startMasquerading">Aloita naamiointi</string>
-    <string name="stopMasquerading">Lopeta naamiointi.</string>
+    <string name="startMasquerading">Aloita toimiminen käyttäjänä</string>
+    <string name="stopMasquerading">Lopeta toimiminen käyttäjänä</string>
     <string name="userId">Käyttäjätunnus</string>
-    <string name="masqueradeFail">Ilmeni virhe yritettäessä naamiointia.</string>
-
+    <string name="masqueradeFail">Ilmeni virhe yritettäessä toimia tänä käyttäjänä.</string>
     <string name="emptyId">Tunnus ei voi olla tyhjä.</string>
 
     <string name="goToQuiz">Siirry tietovisaan</string>
@@ -578,7 +565,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalenteri alkaa maanantaina.</string>
     <string name="profile">Profiili</string>
 
     <string name="noSubject">(Ei aihetta)</string>
@@ -650,6 +636,11 @@
     <string name="accountPreferences">Tilin asetukset</string>
     <string name="pinAndFingerprint">PIN ja sormenjälki</string>
 
+    <string name="pairWithObserver">Yhdistä havaitsijan kanssa</string>
+    <string name="pairWithObserverDetails">Pyydä vanhempiasi skannaamaan tämä viivakoodi Canvas Parent -sovelluksesta, jotta he saavat yhteyden sovellukseen. Tämä koodi vanhenee seitsemässä päivässä tai yhden käytön jälkeen.</string>
+    <string name="pairingCodeLabel">Parinmuodostuskoodi:\u0020</string>
+    <string name="pairingCodeErrorTitle">Parimuodostuskoofin virhe</string>
+    <string name="pairingCodeErrorDescription">Parinmuodostuskoodin nouto epäonnistui. Tämä ominaisuutta tuetaan vain opiskelijoille.</string>
     <string name="launchSpeedgrader">Avaa Speedgrader</string>
 
     <string name="search_todo">mitätehdä mitä tehdä mitä tehdä -luettelo</string>
@@ -722,12 +713,7 @@
     <string name="gauge">Mittari</string>
 
     <string name="calendarDay">Päivä</string>
-    <string name="calendarWeek">Viikko</string>
-    <string name="calendarMonth">Kuukausi</string>
-    <string name="selectCalendars">Valitse kalenterit</string>
     <string name="createNewCalendarEvent">Luo uusi tapahtuma</string>
-    <string name="calendarDialog10Warning">Voit valita vain 10 kalenteria näytettäväksi</string>
-    <string name="calendarDialogNoneWarning">Valitse vähintään yksi kalenteri</string>
     <string name="enableFunMode">Kytke pandat pois päältä</string>
 
     <string name="accountNotifications">Ilmoitukset</string>
@@ -1027,6 +1013,9 @@
     <string name="filePreviewContentDescription">Tiedoston esikatselukuva</string>
     <string name="pdfError">Tämän PDF-tiedoston lataamisen yhteydessä ilmeni virhe.</string>
 
+    <string name="featureNotAllowedInStudentView">Pahoittelut! Tätä ominaisuutta ei sallita opiskelijanäkymässä.</string>
+    <string name="nothingToSeeHere">Täällä ei ole mitään nähtävää.</string>
+    <string name="unsupportedFeature">Tukematon ominaisuus</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Lisää opiskelija</string>
     <string name="addChildSubTitle">Pane opiskelijan parinmuodostuskoodi, joka on toimitettu sinulle.</string>
@@ -1065,6 +1054,9 @@
     <string name="gradeAfterPosting">Arvosana lähetyksen jälkeen</string>
     <string name="gradeOverride">Korvaa arvosana</string>
     <string name="currentGrade">Nykyinen arvosana </string>
+
+    <string name="opensInCanvasStudent">Avautuu Canvas Studentissa</string>
+    <string name="tab_student_view">Opiskelijanäkymä</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valittu pää: %s</string>
@@ -1156,4 +1148,5 @@
     <string name="concludedConferences">Loppuunviedyt konferenssit</string>
     <string name="conferenceDetails">Konferenssin tiedot</string>
     <string name="recordings">Nauhoitukset</string>
+    <string name="conferenceInProgress">Kokous käynnissä</string>
 </resources>

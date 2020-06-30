@@ -49,6 +49,10 @@
     <string name="submitted">已提交</string>
     <string name="notSubmitted">未提交</string>
     <string name="allowedFileTypes">允許的檔案類型</string>
+    <string name="attempts">嘗試</string>
+    <string name="attemptsAllowedLabel">允許的遞交嘗試次數</string>
+    <string name="attemptsUsedLabel">已使用的遞交嘗試次數</string>
+    <string name="noAttemptsLeft">不可再次嘗試</string>
     <string name="resubmitAssignment">重新提交作業</string>
 
     <string name="launchExternalTool">啟動外部工具</string>
@@ -217,28 +221,13 @@
     <string name="addMessage">添加訊息</string>
     <string name="monologue">獨白</string>
     <string name="noItemsToDisplayShort">沒有可顯示的項目</string>
-    <string name="emptyCalendarDate">沒有規劃項目</string>
-    <string name="emptyCalendarWeek">本週沒有規劃項目</string>
-    <string name="emptyCalendarMonth">本月沒有規劃項目</string>
-    <string name="selectCanvasCalendars">選擇最多 10 個行事曆</string>
-    <string name="contentDesc_colored_calendar_indicator">彩色行事曆標記</string>
-    <string name="noDatesSelected">請選擇一個日期</string>
     <string name="Todo">待辦事項</string>
     <string name="todoFilter">篩選課程</string>
     <string name="filterByEllipsis">篩選條件為...</string>
     <string name="favoritedCoursesLabel">已標記為最喜愛的課程</string>
     <string name="Event">活動</string>
-    <string name="eventSuccessfulCreation">活動已成功創建</string>
     <string name="eventSuccessfulDeletion">活動已成功刪除</string>
-    <string name="newEvent">新活動</string>
-    <string name="enterTitle">輸入標題</string>
-    <string name="enterLocation">輸入地點</string>
-    <string name="addNote">添加注釋</string>
-    <string name="titleIconDescription">標題圖示</string>
-    <string name="dateIconDescription">日期圖示</string>
     <string name="timeIconDescription">時間圖示</string>
-    <string name="locationIconDescription">地點圖示</string>
-    <string name="noteIconDescription">注釋圖示</string>
     <string name="toDoTurnIn">提交</string>
     <string name="toDoNoDueDate">無截止日期</string>
 
@@ -390,7 +379,6 @@
     <string name="sendMessage">發送訊息</string>
     <string name="userAvatar">使用者頭像</string>
 
-    <string name="calendarIcon">行事曆圖示</string>
     <string name="assignmentIcon">作業圖示</string>
     <string name="announcementIcon">通告圖示</string>
     <string name="conversationIcon">交談圖示</string>
@@ -424,11 +412,10 @@
     <string name="modified">上次修改於：</string>
     <string name="lastModified">上次修改於：%1$s</string>
 
-    <string name="startMasquerading">開始以其他身份檢視</string>
-    <string name="stopMasquerading">停止以其他身份檢視</string>
+    <string name="startMasquerading">開始作為使用者</string>
+    <string name="stopMasquerading">停止作為使用者</string>
     <string name="userId">使用者 ID</string>
-    <string name="masqueradeFail">在嘗試以其他身份檢視時出現錯誤</string>
-
+    <string name="masqueradeFail">嘗試作為使用者時出現錯誤</string>
     <string name="emptyId">ID 不可為空白</string>
 
     <string name="goToQuiz">前往測驗</string>
@@ -563,7 +550,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">行事曆從週一開始</string>
     <string name="profile">個人檔案</string>
 
     <string name="noSubject">（無主題）</string>
@@ -633,6 +619,11 @@
     <string name="accountPreferences">帳戶偏好</string>
     <string name="pinAndFingerprint">PIN 和指紋</string>
 
+    <string name="pairWithObserver">與觀察者配對</string>
+    <string name="pairWithObserverDetails">讓您的父母在 Canvas Parent 應用程式掃描此二維碼與您配對。此代碼將在七天後過期，或使用一次後過期。</string>
+    <string name="pairingCodeLabel">配對代碼：\u0020</string>
+    <string name="pairingCodeErrorTitle">配對代碼錯誤</string>
+    <string name="pairingCodeErrorDescription">無法取得配對代碼。此功能僅支援學生。</string>
     <string name="launchSpeedgrader">打開 Speedgrader</string>
 
     <string name="search_todo">待辦事項清單</string>
@@ -705,12 +696,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">日</string>
-    <string name="calendarWeek">週</string>
-    <string name="calendarMonth">月</string>
-    <string name="selectCalendars">選擇行事曆</string>
     <string name="createNewCalendarEvent">創建新活動</string>
-    <string name="calendarDialog10Warning">您只能選擇顯示 10 個行事曆</string>
-    <string name="calendarDialogNoneWarning">請選擇至少一個行事曆</string>
     <string name="enableFunMode">關閉熊貓頭像</string>
 
     <string name="accountNotifications">通告</string>
@@ -1002,6 +988,9 @@
     <string name="filePreviewContentDescription">檔案預覽圖像</string>
     <string name="pdfError">嘗試載入此 PDF 時發生錯誤。</string>
 
+    <string name="featureNotAllowedInStudentView">很抱歉！此功能無法於學生視圖中使用。</string>
+    <string name="nothingToSeeHere">這裡沒有內容供瀏覽</string>
+    <string name="unsupportedFeature">不支援的功能</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">添加學生</string>
     <string name="addChildSubTitle">輸入已提供予您的學生配對代碼。</string>
@@ -1037,6 +1026,9 @@
     <string name="gradeAfterPosting">公佈後評分</string>
     <string name="gradeOverride">評分重寫</string>
     <string name="currentGrade">目前評分</string>
+
+    <string name="opensInCanvasStudent">在 Canvas Student 中開啟</string>
+    <string name="tab_student_view">學生視圖</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">選擇的頁首：%s</string>
@@ -1128,4 +1120,5 @@
     <string name="concludedConferences">已結束的會議</string>
     <string name="conferenceDetails">會議詳情</string>
     <string name="recordings">記錄</string>
+    <string name="conferenceInProgress">會議進行中</string>
 </resources>

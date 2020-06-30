@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -387,6 +387,10 @@
     <string name="notificationPrimaryInboxTitle">Canvas Notification</string>
     <string name="notificationChannelNamePrimary">General Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Further configuration of notifications can be done within the Canvas Notification Preferences section.</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d new notifications</item>
+    </plurals>
 
     <string name="copyLinkAddress">Copy link address</string>
     <string name="copyLink">Copy Link</string>

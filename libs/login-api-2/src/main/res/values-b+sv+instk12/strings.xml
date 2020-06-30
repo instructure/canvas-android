@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Du måste ange ett användar-ID.</string>
     <string name="masqueradeErrorDomain">Du måste ange en giltig domän.</string>
-    <string name="masqueradeError">Fel vid försök att agera.</string>
+    <string name="masqueradeError">Fel vid försök att uppträda som användaren.</string>
     <string name="masqueradeInfo">\"Att agera som\" är i själva verket som att logga in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du vore den här användaren, och ur andra användares synvinklar är det som om den här användaren utförde dem. I revisionsloggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar.</string>
     <string name="masqueradingAs">Du agerar som %s</string>
-    <string name="stopActingAsTitle">Sluta agera som ...</string>
+    <string name="stopActingAsTitle">Sluta uppträda som ...</string>
     <string name="stopActingAsMessage">Du kommer att sluta att agera som %s, och gå tillbaka till ditt konto.</string>
     <string name="weMadeChanges">Vi har gjort några ändringar.</string>
     <string name="whatsNewText">Se vad som är nytt</string>

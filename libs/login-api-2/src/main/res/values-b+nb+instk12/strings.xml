@@ -123,7 +123,7 @@
 
     <string name="masqueradeErrorUserId">Du må skrive inn en bruker-ID.</string>
     <string name="masqueradeErrorDomain">Du må oppgi et gyldig domene.</string>
-    <string name="masqueradeError">Feil under maskeringsforsøk.</string>
+    <string name="masqueradeError">Det oppsto en feil da du prøvde å opptre som bruker.</string>
     <string name="masqueradeInfo">\"Oppfør deg som\" er i realiteten å logge inn som denne brukeren uten passord. Du kan ta tiltak som om du er denne brukeren, og fra andres synspunkt ser det ut som denne brukeren har utført dem. Overvåkingloggen vil likevel notere at det var du som utførte handlingene på vegne av denne brukeren.</string>
     <string name="masqueradingAs">Du opptrer som %s</string>
     <string name="stopActingAsTitle">Slutt å opptre som...</string>

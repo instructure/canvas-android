@@ -123,7 +123,7 @@
 
     <string name="masqueradeErrorUserId">Du skal indtaste et bruger-ID.</string>
     <string name="masqueradeErrorDomain">Du skal indtaste et gyldigt domæne.</string>
-    <string name="masqueradeError">Fejl, da du prøvede at anvende anden brugeridentitet.</string>
+    <string name="masqueradeError">Fejl ved forsøg på at fungere som bruger.</string>
     <string name="masqueradeInfo">\"Funger som\" betyder i bund og grund, at du logger ind som denne bruger uden adgangskode. Du kan foretage dig alt, som om du var denne bruger, og for andre brugere, er det lige som om, det var denne bruger, der gjorde det. Dog registrerer audit-logs, at det faktisk var dig, der udførte handlingerne på vegne af denne bruger.</string>
     <string name="masqueradingAs">Du fungerer som %s</string>
     <string name="stopActingAsTitle">Stop med at fungere som ...</string>

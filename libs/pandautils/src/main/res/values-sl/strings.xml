@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Splošna sporočila sistema Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Dodatno konfiguriranje sporočil je mogoče v sekciji sistema Canvas »Prednostne nastavitve«.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d novih obvestil</item>
+    </plurals>
     <string name="copyLinkAddress">Kopiraj naslov povezave</string>
     <string name="copyLink">Kopiraj povezavo</string>
     <string name="linkCopied">Povezava je kopirana.</string>

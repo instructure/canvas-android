@@ -121,10 +121,10 @@
 
     <string name="masqueradeErrorUserId">Vous devez saisir un ID d’utilisateur.</string>
     <string name="masqueradeErrorDomain">Vous devez saisir un nom de domaine valide.</string>
-    <string name="masqueradeError">Erreur lors de tentative de personnification.</string>
+    <string name="masqueradeError">Une erreur s\'est produite lors de la tentative d\'agir en tant qu\'utilisateur.</string>
     <string name="masqueradeInfo">« Agir en tant que » (Act as) est essentiellement ouvrir une session en tant que cet utilisateur sans mot de passe. Vous serez en mesure de prendre toute action comme si vous étiez cet utilisateur, et du point de vue des autres utilisateurs, ce sera comme si cet utilisateur aurait effectué ces actions. Toutefois, le journal d\'événements a identifié que vous étiez celui qui a effectué les actions au nom de cet étudiant.</string>
     <string name="masqueradingAs">Vous agissez en tant que %s</string>
-    <string name="stopActingAsTitle">Cesser d\'agir comme...</string>
+    <string name="stopActingAsTitle">Arrêter d\'agir en tant que...</string>
     <string name="stopActingAsMessage">Vous allez arrêter d’agir comme %s et retournerez à votre compte.</string>
 
     <string name="weMadeChanges">Nous avons fait quelques changements.</string>

@@ -396,6 +396,12 @@
     <string name="notificationChannelNamePrimary">إخطارات Canvas عامة</string>
     <string name="notificationChannelDescriptionPrimary">يمكن إجراء تكوين إضافي للإخطارات داخل قسم تفضيلات إخطار Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="two">%d من الإعلامات الجديدة</item>
+        <item quantity="few">%d من الإعلامات الجديدة</item>
+        <item quantity="many">%d من الإعلامات الجديدة</item>
+        <item quantity="other">%d من الإعلامات الجديدة</item>
+    </plurals>
     <string name="copyLinkAddress">نسخ عنوان الارتباط</string>
     <string name="copyLink">نسخ الرابط</string>
     <string name="linkCopied">تم نسخ الارتباط</string>

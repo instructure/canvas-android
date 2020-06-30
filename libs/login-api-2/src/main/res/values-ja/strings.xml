@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">有効なIDを入力しなければなりません。</string>
     <string name="masqueradeErrorDomain">有効なドメインを入力しなければなりません</string>
-    <string name="masqueradeError">マスカレード試行中にエラーが発生しました。</string>
+    <string name="masqueradeError">ユーザーとして行動しようとした際にエラーが発生しました。</string>
     <string name="masqueradeInfo">\"「\"として行動する」には、このユーザーとしてパスワードなしでログインしていることが基本です。あたかもこのユーザーであるかのようにアクションを取ることができ、また、他のユーザーの観点からだと、あたかもこのユーザーがそれを実行したかのように見ることができます。ただし、監査ログには、このユーザーの代わりにアクションを実行したのは、あなた だったと記録されます。</string>
     <string name="masqueradingAs">あなたは%sとして行動しています</string>
     <string name="stopActingAsTitle">以下として行動することを止める</string>

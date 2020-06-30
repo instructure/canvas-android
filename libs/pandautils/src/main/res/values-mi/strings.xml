@@ -384,6 +384,9 @@
     <string name="notificationChannelNamePrimary">Ngā Canvas Whānui Whakamōhiotanga</string>
     <string name="notificationChannelDescriptionPrimary">Ka taea te whakahohe i ētahi atu whakamōhiotanga i roto i te wāhanga Canvas Whakamōhio Hiahiatanga.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d whakamōhiotanga whakahou</item>
+    </plurals>
     <string name="copyLinkAddress">Tārua wāhitau hono</string>
     <string name="copyLink">Tārua hononga</string>
     <string name="linkCopied">Kua tāruatia te hono</string>

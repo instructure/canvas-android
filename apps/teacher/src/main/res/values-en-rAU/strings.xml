@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Excused</string>
     <string name="last_login_format">Last login: %s</string>
 
+    <string name="muteGrades">Mute Grades</string>
+    <string name="unmuteGrades">Unmute Grades</string>
+    <string name="gradesMutedLabel">Grades Muted</string>
     <string name="turnOnAnonymousGrading">Turn on Anonymous Grading</string>
     <string name="turnOffAnonymousGrading">Turn off Anonymous Grading</string>
     <string name="anonymousGradingLabel">Anonymous Grading</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps might be a better fit. Tap one to visit the Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Grade</string>
+    <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
     <string name="filter_submissions">Filter Submissions</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d questions</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minute</item>
-        <item quantity="other">%s Minutes</item>
-    </plurals>
-
     <string name="discussion_details">Discussion Details</string>
     <string name="discussions_pinned">Pinned</string>
     <string name="discussions_unpinned">Discussions</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Reply</string>
     <string name="discussions_edit">Edit</string>
     <string name="discussions_forbidden">Replies are only visible to those who have posted at least one reply.</string>
-    <string name="discussions_unknown_author">Unknown Author</string>
     <string name="discussions_delete">Delete Discussion</string>
     <string name="discussions_delete_title">Delete Discussion?</string>
     <string name="discussions_delete_message">This will delete the whole discussion and thread.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Privacy Policy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Terms of Use</string>
-    <string name="openSource">Open Source</string>
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
     <string name="reportProblem">Report a Problem</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filter People</string>
     <string name="loadMore">Load More</string>
     <string name="latestStudentActivityAtFormatted">Latest activity on %1$s at %2$s.</string>
-    <string name="sectionFormatted">Section: %s</string>
     <string name="errorLoadingStudentContextCard">Unable to load details for this user.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Teacher</string>
@@ -896,8 +889,6 @@
     <string name="allSections">All Sections</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
-    <string name="downloading">Downloading...</string>
-
+    <string name="downloading">Downloading&#8230;</string>
 </resources>

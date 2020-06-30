@@ -50,6 +50,10 @@
     <string name="submitted">Ingediend</string>
     <string name="notSubmitted">Niet ingediend</string>
     <string name="allowedFileTypes">Toegestane bestandstypen</string>
+    <string name="attempts">Pogingen</string>
+    <string name="attemptsAllowedLabel">Toegestane pogingen</string>
+    <string name="attemptsUsedLabel">Gebruikte pogingen</string>
+    <string name="noAttemptsLeft">Geen resterende pogingen</string>
     <string name="resubmitAssignment">Opdracht opnieuw inleveren</string>
 
     <string name="launchExternalTool">Extern hulpmiddel lanceren</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Bericht toevoegen</string>
     <string name="monologue">Monoloog</string>
     <string name="noItemsToDisplayShort">Geen items te tonen</string>
-    <string name="emptyCalendarDate">Niets gepland voor</string>
-    <string name="emptyCalendarWeek">Niets gepland voor de week</string>
-    <string name="emptyCalendarMonth">Niets gepland voor de maand</string>
-    <string name="selectCanvasCalendars">Tot 10 agenda\'s selecteren</string>
-    <string name="contentDesc_colored_calendar_indicator">Gekleurde kalenderaanduiding</string>
-    <string name="noDatesSelected">Selecteer een datum</string>
     <string name="Todo">To-do lijst</string>
     <string name="todoFilter">Cursussen filteren</string>
     <string name="filterByEllipsis">Filteren op...</string>
     <string name="favoritedCoursesLabel">Favoriete cursussen</string>
     <string name="Event">Gebeurtenis</string>
-    <string name="eventSuccessfulCreation">Evenement was succesvol aangemaakt</string>
     <string name="eventSuccessfulDeletion">Evenement was succesvol verwijderd</string>
-    <string name="newEvent">Nieuw evenement</string>
-    <string name="enterTitle">Titel toevoegen</string>
-    <string name="enterLocation">Locatie invoeren</string>
-    <string name="addNote">Notitie toevoegen</string>
-    <string name="titleIconDescription">Titel icoon</string>
-    <string name="dateIconDescription">Datum icoon</string>
     <string name="timeIconDescription">Tijdpictogram</string>
-    <string name="locationIconDescription">Locatie icoon</string>
-    <string name="noteIconDescription">Notitie icoon</string>
     <string name="toDoTurnIn">Inleveren</string>
     <string name="toDoNoDueDate">Geen inleverdatum</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Bericht versturen</string>
     <string name="userAvatar">Gebruikersavatar</string>
 
-    <string name="calendarIcon">Agenda icoon</string>
     <string name="assignmentIcon">Opdracht icoon</string>
     <string name="announcementIcon">Aankondiging icoon</string>
     <string name="conversationIcon">Conversatie icoon</string>
@@ -430,11 +418,10 @@
     <string name="modified">Laatst gewijzigd:</string>
     <string name="lastModified">Laatst gewijzigd: %1$s</string>
 
-    <string name="startMasquerading">Begin te verbergen</string>
-    <string name="stopMasquerading">Maskeren stoppen</string>
+    <string name="startMasquerading">Starten met optreden als gebruiker</string>
+    <string name="stopMasquerading">Stoppen met optreden als gebruiker</string>
     <string name="userId">Gebruikers-ID:</string>
-    <string name="masqueradeFail">Er heeft zich een foto voorgedaan bij het verbergen</string>
-
+    <string name="masqueradeFail">Er heeft zich een fout voorgedaan bij optreden als gebruiker</string>
     <string name="emptyId">Het ID mag niet leeg zijn</string>
 
     <string name="goToQuiz">Ga naar toets</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Agenda begint op maandag</string>
     <string name="profile">Profiel</string>
 
     <string name="noSubject">(Geen onderwerp)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Accountvoorkeuren</string>
     <string name="pinAndFingerprint">PIN en vingerafdruk</string>
 
+    <string name="pairWithObserver">Koppelen met waarnemer</string>
+    <string name="pairWithObserverDetails">Laat je ouder deze QR-code scannen van de Canvas Parent-app om met jou te koppelen. Deze code vervalt over zeven dagen of na één keer gebruiken.</string>
+    <string name="pairingCodeLabel">Koppelingscode:\u0020</string>
+    <string name="pairingCodeErrorTitle">Koppelingscodefout</string>
+    <string name="pairingCodeErrorDescription">Kan koppelingscode niet ophalen. Deze functie wordt alleen ondersteund voor cursisten.</string>
     <string name="launchSpeedgrader">Speedgrader openen</string>
 
     <string name="search_todo">to do to do to do to do lijst</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Dag</string>
-    <string name="calendarWeek">Week</string>
-    <string name="calendarMonth">Maand</string>
-    <string name="selectCalendars">Kalenders selecteren</string>
     <string name="createNewCalendarEvent">Een nieuwe gebeurtenis maken</string>
-    <string name="calendarDialog10Warning">Je kan slecht 10 agenda\'s kiezen om te tonen</string>
-    <string name="calendarDialogNoneWarning">Selecteer ten minste een agenda</string>
     <string name="enableFunMode">Panda\'s uitzetten</string>
 
     <string name="accountNotifications">Aankondigingen</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Voorbeeldweergave bestand</string>
     <string name="pdfError">Er is een fout opgetreden bij het laden van deze PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Sorry! Deze functie is niet toegestaan in de cursistweergave.</string>
+    <string name="nothingToSeeHere">Niets te zien hier</string>
+    <string name="unsupportedFeature">Niet ondersteunde functie</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Cursist toevoegen</string>
     <string name="addChildSubTitle">Voer de koppelingscode cursist in die je gekregen hebt.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Beoordelen na posten</string>
     <string name="gradeOverride">Cijferoverschrijving</string>
     <string name="currentGrade">Huidig cijfer </string>
+
+    <string name="opensInCanvasStudent">Opent in Canvas-cursist</string>
+    <string name="tab_student_view">Weergave voor cursisten</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Gekozen kop: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Voltooide vergaderingen</string>
     <string name="conferenceDetails">Vergaderingdetails</string>
     <string name="recordings">Opnamen</string>
+    <string name="conferenceInProgress">Vergadering is bezig</string>
 </resources>

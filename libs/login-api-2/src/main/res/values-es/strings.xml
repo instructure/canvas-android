@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Debe ingresar una identificación de usuario.</string>
     <string name="masqueradeErrorDomain">Debe ingresar un dominio válido.</string>
-    <string name="masqueradeError">Error al intentar actuar como.</string>
+    <string name="masqueradeError">Ocurrió un error al intentar actuar como usuario.</string>
     <string name="masqueradeInfo">\"Actuar en nombre de\" consiste básicamente en iniciar sesión en nombre de este usuario sin ingresar una contraseña. Podrá realizar la acción que desee como si fuera este usuario y, desde el punto de vista de los demás usuarios, será como si ese usuario las hubiera realizado. Sin embargo, los registros de auditoría indican que usted es quien realizó las acciones en representación de este usuario.</string>
     <string name="masqueradingAs">Está actuando en nombre de %s</string>
-    <string name="stopActingAsTitle">Dejar de actuar en nombre de...</string>
+    <string name="stopActingAsTitle">Dejar de actuar como&#8230;</string>
     <string name="stopActingAsMessage">Usted dejará de actuar en nombre de %s y volverá a su cuenta.</string>
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>

@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Annettu anteeksi</string>
     <string name="last_login_format">Viimeinen sisäänkirjautuminen: %s</string>
 
+    <string name="muteGrades">Mykistä arvosanat</string>
+    <string name="unmuteGrades">Poista mykistys arvosanoista</string>
+    <string name="gradesMutedLabel">Arvosanat mykistetty</string>
     <string name="turnOnAnonymousGrading">Kytke päälle nimetön arvosanojen anto</string>
     <string name="turnOffAnonymousGrading">Kytke nimetön arvosanojen anto pois päältä</string>
     <string name="anonymousGradingLabel">Nimetön arvosanojen anto</string>
@@ -608,11 +611,6 @@
         <item quantity="other">%d kysymykset</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minuutti</item>
-        <item quantity="other">%s Minuutit</item>
-    </plurals>
-
     <string name="discussion_details">Keskustelun tiedot</string>
     <string name="discussions_pinned">Kiinnitetty</string>
     <string name="discussions_unpinned">Keskustelut</string>
@@ -630,7 +628,6 @@
     <string name="discussions_reply">Vastaus</string>
     <string name="discussions_edit">Muokkaa</string>
     <string name="discussions_forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
-    <string name="discussions_unknown_author">Tuntematon tekijä</string>
     <string name="discussions_delete">Poista keskustelu</string>
     <string name="discussions_delete_title">Poistetaanko keskustelu?</string>
     <string name="discussions_delete_message">Tämä poistaa koko keskustelun ja keskusteluketjun</string>
@@ -727,7 +724,6 @@
     <string name="privacyPolicy">Tietosuojakäytäntö</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Käyttöehdot</string>
-    <string name="openSource">Avoin lähde</string>
     <string name="searchGuides">Etsi Canvas-oppaita</string>
     <string name="searchGuidesDetails">Etsi vastaukset yleisiin kysymyksiin</string>
     <string name="reportProblem">Raportoi ongelma</string>
@@ -781,7 +777,6 @@
     <string name="filterPeople">Suodata ihmisiä</string>
     <string name="loadMore">Lataa lisää</string>
     <string name="latestStudentActivityAtFormatted">Viimeisin aktiviteetti %1$s kohdassa %2$s.</string>
-    <string name="sectionFormatted">Osa: %s</string>
     <string name="errorLoadingStudentContextCard">Tämän käyttäjän tietojen lataus ei onnistunut</string>
     <string name="enrollmentTypeStudent">Opiskelija</string>
     <string name="enrollmentTypeTeacher">Opettaja</string>
@@ -894,8 +889,6 @@
     <string name="allSections">Kaikki osat</string>
 
     <string name="gauge">Mittari</string>
-    <string name="arc">Kaari</string>
     <string name="ltiLaunchFailure">Tämän LTI-työkalun lataaminen ei onnistu juuri nyt.</string>
     <string name="downloading">Ladataan...</string>
-
 </resources>

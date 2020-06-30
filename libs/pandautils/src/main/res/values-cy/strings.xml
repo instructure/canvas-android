@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Hysbysiadau Cyffredinol Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Gellir ffurfweddu hysbysiadau ymhellach o fewn yr adran Dewisiadau Hysbysiadau Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d hysbysiad newydd</item>
+    </plurals>
     <string name="copyLinkAddress">Copïo cyfeiriad dolen</string>
     <string name="copyLink">Copïo Dolen</string>
     <string name="linkCopied">Wedi copïo dolen</string>

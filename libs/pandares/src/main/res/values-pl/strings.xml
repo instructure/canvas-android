@@ -52,6 +52,10 @@
     <string name="submitted">Przesłano</string>
     <string name="notSubmitted">Nie wysłano</string>
     <string name="allowedFileTypes">Dopuszczalne typy plików</string>
+    <string name="attempts">Próby</string>
+    <string name="attemptsAllowedLabel">Dozwolone próby</string>
+    <string name="attemptsUsedLabel">Wykorzystana próba</string>
+    <string name="noAttemptsLeft">Brak pozostałych prób</string>
     <string name="resubmitAssignment">Wyślij ponownie zadanie</string>
     <string name="launchExternalTool">Uruchom narzędzie zewnętrzne</string>
     <string name="preview">Podgląd</string>
@@ -224,28 +228,13 @@
     <string name="addMessage">Dodaj wiadomość</string>
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Brak pozycji do wyświetlenia</string>
-    <string name="emptyCalendarDate">Nie ma planów na</string>
-    <string name="emptyCalendarWeek">Nie ma planowanych wydarzeń na ten tydzień</string>
-    <string name="emptyCalendarMonth">Nie ma planowanych wydarzeń na ten miesiąc</string>
-    <string name="selectCanvasCalendars">Wybierz do 10 kalendarzy</string>
-    <string name="contentDesc_colored_calendar_indicator">Kolorowy wskaźnik kalendarza</string>
-    <string name="noDatesSelected">Proszę wybrać datę</string>
     <string name="Todo">Lista zadań</string>
     <string name="todoFilter">Filtruj kursy</string>
     <string name="filterByEllipsis">Filtruj wg...</string>
     <string name="favoritedCoursesLabel">Ulubione kursy</string>
     <string name="Event">Wydarzenie</string>
-    <string name="eventSuccessfulCreation">Wydarzenie zostało pomyślnie utworzone</string>
     <string name="eventSuccessfulDeletion">Wydarzenie zostało pomyślnie usunięte</string>
-    <string name="newEvent">Nowe wydarzenie</string>
-    <string name="enterTitle">Wpisz tytuł</string>
-    <string name="enterLocation">Wpisz lokalizację</string>
-    <string name="addNote">Dodaj notatkę</string>
-    <string name="titleIconDescription">Ikona tytułu</string>
-    <string name="dateIconDescription">Ikona daty</string>
     <string name="timeIconDescription">Ikona godziny</string>
-    <string name="locationIconDescription">Ikona lokalizacji</string>
-    <string name="noteIconDescription">Ikona notatki</string>
     <string name="toDoTurnIn">Oddaj</string>
     <string name="toDoNoDueDate">Brak terminu</string>
 
@@ -412,7 +401,6 @@
     <string name="sendMessage">Wyślij wiadomość</string>
     <string name="userAvatar">Użyj awatara</string>
 
-    <string name="calendarIcon">Ikona kalendarza</string>
     <string name="assignmentIcon">Ikona zadania</string>
     <string name="announcementIcon">Ikona powiadomienia</string>
     <string name="conversationIcon">Ikona rozmowy</string>
@@ -447,11 +435,10 @@
     <string name="modified">Ostatnia modyfikacja:</string>
     <string name="lastModified">Ostatnia modyfikacja: %1$s</string>
 
-    <string name="startMasquerading">Rozpocznij maskaradę</string>
-    <string name="stopMasquerading">Zatrzymaj maskowanie</string>
+    <string name="startMasquerading">Przestań działać jako użytkownik</string>
+    <string name="stopMasquerading">Przestań działać jako użytkownik</string>
     <string name="userId">ID użytkownika</string>
-    <string name="masqueradeFail">Wystąpił błąd podczas próby rozpoczęcia maskarady</string>
-
+    <string name="masqueradeFail">Wystąpił błąd podczas działania jako użytkownik</string>
     <string name="emptyId">Pole identyfikatora nie może być puste</string>
 
     <string name="goToQuiz">Przejdź do testu</string>
@@ -590,7 +577,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalendarz rozpoczyna się w poniedziałek</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Brak tematu)</string>
@@ -662,6 +648,11 @@
     <string name="accountPreferences">Preferencje konta</string>
     <string name="pinAndFingerprint">Kod PIN i linie papilarne</string>
 
+    <string name="pairWithObserver">Paruj z obserwującym</string>
+    <string name="pairWithObserverDetails">Poproś rodzica o zeskanowanie tego kodu QR w aplikacji Canvas Parent w celu sparowania. Ten kod wygaśnie za siedem dni lub po jednym jego wykorzystaniu.</string>
+    <string name="pairingCodeLabel">Kod parowania:\u0020</string>
+    <string name="pairingCodeErrorTitle">Błąd kodu parowania</string>
+    <string name="pairingCodeErrorDescription">Nie udało się pobrać kodu parowania. Funkcji tej mogą używać tylko uczestnicy.</string>
     <string name="launchSpeedgrader">Otwórz Speedgrader</string>
 
     <string name="search_todo">do zrobienia do zrobienia lista do zrobienia</string>
@@ -734,12 +725,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">dzień</string>
-    <string name="calendarWeek">Tydzień</string>
-    <string name="calendarMonth">mies.</string>
-    <string name="selectCalendars">Wybierz kalendarze</string>
     <string name="createNewCalendarEvent">Utwórz nowe wydarzenie</string>
-    <string name="calendarDialog10Warning">Możesz wyświetlić tylko 10 kalendarzy do wyświetlenia</string>
-    <string name="calendarDialogNoneWarning">Wybierz przynajmniej jeden Kalendarz</string>
     <string name="enableFunMode">Wyłącz pandy</string>
 
     <string name="accountNotifications">Ogłoszenia</string>
@@ -1051,6 +1037,9 @@
     <string name="filePreviewContentDescription">Obraz podglądu pliku</string>
     <string name="pdfError">Podczas wczytywania tego pliku PDF wystąpił błąd.</string>
 
+    <string name="featureNotAllowedInStudentView">Przepraszamy! Funkcja ta nie jest dozwolona w widoku uczestnika.</string>
+    <string name="nothingToSeeHere">Nic tu nie ma</string>
+    <string name="unsupportedFeature">Nieobsługiwana funkcja</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Dodaj ucznia</string>
     <string name="addChildSubTitle">Wpisz otrzymany kod parowania uczestnika.</string>
@@ -1093,6 +1082,9 @@
     <string name="gradeAfterPosting">Ocena po opublikowaniu</string>
     <string name="gradeOverride">Nadpisująca ocena</string>
     <string name="currentGrade">Bieżąca ocena</string>
+
+    <string name="opensInCanvasStudent">Otwiera się w Canvas Student</string>
+    <string name="tab_student_view">Widok uczestnika</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Wybrana głowa: %s</string>
@@ -1186,4 +1178,5 @@
     <string name="concludedConferences">Zakończone konferencje</string>
     <string name="conferenceDetails">Szczegóły konferencji</string>
     <string name="recordings">Nagrań</string>
+    <string name="conferenceInProgress">Konferencja w toku</string>
 </resources>

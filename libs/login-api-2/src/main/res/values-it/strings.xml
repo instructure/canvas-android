@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Devi inserire un ID utente.</string>
     <string name="masqueradeErrorDomain">Devi inserire un dominio valido</string>
-    <string name="masqueradeError">Errore di esecuzione mascheramento.</string>
+    <string name="masqueradeError">Errore durante il tentativo di agire come utente.</string>
     <string name="masqueradeInfo">\"Agisci come\" prevede sostanzialmente l\'esecuzione dell\'accesso assumendo l\'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente.</string>
     <string name="masqueradingAs">Stai agendo come %s</string>
-    <string name="stopActingAsTitle">Non agire più come...</string>
+    <string name="stopActingAsTitle">Smetti di agire come...</string>
     <string name="stopActingAsMessage">Non agirai più come %s e tornerai al tuo account.</string>
     <string name="weMadeChanges">Abbiamo apportato qualche modifica.</string>
     <string name="whatsNewText">Guarda le novità</string>

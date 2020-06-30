@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">Mae’n rhaid i chi roi ID defnyddiwr.</string>
     <string name="masqueradeErrorDomain">Mae’n rhaid i chi roi parth dilys.</string>
-    <string name="masqueradeError">Gwall wrth geisio ffugio.</string>
+    <string name="masqueradeError">Gwall wrth geisio gweithredu fel defnyddiwr.</string>
     <string name="masqueradeInfo">Bydd \""Gweithredu fel"\" yn golygu eich bod yn mewngofnodi fel y defnyddiwr hwn heb gyfrinair. Byddwch chi’n gallu gwneud unrhyw beth fel petai chi yw’r defnyddiwr hwn. O safbwynt pobl eraill, bydd yn edrych fel mai’r defnyddiwr hwn sydd wedi gwneud hynny. Ond, bydd logiau archwilio’n cofnodi mai chi wnaeth hynny ar ran y defnyddiwr hwn.</string>
     <string name="masqueradingAs">Rydych chi’n gweithredu fel %s</string>
     <string name="stopActingAsTitle">Stopio gweithredu fel...</string>
