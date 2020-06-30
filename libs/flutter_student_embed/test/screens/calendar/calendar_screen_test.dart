@@ -369,7 +369,10 @@ void main() {
 
     when(plannerApi.getUserPlannerItems(any, any, any,
             contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) async => [todayItem, tomorrowItem]);
+        .thenAnswer((inv) async {
+      DateTime monthStart = inv.positionalArguments[1];
+      return [todayItem, tomorrowItem].where((item) => item.plannableDate.month == monthStart.month).toList();
+    });
 
     await tester.pumpWidget(_testableMaterialWidget());
     await tester.pumpAndSettle(Duration(seconds: 1)); // Wait for the timers in the calendar day widgets
