@@ -198,8 +198,11 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 page.body = "<body dir=\"rtl\">${page.body}</body>"
             }
 
+            // Some pages need to know the course ID, so we set it on window.ENV.COURSE.id (See MBL-14324)
+            val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
+
             // Load the html with the helper function to handle iframe cases
-            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, page.body.orEmpty(), ::loadPageHtml, {
+            loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
                 val args = LTIWebViewFragment.makeLTIBundle(
                         URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
                 RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
