@@ -71,12 +71,14 @@ data class DiscussionTopicHeader(
         // If the topic is for grading and a group assignment this will
         // point to the original topic in the course.
         // String maybe?
-        @SerializedName("root_topic_id")
-        var rootTopicId: Long = 0,
+        // NOT USED in our code
+        //@SerializedName("root_topic_id")
+        //var rootTopicId: Long = 0,
 
         // A list of topic_ids for the group discussions the user is a part of.
-        @SerializedName("topic_children")
-        var topicChildren: List<Long> = ArrayList(),
+        // NOT USED in our code
+        //@SerializedName("topic_children")
+        //var topicChildren: List<Long> = ArrayList(),
 
         // Used primarily to determine whether a discussion is a group discussion
         @SerializedName("group_topic_children")
@@ -85,7 +87,8 @@ data class DiscussionTopicHeader(
         // List of file attachments
         var attachments: MutableList<RemoteFile> = ArrayList(),
 
-        var unauthorized: Boolean = false,
+        // NOT USED in our code
+        //var unauthorized: Boolean = false,
         var permissions: DiscussionTopicPermission? = null,
         var assignment: Assignment? = null,
         @SerializedName("lock_info")
@@ -99,8 +102,9 @@ data class DiscussionTopicHeader(
         var sortByRating: Boolean = false, // Whether or not entries should be sorted by rating.
 
         // Context code. This is only set when getting DiscussionTopicHeaders from the announcements API
-        @SerializedName("context_code")
-        var contextCode: String? = null,
+        // NOT USED in our code
+        //@SerializedName("context_code")
+        //var contextCode: String? = null,
         var subscribed: Boolean = false,
         @SerializedName("lock_at")
         var lockAt: Date? = null,

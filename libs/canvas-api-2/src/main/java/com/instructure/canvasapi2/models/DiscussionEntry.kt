@@ -47,8 +47,9 @@ data class DiscussionEntry(
         val ratingCount: Int = 0,
         @SerializedName("rating_sum")
         var ratingSum: Int = 0,
-        @SerializedName("user_name")
-        val userName: String? = null,
+        // NOT USED by our code
+        //@SerializedName("user_name")
+        //val userName: String? = null,
         @SerializedName("editor_id")
         val editorId: Long = 0,
         var _hasRated: Boolean = false
