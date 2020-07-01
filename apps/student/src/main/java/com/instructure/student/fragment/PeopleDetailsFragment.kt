@@ -22,21 +22,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.BasicUser
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.canvasapi2.utils.displayType
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
-import com.instructure.canvasapi2.utils.weave.WeaveJob
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.Route
@@ -64,6 +60,8 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var userCall: WeaveJob? = null
+
+    private var permissionCall: WeaveJob? = null
 
     override fun title(): String = ""
 
@@ -99,6 +97,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onDestroy() {
         userCall?.cancel()
+        permissionCall?.cancel()
         super.onDestroy()
     }
 
@@ -123,7 +122,24 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             userRole.text = u.enrollments.distinctBy { it.displayType }.joinToString { it.displayType }
             userBackground.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
             bioText.setVisible(u.bio.isValid() && u.bio != null).text = u.bio
-            compose.setVisible()
+            checkMessagePermission()
+        }
+    }
+
+    private fun checkMessagePermission() {
+        permissionCall = tryWeave {
+            val id = canvasContext.id
+            val canMessageUser = when {
+                canvasContext.isGroup -> GroupManager.getPermissionsAsync(id).awaitOrThrow().send_messages
+                canvasContext.isCourse -> {
+                    val isTeacher = user?.enrollments?.any { it.courseId == id && (it.isTA || it.isTeacher) } ?: false
+                    isTeacher || CourseManager.getPermissionsAsync(canvasContext.id).awaitOrThrow().send_messages
+                }
+                else -> false
+            }
+            compose.setVisible(canMessageUser)
+        } catch {
+            compose.setVisible(false)
         }
     }
 

@@ -21,6 +21,7 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
 import retrofit2.Call
@@ -60,6 +61,9 @@ object GroupAPI {
 
         @GET("courses/{courseId}/groups")
         fun getFirstPageCourseGroups(@Path("courseId") courseId: Long): Call<List<Group>>
+
+        @GET("groups/{groupId}/permissions")
+        fun getGroupPermissions(@Path("groupId") groupId: Long, @Query("permissions[]") requestedPermissions: List<String>): Call<CanvasContextPermission>
     }
 
     fun getFirstPageGroups(adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams) {
@@ -103,5 +107,9 @@ object GroupAPI {
 
     fun getGroupsForCourse(adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams, courseId: Long) {
         callback.addCall(adapter.build(GroupInterface::class.java, params).getFirstPageCourseGroups(courseId)).enqueue(callback)
+    }
+
+    fun getGroupPermissions(groupId: Long, requestedPermissions: List<String>, adapter: RestBuilder, callback: StatusCallback<CanvasContextPermission>, params: RestParams) {
+        callback.addCall(adapter.build(GroupInterface::class.java, params).getGroupPermissions(groupId, requestedPermissions)).enqueue(callback)
     }
 }
