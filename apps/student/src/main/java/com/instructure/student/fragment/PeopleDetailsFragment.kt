@@ -133,7 +133,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
                 canvasContext.isGroup -> GroupManager.getPermissionsAsync(id).awaitOrThrow().send_messages
                 canvasContext.isCourse -> {
                     val isTeacher = user?.enrollments?.any { it.courseId == id && (it.isTA || it.isTeacher) } ?: false
-                    isTeacher || CourseManager.getPermissionsAsync(canvasContext.id).awaitOrThrow().send_messages
+                    isTeacher || CourseManager.getPermissionsAsync(id).awaitOrThrow().send_messages
                 }
                 else -> false
             }
