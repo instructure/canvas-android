@@ -96,6 +96,12 @@ void main() {
     CourseDetailsInteractor().loadCourseTabs(courseId, forceRefresh: true);
     verify(courseApi.getCourseTabs(courseId, forceRefresh: true)).called(1);
   });
+
+  test('load course settings calls the api', () {
+    final courseId = '123';
+    CourseDetailsInteractor().loadCourseSettings(courseId, forceRefresh: true);
+    verify(courseApi.getCourseSettings(courseId, forceRefresh: true)).called(1);
+  });
 }
 
 class _MockCalendarApi extends Mock implements CalendarEventsApi {}

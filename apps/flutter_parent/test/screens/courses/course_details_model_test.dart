@@ -17,6 +17,7 @@ import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/assignment_override.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_settings.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -433,6 +434,7 @@ void main() {
         ..syllabusBody = 'body'
         ..homePage = HomePage.syllabus);
       final model = CourseDetailsModel.withCourse(_student, course);
+      model.courseSettings = CourseSettings((b) => b..courseSummary = true);
 
       expect(model.tabCount(), 3);
     });
@@ -446,6 +448,9 @@ void main() {
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
             CourseTab((b) => b..id = HomePage.syllabus.name),
           ]);
+      when(interactor.loadCourseSettings(_courseId, forceRefresh: true)).thenAnswer((_) async {
+        return CourseSettings((b) => b..courseSummary = true);
+      });
       await model.loadData();
 
       expect(model.tabCount(), 3);
@@ -471,9 +476,22 @@ void main() {
         ..syllabusBody = 'body'
         ..homePage = HomePage.syllabus);
       final model = CourseDetailsModel.withCourse(_student, course);
+      model.courseSettings = CourseSettings((b) => b..courseSummary = true);
 
       expect(model.hasHomePageAsSyllabus, true);
-      expect(model.showSummary, true); // TODO: test once we can access the course flag
+      expect(model.showSummary, true);
+      expect(model.hasHomePageAsFrontPage, false);
+    });
+
+    test('returns syllabus but no summary summary if summary is disabled in course settings', () {
+      final course = _course.rebuild((b) => b
+        ..syllabusBody = 'body'
+        ..homePage = HomePage.syllabus);
+      final model = CourseDetailsModel.withCourse(_student, course);
+      model.courseSettings = CourseSettings((b) => b..courseSummary = false);
+
+      expect(model.hasHomePageAsSyllabus, true);
+      expect(model.showSummary, false);
       expect(model.hasHomePageAsFrontPage, false);
     });
 
@@ -486,6 +504,9 @@ void main() {
       when(interactor.loadCourseTabs(_courseId, forceRefresh: true)).thenAnswer((_) async => [
             CourseTab((b) => b..id = HomePage.syllabus.name),
           ]);
+      when(interactor.loadCourseSettings(_courseId, forceRefresh: true)).thenAnswer((_) async {
+        return CourseSettings((b) => b..courseSummary = true);
+      });
       await model.loadData();
 
       expect(model.hasHomePageAsSyllabus, true);

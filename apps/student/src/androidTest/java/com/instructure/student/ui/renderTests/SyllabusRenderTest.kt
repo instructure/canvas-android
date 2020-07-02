@@ -68,7 +68,7 @@ class SyllabusRenderTest : StudentRenderTest() {
         val model = baseModel.copy()
         loadPageWithModel(model)
 
-        syllabusRenderPage.assertDisplaysSyllabus(syllabusDescription)
+        syllabusRenderPage.assertDisplaysSyllabus(syllabusDescription, shouldDisplayTabs = false)
     }
 
     @Test

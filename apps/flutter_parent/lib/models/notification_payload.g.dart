@@ -93,10 +93,10 @@ class _$NotificationPayloadSerializer
 
 class _$NotificationPayloadTypeSerializer
     implements PrimitiveSerializer<NotificationPayloadType> {
-  static const Map<String, String> _toWire = const <String, String>{
+  static const Map<String, Object> _toWire = const <String, Object>{
     'reminder': 'reminder',
   };
-  static const Map<String, String> _fromWire = const <String, String>{
+  static const Map<Object, String> _fromWire = const <Object, String>{
     'reminder': 'reminder',
   };
 

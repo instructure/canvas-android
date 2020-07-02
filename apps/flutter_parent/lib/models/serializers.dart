@@ -69,6 +69,7 @@ import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
 
 import 'assignment_override.dart';
+import 'course_settings.dart';
 import 'dataseeding/create_assignment_wrapper.dart';
 import 'dataseeding/create_course_info.dart';
 import 'dataseeding/create_course_wrapper.dart';
@@ -107,6 +108,7 @@ part 'serializers.g.dart';
   Conversation,
   Course,
   CoursePermissions,
+  CourseSettings,
   CourseTab,
   CreateAssignmentInfo,
   CreateAssignmentWrapper,

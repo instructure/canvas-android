@@ -41,9 +41,17 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
 
         val course = model.course?.dataOrNull
         val events = mapEventsResultToViewState(course?.color ?: 0, model.events, context)
-        val body = model.syllabus?.description?.takeIf { it.isValid() } ?: return SyllabusViewState.LoadedNoSyllabus(events)
+        val body = model.syllabus?.description?.takeIf { it.isValid() }
 
-        return SyllabusViewState.LoadedFull(body, events)
+        return if (events is EventsViewState.Empty && body == null) {
+            SyllabusViewState.LoadedNothing
+        } else if (body == null) {
+            SyllabusViewState.LoadedNoSyllabus(events)
+        } else if (events is EventsViewState.Empty) {
+            SyllabusViewState.LoadedNoEvents(body)
+        } else {
+            SyllabusViewState.LoadedFull(body, events)
+        }
     }
 
     private fun mapEventsResultToViewState(color: Int, eventsResult: DataResult<List<ScheduleItem>>?, context: Context): EventsViewState {

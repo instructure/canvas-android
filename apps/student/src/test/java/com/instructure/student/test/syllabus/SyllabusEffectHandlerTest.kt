@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
@@ -69,6 +70,9 @@ class SyllabusEffectHandlerTest : Assert() {
         every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
+        }
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
@@ -90,6 +94,9 @@ class SyllabusEffectHandlerTest : Assert() {
         mockkObject(CourseManager)
         every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(course)
+        }
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
         mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
@@ -138,6 +145,9 @@ class SyllabusEffectHandlerTest : Assert() {
         every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(course)
         }
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
+        }
 
         mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
@@ -171,6 +181,9 @@ class SyllabusEffectHandlerTest : Assert() {
         mockkObject(CourseManager)
         every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(course)
+        }
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
         mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
@@ -206,10 +219,66 @@ class SyllabusEffectHandlerTest : Assert() {
         every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(course)
         }
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
+        }
 
         mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
+        }
+        every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.CALENDAR, any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(calendarEvents)
+        }
+
+        connection.accept(SyllabusEffect.LoadData(courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `LoadData with disallowed summary results in DataLoaded with empty events`() {
+        val courseId = 1L
+        val itemCount = 3
+        val now = Date().time
+        val assignments = List(itemCount) {
+            ScheduleItem(
+                itemId = it.toString(),
+                itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+                startAt = Date(now + (1000 * it)).toApiString())
+        }
+        val calendarEvents = List(itemCount) {
+            ScheduleItem(
+                itemId = (it + assignments.size).toString(),
+                itemType = ScheduleItem.Type.TYPE_CALENDAR,
+                startAt = Date(now + (1000 * it)).toApiString())
+        }
+        val sortedEvents = mutableListOf<ScheduleItem>()
+        for (i in 0 until itemCount) {
+            sortedEvents.add(assignments[i])
+            sortedEvents.add(calendarEvents[i])
+        }
+
+        val expectedEvent = SyllabusEvent.DataLoaded(
+            DataResult.Success(course),
+            DataResult.Success(emptyList())
+        )
+
+        mockkObject(CourseManager)
+        every { CourseManager.getCourseSettingsAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = false))
+        }
+        every { CourseManager.getCourseWithSyllabusAsync(courseId, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(course)
+        }
+
+        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(assignments)
         }
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.CALENDAR, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(calendarEvents)

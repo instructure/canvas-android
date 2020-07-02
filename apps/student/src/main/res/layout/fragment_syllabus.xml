@@ -73,4 +73,10 @@
             android:layout_height="match_parent" />
 
     </com.instructure.pandautils.views.MultiSwipeRefreshLayout>
+
+    <com.instructure.student.view.EmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </LinearLayout>

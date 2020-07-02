@@ -210,7 +210,7 @@ class _$AlertSerializer implements StructuredSerializer<Alert> {
 }
 
 class _$AlertTypeSerializer implements PrimitiveSerializer<AlertType> {
-  static const Map<String, String> _toWire = const <String, String>{
+  static const Map<String, Object> _toWire = const <String, Object>{
     'assignmentMissing': 'assignment_missing',
     'assignmentGradeHigh': 'assignment_grade_high',
     'assignmentGradeLow': 'assignment_grade_low',
@@ -219,7 +219,7 @@ class _$AlertTypeSerializer implements PrimitiveSerializer<AlertType> {
     'courseAnnouncement': 'course_announcement',
     'institutionAnnouncement': 'institution_announcement',
   };
-  static const Map<String, String> _fromWire = const <String, String>{
+  static const Map<Object, String> _fromWire = const <Object, String>{
     'assignment_missing': 'assignmentMissing',
     'assignment_grade_high': 'assignmentGradeHigh',
     'assignment_grade_low': 'assignmentGradeLow',
