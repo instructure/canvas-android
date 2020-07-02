@@ -229,6 +229,12 @@ object CourseManager {
         CourseAPI.getCoursePermissions(courseId, requestedPermissions, adapter, callback, params)
     }
 
+    fun getPermissionsAsync(
+        courseId: Long,
+        requestedPermissions: List<String> = emptyList(),
+        forceNetwork: Boolean = false
+    ) = apiAsync<CanvasContextPermission> { getCoursePermissions(courseId, requestedPermissions, it, forceNetwork) }
+
     @JvmStatic
     fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
