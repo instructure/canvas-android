@@ -14,10 +14,13 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
     private long startTime
     private timings = [:]
     private Project refProject
+    private long buildStartTime
 
     TimingsListener(Project _refProject) {
         refProject = _refProject
+        buildStartTime = System.nanoTime()
     }
+
 
     @Override
     void beforeExecute(Task task) {
@@ -32,6 +35,9 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
 
     @Override
     void buildFinished(BuildResult result) {
+
+        // Compute build time
+        def totalBuildTimeMs = TimeUnit.MILLISECONDS.convert(System.nanoTime() - buildStartTime, TimeUnit.NANOSECONDS)
 
         // Grab the Splunk-mobile token from Bitrise
         def splunkToken = System.getenv("SPLUNK_MOBILE_TOKEN")
@@ -53,12 +59,6 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         // Sort the timings in descending time order, compute our top 10
         timings = timings.sort { -it.value }
         def top10 = timings.take(10).entrySet()
-
-        // Compute the cumulative time for all build tasks
-        def cumulativeTime = 0
-        for(entry in timings) {
-            cumulativeTime += entry.value
-        }
 
         // Figure out our build type
         def buildType = "debug"
@@ -121,7 +121,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
 
         // Construct the JSON payload for our "buildComplete" event
         def payloadBuilder = new groovy.json.JsonBuilder()
-        payloadBuilder buildTime: cumulativeTime,
+        payloadBuilder buildTime: totalBuildTimeMs,
             gradleTasks: startTaskNames,
             apkFilePath: file.path,
             apkSize: fileSizeInMB,
