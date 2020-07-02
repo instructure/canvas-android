@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Sinun on annettava voimassa oleva tunnus.</string>
     <string name="masqueradeErrorDomain">Sinun on kirjoitettava kelvollinen verkkotunnus.</string>
-    <string name="masqueradeError">Ilmeni virhe yritettäessä naamioimista.</string>
+    <string name="masqueradeError">Virhe yritettäessä toimia käyttäjänä.</string>
     <string name="masqueradeInfo">\"Toimi käyttäjänä\" kirjautuu periaatteessa sisään tänä käyttäjänä ilman salasanaa. Voit ryhtyä mihin tahansa toimenpiteeseen ikään kuin olisit tämä käyttäjä, ja muiden käyttäjien näkökulmasta näyttäisi siltä, että sinä olisit suorittanut nämä toimenpiteet. Tarkistuslokeihin kuitenkin kirjataan kuitenkin, että sinä suoritit toimenpiteet tämän käyttäjän puolesta.</string>
     <string name="masqueradingAs">Toimit käyttäjänä %s</string>
-    <string name="stopActingAsTitle">Lopeta toimimasta käyttäjänä...</string>
+    <string name="stopActingAsTitle">Lopeta toimimasta...</string>
     <string name="stopActingAsMessage">Lopetat toimimasta käyttäjänä %s ja palaat tilillesi.</string>
     <string name="weMadeChanges">Olemme tehneet muutamia muutoksia.</string>
     <string name="whatsNewText">Mitä uutta</string>

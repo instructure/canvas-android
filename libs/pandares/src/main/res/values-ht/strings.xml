@@ -50,6 +50,10 @@
     <string name="submitted">Soumèt</string>
     <string name="notSubmitted">Pa Soumèt</string>
     <string name="allowedFileTypes">Tip Fichye Otorize</string>
+    <string name="attempts">Tantativ</string>
+    <string name="attemptsAllowedLabel">Tantativ Otorize</string>
+    <string name="attemptsUsedLabel">Tantativ Itilize</string>
+    <string name="noAttemptsLeft">Pa Rete Tantativ</string>
     <string name="resubmitAssignment">Resoumèt Sesyon</string>
 
     <string name="launchExternalTool">Lanse Zouti Eksteryè</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Ajoute Mesaj</string>
     <string name="monologue">Monològ</string>
     <string name="noItemsToDisplayShort">Pa gen atik pou afiche</string>
-    <string name="emptyCalendarDate">Pa gen Anyen ki Planifye Pou</string>
-    <string name="emptyCalendarWeek">Pa gen Anyen ki Planifye Pou Semenn</string>
-    <string name="emptyCalendarMonth">Pa gen Anyen ki Planifye Pou Mwa</string>
-    <string name="selectCanvasCalendars">(Chwazi jiska 10 Kalandriye</string>
-    <string name="contentDesc_colored_calendar_indicator">Endikatè kalandriye kolorye</string>
-    <string name="noDatesSelected">Tanpri chwazi yon dat</string>
     <string name="Todo">Pou Fè</string>
     <string name="todoFilter">Filtè Kou</string>
     <string name="filterByEllipsis">Filtre pa</string>
     <string name="favoritedCoursesLabel">Kou Prefere</string>
     <string name="Event">Aktivite</string>
-    <string name="eventSuccessfulCreation">Aktivite kreye kòrèkteman</string>
     <string name="eventSuccessfulDeletion">Aktivite efase kòrèkteman</string>
-    <string name="newEvent">Nouvo Aktivite</string>
-    <string name="enterTitle">Entre Tit</string>
-    <string name="enterLocation">Entre Anplasman</string>
-    <string name="addNote">Ajoute Nòt</string>
-    <string name="titleIconDescription">Tiit Ikòn</string>
-    <string name="dateIconDescription">Dat Ikòn</string>
     <string name="timeIconDescription">Ikòn Lè</string>
-    <string name="locationIconDescription">Anplasman Ikòn</string>
-    <string name="noteIconDescription">Nòt Ikòn</string>
     <string name="toDoTurnIn">Aktive</string>
     <string name="toDoNoDueDate">San Delè</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Voye Mesaj</string>
     <string name="userAvatar">Avata Itilizatè</string>
 
-    <string name="calendarIcon">Ikòn Kalandriye</string>
     <string name="assignmentIcon">Ikòn Sesyon</string>
     <string name="announcementIcon">Ikòn Anons</string>
     <string name="conversationIcon">Ikòn Konvèsasyon</string>
@@ -430,11 +418,10 @@
     <string name="modified">Dènye Modifikasyon:</string>
     <string name="lastModified">Dènye Modifikasyon: %1$s</string>
 
-    <string name="startMasquerading">Kòmanse Degizman</string>
-    <string name="stopMasquerading">Kanpe Degizman</string>
+    <string name="startMasquerading">Kòmanse Pase Pou Itilizatè</string>
+    <string name="stopMasquerading">Sispann Pase Pou Itilizatè</string>
     <string name="userId">ID Itilizatè</string>
-    <string name="masqueradeFail">Gen yon erè ki fèt pandan w t ap eseye degize a</string>
-
+    <string name="masqueradeFail">Te gen erè pandan w ap eseye pase pou itilizatè</string>
     <string name="emptyId">ID a pa kapab vid</string>
 
     <string name="goToQuiz">Ale nan Quiz</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalandriye kòmanse nan Lendi</string>
     <string name="profile">Pwofil</string>
 
     <string name="noSubject">(Pa gen Sijè)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Preferans Kont</string>
     <string name="pinAndFingerprint">PIN ak Anprent</string>
 
+    <string name="pairWithObserver">Asosye avèk Obsèvatè</string>
+    <string name="pairWithObserverDetails">Fè paran w eskane Kòd QR sa a ak app Canvas Parent lan pou li kapab asosye ak ou. Kòd sa a ap ekspire nan sèt jou oswa aprè yon itilizasyon.</string>
+    <string name="pairingCodeLabel">Kòd Kouplaj:\u0020</string>
+    <string name="pairingCodeErrorTitle">Erè Kòd Kouplaj</string>
+    <string name="pairingCodeErrorDescription">Enposib pou rekipere kòd kouplaj la. Fonksyon sa a se sèlman pou elèv.</string>
     <string name="launchSpeedgrader">Ouvri Speedgrader</string>
 
     <string name="search_todo">lis tout sa pou fè</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Jou</string>
-    <string name="calendarWeek">Semenn</string>
-    <string name="calendarMonth">Mwa</string>
-    <string name="selectCalendars">Chwazi Kalandriye</string>
     <string name="createNewCalendarEvent">Kreye Nouvo Aktivite</string>
-    <string name="calendarDialog10Warning">Ou ka chwazi sèlman 10 kalandriye pou afiche</string>
-    <string name="calendarDialogNoneWarning">Tanpri chwazi pou pi piti yon Kalandriye</string>
     <string name="enableFunMode">Fèmen Panda a</string>
 
     <string name="accountNotifications">Anons</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Fichye apèsi imaj</string>
     <string name="pdfError">Gen yon erè ki fèt pandan esè chajman PDF sa a.</string>
 
+    <string name="featureNotAllowedInStudentView">Nou byen regrèt sa! Yo pa otorize fonksyon sa a nan afichaj elèv.</string>
+    <string name="nothingToSeeHere">Pa Gen Anyen pou Wè La a</string>
+    <string name="unsupportedFeature">Fonksyon ki pa Valide</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Ajoute Elèv</string>
     <string name="addChildSubTitle">Antre kòd kouplaj elèv yo ba ou a.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Nòt aprè piblikasyon</string>
     <string name="gradeOverride">Ranplasman nòt</string>
     <string name="currentGrade">Nòt aktyèl</string>
+
+    <string name="opensInCanvasStudent">Ouvri nan Canvas Student</string>
+    <string name="tab_student_view">Afichaj Elèv</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Antèt chwazi: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Konferans Fini</string>
     <string name="conferenceDetails">Detay Konferans</string>
     <string name="recordings">Anrejistreman</string>
+    <string name="conferenceInProgress">Konferans ap fèt</string>
 </resources>

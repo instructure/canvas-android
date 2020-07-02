@@ -382,6 +382,9 @@
     <string name="notificationChannelNamePrimary">一般的な Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">通知の詳細設定は、Canvas キャンバス通知設定のセクションで行うことができます。</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%dの新規通知</item>
+    </plurals>
     <string name="copyLinkAddress">リンクアドレスをコピー</string>
     <string name="copyLink">リンクをコピー</string>
     <string name="linkCopied">リンクがコピーされました</string>

@@ -239,6 +239,9 @@
     <string name="submission_status_excused">По уважительной причине</string>
     <string name="last_login_format">Последний вход: %s</string>
 
+    <string name="muteGrades">Скрыть оценки</string>
+    <string name="unmuteGrades">Разблокировать оценки</string>
+    <string name="gradesMutedLabel">Оценки скрыты</string>
     <string name="turnOnAnonymousGrading">Включить анонимное оценивание</string>
     <string name="turnOffAnonymousGrading">Отключить анонимное оценивание</string>
     <string name="anonymousGradingLabel">Анонимное Оценивание</string>
@@ -424,9 +427,7 @@
 
   <string name="not_a_teacher">Не преподаватель?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Одно из наших других приложений может подойти лучше. Прикоснитесь один раз для входа в Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Оценка</string>
+    <string name="sg_tab_grade">Оценка</string>
     <string name="sg_tab_comments">Комментарии</string>
     <string name="sg_tab_files">Файлы</string>
     <string name="filter_submissions">Фильтр отправок</string>
@@ -634,13 +635,6 @@
         <item quantity="other">Вопросы %d</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s минута</item>
-        <item quantity="few">%s минут</item>
-        <item quantity="many">%s минут</item>
-        <item quantity="other">%s минут</item>
-    </plurals>
-
     <string name="discussion_details">Сведения об обсуждении</string>
     <string name="discussions_pinned">Прикреплен</string>
     <string name="discussions_unpinned">Дискуссии</string>
@@ -658,7 +652,6 @@
     <string name="discussions_reply">Ответить</string>
     <string name="discussions_edit">Редактировать</string>
     <string name="discussions_forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
-    <string name="discussions_unknown_author">Неизвестный автор</string>
     <string name="discussions_delete">Удалить дискуссию</string>
     <string name="discussions_delete_title">Удалить дискуссию?</string>
     <string name="discussions_delete_message">Это приведет к удалению всей дискуссии и цепочки.</string>
@@ -755,7 +748,6 @@
     <string name="privacyPolicy">Политика конфиденциальности</string>
     <string name="EULA">Лицензионный договор</string>
     <string name="termsOfUse">Условия использования</string>
-    <string name="openSource">Открытый исходный код</string>
     <string name="searchGuides">Поиск в руководствах Canvas</string>
     <string name="searchGuidesDetails">Найти ответы на общие вопросы</string>
     <string name="reportProblem">Сообщить о проблеме</string>
@@ -809,7 +801,6 @@
     <string name="filterPeople">Фильтрация людей</string>
     <string name="loadMore">Загрузить еще</string>
     <string name="latestStudentActivityAtFormatted">Самая последняя работа на %1$s в %2$s.</string>
-    <string name="sectionFormatted">Раздел: %s</string>
     <string name="errorLoadingStudentContextCard">Невозможно загрузить детали для данного пользователя.</string>
     <string name="enrollmentTypeStudent">Студент</string>
     <string name="enrollmentTypeTeacher">Преподаватель</string>
@@ -926,8 +917,6 @@
     <string name="allSections">Все разделы</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
-    <string name="downloading">Загрузка...</string>
-
+    <string name="downloading">Выполняется скачивание&#8230;</string>
 </resources>

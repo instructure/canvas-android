@@ -50,6 +50,10 @@
     <string name="submitted">Soumis</string>
     <string name="notSubmitted">Non soumis</string>
     <string name="allowedFileTypes">Types de fichiers autorisés</string>
+    <string name="attempts">Tentatives</string>
+    <string name="attemptsAllowedLabel">Tentatives autorisées</string>
+    <string name="attemptsUsedLabel">Tentatives utilisées</string>
+    <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
 
     <string name="launchExternalTool">Lancer l\'outil externe</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Ajouter message</string>
     <string name="monologue">Monologue</string>
     <string name="noItemsToDisplayShort">Pas d\'éléments à afficher</string>
-    <string name="emptyCalendarDate">Rien n\'est planifié</string>
-    <string name="emptyCalendarWeek">Rien n\'est planifié pour la semaine</string>
-    <string name="emptyCalendarMonth">Rien n\'est planifié pour le mois</string>
-    <string name="selectCanvasCalendars">Sélectionner jusqu\'à 10 calendriers</string>
-    <string name="contentDesc_colored_calendar_indicator">Indicateur d\'agenda coloré</string>
-    <string name="noDatesSelected">Veuillez choisir une date</string>
     <string name="Todo">À faire</string>
     <string name="todoFilter">Filtrer les cours</string>
     <string name="filterByEllipsis">Filtrer par ....</string>
     <string name="favoritedCoursesLabel">Cours favoris</string>
     <string name="Event">Événement</string>
-    <string name="eventSuccessfulCreation">L\'événement a été créé avec succès</string>
     <string name="eventSuccessfulDeletion">L\'événement a été supprimé avec succès</string>
-    <string name="newEvent">Nouvel événement</string>
-    <string name="enterTitle">Saisir un titre</string>
-    <string name="enterLocation">Saisir un lieu</string>
-    <string name="addNote">Ajouter une note</string>
-    <string name="titleIconDescription">Icône de titre</string>
-    <string name="dateIconDescription">Icône de date</string>
     <string name="timeIconDescription">Icône temps</string>
-    <string name="locationIconDescription">Icône de lieu</string>
-    <string name="noteIconDescription">Icône de note</string>
     <string name="toDoTurnIn">Rendre</string>
     <string name="toDoNoDueDate">Pas de date limite de rendu</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Envoyer message</string>
     <string name="userAvatar">Avatar de l\'utilisateur</string>
 
-    <string name="calendarIcon">Icône de calendrier</string>
     <string name="assignmentIcon">Icône de devoir</string>
     <string name="announcementIcon">Icône d\'annonce</string>
     <string name="conversationIcon">Icône de conversation</string>
@@ -430,11 +418,10 @@
     <string name="modified">Dernièrement modifié :</string>
     <string name="lastModified">Dernièrement modifié : %1$s</string>
 
-    <string name="startMasquerading">Commencer la personnification</string>
-    <string name="stopMasquerading">Cesser de personnifier</string>
+    <string name="startMasquerading">Commencer à agir en tant qu\'utilisateur</string>
+    <string name="stopMasquerading">Cesser d\'agir en tant qu\'utilisateur</string>
     <string name="userId">ID utilisateur</string>
-    <string name="masqueradeFail">Une erreur est survenue lors de l\'essai de personnification</string>
-
+    <string name="masqueradeFail">Une erreur est survenue lors de la tentative d\'agir au nom d’un utilisateur.</string>
     <string name="emptyId">L\'identifiant ne peut être vierge</string>
 
     <string name="goToQuiz">Aller au questionnaire</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Le calendrier commence lundi</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Aucun sujet)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Préférences du compte</string>
     <string name="pinAndFingerprint">PIN et empreinte digitale</string>
 
+    <string name="pairWithObserver">Paire avec l\'observateur</string>
+    <string name="pairWithObserverDetails">Faites scanner ce code QR par vos parents depuis l’application Canvas Parent pour les jumeler à vous. Ce code expirera dans sept jours, ou lorsqu\'il aura été utilisé une fois.</string>
+    <string name="pairingCodeLabel">Code de jumelage :\u0020</string>
+    <string name="pairingCodeErrorTitle">Erreur de code de jumelage</string>
+    <string name="pairingCodeErrorDescription">Impossible de récupérer un code de jumelage. Cette fonctionnalité n’est disponible que pour les élèves.</string>
     <string name="launchSpeedgrader">Lancer Speedgrader</string>
 
     <string name="search_todo">tâche à faire tâches à faire liste des tâches à faire</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Jour</string>
-    <string name="calendarWeek">Semaine</string>
-    <string name="calendarMonth">Mois</string>
-    <string name="selectCalendars">Sélectionner des calendriers</string>
     <string name="createNewCalendarEvent">Créer un nouvel événement</string>
-    <string name="calendarDialog10Warning">Vous pouvez seulement choisir 10 calendriers à afficher</string>
-    <string name="calendarDialogNoneWarning">Veuillez au moins choisir un calendrier</string>
     <string name="enableFunMode">Désactiver les pandas</string>
 
     <string name="accountNotifications">Annonces</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Image de prévisualisation de fichier</string>
     <string name="pdfError">Une erreur est survenue lors du chargement de ce PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Désolé ! Cette fonctionnalité n’est pas autorisée en vue « Élève »</string>
+    <string name="nothingToSeeHere">Rien à voir ici</string>
+    <string name="unsupportedFeature">Fonction non prise en charge</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Ajouter un étudiant</string>
     <string name="addChildSubTitle">Saisir le code de jumelage de l’étudiant qui vous a été fourni.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Note après publication</string>
     <string name="gradeOverride">Remplacement de la note</string>
     <string name="currentGrade">Note actuelle</string>
+
+    <string name="opensInCanvasStudent">S’ouvre dans Canvas Student</string>
+    <string name="tab_student_view">Affichage élève</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Tête sélectionnée : %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Conférences closes</string>
     <string name="conferenceDetails">Détails de la conférence</string>
     <string name="recordings">Enregistrements</string>
+    <string name="conferenceInProgress">Conférence en cours</string>
 </resources>

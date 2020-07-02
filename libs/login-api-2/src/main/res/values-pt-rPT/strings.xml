@@ -121,10 +121,10 @@
 
     <string name="masqueradeErrorUserId">Você deve inserir um ID de utilizador.</string>
     <string name="masqueradeErrorDomain">Você deve inserir um domínio válido.</string>
-    <string name="masqueradeError">Erro ao tentar disfarçar.</string>
+    <string name="masqueradeError">Erro ao tentar agir como utilizador.</string>
     <string name="masqueradeInfo">\"Atue como\" sendo essencialmente ao iniciar sessão como este usuário sem uma senha. Você poderá tomar qualquer ação como se você fosse esse usuário, e dos pontos de vista de outros usuários, será como se esse usuário as executasse. No entanto, registos de auditoria registam que você foi o único que realizou as ações em nome desse utilizador.</string>
     <string name="masqueradingAs">Você está a agir como %s</string>
-    <string name="stopActingAsTitle">Pare de atuar como...</string>
+    <string name="stopActingAsTitle">Parar de agir como...</string>
     <string name="stopActingAsMessage">Você vai parar de agir como %s e retornar à sua conta.</string>
 
     <string name="weMadeChanges">Nós fizemos algumas alterações.</string>

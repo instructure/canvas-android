@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Ursäktad</string>
     <string name="last_login_format">Senaste inloggning: %s</string>
 
+    <string name="muteGrades">Tysta omdömen</string>
+    <string name="unmuteGrades">Av-tysta omdömen</string>
+    <string name="gradesMutedLabel">Omdömen tystade</string>
     <string name="turnOnAnonymousGrading">Sätt på anonym bedömning</string>
     <string name="turnOffAnonymousGrading">Stäng av anonym bedömning</string>
     <string name="anonymousGradingLabel">Anonym bedömning</string>
@@ -307,7 +310,7 @@
     <!--Course Settings-->
     <string name="course_settings">Kursinställningar</string>
     <string name="course_name">Kursnamn</string>
-    <string name="set_home_to">Ställ in \’Startsida\’på &#8230;</string>
+    <string name="set_home_to">Ställ in ’Startsida’på &#8230;</string>
     <string name="course_activity_stream">Aktivitetsflöde för kurs</string>
     <string name="pages_front_page">Sidornas startsida</string>
     <string name="frontPage">Förstasidan</string>
@@ -315,7 +318,6 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursöversikt</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera inlämningsdatum</string>
     <string name="everyone">Alla</string>
@@ -610,11 +612,6 @@
         <item quantity="other">%d frågor</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minut</item>
-        <item quantity="other">%s minuter</item>
-    </plurals>
-
     <string name="discussion_details">Diskussionsinformation</string>
     <string name="discussions_pinned">Fäst</string>
     <string name="discussions_unpinned">Diskussioner</string>
@@ -632,7 +629,6 @@
     <string name="discussions_reply">Svara</string>
     <string name="discussions_edit">Redigera</string>
     <string name="discussions_forbidden">Svaren är endast synliga för de som har publicerat minst ett svar.</string>
-    <string name="discussions_unknown_author">Okänd författare</string>
     <string name="discussions_delete">Ta bort diskussion</string>
     <string name="discussions_delete_title">Ta bort diskussion?</string>
     <string name="discussions_delete_message">Genom denna åtgärd tas hela diskussionen och tråden bort.</string>
@@ -729,7 +725,6 @@
     <string name="privacyPolicy">Integritetspolicy</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Användningsvillkor</string>
-    <string name="openSource">Öppen källkod</string>
     <string name="searchGuides">Sök i Canvas-guider</string>
     <string name="searchGuidesDetails">Hitta svar på vanliga frågor</string>
     <string name="reportProblem">Rapportera ett problem</string>
@@ -783,7 +778,6 @@
     <string name="filterPeople">Filtrera personer</string>
     <string name="loadMore">Ladda fler</string>
     <string name="latestStudentActivityAtFormatted">Senaste aktivitet %1$s kl. %2$s.</string>
-    <string name="sectionFormatted">Sektion: %s</string>
     <string name="errorLoadingStudentContextCard">Kunde inte ladda detaljer för denna användare.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Lärare</string>
@@ -896,8 +890,6 @@
     <string name="allSections">Alla sektioner</string>
 
     <string name="gauge">Mätare</string>
-    <string name="arc">Båge</string>
     <string name="ltiLaunchFailure">Det här LTI-verktyget kunde inte laddas just nu.</string>
-    <string name="downloading">Laddar ner ...</string>
-
+    <string name="downloading">Laddar ned&#8230;</string>
 </resources>

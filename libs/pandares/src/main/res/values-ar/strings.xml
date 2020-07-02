@@ -53,6 +53,10 @@
     <string name="submitted">تم الإرسال</string>
     <string name="notSubmitted">لم يتم الإرسال</string>
     <string name="allowedFileTypes">أنواع الملفات المسموح بها</string>
+    <string name="attempts">المحاولات</string>
+    <string name="attemptsAllowedLabel">المحاولات المسموح بها</string>
+    <string name="attemptsUsedLabel">المحاولات المستخدمة</string>
+    <string name="noAttemptsLeft">لا توجد محاولات متبقية</string>
     <string name="resubmitAssignment">إعادة إرسال المهمة</string>
 
     <string name="launchExternalTool">تشغيل الأداة الخارجية</string>
@@ -221,28 +225,13 @@
     <string name="addMessage">إضافة رسالة</string>
     <string name="monologue">مونولوج</string>
     <string name="noItemsToDisplayShort">لا توجد عناصر للعرض</string>
-    <string name="emptyCalendarDate">لم يتم تخطيط أي شيء ل</string>
-    <string name="emptyCalendarWeek">لم يتم تخطيط أي شيء للأسبوع</string>
-    <string name="emptyCalendarMonth">لم يتم تخطيط أي شيء للشهر</string>
-    <string name="selectCanvasCalendars">تحديد 10 تقويمات بحد أقصى</string>
-    <string name="contentDesc_colored_calendar_indicator">مؤشر تقويم ملون</string>
-    <string name="noDatesSelected">يرجى تحديد تاريخ</string>
     <string name="Todo">قائمة مهام</string>
     <string name="todoFilter">تصفية المساقات</string>
     <string name="filterByEllipsis">التصفية حسب...</string>
     <string name="favoritedCoursesLabel">المساقات المفضلة</string>
     <string name="Event">الحدث</string>
-    <string name="eventSuccessfulCreation">تم إنشاء الحدث بنجاح</string>
     <string name="eventSuccessfulDeletion">تم حذف الحدث بنجاح</string>
-    <string name="newEvent">حدث جديد</string>
-    <string name="enterTitle">إدخال العنوان</string>
-    <string name="enterLocation">إدخال المكان</string>
-    <string name="addNote">إضافة ملاحظة</string>
-    <string name="titleIconDescription">أيقونة العنوان</string>
-    <string name="dateIconDescription">أيقونة التاريخ</string>
     <string name="timeIconDescription">أيقونة الوقت</string>
-    <string name="locationIconDescription">أيقونة المكان</string>
-    <string name="noteIconDescription">أيقونة الملاحظة</string>
     <string name="toDoTurnIn">التسليم</string>
     <string name="toDoNoDueDate">لا يوجد تاريخ استحقاق</string>
 
@@ -419,7 +408,6 @@
     <string name="sendMessage">إرسال رسالة</string>
     <string name="userAvatar">استعمال الصورة الرمزية</string>
 
-    <string name="calendarIcon">أيقونة التقويم</string>
     <string name="assignmentIcon">أيقونة المهمة</string>
     <string name="announcementIcon">أيقونة الإعلان</string>
     <string name="conversationIcon">أيقونة المحادثة</string>
@@ -453,11 +441,10 @@
     <string name="modified">تاريخ آخر تعديل:</string>
     <string name="lastModified">تاريخ آخر تعديل: %1$s</string>
 
-    <string name="startMasquerading">بدء الإخفاء</string>
-    <string name="stopMasquerading">إيقاف إخفاء الأسماء</string>
+    <string name="startMasquerading">بدء التصرف كمستخدم</string>
+    <string name="stopMasquerading">إيقاف التصرف كمستخدم</string>
     <string name="userId">معرف المستخدم</string>
-    <string name="masqueradeFail">حدث خطأ أثناء محاولة القيام بالإخفاء</string>
-
+    <string name="masqueradeFail">حدث خطأ ما عند محاولة التصرف كمستخدم</string>
     <string name="emptyId">لا يمكن ترك المعرف فارغًا</string>
 
     <string name="goToQuiz">الانتقال إلى الاختبار</string>
@@ -592,7 +579,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">يبدأ التقويم يوم الإثنين</string>
     <string name="profile">ملف التعريف</string>
 
     <string name="noSubject">(لا يوجد أي موضوع)</string>
@@ -662,6 +648,11 @@
     <string name="accountPreferences">تفضيلات الحساب</string>
     <string name="pinAndFingerprint">PIN وبصمة الأصبع</string>
 
+    <string name="pairWithObserver">الإقران بالمراقب</string>
+    <string name="pairWithObserverDetails">اطلب من أحد الوالدين مسح رمز QR من تطبيق Canvas Parent لإقرانه بك. ستنتهي صلاحية هذا الرمز خلال سبعة أيام، أو بعد استخدام واحد.</string>
+    <string name="pairingCodeLabel">رمز الإقران:\u0020</string>
+    <string name="pairingCodeErrorTitle">خطأ في رمز الإقران</string>
+    <string name="pairingCodeErrorDescription">يتعذر استرداد رمز الإقران. هذه الميزة مدعومة للطلاب فقط.</string>
     <string name="launchSpeedgrader">فتح SpeedGrader</string>
 
     <string name="search_todo">قائمة ما يجب القيام به</string>
@@ -734,12 +725,7 @@
     <string name="gauge">مقياس</string>
 
     <string name="calendarDay">اليوم</string>
-    <string name="calendarWeek">الأسبوع</string>
-    <string name="calendarMonth">الشهر</string>
-    <string name="selectCalendars">تحديد تقويمات</string>
     <string name="createNewCalendarEvent">إنشاء حدث جديد</string>
-    <string name="calendarDialog10Warning">يمكنك اختيار 10 تقويمات فقط لعرضها</string>
-    <string name="calendarDialogNoneWarning">يرجى اختيار تقويم واحد على الأقل</string>
     <string name="enableFunMode">إيقاف تشغيل الباندا</string>
 
     <string name="accountNotifications">إعلانات</string>
@@ -1061,6 +1047,9 @@
     <string name="filePreviewContentDescription">صورة معاينة الملف</string>
     <string name="pdfError">حدث خطأ أثناء محاولة تحميل ملف PDF هذا.</string>
 
+    <string name="featureNotAllowedInStudentView">عذراً! هذه الميزة غير مسموح بها في طريقة عرض الطالب.</string>
+    <string name="nothingToSeeHere">لا شيء للمشاهدة هنا</string>
+    <string name="unsupportedFeature">ميزة غير مدعومة</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">إضافة طالب</string>
     <string name="addChildSubTitle">أدخل رمز إقران الطالب المقدم لك.</string>
@@ -1106,6 +1095,9 @@
     <string name="gradeAfterPosting">التقدير بعد النشر</string>
     <string name="gradeOverride">تجاوز التقدير</string>
     <string name="currentGrade">التقدير الحالي</string>
+
+    <string name="opensInCanvasStudent">يفتح في Canvas Student</string>
+    <string name="tab_student_view">طريقة عرض الطالب</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">اختر الرأس: %s</string>
@@ -1202,4 +1194,5 @@
     <string name="concludedConferences">المؤتمرات المنجزة</string>
     <string name="conferenceDetails">تفاصيل المؤتمر</string>
     <string name="recordings">التسجيلات</string>
+    <string name="conferenceInProgress">المؤتمر قيد التقدم</string>
 </resources>

@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Algemene Canvas-meldingen</string>
     <string name="notificationChannelDescriptionPrimary">Verdere configuratie van meldingen kan worden uitgevoerd in de sectie Voorkeuren Canvas-meldingen.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nieuwe meldingen</item>
+    </plurals>
     <string name="copyLinkAddress">Linkadres kopiëren</string>
     <string name="copyLink">Link kopieren</string>
     <string name="linkCopied">Link gekopieerd</string>

@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Vnesti morate ID uporabnika.</string>
     <string name="masqueradeErrorDomain">Vnesti morate veljavno domeno.</string>
-    <string name="masqueradeError">Napaka pri poskusu prevzemanja vlog.</string>
+    <string name="masqueradeError">Napaka pri prevzemanju vloge uporabnika.</string>
     <string name="masqueradeInfo">»Nastopajoči v vlogi« se v osnovi prijavlja kot ta uporabnik brez gesla. Lahko boste izvedli katero koli dejanje, kot bi bili ta uporabnik, z vidika drugih uporabnikov pa bo videti, kot da je dejanja izvedel ta uporabnik. Vendar dnevniki dogodkov beležijo, da ste v imenu tega uporabnika dejanja izvedli vi.</string>
     <string name="masqueradingAs">Nastopate v vlogi %s</string>
-    <string name="stopActingAsTitle">Prenehajte nastopati v vlogi ...</string>
+    <string name="stopActingAsTitle">Prenehaj z vlogo ...</string>
     <string name="stopActingAsMessage">Prenehali boste nastopati v vlogi %s in vrnili se boste v svoj račun.</string>
     <string name="weMadeChanges">Uvedli smo nekaj sprememb.</string>
     <string name="whatsNewText">Oglejte si, kaj je novega.</string>

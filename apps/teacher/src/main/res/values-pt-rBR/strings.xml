@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Dispensado</string>
     <string name="last_login_format">Último login: %s</string>
 
+    <string name="muteGrades">Silenciar notas</string>
+    <string name="unmuteGrades">Cancelar silenciamento de notas</string>
+    <string name="gradesMutedLabel">Notas silenciadas</string>
     <string name="turnOnAnonymousGrading">Ativar avaliação anônima</string>
     <string name="turnOffAnonymousGrading">Desativar avaliação anônima</string>
     <string name="anonymousGradingLabel">Avaliação anônima</string>
@@ -307,7 +310,7 @@
     <!--Course Settings-->
     <string name="course_settings">Configurações do curso</string>
     <string name="course_name">Nome do curso</string>
-    <string name="set_home_to">Definir \’Página Inicial\’para...</string>
+    <string name="set_home_to">Definir ’Página Inicial’para...</string>
     <string name="course_activity_stream">Fluxo de atividades do curso</string>
     <string name="pages_front_page">Primeira página das páginas</string>
     <string name="frontPage">Primeira página</string>
@@ -315,7 +318,6 @@
     <string name="assignments_list">Lista de tarefas</string>
     <string name="syllabus">Programa</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Vários prazos de entrega</string>
     <string name="everyone">Todo mundo</string>
@@ -610,11 +612,6 @@
         <item quantity="other">%d perguntas</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minuto</item>
-        <item quantity="other">%s Minutos</item>
-    </plurals>
-
     <string name="discussion_details">Detalhes do fórum</string>
     <string name="discussions_pinned">Fixado</string>
     <string name="discussions_unpinned">Fóruns</string>
@@ -728,7 +725,6 @@
     <string name="privacyPolicy">Política de privacidade</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Termos de Uso</string>
-    <string name="openSource">Código aberto</string>
     <string name="searchGuides">Pesquisar no Canvas Guides</string>
     <string name="searchGuidesDetails">Encontrar respostas para perguntas comuns</string>
     <string name="reportProblem">Relatar um problema</string>
@@ -782,7 +778,6 @@
     <string name="filterPeople">Filtrar pessoas</string>
     <string name="loadMore">Carregar mais</string>
     <string name="latestStudentActivityAtFormatted">Última atividade em %1$s às %2$s.</string>
-    <string name="sectionFormatted">Turma: %s</string>
     <string name="errorLoadingStudentContextCard">Incapaz de carregar detalhes para este usuário.</string>
     <string name="enrollmentTypeStudent">Aluno</string>
     <string name="enrollmentTypeTeacher">Professor</string>
@@ -897,5 +892,4 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Não foi possível carregar esta ferramenta LTI neste momento.</string>
     <string name="downloading">Baixando...</string>
-
 </resources>

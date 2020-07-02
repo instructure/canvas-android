@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
@@ -50,6 +50,10 @@
     <string name="submitted">Submitted</string>
     <string name="notSubmitted">Not Submitted</string>
     <string name="allowedFileTypes">Allowable File Types</string>
+    <string name="attempts">Attempts</string>
+    <string name="attemptsAllowedLabel">Attempts Allowed</string>
+    <string name="attemptsUsedLabel">Attempts Used</string>
+    <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
@@ -222,28 +226,13 @@
     <string name="addMessage">Add Message</string>
     <string name="monologue">Monologue</string>
     <string name="noItemsToDisplayShort">No items to display</string>
-    <string name="emptyCalendarDate">Nothing Planned For</string>
-    <string name="emptyCalendarWeek">Nothing Planned For The Week</string>
-    <string name="emptyCalendarMonth">Nothing Planned For The Month</string>
-    <string name="selectCanvasCalendars">Select Up To 10 Calendars</string>
-    <string name="contentDesc_colored_calendar_indicator">Colored calendar indicator</string>
-    <string name="noDatesSelected">Please select a date</string>
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
     <string name="favoritedCoursesLabel">Favorited Courses</string>
     <string name="Event">Event</string>
-    <string name="eventSuccessfulCreation">Event was successfully created</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
-    <string name="newEvent">New Event</string>
-    <string name="enterTitle">Enter Title</string>
-    <string name="enterLocation">Enter Location</string>
-    <string name="addNote">Add Note</string>
-    <string name="titleIconDescription">Title Icon</string>
-    <string name="dateIconDescription">Date Icon</string>
     <string name="timeIconDescription">Time Icon</string>
-    <string name="locationIconDescription">Location Icon</string>
-    <string name="noteIconDescription">Note Icon</string>
     <string name="toDoTurnIn">Turn in</string>
     <string name="toDoNoDueDate">No Due Date</string>
 
@@ -400,7 +389,6 @@
     <string name="sendMessage">Send Message</string>
     <string name="userAvatar">User Avatar</string>
 
-    <string name="calendarIcon">Calendar Icon</string>
     <string name="assignmentIcon">Assignment Icon</string>
     <string name="announcementIcon">Announcement Icon</string>
     <string name="conversationIcon">Conversation Icon</string>
@@ -435,10 +423,10 @@
     <string name="modified">Last Modified:</string>
     <string name="lastModified">Last Modified: %1$s</string>
 
-    <string name="startMasquerading">Start Masquerading</string>
-    <string name="stopMasquerading">Stop Masquerading</string>
+    <string name="startMasquerading">Start Acting As User</string>
+    <string name="stopMasquerading">Stop Acting As User</string>
     <string name="userId">User ID</string>
-    <string name="masqueradeFail">There was an error when trying to masquerade</string>
+    <string name="masqueradeFail">There was an error when trying to act as user</string>
 
     <string name="emptyId">The ID cannot be blank</string>
 
@@ -578,7 +566,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Calendar starts on Monday</string>
     <string name="profile">Profile</string>
 
     <string name="noSubject">(No Subject)</string>
@@ -649,6 +636,11 @@
     <string name="profileSettings">Profile Settings</string>
     <string name="accountPreferences">Account Preferences</string>
     <string name="pinAndFingerprint">PIN and Fingerprint</string>
+    <string name="pairWithObserver">Pair with Observer</string>
+    <string name="pairWithObserverDetails">Have your parent scan this QR code from the Canvas Parent app to pair with you. This code will expire in seven days, or after one use.</string>
+    <string name="pairingCodeLabel">Pairing Code:\u0020</string>
+    <string name="pairingCodeErrorTitle">Pairing Code Error</string>
+    <string name="pairingCodeErrorDescription">Unable to retrieve a pairing code. This feature is only supported for students.</string>
 
     <string name="launchSpeedgrader">Open Speedgrader</string>
 
@@ -722,12 +714,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Day</string>
-    <string name="calendarWeek">Week</string>
-    <string name="calendarMonth">Month</string>
-    <string name="selectCalendars">Select Calendars</string>
     <string name="createNewCalendarEvent">Create New Event</string>
-    <string name="calendarDialog10Warning">You may only choose 10 Calendars to display</string>
-    <string name="calendarDialogNoneWarning">Please select at least one Calendar</string>
     <string name="enableFunMode">Turn off the pandas</string>
 
     <string name="accountNotifications">Announcements</string>`
@@ -1026,6 +1013,9 @@
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
     <string name="pdfError">An error occurred trying to load this PDF.</string>
+    <string name="featureNotAllowedInStudentView">So sorry! This feature isn\'t allowed in student view.</string>
+    <string name="nothingToSeeHere">Nothing To See Here</string>
+    <string name="unsupportedFeature">Unsupported Feature</string>
 
     <!-- Parent Strings -->
     <string name="addChildTitle">Add Student</string>
@@ -1065,6 +1055,9 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
+    <string name="opensInCanvasStudent">Opens in Canvas Student</string>
+    <string name="tab_student_view">Student View</string>
+
 
     <!-- Panda Avatar Content Descriptions -->
 
@@ -1158,4 +1151,5 @@
     <string name="concludedConferences">Concluded Conferences</string>
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
+    <string name="conferenceInProgress">Conference in progress</string>
 </resources>

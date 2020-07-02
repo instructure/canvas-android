@@ -50,6 +50,10 @@
     <string name="submitted">Enviat</string>
     <string name="notSubmitted">No s\'ha enviat</string>
     <string name="allowedFileTypes">Tipus de fitxers admesos</string>
+    <string name="attempts">Intents</string>
+    <string name="attemptsAllowedLabel">Intents permesos</string>
+    <string name="attemptsUsedLabel">Intents utilitzats</string>
+    <string name="noAttemptsLeft">No queda cap intent</string>
     <string name="resubmitAssignment">Torneu a enviar la tasca</string>
     <string name="launchExternalTool">Inicieu l\'eina externa</string>
     <string name="preview">Visualització prèvia</string>
@@ -223,28 +227,13 @@
     <string name="addMessage">Afegeix un missatge</string>
     <string name="monologue">Monòleg</string>
     <string name="noItemsToDisplayShort">No hi ha cap element per mostrar</string>
-    <string name="emptyCalendarDate">No hi ha res planejat per a</string>
-    <string name="emptyCalendarWeek">No hi ha res planejat per a la setmana</string>
-    <string name="emptyCalendarMonth">No hi ha res planejat per al mes</string>
-    <string name="selectCanvasCalendars">Seleccioneu fins a 10 calendaris</string>
-    <string name="contentDesc_colored_calendar_indicator">Indicador de calendari acolorit</string>
-    <string name="noDatesSelected">Seleccioneu una data</string>
     <string name="Todo">Tasques pendents</string>
     <string name="todoFilter">Filtra els cursos</string>
     <string name="filterByEllipsis">Filtra per&#8230;</string>
     <string name="favoritedCoursesLabel">Cursos preferits</string>
     <string name="Event">Esdeveniment</string>
-    <string name="eventSuccessfulCreation">S\'ha creat correctament l\'esdeveniment</string>
     <string name="eventSuccessfulDeletion">S\'ha suprimit correctament l\'esdeveniment</string>
-    <string name="newEvent">Esdeveniment nou</string>
-    <string name="enterTitle">Introduïu el títol</string>
-    <string name="enterLocation">Introduïu la ubicació</string>
-    <string name="addNote">Afegiu una nota</string>
-    <string name="titleIconDescription">Icona del títol</string>
-    <string name="dateIconDescription">Icona de la data</string>
     <string name="timeIconDescription">Icona de l\'hora</string>
-    <string name="locationIconDescription">Icona de la ubicació</string>
-    <string name="noteIconDescription">Icona de la nota</string>
     <string name="toDoTurnIn">Entrega</string>
     <string name="toDoNoDueDate">Sense data de venciment</string>
 
@@ -401,7 +390,6 @@
     <string name="sendMessage">Envia el missatge</string>
     <string name="userAvatar">Avatar d\'usuari</string>
 
-    <string name="calendarIcon">Icona de calendari</string>
     <string name="assignmentIcon">Icona de tasca</string>
     <string name="announcementIcon">Icona d\'anunci</string>
     <string name="conversationIcon">Icona de conversa</string>
@@ -436,11 +424,10 @@
     <string name="modified">Data de la darrera modificació:</string>
     <string name="lastModified">Data de la darrera modificació: %1$s</string>
 
-    <string name="startMasquerading">Inicia l\'emmascarament</string>
-    <string name="stopMasquerading">Atura l\'emmascarament</string>
+    <string name="startMasquerading">Comença a actuar com a usuari</string>
+    <string name="stopMasquerading">Deixa d\'actuar com a usuari</string>
     <string name="userId">ID d\'usuari</string>
-    <string name="masqueradeFail">S\'ha produït un error en intentar emmascarar</string>
-
+    <string name="masqueradeFail">S\'ha produït un error en intentar actuar com a usuari.</string>
     <string name="emptyId">L\'ID no pot quedar en blanc</string>
 
     <string name="goToQuiz">Ves al qüestionari</string>
@@ -579,7 +566,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">El calendari comença el dilluns</string>
     <string name="profile">Perfil</string>
 
     <string name="noSubject">(Sense assumpte)</string>
@@ -651,6 +637,11 @@
     <string name="accountPreferences">Preferències del compte</string>
     <string name="pinAndFingerprint">PIN i empremta digital</string>
 
+    <string name="pairWithObserver">Emparella amb l\'observador</string>
+    <string name="pairWithObserverDetails">Feu que el vostre progenitor escanegi aquest codi QR de l\'aplicació Canvas Parent per emparellar-vos-hi. Aquest codi caducarà en set dies o després d\'un ús.</string>
+    <string name="pairingCodeLabel">Codi d\'emparellament:\u0020</string>
+    <string name="pairingCodeErrorTitle">Error del codi d\'emparellament</string>
+    <string name="pairingCodeErrorDescription">No es pot recuperar un codi d\'emparellament. Aquesta característica només s\'admet per als estudiants.</string>
     <string name="launchSpeedgrader">Obre SpeedGrader</string>
 
     <string name="search_todo">llista de tasques pendents</string>
@@ -723,12 +714,7 @@
     <string name="gauge">Mesura</string>
 
     <string name="calendarDay">Dia</string>
-    <string name="calendarWeek">Setmana</string>
-    <string name="calendarMonth">Mes</string>
-    <string name="selectCalendars">Selecciona calendaris</string>
     <string name="createNewCalendarEvent">Crea un esdeveniment nou</string>
-    <string name="calendarDialog10Warning">Només podeu triar 10 calendaris perquè es mostrin</string>
-    <string name="calendarDialogNoneWarning">Seleccioneu un calendari com a mínim</string>
     <string name="enableFunMode">Desactiva els pandes</string>
 
     <string name="accountNotifications">Anuncis</string>
@@ -1028,6 +1014,9 @@
     <string name="filePreviewContentDescription">Imatge de visualització prèvia de fitxer</string>
     <string name="pdfError">S\'ha produït un error en provar de carregar aquest PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Ho sentim. Aquesta característica no es permet a la vista d\'estudiant.</string>
+    <string name="nothingToSeeHere">No hi ha res per veure aquí</string>
+    <string name="unsupportedFeature">Característica no admesa</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Afegeix un estudiant</string>
     <string name="addChildSubTitle">Introduïu el codi d\'aparellament d\'estudiants que se us ha proporcionat.</string>
@@ -1066,6 +1055,9 @@
     <string name="gradeAfterPosting">Qualificació després de la publicació</string>
     <string name="gradeOverride">Substitució de la qualificació</string>
     <string name="currentGrade">Qualificació actual</string>
+
+    <string name="opensInCanvasStudent">S\'obre al Canvas Student</string>
+    <string name="tab_student_view">Vista d\'estudiant</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Cap triat: %s</string>
@@ -1157,4 +1149,5 @@
     <string name="concludedConferences">Conferències finalitzades</string>
     <string name="conferenceDetails">Detalls de la conferència</string>
     <string name="recordings">Enregistraments</string>
+    <string name="conferenceInProgress">Conferència en curs</string>
 </resources>

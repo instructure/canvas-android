@@ -384,6 +384,9 @@
     <string name="notificationChannelNamePrimary">Generelle Canvas Notifications</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligere konfigurering av varsler kan gjøres inne i seksjonen for Canvas Notification Preferences.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nye varslinger</item>
+    </plurals>
     <string name="copyLinkAddress">Kopier lenke-adresse</string>
     <string name="copyLink">Kopier lenke</string>
     <string name="linkCopied">Lenke kopiert</string>

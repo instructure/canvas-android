@@ -50,6 +50,10 @@
     <string name="submitted">Poslano</string>
     <string name="notSubmitted">Ni oddano.</string>
     <string name="allowedFileTypes">Dovoljene vrste datotek</string>
+    <string name="attempts">Poskusi</string>
+    <string name="attemptsAllowedLabel">Število dovoljenih poskusov</string>
+    <string name="attemptsUsedLabel">Število poskusov</string>
+    <string name="noAttemptsLeft">Na voljo ni več noben poskus</string>
     <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
 
     <string name="launchExternalTool">Zaženi zunanje orodje</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Dodaj sporočilo</string>
     <string name="monologue">Samogovor</string>
     <string name="noItemsToDisplayShort">Ni elementov za prikaz.</string>
-    <string name="emptyCalendarDate">Ničesar načrtovanega ni za</string>
-    <string name="emptyCalendarWeek">Ničesar načrtovanega ni za teden</string>
-    <string name="emptyCalendarMonth">Ničesar načrtovanega ni za mesec</string>
-    <string name="selectCanvasCalendars">Izberi do 10 koledarjev</string>
-    <string name="contentDesc_colored_calendar_indicator">Barvni kazalnik koledarja</string>
-    <string name="noDatesSelected">Izberite datum.</string>
     <string name="Todo">Čakajoča opravila</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
     <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
     <string name="Event">Dogodek</string>
-    <string name="eventSuccessfulCreation">Dogodek je bil uspešno ustvarjen.</string>
     <string name="eventSuccessfulDeletion">Dogodek je bil uspešno izbrisan.</string>
-    <string name="newEvent">Nov dogodek</string>
-    <string name="enterTitle">Vnos naslova</string>
-    <string name="enterLocation">Vnos lokacije</string>
-    <string name="addNote">Dodaj opombo</string>
-    <string name="titleIconDescription">Ikona naslova</string>
-    <string name="dateIconDescription">Ikona datuma</string>
     <string name="timeIconDescription">Ikona časa</string>
-    <string name="locationIconDescription">Ikona mesta</string>
-    <string name="noteIconDescription">Ikona opombe</string>
     <string name="toDoTurnIn">Oddaj</string>
     <string name="toDoNoDueDate">Ni roka.</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Pošlji sporočilo</string>
     <string name="userAvatar">Avatar uporabnika</string>
 
-    <string name="calendarIcon">Ikona koledarja</string>
     <string name="assignmentIcon">Ikona naloge</string>
     <string name="announcementIcon">Ikona obvestila</string>
     <string name="conversationIcon">Ikona pogovora</string>
@@ -430,11 +418,10 @@
     <string name="modified">Nazadnje prilagojeno:</string>
     <string name="lastModified">Nazadnje prilagojeno: %1$s</string>
 
-    <string name="startMasquerading">Začetek prevzemanja vloge</string>
-    <string name="stopMasquerading">Konec prevzemanja vloge</string>
+    <string name="startMasquerading">Začni z vlogo uporabnika</string>
+    <string name="stopMasquerading">Prenehaj z vlogo uporabnika</string>
     <string name="userId">ID uporabnika</string>
-    <string name="masqueradeFail">Prišlo je do napake pri prevzemanju vloge</string>
-
+    <string name="masqueradeFail">Prišlo je do napake pri prevzemanju vloge uporabnika</string>
     <string name="emptyId">ID ne sme biti prazen.</string>
 
     <string name="goToQuiz">Pojdi na kviz</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Koledar se začne s ponedeljkom.</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Ni kratkega opisa predmeta.)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Prednostne nastavitve računa</string>
     <string name="pinAndFingerprint">Koda PIN in prstni odtis</string>
 
+    <string name="pairWithObserver">Poveži s skritim bralcem</string>
+    <string name="pairWithObserverDetails">Starši se lahko z vami povežejo, tako da preberejo to kodo QR v aplikaciji Canvas Parent. Ta koda poteče v sedmih dneh ali po eni uporabi.</string>
+    <string name="pairingCodeLabel">Koda za seznanjanje:\u0020</string>
+    <string name="pairingCodeErrorTitle">Napaka kode za seznanjanje</string>
+    <string name="pairingCodeErrorDescription">Kode za seznanjanje ni bilo mogoče pridobiti. Ta funkcija je na voljo samo za študente.</string>
     <string name="launchSpeedgrader">Odpri aplikacijo SpeedGrader</string>
 
     <string name="search_todo">Čakajoča opravila Čakajočaopravila seznamopravil seznam opravil seznami opravil seznam opravila</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Merilo</string>
 
     <string name="calendarDay">Dan</string>
-    <string name="calendarWeek">Teden</string>
-    <string name="calendarMonth">Mesec</string>
-    <string name="selectCalendars">Izberi koledarje</string>
     <string name="createNewCalendarEvent">Ustvari nov dogodek</string>
-    <string name="calendarDialog10Warning">Za prikaz lahko izberete le 10 koledarjev.</string>
-    <string name="calendarDialogNoneWarning">Izberite vsaj en koledar.</string>
     <string name="enableFunMode">Izklopi pande</string>
 
     <string name="accountNotifications">Obvestila</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Slika predogleda datoteke</string>
     <string name="pdfError">Med nalaganjem tega PDF je prišlo do napake</string>
 
+    <string name="featureNotAllowedInStudentView">Res nam je žal! Ta funkcija ni dovoljena v pogledu študenta.</string>
+    <string name="nothingToSeeHere">Tu ni ničesar za ogled.</string>
+    <string name="unsupportedFeature">Nepodprta funkcija</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Dodaj študenta</string>
     <string name="addChildSubTitle">Vnesite kodo za vzpostavljanje povezave študentov, ki ste jo prejeli.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Ocena po objavi</string>
     <string name="gradeOverride">Preglasitev ocene</string>
     <string name="currentGrade">Trenutna ocena</string>
+
+    <string name="opensInCanvasStudent">Odpiranje v Canvas Student</string>
+    <string name="tab_student_view">Pogled študenta</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Izbrana glava: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Zaključene konference</string>
     <string name="conferenceDetails">Podrobnosti o konferenci</string>
     <string name="recordings">Snemanja</string>
+    <string name="conferenceInProgress">V teku je konferenca</string>
 </resources>

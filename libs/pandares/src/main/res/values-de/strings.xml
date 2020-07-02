@@ -50,6 +50,10 @@
     <string name="submitted">Abgegeben</string>
     <string name="notSubmitted">Nicht abgegeben</string>
     <string name="allowedFileTypes">Zulässige Dateitypen</string>
+    <string name="attempts">Versuche</string>
+    <string name="attemptsAllowedLabel">Zulässige Versuche</string>
+    <string name="attemptsUsedLabel">Verwendete Versuche</string>
+    <string name="noAttemptsLeft">Keine Versuche übrig</string>
     <string name="resubmitAssignment">Aufgabe neu einreichen</string>
 
     <string name="launchExternalTool">Externes Tool starten</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Nachricht hinzufügen</string>
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Keine Elemente zum Anzeigen</string>
-    <string name="emptyCalendarDate">Nichts geplant</string>
-    <string name="emptyCalendarWeek">Nichts für die Woche geplant</string>
-    <string name="emptyCalendarMonth">Nichts für den Monat geplant</string>
-    <string name="selectCanvasCalendars">Wählen Sie bis zu 10 Kalender</string>
-    <string name="contentDesc_colored_calendar_indicator">Farbige Kalenderanzeige</string>
-    <string name="noDatesSelected">Bitte wählen Sie ein Datum</string>
     <string name="Todo">Zu erledigen</string>
     <string name="todoFilter">Kurse filtern</string>
     <string name="filterByEllipsis">Filtern nach ...</string>
     <string name="favoritedCoursesLabel">Bevorzugte Kurse</string>
     <string name="Event">Ereignis</string>
-    <string name="eventSuccessfulCreation">Das Ereignis wurde erfolgreich erzeugt</string>
     <string name="eventSuccessfulDeletion">Das Ereignis wurde erfolgreich gelöscht</string>
-    <string name="newEvent">Neues Ereignis</string>
-    <string name="enterTitle">Titel eingeben</string>
-    <string name="enterLocation">Standort eingeben</string>
-    <string name="addNote">Hinweis hinzufügen</string>
-    <string name="titleIconDescription">Titel-Symbol</string>
-    <string name="dateIconDescription">Datums-Icon</string>
     <string name="timeIconDescription">Zeitsymbol</string>
-    <string name="locationIconDescription">Standort-Symbol</string>
-    <string name="noteIconDescription">Hinweissymbol</string>
     <string name="toDoTurnIn">Abgeben</string>
     <string name="toDoNoDueDate">Kein Abgabetermin</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Nachricht senden</string>
     <string name="userAvatar">Benutzer-Avatar</string>
 
-    <string name="calendarIcon">Kalender-Symbol</string>
     <string name="assignmentIcon">Aufgaben-Symbol</string>
     <string name="announcementIcon">Ankündigungs-Symbol</string>
     <string name="conversationIcon">Konversations-Symbol</string>
@@ -430,11 +418,10 @@
     <string name="modified">Zuletzt verändert:</string>
     <string name="lastModified">Zuletzt verändert: %1$s</string>
 
-    <string name="startMasquerading">Mit der Maskerade beginnen</string>
-    <string name="stopMasquerading">Maskieren beenden</string>
+    <string name="startMasquerading">Handeln als Benutzer beginnen</string>
+    <string name="stopMasquerading">Handeln als Benutzer beenden</string>
     <string name="userId">Benutzer-ID</string>
-    <string name="masqueradeFail">Beim Versuch der Maskerade ist ein Fehler aufgetreten</string>
-
+    <string name="masqueradeFail">Fehler beim Versuch, als Benutzer zu handeln</string>
     <string name="emptyId">Die ID darf nicht leer sein</string>
 
     <string name="goToQuiz">Zum Quiz gehen</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalender beginnt am Montag</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Kein Betreff)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Kontovoreinstellungen</string>
     <string name="pinAndFingerprint">PIN und Fingerabdruck</string>
 
+    <string name="pairWithObserver">Pairing mit Beobachter</string>
+    <string name="pairWithObserverDetails">Lassen Sie ein Elternteil diesen QR-Code der Canvas Parent-App scannen, um ein Pairing mit Ihnen herzustellen. Dieser Code verfällt nach 7 Tagen oder nach der erstmaligen Verwendung.</string>
+    <string name="pairingCodeLabel">Pairing-Code: \u0020</string>
+    <string name="pairingCodeErrorTitle">Fehler im Pairing-Code</string>
+    <string name="pairingCodeErrorDescription">Pairing-Code konnte nicht abgerufen werden. Diese Funktion wird nur für Studenten unterstützt.</string>
     <string name="launchSpeedgrader">Speedgrader öffnen</string>
 
     <string name="search_todo">Zu erledigen To-Do-Liste</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Tag</string>
-    <string name="calendarWeek">Woche</string>
-    <string name="calendarMonth">Monat</string>
-    <string name="selectCalendars">Kalender auswählen</string>
     <string name="createNewCalendarEvent">Neues Ereignis erstellen</string>
-    <string name="calendarDialog10Warning">Sie dürfen nur max. 10 Kalender für die Anzeige auswählen</string>
-    <string name="calendarDialogNoneWarning">Bitte wählen Sie mind. einen Kalender</string>
     <string name="enableFunMode">Panda ausstellen</string>
 
     <string name="accountNotifications">Announcements</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Dateivorschaubild</string>
     <string name="pdfError">Fehler beim Versuch diese PDF-Datei zu laden</string>
 
+    <string name="featureNotAllowedInStudentView">Tut uns sehr leid! Diese Funktion steht für die Studentenansicht nicht erlaubt.</string>
+    <string name="nothingToSeeHere">Hier gibt es nichts zu sehen</string>
+    <string name="unsupportedFeature">Nicht unterstützte Funktion</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Teilnehmer hinzufügen</string>
     <string name="addChildSubTitle">Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Note nach Posting</string>
     <string name="gradeOverride">Note außer Kraft setzen</string>
     <string name="currentGrade">Aktuelle Note</string>
+
+    <string name="opensInCanvasStudent">Öffnet in Canvas Student</string>
+    <string name="tab_student_view">Studentenansicht</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Gewählte Kopfzeile: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Abgeschlossene Konferenzen</string>
     <string name="conferenceDetails">Details der Konferenz</string>
     <string name="recordings">Aufzeichnungen</string>
+    <string name="conferenceInProgress">Aktive Konferenz</string>
 </resources>

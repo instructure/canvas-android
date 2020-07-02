@@ -388,6 +388,9 @@
     <string name="notificationChannelNamePrimary">Almennar Canvas-tilkynningar</string>
     <string name="notificationChannelDescriptionPrimary">Frekari fínstillingar á tilkynningum má gera innan kjörstillingahluta Canvas-tilkynninga.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nýjar tilkynningar</item>
+    </plurals>
     <string name="copyLinkAddress">Afrita slóð tengils</string>
     <string name="copyLink">Afrita tengil</string>
     <string name="linkCopied">Tengill afritaður</string>

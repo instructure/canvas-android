@@ -391,6 +391,11 @@
     <string name="notificationChannelNamePrimary">Общие уведомления Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Дополнительная настройка уведомлений осуществляется в разделе настроек уведомлений Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="few">%d новых уведомлений</item>
+        <item quantity="many">%d новых уведомлений</item>
+        <item quantity="other">%d новых уведомлений</item>
+    </plurals>
     <string name="copyLinkAddress">Копировать адрес ссылки</string>
     <string name="copyLink">Копировать ссылку</string>
     <string name="linkCopied">Ссылка скопирована</string>

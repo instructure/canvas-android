@@ -227,6 +227,9 @@
     <string name="submission_status_excused">免除</string>
     <string name="last_login_format">最終ログイン：%s</string>
 
+    <string name="muteGrades">成績をミュートする</string>
+    <string name="unmuteGrades">成績をミュート解除する</string>
+    <string name="gradesMutedLabel">成績がミュートされています</string>
     <string name="turnOnAnonymousGrading">匿名での採点をオンにする</string>
     <string name="turnOffAnonymousGrading">匿名での採点をオフにする</string>
     <string name="anonymousGradingLabel">匿名での採点</string>
@@ -412,9 +415,7 @@
 
   <string name="not_a_teacher">講師ではありませんか？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">私たちの他のアプリのうちの1つのほうが、もと合うかもしれません。1つタップしてPlay Storeにアクセスする。</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">成績</string>
+    <string name="sg_tab_grade">成績</string>
     <string name="sg_tab_comments">コメント</string>
     <string name="sg_tab_files">ファイル</string>
     <string name="filter_submissions">フィルターを提出</string>
@@ -598,10 +599,6 @@
         <item quantity="other">%dの質問</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="other">%s分</item>
-    </plurals>
-
     <string name="discussion_details">ディスカッションの詳細</string>
     <string name="discussions_pinned">ピン付けしました</string>
     <string name="discussions_unpinned">ディスカッション</string>
@@ -619,7 +616,6 @@
     <string name="discussions_reply">返信</string>
     <string name="discussions_edit">編集</string>
     <string name="discussions_forbidden">回答は、少なくとも一つの回答を掲載している人にのみ表示されます。</string>
-    <string name="discussions_unknown_author">不明な作成者</string>
     <string name="discussions_delete">ディスカッションを削除</string>
     <string name="discussions_delete_title">ディスカッションを削除しますか？</string>
     <string name="discussions_delete_message">これにより、ディスカッションとスレッド全体が削除されます。</string>
@@ -716,7 +712,6 @@
     <string name="privacyPolicy">プライバシーポリシー</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">利用規約</string>
-    <string name="openSource">ソースを開く</string>
     <string name="searchGuides">Canvas ガイドを検索する</string>
     <string name="searchGuidesDetails">よくある質問に対する回答を見つける</string>
     <string name="reportProblem">問題を報告する</string>
@@ -770,7 +765,6 @@
     <string name="filterPeople">人々をフィルタリングする</string>
     <string name="loadMore">もっと読み込む</string>
     <string name="latestStudentActivityAtFormatted">%1$sへの%2$sでの最新のアクティビティ.</string>
-    <string name="sectionFormatted">セクション：%s</string>
     <string name="errorLoadingStudentContextCard">このユーザーの詳細を読み込むことができません。</string>
     <string name="enrollmentTypeStudent">受講者</string>
     <string name="enrollmentTypeTeacher">講師</string>
@@ -881,8 +875,6 @@
     <string name="allSections">すべてのセクション</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
-    <string name="downloading">ダウンロード中...</string>
-
+    <string name="downloading">読み込み中&#8230;</string>
 </resources>

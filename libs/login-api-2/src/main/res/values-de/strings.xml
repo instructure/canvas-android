@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">Sie müssen eine Benutzer-ID eingeben.</string>
     <string name="masqueradeErrorDomain">Sie müssen eine gültige Domäne eingeben.</string>
-    <string name="masqueradeError">Fehler beim Maskieren.</string>
+    <string name="masqueradeError">Fehler beim Versuch, als Benutzer zu handeln</string>
     <string name="masqueradeInfo">\"Handeln als\" heißt im Grunde, sich als dieser Benutzer ohne Kennwort anzumelden. Sie können beliebige Maßnahmen ergreifen, als wären Sie dieser Benutzer, und aus der Sicht anderer Benutzer wird es sein, als ob dieser Benutzer sie ausführt. Die Audit-Protokolle zeichnen auf, dass Sie die Aktionen im Namen des Benutzers durchgeführt haben.</string>
     <string name="masqueradingAs">Sie handeln als %s.</string>
     <string name="stopActingAsTitle">Aufhören, als Benutzer [...] zu handeln</string>

@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Opravičeno</string>
     <string name="last_login_format">Zadnja prijava: %s</string>
 
+    <string name="muteGrades">Ocene brez sprotnega obveščanja</string>
+    <string name="unmuteGrades">Ocene s sprotnim obveščanjem</string>
+    <string name="gradesMutedLabel">Ocene so brez sprotnega obveščanja.</string>
     <string name="turnOnAnonymousGrading">Vklopi anonimizirano ocenjevanje</string>
     <string name="turnOffAnonymousGrading">Izklopi anonimizirano ocenjevanje</string>
     <string name="anonymousGradingLabel">Anonimno ocenjevanje</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Niste izvajalec?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Ocena</string>
+    <string name="sg_tab_grade">Ocena</string>
     <string name="sg_tab_comments">Komentarji</string>
     <string name="sg_tab_files">Datoteke</string>
     <string name="filter_submissions">Filtriraj oddaje</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d vprašanj</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minuta</item>
-        <item quantity="other">%s minut</item>
-    </plurals>
-
     <string name="discussion_details">Podrobnosti o razpravi</string>
     <string name="discussions_pinned">Pripeto</string>
     <string name="discussions_unpinned">Razprave</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Odgovori</string>
     <string name="discussions_edit">Uredi</string>
     <string name="discussions_forbidden">Odgovori so vidni samo tistim, ki so objavili vsaj en odgovor.</string>
-    <string name="discussions_unknown_author">Neznani avtor</string>
     <string name="discussions_delete">Izbriši razpravo</string>
     <string name="discussions_delete_title">Ali želite odstraniti razpravo?</string>
     <string name="discussions_delete_message">S tem bo izbrisana celotna razprava in nit.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Pravilnik o zasebnosti</string>
     <string name="EULA">Licenčni pogoji za končnega uporabnika</string>
     <string name="termsOfUse">Pogoji uporabe</string>
-    <string name="openSource">Odprti vir</string>
     <string name="searchGuides">Išči vodnike po sistemu Canvas</string>
     <string name="searchGuidesDetails">Poišči odgovore na pogosta vprašanja</string>
     <string name="reportProblem">Poročajte o težavi</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filtriraj sodelujoče</string>
     <string name="loadMore">Naloži več</string>
     <string name="latestStudentActivityAtFormatted">Nedavna dejavnost dne %1$s ob %2$s.</string>
-    <string name="sectionFormatted">Sekcija: %s</string>
     <string name="errorLoadingStudentContextCard">Podrobnosti za tega uporabniku ni mogoče naložiti.</string>
     <string name="enrollmentTypeStudent">Študent</string>
     <string name="enrollmentTypeTeacher">Izvajalec</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Vse sekcije</string>
 
     <string name="gauge">Merilo</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Tega orodja LTI ni mogoče naložiti.</string>
-    <string name="downloading">Prenos ...</string>
-
+    <string name="downloading">Prenašanje&#8230;</string>
 </resources>

@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">Je moet een gebruikers-ID invoeren.</string>
     <string name="masqueradeErrorDomain">Je moet een geldig domein invoeren.</string>
-    <string name="masqueradeError">Fout tijdens maskeren.</string>
+    <string name="masqueradeError">Fout bij poging tot optreden als gebruiker.</string>
     <string name="masqueradeInfo">\"Optreden als\" is in essentie hetzelfde als aanmelden als deze gebruiker zonder wachtwoord. Je kunt alle acties uitvoeren alsof je die gebruiker bent. Gezien vanuit andere gebruikers lijkt het dan ook alsof die acties door die gebruiker zijn uitgevoerd. De controleogboeken laten echter zien dat jij degene was die namens deze gebruiker die acties verricht hebt.</string>
     <string name="masqueradingAs">Je treedt op als %s</string>
     <string name="stopActingAsTitle">Stop met optreden als...</string>

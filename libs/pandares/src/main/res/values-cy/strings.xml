@@ -50,6 +50,10 @@
     <string name="submitted">Wedi Cyflwyno</string>
     <string name="notSubmitted">Heb Gyflwyno</string>
     <string name="allowedFileTypes">Mathau o Ffeiliau a Ganiateir</string>
+    <string name="attempts">Ymgais</string>
+    <string name="attemptsAllowedLabel">Nifer y ceisiadau a ganiateir</string>
+    <string name="attemptsUsedLabel">Ceisiadau wedi’u Defnyddio</string>
+    <string name="noAttemptsLeft">Dim ceisiadau ar ôl</string>
     <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
 
     <string name="launchExternalTool">Lansio Adnodd Allanol</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Ychwanegu Neges</string>
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Dim eitemau i’w dangos</string>
-    <string name="emptyCalendarDate">Dim byd wedi’i gynllunio ar gyfer</string>
-    <string name="emptyCalendarWeek">Dim byd wedi’i gynllunio am yr wythnos</string>
-    <string name="emptyCalendarMonth">Dim byd wedi’i gynllunio am y mis</string>
-    <string name="selectCanvasCalendars">Dewiswch hyd at 10 calendr</string>
-    <string name="contentDesc_colored_calendar_indicator">Dangosydd calendr lliw</string>
-    <string name="noDatesSelected">Dewiswch ddyddiad</string>
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
     <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
     <string name="Event">Digwyddiad</string>
-    <string name="eventSuccessfulCreation">Wedi llwyddo i greu digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
-    <string name="newEvent">Digwyddiad Newydd</string>
-    <string name="enterTitle">Rhowch Deitl</string>
-    <string name="enterLocation">Rhowch Leoliad</string>
-    <string name="addNote">Ychwanegu Nodyn</string>
-    <string name="titleIconDescription">Eicon Teitl</string>
-    <string name="dateIconDescription">Eicon Dyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>
-    <string name="locationIconDescription">Eicon Lleoliad</string>
-    <string name="noteIconDescription">Eicon Nodyn</string>
     <string name="toDoTurnIn">Cyflwyno</string>
     <string name="toDoNoDueDate">Dim Dyddiad Erbyn</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Anfon Neges</string>
     <string name="userAvatar">Avatar Defnyddiwr</string>
 
-    <string name="calendarIcon">Eicon Calendr</string>
     <string name="assignmentIcon">Eicon Aseiniad</string>
     <string name="announcementIcon">Eicon Cyhoeddiad</string>
     <string name="conversationIcon">Eicon Sgwrs</string>
@@ -430,11 +418,10 @@
     <string name="modified">Addaswyd Ddiwethaf:</string>
     <string name="lastModified">Addaswyd Ddiwethaf: %1$s</string>
 
-    <string name="startMasquerading">Dechrau Ffugio</string>
-    <string name="stopMasquerading">Stopio Ffugio</string>
+    <string name="startMasquerading">Dechrau Gweithredu fel Defnyddiwr</string>
+    <string name="stopMasquerading">Stopio Gweithredu fel Defnyddiwr</string>
     <string name="userId">ID Defnyddiwr</string>
-    <string name="masqueradeFail">Gwall wrth geisio ffugio</string>
-
+    <string name="masqueradeFail">Gwall wrth geisio gweithredu fel y defnyddiwr</string>
     <string name="emptyId">Does dim modd i’r ID fod yn wag</string>
 
     <string name="goToQuiz">Mynd i’r Cwis</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Calendr yn dechrau ar ddydd Llun</string>
     <string name="profile">Proffil</string>
 
     <string name="noSubject">(Dim Pwnc)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Blaenoriaethau Cyfrif</string>
     <string name="pinAndFingerprint">PIN ac ôl-bys</string>
 
+    <string name="pairWithObserver">Paru ag Arsyllwr</string>
+    <string name="pairWithObserverDetails">Cael eich rhiant i sganio’r cod QR hwn o ap Canvas Parent i baru â chi. Bydd y cod hwn yn dod i ben mewn saith diwrnod, neu ar ôl cael ei ddefnyddio un waith.</string>
+    <string name="pairingCodeLabel">Cod Paru:\u0020</string>
+    <string name="pairingCodeErrorTitle">Gwall Cod Paru</string>
+    <string name="pairingCodeErrorDescription">Doedd dim modd nôl cod paru Dim ond myfyrwyr sy’n gallu delio â\'r nodwedd hon.</string>
     <string name="launchSpeedgrader">Agor SpeedGrader</string>
 
     <string name="search_todo">Rhestr tasgau i’w gwneud</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Medrydd</string>
 
     <string name="calendarDay">Diwrnod</string>
-    <string name="calendarWeek">Wythnos</string>
-    <string name="calendarMonth">Mis</string>
-    <string name="selectCalendars">Dewiswch Galendrau</string>
     <string name="createNewCalendarEvent">Creu Digwyddiad Newydd</string>
-    <string name="calendarDialog10Warning">Dim ond 10 calendr gewch chi eu dewis i’w dangos</string>
-    <string name="calendarDialogNoneWarning">Dewiswch o leiaf un calendr</string>
     <string name="enableFunMode">Diffodd pandas</string>
 
     <string name="accountNotifications">Cyhoeddiadau</string>
@@ -945,7 +931,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy’r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Delwedd Rhagolwg o Ffeil</string>
     <string name="pdfError">Gwall wrth geisio llwytho’r PDF hwn.</string>
 
+    <string name="featureNotAllowedInStudentView">Sori! Does dim modd defnyddio’r nodwedd hon yn y modd myfyriwr.</string>
+    <string name="nothingToSeeHere">Dim i’w weld yma</string>
+    <string name="unsupportedFeature">Nodwedd Does Dim Modd Delio â Hi</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Ychwanegu Myfyriwr</string>
     <string name="addChildSubTitle">Rhowch y cod paru myfyriwr a roddwyd i chi.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Gradd ar ôl postio</string>
     <string name="gradeOverride">Disodli gradd</string>
     <string name="currentGrade">Gradd bresennol </string>
+
+    <string name="opensInCanvasStudent">Yn agor ym Myfyriwr Canvas</string>
+    <string name="tab_student_view">Gwedd Myfyriwr</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Dewis pen: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Cynadleddau wedi’u Dirwyn i Ben</string>
     <string name="conferenceDetails">Manylion Cynhadledd</string>
     <string name="recordings">Recordiad</string>
+    <string name="conferenceInProgress">Cynhadledd ar waith</string>
 </resources>

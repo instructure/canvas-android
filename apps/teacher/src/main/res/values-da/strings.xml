@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Undskyldt</string>
     <string name="last_login_format">Seneste login: %s</string>
 
+    <string name="muteGrades">Send ikke besked til eleverne om karakterer</string>
+    <string name="unmuteGrades">Send besked til eleverne om karakterer</string>
+    <string name="gradesMutedLabel">Der sendes ikke besked til eleverne om karakterer</string>
     <string name="turnOnAnonymousGrading">Slå Anonym bedømmelse til</string>
     <string name="turnOffAnonymousGrading">Slå Anonym bedømmelse fra</string>
     <string name="anonymousGradingLabel">Anonym karaktergivning</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Ikke en lærer?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">En af vores andre apps kan være bedre egnet. Tryk på et for at besøge Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Karakter</string>
+    <string name="sg_tab_grade">Karakter</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
     <string name="filter_submissions">Filtrér afleveringer</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d spørgsmål</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minut</item>
-        <item quantity="other">%s minutter</item>
-    </plurals>
-
     <string name="discussion_details">Diskussionsdetaljer</string>
     <string name="discussions_pinned">Fastgjort</string>
     <string name="discussions_unpinned">Diskussioner</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Svar</string>
     <string name="discussions_edit">Rediger</string>
     <string name="discussions_forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
-    <string name="discussions_unknown_author">Ukendt forfatter</string>
     <string name="discussions_delete">Slet diskussion</string>
     <string name="discussions_delete_title">Skal diskussion slettes?</string>
     <string name="discussions_delete_message">Dette sletter hele diskussionen og tråden.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Datapolitik</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Betingelser for brug</string>
-    <string name="openSource">Open Source</string>
     <string name="searchGuides">Søg i Canvas-vejledningerne</string>
     <string name="searchGuidesDetails">Find svar på hyppige spørgsmål</string>
     <string name="reportProblem">Indberet et problem</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filtrer brugere</string>
     <string name="loadMore">Indlæs flere</string>
     <string name="latestStudentActivityAtFormatted">Seneste aktivitet d. %1$s kl. %2$s.</string>
-    <string name="sectionFormatted">Sektion: %s</string>
     <string name="errorLoadingStudentContextCard">Kan ikke indlæse detaljer for denne bruger.</string>
     <string name="enrollmentTypeStudent">Studerende</string>
     <string name="enrollmentTypeTeacher">Lærer</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Alle sektioner</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">LTI-værktøjet kunne ikke indlæses på dette tidspunkt.</string>
     <string name="downloading">Downloader ...</string>
-
 </resources>

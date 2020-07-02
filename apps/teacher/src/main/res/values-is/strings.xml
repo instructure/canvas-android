@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Undanþegið</string>
     <string name="last_login_format">Síðasta innskráning: %s</string>
 
+    <string name="muteGrades">Dempa einkunnir</string>
+    <string name="unmuteGrades">Afdempa einkunnir</string>
+    <string name="gradesMutedLabel">Einkunnir dempaðar</string>
     <string name="turnOnAnonymousGrading">Kveiktu á nafnlausri einkunnagjöf</string>
     <string name="turnOffAnonymousGrading">Slökktu á nafnlausri einkunnagjöf</string>
     <string name="anonymousGradingLabel">Nafnlaus einkunnagjöf</string>
@@ -609,11 +612,6 @@
         <item quantity="other">%d spurningar</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Mínúta</item>
-        <item quantity="other">%s mínútur</item>
-    </plurals>
-
     <string name="discussion_details">Upplýsingar umræðu</string>
     <string name="discussions_pinned">Festar</string>
     <string name="discussions_unpinned">Umræður</string>
@@ -894,5 +892,4 @@
     <string name="gauge">Mælir</string>
     <string name="ltiLaunchFailure">Ekki var hægt að hlaða inn LTI verkfærinu í augnablikinu.</string>
     <string name="downloading">Sæki&#8230;</string>
-
 </resources>

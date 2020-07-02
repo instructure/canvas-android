@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Excused</string>
     <string name="last_login_format">Last login: %s</string>
 
+    <string name="muteGrades">Mute Grades</string>
+    <string name="unmuteGrades">Unmute Grades</string>
+    <string name="gradesMutedLabel">Grades Muted</string>
     <string name="turnOnAnonymousGrading">Turn on Anonymous Grading</string>
     <string name="turnOffAnonymousGrading">Turn off Anonymous Grading</string>
     <string name="anonymousGradingLabel">Anonymous grading</string>
@@ -315,7 +318,6 @@
     <string name="assignments_list">Assignments list</string>
     <string name="syllabus">Syllabus</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Multiple Due Dates</string>
     <string name="everyone">Everyone</string>
@@ -418,7 +420,7 @@
   <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps may be a better fit. Tap one to visit the Play Store.</string>
 
-  <string name="sg_tab_grade">Grade</string>
+    <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
     <string name="filter_submissions">Filter Submissions</string>
@@ -608,11 +610,6 @@
     <plurals name="quantityQuestions">
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
-    </plurals>
-
-    <plurals name="minutes">
-        <item quantity="one">%s minute</item>
-        <item quantity="other">%s Minutes</item>
     </plurals>
 
     <string name="discussion_details">Discussion Details</string>
@@ -894,6 +891,5 @@
 
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">This LTI tool could not be loaded at this time.</string>
-    <string name="downloading">Downloading...</string>
-
+    <string name="downloading">Downloading&#8230;</string>
 </resources>

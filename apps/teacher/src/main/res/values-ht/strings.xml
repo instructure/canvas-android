@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Egzante</string>
     <string name="last_login_format">Dènye koneksyon: %s</string>
 
+    <string name="muteGrades">Nòt sou Silans</string>
+    <string name="unmuteGrades">Retire npot sou silans</string>
+    <string name="gradesMutedLabel">Nòt sou silans</string>
     <string name="turnOnAnonymousGrading">Aktive Klasman Anonim</string>
     <string name="turnOffAnonymousGrading">Dezaktive Klasman Anonim</string>
     <string name="anonymousGradingLabel">Klasman Anomin</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Se pa yon pofesè?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Yonn nan lòt aplikasyon nou yo kapab pi bon. Tape sou li pou vizite Play Store la.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Klas</string>
+    <string name="sg_tab_grade">Klas</string>
     <string name="sg_tab_comments">Kòmantè</string>
     <string name="sg_tab_files">Fichye</string>
     <string name="filter_submissions">Soumisyon Filtrasyon</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d kesyon</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minit</item>
-        <item quantity="other">%s Minit</item>
-    </plurals>
-
     <string name="discussion_details">Detay Diskisyon</string>
     <string name="discussions_pinned">Make</string>
     <string name="discussions_unpinned">Diskisyon</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Reponn</string>
     <string name="discussions_edit">Modifye</string>
     <string name="discussions_forbidden">Sèlman moun ki poste yon repons pou pi piti k ap ka wè repons yo.</string>
-    <string name="discussions_unknown_author">Otè Enkoni</string>
     <string name="discussions_delete">Efase Diskisyon</string>
     <string name="discussions_delete_title">Efase Diskisyon?</string>
     <string name="discussions_delete_message">Sa ap efase tout diskisyon ak fil yo.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Politik Konfidansyalite</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Kondisyon Itilizasyon</string>
-    <string name="openSource">Open Source</string>
     <string name="searchGuides">Chèche nan Gid Canvas</string>
     <string name="searchGuidesDetails">Jwenn repons a kesyon yo poze souvan</string>
     <string name="reportProblem">Rapòte yon Pwoblèm</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filtre Moun</string>
     <string name="loadMore">Chaje Plis</string>
     <string name="latestStudentActivityAtFormatted">Dènye aktivite %1$s a %2$s</string>
-    <string name="sectionFormatted">Seksyon: %s</string>
     <string name="errorLoadingStudentContextCard">Pa kapab chaje detay itilizatè sa a.</string>
     <string name="enrollmentTypeStudent">Elèv</string>
     <string name="enrollmentTypeTeacher">Pwofesè</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Tout Seksyon</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Zouti LTI sa a paka chaje pou kounye a.</string>
-    <string name="downloading">Telechajman an kou...</string>
-
+    <string name="downloading">Telechajman...</string>
 </resources>

@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Whakawātea</string>
     <string name="last_login_format">Mātāmuri takiuru %s</string>
 
+    <string name="muteGrades">Ngā kōeke whakangū</string>
+    <string name="unmuteGrades">Ngā kōeke kaore i whakangū</string>
+    <string name="gradesMutedLabel">Ngā kōeke kua whakangūtia</string>
     <string name="turnOnAnonymousGrading">Whakakā i te kōeke ingoamuna</string>
     <string name="turnOffAnonymousGrading">Whakaweto i te kōeke ingoamuna</string>
     <string name="anonymousGradingLabel">Kōeke ingoa kore</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Kaore i te kaiako?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Ko tētahi atu o a mātou taupānga pea he pai ake te uru. Pātō kotahi ki te toro atu ki te Toa Tākaro</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Kōeke</string>
+    <string name="sg_tab_grade">Kōeke</string>
     <string name="sg_tab_comments">Ngā Kōrerorero</string>
     <string name="sg_tab_files">Kōnae</string>
     <string name="filter_submissions">Tātari ngā tukunga</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d pātai</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Meneti</item>
-        <item quantity="other">%s meneti</item>
-    </plurals>
-
     <string name="discussion_details">Kōrerorero Taipitopito</string>
     <string name="discussions_pinned">Kua pinea</string>
     <string name="discussions_unpinned">Ngā Kōrerorero</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Whakautu</string>
     <string name="discussions_edit">Whakatika</string>
     <string name="discussions_forbidden">He kitea anake ki te hunga e kua whakairi i te iti rawa tetahi whakautu whakautu.</string>
-    <string name="discussions_unknown_author">Kaituhi Kaore e Mōhiotia</string>
     <string name="discussions_delete">Muku kōrerorero</string>
     <string name="discussions_delete_title">Muku kōrerorero?</string>
     <string name="discussions_delete_message">Ka mukua te kōrerorero katoa me te aho.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Kaupapahere Tūmataiti</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Ngā ritenga whakamahi</string>
-    <string name="openSource">tuwhera puna</string>
     <string name="searchGuides">Rapu nga Kaiarahi Canvas</string>
     <string name="searchGuidesDetails">Kimihia whakautu ki ngā pātai noa</string>
     <string name="reportProblem">Pūrongo i te Raruraru</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Tātari Tāngata</string>
     <string name="loadMore">Tukuake nui atu</string>
     <string name="latestStudentActivityAtFormatted">Mahi hou i runga i %1$s i %2$s.</string>
-    <string name="sectionFormatted">Wāhanga: %s</string>
     <string name="errorLoadingStudentContextCard">Kaore e taea te uta taipitopito mo tēnei kaiwhakamahi</string>
     <string name="enrollmentTypeStudent">Ākonga</string>
     <string name="enrollmentTypeTeacher">Kaiako</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Ngā Wāhanga katoa</string>
 
     <string name="gauge">Rahi</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Kaore i taea te uta tēnei LTI taonga i tēnei wā.</string>
-    <string name="downloading">Tikiake ana ...</string>
-
+    <string name="downloading">E Tikiake ana...</string>
 </resources>

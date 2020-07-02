@@ -227,6 +227,9 @@
     <string name="submission_status_excused">已请假</string>
     <string name="last_login_format">最后一次登录：%s</string>
 
+    <string name="muteGrades">屏蔽评分</string>
+    <string name="unmuteGrades">取消屏蔽评分</string>
+    <string name="gradesMutedLabel">已屏蔽评分</string>
     <string name="turnOnAnonymousGrading">打开匿名评分</string>
     <string name="turnOffAnonymousGrading">关闭匿名评分</string>
     <string name="anonymousGradingLabel">匿名评分</string>
@@ -412,9 +415,7 @@
 
   <string name="not_a_teacher">不是教师？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">我们的其他应用可能更合适。单击可访问 Play Store。</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">评分</string>
+    <string name="sg_tab_grade">评分</string>
     <string name="sg_tab_comments">评论</string>
     <string name="sg_tab_files">文件</string>
     <string name="filter_submissions">筛选器提交项</string>
@@ -598,10 +599,6 @@
         <item quantity="other">%d 个问题</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="other">%s 分钟</item>
-    </plurals>
-
     <string name="discussion_details">讨论详细信息</string>
     <string name="discussions_pinned">已固定</string>
     <string name="discussions_unpinned">讨论</string>
@@ -619,7 +616,6 @@
     <string name="discussions_reply">回复</string>
     <string name="discussions_edit">编辑</string>
     <string name="discussions_forbidden">回复只对至少发布了一条回复的人可见。</string>
-    <string name="discussions_unknown_author">未知作者</string>
     <string name="discussions_delete">删除讨论</string>
     <string name="discussions_delete_title">删除讨论？</string>
     <string name="discussions_delete_message">这将删除整个讨论和会话。</string>
@@ -716,7 +712,6 @@
     <string name="privacyPolicy">隐私政策</string>
     <string name="EULA">最终用户许可协议</string>
     <string name="termsOfUse">使用条款</string>
-    <string name="openSource">开放源</string>
     <string name="searchGuides">搜索 Canvas 指南</string>
     <string name="searchGuidesDetails">查找常见问题的答案</string>
     <string name="reportProblem">报告问题</string>
@@ -770,7 +765,6 @@
     <string name="filterPeople">筛选人员</string>
     <string name="loadMore">加载更多</string>
     <string name="latestStudentActivityAtFormatted">最新活动时间为 %1$s %2$s。</string>
-    <string name="sectionFormatted">班次：%s</string>
     <string name="errorLoadingStudentContextCard">无法加载此用户的详细信息。</string>
     <string name="enrollmentTypeStudent">学生</string>
     <string name="enrollmentTypeTeacher">教师</string>
@@ -881,8 +875,6 @@
     <string name="allSections">所有班次</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">此时不能加载此 LTI 工具。</string>
     <string name="downloading">正在下载...</string>
-
 </resources>

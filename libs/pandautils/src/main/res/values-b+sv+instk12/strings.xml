@@ -388,6 +388,9 @@
     <string name="notificationChannelNamePrimary">Allmänna Canvas-aviseringar</string>
     <string name="notificationChannelDescriptionPrimary">Ytterligare konfiguration av aviseringar kan göras i sektionen för inställningar för Canvas-aviseringar.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nya aviseringar</item>
+    </plurals>
     <string name="copyLinkAddress">Kopiera länkadress</string>
     <string name="copyLink">Kopiera länk</string>
     <string name="linkCopied">Länken har kopierats</string>

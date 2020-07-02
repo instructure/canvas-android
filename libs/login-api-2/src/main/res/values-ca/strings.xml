@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Heu d\'introduir un ID d\'usuari.</string>
     <string name="masqueradeErrorDomain">Heu d\'introduir un domini vàlid.</string>
-    <string name="masqueradeError">S\'ha produït un error en provar de disfressar-se.</string>
+    <string name="masqueradeError">Error en provar d\'actuar com un usuari.</string>
     <string name="masqueradeInfo">\"Fer de\" consisteix essencialment a iniciar la sessió com a aquest usuari sense cap contrasenya. Podreu dur a terme accions com si fóssiu aquest usuari i, de cara a altres usuaris, serà com si les realitzés aquest usuari. No obstant això, als registres d\'auditoria s\'enregistrarà que vau ser qui va dur a terme les accions en nom d\'aquest usuari.</string>
     <string name="masqueradingAs">Esteu fent de %s</string>
-    <string name="stopActingAsTitle">Deixeu de fer de&#8230;</string>
+    <string name="stopActingAsTitle">Deixa d\'actuar com...</string>
     <string name="stopActingAsMessage">Deixareu de fer de %s i tornareu al vostre compte.</string>
     <string name="weMadeChanges">Hem introduït alguns canvis.</string>
     <string name="whatsNewText">Consulteu les novetats</string>
