@@ -28,7 +28,7 @@ object Const {
     const val APP_NAME = "appName"
     const val PRE_FILL_DATA: String = "preFillData"
 
-    const val URL_CANVAS_NETWORK = "learn.canvas.net"
+    const val URL_CANVAS_NETWORK = "labs.aylearn.net"
 
     const val NO_LOCATION_INDICATOR_INT = -999
 

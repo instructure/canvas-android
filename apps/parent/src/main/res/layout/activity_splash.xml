@@ -24,11 +24,11 @@
     android:background="#FFF"
     android:orientation="vertical">
 
-    <com.instructure.loginapi.login.view.CanvasLoadingView
+    <ImageView
         android:id="@+id/canvasLoadingView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_gravity="center"
-        app:clv_override_color="@color/login_parentAppTheme" />
+        app:srcCompat="@mipmap/ic_launcher_round" />
 
 </FrameLayout>

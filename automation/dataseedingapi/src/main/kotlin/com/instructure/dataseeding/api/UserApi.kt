@@ -83,7 +83,7 @@ object UserApi {
     }
 
     /**
-     * Gets an access token for the userApiModel as described [here](https://canvas.instructure.com/doc/api/file.oauth_endpoints.html)
+     * Gets an access token for the userApiModel as described [here](https://labs.aylearn.net/doc/api/file.oauth_endpoints.html)
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return An [String] access token for the userApiModel. NOTE: the token has an expiration of 1 hour.
      */
@@ -103,7 +103,7 @@ object UserApi {
     }
 
     /**
-     * Gets an authentication code for the userApiModel as described [here](https://canvas.instructure.com/doc/api/file.oauth_endpoints.html)
+     * Gets an authentication code for the userApiModel as described [here](https://labs.aylearn.net/doc/api/file.oauth_endpoints.html)
      * @param[userApiModel] A [CanvasUserApiModel]
      * @return The [String] auth code to be used to acquire the userApiModel's access token
      */

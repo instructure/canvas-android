@@ -28,6 +28,7 @@ import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -138,7 +139,7 @@ class InterwebsToApplication : AppCompatActivity() {
             if (!signedIn) {
                 delay(700)
                 val intent = if (host.isNotBlank()) {
-                    SignInActivity.createIntent(this@InterwebsToApplication, AccountDomain(host))
+                    SignInActivity.createIntent(this@InterwebsToApplication, AccountDomainModel(host))
                 } else {
                     LoginActivity.createIntent(this@InterwebsToApplication)
                 }

@@ -158,7 +158,7 @@ class DioConfig {
     );
   }
 
-  /// Creates a [DioConfig] targeted at core/free-for-teacher API usage (i.e. canvas.instructure.com)
+  /// Creates a [DioConfig] targeted at core/free-for-teacher API usage (i.e. labs.aylearn.net)
   static DioConfig core({
     bool includeApiPath: true,
     Map<String, String> headers: null,
@@ -167,7 +167,7 @@ class DioConfig {
     PageSize pageSize: PageSize.none,
     bool useBetaDomain: false,
   }) {
-    var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://canvas.instructure.com/';
+    var baseUrl = useBetaDomain ? 'https://canvas.beta.instructure.com/' : 'https://labs.aylearn.net/';
     if (includeApiPath) baseUrl += 'api/v1/';
 
     return DioConfig(

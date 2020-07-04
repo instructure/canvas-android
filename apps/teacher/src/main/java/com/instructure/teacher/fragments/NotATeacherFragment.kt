@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_not_a_teacher.*
 
 class NotATeacherFragment : BaseFragment() {
     private val MARKET_URI_PREFIX = "market://details?id="
-    private val CANVAS_ID = "com.instructure.candroid"
+    private val CANVAS_ID = "com.ayouris.aylearn.mobile.student"
     private val PARENT_ID = "com.instructure.parentapp"
 
     override fun layoutResId(): Int = R.layout.fragment_not_a_teacher

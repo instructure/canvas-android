@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -44,6 +45,7 @@ import com.instructure.canvasapi2.StatusCallback;
 import com.instructure.canvasapi2.managers.OAuthManager;
 import com.instructure.canvasapi2.managers.UserManager;
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.models.AccountDomainModel;
 import com.instructure.canvasapi2.models.OAuthTokenResponse;
 import com.instructure.canvasapi2.models.User;
 import com.instructure.canvasapi2.utils.Analytics;
@@ -98,7 +100,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
     boolean mSpecialCase = false;
     private String mAuthenticationURL;
     private HttpAuthHandler mHttpAuthHandler;
-    private AccountDomain mAccountDomain;
+    private AccountDomainModel mAccountDomain;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -264,17 +266,27 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         }
     };
 
-    public AccountDomain getAccountDomain() {
+    public AccountDomainModel getAccountDomain() {
         if (mAccountDomain == null) {
             mAccountDomain = getIntent().getParcelableExtra(ACCOUNT_DOMAIN);
         }
         return mAccountDomain;
     }
 
-    protected void beginSignIn(final AccountDomain accountDomain) {
+    protected void beginSignIn(final AccountDomainModel accountDomain) {
         final String url = accountDomain.getDomain();
-        if(mCanvasLogin == MOBILE_VERIFY_FLOW) { //Skip Mobile Verify
-            final View view = LayoutInflater.from(BaseLoginSignInActivity.this).inflate(R.layout.dialog_skip_mobile_verify, null);
+        Log.d("TAG accountDomain", url);
+        if(mCanvasLogin == MOBILE_VERIFY_FLOW) { //
+            Log.d("TAG MOBILE_VERIFY_FLOW", "MOBILE_VERIFY_FLOW");
+// Skip Mobile Verify
+            ApiPrefs.setProtocol("https");
+            ApiPrefs.setDomain(url);
+            ApiPrefs.setClientId(accountDomain.getClientId());
+            ApiPrefs.setClientSecret(accountDomain.getClientSecret());
+            buildAuthenticationUrl("https", accountDomain, ApiPrefs.getClientId(), false);
+            mWebView.loadUrl(mAuthenticationURL, getHeaders());
+
+           /* final View view = LayoutInflater.from(BaseLoginSignInActivity.this).inflate(R.layout.dialog_skip_mobile_verify, null);
             final EditText protocolEditText = view.findViewById(R.id.mobileVerifyProtocol);
             final EditText clientIdEditText = view.findViewById(R.id.mobileVerifyClientId);
             final EditText clientSecretEditText = view.findViewById(R.id.mobileVerifyClientSecret);
@@ -307,7 +319,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
                     dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK);
                 }
             });
-            dialog.show();
+            dialog.show();*/
         } else {
             MobileVerifyAPI.mobileVerify(url, mMobileVerifyCallback);
         }
@@ -445,7 +457,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
         mAuthenticationURL = authenticationUrl;
     }
 
-    final protected void buildAuthenticationUrl(String protocol, AccountDomain accountDomain, String clientId, boolean forceAuthRedirect) {
+    final protected void buildAuthenticationUrl(String protocol, AccountDomainModel accountDomain, String clientId, boolean forceAuthRedirect) {
         //Get device name for the login request.
         String deviceName = Build.MODEL;
         if (deviceName == null || deviceName.equals("")) {
@@ -476,7 +488,7 @@ public abstract class BaseLoginSignInActivity extends AppCompatActivity implemen
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob");
         } else {
-            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth");
+            builder.appendQueryParameter("redirect_uri", "https://" + domain + "/login/oauth2/auth");
         }
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.

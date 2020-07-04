@@ -121,12 +121,12 @@ void main() {
   group('core options', () {
     test('initializes with a base url', () async {
       final options = DioConfig.core().dio.options;
-      expect(options.baseUrl, 'https://canvas.instructure.com/api/v1/');
+      expect(options.baseUrl, 'https://labs.aylearn.net/api/v1/');
     });
 
     test('initializes with a base url without api path', () async {
       final options = DioConfig.core(includeApiPath: false).dio.options;
-      expect(options.baseUrl, 'https://canvas.instructure.com/');
+      expect(options.baseUrl, 'https://labs.aylearn.net/');
     });
 
     test('initializes with a beta base url', () async {

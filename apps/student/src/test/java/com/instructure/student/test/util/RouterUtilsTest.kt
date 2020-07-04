@@ -61,7 +61,7 @@ class RouterUtilsTest : TestCase() {
     @Test
     fun testCanRouteInternally_courseIdParseWrong() {
         // Written due to a crash found by Crashlytics
-        // See: https://fabric.io/instructure/android/apps/com.instructure.candroid/issues/5a69f6858cb3c2fa63977be1?time=1509408000000%3A1517270399999
+        // See: https://fabric.io/instructure/android/apps/com.ayouris.aylearn.mobile.student/issues/5a69f6858cb3c2fa63977be1?time=1509408000000%3A1517270399999
         assertNull(BaseRouterActivity.parseCourseId("sis_course_id:833"))
     }
 

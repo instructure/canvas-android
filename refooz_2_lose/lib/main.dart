@@ -162,10 +162,10 @@ class _RootState extends State<RootPage> {
 
   getQRCodeInfo() async {
     try {
-      String uri = await BarcodeScanner.scan();
+      String uri = (await BarcodeScanner.scan()).toString();
       if(uri != null) new Timer(Duration(milliseconds: 300), () => assignTeamFlow(uri));
     } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
+      if (e.code == BarcodeScanner.cameraAccessDenied) {
         print('The user did not grant the camera permission!');
       } else {
         print('Unknown error: $e');

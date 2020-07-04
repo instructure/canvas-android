@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.webkit.CookieManager;
 
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.models.AccountDomainModel;
 import com.instructure.canvasapi2.utils.ApiPrefs;
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity;
 import com.instructure.pandautils.services.PushNotificationRegistrationService;
@@ -48,7 +49,7 @@ public class SignInActivity extends BaseLoginSignInActivity {
         //No Widgets in Teacher
     }
 
-    public static Intent createIntent(Context context, AccountDomain accountDomain) {
+    public static Intent createIntent(Context context, AccountDomainModel accountDomain) {
         Intent intent = new Intent(context, SignInActivity.class);
         Bundle extras = new Bundle();
         extras.putParcelable(ACCOUNT_DOMAIN, accountDomain);

@@ -21,13 +21,14 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.loginapi.login.activities.BaseLoginFindSchoolActivity
 
 class FindSchoolActivity : BaseLoginFindSchoolActivity() {
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_studentAppTheme)
 
-    override fun signInActivityIntent(accountDomain: AccountDomain): Intent = SignInActivity.createIntent(this, accountDomain)
+    override fun signInActivityIntent(accountDomain: AccountDomainModel): Intent = SignInActivity.createIntent(this, accountDomain)
 
     companion object {
         fun createIntent(context: Context): Intent = Intent(context, FindSchoolActivity::class.java)

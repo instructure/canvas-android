@@ -50,11 +50,11 @@ android {
     buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
-        applicationId "com.instructure.candroid"
+        applicationId "com.ayouris.aylearn.mobile.student"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 213
-        versionName = '6.8.0'
+        versionCode = 3
+        versionName = '1.0.0'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true

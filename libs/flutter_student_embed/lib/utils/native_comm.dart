@@ -42,7 +42,7 @@ class NativeComm {
 
   static final ShouldPopTracker routeTracker = ShouldPopTracker((shouldPop, statusBarColor) {
     channel.invokeMethod(methodUpdateShouldPop, shouldPop);
-    setStatusBarColor(statusBarColor);
+    setStatusBarColor(Color(0xFFFFFFFF));
   });
 
   /// Called when theme values have been updated and the widget tree should be rebuilt

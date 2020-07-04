@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <string name="app_name" translatable="false">Canvas Teacher</string>
+    <string name="app_name" translatable="false">AyLearn Teacher</string>
     <string name="help_domain" translatable="false">Domain:</string>
     <string name="help_versionNum" translatable="false">Version:</string>
     <string name="help_userId" translatable="false">User ID:</string>
@@ -30,7 +30,7 @@
     <string name="text_space_text" translatable="false">%1$s %2$s</string>
     <string name="conversation_message_title" translatable="false">%1$s,  +%2$s</string>
     <string name="week_assignment_override_title" translatable="false">%1$s (%2$s)</string>
-    <string name="issue_with_canvas" translatable="false">Issue with Canvas Teacher [Android]</string>
+    <string name="issue_with_canvas" translatable="false">Issue with AyLearn Teacher [Android]</string>
     <string name="featureFlagsTitle" translatable="false">Feature Flags</string>
 
     <!-- File Strings -->

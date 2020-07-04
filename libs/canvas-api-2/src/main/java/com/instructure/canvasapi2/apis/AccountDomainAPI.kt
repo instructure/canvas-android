@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 
 import retrofit2.Call
 import retrofit2.http.GET
@@ -29,27 +30,46 @@ import retrofit2.http.Url
 
 
 object AccountDomainAPI {
-    private const val DEFAULT_DOMAIN = "https://canvas.instructure.com/"
+    private const val DEFAULT_DOMAIN = "http://192.168.100.171:8080"
 
     interface AccountDomainInterface {
         @GET
-        fun next(@Url nextURL: String): Call<List<AccountDomain>>
+        fun next(@Url nextURL: String): Call<AccountDomainModel>
 
-        @GET("accounts/search")
-        fun campusSearch(@Query("search_term") term: String): Call<List<AccountDomain>>
+        @GET("abbreviation/labs")
+        fun campusSearch(@Query("abbreviation") term: String): Call<AccountDomainModel>
+
+        @GET("7f465432-7fe9-4028-a36a-6b5305af1193")
+        fun campusSearch2(): Call<AccountDomainModel>
     }
 
-    fun searchAccounts(query: String?, callback: StatusCallback<List<AccountDomain>>) {
+    fun searchAccounts(query: String?, callback: StatusCallback<AccountDomainModel>) {
         if (query == null || query.length < 3) return
 
         val adapter = RestBuilder(callback)
         val params = RestParams(
                 shouldIgnoreToken = true,
-                usePerPageQueryParam = true,
+                usePerPageQueryParam = false,
                 isForceReadFromNetwork = true,
-                domain = DEFAULT_DOMAIN
+                domain = DEFAULT_DOMAIN,
+                apiVersion = "/api/schools/"
+
         )
 
         callback.addCall(adapter.build(AccountDomainInterface::class.java, params).campusSearch(query)).enqueue(callback)
+    }
+
+    fun searchAccounts2(callback: StatusCallback<AccountDomainModel>) {
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(
+                shouldIgnoreToken = true,
+                usePerPageQueryParam = false,
+                isForceReadFromNetwork = true,
+                domain = DEFAULT_DOMAIN,
+                apiVersion = "/v3/"
+        )
+
+        callback.addCall(adapter.build(AccountDomainInterface::class.java, params).campusSearch2()).enqueue(callback)
     }
 }

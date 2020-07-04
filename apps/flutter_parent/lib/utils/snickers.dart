@@ -27,6 +27,6 @@ const List<SnickerDoodle> SNICKERS = const [
     subtitle: "This does not work",
     username: "user",
     password: "pass",
-    domain: "canvas.instructure.com",
+    domain: "labs.aylearn.net",
   ),
 ];

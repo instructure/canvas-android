@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import android.webkit.CookieManager
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -49,7 +50,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     }
 
     override fun beginCanvasNetworkFlow(url: String): Intent {
-        return SignInActivity.createIntent(this, AccountDomain(url))
+        return SignInActivity.createIntent(this, AccountDomainModel(url))
     }
 
     override fun appTypeName(): Int {
@@ -61,7 +62,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     }
 
     override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent {
-        return SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
+        return SignInActivity.createIntent(this, AccountDomainModel(snickerDoodle.domain))
     }
 
     override fun loginWithQRCodeEnabled(): Boolean = true

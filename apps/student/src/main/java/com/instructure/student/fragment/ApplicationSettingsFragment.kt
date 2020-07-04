@@ -88,8 +88,8 @@ class ApplicationSettingsFragment : ParentFragment() {
             accountPreferences.onClick { addFragment(AccountPreferencesFragment.newInstance()) }
         }
 
-        legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
-        help.onClick { HelpDialogStyled.show(requireActivity()) }
+        //legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
+       // help.onClick { HelpDialogStyled.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         if (RemoteConfigUtils.getBoolean(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED) == true && ApiPrefs.canGeneratePairingCode == true) {
@@ -121,7 +121,7 @@ class ApplicationSettingsFragment : ParentFragment() {
                     }
         }
 
-        if (BuildConfig.DEBUG) {
+       /* if (BuildConfig.DEBUG) {
             featureFlags.setVisible()
             featureFlags.onClick {
                 addFragment(FeatureFlagsFragment())
@@ -131,7 +131,7 @@ class ApplicationSettingsFragment : ParentFragment() {
             remoteConfigParams.onClick {
                 addFragment(RemoteConfigParamsFragment())
             }
-        }
+        }*/
     }
 
     private fun addFragment(fragment: Fragment) {

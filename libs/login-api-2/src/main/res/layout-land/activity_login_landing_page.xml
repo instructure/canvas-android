@@ -50,7 +50,7 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/vd_canvas_logo"/>
+                    app:srcCompat="@drawable/aylearn_logo"/>
 
                 <Button
                     android:id="@+id/findMySchool"

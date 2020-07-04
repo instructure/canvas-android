@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.pageview.PandataInfo
  * A [PageViewUploadService] specific to the Student application.
  *
  * To test this service, install the app on a device running Android 7.1+ and run the following command:
- *     adb shell cmd jobscheduler run -f com.instructure.candroid 188372
+ *     adb shell cmd jobscheduler run -f com.ayouris.aylearn.mobile.student 188372
  */
 class StudentPageViewService : PageViewUploadService() {
 
@@ -36,7 +36,7 @@ class StudentPageViewService : PageViewUploadService() {
     companion object {
         val pandataAppKey = PandataInfo.AppKey(
             "CANVAS_STUDENT_ANDROID",
-            "Canvas Student for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+            "AyLearn Student for Android - ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
         )
     }
 

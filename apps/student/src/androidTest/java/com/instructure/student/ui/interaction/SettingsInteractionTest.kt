@@ -182,8 +182,8 @@ class SettingsInteractionTest : StudentTest() {
                     IntentMatchers.hasAction(Intent.ACTION_VIEW),
                     CoreMatchers.anyOf(
                             // Could be either of these, depending on whether the play store app is installed
-                            IntentMatchers.hasData("market://details?id=com.instructure.candroid"),
-                            IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.instructure.candroid")
+                            IntentMatchers.hasData("market://details?id=com.ayouris.aylearn.mobile.student"),
+                            IntentMatchers.hasData("https://play.google.com/store/apps/details?id=com.ayouris.aylearn.mobile.student")
                     )
             )
             Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))

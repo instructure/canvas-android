@@ -23,9 +23,9 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data
+       <!--  <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
+            android:value="${fabricApiKey}" /> -->
 
         <activity
             android:name=".MainActivity"

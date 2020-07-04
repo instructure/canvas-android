@@ -64,7 +64,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   static const String SUCCESS_URL = '/login/oauth2/auth?code=';
   static const String ERROR_URL = '/login/oauth2/auth?error=access_denied';
 
-  final Completer<WebViewController> _controllerCompleter = Completer<WebViewController>();
+  final Completer<WebViewController> _controllerCompleter =
+      Completer<WebViewController>();
 
   WebLoginInteractor get _interactor => locator<WebLoginInteractor>();
 
@@ -79,12 +80,14 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       builder: (context) => Scaffold(
         appBar: AppBar(
           title: Text(widget.domain),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom:
+              ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
         ),
         body: _loginBody(),
         // MBL-14271: When in landscape mode, set this to false in order to avoid the situation
         // where the soft keyboard keeps flickering on and off.
-        resizeToAvoidBottomInset: MediaQuery.of(context).orientation == Orientation.portrait,
+        resizeToAvoidBottomInset:
+            MediaQuery.of(context).orientation == Orientation.portrait,
       ),
     );
   }
@@ -92,7 +95,9 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   Widget _loginBody() {
     if (_verifyFuture == null) {
       _verifyFuture = (widget.loginFlow == LoginFlow.skipMobileVerify)
-          ? Future.delayed(Duration.zero, () => _SkipVerifyDialog.asDialog(context, widget.domain)).then((result) {
+          ? Future.delayed(Duration.zero,
+                  () => _SkipVerifyDialog.asDialog(context, widget.domain))
+              .then((result) {
               // Use the result if we have it, otherwise continue on with mobile verify
               return result ?? _interactor.mobileVerify(widget.domain);
             })
@@ -105,7 +110,9 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
-          if (snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success)) {
+          if (snapshot.hasError ||
+              (snapshot.hasData &&
+                  snapshot.data.result != VerifyResultEnum.success)) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _showErrorDialog(context, snapshot);
             });
@@ -118,20 +125,24 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     );
   }
 
-  Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  Widget _webView(
+      BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
     final verifyResult = snapshot.data;
 
     return WebView(
-      navigationDelegate: (request) => _navigate(context, request, verifyResult),
+      navigationDelegate: (request) =>
+          _navigate(context, request, verifyResult),
       javascriptMode: JavascriptMode.unrestricted,
       darkMode: ParentTheme.of(context).isWebViewDarkMode,
       userAgent: ApiPrefs.getUserAgent(),
       onPageFinished: (url) => _pageFinished(url, verifyResult),
-      onWebViewCreated: (controller) => _webViewCreated(controller, verifyResult),
+      onWebViewCreated: (controller) =>
+          _webViewCreated(controller, verifyResult),
     );
   }
 
-  void _webViewCreated(WebViewController controller, MobileVerifyResult verifyResult) async {
+  void _webViewCreated(
+      WebViewController controller, MobileVerifyResult verifyResult) async {
     controller.clearCache();
     _controller = controller;
 
@@ -139,7 +150,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     await _buildAuthUrl(verifyResult);
     await _loadAuthUrl();
 
-    if (!_controllerCompleter.isCompleted) _controllerCompleter.complete(controller);
+    if (!_controllerCompleter.isCompleted)
+      _controllerCompleter.complete(controller);
   }
 
   void _pageFinished(String url, MobileVerifyResult verifyResult) {
@@ -159,7 +171,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
       final htmlError = await controller.evaluateJavascript("""
             (function() { return ('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>'); })();
           """);
-      if (htmlError != null && htmlError.contains("redirect_uri does not match client settings")) {
+      if (htmlError != null &&
+          htmlError.contains("redirect_uri does not match client settings")) {
         _buildAuthUrl(verifyResult, forceAuthRedirect: true);
         controller.loadUrl("about:blank");
         _loadAuthUrl();
@@ -167,17 +180,22 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     });
   }
 
-  NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
+  NavigationDecision _navigate(BuildContext context, NavigationRequest request,
+      MobileVerifyResult result) {
     if (request.url.contains(SUCCESS_URL)) {
       // Success! Try to get tokens now
       var url = request.url;
-      String oAuthRequest = url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length);
-      locator<WebLoginInteractor>().performLogin(result, oAuthRequest).then((_) {
+      String oAuthRequest =
+          url.substring(url.indexOf(SUCCESS_URL) + SUCCESS_URL.length);
+      locator<WebLoginInteractor>()
+          .performLogin(result, oAuthRequest)
+          .then((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_SUCCESS,
           extras: {AnalyticsParamConstants.DOMAIN_PARAM: result.baseUrl},
         );
-        locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.rootSplash());
+        locator<QuickNav>()
+            .pushRouteAndClearStack(context, PandaRouter.rootSplash());
       }).catchError((_) {
         locator<Analytics>().logEvent(
           AnalyticsEventConstants.LOGIN_FAILURE,
@@ -233,11 +251,18 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     }
 
     // Prepare login information
-    var purpose = await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
-    var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
-    var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
+    var purpose = await DeviceInfoPlugin()
+        .androidInfo
+        .then((info) => info.model.replaceAll(' ', '_'));
+    var clientId = verifyResult != null
+        ? Uri.encodeQueryComponent(verifyResult?.clientId)
+        : '';
+    var redirect = Uri.encodeQueryComponent(
+        'https://labs.aylearn.net/login/oauth2/auth');
 
-    if (forceAuthRedirect || widget.domain.contains(".test.") || widget.loginFlow == LoginFlow.skipMobileVerify) {
+    if (forceAuthRedirect ||
+        widget.domain.contains(".test.") ||
+        widget.loginFlow == LoginFlow.skipMobileVerify) {
       // Skip mobile verify
       redirect = Uri.encodeQueryComponent("urn:ietf:wg:oauth:2.0:oob");
     }
@@ -249,8 +274,10 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     if (widget.authenticationProvider != null &&
         widget.authenticationProvider.length > 0 &&
         widget.authenticationProvider.toLowerCase() != 'null') {
-      locator<Analytics>().logMessage('authentication_provider=${widget.authenticationProvider}');
-      result = '$result&authentication_provider=${Uri.encodeQueryComponent(widget.authenticationProvider)}';
+      locator<Analytics>().logMessage(
+          'authentication_provider=${widget.authenticationProvider}');
+      result =
+          '$result&authentication_provider=${Uri.encodeQueryComponent(widget.authenticationProvider)}';
     }
 
     if (widget.loginFlow == LoginFlow.canvas) result += '&canvas_login=1';
@@ -261,22 +288,25 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   /// Shows a simple alert dialog with an error message that correlates to the result code
-  _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(L10n(context).unexpectedError),
-          content: Text(_getErrorMessage(context, snapshot)),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(L10n(context).ok),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        );
-      });
+  _showErrorDialog(
+          BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) =>
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text(L10n(context).unexpectedError),
+              content: Text(_getErrorMessage(context, snapshot)),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(L10n(context).ok),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            );
+          });
 
-  String _getErrorMessage(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
+  String _getErrorMessage(
+      BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
     final localizations = L10n(context);
 
     // No data means the request failed for some other reason that we don't know
@@ -307,8 +337,10 @@ class _SkipVerifyDialog extends StatefulWidget {
   @override
   __SkipVerifyDialogState createState() => __SkipVerifyDialogState();
 
-  static Future<MobileVerifyResult> asDialog(BuildContext context, String domain) {
-    return showDialog<MobileVerifyResult>(context: context, builder: (_) => _SkipVerifyDialog(domain));
+  static Future<MobileVerifyResult> asDialog(
+      BuildContext context, String domain) {
+    return showDialog<MobileVerifyResult>(
+        context: context, builder: (_) => _SkipVerifyDialog(domain));
   }
 }
 
@@ -377,7 +409,9 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
                 decoration: _decoration(L10n(context).skipMobileVerifyProtocol),
                 initialValue: _protocol,
                 onChanged: (text) => _protocol = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyProtocolMissing : null,
+                validator: (text) => text.isEmpty
+                    ? L10n(context).skipMobileVerifyProtocolMissing
+                    : null,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
               ),
@@ -386,16 +420,21 @@ class __SkipVerifyDialogState extends State<_SkipVerifyDialog> {
                 key: Key(WebLoginScreen.ID_SKIP_VERIFY_KEY),
                 decoration: _decoration(L10n(context).skipMobileVerifyClientId),
                 onChanged: (text) => _clientId = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientIdMissing : null,
+                validator: (text) => text.isEmpty
+                    ? L10n(context).skipMobileVerifyClientIdMissing
+                    : null,
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
               ),
               SizedBox(height: 16),
               TextFormField(
                 key: Key(WebLoginScreen.SECRET_SKIP_VERIFY_KEY),
-                decoration: _decoration(L10n(context).skipMobileVerifyClientSecret),
+                decoration:
+                    _decoration(L10n(context).skipMobileVerifyClientSecret),
                 onChanged: (text) => _clientSecret = text,
-                validator: (text) => text.isEmpty ? L10n(context).skipMobileVerifyClientSecretMissing : null,
+                validator: (text) => text.isEmpty
+                    ? L10n(context).skipMobileVerifyClientSecretMissing
+                    : null,
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => _focusScopeNode.nextFocus(),
                 onEditingComplete: _popWithResult,

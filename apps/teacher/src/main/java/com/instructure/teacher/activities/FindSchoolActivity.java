@@ -22,6 +22,7 @@ import android.content.Intent;
 import androidx.core.content.ContextCompat;
 
 import com.instructure.canvasapi2.models.AccountDomain;
+import com.instructure.canvasapi2.models.AccountDomainModel;
 import com.instructure.loginapi.login.activities.BaseLoginFindSchoolActivity;
 import com.instructure.teacher.R;
 
@@ -33,7 +34,7 @@ public class FindSchoolActivity extends BaseLoginFindSchoolActivity {
     }
 
     @Override
-    protected Intent signInActivityIntent(AccountDomain accountDomain) {
+    protected Intent signInActivityIntent(AccountDomainModel accountDomain) {
         return SignInActivity.createIntent(this, accountDomain);
     }
 

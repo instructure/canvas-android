@@ -56,7 +56,7 @@ object MobileVerifyAPI {
             val baseUrl = if (mobileVerifyBetaEnabled && domain?.contains(".beta.") == true) {
                 "https://canvas.beta.instructure.com/api/v1/"
             } else {
-                "https://canvas.instructure.com/api/v1/"
+                "https://labs.aylearn.net/api/v1/"
             }
 
             return Retrofit.Builder()

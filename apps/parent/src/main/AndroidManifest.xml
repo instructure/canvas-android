@@ -110,7 +110,7 @@
                 <data android:scheme="canvas-courses" />
                 <data android:scheme="canvas-parent" />
                 <data android:host="*.instructure.com" />
-                <data android:host="*.canvas.net" />
+                <data android:host="*.aylearn.net" />
 
                 <action android:name="android.intent.action.VIEW" />
 

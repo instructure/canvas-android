@@ -61,11 +61,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         //noinspection GroovyAccessibility
-        PrivateData.merge(project, "parent")
+       /*  PrivateData.merge(project, "parent")
         PrivateData.merge(project, "dataseeding-flutter")
         addManifestPlaceholders([
                 fabricApiKey:"$fabricApiKey"
-        ])
+        ]) */
     }
 
     signingConfigs {

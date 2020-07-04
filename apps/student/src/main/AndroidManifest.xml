@@ -39,7 +39,7 @@
 
     <instrumentation
         android:name="com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
-        android:targetPackage="com.instructure.candroid"/>
+        android:targetPackage="com.ayouris.aylearn.mobile.student"/>
 
     <uses-feature android:name="android.hardware.camera" android:required="false" tools:replace="required"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" tools:replace="required"/>

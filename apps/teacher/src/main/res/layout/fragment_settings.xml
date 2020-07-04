@@ -85,7 +85,8 @@
                 android:paddingStart="16dp"
                 android:text="@string/legal"
                 android:textColor="@color/defaultTextDark"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/helpButton"
@@ -99,7 +100,8 @@
                 android:paddingStart="16dp"
                 android:text="@string/help"
                 android:textColor="@color/defaultTextDark"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/featureFlagButton"
@@ -114,7 +116,7 @@
                 android:textColor="@color/colorOcean11"
                 android:textSize="16sp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="gone"/>
 
             <TextView
                 android:id="@+id/remoteConfigButton"

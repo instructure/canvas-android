@@ -134,13 +134,13 @@ public class Utils {
     public static void goToAppStore(AppType appType, Context context) {
         String packageName = "";
         if (appType == AppType.STUDENT) {
-            packageName = "com.instructure.candroid";
+            packageName = "com.ayouris.aylearn.mobile.student";
         } else if (appType == AppType.POLLING) {
             packageName = "com.instructure.androidpolling";
         } else if (appType == AppType.PARENT) {
             packageName = "com.instructure.parentapp";
         } else if (appType == AppType.TEACHER) {
-            packageName = "com.instructure.teacher";
+            packageName = "com.ayouris.aylearn.mobile.teacher";
         }
         try {
             Intent goToMarket = new Intent(Intent.ACTION_VIEW);

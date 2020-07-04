@@ -98,7 +98,7 @@ void main() {
     await tester.pump();
 
     var actualUrl = verify(mockLauncher.launch(captureAny)).captured[0];
-    expect(actualUrl, 'market://details?id=com.instructure.candroid');
+    expect(actualUrl, 'market://details?id=com.ayouris.aylearn.mobile.student');
   });
 
   testWidgetsWithAccessibilityChecks('Launches intent to open teacher app in play store', (tester) async {

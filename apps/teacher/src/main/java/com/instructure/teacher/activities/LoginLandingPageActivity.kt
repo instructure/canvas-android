@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginLandingPageActivity
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -40,13 +41,13 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun beginFindSchoolFlow(): Intent = FindSchoolActivity.createIntent(this)
 
-    override fun beginCanvasNetworkFlow(url: String): Intent = SignInActivity.createIntent(this, AccountDomain(url))
+    override fun beginCanvasNetworkFlow(url: String): Intent = SignInActivity.createIntent(this, AccountDomainModel(url))
 
     override fun appTypeName(): Int = R.string.appUserTypeTeacher
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 
-    override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
+    override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomainModel(snickerDoodle.domain))
 
     companion object {
         fun createIntent(context: Context): Intent {

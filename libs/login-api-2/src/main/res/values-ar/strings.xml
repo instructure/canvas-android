@@ -30,8 +30,8 @@
     <string name="confirm">تأكيد</string>
     <string name="cancel">إلغاء</string>
     <string name="help">المساعدة</string>
-    <string name="enterURL">أدخل عنوان URL لـ Canvas الخاص بك:</string>
-    <string name="signIntoCanvasNetwork">هل تحاول تسجيل الدخول إلى Canvas Network؟</string>
+    <string name="enterURL">أدخل عنوان URL لـ AyLearn الخاص بك:</string>
+    <string name="signIntoCanvasNetwork">هل تحاول تسجيل الدخول إلى AyLearn Network؟</string>
     <string name="remove">إزالة</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="userId">معرف المستخدم</string>
@@ -44,7 +44,7 @@
     <string name="removedForever">سيتوجب عليك تسجيل الدخول إلى هذا المستخدم للتمتع بالوصول إلى المحتوى الخاص بهم.</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">شعار Canvas</string>
+    <string name="canvasLogo">شعار AyLearn</string>
 
     <string name="canvasLoginOn">Canvas_Login: تشغيل</string>
     <string name="canvasLoginOff">Canvas_Login: إيقاف تشغيل</string>
@@ -65,7 +65,7 @@
 
     <!--Smart Login-->
     <string name="loginNearYou">بالقرب منك</string>
-    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginCanvasNetwork">AyLearn Network</string>
     <string name="loginRightBehindYou">خلفك تمامًا</string>
     <string name="loginCanvasHelp">ألا ترى مدرستك؟ أدخل عنوان URL التابع للمؤسسة التعليمية أو اضغط هنا لطلب المساعدة.</string>
     <string name="loginCanvasHelpWithUser">أدخل عنوان URL التابع للمؤسسة التعليمية أو اضغط هنا لطلب المساعدة.</string>
@@ -102,9 +102,9 @@
     <string name="loginWithQRCode">رمز QR</string>
     <string name="locateQRCode">ابحث عن رمز QR</string>
     <string name="qrCodeExplanation">ستجد رمز QR على الويب في ملف تعريف حسابك. انقر فوق "QR لتسجيل دخول الجوال" في  القائمة.</string>
-    <string name="qrCodeScanningPrompt">امسح رمز QR من Canvas لتسجيل الدخول</string>
+    <string name="qrCodeScanningPrompt">امسح رمز QR من AyLearn لتسجيل الدخول</string>
     <string name="loginWithQRCodeError">حدث خطأ أثناء تسجيل الدخول. يرجى إنشاء رمز QR وإعادة المحاولة.</string>
-    <string name="invalidQRCodeError">يرجى مسح رمز QR من إنشاء Canvas</string>
+    <string name="invalidQRCodeError">يرجى مسح رمز QR من إنشاء AyLearn</string>
     <string name="qrCodeScreenshotContentDescription">التقط لقطة شاشة لإظهار موقع إنشاء رمز QR في المستعرض</string>
     <string name="whatsYourSchoolName">ما هو اسم مدرستك؟</string>
     <string name="next">التالي</string>

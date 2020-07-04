@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.managers
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.AccountDomainAPI
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 
 object AccountDomainManager {
 
@@ -28,7 +29,12 @@ object AccountDomainManager {
      * @param callback Any valid status callback
      */
     @JvmStatic
-    fun searchAccounts(query: String, callback: StatusCallback<List<AccountDomain>>) {
+    fun searchAccounts(query: String, callback: StatusCallback<AccountDomainModel>) {
         AccountDomainAPI.searchAccounts(query, callback)
+    }
+
+    @JvmStatic
+    fun searchAccounts2(callback: StatusCallback<AccountDomainModel>) {
+        AccountDomainAPI.searchAccounts2(callback)
     }
 }

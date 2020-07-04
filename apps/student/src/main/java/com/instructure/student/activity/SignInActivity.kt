@@ -24,6 +24,7 @@ import android.webkit.CookieManager
 import com.instructure.student.BuildConfig
 import com.instructure.student.widget.WidgetUpdater
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.activities.BaseLoginSignInActivity
 import com.instructure.pandautils.services.PushNotificationRegistrationService
@@ -53,7 +54,7 @@ class SignInActivity : BaseLoginSignInActivity() {
     }
 
     companion object {
-        fun createIntent(context: Context, accountDomain: AccountDomain): Intent {
+        fun createIntent(context: Context, accountDomain: AccountDomainModel): Intent {
             val intent = Intent(context, SignInActivity::class.java)
             val extras = Bundle()
             extras.putParcelable(BaseLoginSignInActivity.ACCOUNT_DOMAIN, accountDomain)

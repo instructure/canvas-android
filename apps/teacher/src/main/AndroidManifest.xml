@@ -203,9 +203,6 @@
         <activity android:name=".activities.TeacherLoginWithQRActivity"
             android:theme="@style/LoginFlowTheme.NoActionBar"/>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

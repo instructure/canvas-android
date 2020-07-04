@@ -68,7 +68,7 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
         title: '',
         // No title since this will be embedded and will not represent a full-screen component
         locale: _locale,
-        navigatorObservers: [NativeComm.routeTracker],
+        //navigatorObservers: [NativeComm.routeTracker],
         localizationsDelegates: const [
           AppLocalizations.delegate,
           // Material components use these delegates to provide default localization

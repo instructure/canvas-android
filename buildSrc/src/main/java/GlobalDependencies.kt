@@ -26,7 +26,7 @@ object Versions {
     const val KOTLIN_COROUTINES = "1.2.1"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.0.1"
+    const val GOOGLE_SERVICES = "4.3.2"
     const val ANDROIDX = "1.0.0"
     const val FIREBASE_JOB_DISPATCHER = "0.8.6"
     const val FIREBASE_CONFIG = "18.0.0"

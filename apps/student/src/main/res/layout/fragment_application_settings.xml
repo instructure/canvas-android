@@ -124,7 +124,7 @@
                 android:text="@string/about"
                 android:textSize="16sp"/>
 
-            <TextView
+           <!-- <TextView
                 android:id="@+id/legal"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"
@@ -174,7 +174,7 @@
                 android:text="@string/remoteConfigParamsTitle"
                 android:textSize="16sp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible"/>-->
 
         </LinearLayout>
 

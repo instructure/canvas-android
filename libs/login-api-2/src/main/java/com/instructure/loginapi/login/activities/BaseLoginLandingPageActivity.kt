@@ -63,7 +63,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     private var gestureFirstFree = true
     private var gestureFirst: Long = 0
     private var gestureSecond: Long = 0
-    private var canvasLogin = NORMAL_FLOW
+    private var canvasLogin = MOBILE_VERIFY_FLOW
 
     protected abstract fun beginFindSchoolFlow(): Intent
 
@@ -107,16 +107,24 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
             } else {
                 NoInternetConnectionDialog.show(supportFragmentManager)
             }
-        }
 
-        canvasNetwork.onClick {
-            if (APIHelper.hasNetworkConnection()) {
+           /* if (APIHelper.hasNetworkConnection()) {
                 val intent = beginCanvasNetworkFlow(URL_CANVAS_NETWORK)
                 intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
                 startActivity(intent)
             } else {
                 NoInternetConnectionDialog.show(supportFragmentManager)
-            }
+            }*/
+        }
+
+        canvasNetwork.onClick {
+           /* if (APIHelper.hasNetworkConnection()) {
+                val intent = beginCanvasNetworkFlow(URL_CANVAS_NETWORK)
+                intent.putExtra(Const.CANVAS_LOGIN, canvasLogin)
+                startActivity(intent)
+            } else {
+                NoInternetConnectionDialog.show(supportFragmentManager)
+            }*/
         }
 
         whatsNew.onClick {
@@ -236,7 +244,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         findMySchool.background = DrawableCompat.unwrap(wrapDrawable)
 
         // Icon
-        ColorUtils.colorIt(color, canvasLogo)
+       // ColorUtils.colorIt(color, canvasLogo)
 
         // App Name/Type. Will not be present in all layout versions
         appDescriptionType?.setTextColor(color)

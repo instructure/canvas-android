@@ -12,6 +12,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:developer';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
@@ -66,7 +68,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   _searchDomains(String query) async {
     if (query.length < _MIN_SEARCH_LENGTH) query = '';
 
-    if (query == _currentQuery) return; // Do nothing if the search query has not effectively changed
+    if (query == _currentQuery)
+      return; // Do nothing if the search query has not effectively changed
 
     _currentQuery = query;
 
@@ -108,7 +111,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
             L10n(context).findSchool,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
           ),
-          bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+          bottom:
+              ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           actions: <Widget>[
             MaterialButton(
               minWidth: 20,
@@ -194,10 +198,16 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                     ));
                   var item = _schoolDomains[index];
                   return ListTile(
-                    title: Text(item.name),
-                    onTap: () => locator<QuickNav>().pushRoute(context,
-                        PandaRouter.loginWeb(item.domain, authenticationProvider: item.authenticationProvider)),
-                  );
+                      title: Text(item.name),
+                      onTap: () {
+                        log(item.domain);
+                        locator<QuickNav>().pushRoute(
+                            context,
+                            PandaRouter.loginWeb(item.domain,
+                                authenticationProvider:
+                                    item.authenticationProvider,
+                                    loginFlow: LoginFlow.skipMobileVerify));
+                      });
                 },
               ),
             ),
@@ -221,7 +231,8 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
   _showHelpDialog(BuildContext context) {
     var canvasGuidesText = L10n(context).canvasGuides;
     var canvasSupportText = L10n(context).canvasSupport;
-    var body = L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
+    var body =
+        L10n(context).domainSearchHelpBody(canvasGuidesText, canvasSupportText);
 
     locator<Analytics>().logEvent(AnalyticsEventConstants.HELP_DOMAIN_SEARCH);
     showDialog(
@@ -236,12 +247,14 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
                   TextSpan(
                     text: canvasGuidesText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasGuides,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = _interactor.openCanvasGuides,
                   ),
                   TextSpan(
                     text: canvasSupportText,
                     style: TextStyle(color: Theme.of(context).accentColor),
-                    recognizer: TapGestureRecognizer()..onTap = _interactor.openCanvasSupport,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = _interactor.openCanvasSupport,
                   ),
                 ],
               ),
@@ -257,8 +270,10 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
         });
   }
 
-  TextSpan _helpBodySpan({@required String text, @required List<TextSpan> inputSpans}) {
-    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+  TextSpan _helpBodySpan(
+      {@required String text, @required List<TextSpan> inputSpans}) {
+    var indexedSpans =
+        inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
     indexedSpans.sort((a, b) => a.key.compareTo(b.key));
 
     int index = 0;
@@ -276,8 +291,11 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
   void _next(BuildContext context) {
     var domain = _query;
-    if (domain.startsWith('www.')) domain = domain.substring(4); // Strip off www. if they typed it
-    if (!domain.contains('.') || domain.endsWith('.beta')) domain += '.instructure.com';
-    locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, loginFlow: widget.loginFlow));
+    if (domain.startsWith('www.'))
+      domain = domain.substring(4); // Strip off www. if they typed it
+    if (!domain.contains('.') || domain.endsWith('.beta'))
+      domain += '.instructure.com';
+    locator<QuickNav>().pushRoute(
+        context, PandaRouter.loginWeb(domain, loginFlow: widget.loginFlow));
   }
 }

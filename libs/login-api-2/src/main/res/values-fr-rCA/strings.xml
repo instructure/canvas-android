@@ -30,8 +30,8 @@
     <string name="confirm">Confirmer</string>
     <string name="cancel">Annuler</string>
     <string name="help">Aide</string>
-    <string name="enterURL">Saisir votre URL Canvas :</string>
-    <string name="signIntoCanvasNetwork">Vous essayez de vous connecter au Canvas Network?</string>
+    <string name="enterURL">Saisir votre URL AyLearn :</string>
+    <string name="signIntoCanvasNetwork">Vous essayez de vous connecter au AyLearn Network?</string>
     <string name="remove">Retirer</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="userId">ID utilisateur</string>
@@ -44,7 +44,7 @@
     <string name="removedForever">Vous devrez ouvrir une session de nouveau pour cet utilisateur afin d’accéder son contenu.</string>
 
     <!--Content Descriptions-->
-    <string name="canvasLogo">Logo de Canvas</string>
+    <string name="canvasLogo">Logo de AyLearn</string>
 
     <string name="canvasLoginOn">Canvas_Login : ACTIF</string>
     <string name="canvasLoginOff">Canvas_Login : INACTIF</string>
@@ -65,7 +65,7 @@
 
     <!--Smart Login-->
     <string name="loginNearYou">Proche de vous</string>
-    <string name="loginCanvasNetwork">Canvas Network</string>
+    <string name="loginCanvasNetwork">AyLearn Network</string>
     <string name="loginRightBehindYou">Juste derrière vous</string>
     <string name="loginCanvasHelp">Vous ne voyez pas votre école? Saisir l\'URL de l\'école ou tapoter ici pour obtenir de l\'aide.</string>
     <string name="loginCanvasHelpWithUser">Saisir l\'URL de l\'école ou tapoter ici pour obtenir de l\'aide.</string>
@@ -102,9 +102,9 @@
     <string name="loginWithQRCode">Code QR</string>
     <string name="locateQRCode">Trouvez le code QR</string>
     <string name="qrCodeExplanation">Vous trouverez le code QR sur le Web dans votre profil de compte. Cliquez sur « \'QR for Mobile Login » (QR pour connexion mobile) dans la liste.</string>
-    <string name="qrCodeScanningPrompt">Scannez un code QR depuis Canvas pour vous connecter</string>
+    <string name="qrCodeScanningPrompt">Scannez un code QR depuis AyLearn pour vous connecter</string>
     <string name="loginWithQRCodeError">Une erreur est survenue lors de la connexion. Veuillez générer un autre code QR et réessayer.</string>
-    <string name="invalidQRCodeError">Veuillez scanner un code QR généré par Canvas</string>
+    <string name="invalidQRCodeError">Veuillez scanner un code QR généré par AyLearn</string>
     <string name="qrCodeScreenshotContentDescription">Capture d\'écran montrant l\'emplacement de la génération de code QR dans le navigateur</string>
     <string name="whatsYourSchoolName">Quel est le nom de votre école?</string>
     <string name="next">Suivant</string>

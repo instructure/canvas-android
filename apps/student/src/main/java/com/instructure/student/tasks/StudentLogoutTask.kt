@@ -46,6 +46,6 @@ class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
     }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }
+//        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }
     }
 }

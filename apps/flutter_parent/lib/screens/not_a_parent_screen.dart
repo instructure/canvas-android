@@ -70,10 +70,10 @@ class NotAParentScreen extends StatelessWidget {
           ),
           SizedBox(height: 24),
           _appButton(context, L10n(context).studentApp, L10n(context).canvasStudentApp, ParentColors.studentApp, () {
-            locator<UrlLauncher>().launch('market://details?id=com.instructure.candroid');
+            locator<UrlLauncher>().launch('market://details?id=com.ayouris.aylearn.mobile.student');
           }),
           _appButton(context, L10n(context).teacherApp, L10n(context).canvasTeacherApp, ParentColors.teacherApp, () {
-            locator<UrlLauncher>().launch('market://details?id=com.instructure.teacher');
+            locator<UrlLauncher>().launch('market://details?id=com.ayouris.aylearn.mobile.teacher');
           }),
           SizedBox(height: 24),
         ],

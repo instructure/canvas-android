@@ -18,13 +18,10 @@ package com.instructure.loginapi.login.activities
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextUtils
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
@@ -43,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.AccountDomainManager
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -71,39 +69,35 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         if (domainInput != null) {
             val query = domainInput!!.text.toString()
             AccountDomainManager.searchAccounts(query, mAccountDomainCallback)
+            //AccountDomainManager.searchAccounts2(mAccountDomainCallback)
+
         }
     }
 
-    private val mAccountDomainCallback = object : StatusCallback<List<AccountDomain>>() {
+    private val mAccountDomainCallback = object : StatusCallback<AccountDomainModel>() {
 
-        override fun onResponse(response: Response<List<AccountDomain>>, linkHeaders: LinkHeaders, type: ApiType) {
+        override fun onResponse(response: Response<AccountDomainModel>, linkHeaders: LinkHeaders, type: ApiType) {
             if (type.isCache) return
+            var account = response.body()
+            Log.d("TAG",   account.toString())
+            domainInput.setText(account?.domain)
+            //domainInput.setSelection(domainInput.text.length)
+            validateDomain(account);
 
-            val domains = response.body()?.toMutableList()
+            //val domains = response.body()?.toMutableList()
 
-            val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
 
-            if (isDebuggable) {
-                // Put these domains first
-                domains?.add(0, createAccountForDebugging("mobiledev.instructure.com"))
-                domains?.add(1, createAccountForDebugging("mobiledev.beta.instructure.com"))
-                domains?.add(2, createAccountForDebugging("mobileqa.instructure.com"))
-                domains?.add(3, createAccountForDebugging("mobileqat.instructure.com"))
-                domains?.add(4, createAccountForDebugging("clare.instructure.com"))
-                domains?.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
-            }
-
-            if (mDomainAdapter != null) {
+           /* if (mDomainAdapter != null) {
                 mDomainAdapter!!.setItems(domains)
                 mDomainAdapter!!.filter.filter(domainInput!!.text.toString())
-            }
+            }*/
         }
     }
 
     @ColorInt
     protected abstract fun themeColor(): Int
 
-    protected abstract fun signInActivityIntent(accountDomain: AccountDomain): Intent
+    protected abstract fun signInActivityIntent(accountDomain: AccountDomainModel): Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,7 +117,8 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
             setOnMenuItemClickListener(Toolbar.OnMenuItemClickListener { item ->
                 if (item.itemId == R.id.next) {
                     if (APIHelper.hasNetworkConnection()) {
-                        validateDomain(AccountDomain(domainInput.text.toString()))
+                        fetchAccountDomains()
+                        //validateDomain(AccountDomain(domainInput.text.toString()))
                         return@OnMenuItemClickListener true
                     } else {
                         NoInternetConnectionDialog.show(supportFragmentManager)
@@ -146,15 +141,15 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         }
 
         mNextActionButton = findViewById(R.id.next)
-        mNextActionButton!!.isEnabled = false
-        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.login_grayCanvasLogo))
+        mNextActionButton!!.isEnabled = true
+        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.login_loginFlowBlue))
 
         domainInput.setOnEditorActionListener { _, _, _ ->
-            validateDomain(AccountDomain(domainInput!!.text.toString()))
+          //  validateDomain(AccountDomain(domainInput!!.text.toString()))
             true
         }
 
-        domainInput.addTextChangedListener(object : TextWatcher {
+       /* domainInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -177,9 +172,9 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                     }
                 }
             }
-        })
+        })*/
 
-        mDomainAdapter = DomainAdapter(object : DomainAdapter.DomainEvents {
+      /*  mDomainAdapter = DomainAdapter(object : DomainAdapter.DomainEvents {
             override fun onDomainClick(account: AccountDomain) {
                 domainInput.setText(account.domain)
                 domainInput.setSelection(domainInput.text.length)
@@ -190,7 +185,7 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
                 val webHelpIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Const.FIND_SCHOOL_HELP_URL))
                 startActivity(webHelpIntent)
             }
-        })
+        })*/
 
         val recyclerView = findViewById<RecyclerView>(R.id.findSchoolRecyclerView)
         recyclerView.addItemDecoration(DividerItemDecoration(this, RecyclerView.VERTICAL))
@@ -214,34 +209,13 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         }
     }
 
-    private fun validateDomain(accountDomain: AccountDomain) {
-        var url: String? = accountDomain.domain!!.toLowerCase().replace(" ", "")
+    private fun validateDomain(accountDomain: AccountDomainModel?) {
+        var url: String? = accountDomain?.domain!!.toLowerCase().replace(" ", "")
 
-        //if the user enters nothing, try to connect to canvas.instructure.com
+        //if the user enters nothing, try to connect to labs.aylearn.net
         if (url!!.trim { it <= ' ' }.isEmpty()) {
-            url = "canvas.instructure.com"
+            url = "labs.aylearn.net"
         }
-
-        //if there are no periods, append .instructure.com
-        if (!url.contains(".") || url.endsWith(".beta")) {
-            url += ".instructure.com"
-        }
-
-        //URIs need to to start with a scheme.
-        if (!url.startsWith("http://") && !url.startsWith("https://")) {
-            url = "https://$url"
-        }
-
-        //Get just the host.
-        val uri = Uri.parse(url)
-        url = uri.host
-
-        //Strip off www. if they typed it.
-        if (url!!.startsWith("www.")) {
-            url = url.substring(4)
-        }
-
-        accountDomain.domain = url
 
         val intent = signInActivityIntent(accountDomain)
         intent.putExtra(Const.CANVAS_LOGIN, getIntent().extras!!.getInt(Const.CANVAS_LOGIN, 0))

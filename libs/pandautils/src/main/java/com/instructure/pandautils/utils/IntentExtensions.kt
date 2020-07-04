@@ -28,7 +28,7 @@ fun Intent.asChooserExcludingInstructure(title: String? = null): Intent {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return this
     val excludeComponents = arrayOf(
         // Student
-        ComponentName("com.instructure.candroid", "com.instructure.student.activity.InterwebsToApplication"),
+        ComponentName("com.ayouris.aylearn.mobile.student", "com.instructure.student.activity.InterwebsToApplication"),
 
         // Parent (native)
         ComponentName("com.instructure.parentapp", "com.instructure.parentapp.activity.RouteValidatorActivity"),
@@ -37,7 +37,7 @@ fun Intent.asChooserExcludingInstructure(title: String? = null): Intent {
         ComponentName("com.instructure.parentapp", "com.instructure.parentapp.MainActivity"),
 
         // Teacher
-        ComponentName("com.instructure.teacher", "com.instructure.teacher.activities.RouteValidatorActivity")
+        ComponentName("com.ayouris.aylearn.mobile.teacher", "com.instructure.teacher.activities.RouteValidatorActivity")
     )
     return Intent.createChooser(this, title).apply { putExtra(Intent.EXTRA_EXCLUDE_COMPONENTS, excludeComponents) }
 }

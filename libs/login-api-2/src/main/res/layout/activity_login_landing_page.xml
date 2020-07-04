@@ -50,9 +50,9 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:importantForAccessibility="no"
-                    app:srcCompat="@drawable/vd_canvas_logo"/>
+                    app:srcCompat="@drawable/aylearn_logo"/>
 
-                <ImageView
+              <!--  <ImageView
                     android:id="@+id/canvasWordmark"
                     android:layout_width="170dp"
                     android:layout_marginTop="24dp"
@@ -61,7 +61,8 @@
                     android:layout_marginBottom="2dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/login_grayCanvasLogo"
-                    app:srcCompat="@drawable/vd_canvas_wordmark"/>
+                    app:srcCompat="@drawable/vd_canvas_wordmark"
+                    android:visibility="gone"/>-->
 
                 <TextView
                     android:id="@+id/appDescriptionType"
@@ -123,7 +124,8 @@
                         android:padding="8dp"
                         android:text="@string/canvasNetwork"
                         android:textColor="@color/login_grayText"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp"
+                        android:visibility="gone"/>
 
                 </LinearLayout>
 

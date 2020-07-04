@@ -27,7 +27,7 @@
         android:layout_gravity="center"
         android:importantForAccessibility="no"
         android:scaleType="centerInside"
-        app:srcCompat="@drawable/vd_canvas_logo" />
+        app:srcCompat="@drawable/ic_splash_icon_student" />
 
     <TextView
         android:id="@+id/loginLogoText"

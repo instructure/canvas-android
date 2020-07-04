@@ -33,7 +33,7 @@ object UrlLauncher {
 
     private val excludeComponents = arrayOf(
         // Student
-        ComponentName("com.instructure.candroid", "com.instructure.student.activity.InterwebsToApplication"),
+        ComponentName("com.ayouris.aylearn.mobile.student", "com.instructure.student.activity.InterwebsToApplication"),
 
         // Parent (native)
         ComponentName("com.instructure.parentapp", "com.instructure.parentapp.activity.RouteValidatorActivity"),
@@ -42,7 +42,7 @@ object UrlLauncher {
         ComponentName("com.instructure.parentapp", "com.instructure.parentapp.MainActivity"),
 
         // Teacher
-        ComponentName("com.instructure.teacher", "com.instructure.teacher.activities.RouteValidatorActivity")
+        ComponentName("com.ayouris.aylearn.mobile.teacher", "com.instructure.teacher.activities.RouteValidatorActivity")
     )
 
     private lateinit var activity: Activity

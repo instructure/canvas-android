@@ -56,8 +56,8 @@ class NotAParentFragment : BaseFragment() {
 
     companion object {
         private const val MARKET_URI_PREFIX = "market://details?id="
-        private const val CANVAS_ID = "com.instructure.candroid"
-        private const val TEACHER_ID = "com.instructure.teacher"
+        private const val CANVAS_ID = "com.ayouris.aylearn.mobile.student"
+        private const val TEACHER_ID = "com.ayouris.aylearn.mobile.teacher"
     }
 
 }

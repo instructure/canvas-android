@@ -125,7 +125,7 @@ class RecipientUnitTest : Assert() {
               "Member"
             ]
           },
-          "avatar_url": "https://secure.gravatar.com/avatar/827ab0b5176ee8ce02b780b272dbf857?s=50&d=https%3A%2F%2Fcanvas.instructure.com%2Fimages%2Fmessages%2Favatar-50.png"
+          "avatar_url": "https://secure.gravatar.com/avatar/827ab0b5176ee8ce02b780b272dbf857?s=50&d=https%3A%2F%2Flabs.aylearn.net%2Fimages%2Fmessages%2Favatar-50.png"
         },
         {
           "id": 5803222,
@@ -136,7 +136,7 @@ class RecipientUnitTest : Assert() {
             ]
           },
           "common_groups": {},
-          "avatar_url": "https://secure.gravatar.com/avatar/452e281f449f50719c4fca1b06289bbb?s=50&d=https%3A%2F%2Fcanvas.instructure.com%2Fimages%2Fmessages%2Favatar-50.png"
+          "avatar_url": "https://secure.gravatar.com/avatar/452e281f449f50719c4fca1b06289bbb?s=50&d=https%3A%2F%2Flabs.aylearn.net%2Fimages%2Fmessages%2Favatar-50.png"
         }
       ]"""
 }

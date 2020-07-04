@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import android.view.Window
 import android.widget.Toast
 import com.instructure.canvasapi2.models.AccountDomain
+import com.instructure.canvasapi2.models.AccountDomainModel
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -119,7 +120,7 @@ class RouteValidatorActivity : FragmentActivity() {
 
             if (!isSignedIn) {
                 val intent = if (host.isNotBlank()) {
-                    SignInActivity.createIntent(this@RouteValidatorActivity, AccountDomain(host))
+                    SignInActivity.createIntent(this@RouteValidatorActivity, AccountDomainModel(host))
                 } else {
                     LoginActivity.createIntent(this@RouteValidatorActivity)
                 }
