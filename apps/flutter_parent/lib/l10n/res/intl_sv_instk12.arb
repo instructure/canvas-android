@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-03-20T11:04:10.914171",
+  "@@last_modified": "2020-05-15T11:04:11.958548",
   "alertsLabel": "Notiser",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -164,9 +164,33 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Tryck för att favoritmarkera de kurser du vill se i kalendern.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Tryck för att favoritmarkera de kurser du vill se i kalendern. Välj upp till 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Du kan endast välja 10 kalendrar att visa",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Du måste välja minst en kalender att visa",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Planner Note": "Planner-anteckning",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Go to today": "Gå till i dag",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
     "type": "text",
     "placeholders": {}
   },
@@ -544,8 +568,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Det gick inte att läsa in din elevs kurser.",
-  "@There was an error loading your your student’s courses.": {
+  "There was an error loading your student’s courses.": "Det gick inte att läsa in din elevs kurser.",
+  "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
@@ -790,12 +814,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set reminder switch": "Ange påminnelse",
-  "@Set reminder switch": {
-    "description": "Label for the switch to set a reminder",
-    "type": "text",
-    "placeholders": {}
-  },
   "Set a date and time to be notified of this specific assignment.": "Ange ett datum och tid för att få en notis för den här specifika uppgiften.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
@@ -808,21 +826,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "Description": "Beskrivning",
-  "@Description": {
-    "description": "Label for the description of the assignment",
-    "type": "text",
-    "placeholders": {}
-  },
   "Instructions": "Instruktioner",
   "@Instructions": {
     "description": "Label for the description of the assignment when it has quiz instructions",
-    "type": "text",
-    "placeholders": {}
-  },
-  "No description": "Ingen beskrivning",
-  "@No description": {
-    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -865,6 +871,17 @@
   "Notifications for reminders about assignments and calendar events": "Påminnelsenotiser om uppgifter och kalenderhändelser",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reminders have changed!": "Påminnelser har ändrats!",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "För att tillhandahålla dig en förbättrad upplevelse har vi uppdaterat påminnelsefunktionen. Du kan lägga till nya påminnelser genom att visa en uppgift eller en kalenderhändelse och trycka på reglaget under avsnittet \"Påminn mig\".\n\nTänk på att påminnelser som skapats i äldre versionen av den här appen inte är kompatibla med de nya ändringarna och måste därför skapas om igen.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders": {}
   },
@@ -934,11 +951,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "dismiss": "avvisa",
-  "@dismiss": {
+  "dismissAlertLabel": "Avvisa {alertTitle}",
+  "@dismissAlertLabel": {
     "description": "Accessibility label to dismiss an alert",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "alertTitle": {}
+    }
   },
   "Course Announcement": "Kursmeddelande",
   "@Course Announcement": {
@@ -1011,6 +1030,12 @@
   "High Contrast Mode": "Högt kontrastläge",
   "@High Contrast Mode": {
     "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Använd mörkt tema i webbinnehållet",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
     "type": "text",
     "placeholders": {}
   },
@@ -1314,42 +1339,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Search the Canvas Guides": "Sök i Canvas guider",
-  "@Search the Canvas Guides": {
-    "description": "Label for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Find answers to common questions": "Hitta svaret på vanliga frågor",
-  "@Find answers to common questions": {
-    "description": "Description for option to search the Canvas Guides",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Report a Problem": "Rapportera ett problem",
-  "@Report a Problem": {
-    "description": "Label for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "If the app misbehaves, let us know": "Om appen inte fungerar bra, berätta det för oss",
-  "@If the app misbehaves, let us know": {
-    "description": "Description for option to report a problem",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Request a Feature": "Begär en funktion",
-  "@Request a Feature": {
-    "description": "Label for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Have an idea to improve the app?": "Har du någon idé om hur appen kan förbättras?",
-  "@Have an idea to improve the app?": {
-    "description": "Description for option to request a feature",
-    "type": "text",
-    "placeholders": {}
-  },
   "Share Your Love for the App": "Dela din kärlek till appen",
   "@Share Your Love for the App": {
     "description": "Label for option to open the app store",
@@ -1481,6 +1470,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "Description": "Beskrivning",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders": {}
+  },
   "A description is required.": "Beskrivning är obligatorisk.",
   "@A description is required.": {
     "description": "Error shown when the description field is empty",
@@ -1530,6 +1525,142 @@
     "type": "text",
     "placeholders": {}
   },
+  "Login flow: Normal": "Inloggningsflöde: Normal",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Inloggningsflöde: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Inloggningsflöde: Webbplatsadmin",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Inloggningsflöde: Hoppa över mobilverifiering",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Act As User": "Agera som användare",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Sluta att agera som en användare",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {}
+  },
+  "actingAsUser": "Du agerar som {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Att uppträda som\", loggar huvudsakligen in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du var den här användaren, och från andra användares synpunkter kommer det att upplevas som om den här användaren utförde dem. I revisionsloggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Domain": "Domän",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Du måste ange en giltig domän",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "User ID": "Användar-ID",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must enter a user id": "Du måste ange ett giltigt användar-ID",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Ett fel inträffade under Agera som den här användaren. Kontrollera domänen och användar-ID:t och försök igen.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Du kommer att sluta agera som {userName} och återgå till ditt ursprungliga konto.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Du kommer att sluta agera som {userName} och loggas ut.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "How are we doing?": "Hur går det för oss?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Don't show again": "Visa inte igen",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "What can we do better?": "Vad kan vi förbättra?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send Feedback": "Skicka återkoppling",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Förslag för Android – Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} stjärna}other{{position} stjärnor}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
   "Cancel": "Avbryt",
   "@Cancel": {
     "type": "text",
@@ -1572,6 +1703,18 @@
     "type": "text",
     "placeholders": {}
   },
+  "Refresh": "Uppdatera",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View Description": "Visa beskrivning",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders": {}
+  },
   "expanded": "expanderad",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
@@ -1589,9 +1732,21 @@
     "type": "text",
     "placeholders": {}
   },
+  "No description": "Ingen beskrivning",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders": {}
+  },
   "Launch External Tool": "Starta externt verktyg",
   "@Launch External Tool": {
     "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Interaktioner på den här sidan har begränsats av din institution.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
     "type": "text",
     "placeholders": {}
   },
@@ -1707,6 +1862,42 @@
   "Open In Browser": "Öppna i webbläsare",
   "@Open In Browser": {
     "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Du hittar QR-koden på webben i din kontoprofil. Klicka på \"QR för mobil inloggning\" i listan.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locate QR Code": "Lokalisera QR-kod",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Skanna en QR-kod som genererats i Canvas.",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "Det gick inte att logga in. Generera en annan QR-kod och försök igen.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Skärmdumpen visar platsen för QR-kodgenerering i webbläsaren",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "QR scanning requires camera access.": "QR-skanning kräver kameraåtkomst.",
+  "@QR scanning requires camera access.": {
+    "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}
   }

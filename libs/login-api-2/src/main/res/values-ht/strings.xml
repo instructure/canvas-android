@@ -121,10 +121,10 @@
 
     <string name="masqueradeErrorUserId">Ou dwe antre yon ID itilizatè.</string>
     <string name="masqueradeErrorDomain">Ou dwe antre yon domèn valid.</string>
-    <string name="masqueradeError">Erè pandan w ap eseye degize a.</string>
+    <string name="masqueradeError">Erè pandan w ap eseye pase pou itilizatè.</string>
     <string name="masqueradeInfo">\"Aji tankou\" an jeneral se konekte tankou itilizatè sa a san modpas. W ap ka fè nenpòt aksyon kòmsi w te itilizatè sa a, epi lòt moun yo ap panse se itilizatè sa a ki t ap aji. Men, jounal odit yo endike ke se te ou menm ki te fè aksyon yo nan non itilizatè sa a.</string>
     <string name="masqueradingAs">W ap aji tankou %s</string>
-    <string name="stopActingAsTitle">Sispann aji tankou...</string>
+    <string name="stopActingAsTitle">Sispann pase pou itilizatè</string>
     <string name="stopActingAsMessage">Ou pral sispann aji tankou %s epi sou kont ou.</string>
 
     <string name="weMadeChanges">Nou te fè kèk chanjman.</string>

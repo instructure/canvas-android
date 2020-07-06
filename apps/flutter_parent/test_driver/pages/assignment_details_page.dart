@@ -15,6 +15,7 @@
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/dataseeding/quiz.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
@@ -85,8 +86,8 @@ class AssignmentDetailsPage {
 
   static Future<void> _validateDueDate(FlutterDriver driver, DateTime dueAt) async {
     var localDate = dueAt.toLocal();
-    String date = (DateFormat.MMMd()).format(localDate);
-    String time = (DateFormat.jm()).format(localDate);
+    String date = (DateFormat.MMMd(supportedDateLocale)).format(localDate);
+    String time = (DateFormat.jm(supportedDateLocale)).format(localDate);
     var dueDateText = await driver.getText(find.byValueKey("assignment_details_due_date"));
     expect(dueDateText.contains(date), true, reason: "Expected due date to contain $date");
     expect(dueDateText.contains(time), true, reason: "Expected due date to contain $time");

@@ -50,6 +50,10 @@
     <string name="submitted">Afleveret</string>
     <string name="notSubmitted">Ikke indsendt</string>
     <string name="allowedFileTypes">Tilladte filtyper</string>
+    <string name="attempts">Forsøg</string>
+    <string name="attemptsAllowedLabel">Forsøg tilladt</string>
+    <string name="attemptsUsedLabel">Brugte forsøg</string>
+    <string name="noAttemptsLeft">Ingen forsøg tilbage</string>
     <string name="resubmitAssignment">Gen-indsend opgave</string>
 
     <string name="launchExternalTool">Start eksternt værktøj</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Tilføj besked</string>
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Ingen elementer for visning</string>
-    <string name="emptyCalendarDate">Intet planlagt for</string>
-    <string name="emptyCalendarWeek">Intet planlagt for ugen</string>
-    <string name="emptyCalendarMonth">Intet planlagt for måneden</string>
-    <string name="selectCanvasCalendars">Vælg op til 10 kalendere</string>
-    <string name="contentDesc_colored_calendar_indicator">Farvet kalenderindikator</string>
-    <string name="noDatesSelected">Vælg venligst en dato</string>
     <string name="Todo">Opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
     <string name="favoritedCoursesLabel">Foretrukne fag</string>
     <string name="Event">Begivenhed</string>
-    <string name="eventSuccessfulCreation">Begivenhed blev oprettet succesfuldt</string>
     <string name="eventSuccessfulDeletion">Begivenheden blev succefuldt slettet</string>
-    <string name="newEvent">Ny begivenhed</string>
-    <string name="enterTitle">Indtast titel</string>
-    <string name="enterLocation">Indtast placering</string>
-    <string name="addNote">Tilføj note</string>
-    <string name="titleIconDescription">Titelikon</string>
-    <string name="dateIconDescription">Datoikon</string>
     <string name="timeIconDescription">Tidsikon</string>
-    <string name="locationIconDescription">Lokaliseringsikon</string>
-    <string name="noteIconDescription">Noteikon</string>
     <string name="toDoTurnIn">Indsend</string>
     <string name="toDoNoDueDate">Ingen afleveringsdato</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Send besked</string>
     <string name="userAvatar">Bruger avatar</string>
 
-    <string name="calendarIcon">Kalenderikon</string>
     <string name="assignmentIcon">Opogaveikon</string>
     <string name="announcementIcon">Bekendtgørelsesikon</string>
     <string name="conversationIcon">Konversationsikon</string>
@@ -430,11 +418,10 @@
     <string name="modified">Sidst redigeret:</string>
     <string name="lastModified">Sidst redigeret: %1$s</string>
 
-    <string name="startMasquerading">Start maskring</string>
-    <string name="stopMasquerading">Stop maskering</string>
+    <string name="startMasquerading">Begynd at fungere som bruger</string>
+    <string name="stopMasquerading">Hold op med at fungere som bruger</string>
     <string name="userId">Bruger-id</string>
-    <string name="masqueradeFail">Der var en fjel under maskring</string>
-
+    <string name="masqueradeFail">Der opstod en fejl ved at fungere som bruger</string>
     <string name="emptyId">ID kan ikke være tomt</string>
 
     <string name="goToQuiz">Gå til Quiz</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalender starter mandag</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Intet emne)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Kontoindstillinger</string>
     <string name="pinAndFingerprint">Pinkode og fingeraftryk</string>
 
+    <string name="pairWithObserver">Par med observatør</string>
+    <string name="pairWithObserverDetails">Bed din forælder om at scanne denne QR-kode fra Canvas Parent-appen for at parre til din konto. Denne kode udløber om 7 dage eller efter en brug.</string>
+    <string name="pairingCodeLabel">Parringskode:\u0020</string>
+    <string name="pairingCodeErrorTitle">Parringskodefejl</string>
+    <string name="pairingCodeErrorDescription">Kan ikke hente en parringskode. Denne funktion understøttes kun for studerende.</string>
     <string name="launchSpeedgrader">Åbn SpeedGrader</string>
 
     <string name="search_todo">at gøre at gøre at gøre at gøre liste</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">Dag</string>
-    <string name="calendarWeek">Uge</string>
-    <string name="calendarMonth">Måned</string>
-    <string name="selectCalendars">Vælg kalendere</string>
     <string name="createNewCalendarEvent">Opret ny begivenhed</string>
-    <string name="calendarDialog10Warning">Du kan kun vælge at vise 10 kalendere</string>
-    <string name="calendarDialogNoneWarning">Vælg  venligst mindst én kalender</string>
     <string name="enableFunMode">Deaktiver  Panadas</string>
 
     <string name="accountNotifications">Beskeder</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Forhåndsvisning af fil-billede</string>
     <string name="pdfError">Der opstod en fejl ved forsøg på at indlæse denne PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Det er vi kede af! Denne funktion er ikke tilladt i visning for studerende.</string>
+    <string name="nothingToSeeHere">Intet at se her.</string>
+    <string name="unsupportedFeature">Ikke-understøttet funktion</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Tilføj studerende</string>
     <string name="addChildSubTitle">Indtast den studerendes parringskode, der er blevet givet til dig.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Karakter efter opslag</string>
     <string name="gradeOverride">Tilsidesættelse af karakter </string>
     <string name="currentGrade">Nuværende karakter </string>
+
+    <string name="opensInCanvasStudent">Åbner i Canvas for studerende</string>
+    <string name="tab_student_view">Visning for studerende</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valgt hoved: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Afsluttede konferencer</string>
     <string name="conferenceDetails">Konferencedetaljer</string>
     <string name="recordings">Optagelser</string>
+    <string name="conferenceInProgress">Konference i gang</string>
 </resources>

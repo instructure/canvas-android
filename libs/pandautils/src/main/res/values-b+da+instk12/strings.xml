@@ -384,6 +384,9 @@
     <string name="notificationChannelNamePrimary">Almindelige Canvas-meddelelser</string>
     <string name="notificationChannelDescriptionPrimary">Yderligere konfiguration af meddelelser kan ske i sektionen Canvas-meddelelsesindstillinger.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nye meddelelser</item>
+    </plurals>
     <string name="copyLinkAddress">Kopier linkets adresse</string>
     <string name="copyLink">Kopier link</string>
     <string name="linkCopied">Link kopieret</string>

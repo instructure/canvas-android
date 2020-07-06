@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Yleiset Canvas-ilmoitukset</string>
     <string name="notificationChannelDescriptionPrimary">Ilmoitusten lisäkonfigurointi voidaan tehdä Canvas-ilmoitusasetusten osassa.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d uudet ilmoitukset</item>
+    </plurals>
     <string name="copyLinkAddress">Kopioi linkin osoite</string>
     <string name="copyLink">Kopioi linkki</string>
     <string name="linkCopied">Linkki kopioitu</string>

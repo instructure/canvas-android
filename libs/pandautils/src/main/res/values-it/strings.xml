@@ -17,6 +17,7 @@
   -->
 
 <resources>
+
     <string name="chooseMedia">Scegli supporto multimediale</string>
     <string name="takeVideo">Realizza video</string>
     <string name="noCameraOnDevice">Nessuna videocamera</string>
@@ -329,7 +330,6 @@
     </plurals>
 
     <!-- Assignment Override !-->
-
     <string name="utils_unlockAfterDueDateError">La data di sblocco non può essere successiva alla data di scadenza</string>
     <string name="utils_lockBeforeDueDateError">La data di blocco non può essere precedente alla data di scadenza</string>
     <string name="utils_lockAfterUnlockError">La data di blocco non può essere precedente alla data di sblocco</string>
@@ -388,6 +388,9 @@
     <string name="notificationChannelNamePrimary">Notifiche Canvas generali</string>
     <string name="notificationChannelDescriptionPrimary">Un\'ulteriore configurazione delle notifiche può eseguita all\'interno della sezione Preferenze notifiche Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nuove notifiche</item>
+    </plurals>
     <string name="copyLinkAddress">Copia indirizzo link</string>
     <string name="copyLink">Copia link</string>
     <string name="linkCopied">Link copiato</string>

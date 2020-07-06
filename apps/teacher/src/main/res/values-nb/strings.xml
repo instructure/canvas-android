@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Fritatt</string>
     <string name="last_login_format">Siste innlogging: %s</string>
 
+    <string name="muteGrades">Demp karakterer</string>
+    <string name="unmuteGrades">Gjenåpne karakterer</string>
+    <string name="gradesMutedLabel">Karakterer dempet</string>
     <string name="turnOnAnonymousGrading">Slå på anonym karaktersetting</string>
     <string name="turnOffAnonymousGrading">Slå av anonym karaktersetting</string>
     <string name="anonymousGradingLabel">Anonym karaktersetting</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Ikke lærer?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">En av våre andre applikasjoner kan være mer tilpasset. Trykk på en for å gå til Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Karakter</string>
+    <string name="sg_tab_grade">Karakter</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
     <string name="filter_submissions">Filtrer innleveringer</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d spørsmål</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minutt</item>
-        <item quantity="other">%s minutter</item>
-    </plurals>
-
     <string name="discussion_details">Diskusjonsdetaljer</string>
     <string name="discussions_pinned">Festet</string>
     <string name="discussions_unpinned">Diskusjoner</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Svar</string>
     <string name="discussions_edit">Rediger</string>
     <string name="discussions_forbidden">Svarene er kun synlige for dem som har postet minst ett svar.</string>
-    <string name="discussions_unknown_author">Ukjent forfatter</string>
     <string name="discussions_delete">Slett diskusjon</string>
     <string name="discussions_delete_title">Slette diskusjon?</string>
     <string name="discussions_delete_message">Dette vil slette hele diskusjonen og tråden.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Personvernregler</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Bruksvilkår</string>
-    <string name="openSource">Åpen kilde</string>
     <string name="searchGuides">Søk i Canvas-guidene</string>
     <string name="searchGuidesDetails">Finn svarene på vanlige spørsmål</string>
     <string name="reportProblem">Rapporter et problem</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Filtrer folk</string>
     <string name="loadMore">Last mer</string>
     <string name="latestStudentActivityAtFormatted">Seneste aktivitet på %1$s på %2$s.</string>
-    <string name="sectionFormatted">Avsnitt: %s</string>
     <string name="errorLoadingStudentContextCard">Kunne ikke laste detaljer for denne brukeren.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Lærer</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Alle seksjoner</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Dette LTI-verktøyet kan ikke lastes ned på dette tidspunktet.</string>
-    <string name="downloading">Laster ned ...</string>
-
+    <string name="downloading">Laster ned...</string>
 </resources>

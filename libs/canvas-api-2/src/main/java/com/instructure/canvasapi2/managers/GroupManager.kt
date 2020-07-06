@@ -20,10 +20,12 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 import retrofit2.Response
 import java.io.IOException
 import java.util.*
@@ -129,5 +131,15 @@ object GroupManager {
 
     @JvmStatic
     fun createGroupMap(groups: List<Group>): Map<Long, Group> = groups.associateBy { it.id }
+
+    fun getPermissionsAsync(
+        groupId: Long,
+        forceNetwork: Boolean = false,
+        requestedPermissions: List<String> = emptyList()
+    ) = apiAsync<CanvasContextPermission> {
+        val adapter = RestBuilder()
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        GroupAPI.getGroupPermissions(groupId, requestedPermissions, adapter, it, params)
+    }
 
 }

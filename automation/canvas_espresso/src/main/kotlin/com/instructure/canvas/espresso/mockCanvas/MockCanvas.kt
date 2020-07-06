@@ -1122,7 +1122,6 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeaderList.add(topicHeader)
 
     val topic = DiscussionTopic(
-            isForbidden = false,
             participants = mutableListOf<DiscussionParticipant>(
                     DiscussionParticipant(id = user.id, displayName = user.name)
             )
@@ -1144,7 +1143,6 @@ fun MockCanvas.addReplyToDiscussion(
             id = newItemId(),
             message = replyMessage,
             unread = true,
-            userName = user.name,
             author = DiscussionParticipant(
                     id = user.id,
                     displayName = user.name

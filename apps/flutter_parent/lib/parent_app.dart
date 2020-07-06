@@ -26,6 +26,8 @@ import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 
+import 'l10n/fallback_material_localizations_delegate.dart';
+
 class ParentApp extends StatefulWidget {
   final Completer<void> _appCompleter;
 
@@ -71,7 +73,7 @@ class _ParentAppState extends State<ParentApp> {
           localizationsDelegates: const [
             AppLocalizations.delegate,
             // Material components use these delegate to provide default localization
-            GlobalMaterialLocalizations.delegate,
+            FallbackMaterialLocalizationsDelegate(),
             GlobalWidgetsLocalizations.delegate,
           ],
           supportedLocales: AppLocalizations.delegate.supportedLocales,

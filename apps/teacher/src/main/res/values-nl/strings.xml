@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Vrijgesteld</string>
     <string name="last_login_format">Laatste aanmelding: %s</string>
 
+    <string name="muteGrades">Cijfers verbergen</string>
+    <string name="unmuteGrades">Verbergen van cijfers opheffen</string>
+    <string name="gradesMutedLabel">Cijfers verborgen</string>
     <string name="turnOnAnonymousGrading">Anonieme beoordeling inschakelen</string>
     <string name="turnOffAnonymousGrading">Anonieme beoordeling uitschakelen</string>
     <string name="anonymousGradingLabel">Anoniem beoordelen</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Geen docent?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Wellicht is een van onze andere apps hiervoor beter geschikt. Tik op een van de apps om de Play Store te openen.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Cijfer</string>
+    <string name="sg_tab_grade">Cijfer</string>
     <string name="sg_tab_comments">Opmerkingen</string>
     <string name="sg_tab_files">Bestanden</string>
     <string name="filter_submissions">Inzendingen filteren</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d vragen</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minuut</item>
-        <item quantity="other">%s minuten</item>
-    </plurals>
-
     <string name="discussion_details">Details over discussie</string>
     <string name="discussions_pinned">Vastgezet</string>
     <string name="discussions_unpinned">Discussies</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Antwoord</string>
     <string name="discussions_edit">Bewerken</string>
     <string name="discussions_forbidden">Antwoorden zijn alleen zichtbaar voor degenen die minimaal één antwoord hebben geplaatst.</string>
-    <string name="discussions_unknown_author">Onbekende auteur</string>
     <string name="discussions_delete">Discussie verwijderen</string>
     <string name="discussions_delete_title">Discussie verwijderen?</string>
     <string name="discussions_delete_message">Hierdoor wordt de gehele discussie en thread verwijderd.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Privacy-beleid</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Gebruiksvoorwaarden</string>
-    <string name="openSource">Open bron</string>
     <string name="searchGuides">In Canvas-handleidingen zoeken</string>
     <string name="searchGuidesDetails">Antwoorden op veelgestelde vragen zoeken</string>
     <string name="reportProblem">Een probleem melden</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Personen filteren</string>
     <string name="loadMore">Meer laden</string>
     <string name="latestStudentActivityAtFormatted">Laatste activiteit op %1$s om %2$s.</string>
-    <string name="sectionFormatted">Sectie: %s</string>
     <string name="errorLoadingStudentContextCard">Kan geen details voor deze gebruiker laden.</string>
     <string name="enrollmentTypeStudent">Cursist</string>
     <string name="enrollmentTypeTeacher">Docent</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Alle secties</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Deze LTI-tool kan op dit moment niet worden geladen.</string>
     <string name="downloading">Downloaden...</string>
-
 </resources>

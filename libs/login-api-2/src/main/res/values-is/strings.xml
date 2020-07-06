@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Þú verður að setja inn notandaauðkenni.</string>
     <string name="masqueradeErrorDomain">Þú verður að skrá gilt lén.</string>
-    <string name="masqueradeError">Villa við að reyna að dyljast.</string>
+    <string name="masqueradeError">Villa við að vera notandi.</string>
     <string name="masqueradeInfo">\"Bregðast við sem\" þýðir í raun að skrá sig inn sem viðkomandi notandi án lykilorðs. Þú munt getað gripið til allra aðgerða eins og að þú værir viðkomandi notandi, frá sjónarhóli annarra notenda, þá mun það vera eins og þessi notandi hafi framkvæmt viðkomandi aðgerðir. Samt sem áður sýna endurskoðaðar skrár að það varst þú sem framkvæmdir aðgerðirnar fyrir hönd þessa notanda.</string>
     <string name="masqueradingAs">Þú virkar sem %s</string>
-    <string name="stopActingAsTitle">Hætta að bregðast við sem&#8230;</string>
+    <string name="stopActingAsTitle">Hætta að vera...</string>
     <string name="stopActingAsMessage">Þú munt hætta að bregðast við sem %s og fara aftur í þinn reikning.</string>
     <string name="weMadeChanges">Við höfum gert nokkrar breytingar.</string>
     <string name="whatsNewText">Sjáðu hvað er nýtt</string>

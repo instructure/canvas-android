@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_settings.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period_response.dart';
@@ -33,6 +34,9 @@ class CourseDetailsInteractor {
 
   Future<List<CourseTab>> loadCourseTabs(String courseId, {bool forceRefresh = false}) =>
       locator<CourseApi>().getCourseTabs(courseId, forceRefresh: forceRefresh);
+
+  Future<CourseSettings> loadCourseSettings(String courseId, {bool forceRefresh = false}) =>
+      locator<CourseApi>().getCourseSettings(courseId, forceRefresh: forceRefresh);
 
   Future<List<AssignmentGroup>> loadAssignmentGroups(String courseId, String studentId, String gradingPeriodId,
       {bool forceRefresh = false}) {

@@ -388,6 +388,9 @@
     <string name="notificationChannelNamePrimary">Notificacions de Canvas generals</string>
     <string name="notificationChannelDescriptionPrimary">A la secció de Preferències de notificacions de Canvas es pot ampliar la configuració de les notificacions.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d notificacions noves</item>
+    </plurals>
     <string name="copyLinkAddress">Copia l\'adreça de l\'enllaç</string>
     <string name="copyLink">Copia l\'enllaç</string>
     <string name="linkCopied">Enllaç copiat</string>

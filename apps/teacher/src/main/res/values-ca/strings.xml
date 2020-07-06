@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Excusat</string>
     <string name="last_login_format">Darrer inici de sessió: %s</string>
 
+    <string name="muteGrades">Oculta les qualificacions</string>
+    <string name="unmuteGrades">Deixa d\'ocultar les qualificacions</string>
+    <string name="gradesMutedLabel">Qualificacions ocultes</string>
     <string name="turnOnAnonymousGrading">Activeu l\'opció Qualificacions anònimes</string>
     <string name="turnOffAnonymousGrading">Desactiveu l\'opció Qualificacions anònimes</string>
     <string name="anonymousGradingLabel">Qualificacions anònimes</string>
@@ -315,7 +318,6 @@
     <string name="assignments_list">Llista de tasques</string>
     <string name="syllabus">Temari</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dates de venciment múltiples</string>
     <string name="everyone">Tothom</string>
@@ -610,11 +612,6 @@
         <item quantity="other">%d preguntes</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minut</item>
-        <item quantity="other">%s minuts</item>
-    </plurals>
-
     <string name="discussion_details">Informació sobre el debat</string>
     <string name="discussions_pinned">Ancorat</string>
     <string name="discussions_unpinned">Debats</string>
@@ -895,5 +892,4 @@
     <string name="gauge">Mesura</string>
     <string name="ltiLaunchFailure">En aquest moment, no s\'ha pogut carregar aquesta eina LTI (interoperabilitat d\'eines d\'aprenentatge).</string>
     <string name="downloading">S\'està baixant&#8230;</string>
-
 </resources>

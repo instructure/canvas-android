@@ -49,6 +49,9 @@ object CourseAPI {
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
         fun getCourse(@Path("courseId") courseId: Long): Call<Course>
 
+        @GET("courses/{courseId}/settings")
+        fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
+
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
 
@@ -165,6 +168,10 @@ object CourseAPI {
 
     fun getCourse(courseId: Long, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getCourse(courseId)).enqueue(callback)
+    }
+
+    fun getCourseSettings(courseId: Long, adapter: RestBuilder, callback: StatusCallback<CourseSettings>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).getCourseSettings(courseId)).enqueue(callback)
     }
 
     fun getCourseWithSyllabus(courseId: Long, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {

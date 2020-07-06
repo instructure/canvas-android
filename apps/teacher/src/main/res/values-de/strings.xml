@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Entschuldigt</string>
     <string name="last_login_format">Letzte Anmeldung: %s</string>
 
+    <string name="muteGrades">Noten stummschalten</string>
+    <string name="unmuteGrades">Aufheben der Stummschaltung der Noten</string>
+    <string name="gradesMutedLabel">Noten stummgeschaltet</string>
     <string name="turnOnAnonymousGrading">Anonyme Benotung einschalten</string>
     <string name="turnOffAnonymousGrading">Anonyme Benotung ausschalten</string>
     <string name="anonymousGradingLabel">Anonyme Benotung</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Kein Lehrer?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Eine unserer anderen Apps passt möglicherweise besser. Tippen Sie auf eine, um den Play Store zu besuchen.</string>
-    <string name="canvas_lowercase">Canvas</string>
-
-  <string name="sg_tab_grade">Note</string>
+    <string name="sg_tab_grade">Note</string>
     <string name="sg_tab_comments">Kommentare</string>
     <string name="sg_tab_files">Dateien</string>
     <string name="filter_submissions">Abgaben filtern</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d Fragen</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Minute</item>
-        <item quantity="other">%s Minuten</item>
-    </plurals>
-
     <string name="discussion_details">Diskussionsdetails</string>
     <string name="discussions_pinned">Angeheftet</string>
     <string name="discussions_unpinned">Diskussionen</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Antwort</string>
     <string name="discussions_edit">Ändern</string>
     <string name="discussions_forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
-    <string name="discussions_unknown_author">Unbekannter Autor</string>
     <string name="discussions_delete">Diskussion löschen</string>
     <string name="discussions_delete_title">Diskussion löschen?</string>
     <string name="discussions_delete_message">Dies löscht die ganze Diskussion samt Thread.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Datenschutzrichtlinien</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Nutzungsbedingungen</string>
-    <string name="openSource">Open Source</string>
     <string name="searchGuides">Die Canvas-Anleitungen durchsuchen</string>
     <string name="searchGuidesDetails">Antworten auf häufige Fragen suchen</string>
     <string name="reportProblem">Ein Problem melden</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Personen filtern</string>
     <string name="loadMore">Mehr laden</string>
     <string name="latestStudentActivityAtFormatted">Letzte Aktivität am %1$s um %2$s.</string>
-    <string name="sectionFormatted">Abschnitt: %s</string>
     <string name="errorLoadingStudentContextCard">Details für diesen Benutzer konnten nicht geladen werden.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Dozent</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Alle Abschnitte</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Dieses LTI-Tool konnte zu diesem Zeitpunkt nicht geladen werden.</string>
-    <string name="downloading">Download läuft...</string>
-
+    <string name="downloading">Wird heruntergeladen ...</string>
 </resources>

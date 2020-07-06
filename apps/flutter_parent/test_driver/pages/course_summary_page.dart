@@ -16,6 +16,7 @@ import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_parent/models/assignment.dart';
 import 'package:flutter_parent/models/dataseeding/quiz.dart';
 import 'package:flutter_parent/models/schedule_item.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:test/test.dart';
 
@@ -71,8 +72,8 @@ class CourseSummaryPage {
       expect(text, "No Due Date", reason: "Due date");
     } else {
       var localDate = dueDate.toLocal();
-      String date = (DateFormat.MMMd()).format(localDate);
-      String time = (DateFormat.jm()).format(localDate);
+      String date = (DateFormat.MMMd(supportedDateLocale)).format(localDate);
+      String time = (DateFormat.jm(supportedDateLocale)).format(localDate);
       expect(text.contains(date), true, reason: "Expected due date ($text) to contain $date");
       expect(text.contains(time), true, reason: "Expected due date ($text) to contain $time");
     }

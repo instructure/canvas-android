@@ -26,6 +26,7 @@ import 'package:flutter_parent/utils/common_widgets/badges.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
+import 'package:flutter_parent/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
@@ -189,12 +190,12 @@ class ConversationListState extends State<ConversationListScreen> {
   String _formatMessageDate(DateTime date) {
     if (date == null) return '';
     date = date.toLocal();
-    var format = DateFormat.MMM().add_d();
+    var format = DateFormat.MMM(supportedDateLocale).add_d();
     var now = DateTime.now();
     if (date.year != now.year) {
       format = format.add_y();
     } else if (date.month == now.month && date.day == now.day) {
-      format = DateFormat.jm();
+      format = DateFormat.jm(supportedDateLocale);
     }
     return format.format(date);
   }

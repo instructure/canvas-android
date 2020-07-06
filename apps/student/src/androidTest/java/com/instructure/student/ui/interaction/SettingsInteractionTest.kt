@@ -237,9 +237,10 @@ class SettingsInteractionTest : StudentTest() {
         dashboardPage.launchSettingsPage()
         settingsPage.launchLegalPage()
         legalPage.openPrivacyPolicy()
+        canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle, as this content could be changed by another team.
-                WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "Policies Home", 20)
+                WebViewTextCheck(Locator.CLASS_NAME, "subnav-wrapper", "Privacy", 20)
         )
     }
 

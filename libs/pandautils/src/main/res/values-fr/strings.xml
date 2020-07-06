@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Notifications Canvas générales</string>
     <string name="notificationChannelDescriptionPrimary">Une configuration plus complète des notifications est disponible dans la section Préférences des notifications Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d nouvelles notifications</item>
+    </plurals>
     <string name="copyLinkAddress">Copier l\'adresse du lien</string>
     <string name="copyLink">Copier le lien</string>
     <string name="linkCopied">Lien copié</string>

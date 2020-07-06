@@ -391,6 +391,11 @@
     <string name="notificationChannelNamePrimary">Ogólne powiadomienia Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Dalszą konfigurację powiadomień można wykonać w sekcji Preferencje powiadomień Canvas.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="few">Nowe powiadomienia: %d</item>
+        <item quantity="many">Nowe powiadomienia: %d</item>
+        <item quantity="other">Nowe powiadomienia: %d</item>
+    </plurals>
     <string name="copyLinkAddress">Kopiuj adres łącza</string>
     <string name="copyLink">Kopiuj łącze</string>
     <string name="linkCopied">Skopiowano łącze</string>

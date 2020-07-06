@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-04-03T11:02:53.662629",
+  "@@last_modified": "2020-05-15T11:04:11.958548",
   "alertsLabel": "Avvisi",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -164,9 +164,33 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Tocca per mettere nei preferiti i corsi che vuoi vedere sul calendario.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Tocca per mettere nei preferiti i corsi che vuoi vedere sul calendario. Seleziona fino a 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Puoi scegliere solo 10 calendari da visualizzare",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Devi selezionare almeno un calendario da visualizzare",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Planner Note": "Nota agenda",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Go to today": "Vai a oggi",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
     "type": "text",
     "placeholders": {}
   },
@@ -544,8 +568,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Si è verificato un errore durante il caricamento dei corsi dello studente.",
-  "@There was an error loading your your student’s courses.": {
+  "There was an error loading your student’s courses.": "Si è verificato un errore durante il caricamento dei corsi dello studente.",
+  "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
@@ -790,12 +814,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set reminder switch": "Imposta commutatore promemoria",
-  "@Set reminder switch": {
-    "description": "Label for the switch to set a reminder",
-    "type": "text",
-    "placeholders": {}
-  },
   "Set a date and time to be notified of this specific assignment.": "Imposta una data e un’ora per ricevere la notifica su questo compito specifico.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
@@ -808,21 +826,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "Description": "Descrizione",
-  "@Description": {
-    "description": "Label for the description of the assignment",
-    "type": "text",
-    "placeholders": {}
-  },
   "Instructions": "Istruzioni",
   "@Instructions": {
     "description": "Label for the description of the assignment when it has quiz instructions",
-    "type": "text",
-    "placeholders": {}
-  },
-  "No description": "Nessuna descrizione",
-  "@No description": {
-    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -865,6 +871,17 @@
   "Notifications for reminders about assignments and calendar events": "Notifiche per i promemoria sui compiti e gli eventi di calendario",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reminders have changed!": "I promemoria sono cambiati!",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Per fornirti un’esperienza migliore, abbiamo aggiornato il modo in cui funzionano i promemoria. Puoi aggiungere nuovi promemoria visualizzando un compito o un evento del calendario e toccando l’interruttore sotto la sezione \"Promemoria\".\n\nNon dimenticare che tutti i promemoria creati con le versioni precedenti di questa app non saranno compatibili con le nuove modifiche e sarà necessario ricrearli.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders": {}
   },
@@ -934,11 +951,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "dismiss": "ignora",
-  "@dismiss": {
+  "dismissAlertLabel": "Ignora {alertTitle}",
+  "@dismissAlertLabel": {
     "description": "Accessibility label to dismiss an alert",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "alertTitle": {}
+    }
   },
   "Course Announcement": "Annuncio corso",
   "@Course Announcement": {
@@ -1011,6 +1030,12 @@
   "High Contrast Mode": "Modalità alto contrasto",
   "@High Contrast Mode": {
     "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Usa tema scuro nel contenuto web",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
     "type": "text",
     "placeholders": {}
   },
@@ -1445,6 +1470,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "Description": "Descrizione",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders": {}
+  },
   "A description is required.": "La descrizione è obbligatoria.",
   "@A description is required.": {
     "description": "Error shown when the description field is empty",
@@ -1538,7 +1569,7 @@
       "userName": {}
     }
   },
-  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "“Agisci come” consiste sostanzialmente nell'effettuare l'accesso assumendo l'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente.",
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Agisci come\" consiste sostanzialmente nell'effettuare l'accesso assumendo l'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente.",
   "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
     "type": "text",
     "placeholders": {}
@@ -1588,6 +1619,48 @@
       "userName": {}
     }
   },
+  "How are we doing?": "Come stiamo andando?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Don't show again": "Non mostrarlo di nuovo",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "What can we do better?": "Cosa possiamo migliorare?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send Feedback": "Invia feedback",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Suggerimenti per Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} stella}other{{position} stelle}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
   "Cancel": "Annulla",
   "@Cancel": {
     "type": "text",
@@ -1630,6 +1703,18 @@
     "type": "text",
     "placeholders": {}
   },
+  "Refresh": "Aggiorna",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View Description": "Visualizza descrizione",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders": {}
+  },
   "expanded": "esteso",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
@@ -1644,6 +1729,12 @@
   },
   "An unexpected error occurred": "Si verificato un errore imprevisto",
   "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No description": "Nessuna descrizione",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -1771,6 +1862,42 @@
   "Open In Browser": "Apri nel browser",
   "@Open In Browser": {
     "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Troverai il codice QR sul web nel tuo profilo account. Fai clic su “QR per login da dispositivo mobile” nell’elenco.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locate QR Code": "Individua codice QR",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Acquisisci un codice QR generato da Canvas",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "Si è verificato un errore di login. Genera un altro codice QR e riprova.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Screenshot che mostra la posizione della generazione del codice QR nel browser",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "QR scanning requires camera access.": "La scansione QR richiede l’accesso alla videocamera.",
+  "@QR scanning requires camera access.": {
+    "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}
   }

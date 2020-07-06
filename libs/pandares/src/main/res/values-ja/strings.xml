@@ -49,6 +49,10 @@
     <string name="submitted">タスクの成績を送信</string>
     <string name="notSubmitted">未提出</string>
     <string name="allowedFileTypes">許可されているファイルタイプ</string>
+    <string name="attempts">回数</string>
+    <string name="attemptsAllowedLabel">企図が許可されています</string>
+    <string name="attemptsUsedLabel">企図が使用されました</string>
+    <string name="noAttemptsLeft">残り試行回数なし</string>
     <string name="resubmitAssignment">課題を再提出する</string>
 
     <string name="launchExternalTool">外部ツールを起動する</string>
@@ -217,28 +221,13 @@
     <string name="addMessage">メッセージを追加</string>
     <string name="monologue">モノローグ</string>
     <string name="noItemsToDisplayShort">表示するアイテムがありません</string>
-    <string name="emptyCalendarDate">以下に予定はありません</string>
-    <string name="emptyCalendarWeek">その週には予定はありません</string>
-    <string name="emptyCalendarMonth">その月には予定はありません</string>
-    <string name="selectCanvasCalendars">最高10のカレンダーを選択</string>
-    <string name="contentDesc_colored_calendar_indicator">カラーカレンダーインジケータ</string>
-    <string name="noDatesSelected">日にちを選択してください</string>
     <string name="Todo">タスク</string>
     <string name="todoFilter">コースをフィルタする</string>
     <string name="filterByEllipsis">フィルタの基準</string>
     <string name="favoritedCoursesLabel">お気に入りのコース</string>
     <string name="Event">イベント</string>
-    <string name="eventSuccessfulCreation">イベントが作成されました</string>
     <string name="eventSuccessfulDeletion">イベントが消去されました</string>
-    <string name="newEvent">新しいイベント</string>
-    <string name="enterTitle">タイトルを入力</string>
-    <string name="enterLocation">場所を入力</string>
-    <string name="addNote">注意点を追加</string>
-    <string name="titleIconDescription">タイトルアイコン</string>
-    <string name="dateIconDescription">日にちアイコン</string>
     <string name="timeIconDescription">時間のアイコン</string>
-    <string name="locationIconDescription">場所アイコン</string>
-    <string name="noteIconDescription">注意点アイコン</string>
     <string name="toDoTurnIn">提出する</string>
     <string name="toDoNoDueDate">期日なし</string>
 
@@ -390,7 +379,6 @@
     <string name="sendMessage">メッセージを送信</string>
     <string name="userAvatar">ユーザーアバター</string>
 
-    <string name="calendarIcon">カレンダーアイコン</string>
     <string name="assignmentIcon">課題アイコン</string>
     <string name="announcementIcon">アナウンスメントアイコン</string>
     <string name="conversationIcon">会話アイコン</string>
@@ -424,11 +412,10 @@
     <string name="modified">最後の変更:</string>
     <string name="lastModified">最後の変更:%1$s</string>
 
-    <string name="startMasquerading">マスカレードを開始する</string>
-    <string name="stopMasquerading">マスカレードを停止</string>
+    <string name="startMasquerading">ユーザーとして行動することを止める</string>
+    <string name="stopMasquerading">ユーザーとして行動することを止める</string>
     <string name="userId">ユーザーID</string>
-    <string name="masqueradeFail">マスカレードを試みている最中に、エラーが発生しました</string>
-
+    <string name="masqueradeFail">ユーザーとして行動しようとした際にエラーが発生しました</string>
     <string name="emptyId">IDは空欄にはできません</string>
 
     <string name="goToQuiz">クイズへ移動</string>
@@ -566,7 +553,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">月曜日にカレンダーが始まります</string>
     <string name="profile">プロフィール</string>
 
     <string name="noSubject">(件名なし)</string>
@@ -638,6 +624,11 @@
     <string name="accountPreferences">アカウントの設定</string>
     <string name="pinAndFingerprint">PIN と指紋</string>
 
+    <string name="pairWithObserver">オブザーバーとペアにする</string>
+    <string name="pairWithObserverDetails">あなたとペアリングするために、親にCanvas ParentアプリからこのQRコードをスキャンしてもらいます。このコードは7日間後または1回使用した後に有効期限が切れます。</string>
+    <string name="pairingCodeLabel">ペアリングコード：\u0020</string>
+    <string name="pairingCodeErrorTitle">ペアリングコードエラー</string>
+    <string name="pairingCodeErrorDescription">ペアリングコードを取得できません。この機能は受講生にのみサポートされています。</string>
     <string name="launchSpeedgrader">SpeedGraderを開く</string>
 
     <string name="search_todo">するべきこと するべきこと するべきことリスト</string>
@@ -710,12 +701,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">日</string>
-    <string name="calendarWeek">週</string>
-    <string name="calendarMonth">月</string>
-    <string name="selectCalendars">予定表を選択する</string>
     <string name="createNewCalendarEvent">新しいイベントを作成</string>
-    <string name="calendarDialog10Warning">10のカレンダーを選択、表示することができます</string>
-    <string name="calendarDialogNoneWarning">最低一つのカレンダーを選択してください</string>
     <string name="enableFunMode">パンダをオフにする</string>
 
     <string name="accountNotifications">発表</string>
@@ -1009,6 +995,9 @@
     <string name="filePreviewContentDescription">ファイルプレビュー画像</string>
     <string name="pdfError">このPDFを削除しようとしてエラーが発生しました。</string>
 
+    <string name="featureNotAllowedInStudentView">申し訳ありません！この機能は受講生のビューでは許可されていません。</string>
+    <string name="nothingToSeeHere">ここには何もありません</string>
+    <string name="unsupportedFeature">サポートされていない機能</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">受講生を追加</string>
     <string name="addChildSubTitle">提供されている受講生ペアリングコードを入力します。</string>
@@ -1045,6 +1034,9 @@
     <string name="gradeAfterPosting">投稿後の成績</string>
     <string name="gradeOverride">成績上書き</string>
     <string name="currentGrade">現在の成績 </string>
+
+    <string name="opensInCanvasStudent">Canvas受講生内で開く</string>
+    <string name="tab_student_view">受講生ビュー</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">選択した頭部：%s</string>
@@ -1135,4 +1127,5 @@
     <string name="concludedConferences">終了した会議</string>
     <string name="conferenceDetails">会議の詳細</string>
     <string name="recordings">録画</string>
+    <string name="conferenceInProgress">会議進行中</string>
 </resources>

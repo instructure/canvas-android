@@ -123,10 +123,10 @@
 
     <string name="masqueradeErrorUserId">Me whakauru e koe he kaiwhakamahi id.</string>
     <string name="masqueradeErrorDomain">Me whakauru koe i te rohe whaimana.</string>
-    <string name="masqueradeError">He hapa i te wā e ngana ana whakāhua kē.</string>
+    <string name="masqueradeError">He hapa i te wā e ngana ana i te mahi rite kaiwhakamahi.</string>
     <string name="masqueradeInfo">\"Te mahi hei\" ko te takiuru i roto i tēnei kaiwhakamahi me te kore he kupuhipa. Ka taea e koe te mahi i tētahi mahi me te mea ko koe tēnei kaiwhakamahi, me ētahi atu whakaaro ō ngā kaiwhakamahi, \'ka mahia ano nei ngā the kaiwhakamahi i mahi. Heoi, ka tuhia e ngā kaute tuhinga ko koe te kaihanga i ngā mahi mo tēnei kaiwhakamahi.</string>
     <string name="masqueradingAs">Kei te mahi koe pēnei %s</string>
-    <string name="stopActingAsTitle">Kāti te mahi hei....</string>
+    <string name="stopActingAsTitle">Kāti te mahi hei ....</string>
     <string name="stopActingAsMessage">Ka mutu tō mahi hei %s ka hoki ki tāu pūkete.</string>
     <string name="weMadeChanges">I mahia e mātou he rerekētanga iti</string>
     <string name="whatsNewText">Tirohia ngā mea hou</string>

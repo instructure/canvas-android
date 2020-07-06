@@ -121,10 +121,10 @@
 
     <string name="masqueradeErrorUserId">يجب أن تدخل معرف مستخدم.</string>
     <string name="masqueradeErrorDomain">يجب عليك إدخال مجال صالح.</string>
-    <string name="masqueradeError">حدث خطأ أثناء محاولة إخفاء الاسم.</string>
+    <string name="masqueradeError">حدث خطأ أثناء محاولة التصرف كمستخدم.</string>
     <string name="masqueradeInfo">\"تصرف كـ\" هو تسجيل الدخول كما لو كنت هذا المستخدم دون كلمة مرور. ستتمكن من اتخاذ أي إجراء كما لو كنت هذا المستخدم، ومن وجهة نظر المستخدمين الآخرين، سيبدو الأمر كما لو كان هذا المستخدم هو من قام بهذه الإجراءات. ولكن سجلات التدقيق ستسجل أنك كنت الشخص الذي قام بالإجراءات نيابةً عن هذا المستخدم.</string>
     <string name="masqueradingAs">أنت تتصرف باعتبارك %s</string>
-    <string name="stopActingAsTitle">إيقاف التصرف باعتبارك...</string>
+    <string name="stopActingAsTitle">إيقاف التصرف كـ...</string>
     <string name="stopActingAsMessage">ستتوقف عن التصرف باعتبارك %s وستعود إلى حسابك.</string>
 
     <string name="weMadeChanges">لقد أجرينا بعض التغييرات.</string>

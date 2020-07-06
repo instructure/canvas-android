@@ -126,6 +126,12 @@ object CourseManager {
         getCourseWithSyllabus(courseId, it, forceNetwork)
     }
 
+    fun getCourseSettingsAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<CourseSettings> {
+        val adapter = RestBuilder(it)
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        CourseAPI.getCourseSettings(courseId, adapter, it, params)
+    }
+
     @JvmStatic
     fun getCourseWithGrade(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
@@ -228,6 +234,12 @@ object CourseManager {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         CourseAPI.getCoursePermissions(courseId, requestedPermissions, adapter, callback, params)
     }
+
+    fun getPermissionsAsync(
+        courseId: Long,
+        requestedPermissions: List<String> = emptyList(),
+        forceNetwork: Boolean = false
+    ) = apiAsync<CanvasContextPermission> { getCoursePermissions(courseId, requestedPermissions, it, forceNetwork) }
 
     @JvmStatic
     fun getUserEnrollmentsForGradingPeriod(

@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Giustificato</string>
     <string name="last_login_format">Ultimo accesso: %s</string>
 
+    <string name="muteGrades">Disattiva voti</string>
+    <string name="unmuteGrades">Riattiva voti</string>
+    <string name="gradesMutedLabel">Voti disattivati</string>
     <string name="turnOnAnonymousGrading">Attiva valutazione anonima</string>
     <string name="turnOffAnonymousGrading">Disattiva valutazione anonima</string>
     <string name="anonymousGradingLabel">Valutazione anonima</string>
@@ -315,7 +318,6 @@
     <string name="assignments_list">Elenco compiti</string>
     <string name="syllabus">Piano di studio</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Più date di scadenza</string>
     <string name="everyone">Tutti</string>
@@ -610,11 +612,6 @@
         <item quantity="other">%d domande</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minuto</item>
-        <item quantity="other">%s minuti</item>
-    </plurals>
-
     <string name="discussion_details">Dettagli discussioni</string>
     <string name="discussions_pinned">Bloccata</string>
     <string name="discussions_unpinned">Discussioni</string>
@@ -895,5 +892,4 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Impossibile caricare questo strumento LTI in questo momento.</string>
     <string name="downloading">Download in corso...</string>
-
 </resources>

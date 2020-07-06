@@ -17,6 +17,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_parent/models/assignment_group.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_settings.dart';
 import 'package:flutter_parent/models/course_tab.dart';
 import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/grading_period.dart';
@@ -32,6 +33,7 @@ class CourseDetailsModel extends BaseModel {
   User student;
   String courseId; // Could be routed to without a full course, only the id may be known
   Course course;
+  CourseSettings courseSettings;
   List<CourseTab> tabs = List();
   bool forceRefresh = true;
   GradingPeriod _currentGradingPeriod;
@@ -53,9 +55,13 @@ class CourseDetailsModel extends BaseModel {
       // Always force a refresh of tabs, it's small enough that we can do this every time
       final tabsFuture = _interactor().loadCourseTabs(courseId, forceRefresh: true);
 
+      // Get course settings to know if course summary is allowed
+      final settingsFuture = _interactor().loadCourseSettings(courseId, forceRefresh: true);
+
       // Await the results
       course = await courseFuture;
       tabs = await tabsFuture;
+      courseSettings = await settingsFuture;
 
       // Set the _nextGradingPeriod to the current enrollment period (if active and if not already set)
       final enrollment =
@@ -172,8 +178,7 @@ class CourseDetailsModel extends BaseModel {
       (course?.homePage == HomePage.syllabus ||
           (course?.homePage != HomePage.wiki && tabs.any((tab) => tab.id == HomePage.syllabus.name)));
 
-  // TODO: Use the course flag to determine if we're allowed to show the summary, as well as if we are showing syllabus
-  bool get showSummary => hasHomePageAsSyllabus; // && course.summaryVisible;
+  bool get showSummary => hasHomePageAsSyllabus && (courseSettings?.courseSummary == true);
 
   GradingPeriod currentGradingPeriod() => _currentGradingPeriod;
 

@@ -50,6 +50,10 @@
     <string name="submitted">Skickad</string>
     <string name="notSubmitted">Inte skickad</string>
     <string name="allowedFileTypes">Tillåtna filtyper</string>
+    <string name="attempts">Försök</string>
+    <string name="attemptsAllowedLabel">Tillåtna försök</string>
+    <string name="attemptsUsedLabel">Använda försök</string>
+    <string name="noAttemptsLeft">Inga försök kvar</string>
     <string name="resubmitAssignment">Skicka uppgift igen</string>
     <string name="launchExternalTool">Starta externt verktyg</string>
     <string name="preview">Förhandsgranska</string>
@@ -220,28 +224,13 @@
     <string name="addMessage">Lägg till meddelande</string>
     <string name="monologue">Monolog</string>
     <string name="noItemsToDisplayShort">Inga objekt att visa</string>
-    <string name="emptyCalendarDate">Inget planerat för</string>
-    <string name="emptyCalendarWeek">Inget planerat för den här veckan</string>
-    <string name="emptyCalendarMonth">Inget planerat för den här månaden</string>
-    <string name="selectCanvasCalendars">Välj upp till 10 kalendrar</string>
-    <string name="contentDesc_colored_calendar_indicator">Färgad kalenderindikering</string>
-    <string name="noDatesSelected">Välj ett datum</string>
     <string name="Todo">Att göra</string>
     <string name="todoFilter">Filtrera kurser</string>
     <string name="filterByEllipsis">Filtrera efter ...</string>
     <string name="favoritedCoursesLabel">Favoritmärkta kurser</string>
     <string name="Event">Händelse</string>
-    <string name="eventSuccessfulCreation">Händelsen skapades</string>
     <string name="eventSuccessfulDeletion">Händelsen togs bort</string>
-    <string name="newEvent">Ny händelse</string>
-    <string name="enterTitle">Ange titel</string>
-    <string name="enterLocation">Ange plats</string>
-    <string name="addNote">Lägg till notering</string>
-    <string name="titleIconDescription">Titelikon</string>
-    <string name="dateIconDescription">Datumikon</string>
     <string name="timeIconDescription">Tidsikon</string>
-    <string name="locationIconDescription">Platsikon</string>
-    <string name="noteIconDescription">Anteckningsikon</string>
     <string name="toDoTurnIn">Lämna in</string>
     <string name="toDoNoDueDate">Inget inskickningsdatum</string>
 
@@ -398,7 +387,6 @@
     <string name="sendMessage">Skicka meddelande</string>
     <string name="userAvatar">Användarens avatar</string>
 
-    <string name="calendarIcon">Kalenderikon</string>
     <string name="assignmentIcon">Uppgiftsikon</string>
     <string name="announcementIcon">Anslagsikon</string>
     <string name="conversationIcon">Konversationsikon</string>
@@ -432,11 +420,10 @@
     <string name="modified">Senast ändrad:</string>
     <string name="lastModified">Senast ändrad: %1$s</string>
 
-    <string name="startMasquerading">Påbörja agerande som</string>
-    <string name="stopMasquerading">Stoppa agerande som</string>
+    <string name="startMasquerading">Börja uppträda som användare</string>
+    <string name="stopMasquerading">Sluta uppträda som användare</string>
     <string name="userId">Användar-ID</string>
-    <string name="masqueradeFail">Ett fel uppstod när du försökte agera som</string>
-
+    <string name="masqueradeFail">Ett fel inträffade vid försök att uppträda som användaren.</string>
     <string name="emptyId">ID kan inte lämnas tomt</string>
 
     <string name="goToQuiz">Gå till quiz</string>
@@ -571,7 +558,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Kalendern startar på måndag</string>
     <string name="profile">Profil</string>
 
     <string name="noSubject">(Inget ämne)</string>
@@ -641,6 +627,11 @@
     <string name="accountPreferences">Kontoinställningar</string>
     <string name="pinAndFingerprint">PIN och fingeravtryck</string>
 
+    <string name="pairWithObserver">Koppla med observatör</string>
+    <string name="pairWithObserverDetails">Be din förälder scanna QR-koden från Canvas Parent-appen för att parkopplas med dig. Den här koden upphör att gälla om sju dagar, eller efter en användning.</string>
+    <string name="pairingCodeLabel">Parkopplingskod:\u0020</string>
+    <string name="pairingCodeErrorTitle">Parkopplingskodfel</string>
+    <string name="pairingCodeErrorDescription">Det gick inte att hämta en parkopplingskod. Den här funktionen stöds endast för studenter.</string>
     <string name="launchSpeedgrader">Öppna Speedgrader</string>
 
     <string name="search_todo">att göra att göra lista</string>
@@ -713,12 +704,7 @@
     <string name="gauge">Mätare</string>
 
     <string name="calendarDay">Dag</string>
-    <string name="calendarWeek">Vecka</string>
-    <string name="calendarMonth">Månad</string>
-    <string name="selectCalendars">Välj kalendrar</string>
     <string name="createNewCalendarEvent">Skapa ny händelse</string>
-    <string name="calendarDialog10Warning">Du kan endast välja 10 kalendrar att visa</string>
-    <string name="calendarDialogNoneWarning">Välj minst en kalender</string>
     <string name="enableFunMode">Stäng av pandorna</string>
 
     <string name="accountNotifications">Anslag</string>
@@ -1017,6 +1003,9 @@
     <string name="filePreviewContentDescription">Förhandsvisningsbild för fil</string>
     <string name="pdfError">Ett fel uppstod vid inläsning av den här PDF:en.</string>
 
+    <string name="featureNotAllowedInStudentView">Tyvärr! Den här funktionen tillåts inte i studentvyn.</string>
+    <string name="nothingToSeeHere">Inget att se här</string>
+    <string name="unsupportedFeature">Funktionen saknar stöd</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Lägg till student</string>
     <string name="addChildSubTitle">Ange kopplingskoden du fått för studenter.</string>
@@ -1055,6 +1044,9 @@
     <string name="gradeAfterPosting">Bedöm efter publicering</string>
     <string name="gradeOverride">Åsidosättning av omdöme</string>
     <string name="currentGrade">Aktuell omdöme</string>
+    <string name="opensInCanvasStudent">Öppnas i Canvas Student</string>
+    <string name="tab_student_view">Studentens vy</string>
+
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Vald rubrik: %s</string>
     <string name="content_description_chosen_body">Vald brödtext: %s</string>
@@ -1146,4 +1138,5 @@
     <string name="concludedConferences">Avslutade konferenser</string>
     <string name="conferenceDetails">Konferensinformation</string>
     <string name="recordings">Inspelningar</string>
+    <string name="conferenceInProgress">Konferens pågår...</string>
 </resources>

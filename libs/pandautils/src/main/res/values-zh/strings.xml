@@ -382,6 +382,9 @@
     <string name="notificationChannelNamePrimary">常规 Canvas 通知</string>
     <string name="notificationChannelDescriptionPrimary">在 Canvas 通知首选项部分可对通知进行进一步配置。</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d 条新通知</item>
+    </plurals>
     <string name="copyLinkAddress">复制链接地址</string>
     <string name="copyLink">复制链接</string>
     <string name="linkCopied">已复制链接</string>

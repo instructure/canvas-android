@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
@@ -124,10 +124,10 @@
 
     <string name="masqueradeErrorUserId">You must enter a user id.</string>
     <string name="masqueradeErrorDomain">You must enter a valid domain.</string>
-    <string name="masqueradeError">Error trying to masquerade.</string>
+    <string name="masqueradeError">Error trying to act as user.</string>
     <string name="masqueradeInfo">\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.</string>
     <string name="masqueradingAs">You are acting as %s</string>
-    <string name="stopActingAsTitle">Stop acting as...</string>
+    <string name="stopActingAsTitle">Stop acting as…</string>
     <string name="stopActingAsMessage">You will stop acting as %s and return to your account.</string>
     <string name="weMadeChanges">We\'ve made a few changes.</string>
     <string name="whatsNewText">See what\'s new</string>

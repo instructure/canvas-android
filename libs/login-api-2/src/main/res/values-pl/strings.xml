@@ -121,10 +121,10 @@
 
     <string name="masqueradeErrorUserId">Musisz wpisać ID użytkownika.</string>
     <string name="masqueradeErrorDomain">Musisz wpisać prawidłową domenę.</string>
-    <string name="masqueradeError">Błąd podczas próby maskowania.</string>
+    <string name="masqueradeError">Błąd podczas działania jako użytkownik</string>
     <string name="masqueradeInfo">\"Podszywanie\" polega na logowaniu się jako inny użytkownik bez użycia hasła. Będzie można podejmować wszelkie działania z punktu widzenia tego użytkownika. W dzienniku audytu zostanie jednak zapisana informacja, że to Ty wykonywałeś(aś) działania w imieniu tego użytkownika.</string>
     <string name="masqueradingAs">Podszywasz się jako %s</string>
-    <string name="stopActingAsTitle">Zatrzymaj podszywanie się jako...</string>
+    <string name="stopActingAsTitle">Przestań działać jako użytkownik...</string>
     <string name="stopActingAsMessage">Zatrzymasz podszywanie się jako %s i powrócisz do swojego konta.</string>
 
     <string name="weMadeChanges">Wprowadziliśmy kilka zmian.</string>

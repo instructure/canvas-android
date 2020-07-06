@@ -385,6 +385,9 @@
     <string name="notificationChannelNamePrimary">Avètisman Jeneral Canvas</string>
     <string name="notificationChannelDescriptionPrimary">Plis konfigirasyon avètisman posib nan seksyon Preferans Avètisman Canvas la.</string>
 
+    <plurals name="notificationGroupContent">
+        <item quantity="other">%d Nouvo notifikasyon</item>
+    </plurals>
     <string name="copyLinkAddress">Kopye lyen</string>
     <string name="copyLink">Kopye Lyen</string>
     <string name="linkCopied">Lyen kopye</string>

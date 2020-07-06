@@ -18,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/canvas_page.dart';
 import 'package:flutter_parent/models/course.dart';
+import 'package:flutter_parent/models/course_settings.dart';
 import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
@@ -131,6 +132,10 @@ void main() {
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
 
+    when(courseInteractor.loadCourseSettings(courseId, forceRefresh: true)).thenAnswer((_) async {
+      return CourseSettings((b) => b..courseSummary = true);
+    });
+
     await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
@@ -138,6 +143,29 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
+    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
+
+    expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Does not show summary tab if summary disable in course settings', (tester) async {
+    final course = Course((b) => b
+      ..id = courseId
+      ..syllabusBody = 'body'
+      ..homePage = HomePage.syllabus
+      ..name = 'Course Name');
+
+    when(courseInteractor.loadCourseSettings(courseId, forceRefresh: true)).thenAnswer((_) async {
+      return CourseSettings((b) => b..courseSummary = false);
+    });
+
+    await tester.pumpWidget(TestApp(CourseDetailsScreen.withCourse(course)));
+    await tester.pump(); // Widget creation
+    await tester.pump(); // Future resolved
+
+    expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
+    expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
     expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
@@ -243,6 +271,10 @@ void main() {
       ..syllabusBody = 'hi'
       ..homePage = HomePage.syllabus
       ..name = 'Course Name');
+
+    when(courseInteractor.loadCourseSettings(courseId, forceRefresh: true)).thenAnswer((_) async {
+      return CourseSettings((b) => b..courseSummary = true);
+    });
 
     await tester.pumpWidget(TestApp(
       CourseDetailsScreen.withCourse(course),

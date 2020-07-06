@@ -227,6 +227,9 @@
     <string name="submission_status_excused">已免除</string>
     <string name="last_login_format">上一次登入：%s</string>
 
+    <string name="muteGrades">隱藏評分</string>
+    <string name="unmuteGrades">取消隱藏評分</string>
+    <string name="gradesMutedLabel">已隱藏評分</string>
     <string name="turnOnAnonymousGrading">開啟匿名評分功能</string>
     <string name="turnOffAnonymousGrading">關閉匿名評分功能</string>
     <string name="anonymousGradingLabel">匿名評分</string>
@@ -412,9 +415,7 @@
 
   <string name="not_a_teacher">不是教師？</string>
     <string name="not_a_teacher_tap_to_visit_play_store">我們其他應用程式可能更適合您。按一查看 Play Store。</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">評分</string>
+    <string name="sg_tab_grade">評分</string>
     <string name="sg_tab_comments">評論</string>
     <string name="sg_tab_files">文檔</string>
     <string name="filter_submissions">篩選器所選項目</string>
@@ -598,10 +599,6 @@
         <item quantity="other">%d 個問題</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="other">%s 分鐘</item>
-    </plurals>
-
     <string name="discussion_details">討論詳細資料</string>
     <string name="discussions_pinned">已釘選</string>
     <string name="discussions_unpinned">討論區</string>
@@ -619,7 +616,6 @@
     <string name="discussions_reply">回覆</string>
     <string name="discussions_edit">編輯</string>
     <string name="discussions_forbidden">只有曾發送一個或以上回覆的才能查閱回覆。</string>
-    <string name="discussions_unknown_author">未知作者</string>
     <string name="discussions_delete">刪除討論區</string>
     <string name="discussions_delete_title">刪除討論區？</string>
     <string name="discussions_delete_message">系統會刪除整個討論區和主題。</string>
@@ -716,7 +712,6 @@
     <string name="privacyPolicy">《隱私政策》</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">《使用條款》</string>
-    <string name="openSource">開源</string>
     <string name="searchGuides">搜尋 Canvas 指南</string>
     <string name="searchGuidesDetails">找出常見問題的答案</string>
     <string name="reportProblem">報告問題</string>
@@ -770,7 +765,6 @@
     <string name="filterPeople">篩選成員</string>
     <string name="loadMore">載入更多</string>
     <string name="latestStudentActivityAtFormatted">最後活動於 %1$s %2$s。</string>
-    <string name="sectionFormatted">分班：%s</string>
     <string name="errorLoadingStudentContextCard">無法載入此使用者的詳細資料。</string>
     <string name="enrollmentTypeStudent">學生</string>
     <string name="enrollmentTypeTeacher">教師</string>
@@ -881,8 +875,6 @@
     <string name="allSections">所有章節</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">現時無法載入此 LTI 工具。</string>
     <string name="downloading">正在下載...</string>
-
 </resources>

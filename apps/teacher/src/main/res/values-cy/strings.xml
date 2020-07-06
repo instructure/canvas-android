@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Wedi esgusodi</string>
     <string name="last_login_format">Manylion mewngofnodi diwethaf: %s</string>
 
+    <string name="muteGrades">Tewi Graddau</string>
+    <string name="unmuteGrades">Dad-dewi Graddau</string>
+    <string name="gradesMutedLabel">Graddau wedi’u tewi</string>
     <string name="turnOnAnonymousGrading">Dechrau Graddio’n Ddienw</string>
     <string name="turnOffAnonymousGrading">Diffodd Graddio’n Ddienw</string>
     <string name="anonymousGradingLabel">Graddio’n Ddienw</string>
@@ -416,9 +419,7 @@
 
   <string name="not_a_teacher">Ddim yn athro?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">Efallai y byddai un o\'r apiau eraill yn fwy addas. Tapiwch un i fynd i\'r Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">Gradd</string>
+    <string name="sg_tab_grade">Gradd</string>
     <string name="sg_tab_comments">Sylwadau</string>
     <string name="sg_tab_files">Ffeiliau</string>
     <string name="filter_submissions">Hidlo Cyflwyniadau</string>
@@ -610,11 +611,6 @@
         <item quantity="other">%d cwestiwn</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s Munud</item>
-        <item quantity="other">%s Munud</item>
-    </plurals>
-
     <string name="discussion_details">Manylion Trafodaeth</string>
     <string name="discussions_pinned">Wedi’i phinio</string>
     <string name="discussions_unpinned">Trafodaethau</string>
@@ -632,7 +628,6 @@
     <string name="discussions_reply">Ateb</string>
     <string name="discussions_edit">Golygu</string>
     <string name="discussions_forbidden">Dim ond y rheini sydd wedi postio o leiaf un ateb sy’n gallu gweld yr atebion.</string>
-    <string name="discussions_unknown_author">Awdur Dieithr</string>
     <string name="discussions_delete">Dileu Trafodaeth</string>
     <string name="discussions_delete_title">Dileu Trafodaeth?</string>
     <string name="discussions_delete_message">Bydd hyn yn dileu’r holl drafodaeth ac edefyn.</string>
@@ -729,7 +724,6 @@
     <string name="privacyPolicy">Polisi Preifatrwydd</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Telerau Defnyddio</string>
-    <string name="openSource">Ffynhonnell Agored</string>
     <string name="searchGuides">Chwilio drwy Ganllawiau Canvas</string>
     <string name="searchGuidesDetails">Dod o hyd i atebion i gwestiynau cyffredin</string>
     <string name="reportProblem">Rhoi gwybod am broblem</string>
@@ -783,7 +777,6 @@
     <string name="filterPeople">Hidlo Pobl</string>
     <string name="loadMore">Llwytho Mwy</string>
     <string name="latestStudentActivityAtFormatted">Gweithgarwch diweddaraf ar %1$s am %2$s</string>
-    <string name="sectionFormatted">Adran: %s</string>
     <string name="errorLoadingStudentContextCard">Does dim modd llwytho manylion ar gyfer y defnyddiwr hwn.</string>
     <string name="enrollmentTypeStudent">Myfyriwr</string>
     <string name="enrollmentTypeTeacher">Athro</string>
@@ -896,8 +889,6 @@
     <string name="allSections">Pob Adran</string>
 
     <string name="gauge">Medrydd</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
-    <string name="downloading">Wrthi\'n llwytho i lawr...</string>
-
+    <string name="downloading">Wrthi’n llwytho i lawr...</string>
 </resources>

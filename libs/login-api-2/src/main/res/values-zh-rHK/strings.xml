@@ -121,7 +121,7 @@
 
     <string name="masqueradeErrorUserId">您必須輸入使用者 ID。</string>
     <string name="masqueradeErrorDomain">您必須輸入有效的網域。</string>
-    <string name="masqueradeError">嘗試以其他身份檢視時發生錯誤。</string>
+    <string name="masqueradeError">嘗試作為使用者時出現錯誤。</string>
     <string name="masqueradeInfo">\"「作為」\"本質上是以此使用者身份登入，沒有密碼。您將能夠進行任何操作，就好像您就是此使用者一樣，並且，其他使用者也會認為是此使用者執行了操作。然而，審計日誌會記錄事實，即您是代表此使用者執行操作的人。</string>
     <string name="masqueradingAs">您正在作為 %s</string>
     <string name="stopActingAsTitle">停止作為...</string>

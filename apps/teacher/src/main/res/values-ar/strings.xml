@@ -247,6 +247,9 @@
     <string name="submission_status_excused">غير إجباري</string>
     <string name="last_login_format">آخر تسجيل دخول: %s</string>
 
+    <string name="muteGrades">إخفاء الدرجات</string>
+    <string name="unmuteGrades">إلغاء إخفاء الدرجات</string>
+    <string name="gradesMutedLabel">تم إخفاء الدرجات</string>
     <string name="turnOnAnonymousGrading">تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="turnOffAnonymousGrading">إيقاف تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="anonymousGradingLabel">تقييم الدرجات دون الكشف عن الهوية</string>
@@ -432,9 +435,7 @@
 
   <string name="not_a_teacher">لستَ معلمًا؟</string>
     <string name="not_a_teacher_tap_to_visit_play_store">ربما تكون إحدى تطبيقاتنا الأخرى مناسبة بشكل أفضل. اضغط على واحد لزيارة Play Store.</string>
-    <string name="canvas_lowercase">canvas</string>
-
-  <string name="sg_tab_grade">الدرجة</string>
+    <string name="sg_tab_grade">الدرجة</string>
     <string name="sg_tab_comments">التعليقات</string>
     <string name="sg_tab_files">الملفات</string>
     <string name="filter_submissions">تصفية الإرسالات</string>
@@ -658,15 +659,6 @@
         <item quantity="other">%d أسئلة</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="zero">%s دقائق</item>
-        <item quantity="one">%s دقيقة</item>
-        <item quantity="two">%s دقائق</item>
-        <item quantity="few">%s دقائق</item>
-        <item quantity="many">%s دقائق</item>
-        <item quantity="other">%s دقائق</item>
-    </plurals>
-
     <string name="discussion_details">تفاصيل النقاش</string>
     <string name="discussions_pinned">تم التثبيت</string>
     <string name="discussions_unpinned">النقاشات</string>
@@ -684,7 +676,6 @@
     <string name="discussions_reply">رد</string>
     <string name="discussions_edit">تحرير</string>
     <string name="discussions_forbidden">تظهر الردود فقط للأشخاص الذين أرسلوا ردًا واحدًا على الأقل.</string>
-    <string name="discussions_unknown_author">مؤلف غير معروف</string>
     <string name="discussions_delete">حذف النقاش</string>
     <string name="discussions_delete_title">هل تريد حذف النقاش؟</string>
     <string name="discussions_delete_message">سيؤدي هذا إلى حذف النقاش والمحادثة بأكملها.</string>
@@ -781,7 +772,6 @@
     <string name="privacyPolicy">سياسة الخصوصية</string>
     <string name="EULA">اتفاقية ترخيص المستخدم</string>
     <string name="termsOfUse">شروط الاستخدام</string>
-    <string name="openSource">مصدر مفتوح</string>
     <string name="searchGuides">البحث في Canvas Guides</string>
     <string name="searchGuidesDetails">احصل على إجابات للأسئلة المتداولة</string>
     <string name="reportProblem">إبلاغ عن مشكلة</string>
@@ -835,7 +825,6 @@
     <string name="filterPeople">تصفية الأشخاص</string>
     <string name="loadMore">تحميل المزيد</string>
     <string name="latestStudentActivityAtFormatted">آخر نشاط في %1$s في تمام الساعة %2$s.</string>
-    <string name="sectionFormatted">القسم: %s</string>
     <string name="errorLoadingStudentContextCard">تعذر تحميل التفاصيل لهذا المستخدم.</string>
     <string name="enrollmentTypeStudent">طالب</string>
     <string name="enrollmentTypeTeacher">المعلم</string>
@@ -956,8 +945,6 @@
     <string name="allSections">كل الأقسام</string>
 
     <string name="gauge">Gauge</string>
-    <string name="arc">Arc</string>
     <string name="ltiLaunchFailure">تعذر تحميل أداة LTI في الوقت الحالي.</string>
     <string name="downloading">جارٍ التنزيل...</string>
-
 </resources>

@@ -50,6 +50,10 @@
     <string name="submitted">Skilað</string>
     <string name="notSubmitted">Ekki lagt fram</string>
     <string name="allowedFileTypes">Leyfilegar tegundir skráa</string>
+    <string name="attempts">Tilraunir</string>
+    <string name="attemptsAllowedLabel">Tilraunir leyfðar</string>
+    <string name="attemptsUsedLabel">Tilraunir notaðar</string>
+    <string name="noAttemptsLeft">Engar tilraunir eftir</string>
     <string name="resubmitAssignment">Endurskila verkefni</string>
     <string name="launchExternalTool">Nota ytra verkfæri</string>
     <string name="preview">Forskoðun</string>
@@ -222,28 +226,13 @@
     <string name="addMessage">Bæta við skilaboðum</string>
     <string name="monologue">Einræða</string>
     <string name="noItemsToDisplayShort">Engin hlutir til að sýna</string>
-    <string name="emptyCalendarDate">Ekkert skipulagt fyrir</string>
-    <string name="emptyCalendarWeek">Ekkert skipulagt fyrir vikuna</string>
-    <string name="emptyCalendarMonth">Ekkert skipulagt fyrir mánuðinn</string>
-    <string name="selectCanvasCalendars">Veldu allt að 10 dagatöl</string>
-    <string name="contentDesc_colored_calendar_indicator">Litaður dagatalsvísir</string>
-    <string name="noDatesSelected">Veldu dagsetningu</string>
     <string name="Todo">Verkefni</string>
     <string name="todoFilter">Sía námskeið</string>
     <string name="filterByEllipsis">Sía eftir&#8230;</string>
     <string name="favoritedCoursesLabel">Uppáhalds námskeið</string>
     <string name="Event">Viðburður</string>
-    <string name="eventSuccessfulCreation">Viðburður var stofnaður</string>
     <string name="eventSuccessfulDeletion">Viðburði var eytt</string>
-    <string name="newEvent">Nýr viðburður</string>
-    <string name="enterTitle">Settu inn titli</string>
-    <string name="enterLocation">Settu inn staðsetningu</string>
-    <string name="addNote">Bæta við glósu</string>
-    <string name="titleIconDescription">Titilstákn</string>
-    <string name="dateIconDescription">Dagsetningartákn</string>
     <string name="timeIconDescription">Tímatákn</string>
-    <string name="locationIconDescription">Staðsetningartákn</string>
-    <string name="noteIconDescription">Glósutákn</string>
     <string name="toDoTurnIn">Skila</string>
     <string name="toDoNoDueDate">Enginn skiladagur</string>
 
@@ -400,7 +389,6 @@
     <string name="sendMessage">Senda skilaboð</string>
     <string name="userAvatar">Notandagengill</string>
 
-    <string name="calendarIcon">Dagatalstákn</string>
     <string name="assignmentIcon">Verkefnistákn</string>
     <string name="announcementIcon">Tilkynningatákn</string>
     <string name="conversationIcon">Samtalstákn</string>
@@ -435,11 +423,10 @@
     <string name="modified">Síðast breytt:</string>
     <string name="lastModified">Síðast breytt: %1$s</string>
 
-    <string name="startMasquerading">Byrjaðu að dyljast</string>
-    <string name="stopMasquerading">Hætta að dyljast</string>
+    <string name="startMasquerading">Byrja að vera notandi</string>
+    <string name="stopMasquerading">Hætta að vera notandi</string>
     <string name="userId">Auðkenni notanda</string>
-    <string name="masqueradeFail">Villa kom upp við að reyna að dyljast</string>
-
+    <string name="masqueradeFail">Villa kom upp við að reyna að vera notandi</string>
     <string name="emptyId">Auðkenni getur ekki verið autt</string>
 
     <string name="goToQuiz">Farðu í próf</string>
@@ -578,7 +565,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Dagatal byrjar á mánudegi</string>
     <string name="profile">Upplýsingar</string>
 
     <string name="noSubject">(Ekkert efnisheiti)</string>
@@ -650,6 +636,11 @@
     <string name="accountPreferences">Kjörstillingar reiknings</string>
     <string name="pinAndFingerprint">PIN-númer og fingrafar</string>
 
+    <string name="pairWithObserver">Para við áhorfanda</string>
+    <string name="pairWithObserverDetails">Láttu foreldra þína skanna þennan QR-kóða úr Canvas foreldra appinu til að para við þig. Þessi kóði rennur út á sjö dögum, eða eftir eina notkun.</string>
+    <string name="pairingCodeLabel">Pörunarkóði:\u0020</string>
+    <string name="pairingCodeErrorTitle">Pörunarkóða villa</string>
+    <string name="pairingCodeErrorDescription">Ekki tókst að endurheimta pörunarkóða. Þessi eiginleiki er bara studdur fyrir nemendur.</string>
     <string name="launchSpeedgrader">Opna Speedgrader</string>
 
     <string name="search_todo">verkefni verkefnalisti</string>
@@ -722,12 +713,7 @@
     <string name="gauge">Mælir</string>
 
     <string name="calendarDay">Dagur</string>
-    <string name="calendarWeek">Vika</string>
-    <string name="calendarMonth">Mánuður</string>
-    <string name="selectCalendars">Velja dagatöl</string>
     <string name="createNewCalendarEvent">Stofna nýjan viðburð</string>
-    <string name="calendarDialog10Warning">Þú getur aðeins valið 10 dagatöl til að sýna</string>
-    <string name="calendarDialogNoneWarning">Veldu að minnsta kosti eitt dagatal</string>
     <string name="enableFunMode">Slökkva á pöndunum</string>
 
     <string name="accountNotifications">Tilkynningar</string>
@@ -1027,6 +1013,9 @@
     <string name="filePreviewContentDescription">Forskoðun skráar mynd</string>
     <string name="pdfError">Villa kom upp við að sækja þetta PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Því miður! Þessi eiginleiki er ekki leyfður fyrir nemendur.</string>
+    <string name="nothingToSeeHere">Hér er ekkert að sjá</string>
+    <string name="unsupportedFeature">Óstuddur eiginleiki</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Bæta við nemanda</string>
     <string name="addChildSubTitle">Settu inn pörunarkóða nemanda sem þú fékkst.</string>
@@ -1065,6 +1054,9 @@
     <string name="gradeAfterPosting">Gefðu einkunn eftir birtingu</string>
     <string name="gradeOverride">Hnekking einkunnar</string>
     <string name="currentGrade">Núverandi einkunn</string>
+
+    <string name="opensInCanvasStudent">Opnast í Canvas Student</string>
+    <string name="tab_student_view">Nemandasýn</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Valinn haus: %s</string>
@@ -1156,4 +1148,5 @@
     <string name="concludedConferences">Loknar ráðstefnur</string>
     <string name="conferenceDetails">Upplýsingar um ráðstefnur</string>
     <string name="recordings">Upptökur</string>
+    <string name="conferenceInProgress">Ráðstefna í gangi</string>
 </resources>

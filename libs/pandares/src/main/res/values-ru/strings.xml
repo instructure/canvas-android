@@ -52,6 +52,10 @@
     <string name="submitted">Отправлено</string>
     <string name="notSubmitted">Не отправлено</string>
     <string name="allowedFileTypes">Разрешенные типы файлов</string>
+    <string name="attempts">Попытки</string>
+    <string name="attemptsAllowedLabel">Разрешенное число попыток</string>
+    <string name="attemptsUsedLabel">Использованное число попыток</string>
+    <string name="noAttemptsLeft">Попыток не осталось</string>
     <string name="resubmitAssignment">Повторная отправка задания</string>
     <string name="launchExternalTool">Запуск внешнего инструмента</string>
     <string name="preview">Предпросмотр</string>
@@ -224,28 +228,13 @@
     <string name="addMessage">Добавить сообщение</string>
     <string name="monologue">Монолог</string>
     <string name="noItemsToDisplayShort">Нет элементов для отображения</string>
-    <string name="emptyCalendarDate">Ничего не запланировано на</string>
-    <string name="emptyCalendarWeek">Ничего не запланировано на неделю</string>
-    <string name="emptyCalendarMonth">Ничего не запланировано на месяц</string>
-    <string name="selectCanvasCalendars">Выберите до 10 календарей</string>
-    <string name="contentDesc_colored_calendar_indicator">Цветной индикатор расписания</string>
-    <string name="noDatesSelected">Пожалуйста, выберите дату</string>
     <string name="Todo">Задачи</string>
     <string name="todoFilter">Фильтровать курсы</string>
     <string name="filterByEllipsis">Фильтровать по&#8230;</string>
     <string name="favoritedCoursesLabel">Избранные курсы</string>
     <string name="Event">Событие</string>
-    <string name="eventSuccessfulCreation">Мероприятие было успешно создано</string>
     <string name="eventSuccessfulDeletion">Мероприятие было успешно удалено</string>
-    <string name="newEvent">Новое мероприятие</string>
-    <string name="enterTitle">Введите название</string>
-    <string name="enterLocation">Введите Местоположение</string>
-    <string name="addNote">Добавить заметку</string>
-    <string name="titleIconDescription">Иконка названия</string>
-    <string name="dateIconDescription">Иконка даты</string>
     <string name="timeIconDescription">Значок времени</string>
-    <string name="locationIconDescription">Иконка местоположения</string>
-    <string name="noteIconDescription">Иконка заметки</string>
     <string name="toDoTurnIn">Включить</string>
     <string name="toDoNoDueDate">Срок выполнения не задан</string>
 
@@ -412,7 +401,6 @@
     <string name="sendMessage">Отправить сообщение</string>
     <string name="userAvatar">Аватар пользователя</string>
 
-    <string name="calendarIcon">Иконка календаря</string>
     <string name="assignmentIcon">Иконка задания</string>
     <string name="announcementIcon">Иконка объявления</string>
     <string name="conversationIcon">Иконка разговора</string>
@@ -447,11 +435,10 @@
     <string name="modified">Последнее изменение:</string>
     <string name="lastModified">Последнее изменение: %1$s</string>
 
-    <string name="startMasquerading">Начать подмену</string>
-    <string name="stopMasquerading">Остановить подмену</string>
+    <string name="startMasquerading">Начать действовать как пользователь</string>
+    <string name="stopMasquerading">Перестать действовать как пользователь</string>
     <string name="userId">Идентификатор пользователя</string>
-    <string name="masqueradeFail">При попытке подмены возникла ошибка</string>
-
+    <string name="masqueradeFail">Произошла ошибка при попытке действовать как пользователь</string>
     <string name="emptyId">ID не может быть пустым</string>
 
     <string name="goToQuiz">Перейти к тестовому заданию</string>
@@ -590,7 +577,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Календарь начинается в понедельник</string>
     <string name="profile">Профиль</string>
 
     <string name="noSubject">(Без темы)</string>
@@ -662,6 +648,11 @@
     <string name="accountPreferences">Параметры учетной записи</string>
     <string name="pinAndFingerprint">PIN-код и отпечаток пальца</string>
 
+    <string name="pairWithObserver">Сопряжение с наблюдателем</string>
+    <string name="pairWithObserverDetails">Отсканировал ли ваш родитель этот QR-код из приложения Canvas Parent для сопряжения с вами. Срок действия этого кода истекает через семь дней или после однократного использования.</string>
+    <string name="pairingCodeLabel">Код сопряжения:\u0020</string>
+    <string name="pairingCodeErrorTitle">Ошибка кода сопряжения</string>
+    <string name="pairingCodeErrorDescription">Невозможно получить код сопряжения. Эта функция поддерживается только для студентов.</string>
     <string name="launchSpeedgrader">Открыть Speedgrader</string>
 
     <string name="search_todo">для выполнения выполнить список заданий список задач</string>
@@ -734,12 +725,7 @@
     <string name="gauge">Gauge</string>
 
     <string name="calendarDay">День</string>
-    <string name="calendarWeek">Неделя</string>
-    <string name="calendarMonth">Месяц</string>
-    <string name="selectCalendars">Выбрать календари</string>
     <string name="createNewCalendarEvent">Создать новое событие</string>
-    <string name="calendarDialog10Warning">Вы можете выбрать только 10 календарей для отображения</string>
-    <string name="calendarDialogNoneWarning">Выберите хотя бы один календарь</string>
     <string name="enableFunMode">Выключить панд</string>
 
     <string name="accountNotifications">Объявления</string>
@@ -1051,6 +1037,9 @@
     <string name="filePreviewContentDescription">Изображение для предварительного просмотра</string>
     <string name="pdfError">Ошибка при попытке скачать этот PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Очень жаль! Эта функция недоступна в представлении для студентов.</string>
+    <string name="nothingToSeeHere">Здесь ничего нет для просмотра</string>
+    <string name="unsupportedFeature">Неподдерживаемая функция</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Добавить студента</string>
     <string name="addChildSubTitle">Введите полученный код привязки студента.</string>
@@ -1093,6 +1082,9 @@
     <string name="gradeAfterPosting">Оценка после публикации</string>
     <string name="gradeOverride">Игнорировать оценку</string>
     <string name="currentGrade">Текущая оценка</string>
+
+    <string name="opensInCanvasStudent">Открыть в Canvas Student</string>
+    <string name="tab_student_view">Просмотр студентом</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Выбранная голова: %s</string>
@@ -1186,4 +1178,5 @@
     <string name="concludedConferences">Завершенные конференции</string>
     <string name="conferenceDetails">Данные веб-конференции</string>
     <string name="recordings">Записи</string>
+    <string name="conferenceInProgress">Идет конференция</string>
 </resources>

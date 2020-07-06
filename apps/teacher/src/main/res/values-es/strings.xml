@@ -231,6 +231,9 @@
     <string name="submission_status_excused">Justificado</string>
     <string name="last_login_format">Último inicio de sesión: %s</string>
 
+    <string name="muteGrades">Silenciar calificaciones</string>
+    <string name="unmuteGrades">Activar el sonido de las calificaciones</string>
+    <string name="gradesMutedLabel">Calificaciones silenciadas</string>
     <string name="turnOnAnonymousGrading">Activar calificación anónima</string>
     <string name="turnOffAnonymousGrading">Desactivar calificación anónima</string>
     <string name="anonymousGradingLabel">Calificación anónima</string>
@@ -609,11 +612,6 @@
         <item quantity="other">%d preguntas</item>
     </plurals>
 
-    <plurals name="minutes">
-        <item quantity="one">%s minuto</item>
-        <item quantity="other">%s minutos</item>
-    </plurals>
-
     <string name="discussion_details">Detalles del foro de discusión</string>
     <string name="discussions_pinned">Anclado</string>
     <string name="discussions_unpinned">Foros de discusión</string>
@@ -727,7 +725,6 @@
     <string name="privacyPolicy">Política de privacidad</string>
     <string name="EULA">EULA</string>
     <string name="termsOfUse">Términos de uso</string>
-    <string name="openSource">Abrir fuente</string>
     <string name="searchGuides">Busque en las guías de Canvas</string>
     <string name="searchGuidesDetails">Encontrar respuestas a preguntas comunes</string>
     <string name="reportProblem">Reportar un problema</string>
@@ -781,7 +778,6 @@
     <string name="filterPeople">Filtrar personas</string>
     <string name="loadMore">Cargar más</string>
     <string name="latestStudentActivityAtFormatted">Última actividad el %1$s a las %2$s.</string>
-    <string name="sectionFormatted">Sección: %s</string>
     <string name="errorLoadingStudentContextCard">No se pudieron cargar los detalles de este usuario.</string>
     <string name="enrollmentTypeStudent">Estudiante</string>
     <string name="enrollmentTypeTeacher">Profesor</string>
@@ -895,6 +891,5 @@
 
     <string name="gauge">Indicador</string>
     <string name="ltiLaunchFailure">En este momento, no se pudo cargar esta herramienta LTI.</string>
-    <string name="downloading">Descargando...</string>
-
+    <string name="downloading">Descargando&#8230;</string>
 </resources>

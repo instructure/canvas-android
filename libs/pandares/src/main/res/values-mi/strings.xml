@@ -50,6 +50,10 @@
     <string name="submitted">Kua tukuna</string>
     <string name="notSubmitted">E Kore E Tukua</string>
     <string name="allowedFileTypes">Whakāe kōnae momo</string>
+    <string name="attempts">Ngā whakamātau</string>
+    <string name="attemptsAllowedLabel">Ngā whakamātau e whakāetia ana</string>
+    <string name="attemptsUsedLabel">Ngā whakamatau i mahia</string>
+    <string name="noAttemptsLeft">Kaore ngā whakamātau e toe ana</string>
     <string name="resubmitAssignment">Tuku anō i te whakataunga</string>
 
     <string name="launchExternalTool">Neke Taputapu Waho</string>
@@ -218,28 +222,13 @@
     <string name="addMessage">Tāpiri Karere</string>
     <string name="monologue">whai kupu</string>
     <string name="noItemsToDisplayShort">Kaore ngā tūemi hei whakātu</string>
-    <string name="emptyCalendarDate">Kaore he whakamahere mō</string>
-    <string name="emptyCalendarWeek">Kaore he whakamaheretia mo te Wiki</string>
-    <string name="emptyCalendarMonth">Kaore he whakamaheretia mo te marama</string>
-    <string name="selectCanvasCalendars">Tīpakohia Ki 10 ngā Maramataka</string>
-    <string name="contentDesc_colored_calendar_indicator">Tae maramataka tohutohu</string>
-    <string name="noDatesSelected">Tēnā koa tīpako he rā</string>
     <string name="Todo">Hei mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
     <string name="favoritedCoursesLabel">Ngā akoranga tino pai</string>
     <string name="Event">Tauwhāinga</string>
-    <string name="eventSuccessfulCreation">I momoho te hanga Tauwhāinga</string>
     <string name="eventSuccessfulDeletion">I momoho te muku Tauwhāinga</string>
-    <string name="newEvent">Tauwhāinga Hōu</string>
-    <string name="enterTitle">Whakauru Taitara</string>
-    <string name="enterLocation">Whakauru Wāhi</string>
-    <string name="addNote">Tāpiri Tuhipoka</string>
-    <string name="titleIconDescription">Taitara Icon</string>
-    <string name="dateIconDescription">Rā Icon</string>
     <string name="timeIconDescription">Te Wā Icon</string>
-    <string name="locationIconDescription">Wāhi Icon</string>
-    <string name="noteIconDescription">Tuhipoka Icon</string>
     <string name="toDoTurnIn">tahuri i roto i</string>
     <string name="toDoNoDueDate">Kaore he rā tika</string>
 
@@ -396,7 +385,6 @@
     <string name="sendMessage">Tukua Karere</string>
     <string name="userAvatar">Avatar kaiwhakamahi</string>
 
-    <string name="calendarIcon">Maramataka Icon</string>
     <string name="assignmentIcon">Whakataunga Icon</string>
     <string name="announcementIcon">Pānuitanga Icon</string>
     <string name="conversationIcon">Kōrerorero Icon</string>
@@ -430,11 +418,10 @@
     <string name="modified">Whakarerekētanga Mutunga:</string>
     <string name="lastModified">Whakarerekētanga Mutunga: %1$s</string>
 
-    <string name="startMasquerading">tīmata whakāhua kē</string>
-    <string name="stopMasquerading">Kāti e whakāhua kē ana</string>
+    <string name="startMasquerading">Kati te mahi rite tonu i te kaiwhakamahi</string>
+    <string name="stopMasquerading">Kati te mahi rite tonu i te kaiwhakamahi</string>
     <string name="userId">Kaiwhakamahi ID</string>
-    <string name="masqueradeFail">I hapa i te wā e ngana ana ki te whakāhua kē</string>
-
+    <string name="masqueradeFail">He hapa i te wā e ngana ana ki te mahi hei kaiwhakamahi.</string>
     <string name="emptyId">E kore e taea te ID ki te wātea</string>
 
     <string name="goToQuiz">Haere ki te Quiz</string>
@@ -569,7 +556,6 @@
 
 
     <!-- Profile Strings -->
-    <string name="calendarWeekSetting">Ka tīmata te Maramataka i te Mane</string>
     <string name="profile">Kōtaha</string>
 
     <string name="noSubject">(Kaore he kaupapa)</string>
@@ -639,6 +625,11 @@
     <string name="accountPreferences">Nga Manokohanga Pūkete</string>
     <string name="pinAndFingerprint">PIN me te Tapumati</string>
 
+    <string name="pairWithObserver">Hono ki te Kaitirotiro</string>
+    <string name="pairWithObserverDetails">Ma ō matua e matawai tēnei QR waehere mai i te Canvas Matua Taupanga ki te takirua ki ā koe. Ka mutu tēnei waehere i roto i te whitu rā ara i muri o te whakamahi kotahi rānei.</string>
+    <string name="pairingCodeLabel">Waihere Hono\u0020</string>
+    <string name="pairingCodeErrorTitle">Waihere Hono Hapa</string>
+    <string name="pairingCodeErrorDescription">Kaore e taea te tiki atu i te waehere hono Ka tautokitia tēnei āhuatanga mō ngā ākonga anake</string>
     <string name="launchSpeedgrader">tuwhera speedgrader</string>
 
     <string name="search_todo">hei mahi hei mahi ngā hei mahi hei mahi rārangi</string>
@@ -711,12 +702,7 @@
     <string name="gauge">Rahi</string>
 
     <string name="calendarDay">rā</string>
-    <string name="calendarWeek">Wiki</string>
-    <string name="calendarMonth">marama</string>
-    <string name="selectCalendars">Tīpako ngā māramataka</string>
     <string name="createNewCalendarEvent">Waihanga Tauwhāinga Hōu</string>
-    <string name="calendarDialog10Warning">Me kōwhiria e koe 10 Maramataka anake ki te whakātu</string>
-    <string name="calendarDialogNoneWarning">Tēnā koa tīpako te iti rawa kia kotahi Maramataka</string>
     <string name="enableFunMode">Whakaweto ngā Pandas</string>
 
     <string name="accountNotifications">Pānuitanga</string>
@@ -1014,6 +1000,9 @@
     <string name="filePreviewContentDescription">Kōnae arokite āhua</string>
     <string name="pdfError">He hapa i puta i te wā e ngana ana i te uta ana i tēnei PDF.</string>
 
+    <string name="featureNotAllowedInStudentView">Aue āroha mai! Kaore tēnei āhuatanga e whakāetia i roto i te tirohanga ākonga</string>
+    <string name="nothingToSeeHere">Kaore ki te kite i konei.</string>
+    <string name="unsupportedFeature">Āhuatanga kaore i te tautokotia</string>
     <!-- Parent Strings -->
     <string name="addChildTitle">Tapiri ākonga</string>
     <string name="addChildSubTitle">Hwakauru te waehere whakakotahi a te ākonga kua whakaratohia ki a koe.</string>
@@ -1051,6 +1040,9 @@
     <string name="gradeAfterPosting">Te kōeke i muri o te whakairi</string>
     <string name="gradeOverride">Whakakorenga kōeke</string>
     <string name="currentGrade">Kōeke ō naian</string>
+
+    <string name="opensInCanvasStudent">Huaki ai i roto i Canvas Ākonga</string>
+    <string name="tab_student_view">Tirohanga Ākonga</string>
 
     <!-- Panda Avatar Content Descriptions -->
     <string name="content_description_chosen_head">Ūpoko i tohua: %s</string>
@@ -1143,4 +1135,5 @@
     <string name="concludedConferences">Ngā Hui kua oti</string>
     <string name="conferenceDetails">Ngā taipitopito hui</string>
     <string name="recordings">Ngā ōrongongo</string>
+    <string name="conferenceInProgress">Huihuinga I roto i te kaunuku</string>
 </resources>

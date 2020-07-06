@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-04-03T11:02:53.662629",
+  "@@last_modified": "2020-05-15T11:04:11.958548",
   "alertsLabel": "Alertes",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -164,9 +164,33 @@
     "type": "text",
     "placeholders": {}
   },
-  "Tap to favorite the courses you want to see on the Calendar.": "Appuyez pour mettre en favoris les cours que vous souhaitez afficher sur le calendrier.",
-  "@Tap to favorite the courses you want to see on the Calendar.": {
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Appuyez pour mettre en favoris les cours que vous souhaitez afficher sur le calendrier. Sélectionnez-en jusqu'à 10",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
     "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Vous pouvez seulement choisir 10 calendriers à afficher",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Vous devez sélectionner au moins un calendrier à afficher.",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Planner Note": "Note à l'intention du planificateur",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Go to today": "Aller à « Aujourd'hui »",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
     "type": "text",
     "placeholders": {}
   },
@@ -544,8 +568,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "There was an error loading your your student’s courses.": "Une erreur est survenue lors du chargement des cours de l’élève.",
-  "@There was an error loading your your student’s courses.": {
+  "There was an error loading your student’s courses.": "Une erreur est survenue lors du chargement des cours de l’élève.",
+  "@There was an error loading your student’s courses.": {
     "description": "Message displayed when the list of student courses could not be loaded",
     "type": "text",
     "placeholders": {}
@@ -790,12 +814,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Set reminder switch": "Bouton rappel planifié",
-  "@Set reminder switch": {
-    "description": "Label for the switch to set a reminder",
-    "type": "text",
-    "placeholders": {}
-  },
   "Set a date and time to be notified of this specific assignment.": "Paramétrez une date et une heure à laquelle être informé de ce travail spécifique.",
   "@Set a date and time to be notified of this specific assignment.": {
     "description": "Description for row to set reminders",
@@ -808,21 +826,9 @@
     "type": "text",
     "placeholders": {}
   },
-  "Description": "Description",
-  "@Description": {
-    "description": "Label for the description of the assignment",
-    "type": "text",
-    "placeholders": {}
-  },
   "Instructions": "Instructions",
   "@Instructions": {
     "description": "Label for the description of the assignment when it has quiz instructions",
-    "type": "text",
-    "placeholders": {}
-  },
-  "No description": "Aucune description",
-  "@No description": {
-    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -865,6 +871,17 @@
   "Notifications for reminders about assignments and calendar events": "Notifications de rappels de travaux et d'événement de calendrier",
   "@Notifications for reminders about assignments and calendar events": {
     "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Reminders have changed!": "Les rappels ont été modifiés !",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Afin de vous fournir une meilleure expérience utilisateur, nous avons changé la façon dont les rappels fonctionnent : Vous pouvez ajouter de nouveaux rappels en affichant un travail ou un événement de calendrier, puis en appuyant sur l’interrupteur situé dans la section « Rappelez-moi » (Remind Me).\n\nAttention, tout rappel créé avec d'anciennes versions de l’application sera incompatible avec les nouveaux changements. Vous devrez donc créer à nouveau ces rappels.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
     "type": "text",
     "placeholders": {}
   },
@@ -934,11 +951,13 @@
     "type": "text",
     "placeholders": {}
   },
-  "dismiss": "Ignorer",
-  "@dismiss": {
+  "dismissAlertLabel": "Rejeter {alertTitle}",
+  "@dismissAlertLabel": {
     "description": "Accessibility label to dismiss an alert",
     "type": "text",
-    "placeholders": {}
+    "placeholders": {
+      "alertTitle": {}
+    }
   },
   "Course Announcement": "Annonce de cours",
   "@Course Announcement": {
@@ -1011,6 +1030,12 @@
   "High Contrast Mode": "Mode contraste élevé",
   "@High Contrast Mode": {
     "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Utiliser le thème sombre pour le contenu Web.",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
     "type": "text",
     "placeholders": {}
   },
@@ -1445,6 +1470,12 @@
     "type": "text",
     "placeholders": {}
   },
+  "Description": "Description",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders": {}
+  },
   "A description is required.": "Une description est requise.",
   "@A description is required.": {
     "description": "Error shown when the description field is empty",
@@ -1588,6 +1619,48 @@
       "userName": {}
     }
   },
+  "How are we doing?": "Comment nous débrouillons-nous ?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Don't show again": "Ne plus montrer à nouveau",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "What can we do better?": "En quoi pouvons-nous nous améliorer ?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Send Feedback": "Envoyer un avis",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Suggestions pour Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} étoile}other{{position} étoiles}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
   "Cancel": "Annuler",
   "@Cancel": {
     "type": "text",
@@ -1630,6 +1703,18 @@
     "type": "text",
     "placeholders": {}
   },
+  "Refresh": "Actualiser",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View Description": "Afficher la description",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders": {}
+  },
   "expanded": "étendu",
   "@expanded": {
     "description": "Description for the accessibility reader for list groups that are expanded",
@@ -1644,6 +1729,12 @@
   },
   "An unexpected error occurred": "Une erreur inattendue s'est produite",
   "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "No description": "Aucune description",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
     "type": "text",
     "placeholders": {}
   },
@@ -1771,6 +1862,42 @@
   "Open In Browser": "Ouvrir dans le navigateur",
   "@Open In Browser": {
     "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Vous trouverez le code QR sur le Web dans votre profil. Cliquez sur « QR pour connexion mobile » dans la liste.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Locate QR Code": "Localiser un code QR",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Veuillez scanner un code QR généré par Canvas.",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "Une erreur est survenue pendant la connexion. Veuillez générer un autre code QR, puis réessayez.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Capture d'écran montrant l’emplacement du générateur de code QR dans le navigateur.",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "QR scanning requires camera access.": "Le scan de code QR nécessite l’accès à l'appareil photo.",
+  "@QR scanning requires camera access.": {
+    "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}
   }

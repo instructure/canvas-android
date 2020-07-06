@@ -79,6 +79,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
     override fun render(state: SyllabusViewState) {
         swipeRefreshLayout.isRefreshing = state is SyllabusViewState.Loading
+        emptyView.setGone()
+        swipeRefreshLayout.setVisible()
 
         when (state) {
             SyllabusViewState.Loading -> Unit
@@ -96,6 +98,19 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
                 syllabusPager.canSwipe = false
 
                 renderEvents(state.eventsState)
+            }
+            is SyllabusViewState.LoadedNoEvents -> {
+                syllabusTabLayout.setGone()
+                syllabusPager.setCurrentItem(0, false)
+                syllabusPager.canSwipe = false
+
+                syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+            }
+            SyllabusViewState.LoadedNothing -> {
+                syllabusTabLayout.setGone()
+                swipeRefreshLayout.setGone()
+                emptyView.setVisible()
+                setEmptyView(emptyView, R.drawable.vd_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
             }
         }.exhaustive
     }
