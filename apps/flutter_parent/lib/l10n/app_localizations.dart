@@ -1041,6 +1041,34 @@ class AppLocalizations {
         examples: const {'percentage': 5},
       );
 
+  /// Student color picker
+
+  String get selectStudentColor => Intl.message(
+        'Select Student Color',
+        desc: 'Title for screen that allows users to assign a color to a specific student',
+      );
+
+  String get colorElectric => Intl.message('Electric, blue', desc: 'Name of the Electric (blue) color');
+
+  String get colorPlum => Intl.message('Plum, Purple', desc: 'Name of the Plum (purple) color');
+
+  String get colorBarney => Intl.message('Barney, Fuschia', desc: 'Name of the Barney (fuschia) color');
+
+  String get colorRaspberry => Intl.message('Raspberry, Red', desc: 'Name of the Raspberry (red) color');
+
+  String get colorFire => Intl.message('Fire, Orange', desc: 'Name of the Fire (orange) color');
+
+  String get colorShamrock => Intl.message('Shamrock, Green', desc: 'Name of the Shamrock (green) color');
+
+  String get errorSavingColor => Intl.message('An error occurred while saving your selection. Please try again.');
+
+  String changeStudentColorLabel(String studentName) => Intl.message(
+        'Change color for $studentName',
+        name: 'changeStudentColorLabel',
+        args: [studentName],
+        desc: 'Accessibility label for the button that lets users change the color associated with a specific student',
+      );
+
   /// Enrollment types
 
   String get enrollmentTypeTeacher => Intl.message('Teacher', desc: 'Label for the Teacher enrollment type');

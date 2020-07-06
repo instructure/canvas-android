@@ -17,11 +17,13 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
@@ -70,7 +72,16 @@ class SplashScreenInteractor {
       }
     }
 
-    return SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
+    SplashScreenData data = SplashScreenData(isObserver, ApiPrefs.getCurrentLogin().canMasquerade);
+
+    if (data.isObserver || data.canMasquerade) await updateUserColors();
+
+    return data;
+  }
+
+  Future<void> updateUserColors() async {
+    var colors = await locator<UserApi>().getUserColors(refresh: true);
+    await locator<UserColorsDb>().insertOrUpdateAll(ApiPrefs.getDomain(), ApiPrefs.getUser().id, colors);
   }
 
   Future<int> getCameraCount() async {

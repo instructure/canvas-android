@@ -61,8 +61,8 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        var idx = widget._students.indexOf(student);
-        ParentTheme.of(context).studentIndex = idx;
+        ApiPrefs.updateCurrentLogin((b) => b..selectedStudentId = student.id);
+        ParentTheme.of(context).setSelectedStudent(student.id);
         Provider.of<SelectedStudentNotifier>(context, listen: false).update(student);
         ApiPrefs.setCurrentStudent(student);
         widget.onTap();

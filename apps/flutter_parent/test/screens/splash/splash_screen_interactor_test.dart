@@ -12,15 +12,20 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:built_collection/built_collection.dart';
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/canvas_token.dart';
 import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/models/mobile_verify_result.dart';
+import 'package:flutter_parent/models/user_colors.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/auth_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -28,12 +33,14 @@ import 'package:test/test.dart';
 import '../../utils/canvas_model_utils.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
+import '../dashboard/dashboard_interactor_test.dart';
 
 void main() {
   _MockDashboardInteractor dashboardInteractor = _MockDashboardInteractor();
   _MockAccountsApi accountsApi = _MockAccountsApi();
   _MockAuthApi authApi = _MockAuthApi();
   final mockScanner = MockBarcodeScanner();
+  MockUserApi userApi = MockUserApi();
 
   Login login = Login((b) => b
     ..domain = 'domain'
@@ -58,12 +65,14 @@ void main() {
     locator.registerLazySingleton<AccountsApi>(() => accountsApi);
     locator.registerLazySingleton<AuthApi>(() => authApi);
     locator.registerLazySingleton<BarcodeScanVeneer>(() => mockScanner);
+    locator.registerLazySingleton<UserApi>(() => userApi);
   });
 
   setUp(() async {
     reset(dashboardInteractor);
     reset(accountsApi);
     reset(authApi);
+    reset(userApi);
     ApiPrefs.clean();
 
     // Default return value for getStudents is an empty list
@@ -75,6 +84,9 @@ void main() {
     // Default return value for auth apis
     when(authApi.mobileVerify(any)).thenAnswer((_) async => mobileVerifyResult);
     when(authApi.getTokens(any, any)).thenAnswer((_) async => canvasToken);
+
+    // Default return value for user api
+    when(userApi.getUserColors()).thenAnswer((_) async => UserColors());
 
     await setupPlatformChannels();
   });
@@ -238,6 +250,19 @@ void main() {
     final prefCount = await ApiPrefs.getCameraCount();
 
     expect(count, prefCount);
+  });
+
+  test('updateUserColors calls UserApi and saves result to database', () async {
+    var expectedColors = UserColors((b) => b..customColors = MapBuilder({'user_1234': '#FFFFFFFF'}));
+    when(userApi.getUserColors(refresh: true)).thenAnswer((_) async => expectedColors);
+    await ApiPrefs.switchLogins(login);
+
+    await SplashScreenInteractor().updateUserColors();
+
+    verify(userApi.getUserColors(refresh: true));
+
+    var db = (locator<UserColorsDb>() as MockUserColorsDb);
+    verify(db.insertOrUpdateAll(login.domain, login.user.id, expectedColors));
   });
 }
 

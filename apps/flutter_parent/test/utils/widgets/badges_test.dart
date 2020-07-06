@@ -24,6 +24,8 @@ import '../test_app.dart';
 
 void main() {
   testWidgetsWithAccessibilityChecks('shows an indicator badge that is the student color', (tester) async {
+    setupTestLocator((_) {});
+
     await tester.pumpWidget(TestApp(IndicatorBadge()));
     await tester.pumpAndSettle();
 
@@ -31,7 +33,7 @@ void main() {
     expect(decoration.color, StudentColorSet.all[0].light);
 
     var state = tester.state(find.byType(MaterialApp));
-    ParentTheme.of(state.context).studentIndex = 1;
+    ParentTheme.of(state.context).setSelectedStudent('1');
     await tester.pumpAndSettle();
 
     decoration = (tester.widgetList(find.byType(Container)).last as Container).decoration as BoxDecoration;

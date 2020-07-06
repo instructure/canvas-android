@@ -50,6 +50,7 @@ import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/reply/conversation_reply_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
+import 'package:flutter_parent/screens/manage_students/student_color_picker_interactor.dart';
 import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
@@ -63,6 +64,7 @@ import 'package:flutter_parent/utils/common_widgets/view_attachment/viewers/audi
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -104,6 +106,7 @@ void setupLocator() {
   locator.registerLazySingleton<Database>(() => DbUtil.instance);
   locator.registerLazySingleton<CalendarFilterDb>(() => CalendarFilterDb());
   locator.registerLazySingleton<ReminderDb>(() => ReminderDb());
+  locator.registerLazySingleton<UserColorsDb>(() => UserColorsDb());
 
   // Interactors
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
@@ -132,6 +135,7 @@ void setupLocator() {
   locator.registerFactory<QRLoginTutorialScreenInteractor>(() => QRLoginTutorialScreenInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
+  locator.registerFactory<StudentColorPickerInteractor>(() => StudentColorPickerInteractor());
   locator.registerFactory<ViewAttachmentInteractor>(() => ViewAttachmentInteractor());
   locator.registerFactory<WebLoginInteractor>(() => WebLoginInteractor());
   locator.registerFactory<WebContentInteractor>(() => WebContentInteractor());

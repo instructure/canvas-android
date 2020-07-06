@@ -51,6 +51,7 @@ import 'package:flutter_parent/utils/common_widgets/error_report/error_report_in
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/notification_util.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
@@ -158,6 +159,8 @@ class MockSnackbar extends Mock implements FlutterSnackbarVeneer {}
 class MockStudentAddedNotifier extends Mock implements StudentAddedNotifier {}
 
 class MockUrlLauncher extends Mock implements UrlLauncher {}
+
+class MockUserColorsDb extends Mock implements UserColorsDb {}
 
 class MockWebLoginInteractor extends Mock implements WebLoginInteractor {}
 
