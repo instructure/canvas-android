@@ -36,22 +36,17 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         if (model.isLoading) return SyllabusViewState.Loading
 
         if (model.course?.isFail == true && model.events?.isFail == true) {
-            return SyllabusViewState.LoadedNoSyllabus(EventsViewState.Error)
+            return SyllabusViewState.Loaded(eventsState = EventsViewState.Error)
         }
 
         val course = model.course?.dataOrNull
         val events = mapEventsResultToViewState(course?.color ?: 0, model.events, context)
         val body = model.syllabus?.description?.takeIf { it.isValid() }
 
-        return if (events is EventsViewState.Empty && body == null) {
-            SyllabusViewState.LoadedNothing
-        } else if (body == null) {
-            SyllabusViewState.LoadedNoSyllabus(events)
-        } else if (events is EventsViewState.Empty) {
-            SyllabusViewState.LoadedNoEvents(body)
-        } else {
-            SyllabusViewState.LoadedFull(body, events)
-        }
+        return SyllabusViewState.Loaded(
+            syllabus = body,
+            eventsState = events.takeUnless { it == EventsViewState.Empty && body != null }
+        )
     }
 
     private fun mapEventsResultToViewState(color: Int, eventsResult: DataResult<List<ScheduleItem>>?, context: Context): EventsViewState {

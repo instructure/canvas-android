@@ -38,7 +38,7 @@ class SyllabusRenderPage : SyllabusPage() {
     private val tabs by OnViewWithId(R.id.syllabusTabLayout)
     private val webView by WaitForViewWithId(R.id.syllabusWebView)
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecycler)
-    private val emptyView by WaitForViewWithId(R.id.emptyView)
+    private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)
 
     fun assertDisplaysToolbarTitle(text: String) {
@@ -51,7 +51,7 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun assertDoesNotDisplaySyllabus() {
         tabs.assertNotDisplayed()
-        onView(withId(R.id.syllabusWebView)).check(doesNotExist())
+        webView.assertNotDisplayed()
     }
 
     fun assertDisplaysSyllabus(text: String, shouldDisplayTabs: Boolean = true) {
@@ -61,7 +61,7 @@ class SyllabusRenderPage : SyllabusPage() {
     }
 
     fun assertDisplaysEmpty() {
-        emptyView.assertDisplayed()
+        eventsEmpty.assertDisplayed()
     }
 
     fun assertDisplaysError() {

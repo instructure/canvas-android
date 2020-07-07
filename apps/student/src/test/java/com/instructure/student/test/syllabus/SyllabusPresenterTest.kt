@@ -129,16 +129,16 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns failed state when model result is failed`() {
-        val expectedState = SyllabusViewState.LoadedNoSyllabus(EventsViewState.Error)
+    fun `Returns Loaded state with event failure when model result is failed`() {
+        val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Error)
         val model = baseModel.copy(course = DataResult.Fail(), events = DataResult.Fail())
         val actualState = SyllabusPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }
 
     @Test
-    fun `Returns LoadedNoSyllabus state with event failure when model has no syllabus and failed events`() {
-        val expectedState = SyllabusViewState.LoadedNoSyllabus(EventsViewState.Error)
+    fun `Returns Loaded state with event failure when model has no syllabus and failed events`() {
+        val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Error)
         val model =
             baseModel.copy(course = DataResult.Success(baseCourse), events = DataResult.Fail())
         val actualState = SyllabusPresenter.present(model, context)
@@ -146,8 +146,8 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedNothing state with empty events when course model has no syllabus and no events`() {
-        val expectedState = SyllabusViewState.LoadedNothing
+    fun `Returns Loaded state with empty events when course model has no syllabus and no events`() {
+        val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Empty)
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(emptyList())
@@ -157,9 +157,9 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedNoSyllabus state with events when course model has no syllabus`() {
+    fun `Returns Loaded state with events when course model has no syllabus`() {
         val expectedState =
-            SyllabusViewState.LoadedNoSyllabus(EventsViewState.Loaded(baseEventsViewState))
+            SyllabusViewState.Loaded(eventsState = EventsViewState.Loaded(baseEventsViewState))
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(baseEvents)
@@ -169,9 +169,9 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedNoSyllabus state with events when course failed`() {
+    fun `Returns Loaded state with events when course failed`() {
         val expectedState =
-            SyllabusViewState.LoadedNoSyllabus(EventsViewState.Loaded(baseEventsViewState.map {
+            SyllabusViewState.Loaded(eventsState = EventsViewState.Loaded(baseEventsViewState.map {
                 it.copy(color = 0)
             }))
         val model =
@@ -181,8 +181,8 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedNoEvents state with syllabus and no events`() {
-        val expectedState = SyllabusViewState.LoadedNoEvents("syllabus")
+    fun `Returns Loaded state with syllabus and empty events`() {
+        val expectedState = SyllabusViewState.Loaded(syllabus = "syllabus")
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(emptyList()),
@@ -193,9 +193,9 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedFull state with events and syllabus`() {
+    fun `Returns Loaded state with events and syllabus`() {
         val expectedState =
-            SyllabusViewState.LoadedFull("syllabus", EventsViewState.Loaded(baseEventsViewState))
+            SyllabusViewState.Loaded(syllabus = "syllabus", eventsState = EventsViewState.Loaded(baseEventsViewState))
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(baseEvents),
@@ -206,7 +206,7 @@ class SyllabusPresenterTest : Assert() {
     }
 
     @Test
-    fun `Returns LoadedFull state with locked events`() {
+    fun `Returns Loaded state with locked events`() {
         val time = Calendar.getInstance().timeInMillis
         val futureDate = Date(time + 100000)
         val pastDate = Date(time - 100000)
@@ -234,7 +234,7 @@ class SyllabusPresenterTest : Assert() {
         )
 
         val expectedState =
-            SyllabusViewState.LoadedNoSyllabus(EventsViewState.Loaded(eventsViewState))
+            SyllabusViewState.Loaded(eventsState = EventsViewState.Loaded(eventsViewState))
         val model = baseModel.copy(course = DataResult.Success(baseCourse), events = events)
         val actualState = SyllabusPresenter.present(model, context)
         assertEquals(expectedState, actualState)
