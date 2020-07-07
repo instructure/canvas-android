@@ -146,7 +146,7 @@ class HelpDialogStyled : DialogFragment() {
                     val intent = populateMailIntent(getString(R.string.featureSubject), getString(R.string.understandRequest), false)
                     startActivity(Intent.createChooser(intent, getString(R.string.sendMail)))
                 }
-                link.url.startsWith("tel:+") -> {
+                link.url.startsWith("tel:") -> {
                     // Support phone links: https://community.canvaslms.com/docs/DOC-12664-4214610054
                     val intent = Intent(Intent.ACTION_DIAL).apply { data = Uri.parse(link.url) }
                     startActivity(intent)
