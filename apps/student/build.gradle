@@ -327,14 +327,15 @@ if (coverageEnabled) {
         def buildType = 'debug'
 
         classDirectories = fileTree(
-                dir: "${project.buildDir}/intermediates/app_classes/${productFlavor}${buildType}",
+                //dir: "${project.buildDir}/intermediates/app_classes/${productFlavor}${buildType}",
+                dir: "${project.buildDir}/intermediates/jacoco_instrumented_classes/${productFlavor}${buildType}/jacoco${productFlavor}${buildType}/out",
                 excludes: ['**/R.class',
                            '**/R$*.class',
                            '**/*$ViewInjector*.*',
                            '**/*$ViewBinder*.*',
                            '**/BuildConfig.*',
                            '**/Manifest*.*'],
-                //includes: ['**/com.instructure.*']
+                includes: ['**/com/instructure/*']
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
