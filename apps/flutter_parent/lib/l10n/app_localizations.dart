@@ -1093,6 +1093,14 @@ class AppLocalizations {
   String get addNewStudent =>
       Intl.message('Add new student', desc: 'Semantics label for the FAB on the Manage Students Screen');
 
+  String get qrLoginSelect => Intl.message('Select', desc: 'Hint text to tell the user to choose one of two options');
+
+  String get qrLoginHaveAccount =>
+      Intl.message('I have a Canvas account', desc: 'Option to select for users that have a canvas account');
+
+  String get qrLoginNewAccount => Intl.message('I don\'t have a Canvas account',
+      desc: 'Option to select for users that don\'t have a canvas account');
+
   /// Event details
 
   String get eventDetailsTitle => Intl.message('Event', desc: 'Title for the event details screen');

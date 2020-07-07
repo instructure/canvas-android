@@ -29,8 +29,9 @@ import 'package:tuple/tuple.dart';
 
 class QRPairingScreen extends StatefulWidget {
   final QRPairingInfo pairingInfo;
+  final bool isCreatingAccount;
 
-  const QRPairingScreen({Key key, this.pairingInfo}) : super(key: key);
+  const QRPairingScreen({Key key, this.pairingInfo, this.isCreatingAccount = false}) : super(key: key);
 
   @override
   _QRPairingScreenState createState() => _QRPairingScreenState();
@@ -139,32 +140,12 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
     if (result is QRPairingInfo) {
       setState(() => _isPairing = true);
 
-      // 'success' is true if pairing worked, false for API/pairing error, null for network error
-      bool success = await _interactor.pairWithStudent(result.code);
-
-      if (success == true) {
-        // If opened from a deep link in a cold state, this will be the top route and we'll want to go to the splash instead of popping
-        if (ModalRoute.of(context).isFirst) {
-          locator<QuickNav>().replaceRoute(context, PandaRouter.rootSplash());
-        } else {
-          locator<StudentAddedNotifier>().notify();
-          Navigator.of(context).pop(true);
-        }
+      if (widget.isCreatingAccount) {
+        // Don't pair, just prep the code/domain for account creation
+        // TODO - Route to account creation with info
+        return;
       } else {
-        Tuple2<String, String> errorInfo;
-        if (success == false) {
-          if (ApiPrefs.isLoggedIn() && !ApiPrefs.getDomain().endsWith(result.domain)) {
-            errorInfo = Tuple2(l10n.qrPairingWrongDomainTitle, l10n.qrPairingWrongDomainSubtitle);
-          } else {
-            errorInfo = Tuple2(l10n.qrPairingFailedTitle, l10n.qrPairingFailedSubtitle);
-          }
-        } else {
-          errorInfo = Tuple2(l10n.genericNetworkError, l10n.qrPairingNetworkError);
-        }
-        setState(() {
-          _isPairing = false;
-          _errorInfo = errorInfo;
-        });
+        _handleScanResultForPairing(result);
       }
     } else if (result is QRPairingScanError) {
       locator<Analytics>().logMessage(result.type.toString());
@@ -182,6 +163,37 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
         case QRPairingScanErrorType.canceled:
           // Don't set or change the error if scan was canceled
           break;
+      }
+      setState(() {
+        _isPairing = false;
+        _errorInfo = errorInfo;
+      });
+    }
+  }
+
+  void _handleScanResultForPairing(QRPairingInfo result) async {
+    var l10n = L10n(context);
+    // 'success' is true if pairing worked, false for API/pairing error, null for network error
+    bool success = await _interactor.pairWithStudent(result.code);
+
+    if (success == true) {
+      // If opened from a deep link in a cold state, this will be the top route and we'll want to go to the splash instead of popping
+      if (ModalRoute.of(context).isFirst) {
+        locator<QuickNav>().replaceRoute(context, PandaRouter.rootSplash());
+      } else {
+        locator<StudentAddedNotifier>().notify();
+        Navigator.of(context).pop(true);
+      }
+    } else {
+      Tuple2<String, String> errorInfo;
+      if (success == false) {
+        if (ApiPrefs.isLoggedIn() && !ApiPrefs.getDomain().endsWith(result.domain)) {
+          errorInfo = Tuple2(l10n.qrPairingWrongDomainTitle, l10n.qrPairingWrongDomainSubtitle);
+        } else {
+          errorInfo = Tuple2(l10n.qrPairingFailedTitle, l10n.qrPairingFailedSubtitle);
+        }
+      } else {
+        errorInfo = Tuple2(l10n.genericNetworkError, l10n.qrPairingNetworkError);
       }
       setState(() {
         _isPairing = false;

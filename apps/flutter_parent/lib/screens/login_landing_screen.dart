@@ -20,6 +20,7 @@ import 'package:flutter_parent/models/login.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_util.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
@@ -137,7 +138,7 @@ class LoginLandingScreen extends StatelessWidget {
   Widget _qrLogin(BuildContext context) {
     return InkWell(
         onTap: () {
-          locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
+          locator<QRLoginUtil>().launchQRTutorial(context);
         },
         child: Container(
           padding: EdgeInsets.all(12.0),

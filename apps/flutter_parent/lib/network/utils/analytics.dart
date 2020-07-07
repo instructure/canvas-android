@@ -35,6 +35,7 @@ class AnalyticsEventConstants {
   static const LOGIN_FAILURE = 'login_failure';
   static const LOGIN_SUCCESS = 'login_success';
   static const LOGOUT = 'logout';
+  static const QR_ACCOUNT_CREATION_CLICKED = 'qr_account_creation_clicked';
   static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
   static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
   static const QR_LOGIN_SUCCESS = 'qr_code_login_success';

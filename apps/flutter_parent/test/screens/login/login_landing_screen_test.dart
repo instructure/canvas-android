@@ -22,7 +22,10 @@ import 'package:flutter_parent/screens/dashboard/dashboard_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
+import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
+import 'package:flutter_parent/screens/pairing/qr_pairing_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_util.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_screen.dart';
@@ -46,6 +49,7 @@ void main() {
   final analytics = _MockAnalytics();
   final interactor = _MockInteractor();
   final authApi = _MockAuthApi();
+  final pairingInteractor = MockPairingInteractor();
 
   final login = Login((b) => b
     ..domain = 'domain'
@@ -56,7 +60,9 @@ void main() {
     locator.registerLazySingleton<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Analytics>(() => analytics);
     locator.registerLazySingleton<AuthApi>(() => authApi);
+    locator.registerLazySingleton<QRLoginUtil>(() => QRLoginUtil());
 
+    locator.registerLazySingleton<PairingInteractor>(() => pairingInteractor);
     locator.registerFactory<DashboardInteractor>(() => interactor);
     locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
     locator.registerFactory<DomainSearchInteractor>(() => null);
@@ -288,7 +294,7 @@ void main() {
     await tester.pageBack();
   });
 
-  testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login Tutorial screen', (tester) async {
+  testWidgetsWithAccessibilityChecks('Tapping QR login shows QR Login picker', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await ApiPrefs.setCameraCount(2);
     await tester.pumpAndSettle();
@@ -296,7 +302,37 @@ void main() {
     await tester.tap(find.text(AppLocalizations().qrCode));
     await tester.pumpAndSettle();
 
+    expect(find.byType(BottomSheet), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping have account in QR Login picker shows QR Login Tutorial screen',
+      (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.setCameraCount(2);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().qrCode));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().qrLoginHaveAccount));
+    await tester.pumpAndSettle();
+
     expect(find.byType(QRLoginTutorialScreen), findsOneWidget);
+  });
+
+  testWidgetsWithAccessibilityChecks('Tapping new account in QR Login picker shows QR Pairing Tutorial screen',
+      (tester) async {
+    await tester.pumpWidget(TestApp(LoginLandingScreen()));
+    await ApiPrefs.setCameraCount(2);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().qrCode));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(AppLocalizations().qrLoginNewAccount));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(QRPairingScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('QR login does not display when camera count is 0', (tester) async {

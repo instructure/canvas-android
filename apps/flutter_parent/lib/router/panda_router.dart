@@ -123,7 +123,8 @@ class PandaRouter {
 
   static String _qrPairing = '/qr_pairing';
 
-  static String qrPairing({String pairingUri}) {
+  static String qrPairing({String pairingUri, bool isCreatingAccount = false}) {
+    if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount ? 1 : 0}';
     if (pairingUri == null) return _qrPairing;
     return '$_qrPairing?${_RouterKeys.qrPairingInfo}=${Uri.encodeQueryComponent(pairingUri)}';
   }
@@ -315,8 +316,11 @@ class PandaRouter {
 
   static Handler _qrPairingHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var pairingInfo = QRUtils.parsePairingInfo(params[_RouterKeys.qrPairingInfo]?.elementAt(0));
+    var isCreatingAccount = params[_RouterKeys.isCreatingAccount]?.elementAt(0) == '1';
     if (pairingInfo is QRPairingInfo) {
       return QRPairingScreen(pairingInfo: pairingInfo);
+    } else if (isCreatingAccount) {
+      return QRPairingScreen(isCreatingAccount: isCreatingAccount);
     } else {
       return QRPairingScreen();
     }
@@ -467,6 +471,7 @@ class _RouterKeys {
   static final domain = 'domain';
   static final eventId = 'eventId';
   static final infoText = 'infoText';
+  static final isCreatingAccount = 'isCreatingAccount';
   static final loginFlow = 'loginFlow';
   static final qrLoginUrl = 'qrLoginUrl';
   static final qrPairingInfo = 'qrPairingInfo';
