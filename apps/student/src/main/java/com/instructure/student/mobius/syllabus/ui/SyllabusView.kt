@@ -78,41 +78,23 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     override fun render(state: SyllabusViewState) {
-        swipeRefreshLayout.isRefreshing = state is SyllabusViewState.Loading
-        emptyView.setGone()
-        swipeRefreshLayout.setVisible()
-
         when (state) {
-            SyllabusViewState.Loading -> Unit
-            is SyllabusViewState.LoadedFull -> {
-                syllabusTabLayout.setVisible()
-                syllabusPager.canSwipe = true
-
-                syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
-
-                renderEvents(state.eventsState)
+            SyllabusViewState.Loading -> {
+                swipeRefreshLayout.isRefreshing = true
             }
-            is SyllabusViewState.LoadedNoSyllabus -> {
-                syllabusTabLayout.setGone()
-                syllabusPager.setCurrentItem(1, false)
-                syllabusPager.canSwipe = false
+            is SyllabusViewState.Loaded -> {
+                swipeRefreshLayout.isRefreshing = false
 
-                renderEvents(state.eventsState)
-            }
-            is SyllabusViewState.LoadedNoEvents -> {
-                syllabusTabLayout.setGone()
-                syllabusPager.setCurrentItem(0, false)
-                syllabusPager.canSwipe = false
+                val hasBoth = state.eventsState != null && state.syllabus != null
+                syllabusTabLayout.setVisible(hasBoth)
+                syllabusPager.canSwipe = hasBoth
 
-                syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
+
+                if (state.syllabus != null) syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+                if (state.eventsState != null) renderEvents(state.eventsState)
             }
-            SyllabusViewState.LoadedNothing -> {
-                syllabusTabLayout.setGone()
-                swipeRefreshLayout.setGone()
-                emptyView.setVisible()
-                setEmptyView(emptyView, R.drawable.vd_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
-            }
-        }.exhaustive
+        }
     }
 
     private fun renderEvents(eventsState: EventsViewState) {
@@ -133,7 +115,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
                 syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
             }
             EventsViewState.Empty -> {
-                setEmptyView(syllabusEmptyView, R.drawable.vd_panda_space, R.string.noAssignments, R.string.noAssignmentsSubtext)
+                setEmptyView(syllabusEmptyView, R.drawable.vd_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
             }
             is EventsViewState.Loaded -> {
                 if (syllabusEventsRecycler?.adapter == null) syllabusEventsRecycler?.adapter = SyllabusEventsAdapter(consumer)
