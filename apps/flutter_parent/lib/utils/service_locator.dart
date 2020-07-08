@@ -54,6 +54,7 @@ import 'package:flutter_parent/screens/masquerade/masquerade_screen_interactor.d
 import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
+import 'package:flutter_parent/screens/qr_login/qr_login_util.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -153,6 +154,7 @@ void setupLocator() {
   locator.registerLazySingleton<NotificationUtil>(() => NotificationUtil());
   locator.registerLazySingleton<OldAppMigration>(() => OldAppMigration());
   locator.registerLazySingleton<PairingUtil>(() => PairingUtil());
+  locator.registerLazySingleton<QRLoginUtil>(() => QRLoginUtil());
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
   locator.registerLazySingleton<StudentAddedNotifier>(() => StudentAddedNotifier());
 }

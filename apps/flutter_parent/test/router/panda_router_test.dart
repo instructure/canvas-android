@@ -36,6 +36,7 @@ import 'package:flutter_parent/screens/help/terms_of_use_screen.dart';
 import 'package:flutter_parent/screens/inbox/conversation_list/conversation_list_screen.dart';
 import 'package:flutter_parent/screens/login_landing_screen.dart';
 import 'package:flutter_parent/screens/not_a_parent_screen.dart';
+import 'package:flutter_parent/screens/pairing/qr_pairing_screen.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_screen.dart';
 import 'package:flutter_parent/screens/splash/splash_screen.dart';
@@ -320,6 +321,26 @@ void main() {
           '&${QRUtils.QR_DOMAIN}=mobiledev.instructure.com';
       final widget = _getWidgetFromRoute(PandaRouter.qrLogin(barcodeResultUrl));
       expect(widget, isA<SplashScreen>());
+    });
+
+    test('qrPairing returns qrPairingScreen screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.qrPairing());
+      expect(widget, isA<QRPairingScreen>());
+    });
+
+    test('qrPairing returns qrPairingScreen screen', () {
+      final widget = _getWidgetFromRoute(PandaRouter.qrPairing(isCreatingAccount: true));
+      expect(widget, isA<QRPairingScreen>());
+      expect((widget as QRPairingScreen).isCreatingAccount, true);
+    });
+
+    test('qrPairing returns qrPairingScreen screen', () {
+      final uri = 'canvas-parent://addObservee?pairing_code=1234&pairing_domain=mobiledev.instructure.com';
+      final pairingInfo = QRUtils.parsePairingInfo(uri) as QRPairingInfo;
+      final widget = _getWidgetFromRoute(PandaRouter.qrPairing(pairingUri: uri));
+      expect(widget, isA<QRPairingScreen>());
+      expect((widget as QRPairingScreen).pairingInfo.code, pairingInfo.code);
+      expect((widget as QRPairingScreen).pairingInfo.domain, pairingInfo.domain);
     });
 
     test('syllabus returns CourseRoutingShellScreen', () {
