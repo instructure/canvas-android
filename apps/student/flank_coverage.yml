@@ -10,6 +10,7 @@ gcloud:
   use-orchestrator: true
   performance-metrics: false
   record-video: true
+  num-flaky-test-attempts: 1
   timeout: 60m
   environment-variables:
     coverage: true
