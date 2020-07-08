@@ -16,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_screen.dart';
+import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -58,7 +60,8 @@ class QRLoginUtil {
       onTap: () async {
         Navigator.of(context).pop();
         locator<Analytics>().logEvent(AnalyticsEventConstants.QR_ACCOUNT_CREATION_CLICKED);
-        locator<QuickNav>().pushRoute(context, PandaRouter.qrPairing(isCreatingAccount: true));
+        locator<QuickNav>()
+            .push(context, AccountCreationScreen(QRPairingScanResult.success('123', 'mobiledev.instructure.com')));
       },
     );
   }

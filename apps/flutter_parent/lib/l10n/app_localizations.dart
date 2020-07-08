@@ -1101,6 +1101,20 @@ class AppLocalizations {
   String get qrLoginNewAccount => Intl.message('I don\'t have a Canvas account',
       desc: 'Option to select for users that don\'t have a canvas account');
 
+  String get qrCreateAccount => Intl.message('Create Account', desc: 'Button text for account creation confirmation');
+
+  String get qrCreateAccountLabelName => Intl.message('Full Name');
+
+  String get qrCreateAccountLabelEmail => Intl.message('Email Address');
+
+  String get qrCreateAccountLabelPassword => Intl.message('Password');
+
+  String get qrCreateAccountHintName => Intl.message('Full Name...');
+
+  String get qrCreateAccountHintEmail => Intl.message('Email...');
+
+  String get qrCreateAccountHintPassword => Intl.message('Password...');
+
   /// Event details
 
   String get eventDetailsTitle => Intl.message('Event', desc: 'Title for the event details screen');
