@@ -294,11 +294,7 @@ class AssignmentDetailsView(
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-        if (QuizListFragment.isNativeQuiz(canvasContext, quiz)) {
-            RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
-        } else {
-            RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
-        }
+        RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {

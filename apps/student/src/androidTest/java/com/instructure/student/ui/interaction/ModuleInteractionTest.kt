@@ -173,10 +173,12 @@ class ModuleInteractionTest : StudentTest() {
         // Verify that we can launch into a quiz from a quiz module item
         modulesPage.assertModuleDisplayed(module)
         modulesPage.assertModuleItemDisplayed(module, quiz!!.title!!)
+        /* TODO: Check that the quiz is displayed if/when we can do so via WebView
         modulesPage.clickModuleItem(module, quiz!!.title!!, R.id.goToQuiz/*, R.id.next*/)
         val quizQuestions = data.quizQuestions[quiz!!.id]?.toList()
         quizDetailsPage.assertQuizDisplayed(quiz!!, false, quizQuestions!!)
         Espresso.pressBack()
+         */
         moduleProgressionPage.assertModuleItemTitleDisplayed(quiz!!.title!!)
     }
 

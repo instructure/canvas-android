@@ -134,15 +134,9 @@ class ModuleQuizDecider : ParentFragment() {
 
         ViewStyler.themeButton(goToQuiz)
         goToQuiz.onClick {
-            if (!QuizListFragment.isNativeQuiz(canvasContext, quiz)) {
-                val route = BasicQuizViewFragment.makeRoute(canvasContext, quiz, baseURL)
-                route.ignoreDebounce = true
-                RouteMatcher.route(requireContext(), route)
-            } else {
-                val route = QuizStartFragment.makeRoute(canvasContext, quiz)
-                route.ignoreDebounce = true
-                RouteMatcher.route(requireContext(), route)
-            }
+            val route = BasicQuizViewFragment.makeRoute(canvasContext, quiz, baseURL)
+            route.ignoreDebounce = true
+            RouteMatcher.route(requireContext(), route)
         }
     }
 

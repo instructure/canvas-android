@@ -270,6 +270,7 @@ public class Const {
     public static final String POSITION = "position";
     public static final String ARRAY = "array";
 
+    // TODO: Purge as necessary
     public static final String QUIZ_SUBMISSION_ID = "quiz_submission_id";
     public static final String QUIZ_SHOULD_LET_ANSWER = "should_let_answer";
     public static final String QUIZ_SUBMISSION = "quiz_submission";

@@ -55,9 +55,10 @@ class TodoInteractionTest : StudentTest() {
         Espresso.pressBack() // Back to todo page
 
         todoPage.assertQuizDisplayed(quiz)
+        /* TODO: Check that the quiz is displayed if/when we can do so via WebView
         todoPage.selectQuiz(quiz)
         quizDetailsPage.assertQuizDisplayed(quiz,false,listOf<QuizQuestion>())
-
+        */
     }
 
     // Seeds ToDos (assignment + quiz) for tomorrow and then navigates to the ToDo page

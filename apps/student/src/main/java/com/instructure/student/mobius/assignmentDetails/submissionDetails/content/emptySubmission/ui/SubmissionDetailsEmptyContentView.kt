@@ -37,10 +37,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.fragment.DiscussionDetailsFragment
-import com.instructure.student.fragment.LTIWebViewFragment
-import com.instructure.student.fragment.QuizStartFragment
-import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -141,7 +138,7 @@ class SubmissionDetailsEmptyContentView(
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-        RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
+        RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
