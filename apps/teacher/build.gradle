@@ -28,8 +28,7 @@ apply from: '../../gradle/coverage.gradle'
 def coverageEnabled = project.hasProperty('coverage')
 
 if (coverageEnabled) {
-    apply plugin: 'jacoco-android'
-    apply from: 'jacoco.gradle'
+    apply from: '../../gradle/jacoco.gradle'
 }
 
 android {
