@@ -16,12 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
+import 'package:flutter_parent/screens/manage_students/student_color_picker_dialog.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/common_widgets/avatar.dart';
 import 'package:flutter_parent/utils/common_widgets/empty_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/user_name.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -32,7 +34,6 @@ import 'manage_students_interactor.dart';
 ///
 /// Pull to refresh and updating when a pairing code is used are handled, however.
 class ManageStudentsScreen extends StatefulWidget {
-  final _interactor = locator<ManageStudentsInteractor>();
   final List<User> _students;
 
   ManageStudentsScreen(this._students, {Key key}) : super(key: key);
@@ -104,7 +105,7 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
     return ListView.builder(
       itemCount: students.length,
       itemBuilder: (context, index) => ListTile(
-        contentPadding: const EdgeInsets.fromLTRB(16.0, 12.0, 16.0, 12.0),
+        contentPadding: const EdgeInsets.fromLTRB(16.0, 12.0, 8.0, 12.0),
         leading: Hero(
           tag: 'studentAvatar${students[index].id}',
           child: Avatar(students[index].avatarUrl, name: students[index].shortName),
@@ -124,6 +125,43 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
             _addedStudentFlag = true;
           }
         },
+        trailing: FutureBuilder<StudentColorSet>(
+          future: ParentTheme.of(context).getColorsForStudent(students[index].id),
+          builder: (context, snapshot) {
+            var color = snapshot.hasData
+                ? ParentTheme.of(context).getColorVariantForCurrentState(snapshot.data)
+                : Colors.transparent;
+            return Semantics(
+              container: true,
+              label: L10n(context).changeStudentColorLabel(students[index].shortName),
+              child: InkResponse(
+                highlightColor: color,
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => StudentColorPickerDialog(
+                      initialColor: color,
+                      studentId: students[index].id,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: 48,
+                  height: 48,
+                  padding: EdgeInsets.all(10),
+                  child: Center(
+                    child: Container(
+                      key: Key('color-circle-${students[index].id}'),
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }

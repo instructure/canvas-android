@@ -161,13 +161,16 @@ class _ThemeViewerScreenState extends State<ThemeViewerScreen> {
   }
 
   List<Widget> _drawerContents(BuildContext context) {
+    var selectedColorSet = ParentTheme.of(context).studentColorSet;
+    var colorIndex = StudentColorSet.all.indexOf(selectedColorSet);
+    if (colorIndex == -1) colorIndex = 0;
     return [
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: DropdownButton<int>(
           hint: Text('Tralala'),
-          value: ParentTheme.of(context).studentIndex,
-          onChanged: (index) => ParentTheme.of(context).studentIndex = index,
+          value: colorIndex,
+          onChanged: (index) => ParentTheme.of(context).setSelectedStudent(index.toString()),
           isExpanded: true,
           items: StudentColorSet.all
               .asMap()

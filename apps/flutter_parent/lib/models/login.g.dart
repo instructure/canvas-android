@@ -46,6 +46,13 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
       result.add(serializers.serialize(object.clientSecret,
           specifiedType: const FullType(String)));
     }
+    result.add('selectedStudentId');
+    if (object.selectedStudentId == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.selectedStudentId,
+          specifiedType: const FullType(String)));
+    }
     result.add('canMasquerade');
     if (object.canMasquerade == null) {
       result.add(null);
@@ -117,6 +124,10 @@ class _$LoginSerializer implements StructuredSerializer<Login> {
           result.user.replace(serializers.deserialize(value,
               specifiedType: const FullType(User)) as User);
           break;
+        case 'selectedStudentId':
+          result.selectedStudentId = serializers.deserialize(value,
+              specifiedType: const FullType(String)) as String;
+          break;
         case 'canMasquerade':
           result.canMasquerade = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
@@ -156,6 +167,8 @@ class _$Login extends Login {
   @override
   final User user;
   @override
+  final String selectedStudentId;
+  @override
   final bool canMasquerade;
   @override
   final User masqueradeUser;
@@ -175,6 +188,7 @@ class _$Login extends Login {
       this.accessToken,
       this.refreshToken,
       this.user,
+      this.selectedStudentId,
       this.canMasquerade,
       this.masqueradeUser,
       this.masqueradeDomain,
@@ -215,6 +229,7 @@ class _$Login extends Login {
         accessToken == other.accessToken &&
         refreshToken == other.refreshToken &&
         user == other.user &&
+        selectedStudentId == other.selectedStudentId &&
         canMasquerade == other.canMasquerade &&
         masqueradeUser == other.masqueradeUser &&
         masqueradeDomain == other.masqueradeDomain &&
@@ -232,13 +247,15 @@ class _$Login extends Login {
                             $jc(
                                 $jc(
                                     $jc(
-                                        $jc($jc(0, uuid.hashCode),
-                                            domain.hashCode),
-                                        clientId.hashCode),
-                                    clientSecret.hashCode),
-                                accessToken.hashCode),
-                            refreshToken.hashCode),
-                        user.hashCode),
+                                        $jc(
+                                            $jc($jc(0, uuid.hashCode),
+                                                domain.hashCode),
+                                            clientId.hashCode),
+                                        clientSecret.hashCode),
+                                    accessToken.hashCode),
+                                refreshToken.hashCode),
+                            user.hashCode),
+                        selectedStudentId.hashCode),
                     canMasquerade.hashCode),
                 masqueradeUser.hashCode),
             masqueradeDomain.hashCode),
@@ -255,6 +272,7 @@ class _$Login extends Login {
           ..add('accessToken', accessToken)
           ..add('refreshToken', refreshToken)
           ..add('user', user)
+          ..add('selectedStudentId', selectedStudentId)
           ..add('canMasquerade', canMasquerade)
           ..add('masqueradeUser', masqueradeUser)
           ..add('masqueradeDomain', masqueradeDomain)
@@ -294,6 +312,11 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
   UserBuilder get user => _$this._user ??= new UserBuilder();
   set user(UserBuilder user) => _$this._user = user;
 
+  String _selectedStudentId;
+  String get selectedStudentId => _$this._selectedStudentId;
+  set selectedStudentId(String selectedStudentId) =>
+      _$this._selectedStudentId = selectedStudentId;
+
   bool _canMasquerade;
   bool get canMasquerade => _$this._canMasquerade;
   set canMasquerade(bool canMasquerade) =>
@@ -328,6 +351,7 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
       _accessToken = _$v.accessToken;
       _refreshToken = _$v.refreshToken;
       _user = _$v.user?.toBuilder();
+      _selectedStudentId = _$v.selectedStudentId;
       _canMasquerade = _$v.canMasquerade;
       _masqueradeUser = _$v.masqueradeUser?.toBuilder();
       _masqueradeDomain = _$v.masqueradeDomain;
@@ -363,6 +387,7 @@ class LoginBuilder implements Builder<Login, LoginBuilder> {
               accessToken: accessToken,
               refreshToken: refreshToken,
               user: user.build(),
+              selectedStudentId: selectedStudentId,
               canMasquerade: canMasquerade,
               masqueradeUser: _masqueradeUser?.build(),
               masqueradeDomain: masqueradeDomain,

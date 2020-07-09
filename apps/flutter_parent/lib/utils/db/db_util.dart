@@ -14,20 +14,23 @@
 
 import 'package:flutter_parent/utils/db/calendar_filter_db.dart';
 import 'package:flutter_parent/utils/db/reminder_db.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:sqflite/sqflite.dart';
 
 List<OnDatabaseCreateFn> _creators = [
   ReminderDb.createTable,
   CalendarFilterDb.createTable,
+  UserColorsDb.createTable,
 ];
 
 List<OnDatabaseVersionChangeFn> _updaters = [
   CalendarFilterDb.updateTable,
   ReminderDb.updateTable,
+  UserColorsDb.updateTable,
 ];
 
 class DbUtil {
-  static const dbVersion = 3;
+  static const dbVersion = 4;
   static const dbName = 'canvas_parent.db';
 
   static Database _db;

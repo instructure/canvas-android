@@ -13,8 +13,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_parent/models/user_color.dart';
+import 'package:flutter_parent/network/utils/api_prefs.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 import 'student_color_set.dart';
@@ -60,18 +64,51 @@ class ParentTheme extends StatefulWidget {
 class _ParentThemeState extends State<ParentTheme> {
   ParentThemeStateChangeNotifier _notifier = ParentThemeStateChangeNotifier();
 
-  int _studentIndex = 0;
+  StudentColorSet _studentColorSet;
 
-  /// The index of the currently selected student color set
-  int get studentIndex => _studentIndex;
+  String _selectedStudentId;
 
-  /// Set the index of the selected student color set
-  set studentIndex(index) {
-    setState(() => _studentIndex = index);
+  Future<void> refreshStudentColor() => setSelectedStudent(_selectedStudentId);
+
+  /// Set the id of the selected student, used for updating the student color. Setting this to null
+  /// effectively resets the color state.
+  Future<void> setSelectedStudent(String studentId) async {
+    _studentColorSet = null;
+    _selectedStudentId = studentId;
+
+    if (studentId != null) {
+      _studentColorSet = await getColorsForStudent(studentId);
+    }
+    setState(() {});
+  }
+
+  Future<StudentColorSet> getColorsForStudent(String studentId) async {
+    // Get saved color for this user
+    UserColor userColor = await locator<UserColorsDb>().getByContext(
+      ApiPrefs.getDomain(),
+      ApiPrefs.getUser()?.id,
+      'user_$studentId',
+    );
+
+    StudentColorSet colorSet;
+    if (userColor == null) {
+      // No saved color for this user, fall back to existing color sets based on user id
+      var numId = studentId.replaceAll(RegExp(r'[^\d]'), '');
+      var index = (int.tryParse(numId) ?? studentId.length) % StudentColorSet.all.length;
+      colorSet = StudentColorSet.all[index];
+    } else {
+      // Check if there is a matching color set and prefer that for a better dark/HC mode experience
+      Color color = userColor.color;
+      colorSet = StudentColorSet.all.firstWhere(
+        (colorSet) => colorSet.light == color,
+        orElse: () => StudentColorSet(color, color, color, color),
+      );
+    }
+    return colorSet;
   }
 
   /// Returns the currently selected student color set
-  StudentColorSet get studentColorSet => StudentColorSet.all[_studentIndex % StudentColorSet.all.length];
+  StudentColorSet get studentColorSet => _studentColorSet ?? StudentColorSet.all[0];
 
   /// Returns the color variant of the provided 'colorSet' that is appropriate for the current state of dark mode and
   /// high-contrast mode in this theme

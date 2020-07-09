@@ -101,9 +101,11 @@ class DashboardState extends State<DashboardScreen> {
     _loadSelf();
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
-      _selectedStudent = _students.first;
+      String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+      _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
+      _updateStudentColor(_selectedStudent.id);
       _selectedStudentNotifier.value = _selectedStudent;
-      ApiPrefs.setCurrentStudent(_students.first);
+      ApiPrefs.setCurrentStudent(_selectedStudent);
       _interactor.getAlertCountNotifier().update(_selectedStudent.id);
     } else {
       _loadStudents();
@@ -125,6 +127,12 @@ class DashboardState extends State<DashboardScreen> {
   void dispose() {
     locator<StudentAddedNotifier>().removeListener(_onStudentAdded);
     super.dispose();
+  }
+
+  void _updateStudentColor(String studentId) {
+    WidgetsBinding.instance.scheduleFrameCallback((_) {
+      ParentTheme.of(context).setSelectedStudent(studentId);
+    });
   }
 
   void _loadSelf() {
@@ -157,9 +165,11 @@ class DashboardState extends State<DashboardScreen> {
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() {
-          _selectedStudentNotifier.value = _students.first;
-          _selectedStudent = _students.first;
-          ApiPrefs.setCurrentStudent(_students.first);
+          String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
+          _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
+          _selectedStudentNotifier.value = _selectedStudent;
+          _updateStudentColor(_selectedStudent.id);
+          ApiPrefs.setCurrentStudent(_selectedStudent);
           _interactor.getAlertCountNotifier().update(_selectedStudent.id);
         });
       }
@@ -550,7 +560,7 @@ class DashboardState extends State<DashboardScreen> {
   }
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
-    ParentTheme.of(context).studentIndex = 0;
+    await ParentTheme.of(context).setSelectedStudent(null);
     await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
     MasqueradeUI.of(context).refresh();
     locator<Analytics>()

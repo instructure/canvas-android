@@ -101,6 +101,7 @@ void main() {
   });
 
   testWidgets('Uses correct student color variants', (tester) async {
+    setupTestLocator((_) {});
     await tester.pumpWidget(TestApp(ThemeViewerScreen()));
     await tester.pumpAndSettle();
 

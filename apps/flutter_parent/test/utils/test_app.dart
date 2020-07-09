@@ -25,6 +25,7 @@ import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/utils/common_widgets/masquerade_ui.dart';
 import 'package:flutter_parent/utils/common_widgets/respawn.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_prefs.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
@@ -33,6 +34,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'platform_config.dart';
+import 'test_helpers/mock_helpers.dart';
 
 class TestApp extends StatefulWidget {
   TestApp(
@@ -172,6 +174,7 @@ void setupTestLocator(config(GetIt locator)) {
 
   // Register things that needed by default
   locator.registerLazySingleton<Analytics>(() => Analytics());
+  locator.registerLazySingleton<UserColorsDb>(() => MockUserColorsDb());
 
   config(locator);
 }

@@ -185,6 +185,7 @@ class ApiPrefs {
   static Future<void> updateCurrentLogin(dynamic Function(LoginBuilder) updates, {app}) async {
     _checkInit();
     final login = getCurrentLogin();
+    if (login == null) return;
     final updatedLogin = login.rebuild(updates);
 
     // Save in-memory login

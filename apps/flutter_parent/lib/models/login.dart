@@ -42,6 +42,9 @@ abstract class Login implements Built<Login, LoginBuilder> {
   User get user;
 
   @nullable
+  String get selectedStudentId;
+
+  @nullable
   bool get canMasquerade;
 
   @nullable
