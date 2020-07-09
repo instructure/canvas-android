@@ -131,9 +131,6 @@ class _StudentColorPickerDialogState extends State<StudentColorPickerDialog> {
       ParentTheme.of(context).refreshStudentColor();
       Navigator.of(context).pop(true);
     } catch (e, s) {
-      print('FLAIL!');
-      print(e);
-      print(s);
       setState(() {
         _saving = false;
         _error = true;
