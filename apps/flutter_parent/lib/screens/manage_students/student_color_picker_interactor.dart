@@ -27,7 +27,7 @@ class StudentColorPickerInteractor {
       ..userId = ApiPrefs.getUser().id
       ..userDomain = ApiPrefs.getDomain()
       ..canvasContext = contextId
-      ..color = newColor);
+      ..color = newColor.value);
     await locator<UserColorsDb>().insertOrUpdate(data);
   }
 }

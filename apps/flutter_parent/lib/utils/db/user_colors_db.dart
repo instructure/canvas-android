@@ -43,7 +43,7 @@ class UserColorsDb {
         columnUserDomain: userColor.userDomain,
         columnUserId: userColor.userId,
         columnCanvasContext: userColor.canvasContext,
-        columnColor: userColor.color.value,
+        columnColor: userColor.color,
       };
 
   static UserColor fromMap(Map<String, dynamic> map) => UserColor((b) => b
@@ -51,7 +51,7 @@ class UserColorsDb {
     ..userDomain = map[columnUserDomain]
     ..userId = map[columnUserId]
     ..canvasContext = map[columnCanvasContext]
-    ..color = Color(map[columnColor]));
+    ..color = Color(map[columnColor]).value);
 
   static Future<void> createTable(Database db, int version) async {
     await db.execute('''
@@ -83,7 +83,7 @@ class UserColorsDb {
         ..userDomain = domain
         ..userId = userId
         ..canvasContext = entry.key
-        ..color = parseColor(entry.value)));
+        ..color = parseColor(entry.value).value));
     }
   }
 

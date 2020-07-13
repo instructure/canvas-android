@@ -16,7 +16,7 @@ class _$UserColor extends UserColor {
   @override
   final String canvasContext;
   @override
-  final Color color;
+  final int color;
 
   factory _$UserColor([void Function(UserColorBuilder) updates]) =>
       (new UserColorBuilder()..update(updates)).build();
@@ -96,9 +96,9 @@ class UserColorBuilder implements Builder<UserColor, UserColorBuilder> {
   set canvasContext(String canvasContext) =>
       _$this._canvasContext = canvasContext;
 
-  Color _color;
-  Color get color => _$this._color;
-  set color(Color color) => _$this._color = color;
+  int _color;
+  int get color => _$this._color;
+  set color(int color) => _$this._color = color;
 
   UserColorBuilder() {
     UserColor._initializeBuilder(this);

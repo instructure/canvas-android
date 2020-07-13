@@ -12,9 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'dart:ui';
-
-import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
 
 part 'user_color.g.dart';
@@ -31,7 +28,7 @@ abstract class UserColor implements Built<UserColor, UserColorBuilder> {
 
   String get canvasContext;
 
-  Color get color;
+  int get color;
 
   UserColor._();
   factory UserColor([void Function(UserColorBuilder) updates]) = _$UserColor;
@@ -40,5 +37,5 @@ abstract class UserColor implements Built<UserColor, UserColorBuilder> {
     ..userDomain = ''
     ..userId = ''
     ..canvasContext = ''
-    ..color = Color(0);
+    ..color = 0;
 }
