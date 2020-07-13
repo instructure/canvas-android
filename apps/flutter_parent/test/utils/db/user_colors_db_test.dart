@@ -59,7 +59,7 @@ void main() {
       ..userDomain = 'domain'
       ..userId = 'user-id'
       ..canvasContext = 'canvas-context'
-      ..color = Color(0xFF00ACEC));
+      ..color = Color(0xFF00ACEC).value);
 
     final expected = userColor.rebuild((b) => b..id = 123);
 
@@ -95,11 +95,11 @@ void main() {
       ..userDomain = 'domain'
       ..userId = 'user-id'
       ..canvasContext = 'canvas-context'
-      ..color = newColor);
+      ..color = newColor.value);
 
     final existing = userColor.rebuild((b) => b
       ..id = 123
-      ..color = oldColor);
+      ..color = oldColor.value);
 
     final expected = userColor.rebuild((b) => b..id = 123);
 
@@ -242,7 +242,7 @@ void main() {
         ..userDomain = 'domain'
         ..userId = 'user-id'
         ..canvasContext = entry.key
-        ..color = UserColorsDb.parseColor(entry.value));
+        ..color = UserColorsDb.parseColor(entry.value).value);
 
       verify(database.insert(UserColorsDb.tableName, UserColorsDb.toMap(userColor)));
     }

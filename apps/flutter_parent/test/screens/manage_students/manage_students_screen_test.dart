@@ -218,7 +218,7 @@ void main() {
         CanvasModelTestUtils.mockUser(shortName: 'Billy', id: '123'),
       ];
 
-      UserColor userColor = UserColor((b) => b..color = Colors.pinkAccent);
+      UserColor userColor = UserColor((b) => b..color = Colors.pinkAccent.value);
       when(userColorsDb.getByContext(any, any, 'user_123')).thenAnswer((_) async => userColor);
 
       await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
@@ -230,7 +230,7 @@ void main() {
 
       // Circle should be the correct color
       Container circleContainer = tester.widget<Container>(find.byKey(key));
-      expect((circleContainer.decoration as BoxDecoration).color, userColor.color);
+      expect((circleContainer.decoration as BoxDecoration).color, Color(userColor.color));
     });
 
     testWidgetsWithAccessibilityChecks('Displays default user color', (tester) async {

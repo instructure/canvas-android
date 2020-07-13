@@ -61,7 +61,7 @@ void main() {
       ..userId = login.user.id
       ..userDomain = login.domain
       ..canvasContext = 'user_456'
-      ..color = color);
+      ..color = color.value);
 
     await StudentColorPickerInteractor().save(studentId, color);
     verify(db.insertOrUpdate(expectedData));
