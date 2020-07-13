@@ -38,6 +38,10 @@ class AccountCreationScreen extends StatefulWidget {
 }
 
 class _AccountCreationScreenState extends State<AccountCreationScreen> {
+  final FocusNode _nameFocus = FocusNode();
+  final FocusNode _emailFocus = FocusNode();
+  final FocusNode _passwordFocus = FocusNode();
+
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   Widget _passwordIcon = Padding(
@@ -76,16 +80,13 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   Widget _accountCreationForm(BuildContext context) {
-    final FocusNode _nameFocus = FocusNode();
-    final FocusNode _emailFocus = FocusNode();
-    final FocusNode _passwordFocus = FocusNode();
-
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelName),
           TextFormField(
+            autofocus: true,
             focusNode: _nameFocus,
             textInputAction: TextInputAction.next,
             autocorrect: false,
@@ -95,7 +96,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(color: ParentColors.failure),
                 ),
-                hintText: 'Full name...',
+                hintText: L10n(context).qrCreateAccountHintName,
                 hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
                 border: OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(4.0),
@@ -106,7 +107,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
             },
             validator: (value) {
               if (value.isEmpty) {
-                return 'Name Is Required';
+                return L10n(context).qrCreateAccountNameError;
               } else {
                 return null;
               }
@@ -114,6 +115,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           ),
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelEmail),
           TextFormField(
+            autofocus: true,
             focusNode: _emailFocus,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -124,7 +126,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(color: ParentColors.failure),
                 ),
-                hintText: 'Email...',
+                hintText: L10n(context).qrCreateAccountHintEmail,
                 hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
                 border: OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(4.0),
@@ -135,7 +137,9 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
             },
             validator: (value) {
               if (value.isEmpty) {
-                return 'Email Is Required';
+                return L10n(context).qrCreateAccountEmailError;
+              } else if (false) {
+                return L10n(context).qrCreateAccountInvalidEmailError;
               } else {
                 return null;
               }
@@ -143,6 +147,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           ),
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelPassword),
           TextFormField(
+            autofocus: true,
             focusNode: _passwordFocus,
             obscureText: _obscurePassword,
             autocorrect: false,
@@ -172,19 +177,20 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(color: ParentColors.failure),
                 ),
-                hintText: 'Password...',
+                hintText: L10n(context).qrCreateAccountHintPassword,
                 hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
                 border: OutlineInputBorder(
                   borderRadius: new BorderRadius.circular(4.0),
                   borderSide: new BorderSide(),
                 )),
             onFieldSubmitted: (term) {
+              _clearFieldFocus();
               _formKey.currentState.validate();
               // TODO - button press tooooo
             },
             validator: (value) {
               if (value.isEmpty) {
-                return 'Password Is Required';
+                return L10n(context).qrCreateAccountPasswordError;
               } else {
                 return null;
               }
@@ -215,6 +221,12 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+
+  _clearFieldFocus() {
+    _nameFocus.unfocus();
+    _emailFocus.unfocus();
+    _passwordFocus.unfocus();
   }
 
   Widget _createAccountButton(BuildContext context) {
@@ -254,17 +266,17 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         text: TextSpan(
           style: defaultStyle,
           children: <TextSpan>[
-            TextSpan(text: 'By tapping \'Create Account\', you agree to the '),
+            TextSpan(text: L10n(context).qrCreateAccountTos1),
             TextSpan(
-                text: 'Terms of Service',
+                text: L10n(context).qrCreateAccountTos2,
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
                   }),
-            TextSpan(text: ' and acknowledge the '),
+            TextSpan(text: L10n(context).qrCreateAccountTos3),
             TextSpan(
-                text: 'Privacy Policy',
+                text: L10n(context).qrCreateAccountTos4,
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -284,9 +296,9 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         text: TextSpan(
           style: defaultStyle,
           children: <TextSpan>[
-            TextSpan(text: 'Already have an account? '),
+            TextSpan(text: L10n(context).qrCreateAccountSignIn1),
             TextSpan(
-                text: 'Sign In',
+                text: L10n(context).qrCreateAccountSignIn2,
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {

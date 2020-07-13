@@ -124,7 +124,7 @@ class PandaRouter {
   static String _qrPairing = '/qr_pairing';
 
   static String qrPairing({String pairingUri, bool isCreatingAccount = false}) {
-    if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount ? 1 : 0}';
+    if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount}';
     if (pairingUri == null) return _qrPairing;
     return '$_qrPairing?${_RouterKeys.qrPairingInfo}=${Uri.encodeQueryComponent(pairingUri)}';
   }

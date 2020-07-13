@@ -68,7 +68,7 @@ void main() {
     await tester.pumpWidget(TestApp(QRPairingScreen()));
     await tester.pumpAndSettle();
 
-    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', ''));
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', '', ''));
 
     Completer<bool> completer = Completer();
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => completer.future);
@@ -80,7 +80,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Pops with true value on success', (tester) async {
-    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', ''));
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', '', ''));
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => true);
 
     await tester.pumpWidget(TestApp(DummyWidget()));
@@ -101,7 +101,7 @@ void main() {
   testWidgetsWithAccessibilityChecks('Navigates to splash screen on success if first route', (tester) async {
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => true);
 
-    await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: QRPairingScanResult.success('', ''))));
+    await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: QRPairingScanResult.success('', '', ''))));
     await tester.pump();
 
     verify(nav.replaceRoute(any, PandaRouter.rootSplash()));
@@ -168,7 +168,7 @@ void main() {
     await tester.pumpWidget(TestApp(QRPairingScreen()));
     await tester.pumpAndSettle();
 
-    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', ''));
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', '', ''));
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => null); // null represents network error
 
     await tester.tap(find.text(l10n.next.toUpperCase()));
@@ -183,7 +183,7 @@ void main() {
     await tester.pumpWidget(TestApp(QRPairingScreen()));
     await tester.pumpAndSettle();
 
-    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', ''));
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', '', ''));
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => false); // false represents pairing failure
 
     await tester.tap(find.text(l10n.next.toUpperCase()));
@@ -207,7 +207,7 @@ void main() {
     await tester.pumpAndSettle();
 
     when(interactor.scanQRCode())
-        .thenAnswer((_) async => QRPairingScanResult.success('123abc', 'other.instructure.com'));
+        .thenAnswer((_) async => QRPairingScanResult.success('123abc', 'other.instructure.com', '123'));
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => false);
 
     await tester.tap(find.text(l10n.next.toUpperCase()));
@@ -222,7 +222,7 @@ void main() {
     await tester.pumpWidget(TestApp(QRPairingScreen()));
     await tester.pumpAndSettle();
 
-    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', ''));
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success('', '', ''));
     when(interactor.pairWithStudent(any)).thenAnswer((_) async => null);
 
     await tester.tap(find.text(l10n.next.toUpperCase()));
@@ -247,7 +247,7 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Initiates pairing on launch if pairing info is provided', (tester) async {
-    QRPairingInfo pairingInfo = QRPairingScanResult.success('123acb', '');
+    QRPairingInfo pairingInfo = QRPairingScanResult.success('123acb', '', '');
     await tester.pumpWidget(TestApp(QRPairingScreen(pairingInfo: pairingInfo)));
     await tester.pump();
 

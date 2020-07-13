@@ -1115,6 +1115,22 @@ class AppLocalizations {
 
   String get qrCreateAccountHintPassword => Intl.message('Password...');
 
+  String get qrCreateAccountNameError => Intl.message('Please enter full name');
+
+  String get qrCreateAccountEmailError => Intl.message('Please enter an email address');
+
+  String get qrCreateAccountInvalidEmailError => Intl.message('Please enter a valid email address');
+
+  String get qrCreateAccountPasswordError => Intl.message('Password is required');
+
+  String get qrCreateAccountTos1 => Intl.message('By tapping \'Create Account\', you agree to the ');
+  String get qrCreateAccountTos2 => Intl.message('Terms of Service');
+  String get qrCreateAccountTos3 => Intl.message(' and acknowledge the ');
+  String get qrCreateAccountTos4 => Intl.message('Privacy Policy');
+
+  String get qrCreateAccountSignIn1 => Intl.message('Already have an account? ');
+  String get qrCreateAccountSignIn2 => Intl.message('Sign In');
+
   /// Event details
 
   String get eventDetailsTitle => Intl.message('Event', desc: 'Title for the event details screen');

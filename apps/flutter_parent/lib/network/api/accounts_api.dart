@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
@@ -37,4 +38,6 @@ class AccountsApi {
     var selfRegistration = response.data['self_registration'];
     return selfRegistration == 'observer' || selfRegistration == 'all';
   }
+
+  Future<User> createNewAccount() async {}
 }

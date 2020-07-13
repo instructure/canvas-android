@@ -28,9 +28,9 @@ class QRUtils {
   static const String QR_HOST_TEST = 'sso.test.canvaslms.com';
 
   // QR Pairing
-  static const String QR_PAIR_HOST = 'addobservee';
+  static const String QR_PAIR_PATH = 'pair';
   static const String QR_PAIR_PARAM_CODE = 'pairing_code';
-  static const String QR_PAIR_PARAM_DOMAIN = 'pairing_domain';
+  static const String QR_PAIR_PARAM_ACCOUNT_ID = 'pairing_account_id';
 
   static Uri verifySSOLogin(String url) {
     try {
@@ -76,8 +76,10 @@ class QRUtils {
     try {
       var uri = Uri.parse(rawUri);
       var params = uri.queryParameters;
-      if (QR_PAIR_HOST == uri.host && params[QR_PAIR_PARAM_CODE] != null && params[QR_PAIR_PARAM_DOMAIN] != null) {
-        return QRPairingScanResult.success(params[QR_PAIR_PARAM_CODE], params[QR_PAIR_PARAM_DOMAIN]);
+      if (QR_PAIR_PATH == uri.pathSegments.first &&
+          params[QR_PAIR_PARAM_CODE] != null &&
+          params[QR_PAIR_PARAM_ACCOUNT_ID] != null) {
+        return QRPairingScanResult.success(params[QR_PAIR_PARAM_CODE], uri.host, params[QR_PAIR_PARAM_ACCOUNT_ID]);
       }
     } catch (e) {
       // Intentionally left blank
@@ -89,7 +91,7 @@ class QRUtils {
 class QRPairingScanResult {
   QRPairingScanResult._();
 
-  factory QRPairingScanResult.success(String code, String domain) = QRPairingInfo._;
+  factory QRPairingScanResult.success(String code, String domain, String accountId) = QRPairingInfo._;
 
   factory QRPairingScanResult.error(QRPairingScanErrorType type) = QRPairingScanError._;
 }
@@ -97,8 +99,9 @@ class QRPairingScanResult {
 class QRPairingInfo extends QRPairingScanResult {
   final String code;
   final String domain;
+  final String accountId;
 
-  QRPairingInfo._(this.code, this.domain) : super._();
+  QRPairingInfo._(this.code, this.domain, this.accountId) : super._();
 }
 
 class QRPairingScanError extends QRPairingScanResult {
