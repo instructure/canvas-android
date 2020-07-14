@@ -207,7 +207,8 @@ android {
                     new PageViewTransformer(),
                     new LocaleTransformer(),
                     new FlutterA11yOffsetTransformer(),
-                    new FlutterTextureRenderModeFix()
+                    new FlutterTextureRenderModeFix(),
+                    new FlutterTextureDisconnectFix()
             )
     )
 

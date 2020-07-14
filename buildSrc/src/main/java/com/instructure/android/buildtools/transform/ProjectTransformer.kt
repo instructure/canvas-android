@@ -21,6 +21,7 @@ import com.android.build.gradle.AppExtension
 import javassist.ClassPool
 import javassist.CtClass
 import java.io.File
+import java.lang.IllegalStateException
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
@@ -143,7 +144,7 @@ class ProjectTransformer(
                 } catch (e: Throwable) {
                     println("Error transforming jar entry: ${e.message}")
                     e.printStackTrace()
-                    copyJarEntry(input, entry, output)
+                    throw e
                 }
             }
             output.close()
