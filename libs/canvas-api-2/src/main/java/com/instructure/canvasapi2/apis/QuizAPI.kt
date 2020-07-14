@@ -42,9 +42,6 @@ object QuizAPI {
         @GET
         fun getDetailedQuizByUrl(@Url quizUrl: String): Call<Quiz>
 
-        @GET("quiz_submissions/{quizSubmissionId}/questions")
-        fun getFirstPageSubmissionQuestions(@Path("quizSubmissionId") quizSubmissionId: Long): Call<QuizSubmissionQuestionResponse>
-
         @GET("courses/{courseId}/quizzes")
         fun getFirstPageQuizzes(@Path("courseId") contextId: Long): Call<List<Quiz>>
 
@@ -59,10 +56,6 @@ object QuizAPI {
                 @Path("courseId") courseId: Long,
                 @Path("quizId") quizId: Long,
                 @Body body: QuizPostBodyWrapper): Call<Quiz>
-
-        //FIXME: MIGRATION can be removed and replaced with other getFirstPageQuizSubmissions()
-        @GET("courses/{courseId}/quizzes/{quizId}/submissions")
-        fun getFirstPageQuizSubmissions(@Path("courseId") courseId: Long?, @Path("quizId") quizId: Long?): Call<QuizSubmissionResponse>
 
         @GET("{contextType}/{contextId}/quizzes/{quizId}/submissions")
         fun getFirstPageQuizSubmissions(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("quizId") quizId: Long): Call<QuizSubmissionResponse>
