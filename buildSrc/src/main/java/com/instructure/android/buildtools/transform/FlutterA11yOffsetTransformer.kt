@@ -73,6 +73,7 @@ class FlutterA11yOffsetTransformer() : ClassTransformer() {
                 float topOffset = (float) insets.getSystemWindowInsetTop();
                 android.opengl.Matrix.translateM(identity, 0, 0f, topOffset, 0f);
             """.trimIndent())
+            println("    :Flutter AccessibilityBridge patched")
         } else {
             throw IllegalStateException("Method 'updateSemantics' is null for transformer $transformName")
         }
