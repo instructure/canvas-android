@@ -55,9 +55,18 @@ object AccountEndpoint : Endpoint(
     ),
     Segment("permissions") to AccountPermissionsEndpoint,
     Segment("help_links") to HelpLinksEndpoint,
+    Segment("terms_of_service") to TermsOfServiceEndpoint,
     response = {
         // NOTE: Only supporting one account for now and we'll assume no users are admins, so return a 401
         GET { request.unauthorizedResponse() }
+    }
+)
+
+object TermsOfServiceEndpoint : Endpoint(
+    response = {
+        GET {
+            request.successResponse(data.accountTermsOfService)
+        }
     }
 )
 

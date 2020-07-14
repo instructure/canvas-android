@@ -46,6 +46,14 @@ class MockCanvas {
             effectiveLocale = "en"
     )
 
+    var accountTermsOfService = TermsOfService(
+            id = 1L,
+            termsType = "default",
+            passive = false,
+            accountId = account.id,
+            content = "hodor"
+    )
+
     /** Canvas brand variables */
     var brandVariables = CanvasTheme(
             brand = "#25d6ab",
