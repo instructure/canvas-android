@@ -77,7 +77,7 @@ void main() {
       expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
     });
 
-    test('parsePairingInfo returns invalidCode error if input has wrong host', () {
+    test('parsePairingInfo returns invalidCode error if input has wrong path', () {
       var input = 'canvas-parent://test.instructure.com/addStudent?code=abcd&account_id=1234';
       var result = QRUtils.parsePairingInfo(input);
       expect(result, isA<QRPairingScanError>());
