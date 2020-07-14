@@ -85,6 +85,10 @@ object FlutterComm {
             return
         }
 
+        // Per a comment in NavigationActivity.initialCoreDataLoadingComplete, the user can be null in rare instances.
+        // In these cases the user will be logged out automatically, so we don't need to send any data here.
+        if (ApiPrefs.user == null) return
+
         val userJson = JSONObject(Gson().toJson(ApiPrefs.user)).apply {
             // Convert ID from Long to String
             put("id", getLong("id").toString())
