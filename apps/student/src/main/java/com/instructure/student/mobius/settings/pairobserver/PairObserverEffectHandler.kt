@@ -34,11 +34,8 @@ class PairObserverEffectHandler : EffectHandler<PairObserverView, PairObserverEv
     private fun loadData() {
         launch {
             val pairingCode = UserManager.generatePairingCodeAsync(true).await()
-            consumer.accept(
-                PairObserverEvent.DataLoaded(
-                    pairingCode
-                )
-            )
+            val termsOfService = UserManager.getTermsOfServiceAsync(true).await()
+            consumer.accept(PairObserverEvent.DataLoaded(pairingCode, termsOfService))
         }
     }
 }

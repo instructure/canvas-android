@@ -19,15 +19,18 @@ package com.instructure.student.mobius.settings.pairobserver
 import android.content.Context
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.mobius.settings.pairobserver.PairObserverModel
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverViewState
 
 object PairObserverPresenter : Presenter<PairObserverModel, PairObserverViewState> {
     override fun present(model: PairObserverModel, context: Context): PairObserverViewState {
         if (model.isLoading) return PairObserverViewState.Loading
 
-        if (!model.pairingCode.isValid()) return PairObserverViewState.Failed
+        if (!model.pairingCode.isValid() || model.accountId == null) return PairObserverViewState.Failed
 
-        return PairObserverViewState.Loaded(pairingCode = model.pairingCode, domain = model.domain)
+        return PairObserverViewState.Loaded(
+                pairingCode = model.pairingCode,
+                domain = model.domain,
+                accountId = model.accountId
+        )
     }
 }

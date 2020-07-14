@@ -78,32 +78,26 @@ void main() {
     });
 
     test('parsePairingInfo returns invalidCode error if input has wrong host', () {
-      var input = 'canvas-parent://addStudent?pairing_code=abcd&pairing_domain=test.instructure.com';
+      var input = 'canvas-parent://test.instructure.com/addStudent?code=abcd&account_id=1234';
       var result = QRUtils.parsePairingInfo(input);
       expect(result, isA<QRPairingScanError>());
       expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
     });
 
     test('parsePairingInfo returns invalidCode error if input is missing pairing code', () {
-      var input = 'canvas-parent://addObservee?pairing_domain=test.instructure.com';
-      var result = QRUtils.parsePairingInfo(input);
-      expect(result, isA<QRPairingScanError>());
-      expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
-    });
-
-    test('parsePairingInfo returns invalidCode error if input is missing pairing domain', () {
-      var input = 'canvas-parent://addObservee?pairing_code=aBc123';
+      var input = 'canvas-parent://test.instructure.com/pair?account_id=1234';
       var result = QRUtils.parsePairingInfo(input);
       expect(result, isA<QRPairingScanError>());
       expect((result as QRPairingScanError).type, QRPairingScanErrorType.invalidCode);
     });
 
     test('parsePairingInfo returns QRPairingInfo on successful parse', () {
-      var input = 'canvas-parent://addObservee?pairing_code=aBc123&pairing_domain=test.instructure.com';
+      var input = 'canvas-parent://test.instructure.com/pair?code=aBc123&account_id=1234';
       var result = QRUtils.parsePairingInfo(input);
       expect(result, isA<QRPairingInfo>());
       expect((result as QRPairingInfo).domain, 'test.instructure.com');
       expect((result as QRPairingInfo).code, 'aBc123');
+      expect((result as QRPairingInfo).accountId, '1234');
     });
   });
 
@@ -116,12 +110,13 @@ void main() {
     });
 
     test('scanPairingCode returns QRPairingInfo on successful scan of a valid code', () async {
-      var validCode = 'canvas-parent://addObservee?pairing_code=aBc123&pairing_domain=test.instructure.com';
+      var validCode = 'canvas-parent://test.instructure.com/pair?code=aBc123&account_id=1234';
       when(barcodeScanner.scanBarcode()).thenAnswer((_) async => ScanResult(rawContent: validCode));
       var result = await QRUtils.scanPairingCode();
       expect(result, isA<QRPairingInfo>());
       expect((result as QRPairingInfo).domain, 'test.instructure.com');
       expect((result as QRPairingInfo).code, 'aBc123');
+      expect((result as QRPairingInfo).accountId, '1234');
     });
 
     test('scanPairingCode returns canceled result if scan was canceled', () async {

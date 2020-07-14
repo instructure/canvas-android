@@ -18,6 +18,7 @@ package com.instructure.student.test.settings.pairobserver
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.PairingCode
+import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.DataResult
@@ -55,11 +56,16 @@ class PairObserverEffectHandlerTest : Assert() {
     @Test
     fun `LoadData with failed pairing code results in failed DataLoaded`() {
         val expectedEvent = PairObserverEvent.DataLoaded(
+            DataResult.Fail(),
             DataResult.Fail()
         )
 
         mockkObject(UserManager)
         every { UserManager.generatePairingCodeAsync(true) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
+
+        every { UserManager.getTermsOfServiceAsync(true) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
 
@@ -75,13 +81,19 @@ class PairObserverEffectHandlerTest : Assert() {
     @Test
     fun `LoadData results in DataLoaded`() {
         val pairingCode = PairingCode(code = "code")
+        val termsOfService = TermsOfService(accountId = 123L)
         val expectedEvent = PairObserverEvent.DataLoaded(
-            DataResult.Success(pairingCode)
+            DataResult.Success(pairingCode),
+            DataResult.Success(termsOfService)
         )
 
         mockkObject(UserManager)
         every { UserManager.generatePairingCodeAsync(true) } returns mockk {
             coEvery { await() } returns DataResult.Success(pairingCode)
+        }
+
+        every { UserManager.getTermsOfServiceAsync(true) } returns mockk {
+            coEvery { await() } returns DataResult.Success(termsOfService)
         }
 
         connection.accept(PairObserverEffect.LoadData(true))

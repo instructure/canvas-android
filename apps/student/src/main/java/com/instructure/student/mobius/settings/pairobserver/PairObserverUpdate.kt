@@ -38,7 +38,8 @@ class PairObserverUpdate : UpdateInit<PairObserverModel, PairObserverEvent, Pair
             is PairObserverEvent.DataLoaded -> {
                 Next.next(model.copy(
                     isLoading = false,
-                    pairingCode = event.pairingCode.dataOrNull?.code
+                    pairingCode = event.pairingCode.dataOrNull?.code,
+                    accountId = event.termsOfService.dataOrNull?.accountId
                 ))
             }
         }

@@ -17,11 +17,15 @@
 package com.instructure.student.mobius.settings.pairobserver
 
 import com.instructure.canvasapi2.models.PairingCode
+import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class PairObserverEvent {
     object RefreshCode : PairObserverEvent()
-    data class DataLoaded(val pairingCode: DataResult<PairingCode>) : PairObserverEvent()
+    data class DataLoaded(
+            val pairingCode: DataResult<PairingCode>,
+            val termsOfService: DataResult<TermsOfService>
+    ) : PairObserverEvent()
 }
 
 sealed class PairObserverEffect {
@@ -32,5 +36,6 @@ sealed class PairObserverEffect {
 data class PairObserverModel(
     val isLoading: Boolean = false,
     val pairingCode: String? = null,
+    val accountId: Long? = null,
     val domain: String
 )

@@ -19,5 +19,5 @@ package com.instructure.student.mobius.settings.pairobserver.ui
 sealed class PairObserverViewState {
     object Loading : PairObserverViewState()
     object Failed : PairObserverViewState()
-    data class Loaded(val pairingCode: String, val domain: String) : PairObserverViewState()
+    data class Loaded(val pairingCode: String, val domain: String, val accountId: Long) : PairObserverViewState()
 }

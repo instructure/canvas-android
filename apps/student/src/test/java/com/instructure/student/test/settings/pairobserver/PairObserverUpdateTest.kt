@@ -16,6 +16,7 @@
 package com.instructure.student.test.settings.pairobserver
 
 import com.instructure.canvasapi2.models.PairingCode
+import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.settings.pairobserver.PairObserverEffect
 import com.instructure.student.mobius.settings.pairobserver.PairObserverEvent
@@ -79,12 +80,13 @@ class PairObserverUpdateTest : Assert() {
     fun `DataLoaded event updates the model`() {
         val code = "code"
         val pairingCode = DataResult.Success(PairingCode(code = code))
+        val termsOfService = DataResult.Success(TermsOfService(accountId = 123L))
 
-        val expectedModel = initModel.copy(isLoading = false, pairingCode = code)
+        val expectedModel = initModel.copy(isLoading = false, pairingCode = code, accountId = 123L)
 
         updateSpec
             .given(initModel.copy(isLoading = true))
-            .whenEvent(PairObserverEvent.DataLoaded(pairingCode))
+            .whenEvent(PairObserverEvent.DataLoaded(pairingCode, termsOfService))
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel)
@@ -96,11 +98,11 @@ class PairObserverUpdateTest : Assert() {
     fun `DataLoaded event updates the model when failed to get pairing code`() {
         val initModel = initModel.copy(isLoading = true, pairingCode = "Old")
 
-        val expectedModel = initModel.copy(isLoading = false, pairingCode = null)
+        val expectedModel = initModel.copy(isLoading = false, pairingCode = null, accountId = null)
 
         updateSpec
             .given(initModel)
-            .whenEvent(PairObserverEvent.DataLoaded(DataResult.Fail()))
+            .whenEvent(PairObserverEvent.DataLoaded(DataResult.Fail(), DataResult.Fail()))
             .then(
                 assertThatNext(
                     NextMatchers.hasModel(expectedModel)
