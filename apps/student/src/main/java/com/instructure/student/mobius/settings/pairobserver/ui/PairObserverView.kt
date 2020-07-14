@@ -62,7 +62,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
         when (state) {
             is PairObserverViewState.Loading -> renderLoading()
             is PairObserverViewState.Failed -> renderFailed()
-            is PairObserverViewState.Loaded -> renderPairingCode(state.domain, state.pairingCode)
+            is PairObserverViewState.Loaded -> renderPairingCode(state.domain, state.pairingCode, state.accountId)
         }.exhaustive
     }
 
@@ -80,7 +80,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
         errorContainer.setVisible()
     }
 
-    private fun renderPairingCode(domain: String, pairingCode: String) {
+    private fun renderPairingCode(domain: String, pairingCode: String, accountId: Long) {
         pairObserverLoading.setGone()
         pairObserverContent.setVisible()
         errorContainer.setGone()
@@ -88,7 +88,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
 
         try {
             // Open the Parent App with relevant data so it can pair the student
-            val content = "canvas-parent://addObservee?pairing_code=$pairingCode&pairing_domain=$domain"
+            val content = "canvas-parent://$domain/pair?code=$pairingCode&account_id=$accountId"
             val barcodeEncoder = BarcodeEncoder()
             val bitmap: Bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 100, 100)
             pairObserverQrCode.setImageBitmap(bitmap)

@@ -30,6 +30,7 @@ import org.junit.runner.RunWith
 class PairObserverPresenterTest : Assert() {
 
     private val domain = "domain"
+    private val accountId = 123L
 
     private lateinit var context: Context
     private lateinit var baseModel: PairObserverModel
@@ -66,8 +67,8 @@ class PairObserverPresenterTest : Assert() {
     @Test
     fun `Returns Loaded state when model has a pairing code`() {
         val code = "code"
-        val expectedState = PairObserverViewState.Loaded(code, domain)
-        val model = baseModel.copy(pairingCode = code)
+        val expectedState = PairObserverViewState.Loaded(code, domain, accountId)
+        val model = baseModel.copy(pairingCode = code, accountId = accountId)
         val actualState = PairObserverPresenter.present(model, context)
         assertEquals(expectedState, actualState)
     }

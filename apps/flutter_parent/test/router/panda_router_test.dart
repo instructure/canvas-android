@@ -335,12 +335,13 @@ void main() {
     });
 
     test('qrPairing returns qrPairingScreen screen', () {
-      final uri = 'canvas-parent://addObservee?pairing_code=1234&pairing_domain=mobiledev.instructure.com';
+      final uri = 'canvas-parent://mobiledev.instructure.com/pair?code=123abc&account_id=1234';
       final pairingInfo = QRUtils.parsePairingInfo(uri) as QRPairingInfo;
       final widget = _getWidgetFromRoute(PandaRouter.qrPairing(pairingUri: uri));
       expect(widget, isA<QRPairingScreen>());
       expect((widget as QRPairingScreen).pairingInfo.code, pairingInfo.code);
       expect((widget as QRPairingScreen).pairingInfo.domain, pairingInfo.domain);
+      expect((widget as QRPairingScreen).pairingInfo.accountId, pairingInfo.accountId);
     });
 
     test('syllabus returns CourseRoutingShellScreen', () {
