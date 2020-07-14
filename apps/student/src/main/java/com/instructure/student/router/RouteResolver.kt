@@ -72,8 +72,6 @@ object RouteResolver {
             cls.isA<BasicQuizViewFragment>() -> BasicQuizViewFragment.newInstance(route)
             cls.isA<AssignmentListFragment>() -> AssignmentListFragment.newInstance(route)
             cls.isA<AssignmentBasicFragment>() -> AssignmentBasicFragment.newInstance(route)
-            cls.isA<QuizStartFragment>() -> QuizStartFragment.newInstance(route)
-            cls.isA<QuizQuestionsFragment>() -> QuizQuestionsFragment.newInstance(route)
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LTIWebViewFragment>() -> LTIWebViewFragment.newInstance(route)
             cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)

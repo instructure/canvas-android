@@ -23,9 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizQuestion.QuestionType.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -147,18 +145,6 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
     override fun handleBackPressed() = toolbar.closeSearch()
 
     companion object {
-
-        // Currently supports TRUE_FALSE, ESSAY, SHORT_ANSWER, MULTI_CHOICE
-        private val unsupportedTypes = listOf(CALCULATED, FILL_IN_MULTIPLE_BLANKS, UNKNOWN)
-
-        private fun containsUnsupportedQuestionType(quiz: Quiz): Boolean {
-            // Loop through all question types. If there is one we don't support or the list is null/empty, return true
-            return quiz.parsedQuestionTypes.takeIf { it.isNotEmpty() }?.any { it in unsupportedTypes } ?: true
-        }
-
-        @JvmStatic
-        fun isNativeQuiz(canvasContext: CanvasContext, quiz: Quiz): Boolean = !(containsUnsupportedQuestionType(quiz) || quiz.hasAccessCode || quiz.oneQuestionAtATime || canvasContext is Course && canvasContext.isTeacher)
-
         fun makeRoute(canvasContext: CanvasContext): Route = Route(QuizListFragment::class.java, canvasContext, Bundle())
 
         private fun validateRoute(route: Route) = route.canvasContext != null

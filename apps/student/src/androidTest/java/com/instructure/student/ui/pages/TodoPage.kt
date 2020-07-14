@@ -35,7 +35,6 @@ import org.hamcrest.Matchers
 class TodoPage: BasePage(R.id.todoPage) {
 
     private val toolbar by OnViewWithId(R.id.toolbar)
-    private val listview by OnViewWithId(R.id.listview, autoAssert = false)
 
     fun assertAssignmentDisplayed(assignment: AssignmentApiModel) {
         assertTextDisplayedInRecyclerView(assignment.name)
