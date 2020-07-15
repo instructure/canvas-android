@@ -172,5 +172,57 @@
         </LinearLayout>
 
     </LinearLayout>
+    <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
+        android:id="@+id/statisticsView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+    </com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="50px"
+        android:id="@+id/statisticsTextContainer">
+
+        <TextView
+            android:id="@+id/minLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Mean: 7.2"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/meanLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Min: 1.0"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/maxLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="Max: 9.5"
+            android:layout_weight="1"/>
+    </LinearLayout>
 
 </LinearLayout>

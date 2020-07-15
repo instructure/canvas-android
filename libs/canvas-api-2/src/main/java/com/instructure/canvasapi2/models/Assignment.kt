@@ -95,6 +95,8 @@ data class Assignment(
         val moderatedGrading: Boolean = false,
         @SerializedName("anonymous_grading")
         val anonymousGrading: Boolean = false,
+        @SerializedName("score_statistics")
+        val scoreStatistics: AssignmentScoreStatistics? = null,
         @SerializedName("allowed_attempts")
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
         @SerializedName("external_tool_tag_attributes")
