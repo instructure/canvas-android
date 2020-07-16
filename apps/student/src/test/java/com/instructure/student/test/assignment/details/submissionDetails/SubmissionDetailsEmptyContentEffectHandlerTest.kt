@@ -367,15 +367,16 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView event with EXTERNAL_TOOL submissionType calls showLTIView() on the view`() {
         val submissionType = Assignment.SubmissionType.EXTERNAL_TOOL
         val ltiUrl = "https://www.instructure.com"
+        val ltiTool = LTITool(id = 1L, url = ltiUrl)
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
             submissionType = submissionType,
             course = course,
             assignment = assignment,
-            ltiUrl = ltiUrl))
+            ltiTool = ltiTool))
 
         verify(timeout = 100) {
-            view.showLTIView(course, ltiUrl, assignment.name!!)
+            view.showLTIView(course, assignment.name!!, ltiTool)
         }
         confirmVerified(view)
     }
@@ -384,15 +385,16 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
     fun `ShowCreateSubmissionView event with BASIC_LTI_LAUNCH submissionType calls showLTIView() on the view`() {
         val submissionType = Assignment.SubmissionType.BASIC_LTI_LAUNCH
         val ltiUrl = "https://www.instructure.com"
+        val ltiTool = LTITool(id = 1L, url = ltiUrl)
 
         connection.accept(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
             submissionType = submissionType,
             course = course,
             assignment = assignment,
-            ltiUrl = ltiUrl))
+            ltiTool = ltiTool))
 
         verify(timeout = 100) {
-            view.showLTIView(course, ltiUrl, assignment.name!!)
+            view.showLTIView(course, assignment.name!!, ltiTool)
         }
         confirmVerified(view)
     }

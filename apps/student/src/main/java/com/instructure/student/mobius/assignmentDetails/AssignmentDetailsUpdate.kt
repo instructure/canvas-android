@@ -159,7 +159,7 @@ class AssignmentDetailsUpdate : UpdateInit<AssignmentDetailsModel, AssignmentDet
                     submissionTypes.first(),
                     model.course,
                     assignmentResult.dataOrThrow,
-                    assignmentResult.dataOrThrow.url
+                    model.ltiTool?.dataOrNull
                 )
             }
             else -> {

@@ -144,6 +144,30 @@ class SubmissionDetailsEmptyContentUpdateTest : Assert() {
     }
 
     @Test
+    fun `SubmitAssignmentClicked event with only EXTERNAL_TOOL submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
+        val submissionType = Assignment.SubmissionType.EXTERNAL_TOOL
+        val submissionTypes = listOf("external_tool")
+        val ltiTool = LTITool(123L, url = "https://hodor.instructure.com")
+        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
+        val givenModel = initModel.copy(assignment = assignmentCopy, ltiTool = ltiTool)
+        updateSpec
+                .given(givenModel)
+                .whenEvent(SubmissionDetailsEmptyContentEvent.SubmitAssignmentClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(
+                                        SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(
+                                                submissionType,
+                                                course,
+                                                assignmentCopy,
+                                                ltiTool
+                                        )
+                                )
+                        )
+                )
+    }
+
+    @Test
     fun `SubmitAssignmentClicked event with one submission type results in ShowCreateSubmissionView effect`() {
         val submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         val submissionTypes = listOf("online_text_entry")

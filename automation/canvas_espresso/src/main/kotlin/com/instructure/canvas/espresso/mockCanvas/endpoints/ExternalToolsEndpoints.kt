@@ -16,6 +16,7 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 

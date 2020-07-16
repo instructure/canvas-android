@@ -174,6 +174,7 @@ public class Const {
     public static final String GRADE_URL = "/grades";
     public static final String SESSIONLESS_LAUNCH = "sessionlessLaunch";
     public static final String ASSIGNMENT_LTI = "assignmentLti";
+    public static final String LTI_TOOL = "ltiTool";
     //Broadcast
     public static final String REFRESH = "refresh";
     public static final String SUBMISSION_COMMENT_SUBMITTED = "submission-comment-submitted";

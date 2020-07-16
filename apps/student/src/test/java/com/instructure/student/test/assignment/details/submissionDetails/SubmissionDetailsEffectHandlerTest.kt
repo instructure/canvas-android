@@ -15,7 +15,6 @@
  */
 package com.instructure.student.test.assignment.details.submissionDetails
 
-import android.util.Log
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -189,6 +188,64 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
                     quizResult = null,
                     studioLTIToolResult = DataResult.Fail(null)
                 )
+            )
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `loadData with external tag attributes results in DataLoaded`() {
+        val courseId = 1L
+        val assignmentId = 1L
+        val ltiUrl = "https://www.instructure.com"
+        val ltiId = 123L
+        val ltiTool = LTITool(id = ltiId, url = ltiUrl, assignmentId = assignmentId, courseId = courseId)
+        val externalToolAttributes = ExternalToolAttributes(url = ltiUrl, contentId = ltiId)
+        val assignment = Assignment().copy(
+            id = assignmentId,
+            courseId = courseId,
+            externalToolAttributes = externalToolAttributes,
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString)
+        )
+        val submission = Submission()
+        val user = User()
+
+        mockkObject(AssignmentManager)
+        mockkObject(SubmissionManager)
+        mockkObject(EnrollmentManager)
+
+        every { EnrollmentManager.getObserveeEnrollmentsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf())
+        }
+
+        every { AssignmentManager.getAssignmentAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(assignment)
+        }
+
+        every { SubmissionManager.getSingleSubmissionAsync(any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(submission)
+        }
+
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkStatic(ApiPrefs::class)
+        every { ApiPrefs.user } returns user
+
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(
+                    SubmissionDetailsEvent.DataLoaded(
+                            assignment = DataResult.Success(assignment),
+                            rootSubmissionResult = DataResult.Success(submission),
+                            ltiUrlResult = DataResult.Success(ltiTool),
+                            isStudioEnabled = false,
+                            quizResult = null,
+                            studioLTIToolResult = DataResult.Fail(null)
+                    )
             )
         }
 
