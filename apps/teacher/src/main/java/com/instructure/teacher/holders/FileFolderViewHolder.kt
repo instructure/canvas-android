@@ -52,6 +52,7 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         if(item.displayName.isValid()) { // This is a file
             fileName.text = item.displayName
+            fileName.contentDescription = itemView.resources.getString(R.string.fileTalkBack, item.displayName)
             fileSize.text = NumberHelper.readableFileSize(context, item.size)
             if(item.thumbnailUrl.isValid()) {
                 fileIconOrImage.setImage(item.thumbnailUrl!!)
@@ -69,6 +70,7 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         } else { // This is a folder
             fileName.text = item.name
+            fileName.contentDescription = itemView.resources.getString(R.string.folderTalkBack, item.name)
             fileSize.text = ""
             fileIconOrImage.setIcon(R.drawable.vd_folder_solid, courseColor)
         }
