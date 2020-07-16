@@ -29,8 +29,8 @@ class QRUtils {
 
   // QR Pairing
   static const String QR_PAIR_PATH = 'pair';
-  static const String QR_PAIR_PARAM_CODE = 'pairing_code';
-  static const String QR_PAIR_PARAM_ACCOUNT_ID = 'pairing_account_id';
+  static const String QR_PAIR_PARAM_CODE = 'code';
+  static const String QR_PAIR_PARAM_ACCOUNT_ID = 'account_id';
 
   static Uri verifySSOLogin(String url) {
     try {

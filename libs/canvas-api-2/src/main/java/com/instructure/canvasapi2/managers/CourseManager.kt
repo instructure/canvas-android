@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import java.io.IOException
@@ -46,6 +47,11 @@ object CourseManager {
 
     @JvmStatic
     fun getCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        if (ApiPrefs.isStudentView) {
+            getCoursesTeacher(forceNetwork, callback)
+            return
+        }
+
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 

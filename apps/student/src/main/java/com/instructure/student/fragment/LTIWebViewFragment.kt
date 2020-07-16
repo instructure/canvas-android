@@ -25,9 +25,11 @@ import android.text.Html
 import android.text.SpannedString
 import android.view.MenuItem
 import android.widget.Toast
+import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.HttpHelper
@@ -55,6 +57,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     private var ltiUrl: String by StringArg(key = LTI_URL)
     private var ltiTab: Tab? by NullableParcelableArg(key = Const.TAB)
+    private var ltiTool: LTITool? by NullableParcelableArg(key = Const.LTI_TOOL, default = null)
     private var sessionLessLaunch: Boolean by BooleanArg(key = Const.SESSIONLESS_LAUNCH)
     private var isAssignmentLTI: Boolean by BooleanArg(key = Const.ASSIGNMENT_LTI)
     private var hideToolbar by BooleanArg(key = HIDE_TOOLBAR)
@@ -203,7 +206,15 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                     if (isAssignmentLTI) {
                         // Get a basic sessionless URL for Assignment LTIs
                         inBackground {
-                            val result = getLTIUrl(requireContext(), ltiUrl)
+                            val result = if(ltiTool != null) {
+                                AssignmentManager.getExternalToolLaunchUrlAsync(
+                                        ltiTool!!.courseId,
+                                        ltiTool!!.id,
+                                        ltiTool!!.assignmentId
+                                ).await().dataOrNull?.url
+                            } else {
+                                getLTIUrl(requireContext(), ltiUrl)
+                            }
                             launchIntent(result)
                         }
                     } else if (ApiPrefs.domain in url) {
@@ -273,7 +284,15 @@ class LTIWebViewFragment : InternalWebviewFragment() {
         ltiUrlLaunchJob = weave {
             var result: String? = null
             inBackground {
-                result = getLTIUrl(requireContext(), ltiUrl)
+                result = if (ltiTool != null) {
+                    AssignmentManager.getExternalToolLaunchUrlAsync(
+                        ltiTool!!.courseId,
+                        ltiTool!!.id,
+                        ltiTool!!.assignmentId
+                    ).await().dataOrNull?.url
+                } else {
+                    getLTIUrl(requireContext(), ltiUrl)
+                }
             }
 
             if (result != null) {
@@ -372,13 +391,18 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             return Route(LTIWebViewFragment::class.java, canvasContext, bundle)
         }
 
+        /**
+         * The ltiTool param is used specifically for launching assignment based lti tools, where its possible to have
+         * a tool "collision". As such, we need to pre-fetch the correct tool to use here.
+         */
         fun makeRoute(
             canvasContext: CanvasContext,
             url: String,
             title: String? = null,
             sessionLessLaunch: Boolean = false,
             isAssignmentLTI: Boolean = false,
-            hideToolbar: Boolean = false
+            hideToolbar: Boolean = false,
+            ltiTool: LTITool? = null
         ): Route {
             val bundle = Bundle().apply {
                 putString(LTI_URL, url)
@@ -386,6 +410,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                 putBoolean(Const.SESSIONLESS_LAUNCH, sessionLessLaunch)
                 putBoolean(Const.ASSIGNMENT_LTI, isAssignmentLTI)
                 putString(Const.ACTION_BAR_TITLE, title) // For 'title' property in InternalWebViewFragment
+                putParcelable(Const.LTI_TOOL, ltiTool)
             }
             return Route(LTIWebViewFragment::class.java, canvasContext, bundle)
         }

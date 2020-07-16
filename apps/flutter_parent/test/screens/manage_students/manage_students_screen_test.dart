@@ -18,12 +18,16 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/models/user_color.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_screen.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_interactor.dart';
 import 'package:flutter_parent/screens/manage_students/manage_students_screen.dart';
+import 'package:flutter_parent/screens/manage_students/student_color_picker_dialog.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
+import 'package:flutter_parent/utils/db/user_colors_db.dart';
+import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -39,6 +43,7 @@ void main() {
   mockNetworkImageResponse();
   final analytics = _MockAnalytics();
   final MockPairingUtil pairingUtil = MockPairingUtil();
+  final MockUserColorsDb userColorsDb = MockUserColorsDb();
 
   _setupLocator([_MockManageStudentsInteractor interactor]) {
     final locator = GetIt.instance;
@@ -52,11 +57,13 @@ void main() {
     locator.registerFactory<QuickNav>(() => QuickNav());
     locator.registerLazySingleton<Analytics>(() => analytics);
     locator.registerLazySingleton<PairingUtil>(() => pairingUtil);
+    locator.registerLazySingleton<UserColorsDb>(() => userColorsDb);
   }
 
   setUp(() {
     reset(analytics);
     reset(pairingUtil);
+    reset(userColorsDb);
   });
 
   void _clickFAB(WidgetTester tester) async {
@@ -202,6 +209,70 @@ void main() {
 
       // See if we are correctly displaying the username and pronouns of the user
       expect(find.text('Billy (he/him)'), findsOneWidget);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays stored user color', (tester) async {
+      _setupLocator();
+
+      var observedStudents = [
+        CanvasModelTestUtils.mockUser(shortName: 'Billy', id: '123'),
+      ];
+
+      UserColor userColor = UserColor((b) => b..color = Colors.pinkAccent);
+      when(userColorsDb.getByContext(any, any, 'user_123')).thenAnswer((_) async => userColor);
+
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
+      await tester.pumpAndSettle();
+
+      // Should show the color circle
+      var key = Key('color-circle-123');
+      expect(find.byKey(key), findsOneWidget);
+
+      // Circle should be the correct color
+      Container circleContainer = tester.widget<Container>(find.byKey(key));
+      expect((circleContainer.decoration as BoxDecoration).color, userColor.color);
+    });
+
+    testWidgetsWithAccessibilityChecks('Displays default user color', (tester) async {
+      _setupLocator();
+
+      int studentIndex = 2;
+      var expectedColor = StudentColorSet.all[studentIndex].light;
+
+      var observedStudents = [
+        CanvasModelTestUtils.mockUser(shortName: 'Billy', id: studentIndex.toString()),
+      ];
+
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
+      await tester.pumpAndSettle();
+
+      // Should show the color circle
+      var key = Key('color-circle-$studentIndex');
+      expect(find.byKey(key), findsOneWidget);
+
+      // Circle should be the correct color
+      Container circleContainer = tester.widget<Container>(find.byKey(key));
+      expect((circleContainer.decoration as BoxDecoration).color, expectedColor);
+    });
+
+    testWidgetsWithAccessibilityChecks('Clicking student color opens color picker', (tester) async {
+      _setupLocator();
+
+      var observedStudents = [
+        CanvasModelTestUtils.mockUser(shortName: 'Billy', id: '123'),
+      ];
+
+      // Start the page with the user
+      await tester.pumpWidget(TestApp(ManageStudentsScreen(observedStudents)));
+      await tester.pumpAndSettle();
+
+      // Tap the color circle
+      var key = Key('color-circle-123');
+      await tester.tap(find.byKey(key));
+      await tester.pumpAndSettle();
+
+      // Should show the color picker dialog
+      expect(find.byType(StudentColorPickerDialog), findsOneWidget);
     });
 
     testWidgetsWithAccessibilityChecks('Empty when null', (tester) async {

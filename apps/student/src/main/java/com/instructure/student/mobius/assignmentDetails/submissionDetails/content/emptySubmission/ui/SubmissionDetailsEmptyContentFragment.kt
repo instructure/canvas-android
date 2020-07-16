@@ -29,6 +29,7 @@ import com.instructure.student.db.Db
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsEmptyContentEventBusSource
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.*
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.common.DBSource
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
@@ -41,12 +42,13 @@ class SubmissionDetailsEmptyContentFragment :
     val quiz by NullableParcelableArg<Quiz>(key = Const.QUIZ)
     val studioLTITool by NullableParcelableArg<LTITool>(key = Const.STUDIO_LTI_TOOL)
     val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
+    private var ltiTool: LTITool? by NullableParcelableArg(key = Const.LTI_TOOL, default = null)
 
     override fun makeEffectHandler() = SubmissionDetailsEmptyContentEffectHandler(requireContext(), assignment.id)
     override fun makeUpdate() = SubmissionDetailsEmptyContentUpdate()
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SubmissionDetailsEmptyContentView(canvasContext, inflater, parent)
     override fun makePresenter() = SubmissionDetailsEmptyContentPresenter
-    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isStudioEnabled, quiz, studioLTITool = studioLTITool, isObserver = isObserver)
+    override fun makeInitModel() = SubmissionDetailsEmptyContentModel(assignment, canvasContext, isStudioEnabled, quiz, studioLTITool = studioLTITool, isObserver = isObserver, ltiTool = ltiTool)
     override fun getExternalEventSources() = listOf(
         SubmissionDetailsEmptyContentEventBusSource(),
         DBSource.ofSingle<Submission, SubmissionDetailsEmptyContentEvent>(
@@ -68,13 +70,14 @@ class SubmissionDetailsEmptyContentFragment :
         const val CHOOSE_MEDIA_REQUEST_CODE = 45521
 
         @JvmStatic
-        fun newInstance(course: Course, assignment: Assignment, isStudioEnabled: Boolean, quiz: Quiz? = null, studioLTITool: LTITool? = null, isObserver: Boolean = false): SubmissionDetailsEmptyContentFragment {
+        fun newInstance(course: Course, assignment: Assignment, isStudioEnabled: Boolean, quiz: Quiz? = null, studioLTITool: LTITool? = null, isObserver: Boolean = false, ltiTool: LTITool? = null): SubmissionDetailsEmptyContentFragment {
             val bundle = course.makeBundle {
                 putBoolean(Const.IS_OBSERVER, isObserver)
                 putParcelable(Const.ASSIGNMENT, assignment)
                 putParcelable(Const.QUIZ, quiz)
                 putBoolean(Const.IS_STUDIO_ENABLED, isStudioEnabled)
                 putParcelable(Const.STUDIO_LTI_TOOL, studioLTITool)
+                putParcelable(Const.LTI_TOOL, ltiTool)
             }
 
             return SubmissionDetailsEmptyContentFragment().withArgs(bundle)

@@ -21,6 +21,7 @@ import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart'
 import 'package:flutter_parent/screens/dashboard/student_horizontal_list_view.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
+import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -86,9 +87,9 @@ void main() {
       // Check the initial value of the student notifier
       expect(notifier.value, null);
 
-      // Check the initial value of the theme, should be 0
+      // Check the initial value of the theme, should be default student color (electric)
       var state = ParentTheme.of(TestApp.navigatorKey.currentContext);
-      expect(state.studentIndex, 0);
+      expect(state.studentColor, StudentColorSet.electric.light);
 
       // Check for the second student
       expect(find.text(student2.shortName), findsOneWidget);
@@ -101,8 +102,9 @@ void main() {
       // Check the selected student notifier
       expect(student2, notifier.value);
 
-      // Check the theme, should be 1
-      expect(state.studentIndex, students.indexOf(student2));
+      // Check the theme, should be correct color for student
+      var expectedColor = (await state.getColorsForStudent(student2.id)).light;
+      expect(state.studentColor, expectedColor);
 
       // Check to make sure we called the onTap function passed in
       expect(called, true);

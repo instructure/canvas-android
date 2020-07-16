@@ -138,6 +138,7 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.toggleBaseOnGradedAssignments()
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60")) // 9 out of 15
 
+        /* TODO: Submit a quiz if/when we can do so via WebView
         // Let's submit our quiz
         courseGradesPage.selectItem(quizMatcher)
         assignmentDetailsPage.viewQuiz()
@@ -150,6 +151,7 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.refresh()
         courseGradesPage.assertGradeDisplayed(quizMatcher, containsTextCaseInsensitive("10/10"))
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("76"))
+        */
     }
 
 }

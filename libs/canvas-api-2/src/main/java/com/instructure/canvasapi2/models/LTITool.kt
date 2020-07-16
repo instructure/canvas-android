@@ -23,7 +23,9 @@ import kotlinx.android.parcel.Parcelize
 data class LTITool(
         override var id: Long = 0,
         var name: String? = null,
-        var url: String? = null
+        var url: String? = null,
+        var assignmentId: Long = 0L,
+        var courseId: Long = 0L
 ) : CanvasModel<LTITool>() {
     override val comparisonString get() = name
 }

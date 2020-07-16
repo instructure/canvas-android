@@ -89,10 +89,25 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
             val isStudioEnabled = studioLTIToolResult.dataOrNull != null
 
             // Determine if we need to retrieve an authenticated LTI URL based on whether this assignment accepts external tool submissions
-            val assignmentUrl = assignmentResult.dataOrNull?.url
-            val ltiUrl = if (assignmentUrl != null && assignmentResult.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
-                 SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
-            else DataResult.Fail(null)
+            val ltiToolId = assignmentResult.dataOrNull?.externalToolAttributes?.contentId
+            val ltiToolResponse = if(ltiToolId != null && ltiToolId != 0L) {
+                // Use this to create a proper fetch url for the external tool
+                AssignmentManager.getExternalToolLaunchUrlAsync(
+                        assignmentResult.dataOrNull?.courseId!!,
+                        ltiToolId, assignmentResult.dataOrNull?.id!!
+                ).await()
+            } else {
+                val assignmentUrl = assignmentResult.dataOrNull?.url
+                if (assignmentUrl != null && assignmentResult.dataOrNull?.getSubmissionTypes()?.contains(Assignment.SubmissionType.EXTERNAL_TOOL) == true)
+                    SubmissionManager.getLtiFromAuthenticationUrlAsync(assignmentUrl, true).await()
+                else DataResult.Fail(null)
+            }
+
+            val ltiTool = if(ltiToolResponse.isSuccess && ltiToolResponse.dataOrNull != null) {
+                DataResult.Success(ltiToolResponse.dataOrThrow.copy(assignmentId = assignmentResult.dataOrNull?.id!!, courseId = assignmentResult.dataOrNull?.courseId!!))
+            } else {
+                ltiToolResponse
+            }
 
             // We need to get the quiz for the empty submission page
             val quizResult = if (assignmentResult.dataOrNull?.turnInType == (Assignment.TurnInType.QUIZ) && assignmentResult.dataOrNull?.quizId != 0L) {
@@ -107,7 +122,7 @@ class SubmissionDetailsEffectHandler : EffectHandler<SubmissionDetailsView, Subm
                 }
             } else null
 
-            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiUrl, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver))
+            consumer.accept(SubmissionDetailsEvent.DataLoaded(assignmentResult, submissionResult, ltiTool, isStudioEnabled, quizResult, studioLTIToolResult, effect.isObserver))
         }
     }
 

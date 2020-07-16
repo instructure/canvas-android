@@ -14,6 +14,9 @@
 
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_parent/l10n/app_localizations.dart';
+
 /// Holds a set of a color variants meant to be used with different combinations of dark mode and high-contrast mode
 class StudentColorSet {
   /// Blue student color set
@@ -44,4 +47,23 @@ class StudentColorSet {
   final Color lightHC;
   final Color dark;
   final Color darkHC;
+
+  static String getA11yName(StudentColorSet colorSet, BuildContext context) {
+    switch (colorSet) {
+      case electric:
+        return L10n(context).colorElectric;
+      case jeffGoldplum:
+        return L10n(context).colorPlum;
+      case barney:
+        return L10n(context).colorBarney;
+      case raspberry:
+        return L10n(context).colorRaspberry;
+      case fire:
+        return L10n(context).colorFire;
+      case shamrock:
+        return L10n(context).colorShamrock;
+      default:
+        return '';
+    }
+  }
 }

@@ -50,8 +50,11 @@ class FlutterTextureRenderModeFix : ClassTransformer() {
     private fun CtClass.transformFlutterViewConstructor() {
         val constructor = getDeclaredConstructor(arrayOf(contextClass, attributeSetClass, flutterTextureViewClass))
         if (constructor != null) {
+            // Replaces the line "this.renderSurface = flutterSurfaceView;" in the constructor that takes a FlutterTextureView param.
+            // The exact line number(s) may change in newer Flutter versions.
             constructor.removeLines(267..268)
             constructor.insertAt(266, """renderSurface = $3;""")
+            println("    :FlutterView patched")
         } else {
             throw IllegalStateException("Could not find correct constructor for $transformName")
         }

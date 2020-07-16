@@ -32,8 +32,6 @@
     <item type="id" name="formatLoaderID"/>
     <item type="id" name="openMediaLoaderID"/>
     <item type="id" name="videoFullScreenView"/>
-    <item type="id" name="toggleTimer"/>
-    <item type="id" name="showFlaggedQuestions"/>
     <item type="id" name="menu_star_conversation"/>
     <item type="id" name="menu_inbox_mark_unread"/>
     <item type="id" name="menu_inbox_archive"/>

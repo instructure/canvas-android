@@ -188,8 +188,6 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
         if (quiz?.lockInfo != null && awaitApi<QuizSubmissionResponse> { QuizManager.getFirstPageQuizSubmissions(canvasContext, quiz!!.id, true, it) }.quizSubmissions.isEmpty()) {
             populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo, activity, R.string.lockedQuizDesc))
         } else {
-            if (shouldShowNatively(quiz)) return
-
             val authenticatedUrl = tryOrNull {
                 awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl
             }
@@ -203,22 +201,6 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     }
 
     override fun handleBackPressed() = getCanvasWebView()?.handleGoBack() ?: false
-
-    /**
-     * When we route we always route quizzes here, so this checks to see if we support
-     * native quizzes and if we do then we'll show it natively
-     * @param quiz
-     * @return
-     */
-    private fun shouldShowNatively(quiz: Quiz?): Boolean {
-        if (QuizListFragment.isNativeQuiz(canvasContext, quiz!!)) {
-            //take them to the quiz start fragment instead, let them take it natively
-            navigation?.popCurrentFragment()
-            quiz.let { RouteMatcher.route(requireContext(), QuizStartFragment.makeRoute(canvasContext, it).apply { ignoreDebounce = true }) }
-            return true
-        }
-        return false
-    }
 
     companion object {
 

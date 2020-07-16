@@ -67,6 +67,7 @@ import 'package:flutter_parent/models/term.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
 import 'package:flutter_parent/models/unread_count.dart';
 import 'package:flutter_parent/models/user.dart';
+import 'package:flutter_parent/models/user_colors.dart';
 
 import 'assignment_override.dart';
 import 'course_settings.dart';
@@ -157,6 +158,7 @@ part 'serializers.g.dart';
   TermsOfService,
   UnreadCount,
   User,
+  UserColors,
   UserNameData,
 ])
 final Serializers _serializers = _$_serializers;

@@ -73,7 +73,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     event.assignment.dataOrNull,
                     model.canvasContext,
                     event.isStudioEnabled,
-                    event.ltiUrlResult.dataOrNull,
+                    event.ltiUrlResult?.dataOrNull,
                     event.quizResult?.dataOrNull,
                     event.studioLTIToolResult?.dataOrNull,
                     event.isObserver
@@ -163,7 +163,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiUrl?.url ?: "")
                 else SubmissionDetailsContentType.LockedContent
             }
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver)
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver, ltiUrl)
             submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 

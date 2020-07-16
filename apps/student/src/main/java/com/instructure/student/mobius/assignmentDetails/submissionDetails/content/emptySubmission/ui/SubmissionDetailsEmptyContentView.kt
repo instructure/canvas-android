@@ -26,10 +26,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -37,10 +34,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.fragment.DiscussionDetailsFragment
-import com.instructure.student.fragment.LTIWebViewFragment
-import com.instructure.student.fragment.QuizStartFragment
-import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
@@ -134,14 +128,14 @@ class SubmissionDetailsEmptyContentView(
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
-    fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+    fun showLTIView(canvasContext: CanvasContext, title: String, ltiTool: LTITool? = null) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
+        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, ltiTool?.url ?: "", title, isAssignmentLTI = true, ltiTool = ltiTool))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-        RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
+        RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {

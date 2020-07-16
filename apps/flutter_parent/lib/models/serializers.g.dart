@@ -81,6 +81,7 @@ Serializers _$_serializers = (new Serializers().toBuilder()
       ..add(TermsOfService.serializer)
       ..add(UnreadCount.serializer)
       ..add(User.serializer)
+      ..add(UserColors.serializer)
       ..add(UserNameData.serializer)
       ..add(UserPermission.serializer)
       ..addBuilderFactory(
@@ -149,6 +150,10 @@ Serializers _$_serializers = (new Serializers().toBuilder()
             const FullType(BuiltList, const [const FullType(String)])
           ]),
           () => new MapBuilder<String, BuiltList<String>>())
+      ..addBuilderFactory(
+          const FullType(
+              BuiltMap, const [const FullType(String), const FullType(String)]),
+          () => new MapBuilder<String, String>())
       ..addBuilderFactory(
           const FullType(
               BuiltMap, const [const FullType(String), const FullType(String)]),

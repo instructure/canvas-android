@@ -27,9 +27,9 @@ object PairObserverPresenter : Presenter<PairObserverModel, PairObserverViewStat
         if (!model.pairingCode.isValid() || model.accountId == null) return PairObserverViewState.Failed
 
         return PairObserverViewState.Loaded(
-            pairingCode = model.pairingCode,
-            domain = model.domain,
-            accountId = model.accountId
+                pairingCode = model.pairingCode,
+                domain = model.domain,
+                accountId = model.accountId
         )
     }
 }

@@ -52,7 +52,8 @@ class PairObserverRenderTest : StudentRenderTest() {
     @Test
     fun displaysPairingCode() {
         val code = "code"
-        val model = baseModel.copy(pairingCode = code)
+        val accountId = 123L
+        val model = baseModel.copy(pairingCode = code, accountId = accountId)
         loadPageWithModel(model)
 
         pairObserverRenderPage.assertCodeDisplayed(code)

@@ -35,7 +35,7 @@ class SubmissionDetailsEmptyContentUpdate : UpdateInit<SubmissionDetailsEmptyCon
             when {
                 model.assignment.turnInType == Assignment.TurnInType.QUIZ -> Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowQuizStartView(model.quiz!!, model.course)))
                 model.assignment.turnInType == Assignment.TurnInType.DISCUSSION -> Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowDiscussionDetailView(model.assignment.discussionTopicHeader!!.id, model.course)))
-                submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isStudioEnabled) -> Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignment, model.assignment.url)))
+                submissionTypes.size == 1 && !(submissionTypes.contains(Assignment.SubmissionType.ONLINE_UPLOAD) && model.isStudioEnabled) -> Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowCreateSubmissionView(submissionTypes.first(), model.course, model.assignment, model.ltiTool)))
                 else -> Next.dispatch<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentEffect>(setOf(SubmissionDetailsEmptyContentEffect.ShowSubmitDialogView(model.assignment, model.course, model.isStudioEnabled, model.studioLTITool)))
             }
         }

@@ -58,6 +58,7 @@ private fun verifyAllDatesPopulated(description: String, dates: AssignmentDueDat
 //
 // region logic for permissions object within quiz
 //
+
 fun LambdaDslObject.populateQuizPermissionsFields() : LambdaDslObject {
     this
             .booleanType("read")
@@ -91,6 +92,7 @@ fun verifyQuizPermissionsPopulated(description: String, permissions: QuizPermiss
 //
 // region Logic for quiz object fields
 //
+
 fun LambdaDslObject.populateQuizFields(role: String = "student", singleQuiz: Boolean = true): LambdaDslObject {
 
     this
@@ -152,7 +154,6 @@ fun LambdaDslObject.populateQuizFields(role: String = "student", singleQuiz: Boo
     return this
 }
 
-
 fun assertQuizPopulated(description: String, quiz: Quiz, role: String = "student", singleQuiz: Boolean = true) {
     assertNotNull("$description + id", quiz.id)
     assertNotNull("$description + mobileUrl", quiz.mobileUrl)
@@ -209,6 +210,7 @@ fun assertQuizPopulated(description: String, quiz: Quiz, role: String = "student
 //
 // region Logic for QuizSubmission object fields
 //
+
 fun LambdaDslObject.populateQuizSubmissionFields() : LambdaDslObject {
     this
             .id("id")
@@ -263,75 +265,4 @@ fun assertQuizSubmissionPopulated(description: String, quizSubmission: QuizSubmi
 }
 //endregion
 
-//
-// region Logic for QuizSubmissionAnswer object within QuizSubmissionQuestion object
-//
-fun LambdaDslObject.populateQuizSubmissionAnswerFields() : LambdaDslObject {
-    this
-            .id("id")
-            .stringType("text")
-            .stringType("html")
-            //.stringType("comments") // Not returned by API, not used internally
-            //.id("weight") // Not returned by API, not used internally
-            .stringType("blank_id")
 
-    return this
-}
-
-fun assertQuizSubmissionAnswerPopulated(description: String, answer: QuizSubmissionAnswer) {
-    assertNotNull("$description + id", answer.id)
-    assertNotNull("$description + text", answer.text)
-    assertNotNull("$description + html", answer.html)
-    //assertNotNull("$description + comments", answer.comments) //Not returned by API, not used internally
-    //assertNotNull("$description + weight", answer.weight) //Not returned by API, not used internally
-    assertNotNull("$description + blankId", answer.blankId)
-}
-//endregion
-
-//
-// region Logic for QuizSubmissionQuestion object
-//
-fun LambdaDslObject.populateQuizSubmissionQuestionFields(hasMatches: Boolean = false) : LambdaDslObject {
-    this
-            .id("id")
-            .booleanType("flagged")
-            .minArrayLike("answers", 1) { obj ->
-                obj.populateQuizSubmissionAnswerFields()
-            }
-            .id("position")
-            .id("quiz_id")
-            .stringType("question_name")
-            .stringMatcher("question_type", questionTypeRegex, "true_false_question")
-            .stringType("question_text")
-    // TODO: answer field.  Too complicated to specify right now.
-    if(hasMatches) {
-        this.minArrayLike("matches", 1) { obj ->
-            obj.id("match_id")
-            obj.stringType("text")
-        }
-    }
-    return this
-}
-
-fun assertQuizSubmissionQuestionPopulated(description: String, question: QuizSubmissionQuestion, hasMatches: Boolean = false) {
-    assertNotNull("$description + id", question.id)
-    assertNotNull("$description + isFlagged", question.isFlagged)
-    assertNotNull("$description + answers", question.answers)
-    for(i in 0..question.answers!!.size - 1) {
-        assertQuizSubmissionAnswerPopulated("$description + answers[$i]", question.answers!![i])
-    }
-    assertNotNull("$description + position", question.position)
-    assertNotNull("$description + quizId", question.quizId)
-    assertNotNull("$description + questionName", question.questionName)
-    assertNotNull("$description + questionType", question.questionType)
-    assertNotNull("$description + questionText", question.questionText)
-
-    if(hasMatches) {
-        assertNotNull("$description + matches", question.matches)
-        for(i in 0..question.matches!!.size-1) {
-            assertNotNull("$description + matches[$i].matchId", question.matches!![i].matchId)
-            assertNotNull("$description + matches[$i].text", question.matches!![i].text)
-        }
-    }
-}
-//endregion

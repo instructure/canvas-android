@@ -97,6 +97,8 @@ class QuizzesE2ETest: StudentTest() {
         courseBrowserPage.selectQuizzes()
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
+
+        /* TODO: Re-introduce these tests if/when we can do so via WebView
         quizListPage.selectQuiz(quizPublished)
         quizDetailsPage.assertQuizDisplayed(quizPublished, false, quizQuestions)
         pressBack() // Back to quiz list page
@@ -133,6 +135,7 @@ class QuizzesE2ETest: StudentTest() {
         assignmentDetailsPage.assertSubmittedStatus()
         pressBack() // Back to assignment list page
         pressBack() // Back to course browser page
+        */
     }
 
     private fun possiblePointTotal(questions: List<QuizQuestion>): Int {

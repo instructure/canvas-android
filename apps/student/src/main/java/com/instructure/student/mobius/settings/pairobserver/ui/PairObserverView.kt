@@ -87,7 +87,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
         pairObserverCode.text = pairingCode
 
         try {
-            // Open the Parent App with relevant data so it can pair the student canvas-parent://{domain}/pair?code={}&account_id={}
+            // Open the Parent App with relevant data so it can pair the student
             val content = "canvas-parent://$domain/pair?code=$pairingCode&account_id=$accountId"
             val barcodeEncoder = BarcodeEncoder()
             val bitmap: Bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 100, 100)

@@ -287,18 +287,14 @@ class AssignmentDetailsView(
         RouteMatcher.route(context, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl, isFailure))
     }
 
-    fun showLTIView(canvasContext: CanvasContext, url: String, title: String) {
+    fun showLTIView(canvasContext: CanvasContext, title: String, ltiTool: LTITool? = null) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, url, title, isAssignmentLTI = true))
+        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, ltiTool?.url ?: "", title, isAssignmentLTI = true, ltiTool = ltiTool))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_QUIZLAUNCH)
-        if (QuizListFragment.isNativeQuiz(canvasContext, quiz)) {
-            RouteMatcher.route(context, QuizStartFragment.makeRoute(canvasContext, quiz))
-        } else {
-            RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
-        }
+        RouteMatcher.route(context, BasicQuizViewFragment.makeRoute(canvasContext, quiz, quiz.url!!))
     }
 
     fun showDiscussionDetailView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {

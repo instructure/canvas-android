@@ -61,7 +61,7 @@ class MasqueradeUI extends StatefulWidget {
               child: new Text(L10n(context).ok),
               onPressed: () async {
                 if (logout) {
-                  ParentTheme.of(context).studentIndex = 0;
+                  await ParentTheme.of(context).setSelectedStudent(null);
                   await ApiPrefs.performLogout();
                   MasqueradeUI.of(context).refresh();
                   locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
