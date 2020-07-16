@@ -23,6 +23,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.endpoints.pairingCodeCount
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -254,6 +255,10 @@ class SettingsInteractionTest : StudentTest() {
         // remembering our original value.
         val originalVal = RemoteConfigPrefs.getString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name);
         RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, "true")
+
+        // In case this is a retry, reset the pairingCodeCount in UserEndpoints to 0
+        pairingCodeCount = 0
+
 
         try {
             setUpAndSignIn()

@@ -17,11 +17,13 @@
 package com.instructure.student.ui.pages
 
 import android.os.SystemClock.sleep
+import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -272,6 +274,37 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
                     .check(webMatches(getText(), containsString(check.textValue)))
         }
         Espresso.pressBack()
+    }
+
+    /**
+     * It can take a *long* time (much longer than the advertised 2.5 seconds) for
+     * the unread indicator to disappear when running tests on FTL.  Rather than
+     * use an ever-increasing timeout, I figured I would just programmatically
+     * wait until the unread indicator disappeared, for up to 10 seconds.
+     *
+     * The downside is that we are relying on webview elements to not change.
+     * If that is something that happens often (or maybe even once), we will
+     * need to go back to using a timeout.
+     */
+    fun waitForUnreadIndicatorToDisappear(reply: DiscussionEntry) {
+        repeat(10) {
+            if(!isUnreadIndicatorVisible(reply)) return
+            sleep(1000)
+        }
+
+        assertTrue("Timed out waiting for unread indicator to disappear", false)
+    }
+
+    private fun isUnreadIndicatorVisible(reply: DiscussionEntry) : Boolean {
+        try {
+            onWebView(withId(R.id.discussionRepliesWebView))
+                    .withElement(findElement(Locator.ID, "unread_indicator_${reply.id}"))
+                    .withElement(findElement(Locator.CLASS_NAME, "unread"))
+            return true
+        }
+        catch(t: Throwable) {
+            return false
+        }
     }
 }
 

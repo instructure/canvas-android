@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
@@ -173,12 +174,9 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
-        sleep(500) // let's allow time for the webview to become populated/visible before we scroll to it
+        sleep(1500) // let's allow time for the webview to become populated/visible before we scroll to it
         discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
-        // From what I can tell, our self-generated HTML has a 2500 ms wait before it
-        // sends the "read" call for the unread messages on the page.  So we'll wait for
-        // a few seconds.
-        sleep(5000) // There have been instances where 3 seconds wasn't enough
+        discussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
         Espresso.pressBack() // Back to discussionListPage
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 0)
