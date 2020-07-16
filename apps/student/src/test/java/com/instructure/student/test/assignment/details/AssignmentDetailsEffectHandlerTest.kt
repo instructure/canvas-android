@@ -234,6 +234,51 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     }
 
     @Test
+    fun `Successful LoadData with external tag attributes results in DataLoaded`() {
+        val courseId = 1L
+        val submission = mockkSubmission(9876L)
+        val ltiUrl = "https://www.instructure.com"
+        val ltiId = 123L
+        val ltiTool = LTITool(id = ltiId, url = ltiUrl, assignmentId = assignment.id, courseId = assignment.courseId)
+        val externalToolAttributes = ExternalToolAttributes(url = ltiUrl, contentId = ltiId)
+        assignment = assignment.copy(
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
+            externalToolAttributes = externalToolAttributes
+        )
+        val expectedEvent = AssignmentDetailsEvent.DataLoaded(
+            DataResult.Success(assignment),
+            false,
+            DataResult.Fail(null),
+            DataResult.Success(ltiTool),
+            submission,
+            null
+        )
+
+        mockkStatic("com.instructure.canvasapi2.utils.weave.AwaitApiKt")
+        coEvery { awaitApiResponse<Assignment>(any()) } returns Response.success(assignment)
+
+        mockkObject(AssignmentManager)
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkDatabase(listOf(submission))
+
+        connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        verify {
+            firebase.logEvent(AnalyticsEventConstants.ASSIGNMENT_DETAIL_ASSIGNMENT, null)
+        }
+
+        confirmVerified(firebase)
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
     fun `Successful LoadData for observer results in DataLoaded`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)

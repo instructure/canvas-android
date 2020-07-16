@@ -170,11 +170,15 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     @Test
-    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
-        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
-        val submissionTypes = listOf("online_upload")
+    fun `SubmitAssignmentClicked event with only EXTERNAL_TOOL submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
+        val submissionType = Assignment.SubmissionType.EXTERNAL_TOOL
+        val submissionTypes = listOf("external_tool")
+        val ltiTool = LTITool(id = 123L, url = "hodor.com", assignmentId = assignment.id, courseId = assignment.courseId)
         val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
-        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
+        val givenModel = initModel.copy(
+            assignmentResult = DataResult.Success(assignmentCopy),
+            ltiTool = DataResult.Success(ltiTool)
+        )
         updateSpec
             .given(givenModel)
             .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
@@ -184,11 +188,34 @@ class AssignmentDetailsUpdateTest : Assert() {
                         AssignmentDetailsEffect.ShowCreateSubmissionView(
                             submissionType,
                             course,
-                            assignmentCopy
+                            assignmentCopy,
+                            ltiTool
                         )
                     )
                 )
             )
+    }
+
+    @Test
+    fun `SubmitAssignmentClicked event with only ONLINE_UPLOAD submission type and without Studio enabled results in ShowCreateSubmissionView effect`() {
+        val submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
+        val submissionTypes = listOf("online_upload")
+        val assignmentCopy = assignment.copy(submissionTypesRaw = submissionTypes)
+        val givenModel = initModel.copy(assignmentResult = DataResult.Success(assignmentCopy))
+        updateSpec
+                .given(givenModel)
+                .whenEvent(AssignmentDetailsEvent.SubmitAssignmentClicked)
+                .then(
+                        assertThatNext(
+                                matchesEffects<AssignmentDetailsModel, AssignmentDetailsEffect>(
+                                        AssignmentDetailsEffect.ShowCreateSubmissionView(
+                                                submissionType,
+                                                course,
+                                                assignmentCopy
+                                        )
+                                )
+                        )
+                )
     }
 
     @Test

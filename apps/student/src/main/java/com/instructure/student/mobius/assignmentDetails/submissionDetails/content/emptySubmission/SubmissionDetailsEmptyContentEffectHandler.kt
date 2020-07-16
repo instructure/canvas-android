@@ -67,7 +67,7 @@ class SubmissionDetailsEmptyContentEffectHandler(val context: Context, val assig
                     Assignment.SubmissionType.ONLINE_UPLOAD -> view?.showFileUploadView(effect.assignment)
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> view?.showOnlineTextEntryView(effect.assignment.id, effect.assignment.name)
                     Assignment.SubmissionType.ONLINE_URL -> view?.showOnlineUrlEntryView(effect.assignment.id, effect.assignment.name, effect.course)
-                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course,  effect.assignment.name ?: "", effect.ltiTool)
+                    Assignment.SubmissionType.EXTERNAL_TOOL, Assignment.SubmissionType.BASIC_LTI_LAUNCH -> view?.showLTIView(effect.course, title = effect.assignment.name ?: "", ltiTool = effect.ltiTool)
                     else -> view?.showMediaRecordingView() // e.g. Assignment.SubmissionType.MEDIA_RECORDING
                 }
             }

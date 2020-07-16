@@ -317,6 +317,16 @@ class SubmissionDetailsUpdateTest : Assert() {
     }
 
     @Test
+    fun `ASSIGNMENT_STATE_MISSING with ltiTool results in SubmissionDetailsContentType of NoSubmissionContent`() {
+        verifyGetSubmissionContentType(
+            assignment,
+            submission.copy(attempt = 0),
+            SubmissionDetailsContentType.NoSubmissionContent(course, assignment, isStudioEnabled, ltiTool = ltiTool),
+            lti = ltiTool
+        )
+    }
+
+    @Test
     fun `ASSIGNMENT_STATE_GRADED_MISSING results in SubmissionDetailsContentType of NoSubmissionContent`() {
         verifyGetSubmissionContentType(
             assignment,
