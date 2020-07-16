@@ -51,7 +51,7 @@ sealed class SubmissionDetailsEmptyContentEffect {
     data class ShowSubmitDialogView(val assignment: Assignment, val course: Course, val isStudioEnabled: Boolean, val studioLTITool: LTITool? = null) : SubmissionDetailsEmptyContentEffect()
     data class ShowQuizStartView(val quiz: Quiz, val course: Course) : SubmissionDetailsEmptyContentEffect()
     data class ShowDiscussionDetailView(val discussionTopicHeaderId: Long, val course: Course) : SubmissionDetailsEmptyContentEffect()
-    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiUrl: String? = null) : SubmissionDetailsEmptyContentEffect()
+    data class ShowCreateSubmissionView(val submissionType: Assignment.SubmissionType, val course: Course, val assignment: Assignment, val ltiTool: LTITool? = null) : SubmissionDetailsEmptyContentEffect()
 }
 
 data class SubmissionDetailsEmptyContentModel(
@@ -61,5 +61,6 @@ data class SubmissionDetailsEmptyContentModel(
     val quiz: Quiz? = null,
     val studioLTITool: LTITool? = null,
     val videoFileUri: Uri? = null,
-    val isObserver: Boolean = false
+    val isObserver: Boolean = false,
+    val ltiTool: LTITool? = null
 )

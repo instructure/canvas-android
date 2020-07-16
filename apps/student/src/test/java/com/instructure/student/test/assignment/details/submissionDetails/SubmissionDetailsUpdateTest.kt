@@ -707,7 +707,7 @@ class SubmissionDetailsUpdateTest : Assert() {
     ) {
         val assignmentResult = DataResult.Success(assignment)
         val submissionResult = DataResult.Success(submission)
-        val ltiToolResult = DataResult.Success(lti)
+        val ltiToolResult = if (lti == null) null else DataResult.Success(lti)
         val expectedModel = initModel.copy(
             isLoading = false,
             assignmentResult = assignmentResult,

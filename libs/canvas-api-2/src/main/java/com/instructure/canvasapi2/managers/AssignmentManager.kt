@@ -45,6 +45,17 @@ object AssignmentManager {
     fun getAssignmentAsync(assignmentId: Long, courseId: Long, forceNetwork: Boolean)
             = apiAsync<Assignment> { getAssignment(assignmentId, courseId, forceNetwork, it) }
 
+    fun getExternalToolLaunchUrlAsync(courseId: Long, externalToolId: Long, assignmentId: Long) = apiAsync<LTITool> {
+        AssignmentAPI.getExternalToolLaunchUrl(
+            courseId,
+            externalToolId,
+            assignmentId,
+            RestBuilder(it),
+            it,
+            RestParams(isForceReadFromNetwork = true)
+        )
+    }
+
     @JvmStatic
     fun getAssignmentGroupsWithAssignments(
         courseId: Long,

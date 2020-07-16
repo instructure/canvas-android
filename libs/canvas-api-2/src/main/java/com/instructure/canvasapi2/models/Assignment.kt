@@ -20,6 +20,7 @@ package com.instructure.canvasapi2.models
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.R
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.android.parcel.Parcelize
 import java.util.Date
@@ -96,6 +97,8 @@ data class Assignment(
         val anonymousGrading: Boolean = false,
         @SerializedName("allowed_attempts")
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
+        @SerializedName("external_tool_tag_attributes")
+        val externalToolAttributes: ExternalToolAttributes? = null,
         var isStudioEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate

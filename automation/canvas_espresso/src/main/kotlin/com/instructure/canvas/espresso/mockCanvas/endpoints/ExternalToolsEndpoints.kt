@@ -16,10 +16,12 @@
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
 import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 
 object ExternalToolsEndpoint : Endpoint(
+//    Segment("sessionless_launch") to SessionlessLaunchEndpoint,
     response = {
         GET { // Only currently used for AssignmentDetailsInteractionTest.testQuizzesNext, which is commented out
             if(data.ltiTool != null) {
@@ -30,3 +32,13 @@ object ExternalToolsEndpoint : Endpoint(
         }
     }
 )
+/*
+object SessionlessLaunchEndpoint : Endpoint(
+    response = {
+        GET {
+
+        }
+    }
+)
+
+ */

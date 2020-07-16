@@ -20,10 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.ExternalToolManager
-import com.instructure.canvasapi2.managers.QuizManager
-import com.instructure.canvasapi2.managers.SubmissionManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
@@ -196,7 +193,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Successful LoadData results in DataLoaded`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
-        val ltiTool = LTITool(url = "https://www.instructure.com")
+        val ltiTool = LTITool(url = "https://www.instructure.com", assignmentId = assignment.id, courseId = assignment.courseId)
         assignment = assignment.copy(submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString), url = "https://www.instructure.com")
         val expectedEvent = AssignmentDetailsEvent.DataLoaded(
             DataResult.Success(assignment),
@@ -212,6 +209,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionManager)
         every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkObject(AssignmentManager)
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
@@ -235,7 +237,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Successful LoadData for observer results in DataLoaded`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
-        val ltiTool = LTITool(url = "https://www.instructure.com")
+        val ltiTool = LTITool(url = "https://www.instructure.com", assignmentId = assignment.id, courseId = courseId)
         val observerAssignment = ObserveeAssignment(
             id= assignmentId,
             courseId = courseId,
@@ -265,6 +267,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionManager)
         every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkObject(AssignmentManager)
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
@@ -325,7 +332,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Successful LoadData results in DataLoaded with submissionId if an older submission exists from API`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L, daysAgo = -1, failed = true)
-        val ltiTool = LTITool(url = "https://www.instructure.com")
+        val ltiTool = LTITool(url = "https://www.instructure.com", assignmentId = assignment.id, courseId = assignment.courseId)
         assignment = assignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
             url = "https://www.instructure.com",
@@ -348,6 +355,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
+        mockkObject(AssignmentManager)
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
         mockkDatabase(listOf(submission))
 
         connection.accept(AssignmentDetailsEffect.LoadData(assignment.id, courseId, false))
@@ -363,7 +375,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     fun `Successful LoadData results in DataLoaded with submissionId if submittedAt on submission is null from API`() {
         val courseId = 1L
         val submission = mockkSubmission(9876L)
-        val ltiTool = LTITool(url = "https://www.instructure.com")
+        val ltiTool = LTITool(url = "https://www.instructure.com", assignmentId = assignment.id, courseId = assignment.courseId)
         assignment = assignment.copy(
             submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
             url = "https://www.instructure.com",
@@ -383,6 +395,11 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
         mockkObject(SubmissionManager)
         every { SubmissionManager.getLtiFromAuthenticationUrlAsync(any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(ltiTool)
+        }
+
+        mockkObject(AssignmentManager)
+        every { AssignmentManager.getExternalToolLaunchUrlAsync(any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
@@ -1093,12 +1110,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with type external tool calls showLTIView`() {
         val ltiUrl = "https://www.instructure.com"
+        val ltiTool = LTITool(id = 1L, url = ltiUrl)
         val assignmentName = "hodor"
         val assignmentCopy = assignment.copy(name = assignmentName)
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.EXTERNAL_TOOL, course, assignmentCopy, ltiUrl))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.EXTERNAL_TOOL, course, assignmentCopy, ltiTool))
 
         verify(timeout = 100) {
-            view.showLTIView(course, ltiUrl, assignmentName)
+            view.showLTIView(course, assignmentName, ltiTool)
         }
 
         confirmVerified(view)
@@ -1107,12 +1125,13 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     @Test
     fun `ShowCreateSubmissionView with type basic lti launch calls showLTIView`() {
         val ltiUrl = "https://www.instructure.com"
+        val ltiTool = LTITool(id = 1L, url = ltiUrl)
         val assignmentName = "hodor"
         val assignmentCopy = assignment.copy(name = assignmentName)
-        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.BASIC_LTI_LAUNCH, course, assignmentCopy, ltiUrl))
+        connection.accept(AssignmentDetailsEffect.ShowCreateSubmissionView(Assignment.SubmissionType.BASIC_LTI_LAUNCH, course, assignmentCopy, ltiTool))
 
         verify(timeout = 100) {
-            view.showLTIView(course, ltiUrl, assignmentName)
+            view.showLTIView(course, assignmentName, ltiTool)
         }
 
         confirmVerified(view)

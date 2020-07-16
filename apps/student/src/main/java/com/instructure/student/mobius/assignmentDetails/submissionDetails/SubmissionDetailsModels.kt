@@ -33,7 +33,7 @@ sealed class SubmissionDetailsEvent {
     data class AttachmentClicked(val file: Attachment) : SubmissionDetailsEvent()
     data class SubmissionClicked(val submissionAttempt: Long) : SubmissionDetailsEvent()
     data class SubmissionAndAttachmentClicked(val submissionAttempt: Long, val attachment: Attachment) : SubmissionDetailsEvent()
-    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmissionResult: DataResult<Submission>, val ltiUrlResult: DataResult<LTITool?>, val isStudioEnabled: Boolean, val quizResult: DataResult<Quiz>?, val studioLTIToolResult: DataResult<LTITool>?, val isObserver: Boolean = false) :
+    data class DataLoaded(val assignment: DataResult<Assignment>, val rootSubmissionResult: DataResult<Submission>, val ltiUrlResult: DataResult<LTITool>?, val isStudioEnabled: Boolean, val quizResult: DataResult<Quiz>?, val studioLTIToolResult: DataResult<LTITool>?, val isObserver: Boolean = false) :
         SubmissionDetailsEvent()
 }
 
@@ -61,7 +61,8 @@ data class SubmissionDetailsModel(
     val isStudioEnabled: Boolean? = null,
     val quizResult: DataResult<Quiz>? = null,
     val studioLTIToolResult: DataResult<LTITool>? = null,
-    val isObserver: Boolean = false
+    val isObserver: Boolean = false,
+    val ltiTool: DataResult<LTITool>? = null
 )
 
 sealed class SubmissionDetailsContentType {
@@ -76,7 +77,7 @@ sealed class SubmissionDetailsContentType {
         val displayName: String?
     ) : SubmissionDetailsContentType()
 
-    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isStudioEnabled: Boolean, val quiz: Quiz? = null, val studioLTITool: LTITool? = null, val isObserver: Boolean = false) : SubmissionDetailsContentType()
+    data class NoSubmissionContent(val canvasContext: CanvasContext, val assignment: Assignment, val isStudioEnabled: Boolean, val quiz: Quiz? = null, val studioLTITool: LTITool? = null, val isObserver: Boolean = false, val ltiTool: LTITool? = null) : SubmissionDetailsContentType()
     object NoneContent : SubmissionDetailsContentType()
     data class ExternalToolContent(val canvasContext: CanvasContext, val url: String) : SubmissionDetailsContentType()
     object OnPaperContent : SubmissionDetailsContentType()
