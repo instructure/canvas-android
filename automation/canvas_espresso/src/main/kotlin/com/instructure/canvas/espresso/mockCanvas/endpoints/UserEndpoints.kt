@@ -292,6 +292,6 @@ var pairingCodeCount = 0
  */
 object UserPairingCodeEndpoint : Endpoint(response = {
     POST {
-        request.successResponse(PairingCode((pairingCodeCount++).toString()))
+        request.successResponse(PairingCode((++pairingCodeCount).toString()))
     }
 })
