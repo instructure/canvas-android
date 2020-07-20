@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-05-15T11:04:11.958548",
+  "@@last_modified": "2020-06-08T18:06:15.639282",
   "alertsLabel": "提醒",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1273,6 +1273,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "Students can obtain a pairing code through the Canvas website": "學生可以透過 Canvas 網站獲取配對碼",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "輸入已提供給您的學生配對代碼。如果配對代碼無效，可能是已到期",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
@@ -1285,6 +1290,11 @@
   },
   "QR Code": "QR 碼",
   "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "學生可以使用流動裝置上的 Canvas Student 應用程式創建 QR 碼",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders": {}
   },
@@ -1661,6 +1671,80 @@
       }
     }
   },
+  "Student Pairing": "學生配對",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open Canvas Student": "開啟 Canvas Student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "您需要開啟學生的 Canvas Student 應用程式以繼續操作。前往主選單 > 設定 > 與觀察者配對，然後掃描該處顯示的 QR 碼。",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "螢幕截圖顯示 Canvas Student 應用程式內產生配對 QR 碼的位置",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Expired QR Code": "已過期 QR 碼",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "您所掃描的 QR 碼可能已經過期。請在學生的裝置上重新載入 QR 碼然後重試。",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "添加此學生時發生網路錯誤。請檢查您的連線，然後再試一次。",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Invalid QR Code": "無效的 QR 碼",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incorrect Domain": "錯誤網域",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "您嘗試添加的學生屬於另一所學校。請登入至該學校或在該學校創建帳戶以掃描此 QR 碼。",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Camera Permission": "攝影機權限",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "此操作將取消配對並從您的帳戶中移除所有此學生的註冊資料。",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "從帳戶中移除此學生時發生問題。請檢查您的連接然後重試。",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Cancel": "取消",
   "@Cancel": {
     "type": "text",
@@ -1895,8 +1979,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "QR scanning requires camera access.": "QR 碼掃描需要攝影機存取權限。",
-  "@QR scanning requires camera access.": {
+  "QR scanning requires camera access": "QR 碼掃描需要攝影機存取權限",
+  "@QR scanning requires camera access": {
     "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}

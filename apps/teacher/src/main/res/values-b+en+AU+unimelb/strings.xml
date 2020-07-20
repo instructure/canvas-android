@@ -780,7 +780,7 @@
     <string name="errorLoadingStudentContextCard">Unable to load details for this user.</string>
     <string name="enrollmentTypeStudent">Student</string>
     <string name="enrollmentTypeTeacher">Instructor</string>
-    <string name="enrollmentTypeObserver">Observer</string>
+    <string name="enrollmentTypeObserver">Auditor</string>
     <string name="enrollmentTypeTeachingAssistant">Tutor</string>
     <string name="enrollmentTypeDesigner">Designer</string>
     <string name="enrollmentTypeUnknown">Unknown</string>

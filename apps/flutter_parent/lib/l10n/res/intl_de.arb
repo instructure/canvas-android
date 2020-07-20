@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-05-15T11:04:11.958548",
+  "@@last_modified": "2020-06-08T18:06:15.639282",
   "alertsLabel": "Benachrichtigungen",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1273,6 +1273,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "Students can obtain a pairing code through the Canvas website": "Studenten können einen Pairing-Code über die Canvas-Website erhalten",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Geben Sie den Studenten-Pairing-Code ein, den Sie erhalten haben. Falls der Pairing-Code nicht funktioniert, ist er möglicherweise abgelaufen",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
@@ -1285,6 +1290,11 @@
   },
   "QR Code": "QR-Code",
   "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Studenten können einen QR-Code mit der Canvas Studenten-App auf ihrem Mobilgerät erstellen",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders": {}
   },
@@ -1661,6 +1671,80 @@
       }
     }
   },
+  "Student Pairing": "Studenten-Pairing",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Canvas Student öffnen",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Um fortzufahren, müssen Sie die Canvas Studenten-App Ihres Studenten öffnen. Gehen Sie zu Hauptmenü > Einstellungen > Pairing mit Beobachter und scannen Sie den QR-Code, den Sie dort sehen.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Screenshot des Ortes der Erzeugung des Pairing-QR-Codes in der Canvas Studenten-App",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Expired QR Code": "Abgelaufener QR-Code",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Der von Ihnen gescannte QR-Code ist möglicherweise abgelaufen. Aktualisieren Sie den Code auf dem Gerät des Studenten und versuchen Sie es erneut.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "Beim Hinzufügen dieses Studenten ist ein Netzwerkfehler aufgetreten. Überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Ungültiger QR-Code",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Falsche Domain",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Der Student, den Sie hinzufügen möchten, gehört zu einer anderen Schule. Melden Sie sich an oder erstellen Sie ein Konto bei dieser Einrichtung, um diesen Code zu scannen.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Camera Permission": "Kameraberechtigung",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Dadurch werden alle Pairings für Einschreibungen für diesen Studenten aufgehoben und die Einschreibungen werden von Ihrem Konto entfernt.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Beim Entfernen des Studenten aus Ihrem Konto ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Cancel": "Abbrechen",
   "@Cancel": {
     "type": "text",
@@ -1895,8 +1979,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "QR scanning requires camera access.": "QR-Scan erfordert Zugriff auf die Kamera.",
-  "@QR scanning requires camera access.": {
+  "QR scanning requires camera access": "QR-Scan erfordert Zugriff auf die Kamera",
+  "@QR scanning requires camera access": {
     "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}

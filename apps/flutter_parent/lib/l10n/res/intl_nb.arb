@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-05-15T11:04:11.958548",
+  "@@last_modified": "2020-06-08T18:06:15.639282",
   "alertsLabel": "Varsler",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1273,6 +1273,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "Students can obtain a pairing code through the Canvas website": "Studenter kan få en paringskode gjennom Canvas-nettstedet",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Angi studentparingskoden som ble gitt til deg. Hvis paringskoden ikke fungerer kan det hende at den er utgått",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
@@ -1285,6 +1290,11 @@
   },
   "QR Code": "QR-kode",
   "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Studenter kan opprette en QR-kode ved å bruke Canvas Student-appen på mobilenheten",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders": {}
   },
@@ -1661,6 +1671,80 @@
       }
     }
   },
+  "Student Pairing": "Studentparing",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Åpne Canvas student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Du må åpne Canvas Student-appen til studenten din for å fortsette. Gå til Hovedmeny > Innstillinger > Paring med observatør og skann QR-koden du ser der.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Skjermbilde som viser plasseringen av QR-koden som genereres i Canvas Student-appen",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Expired QR Code": "Utgått QR-kode",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "QR-koden du skannet kan ha utgått Gjenopprett koden på studentens enhet og prøv igjen.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "Det oppsto en nettverksfeil da du la til denne studenten. Kontroller tilkoblingen og prøv på nytt.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Ugyldig QR-kode",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Ugyldig domene",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Studenten du forsøker å legge til tilhører en annen skole. Logg inn eller opprett en konto med den skolen for å skanne denne koden.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Camera Permission": "Kameratillatelse",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Dette vil koble fra og fjerne alle påmeldinger for denne studenten fra kontoen din.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Det oppsto et problem ved fjerning av denne studenten fra kontoen din. Kontroller tilkoblingen og prøv på nytt.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Cancel": "Avbryt",
   "@Cancel": {
     "type": "text",
@@ -1895,8 +1979,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "QR scanning requires camera access.": "QR-scanning krever kameratilgang.",
-  "@QR scanning requires camera access.": {
+  "QR scanning requires camera access": "QR-skanning krever kameratilgang",
+  "@QR scanning requires camera access": {
     "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}
