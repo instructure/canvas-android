@@ -53,7 +53,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.signature.ObjectKey
@@ -69,7 +68,6 @@ import com.instructure.pandautils.R
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.abc_search_view.view.*
 import kotlinx.coroutines.delay
-import kotlin.math.roundToInt
 
 /** Convenience extension for setting a click listener */
 @Suppress("NOTHING_TO_INLINE")
@@ -474,10 +472,10 @@ fun TextView.setTextForVisibility(newText: String?, invalidVisibility: Int = Vie
 
 /**
  * Adds a basic avatar content description as well as a click action description which includes the
- * user's name. E.g. "Avatar button. Double-tap to view user details for John Doe."
+ * user's name. E.g. "John Doe Avatar button. Double-tap to view user details for John Doe."
  */
 fun View.setupAvatarA11y(userName: String?) {
-    contentDescription = context.getString(R.string.content_description_avatar)
+    contentDescription = context.getString(R.string.a11y_avatarNameFormatted, userName.orEmpty())
     setAccessibilityDelegate(object : View.AccessibilityDelegate() {
         override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfo) {
             super.onInitializeAccessibilityNodeInfo(v, info)

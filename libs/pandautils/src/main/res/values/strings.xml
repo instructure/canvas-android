@@ -219,6 +219,7 @@
     <string name="noInternetConnectionTitle">No Internet Connection</string>
     <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">View user details for %s.</string>
 
     <!-- App Names -->
