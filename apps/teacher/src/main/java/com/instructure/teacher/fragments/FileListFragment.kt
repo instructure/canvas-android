@@ -208,6 +208,7 @@ class FileListFragment : BaseSyncFragment<
 
     override fun checkIfEmpty() {
         when {
+            !presenter.currentFolder.isRoot -> emptyPandaView.setMessageText(R.string.emptyFolder)
             mCanvasContext.isCourse -> emptyPandaView.setMessageText(R.string.noFilesSubtextCourse)
             mCanvasContext.isGroup -> emptyPandaView.setMessageText(R.string.noFilesSubtextGroup)
             else -> emptyPandaView.setMessageText(R.string.noFilesSubtext)

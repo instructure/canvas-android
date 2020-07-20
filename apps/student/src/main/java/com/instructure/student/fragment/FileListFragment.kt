@@ -404,11 +404,13 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private fun getNoFileSubtextId(): Int {
         return when {
+            folder?.isRoot == false -> R.string.emptyFolder
             canvasContext.isCourse -> R.string.noFilesSubtextCourse
             canvasContext.isGroup -> R.string.noFilesSubtextGroup
             else -> R.string.noFilesSubtext
         }
     }
+
 
     private fun uploadFile() {
         folder?.let {
