@@ -248,11 +248,6 @@ object UserManager {
     }
 
     @JvmStatic
-    fun getTermsOfServiceAsync(forceNetwork: Boolean) = apiAsync<TermsOfService> { callback ->
-        UserAPI.getTermsOfService(RestBuilder(callback), RestParams(isForceReadFromNetwork = forceNetwork), callback)
-    }
-
-    @JvmStatic
     fun getSelfAccount(forceNetwork: Boolean, callback: StatusCallback<Account>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

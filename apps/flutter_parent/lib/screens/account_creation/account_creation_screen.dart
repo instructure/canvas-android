@@ -272,7 +272,8 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
+                    // TODO route to ToS with domain/accountId
+//                    locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
                   }),
             TextSpan(text: L10n(context).qrCreateAccountTos3),
             TextSpan(
