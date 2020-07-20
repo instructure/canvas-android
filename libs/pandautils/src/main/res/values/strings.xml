@@ -162,7 +162,7 @@
     <string name="noFiles">No Files</string>
     <string name="noFilesForAssignment">There are no files for this submission</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
-    <string name="emptyFolder">This folder is empty.</string>
+    <string name="emptyFolder">This folder is empty</string>
     <string name="notSupported">Not Supported</string>
     <string name="noEvents">No Events Today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
