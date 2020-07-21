@@ -1155,6 +1155,7 @@ class AppLocalizations {
   String get qrCreateAccountTos2 => Intl.message('Terms of Service');
   String get qrCreateAccountTos3 => Intl.message(' and acknowledge the ');
   String get qrCreateAccountTos4 => Intl.message('Privacy Policy');
+  String get qrCreateAccountViewPrivacy => Intl.message('View the Privacy Policy');
 
   String get qrCreateAccountSignIn1 => Intl.message('Already have an account? ');
   String get qrCreateAccountSignIn2 => Intl.message('Sign In');

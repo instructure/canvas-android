@@ -44,9 +44,9 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
   }
 
   Future<TermsOfService> getTosFuture() {
-    return widget.accountId.isEmpty
-        ? locator<AccountsApi>().getTermsOfService()
-        : locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId, widget.domain);
+    return (widget.accountId != null && widget.domain != null)
+        ? locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId, widget.domain)
+        : locator<AccountsApi>().getTermsOfService();
   }
 
   @override

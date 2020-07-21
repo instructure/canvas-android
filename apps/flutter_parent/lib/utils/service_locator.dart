@@ -29,6 +29,7 @@ import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/api/planner_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/alert_thresholds/alert_thresholds_interactor.dart';
 import 'package:flutter_parent/screens/alerts/alerts_interactor.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_interactor.dart';
@@ -110,6 +111,7 @@ void setupLocator() {
   locator.registerLazySingleton<UserColorsDb>(() => UserColorsDb());
 
   // Interactors
+  locator.registerFactory<AccountCreationInteractor>(() => AccountCreationInteractor());
   locator.registerFactory<AlertsInteractor>(() => AlertsInteractor());
   locator.registerFactory<AlertThresholdsInteractor>(() => AlertThresholdsInteractor());
   locator.registerFactory<AnnouncementDetailsInteractor>(() => AnnouncementDetailsInteractor());

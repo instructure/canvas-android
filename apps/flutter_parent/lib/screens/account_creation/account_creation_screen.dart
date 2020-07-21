@@ -18,7 +18,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
+import 'package:flutter_parent/models/terms_of_service.dart';
 import 'package:flutter_parent/router/panda_router.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
+import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -39,10 +42,18 @@ class AccountCreationScreen extends StatefulWidget {
 
 class _AccountCreationScreenState extends State<AccountCreationScreen> {
   final FocusNode _nameFocus = FocusNode();
+  final _nameController = TextEditingController();
+
   final FocusNode _emailFocus = FocusNode();
+  final _emailController = TextEditingController();
+
   final FocusNode _passwordFocus = FocusNode();
+  final _passwordController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  bool _isLoading = false;
   bool _obscurePassword = true;
   Widget _passwordIcon = Padding(
     padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -55,27 +66,28 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   Widget build(BuildContext context) {
     return DefaultParentTheme(
       builder: (context) => Scaffold(
+          key: _scaffoldKey,
           body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
-          children: <Widget>[
-            SizedBox(height: 64),
-            SvgPicture.asset(
-              'assets/svg/canvas-parent-login-logo.svg',
-              semanticsLabel: L10n(context).canvasLogoLabel,
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+              children: <Widget>[
+                SizedBox(height: 64),
+                SvgPicture.asset(
+                  'assets/svg/canvas-parent-login-logo.svg',
+                  semanticsLabel: L10n(context).canvasLogoLabel,
+                ),
+                SizedBox(height: 56),
+                _accountCreationForm(context),
+                SizedBox(height: 16),
+                _createAccountTOS(context),
+                SizedBox(height: 8),
+                _createAccountButton(context),
+                SizedBox(height: 24),
+                _alreadyHaveAnAccount(context),
+                SizedBox(height: 8),
+              ],
             ),
-            SizedBox(height: 56),
-            _accountCreationForm(context),
-            SizedBox(height: 16),
-            _createAccountTOS(context),
-            SizedBox(height: 8),
-            _createAccountButton(context),
-            SizedBox(height: 24),
-            _alreadyHaveAnAccount(context),
-            SizedBox(height: 8),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
@@ -86,10 +98,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         children: <Widget>[
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelName),
           TextFormField(
-            autofocus: true,
             focusNode: _nameFocus,
             textInputAction: TextInputAction.next,
             autocorrect: false,
+            controller: _nameController,
             decoration: InputDecoration(
                 errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
                 errorBorder: OutlineInputBorder(
@@ -115,11 +127,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           ),
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelEmail),
           TextFormField(
-            autofocus: true,
             focusNode: _emailFocus,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             autocorrect: false,
+            controller: _emailController,
             decoration: InputDecoration(
                 errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
                 errorBorder: OutlineInputBorder(
@@ -147,10 +159,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           ),
           _formFieldLabel(context, L10n(context).qrCreateAccountLabelPassword),
           TextFormField(
-            autofocus: true,
             focusNode: _passwordFocus,
             obscureText: _obscurePassword,
             autocorrect: false,
+            controller: _passwordController,
             textInputAction: TextInputAction.done,
             decoration: InputDecoration(
                 suffixIcon: GestureDetector(
@@ -186,7 +198,6 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
             onFieldSubmitted: (term) {
               _clearFieldFocus();
               _formKey.currentState.validate();
-              // TODO - button press tooooo
             },
             validator: (value) {
               if (value.isEmpty) {
@@ -200,23 +211,6 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       ),
     );
   }
-  /*
-  suffixIcon: GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (_obscurePassword) {
-                          _obscurePassword = false;
-                          _passwordIcon = SvgPicture.asset(
-                            'assets/svg/eye_off.svg',
-                          );
-                        } else {
-                          _obscurePassword = true;
-                          _passwordIcon = Icon(CanvasIcons.eye);
-                        }
-                      });
-                    },
-                    child: Container(width: 24, height: 24, child: _passwordIcon)),
-   */
 
   _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
@@ -234,16 +228,40 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       child: RaisedButton(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text(
-            L10n(context).qrCreateAccount,
-            style: TextStyle(fontSize: 16),
-          ),
+          child: _isLoading
+              ? Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator())
+              : Text(
+                  L10n(context).qrCreateAccount,
+                  style: TextStyle(fontSize: 16),
+                ),
         ),
         color: Theme.of(context).accentColor,
         textColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
         onPressed: () {
-          _formKey.currentState.validate();
+          if (_formKey.currentState.validate()) {
+            setState(() => _isLoading = true);
+            try {
+              var user = locator<AccountCreationInteractor>().createNewAccount(
+                  widget.pairingInfo.accountId,
+                  widget.pairingInfo.code,
+                  _nameController.text,
+                  _emailController.text,
+                  _passwordController.text,
+                  widget.pairingInfo.domain);
+
+              // TODO - success toast + Route them to login page
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(content: Text('WAIT, it worked?! -> ${user.toString()}')),
+              );
+            } catch (e) {
+              // TODO - error toast, potentially update email error message
+              setState(() => _isLoading = false);
+              _scaffoldKey.currentState.showSnackBar(
+                SnackBar(content: Text('ERROR YOOO -> ${e.toString()}')),
+              );
+            }
+          }
         },
       ),
     );
@@ -259,6 +277,44 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   Widget _createAccountTOS(BuildContext context) {
+    return FutureBuilder(
+        future: locator<AccountCreationInteractor>()
+            .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain),
+        builder: (context, AsyncSnapshot<TermsOfService> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
+          }
+
+          if (snapshot.hasError || snapshot.data == null) {
+            return _getTosSpan(context, null);
+          } else {
+            var terms = snapshot.data;
+            if (terms.passive) {
+              return _getPrivacyPolicySpan(context);
+            } else {
+              return _getTosSpan(context, snapshot.data);
+            }
+          }
+        });
+  }
+
+  Widget _getPrivacyPolicySpan(BuildContext context) {
+    TextStyle linkStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
+
+    return Align(
+      child: RichText(
+        text: TextSpan(
+            text: L10n(context).qrCreateAccountViewPrivacy,
+            style: linkStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                locator<UrlLauncher>().launch('https://www.instructure.com/policies/privacy/');
+              }),
+      ),
+    );
+  }
+
+  Widget _getTosSpan(BuildContext context, TermsOfService terms) {
     TextStyle defaultStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
     TextStyle linkStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
     return Center(
@@ -272,8 +328,14 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                 style: linkStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    // TODO route to ToS with domain/accountId
-//                    locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
+                    if (terms == null) {
+                      locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
+                    } else {
+                      locator<QuickNav>().pushRoute(
+                          context,
+                          PandaRouter.termsOfUse(
+                              accountId: widget.pairingInfo.accountId, domain: widget.pairingInfo.domain));
+                    }
                   }),
             TextSpan(text: L10n(context).qrCreateAccountTos3),
             TextSpan(

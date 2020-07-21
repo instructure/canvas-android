@@ -15,6 +15,7 @@
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/school_domain.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
+import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
@@ -29,8 +30,8 @@ class AccountsApi {
   }
 
   Future<TermsOfService> getTermsOfServiceForAccount(String accountId, String domain) {
-    // TODO config dio for domain + no auth etc
-    return fetch(canvasDio().get('accounts/$accountId/terms_of_service'));
+    var dio = DioConfig.canvas(noHeaders: true).copyWith(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
+    return fetch(dio.get('accounts/$accountId/terms_of_service'));
   }
 
   Future<AccountPermissions> getAccountPermissions() {
@@ -76,13 +77,20 @@ class AccountsApi {
     );
   }
 }
+   */
 
   Future<User> createNewAccount(
-      String accountId, String pairingCode, String fullname, String email, String password) async {
-    var dio = canvasDio();
+      String accountId, String pairingCode, String fullname, String email, String password, String domain) async {
+    var dio = DioConfig.canvas().copyWith(baseUrl: 'https://$domain').dio;
 
-    return dio.post
-
+    // TODO - might need to be a post body rather than query params....
+    return fetch(dio.post<User>('/api/v1/accounts/$accountId/users', queryParameters: {
+      'user[name]': fullname,
+      'user[terms_of_use]': true,
+      'user[initial_enrollment]': 'observer',
+      'pairing_code[code]': pairingCode,
+      'pseudonym[unique_id]': email,
+      'pseudonym[password]': password
+    }));
   }
-  */
 }
