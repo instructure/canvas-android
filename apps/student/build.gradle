@@ -349,4 +349,35 @@ if (coverageEnabled) {
             xml.enabled  false
         }
     }
+
+    task combinedJacoco(type: JacocoReport) {
+        group = "Reporting"
+        description = "Generate Jacoco coverage reports for FTL + unit tests."
+
+        def productFlavor = 'qa'
+        def buildType = 'debug'
+
+        classDirectories = fileTree(
+                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
+                excludes: ['**/R.class',
+                           '**/R$*.class',
+                           '**/*$ViewInjector*.*',
+                           '**/*$ViewBinder*.*',
+                           '**/BuildConfig.*',
+                           '**/Manifest*.*'],
+                //includes: ['**/com/instructure/*']
+        )
+
+        // project.buildDir is /canvas-android/apps/teacher/build
+        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData = fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
+
+        reports {
+            // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
+            html.enabled true
+            csv.enabled  false
+            xml.enabled  false
+        }
+    }
+
 }
