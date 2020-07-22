@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-05-15T11:04:11.958548",
+  "@@last_modified": "2020-06-08T18:06:15.639282",
   "alertsLabel": "Negeseuon Hysbysu",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1273,6 +1273,11 @@
     "type": "text",
     "placeholders": {}
   },
+  "Students can obtain a pairing code through the Canvas website": "Mae myfyrwyr yn gallu cael cod paru trwy wefan Canvas",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Rhowch y cod paru myfyriwr a roddwyd i chi. Os nad yw’r cod paru yn gweithio, mae’n bosib ei fod wedi dod i ben",
   "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
     "type": "text",
@@ -1285,6 +1290,11 @@
   },
   "QR Code": "Cod QR",
   "@QR Code": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Mae myfyrwyr yn gallu creu cod QR drwy ddefnyddio app Canvas Student ar eu dyfais symudol",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
     "type": "text",
     "placeholders": {}
   },
@@ -1661,6 +1671,80 @@
       }
     }
   },
+  "Student Pairing": "Paru Myfyrwyr",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Agor Canvas Student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Bydd angen i chi agor app Canvas Student eich myfyriwr i barhau. Ewch i'r Brif Ddewislen > Gosodiadau > Paru ag Arsyllwr a sganiwch y cod QR rydych chi’n ei weld yno.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Ciplun yn dangos y lleoliad creu cod QR paru yn ap Canvas Student",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Expired QR Code": "Cod QR wedi dod i ben",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Efallai fod y cod QR y gwnaethoch chi ei sganio wedi dod i ben. Adnewyddwch y cod ar ddyfais y myfyriwr a rhowch gynnig arall arni.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "Gwall ar y rhwydwaith wrth ychwanegu'r myfyriwr hwn. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Cod QR Annilys",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Parth Anghywir",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Mae’r myfyriwr rydych chi’n ceisio ei ychwanegu’n perthyn i ysgol arall. Rhaid i chi fewngofnodi neu greu cyfrif gyda’r ysgol honno i sganio’r cod hwn.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Camera Permission": "Hawl Camera",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Bydd hyn yn dadbaru ac yn tynnu’r holl ymrestriadau ar gyfer y myfyriwr hwn o’ch cyfrif.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Roedd problem wrth dynnu’r myfyriwr hwn o’ch cyfrif. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
   "Cancel": "Canslo",
   "@Cancel": {
     "type": "text",
@@ -1895,8 +1979,8 @@
     "type": "text",
     "placeholders": {}
   },
-  "QR scanning requires camera access.": "Mae sganio QR angen mynediad at eich camera",
-  "@QR scanning requires camera access.": {
+  "QR scanning requires camera access": "Mae sganio QR angen mynediad at eich camera",
+  "@QR scanning requires camera access": {
     "description": "placeholder for camera error for QR code scan",
     "type": "text",
     "placeholders": {}

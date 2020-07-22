@@ -375,7 +375,7 @@
     <string name="coursePeople">People</string>
     <string name="teachersTas">Instructors &amp; Tutors</string>
     <string name="students">Students</string>
-    <string name="observers">Observers</string>
+    <string name="observers">Auditors</string>
     <string name="syllabusMissing">A subject overview not has been added.</string>
 
     <string name="syllabusEventsError">There was an error loading your modules.</string>
@@ -625,7 +625,7 @@
     <string name="accountPreferences">Account Preferences</string>
     <string name="pinAndFingerprint">PIN and Fingerprint</string>
 
-    <string name="pairWithObserver">Pair with Observer</string>
+    <string name="pairWithObserver">Pair with Auditor</string>
     <string name="pairWithObserverDetails">Have your parent scan this QR code from the Canvas Parent app to pair with you. This code will expire in seven days, or after one use.</string>
     <string name="pairingCodeLabel">Pairing Code:\u0020</string>
     <string name="pairingCodeErrorTitle">Pairing Code Error</string>
