@@ -159,7 +159,11 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
                     val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
                     if (groupPosition >= 0) {
-                        (listView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(groupPosition,  0)
+                        // We need to delay scrolling until the expand animation has completed, otherwise modules
+                        // that appear near the end of the list will not have the extra 'expanded' space needed
+                        // to scroll as far as possible toward the top
+                        val lm = listView.layoutManager as LinearLayoutManager
+                        listView?.postDelayed({ lm.scrollToPositionWithOffset(groupPosition, 0) }, 1000)
                     }
                 }
             }
