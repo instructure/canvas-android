@@ -22,7 +22,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.api.*
 import com.instructure.dataseeding.model.*
@@ -30,8 +34,10 @@ import com.instructure.dataseeding.util.CanvasRestAdapter
 import com.instructure.dataseeding.util.DataSeedingException
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.interactions.router.Route
+import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.ui.models.CanvasUser
 import java.io.*
 
 
@@ -352,6 +358,22 @@ fun TeacherTest.tokenLogin(teacher: CanvasUserApiModel, skipSplash: Boolean = tr
                 skipSplash
         )
     }
+    coursesListPage.assertPageObjects()
+}
+
+fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
+    activityRule.runOnUiThread {
+        (activityRule.activity as LoginActivity).loginWithToken(
+                token,
+                domain,
+                user,
+                true
+        )
+    }
+    // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
+    // up after a token login.  Add some tolerance for that.
+    waitForMatcherWithSleeps(withId(R.id.courseRecyclerView), 20000)
+            .check(matches(isDisplayed()))
     coursesListPage.assertPageObjects()
 }
 

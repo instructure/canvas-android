@@ -1,5 +1,6 @@
 package com.instructure.teacher.ui.pages
 
+import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -29,6 +30,10 @@ class InboxPage: BasePage() {
 
     fun clickConversation(conversation: ConversationApiModel) {
         waitForViewWithText(conversation.subject).click()
+    }
+
+    fun clickConversation(conversation: Conversation) {
+        waitForViewWithText(conversation.subject!!).click()
     }
 
     fun clickAddMessageFAB() {

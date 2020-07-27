@@ -16,46 +16,66 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SeedApi
-import com.instructure.espresso.ditto.Ditto
+import android.os.SystemClock.sleep
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class DiscussionsListPageTest : TeacherTest() {
 
+    lateinit var course: Course
+
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToDiscussionsListPage()
         discussionsListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun assertHasDiscussion() {
-        val discussion = getToDiscussionsListPage().discussionsList[0]
+        val discussion = getToDiscussionsListPage().courseDiscussionTopicHeaders[course.id]!![0]
         discussionsListPage.assertHasDiscussion(discussion)
     }
 
     @Test
-    @Ditto
     fun searchesDiscussions() {
-        val discussions = getToDiscussionsListPage(discussionCount = 3).discussionsList
+        val discussions = getToDiscussionsListPage(discussionCount = 3).courseDiscussionTopicHeaders[course.id]!!
         val searchDiscussion = discussions[2]
         discussionsListPage.assertDiscussionCount(discussions.size + 1) // +1 to account for header
         discussionsListPage.openSearch()
-        discussionsListPage.enterSearchQuery(searchDiscussion.title.take(searchDiscussion.title.length / 2))
+        discussionsListPage.enterSearchQuery(searchDiscussion.title!!.take(searchDiscussion.title!!.length / 2))
         discussionsListPage.assertDiscussionCount(2) // header + single search result
         discussionsListPage.assertHasDiscussion(searchDiscussion)
     }
 
-    private fun getToDiscussionsListPage(discussionCount: Int = 1): SeedApi.SeededDataApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1, discussions = discussionCount)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        tokenLogin(teacher)
+    private fun getToDiscussionsListPage(discussionCount: Int = 1): MockCanvas {
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1
+        )
+        val teacher = data.teachers[0]
+        course = data.courses.values.first()
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission(send_messages_all = true, send_messages = true)
+        )
+
+        val discussionsTab = Tab(position = 2, label = "Discussions", visibility = "public", tabId = Tab.DISCUSSIONS_ID)
+        data.courseTabs[course.id]!! += discussionsTab
+
+        repeat(discussionCount) {data.addDiscussionTopicToCourse(course, teacher)}
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openDiscussionsTab()

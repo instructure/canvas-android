@@ -1,6 +1,8 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import com.instructure.canvasapi2.models.DiscussionTopic
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -21,6 +23,10 @@ class DiscussionsListPage : BasePage() {
 
     fun assertHasDiscussion(discussion: DiscussionApiModel) {
         waitForViewWithText(discussion.title).assertDisplayed()
+    }
+
+    fun assertHasDiscussion(discussion: DiscussionTopicHeader) {
+        waitForViewWithText(discussion.title!!).assertDisplayed()
     }
 
     fun openSearch() {
