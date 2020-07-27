@@ -69,6 +69,7 @@ object CourseEndpoint : Endpoint(
         Segment("quizzes") to CourseQuizListEndpoint,
         Segment("users") to CourseUsersEndpoint,
         Segment("permissions") to CoursePermissionsEndpoint,
+        Segment("lti_apps") to CourseLTIAppsEndpoint,
 
         response = {
             GET {
@@ -83,6 +84,19 @@ object CourseEndpoint : Endpoint(
         }
 )
 
+/**
+ * Endpoint for course LTI apps
+ *
+ * For now, just the "launch_definitions" segment is supported.
+ */
+object CourseLTIAppsEndpoint : Endpoint (
+        Segment("launch_definitions") to Endpoint( response = {
+            GET {
+                // For now, just return an empty list of LaunchDefinitions
+                request.successResponse(listOf<LaunchDefinition>())
+            }
+        })
+)
 /**
  * Endpoint that returns the tabs for a course
  */

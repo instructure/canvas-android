@@ -16,33 +16,40 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class InboxMessagePageTest: TeacherTest() {
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToMessageThread()
         inboxMessagePage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysMessage() {
         getToMessageThread()
         inboxMessagePage.assertHasMessage()
     }
 
     private fun getToMessageThread() {
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
-        val conversationList = seedConversation(student, listOf(teacher))
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                studentCount = 1
+        )
 
-        tokenLogin(teacher)
+        val teacher = data.teachers[0]
+        data.addConversations(userId = teacher.id)
+        val chosenConversation = data.conversations.values.first { item -> item.isStarred }
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.clickInboxTab()
-        inboxPage.clickConversation(conversationList.conversations[0])
+        inboxPage.clickConversation(chosenConversation)
     }
 }

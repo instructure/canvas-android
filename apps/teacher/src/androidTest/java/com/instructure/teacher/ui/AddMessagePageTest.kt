@@ -16,30 +16,32 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.randomString
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.clickInboxTab
+import com.instructure.teacher.ui.utils.logIn
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class AddMessagePageTest: TeacherTest() {
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToReply()
         addMessagePage.assertPageObjects()
     }
 
     @Test
-    @Ditto(sequential = true)
     fun addReply() {
         getToReply()
-        val message = mockableString("reply message") { randomString() }
+        val message = randomString()
         addMessagePage.addReply(message)
         inboxMessagePage.assertHasReply()
     }
 
     @Test
-    @Ditto
     fun displayPageObjectsNewMessage() {
         logIn()
         coursesListPage.clickInboxTab()
@@ -48,16 +50,22 @@ class AddMessagePageTest: TeacherTest() {
     }
 
     private fun getToReply() {
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                courseCount = 1,
+                studentCount = 1
+        )
 
-        val conversationList = seedConversation(student, listOf(teacher))
+        val teacher = data.teachers[0]
 
-        tokenLogin(teacher)
+        data.addConversations(userId = teacher.id, messageBody = "Message Body")
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.clickInboxTab()
 
-        inboxPage.clickConversation(conversationList.conversations[0])
+        val chosenConversation = data.conversations.values.first { item -> item.isStarred }
+        inboxPage.clickConversation(chosenConversation)
         inboxMessagePage.clickReply()
     }
 }
