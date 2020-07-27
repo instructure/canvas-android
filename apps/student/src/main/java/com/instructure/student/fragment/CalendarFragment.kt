@@ -90,7 +90,7 @@ class CalendarFragment : ParentFragment() {
             "quiz" -> {
                 if (item.plannable.assignmentId != null) {
                     // This is a quiz assignment, go to the assignment page
-                    AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.id)
+                    AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.assignmentId!!)
                 } else {
                     var htmlUrl = item.htmlUrl.orEmpty()
                     if (htmlUrl.startsWith('/')) htmlUrl = ApiPrefs.fullDomain + htmlUrl
