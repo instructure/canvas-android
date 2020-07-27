@@ -17,40 +17,33 @@
 
 package com.instructure.student.fragment
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
 import android.text.SpannedString
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import com.instructure.canvasapi2.managers.AssignmentManager
+import androidx.browser.customtabs.CustomTabsIntent
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.HttpHelper
 import com.instructure.canvasapi2.utils.isValid
-import com.instructure.canvasapi2.utils.pageview.BeforePageView
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrl
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.canvasapi2.utils.weave.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import kotlinx.android.synthetic.main.fragment_webview.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import org.json.JSONObject
+import kotlinx.coroutines.*
 
 @PageView
 class LTIWebViewFragment : InternalWebviewFragment() {
@@ -64,6 +57,11 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
     private var externalUrlToLoad: String? = null
     private var skipReload: Boolean = false
+
+    /* Tracks whether we have automatically started launching the LTI tool in a chrome custom tab. Because this fragment
+    re-runs certain logic in onResume, tracking the launch helps us know to pop this fragment instead of erroneously
+    launching again when the user returns to the app. */
+    private var customTabLaunched: Boolean = false
 
     private var ltiUrlLaunchJob: Job? = null
     private var retrieveLtiUrlJob: Job? = null
@@ -123,7 +121,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
         try {
             if (ltiTab != null) {
-                getLtiUrl(ltiTab)
+                loadLtiTabUrl(ltiTab)
             } else {
                 if (ltiUrl.isNotBlank()) {
 
@@ -137,8 +135,8 @@ class LTIWebViewFragment : InternalWebviewFragment() {
 
                     when {
                         sessionLessLaunch -> // This is specific for Studio and Gauge
-                            getSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
-                        isAssignmentLTI -> getSessionlessLtiUrl(ltiUrl)
+                            loadSessionlessLtiUrl(ApiPrefs.fullDomain + "/api/v1/accounts/self/external_tools/sessionless_launch?url=" + ltiUrl)
+                        isAssignmentLTI -> loadSessionlessLtiUrl(ltiUrl)
                         else -> {
                             externalUrlToLoad = ltiUrl
 
@@ -181,11 +179,9 @@ class LTIWebViewFragment : InternalWebviewFragment() {
             if (ltiTab != null) {
                 // Coming from a tab that is an lti tool
                 retrieveLtiUrlJob = tryWeave {
-                    val result = inBackground {
-                        // We have to get a new sessionless url
-                        getLTIUrlForTab(requireContext(), ltiTab as Tab)
-                    }
-                    launchIntent(result)
+                    // We have to get a new sessionless url
+                    val tool = getLtiTool(ltiTab!!.ltiUrl)
+                    launchIntent(tool?.url)
                 } catch {
                     GlobalScope.launch(Dispatchers.Main) {
                         Toast.makeText(
@@ -205,18 +201,8 @@ class LTIWebViewFragment : InternalWebviewFragment() {
                 retrieveLtiUrlJob = tryWeave {
                     if (isAssignmentLTI) {
                         // Get a basic sessionless URL for Assignment LTIs
-                        inBackground {
-                            val result = if(ltiTool != null) {
-                                AssignmentManager.getExternalToolLaunchUrlAsync(
-                                        ltiTool!!.courseId,
-                                        ltiTool!!.id,
-                                        ltiTool!!.assignmentId
-                                ).await().dataOrNull?.url
-                            } else {
-                                getLTIUrl(requireContext(), ltiUrl)
-                            }
-                            launchIntent(result)
-                        }
+                        val tool = getLtiTool()
+                        launchIntent(tool?.url)
                     } else if (ApiPrefs.domain in url) {
                         // Get an authenticated session so the user doesn't have to log in
                         url = awaitApi<AuthenticatedSession> {
@@ -254,23 +240,26 @@ class LTIWebViewFragment : InternalWebviewFragment() {
         }
     }
 
-    private fun getLtiUrl(ltiTab: Tab?) {
+    private fun loadLtiTabUrl(ltiTab: Tab?) {
         if (ltiTab == null) {
             loadDisplayError()
-            return
+        } else {
+            loadSessionlessLtiUrl(ltiTab.ltiUrl)
         }
+    }
 
+    private fun loadSessionlessLtiUrl(ltiUrl: String) {
         ltiUrlLaunchJob = weave {
-            var result: String? = null
-            inBackground {
-                result = getLTIUrlForTab(requireContext(), ltiTab)
-            }
-
-            if (result != null) {
-                val uri = Uri.parse(result).buildUpon()
+            val tool = getLtiTool(ltiUrl)
+            if (tool?.name == FLIPGRID) {
+                launchCustomTab(tool.url.orEmpty())
+            } else if (tool?.url != null) {
+                val uri = Uri.parse(tool.url)
+                    .buildUpon()
                     .appendQueryParameter("display", "borderless")
                     .appendQueryParameter("platform", "android")
                     .build()
+                // Set the sessionless url here in case the user wants to use an external browser
                 externalUrlToLoad = uri.toString()
                 loadUrl(uri.toString())
             } else {
@@ -280,36 +269,26 @@ class LTIWebViewFragment : InternalWebviewFragment() {
         }
     }
 
-    private fun getSessionlessLtiUrl(ltiUrl: String) {
-        ltiUrlLaunchJob = weave {
-            var result: String? = null
-            inBackground {
-                result = if (ltiTool != null) {
-                    AssignmentManager.getExternalToolLaunchUrlAsync(
-                        ltiTool!!.courseId,
-                        ltiTool!!.id,
-                        ltiTool!!.assignmentId
-                    ).await().dataOrNull?.url
-                } else {
-                    getLTIUrl(requireContext(), ltiUrl)
-                }
-            }
-
-            if (result != null) {
-                val uri = Uri.parse(result)
-                    .buildUpon()
-                    .appendQueryParameter("display", "borderless")
-                    .appendQueryParameter("platform", "android")
-                    .build()
-                // Set the sessionless url here in case the user wants to use an external browser
-                externalUrlToLoad = uri.toString()
-
-                loadUrl(uri.toString())
-            } else {
-                // Error
-                loadDisplayError()
-            }
+    private fun launchCustomTab(url: String) {
+        if (customTabLaunched) {
+            activity?.supportFragmentManager?.popBackStack()
+            return
         }
+
+        var intent = CustomTabsIntent.Builder()
+            .setToolbarColor(canvasContext.color)
+            .setShowTitle(true)
+            .build()
+            .intent
+
+        intent.data = Uri.parse(url)
+
+        // Exclude Instructure apps from chooser options
+        intent = intent.asChooserExcludingInstructure()
+
+        context?.startActivity(intent)
+
+        customTabLaunched = true
     }
 
     @Suppress("DEPRECATION")
@@ -322,24 +301,10 @@ class LTIWebViewFragment : InternalWebviewFragment() {
         }
     }
 
-    @BeforePageView
-    private fun getLTIUrlForTab(context: Context, tab: Tab): String? {
-        return getLTIUrl(context, tab.ltiUrl)
-    }
-
-    private fun getLTIUrl(context: Context, url: String): String? {
-        return try {
-            val result = HttpHelper.externalHttpGet(context, url, true).responseBody
-            var ltiUrl: String? = null
-            if (result != null) {
-                val ltiJSON = JSONObject(result)
-                ltiUrl = ltiJSON.getString("url")
-            }
-            ltiUrl
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    private suspend fun getLtiTool(url: String = ltiUrl): LTITool? {
+        return ltiTool?.let {
+            AssignmentManager.getExternalToolLaunchUrlAsync(it.courseId, it.id, it.assignmentId).await().dataOrNull
+        } ?: SubmissionManager.getLtiFromAuthenticationUrlAsync(url, true).await().dataOrNull
     }
 
     override fun onDestroy() {
@@ -375,7 +340,7 @@ class LTIWebViewFragment : InternalWebviewFragment() {
     companion object {
         const val LTI_URL = "ltiUrl"
         const val HIDE_TOOLBAR = "hideToolbar"
-
+        const val FLIPGRID = "Flipgrid"
 
         @JvmStatic
         fun makeLTIBundle(ltiUrl: String, title: String, sessionLessLaunch: Boolean): Bundle {
