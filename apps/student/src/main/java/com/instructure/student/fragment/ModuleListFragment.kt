@@ -162,8 +162,10 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                         // We need to delay scrolling until the expand animation has completed, otherwise modules
                         // that appear near the end of the list will not have the extra 'expanded' space needed
                         // to scroll as far as possible toward the top
-                        val lm = listView.layoutManager as LinearLayoutManager
-                        listView?.postDelayed({ lm.scrollToPositionWithOffset(groupPosition, 0) }, 1000)
+                        listView?.postDelayed({
+                            val lm = listView?.layoutManager as? LinearLayoutManager
+                            lm?.scrollToPositionWithOffset(groupPosition, 0)
+                        }, 1000)
                     }
                 }
             }
