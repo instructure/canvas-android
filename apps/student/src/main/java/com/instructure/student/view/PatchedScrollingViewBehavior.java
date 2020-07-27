@@ -18,14 +18,18 @@
 package com.instructure.student.view;
 
 import android.content.Context;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
-import java.util.List;
+import com.google.android.material.appbar.AppBarLayout;
 
+import java.util.*;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ViewCompat;
+
+// Used in assignment_list_layout.xml
+@SuppressWarnings("unused")
 public class PatchedScrollingViewBehavior extends AppBarLayout.ScrollingViewBehavior {
 
     public PatchedScrollingViewBehavior() {

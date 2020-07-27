@@ -29,13 +29,11 @@ import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.fragment_course_settings.*
 import kotlinx.android.synthetic.main.fragment_course_settings.view.*
 
-class CourseSettingsFragment : ParentFragment(), DatePickerFragment.DatePickerCancelListener {
+class CourseSettingsFragment : ParentFragment() {
 
     var course: Course by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
     override fun title(): String = getString(R.string.settings)
-
-    override fun onCancel() = Unit
 
     override fun applyTheme() {
         toolbar.title = title()
@@ -57,17 +55,17 @@ class CourseSettingsFragment : ParentFragment(), DatePickerFragment.DatePickerCa
         endLayout.setVisible(course.endDate != null).endDate.text =
                 DateHelper.dateToDayMonthYearString(requireContext(), course.endDate)
     }
-    
+
     companion object {
-        
+
         fun makeRoute(canvasContext: CanvasContext) = Route(CourseSettingsFragment::class.java, canvasContext)
-        
+
         private fun validateRoute(route: Route) = route.canvasContext is Course
-        
+
         fun newInstance(route: Route): CourseSettingsFragment? {
             if (!validateRoute(route)) return null
             return CourseSettingsFragment().withArgs(route.canvasContext!!.makeBundle())
         }
-        
+
     }
 }

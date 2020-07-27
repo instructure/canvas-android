@@ -148,6 +148,5 @@ class StatusBarColorChangeEvent(color: Int, skipId: String? = null) : RationedBu
 
 object ShowGradesToggledEvent
 object CourseColorOverlayToggledEvent
-object RecipientsListModifiedEvent
 object CoreDataFinishedLoading
 object ShowConfettiEvent
