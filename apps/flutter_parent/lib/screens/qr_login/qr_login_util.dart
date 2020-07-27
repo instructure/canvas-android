@@ -58,10 +58,6 @@ class QRLoginUtil {
       onTap: () async {
         Navigator.of(context).pop();
         locator<Analytics>().logEvent(AnalyticsEventConstants.QR_ACCOUNT_CREATION_CLICKED);
-        /*
-        locator<QuickNav>().push(
-            context, AccountCreationScreen(QRPairingScanResult.success('123', 'mobiledev.instructure.com', 'hodor')));
-         */
         locator<QuickNav>().pushRoute(context, PandaRouter.qrPairing(isCreatingAccount: true));
       },
     );

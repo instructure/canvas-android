@@ -141,6 +141,10 @@ class _QRPairingScreenState extends State<QRPairingScreen> {
       setState(() => _isPairing = true);
 
       if (widget.isCreatingAccount) {
+        setState(() {
+          _isPairing = false;
+        });
+
         // Don't pair, just route the info to account creation
         locator<QuickNav>()
             .pushRoute(context, PandaRouter.accountCreation(result.code, result.domain, result.accountId));

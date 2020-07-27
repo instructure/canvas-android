@@ -55,6 +55,7 @@ dependencies:
   uuid: ^2.0.2
   collection: ^1.14.11
   flutter_linkify: 3.1.0
+  email_validator: ^1.0.5
 
   # File handling
   path_provider: 1.5.1

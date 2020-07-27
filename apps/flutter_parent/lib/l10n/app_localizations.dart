@@ -1150,6 +1150,7 @@ class AppLocalizations {
   String get qrCreateAccountInvalidEmailError => Intl.message('Please enter a valid email address');
 
   String get qrCreateAccountPasswordError => Intl.message('Password is required');
+  String get qrCreateAccountPasswordLengthError => Intl.message('Password must contain at least 8 characters');
 
   String get qrCreateAccountTos1 => Intl.message('By tapping \'Create Account\', you agree to the ');
   String get qrCreateAccountTos2 => Intl.message('Terms of Service');
@@ -1159,6 +1160,9 @@ class AppLocalizations {
 
   String get qrCreateAccountSignIn1 => Intl.message('Already have an account? ');
   String get qrCreateAccountSignIn2 => Intl.message('Sign In');
+
+  String get qrCreateAccountEyeOffSemantics => Intl.message('Hide Password');
+  String get qrCreateAccountEyeSemantics => Intl.message('Show Password');
 
   /// Event details
 

@@ -14,6 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import 'package:dio/dio.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,6 @@ import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/qr_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
-import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AccountCreationScreen extends StatefulWidget {
@@ -41,11 +42,22 @@ class AccountCreationScreen extends StatefulWidget {
 }
 
 class _AccountCreationScreenState extends State<AccountCreationScreen> {
+  TextStyle _defaultSpanStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
+  TextStyle _linkSpanStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
+
+  Future<TermsOfService> _tosFuture;
+
+  Future<TermsOfService> _getToS() {
+    return locator<AccountCreationInteractor>()
+        .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain);
+  }
+
   final FocusNode _nameFocus = FocusNode();
   final _nameController = TextEditingController();
 
   final FocusNode _emailFocus = FocusNode();
   final _emailController = TextEditingController();
+  String _emailErrorText = null;
 
   final FocusNode _passwordFocus = FocusNode();
   final _passwordController = TextEditingController();
@@ -55,15 +67,13 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   bool _isLoading = false;
   bool _obscurePassword = true;
-  Widget _passwordIcon = Padding(
-    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
-    child: SvgPicture.asset(
-      'assets/svg/eye_off.svg',
-    ),
-  );
 
   @override
   Widget build(BuildContext context) {
+    if (_tosFuture == null) {
+      _tosFuture = _getToS();
+    }
+
     return DefaultParentTheme(
       builder: (context) => Scaffold(
           key: _scaffoldKey,
@@ -77,13 +87,13 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                   semanticsLabel: L10n(context).canvasLogoLabel,
                 ),
                 SizedBox(height: 56),
-                _accountCreationForm(context),
+                _accountCreationForm(),
                 SizedBox(height: 16),
-                _createAccountTOS(context),
+                _createAccountTOS(),
                 SizedBox(height: 8),
-                _createAccountButton(context),
+                _createAccountButton(),
                 SizedBox(height: 24),
-                _alreadyHaveAnAccount(context),
+                _alreadyHaveAnAccount(),
                 SizedBox(height: 8),
               ],
             ),
@@ -91,128 +101,163 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
-  Widget _accountCreationForm(BuildContext context) {
+  Widget _accountCreationForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
-          _formFieldLabel(context, L10n(context).qrCreateAccountLabelName),
-          TextFormField(
-            focusNode: _nameFocus,
-            textInputAction: TextInputAction.next,
-            autocorrect: false,
-            controller: _nameController,
-            decoration: InputDecoration(
-                errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(color: ParentColors.failure),
-                ),
-                hintText: L10n(context).qrCreateAccountHintName,
-                hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
-                border: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(),
-                )),
-            onFieldSubmitted: (term) {
-              _fieldFocusChange(context, _nameFocus, _emailFocus);
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return L10n(context).qrCreateAccountNameError;
-              } else {
-                return null;
-              }
-            },
-          ),
-          _formFieldLabel(context, L10n(context).qrCreateAccountLabelEmail),
-          TextFormField(
-            focusNode: _emailFocus,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            autocorrect: false,
-            controller: _emailController,
-            decoration: InputDecoration(
-                errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(color: ParentColors.failure),
-                ),
-                hintText: L10n(context).qrCreateAccountHintEmail,
-                hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
-                border: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(),
-                )),
-            onFieldSubmitted: (term) {
-              _fieldFocusChange(context, _emailFocus, _passwordFocus);
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return L10n(context).qrCreateAccountEmailError;
-              } else if (false) {
-                return L10n(context).qrCreateAccountInvalidEmailError;
-              } else {
-                return null;
-              }
-            },
-          ),
-          _formFieldLabel(context, L10n(context).qrCreateAccountLabelPassword),
-          TextFormField(
-            focusNode: _passwordFocus,
-            obscureText: _obscurePassword,
-            autocorrect: false,
-            controller: _passwordController,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-                suffixIcon: GestureDetector(
-                  child: _passwordIcon,
-                  onTap: () {
-                    setState(() {
-                      if (_obscurePassword) {
-                        _obscurePassword = false;
-                        _passwordIcon = Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 9, 12, 10),
-                          child: SvgPicture.asset(
-                            'assets/svg/eye_off.svg',
-                          ),
-                        );
-                      } else {
-                        _obscurePassword = true;
-                        _passwordIcon = Icon(CanvasIcons.eye);
-                      }
-                    });
-                  },
-                ),
-                errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(color: ParentColors.failure),
-                ),
-                hintText: L10n(context).qrCreateAccountHintPassword,
-                hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
-                border: OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(4.0),
-                  borderSide: new BorderSide(),
-                )),
-            onFieldSubmitted: (term) {
-              _clearFieldFocus();
-              _formKey.currentState.validate();
-            },
-            validator: (value) {
-              if (value.isEmpty) {
-                return L10n(context).qrCreateAccountPasswordError;
-              } else {
-                return null;
-              }
-            },
-          ),
+          _formFieldLabel(L10n(context).qrCreateAccountLabelName),
+          _nameFormField(),
+          _formFieldLabel(L10n(context).qrCreateAccountLabelEmail),
+          _emailFormField(),
+          _formFieldLabel(L10n(context).qrCreateAccountLabelPassword),
+          _passwordFormField(),
         ],
       ),
     );
   }
 
-  _fieldFocusChange(BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
+  Widget _formFieldLabel(String text) {
+    return Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
+          child: Text(text, style: TextStyle(color: ParentColors.licorice, fontSize: 16, fontWeight: FontWeight.w500)),
+        ));
+  }
+
+  Widget _nameFormField() {
+    return TextFormField(
+      focusNode: _nameFocus,
+      textInputAction: TextInputAction.next,
+      autocorrect: false,
+      controller: _nameController,
+      decoration: InputDecoration(
+          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+          errorBorder: OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(4.0),
+            borderSide: new BorderSide(color: ParentColors.failure),
+          ),
+          hintText: L10n(context).qrCreateAccountHintName,
+          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+          border: OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(4.0),
+            borderSide: new BorderSide(),
+          )),
+      onFieldSubmitted: (term) {
+        _fieldFocusChange(_nameFocus, _emailFocus);
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return L10n(context).qrCreateAccountNameError;
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _emailFormField() {
+    return TextFormField(
+        focusNode: _emailFocus,
+        keyboardType: TextInputType.emailAddress,
+        textInputAction: TextInputAction.next,
+        autocorrect: false,
+        controller: _emailController,
+        decoration: InputDecoration(
+            errorText: _emailErrorText,
+            errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+            errorBorder: OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(4.0),
+              borderSide: new BorderSide(color: ParentColors.failure),
+            ),
+            hintText: L10n(context).qrCreateAccountHintEmail,
+            hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+            border: OutlineInputBorder(
+              borderRadius: new BorderRadius.circular(4.0),
+              borderSide: new BorderSide(),
+            )),
+        onFieldSubmitted: (term) {
+          _fieldFocusChange(_emailFocus, _passwordFocus);
+        },
+        validator: (value) => _validateEmail(value));
+  }
+
+  String _validateEmail(String value, {bool apiError = false}) {
+    if (apiError) {
+      return L10n(context).qrCreateAccountInvalidEmailError;
+    } else if (value.isEmpty) {
+      return L10n(context).qrCreateAccountEmailError;
+    } else if (!EmailValidator.validate(value)) {
+      return L10n(context).qrCreateAccountInvalidEmailError;
+    } else {
+      _emailErrorText = null;
+      return _emailErrorText;
+    }
+  }
+
+  Widget _passwordFormField() {
+    return TextFormField(
+      focusNode: _passwordFocus,
+      obscureText: _obscurePassword,
+      autocorrect: false,
+      controller: _passwordController,
+      textInputAction: TextInputAction.done,
+      decoration: InputDecoration(
+          suffixIcon: GestureDetector(
+            child: _passwordIcon(_obscurePassword),
+            onTap: () {
+              setState(() {
+                if (_obscurePassword) {
+                  _obscurePassword = false;
+                } else {
+                  _obscurePassword = true;
+                }
+              });
+            },
+          ),
+          errorStyle: TextStyle(color: ParentColors.failure, fontSize: 14, fontWeight: FontWeight.w500),
+          errorBorder: OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(4.0),
+            borderSide: new BorderSide(color: ParentColors.failure),
+          ),
+          hintText: L10n(context).qrCreateAccountHintPassword,
+          hintStyle: TextStyle(color: ParentColors.tiara, fontSize: 16, fontWeight: FontWeight.normal),
+          border: OutlineInputBorder(
+            borderRadius: new BorderRadius.circular(4.0),
+            borderSide: new BorderSide(),
+          )),
+      onFieldSubmitted: (term) {
+        _clearFieldFocus();
+        _formKey.currentState.validate();
+      },
+      validator: (value) {
+        if (value.isEmpty) {
+          return L10n(context).qrCreateAccountPasswordError;
+        } else if (value.length < 8) {
+          return L10n(context).qrCreateAccountPasswordLengthError;
+        } else {
+          return null;
+        }
+      },
+    );
+  }
+
+  Widget _passwordIcon(bool obscurePassword) {
+    if (obscurePassword) {
+      return Icon(CanvasIcons.eye);
+    } else {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: SvgPicture.asset(
+          'assets/svg/eye_off.svg',
+          semanticsLabel: L10n(context).qrCreateAccountEyeOffSemantics,
+        ),
+      );
+    }
+  }
+
+  _fieldFocusChange(FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
   }
@@ -223,113 +268,55 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     _passwordFocus.unfocus();
   }
 
-  Widget _createAccountButton(BuildContext context) {
-    return ButtonTheme(
-      child: RaisedButton(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: _isLoading
-              ? Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator())
-              : Text(
-                  L10n(context).qrCreateAccount,
-                  style: TextStyle(fontSize: 16),
-                ),
-        ),
-        color: Theme.of(context).accentColor,
-        textColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            setState(() => _isLoading = true);
-            try {
-              var user = locator<AccountCreationInteractor>().createNewAccount(
-                  widget.pairingInfo.accountId,
-                  widget.pairingInfo.code,
-                  _nameController.text,
-                  _emailController.text,
-                  _passwordController.text,
-                  widget.pairingInfo.domain);
-
-              // TODO - success toast + Route them to login page
-              _scaffoldKey.currentState.showSnackBar(
-                SnackBar(content: Text('WAIT, it worked?! -> ${user.toString()}')),
-              );
-            } catch (e) {
-              // TODO - error toast, potentially update email error message
-              setState(() => _isLoading = false);
-              _scaffoldKey.currentState.showSnackBar(
-                SnackBar(content: Text('ERROR YOOO -> ${e.toString()}')),
-              );
-            }
-          }
-        },
-      ),
-    );
-  }
-
-  Widget _formFieldLabel(BuildContext context, String text) {
-    return Align(
-        alignment: Alignment.centerLeft,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 12, 0, 8),
-          child: Text(text, style: TextStyle(color: ParentColors.licorice, fontSize: 16, fontWeight: FontWeight.w500)),
-        ));
-  }
-
-  Widget _createAccountTOS(BuildContext context) {
+  Widget _createAccountTOS() {
     return FutureBuilder(
-        future: locator<AccountCreationInteractor>()
-            .getToSForAccount(widget.pairingInfo.accountId, widget.pairingInfo.domain),
+        future: _tosFuture,
         builder: (context, AsyncSnapshot<TermsOfService> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(color: Theme.of(context).scaffoldBackgroundColor, child: LoadingIndicator());
           }
 
           if (snapshot.hasError || snapshot.data == null) {
-            return _getTosSpan(context, null);
+            return _getTosSpan(null);
           } else {
             var terms = snapshot.data;
             if (terms.passive) {
-              return _getPrivacyPolicySpan(context);
+              return _getPrivacyPolicySpan();
             } else {
-              return _getTosSpan(context, snapshot.data);
+              return _getTosSpan(snapshot.data);
             }
           }
         });
   }
 
-  Widget _getPrivacyPolicySpan(BuildContext context) {
-    TextStyle linkStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
-
+  Widget _getPrivacyPolicySpan() {
     return Align(
       child: RichText(
         text: TextSpan(
             text: L10n(context).qrCreateAccountViewPrivacy,
-            style: linkStyle,
+            style: _linkSpanStyle,
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-                locator<UrlLauncher>().launch('https://www.instructure.com/policies/privacy/');
+                locator<AccountCreationInteractor>().launchPrivacyPolicy();
               }),
       ),
     );
   }
 
-  Widget _getTosSpan(BuildContext context, TermsOfService terms) {
-    TextStyle defaultStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
-    TextStyle linkStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
+  Widget _getTosSpan(TermsOfService terms) {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: defaultStyle,
+          style: _defaultSpanStyle,
           children: <TextSpan>[
             TextSpan(text: L10n(context).qrCreateAccountTos1),
             TextSpan(
                 text: L10n(context).qrCreateAccountTos2,
-                style: linkStyle,
+                style: _linkSpanStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     if (terms == null) {
-                      locator<UrlLauncher>().launch('https://www.instructure.com/policies/terms-of-use-canvas/');
+                      locator<AccountCreationInteractor>().launchDefaultToS();
                     } else {
                       locator<QuickNav>().pushRoute(
                           context,
@@ -340,10 +327,10 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
             TextSpan(text: L10n(context).qrCreateAccountTos3),
             TextSpan(
                 text: L10n(context).qrCreateAccountTos4,
-                style: linkStyle,
+                style: _linkSpanStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    locator<UrlLauncher>().launch('https://www.instructure.com/policies/privacy/');
+                    locator<AccountCreationInteractor>().launchPrivacyPolicy();
                   }),
           ],
         ),
@@ -351,18 +338,38 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
-  Widget _alreadyHaveAnAccount(BuildContext context) {
-    TextStyle defaultStyle = TextStyle(color: ParentColors.ash, fontSize: 14.0, fontWeight: FontWeight.normal);
-    TextStyle linkStyle = TextStyle(color: ParentColors.parentApp, fontSize: 14.0, fontWeight: FontWeight.normal);
+  Widget _createAccountButton() {
+    return ButtonTheme(
+      child: RaisedButton(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+              : Text(
+                  L10n(context).qrCreateAccount,
+                  style: TextStyle(fontSize: 16),
+                ),
+        ),
+        color: Theme.of(context).accentColor,
+        textColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        onPressed: () {
+          if (!_isLoading) _handleCreateAccount();
+        },
+      ),
+    );
+  }
+
+  Widget _alreadyHaveAnAccount() {
     return Center(
       child: RichText(
         text: TextSpan(
-          style: defaultStyle,
+          style: _defaultSpanStyle,
           children: <TextSpan>[
             TextSpan(text: L10n(context).qrCreateAccountSignIn1),
             TextSpan(
                 text: L10n(context).qrCreateAccountSignIn2,
-                style: linkStyle,
+                style: _linkSpanStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
@@ -371,5 +378,60 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         ),
       ),
     );
+  }
+
+  void _handleCreateAccount() async {
+    if (_formKey.currentState.validate()) {
+      setState(() => _isLoading = true);
+      try {
+        var response = await locator<AccountCreationInteractor>().createNewAccount(
+            widget.pairingInfo.accountId,
+            widget.pairingInfo.code,
+            _nameController.text,
+            _emailController.text,
+            _passwordController.text,
+            widget.pairingInfo.domain);
+
+        if (response.statusCode == 200) {
+          setState(() => _isLoading = false);
+
+          // Route them to the login page with their domain
+          locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
+        }
+      } catch (e) {
+        setState(() => _isLoading = false);
+        if (e is DioError) {
+          _handleDioError(e);
+        } else {
+          _scaffoldKey.currentState.showSnackBar(
+            SnackBar(content: Text('Generic Error')),
+          );
+        }
+      }
+    }
+  }
+
+  _handleDioError(DioError e) {
+    try {
+      String emailError = e.response.data['errors']['user']['pseudonyms'][0]['message'];
+      if (emailError != null && emailError.isNotEmpty) {
+        setState(() {
+          _emailErrorText = _validateEmail('', apiError: true);
+        });
+      }
+    } catch (e) {
+      // If we catch it means the error isn't present
+    }
+
+    try {
+      String pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
+      if (pairingError != null && pairingError.isNotEmpty) {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(content: Text('Invalid Pairing Code')),
+        );
+      }
+    } catch (e) {
+      // If we catch it means the error isn't present
+    }
   }
 }

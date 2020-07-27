@@ -35,6 +35,7 @@ import 'package:flutter_parent/network/api/inbox_api.dart';
 import 'package:flutter_parent/network/api/oauth_api.dart';
 import 'package:flutter_parent/network/api/page_api.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_interactor.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
 import 'package:flutter_parent/screens/courses/courses_interactor.dart';
@@ -75,6 +76,8 @@ MockRemoteConfig setupMockRemoteConfig({Map<String, String> valueSettings = null
 }
 
 class MockAccountsApi extends Mock implements AccountsApi {}
+
+class MockAccountCreationInteractor extends Mock implements AccountCreationInteractor {}
 
 class MockAnalytics extends Mock implements Analytics {}
 

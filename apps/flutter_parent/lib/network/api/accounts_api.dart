@@ -12,10 +12,17 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+import 'package:flutter_parent/models/account_creation_models/create_account_post_body.dart';
+import 'package:flutter_parent/models/account_creation_models/post_pairing_code.dart';
+import 'package:flutter_parent/models/account_creation_models/post_pseudonym.dart';
+import 'package:flutter_parent/models/account_creation_models/post_user.dart';
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/school_domain.dart';
+import 'package:flutter_parent/models/serializers.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
-import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/dio_config.dart';
 import 'package:flutter_parent/network/utils/fetch.dart';
 
@@ -44,53 +51,33 @@ class AccountsApi {
     return selfRegistration == 'observer' || selfRegistration == 'all';
   }
 
-  /*
-  class ErrorReportApi {
-  static const DEFAULT_DOMAIN = 'https://canvas.instructure.com';
-
-  Future<void> submitErrorReport({
-    String subject,
-    String description,
-    String email,
-    String severity,
-    String stacktrace,
-    String domain,
-    String name,
-    String becomeUser,
-    String userRoles,
-  }) {
-    var config = domain == DEFAULT_DOMAIN ? DioConfig.core() : DioConfig.canvas();
-
-    return config.dio.post(
-      '/error_reports.json',
-      queryParameters: {
-        'error[subject]': subject,
-        'error[url]': domain,
-        'error[email]': email,
-        'error[comments]': description,
-        'error[user_perceived_severity]': severity,
-        'error[name]': name,
-        'error[user_roles]': userRoles,
-        'error[become_user]': becomeUser,
-        if (stacktrace != null) 'error[backtrace]': stacktrace,
-      },
-    );
-  }
-}
-   */
-
-  Future<User> createNewAccount(
+  Future<Response> createNewAccount(
       String accountId, String pairingCode, String fullname, String email, String password, String domain) async {
-    var dio = DioConfig.canvas().copyWith(baseUrl: 'https://$domain').dio;
+    var dio = DioConfig.canvas(noHeaders: true).copyWith(baseUrl: 'https://$domain/api/v1/').dio;
 
-    // TODO - might need to be a post body rather than query params....
-    return fetch(dio.post<User>('/api/v1/accounts/$accountId/users', queryParameters: {
+    var pairingCodeBody = PostPairingCode((b) => b..code = pairingCode);
+    var userBody = PostUser((b) => b
+      ..name = fullname
+      ..initialEnrollmentType = 'observer'
+      ..termsOfUse = true);
+    var pseudonymBody = PostPseudonym((b) => b
+      ..uniqueId = email
+      ..password = password);
+    var postBody = CreateAccountPostBody((b) => b
+      ..pairingCode = pairingCodeBody.toBuilder()
+      ..user = userBody.toBuilder()
+      ..pseudonym = pseudonymBody.toBuilder());
+
+    return dio.post('accounts/$accountId/users', data: json.encode(serialize(postBody)));
+  }
+/*
+  queryParameters: {
       'user[name]': fullname,
       'user[terms_of_use]': true,
       'user[initial_enrollment]': 'observer',
       'pairing_code[code]': pairingCode,
       'pseudonym[unique_id]': email,
       'pseudonym[password]': password
-    }));
-  }
+    }
+   */
 }
