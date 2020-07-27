@@ -16,6 +16,7 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.student.R
@@ -33,6 +34,7 @@ class PairObserverRenderPage : PairObserverPage() {
     }
 
     fun assertCodeDisplayed(itemText: String) {
+        waitForMatcherWithSleeps(withId(R.id.pairObserverContent), waitMs = 5000)
         errorView.assertGone()
         loadingView.assertGone()
         pairingView.assertDisplayed()

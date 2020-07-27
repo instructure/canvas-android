@@ -22,6 +22,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.FavoriteApiModel
 import com.instructure.espresso.*
@@ -71,6 +72,10 @@ class CoursesListPage : BasePage() {
     }
 
     fun openCourse(course: CourseApiModel) {
+        callOnClick(withText(course.name))
+    }
+
+    fun openCourse(course: Course) {
         callOnClick(withText(course.name))
     }
 

@@ -182,7 +182,6 @@ class SplashActivity : AppCompatActivity() {
                     }
                     if (!ThemePrefs.isThemeApplied) themeFetch.await() else themeFetch.start()
                 } catch (e: Throwable) {
-                    LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load data inside weave")
                     Logger.e(e.message)
                 }
 
@@ -202,8 +201,6 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             }
         } catch (e: Throwable) {
-            // TODO: MBL-13563 Watch this catch in crashlytics for any more info on why we get an unknown host exception with du11hjcvx0uqb.cloudfront.net
-            LoggingUtility.log("${SplashActivity::class.java.simpleName} - Failed to load data outside weave")
             Logger.e(e.message)
         }
     }

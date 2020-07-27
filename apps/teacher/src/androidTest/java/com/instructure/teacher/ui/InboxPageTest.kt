@@ -17,29 +17,45 @@
 
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addConversations
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class InboxPageTest: TeacherTest() {
     @Test
-    @Ditto
     override fun displaysPageObjects() {
-        val teacher = seedData(teachers = 1, courses = 1).teachersList[0]
-        tokenLogin(teacher)
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1
+        )
+        val teacher = data.teachers[0]
+        data.addConversations(userId = teacher.id)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.clickInboxTab()
         inboxPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysConversation() {
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
-        seedConversation(student, listOf(teacher))
+        val data = MockCanvas.init(
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                teacherCount = 1,
+                studentCount = 1
+        )
+        val teacher = data.teachers[0]
+        data.addConversations(userId = teacher.id)
 
-        tokenLogin(teacher)
+        // Test expects single conversation; filter down to starred conversation
+        val unwanted = data.conversations.filter() {entry -> !entry.value.isStarred}
+        unwanted.forEach() {id, conversation -> data.conversations.remove(id)}
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.clickInboxTab()
         inboxPage.assertHasConversation()
     }

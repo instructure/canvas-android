@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.util.TypedValue
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
@@ -53,6 +54,16 @@ class GradeableStudentSubmissionViewHolder(view: View) : RecyclerView.ViewHolder
         courseId: Long,
         callback: (GradeableStudentSubmission) -> Unit
     ) = with(itemView) {
+        // Set item a11y action to "view submission details"
+        setAccessibilityDelegate(object : View.AccessibilityDelegate() {
+            override fun onInitializeAccessibilityNodeInfo(v: View, info: AccessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(v, info)
+                val description = context.getString(R.string.a11y_viewSubmissionAction)
+                val customClick = AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_CLICK.id, description)
+                info.addAction(customClick)
+            }
+        })
+
         hiddenIcon.setGone()
         val assignee = gradeableStudentSubmission.assignee
         when {

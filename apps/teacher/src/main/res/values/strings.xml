@@ -389,6 +389,7 @@
     <string name="graded">Graded</string>
     <string name="needsGrading">Needs Grading</string>
     <string name="not_submitted">Not Submitted</string>
+    <string name="a11y_viewSubmissionAction">view submission details</string>
     <string name="content_description_submission_donut_graded" formatted="false">Graded, %s of %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Needs Grading, %s of %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Not submitted, %s of %s</string>

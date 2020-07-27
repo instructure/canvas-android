@@ -162,6 +162,7 @@
     <string name="noFiles">No Files</string>
     <string name="noFilesForAssignment">There are no files for this submission</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
+    <string name="emptyFolder">This folder is empty</string>
     <string name="notSupported">Not Supported</string>
     <string name="noEvents">No Events Today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
@@ -219,6 +220,7 @@
     <string name="noInternetConnectionTitle">No Internet Connection</string>
     <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">View user details for %s.</string>
 
     <!-- App Names -->

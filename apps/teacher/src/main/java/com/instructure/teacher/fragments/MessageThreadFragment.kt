@@ -233,6 +233,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
                 (it.layoutManager as LinearLayoutManager).orientation
             )
             dividerItemDecoration.setDrawable(requireContext().getDrawableCompat(R.drawable.item_decorator_gray))
+            it.removeAllItemDecorations()
             it.addItemDecoration(dividerItemDecoration)
             addSwipeToRefresh(swipeRefreshLayout)
         }
