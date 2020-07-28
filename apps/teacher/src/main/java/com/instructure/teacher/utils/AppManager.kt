@@ -63,7 +63,6 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
                     .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
                     .build()
             Fabric.with(this, crashlytics)
-            Analytics.trackAppFlow(this)
         }
 
         ColorKeeper.defaultColor = getColorCompat(R.color.defaultPrimary)

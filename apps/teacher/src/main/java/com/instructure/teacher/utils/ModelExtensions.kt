@@ -19,7 +19,6 @@ package com.instructure.teacher.utils
 
 import android.content.Context
 import android.net.Uri
-import android.os.Parcel
 import android.webkit.MimeTypeMap
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.models.*
@@ -39,9 +38,6 @@ import com.instructure.teacher.fragments.ViewPdfFragment
 import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.pspdfkit.ui.PdfFragment
-
-fun Parcel.writeBoolean(bool: Boolean) = writeByte((if (bool) 1 else 0).toByte())
-fun Parcel.readBoolean() = readByte() != 0.toByte()
 
 // region Attachment extensions
 
@@ -118,15 +114,6 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
 
 @Suppress("unused")
 val GroupAssignee.iconRes: Int get() = R.drawable.vd_group
-
-val Enrollment.displayType: CharSequence get() = ContextKeeper.appContext.getText(when {
-    isStudent -> R.string.enrollmentTypeStudent
-    isTeacher -> R.string.enrollmentTypeTeacher
-    isObserver -> R.string.enrollmentTypeObserver
-    isTA -> R.string.enrollmentTypeTeachingAssistant
-    isDesigner -> R.string.enrollmentTypeDesigner
-    else -> R.string.enrollmentTypeUnknown
-})
 
 val EnrollmentType?.displayText: CharSequence
     get() = ContextKeeper.appContext.getText(

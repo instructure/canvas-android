@@ -27,9 +27,6 @@ object TeacherPrefs : PrefManager(AppManager.PREF_FILE_NAME) {
     @JvmStatic
     var isConfirmedTeacher by BooleanPref()
 
-    @JvmStatic
-    var warnForMobileData by BooleanPref(true)
-
     /* Whether the user has viewed the 'Swipe to view other students' tutorial in SpeedGrader */
     @JvmStatic
     var hasViewedSwipeTutorial by BooleanPref()

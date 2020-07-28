@@ -17,16 +17,15 @@
 package com.instructure.teacher.utils;
 
 import android.content.Context;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.instructure.pandarecycler.interfaces.EmptyInterface;
 import com.instructure.teacher.R;
-import com.instructure.teacher.adapters.BaseListRecyclerAdapter;
 
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import instructure.androidblueprint.ListPresenter;
 import instructure.androidblueprint.ListRecyclerAdapter;
 import instructure.androidblueprint.SyncExpandablePresenter;
@@ -135,25 +134,6 @@ public class RecyclerViewUtils {
         });
 
         return recyclerView;
-    }
-
-    public static void checkIfEmpty(EmptyInterface emptyPandaView,
-                                    BaseListRecyclerAdapter adapter,
-                                    RecyclerView recyclerView, boolean isRefresh, boolean isEmpty) {
-        if (emptyPandaView != null && adapter != null && recyclerView != null) {
-            if (adapter.size() == 0 && !isRefresh) {
-                recyclerView.setVisibility(View.GONE);
-                emptyPandaView.setVisibility(View.VISIBLE);
-                if (isEmpty) {
-                    emptyPandaView.setListEmpty();
-                } else {
-                    emptyPandaView.setLoading();
-                }
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                emptyPandaView.setVisibility(View.GONE);
-            }
-        }
     }
 
     public static void checkIfEmpty(EmptyInterface emptyPandaView,
