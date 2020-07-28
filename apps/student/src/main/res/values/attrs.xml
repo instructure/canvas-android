@@ -104,12 +104,6 @@
         <attr name="drawableColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="CircularTextView">
-        <attr name="circleColor" format="string" />
-        <attr name="hasBorder" format="boolean" />
-        <attr name="hasShadow" format="boolean" />
-    </declare-styleable>
-
     <declare-styleable name="PagerSlidingTabStrip">
         <attr name="pstIndicatorColor" format="color" />
         <attr name="pstUnderlineColor" format="color" />
