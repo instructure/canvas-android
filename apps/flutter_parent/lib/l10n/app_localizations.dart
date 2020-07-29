@@ -1158,7 +1158,7 @@ class AppLocalizations {
 
   String qrCreateAccountTos(String termsOfService, String privacyPolicy) => Intl.message(
       """By tapping 'Create Account', you agree to the $termsOfService and acknowledge the $privacyPolicy""",
-      name: 'tos and privacy policy agreement text',
+      name: 'qrCreateAccountTos',
       desc: 'The text show on the account creation screen',
       args: [termsOfService, privacyPolicy]);
 
