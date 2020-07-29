@@ -18,7 +18,6 @@ package com.instructure.teacher.utils
 
 import android.app.Activity
 import android.content.Context
-import android.os.Build
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
@@ -36,11 +35,6 @@ fun Context.getColorCompat(@ColorRes colorRes: Int) = ContextCompat.getColor(thi
 fun FragmentActivity.withRequireNetwork(block: () -> Unit) {
     if (APIHelper.hasNetworkConnection()) block() else NoInternetConnectionDialog.show(supportFragmentManager)
 }
-
-/** The status bar color */
-var Activity.statusBarColor: Int
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.statusBarColor else 0
-    set(value) { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) window.statusBarColor = value }
 
 val Activity.isTablet: Boolean
     get() = resources.getBoolean(R.bool.isDeviceTablet)

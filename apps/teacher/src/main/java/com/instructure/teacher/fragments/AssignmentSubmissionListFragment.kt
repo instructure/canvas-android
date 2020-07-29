@@ -129,7 +129,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     override fun getAdapter(): GradeableStudentSubmissionAdapter {
         if(mAdapter == null) {
             mAdapter = GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
-                doWithNetworkRequired(requireContext()) {
+                withRequireNetwork {
                     val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
                     val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
                     val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)

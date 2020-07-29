@@ -39,10 +39,9 @@ import com.instructure.teacher.interfaces.MessageAdapterCallback
 import com.instructure.teacher.utils.linkifyTextView
 import kotlinx.android.synthetic.main.adapter_message.view.*
 import java.text.SimpleDateFormat
-import java.util.Locale
+import java.util.*
 
-
-object MessageBinder : BaseBinder() {
+object MessageBinder {
 
     fun bind(message: Message, conversation: Conversation, author: BasicUser?, holder: MessageHolder, position: Int, callback: MessageAdapterCallback) {
 

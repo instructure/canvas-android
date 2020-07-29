@@ -16,20 +16,6 @@
  */
 package com.instructure.teacher.utils
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 
-/**
- * Show the provided message in a Toast, prefixed with 'Coming Soon:'.
- * This is for development only and input strings do not need i18n.
- */
-fun Fragment.soonToast(message: String) {
-    Toast.makeText(requireContext(), "Coming soon: $message", Toast.LENGTH_SHORT).show()
-}
-
 fun Fragment.withRequireNetwork(block: () -> Unit) = requireActivity().withRequireNetwork(block)
-
-/** The status bar color */
-var Fragment.statusBarColor: Int
-    get() = requireActivity().statusBarColor
-    set(value) { requireActivity().statusBarColor = value }

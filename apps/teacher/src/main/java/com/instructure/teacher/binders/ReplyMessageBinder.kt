@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.binders
 
-import android.content.Context
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.pandautils.utils.onClick
@@ -26,8 +25,7 @@ import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
 import kotlinx.android.synthetic.main.adapter_message.view.*
 
-
-class ReplyMessageBinder : BaseBinder() {
+class ReplyMessageBinder {
     companion object {
 
         fun bind(message: Message, conversation: Conversation, holder: MessageHolder, position: Int, callback: MessageAdapterCallback) {

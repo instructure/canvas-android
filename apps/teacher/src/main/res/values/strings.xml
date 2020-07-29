@@ -217,8 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Are you sure you want to delete this assignment?</string>
-    <string name="question">Question</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
 
     <string name="max_count">99+</string>
     <string name="message_student">Message Student</string>
