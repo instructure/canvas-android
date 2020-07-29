@@ -25,11 +25,7 @@
     <string name="installDate" translatable="false">Install Date:</string>
     <string name="no_user" translatable="false">No user data available.</string>
 
-    <string name="date_bar" translatable="false">%1$s - %2$s</string>
-    <string name="week_header_text" translatable="false">%1$s,  %2$s</string>
-    <string name="text_space_text" translatable="false">%1$s %2$s</string>
     <string name="conversation_message_title" translatable="false">%1$s,  +%2$s</string>
-    <string name="week_assignment_override_title" translatable="false">%1$s (%2$s)</string>
     <string name="issue_with_canvas" translatable="false">Issue with Canvas Teacher [Android]</string>
     <string name="featureFlagsTitle" translatable="false">Feature Flags</string>
 

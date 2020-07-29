@@ -16,7 +16,6 @@
   -->
 
 <resources>
-    <item type="dimen" name="course_card_width_percent">60%</item>
 
     <item name="tabletWidthPercent" type="dimen">60%</item>
     <item name="tabletHeightPercent" type="dimen">75%</item>
