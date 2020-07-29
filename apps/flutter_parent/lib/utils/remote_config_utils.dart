@@ -59,7 +59,7 @@ class RemoteConfigUtils {
     // fetch data from Firebase
     var updated = false;
     try {
-      await _remoteConfig.fetch(expiration: const Duration(seconds: 10));
+      await _remoteConfig.fetch(expiration: const Duration(hours: 1));
       updated = await _remoteConfig.activateFetched();
     } catch (e) {
       // On fetch/activate failure, just make sure that updated is set to false
