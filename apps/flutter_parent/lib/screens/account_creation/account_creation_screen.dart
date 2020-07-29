@@ -33,6 +33,9 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AccountCreationScreen extends StatefulWidget {
+  @visibleForTesting
+  static final GlobalKey accountCreationTextSpanKey = GlobalKey();
+
   final QRPairingInfo pairingInfo;
 
   const AccountCreationScreen(this.pairingInfo, {Key key}) : super(key: key);
@@ -245,7 +248,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
 
   Widget _passwordIcon(bool obscurePassword) {
     if (obscurePassword) {
-      return Icon(CanvasIcons.eye);
+      return Icon(CanvasIcons.eye, semanticLabel: L10n(context).qrCreateAccountEyeSemantics);
     } else {
       return Padding(
         padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
@@ -303,15 +306,33 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     );
   }
 
+  TextSpan _getTosSpanHelper({@required String text, @required List<TextSpan> inputSpans}) {
+    var indexedSpans = inputSpans.map((it) => MapEntry(text.indexOf(it.text), it)).toList();
+    indexedSpans.sort((a, b) => a.key.compareTo(b.key));
+
+    int index = 0;
+    List<TextSpan> spans = [];
+
+    for (var indexedSpan in indexedSpans) {
+      spans.add(TextSpan(text: text.substring(index, indexedSpan.key)));
+      spans.add(indexedSpan.value);
+      index = indexedSpan.key + indexedSpan.value.text.length;
+    }
+    spans.add(TextSpan(text: text.substring(index)));
+
+    return TextSpan(children: spans);
+  }
+
   Widget _getTosSpan(TermsOfService terms) {
+    var termsOfService = L10n(context).qrCreateAccountTermsOfService;
+    var privacyPolicy = L10n(context).qrCreateAccountPrivacyPolicy;
+    var body = L10n(context).qrCreateAccountTos(termsOfService, privacyPolicy);
+
     return Center(
-      child: RichText(
-        text: TextSpan(
-          style: _defaultSpanStyle,
-          children: <TextSpan>[
-            TextSpan(text: L10n(context).qrCreateAccountTos1),
-            TextSpan(
-                text: L10n(context).qrCreateAccountTos2,
+        child: Text.rich(
+            _getTosSpanHelper(text: body, inputSpans: [
+              TextSpan(
+                text: termsOfService,
                 style: _linkSpanStyle,
                 recognizer: TapGestureRecognizer()
                   ..onTap = () {
@@ -323,19 +344,16 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
                           PandaRouter.termsOfUse(
                               accountId: widget.pairingInfo.accountId, domain: widget.pairingInfo.domain));
                     }
-                  }),
-            TextSpan(text: L10n(context).qrCreateAccountTos3),
-            TextSpan(
-                text: L10n(context).qrCreateAccountTos4,
-                style: _linkSpanStyle,
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    locator<AccountCreationInteractor>().launchPrivacyPolicy();
-                  }),
-          ],
-        ),
-      ),
-    );
+                  },
+              ),
+              TextSpan(
+                  text: privacyPolicy,
+                  style: _linkSpanStyle,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => locator<AccountCreationInteractor>().launchPrivacyPolicy()),
+            ]),
+            style: _defaultSpanStyle,
+            key: AccountCreationScreen.accountCreationTextSpanKey));
   }
 
   Widget _createAccountButton() {
@@ -361,20 +379,21 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   Widget _alreadyHaveAnAccount() {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          style: _defaultSpanStyle,
-          children: <TextSpan>[
-            TextSpan(text: L10n(context).qrCreateAccountSignIn1),
-            TextSpan(
-                text: L10n(context).qrCreateAccountSignIn2,
-                style: _linkSpanStyle,
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () {
-                    locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
-                  }),
-          ],
+    // Since this one is always alone, the touch target size has been boosted
+    return GestureDetector(
+      onTap: () => locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 14, 0, 14),
+        child: Center(
+          child: RichText(
+            text: TextSpan(
+              style: _defaultSpanStyle,
+              children: <TextSpan>[
+                TextSpan(text: L10n(context).qrCreateAccountSignIn1),
+                TextSpan(text: L10n(context).qrCreateAccountSignIn2, style: _linkSpanStyle)
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -404,7 +423,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
           _handleDioError(e);
         } else {
           _scaffoldKey.currentState.showSnackBar(
-            SnackBar(content: Text('Generic Error')),
+            SnackBar(content: Text(L10n(context).unexpectedError)),
           );
         }
       }
@@ -427,7 +446,7 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
       String pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
       if (pairingError != null && pairingError.isNotEmpty) {
         _scaffoldKey.currentState.showSnackBar(
-          SnackBar(content: Text('Invalid Pairing Code')),
+          SnackBar(content: Text(L10n(context).errorPairingFailed)),
         );
       }
     } catch (e) {
