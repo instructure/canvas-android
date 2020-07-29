@@ -18,41 +18,15 @@
     <integer name="match_parent">-1</integer>
     <integer name="wrap_content">-2</integer>
 
-    <dimen name="tab_indicator_height">4dp</dimen>
-    <dimen name="card_item_spacing">8dp</dimen>
-    <dimen name="card_item_spacing_half">4dp</dimen>
-    <item name="course_card_width_percent" type="dimen">96%</item>
-    <dimen name="list_divider">0.5dp</dimen>
-    <dimen name="elevation">0dp</dimen>
-    <dimen name="grid_header_text_size">20sp</dimen>
-    <dimen name="course_card_height">130dp</dimen>
-    <dimen name="course_card_min_width">280dp</dimen>
-
-    <dimen name="colorDialogPaddingLeft">16dp</dimen>
-    <dimen name="colorDialogPaddingRight">2dp</dimen>
-    <dimen name="colorDialogPaddingBottom">8dp</dimen>
-    <dimen name="colorDialogColorSize">40dp</dimen>
-    <dimen name="colorBubbleColorSize">40dp</dimen>
-    <dimen name="colorItemMargin">8dp</dimen>
-    <dimen name="colorItemPadding">3dp</dimen>
-    <dimen name="colorItemSize">60dp</dimen>
-    <dimen name="colorItemMarginLeftRight">6dp</dimen>
-
-    <dimen name="message_user_avatar_size">40dp</dimen>
     <dimen name="unread_message_marker_size">8dp</dimen>
-
-    <dimen name="gridIconSizeSmall">22dp</dimen>
 
 
     <dimen name="message_avatar_dimen">32dp</dimen>
-    <dimen name="bottom_bar_height">56dp</dimen>
 
     <dimen name="navigationProfileAvatarSize">64dp</dimen>
     <dimen name="navigationDrawerWidth">320dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
 
     <!-- override default padding values, -1dp if it's not set to override -->
     <dimen name="chip_padding_start">-1dp</dimen>
@@ -76,7 +50,6 @@
     <dimen name="chip_wrapper_bottom_padding">16dp</dimen>
 
     <dimen name="toolbar_elevation_small">2dp</dimen>
-    <dimen name="toolbar_elevation">6dp</dimen>
 
     <!-- SpeedGrader Tutorial dimens -->
     <dimen name="speedGraderTutorialShadowRadius">10dp</dimen>
@@ -88,14 +61,10 @@
     <dimen name="course_list_padding">8dp</dimen>
     <dimen name="course_list_top_padding">4dp</dimen>
     <dimen name="course_header_spacing">0dp</dimen>
-    <dimen name="toolbarIconPadding">12dp</dimen>
-    <dimen name="comp_toolbar_elevation_small">2dp</dimen>
-    <dimen name="comp_toolbar_elevation">6dp</dimen>
     <dimen name="comp_cardTitleMargin">0dp</dimen>
 
     <item name="tabletWidthPercent" type="dimen">84%</item>
     <item name="tabletHeightPercent" type="dimen">65%</item>
-    <dimen name="bottomSheetWidth">-1dp</dimen>
     <dimen name="bottomSheetCardBottomPadding">-10dp</dimen>
 
     <dimen name="speedgrader_tab_spacing">12dp</dimen>
@@ -103,13 +72,10 @@
     <dimen name="speedgraderGroupMemberListWidth">240dp</dimen>
 
     <dimen name="dialogRadioButtonTextSize">16sp</dimen>
-    <dimen name="landscapeTabletDialogAdjustment">120dp</dimen>
 
     <dimen name="profileAvatarSize">168dp</dimen>
     <dimen name="profileBannerHeight">180dp</dimen>
     <dimen name="profileCameraIconSize">48dp</dimen>
-
-    <dimen name="rceEditorEmbeddedHeight">300dp</dimen>
 
     <dimen name="design_bottom_navigation_text_size" tools:override="true">10sp</dimen>
     <dimen name="design_bottom_navigation_active_text_size" tools:override="true">10sp</dimen>
