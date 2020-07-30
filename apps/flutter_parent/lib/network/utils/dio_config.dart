@@ -138,21 +138,11 @@ class DioConfig {
     bool includeApiPath: true,
     bool forceRefresh: false,
     bool forceDeviceLanguage: false,
-    bool noHeaders: false,
     String overrideToken: null,
     Map<String, String> extraHeaders: null,
     PageSize pageSize: PageSize.none,
   }) {
     Map<String, dynamic> extraParams = ApiPrefs.isMasquerading() ? {'as_user_id': ApiPrefs.getUser().id} : null;
-    if (noHeaders) {
-      return DioConfig(
-        baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
-        cacheMaxAge: const Duration(hours: 1),
-        forceRefresh: forceRefresh,
-        pageSize: pageSize,
-        extraQueryParams: extraParams,
-      );
-    }
     return DioConfig(
       baseUrl: includeApiPath ? ApiPrefs.getApiUrl() : '${ApiPrefs.getDomain()}/',
       baseHeaders: ApiPrefs.getHeaderMap(

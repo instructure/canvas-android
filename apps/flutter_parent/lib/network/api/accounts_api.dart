@@ -37,7 +37,7 @@ class AccountsApi {
   }
 
   Future<TermsOfService> getTermsOfServiceForAccount(String accountId, String domain) {
-    var dio = DioConfig.canvas(noHeaders: true).copyWith(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
+    var dio = DioConfig(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
     return fetch(dio.get('accounts/$accountId/terms_of_service'));
   }
 
@@ -53,7 +53,7 @@ class AccountsApi {
 
   Future<Response> createNewAccount(
       String accountId, String pairingCode, String fullname, String email, String password, String domain) async {
-    var dio = DioConfig.canvas(noHeaders: true).copyWith(baseUrl: 'https://$domain/api/v1/').dio;
+    var dio = DioConfig(baseUrl: 'https://$domain/api/v1/', forceRefresh: true).dio;
 
     var pairingCodeBody = PostPairingCode((b) => b..code = pairingCode);
     var userBody = PostUser((b) => b
@@ -70,14 +70,4 @@ class AccountsApi {
 
     return dio.post('accounts/$accountId/users', data: json.encode(serialize(postBody)));
   }
-/*
-  queryParameters: {
-      'user[name]': fullname,
-      'user[terms_of_use]': true,
-      'user[initial_enrollment]': 'observer',
-      'pairing_code[code]': pairingCode,
-      'pseudonym[unique_id]': email,
-      'pseudonym[password]': password
-    }
-   */
 }

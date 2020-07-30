@@ -1137,11 +1137,11 @@ class AppLocalizations {
 
   String get qrCreateAccountLabelPassword => Intl.message('Password');
 
-  String get qrCreateAccountHintName => Intl.message('Full Name...', desc: 'hint label for inside form field');
+  String get qrCreateAccountHintName => Intl.message('Full Name…', desc: 'hint label for inside form field');
 
-  String get qrCreateAccountHintEmail => Intl.message('Email...', desc: 'hint label for inside form field');
+  String get qrCreateAccountHintEmail => Intl.message('Email…', desc: 'hint label for inside form field');
 
-  String get qrCreateAccountHintPassword => Intl.message('Password...', desc: 'hint label for inside form field');
+  String get qrCreateAccountHintPassword => Intl.message('Password…', desc: 'hint label for inside form field');
 
   String get qrCreateAccountNameError => Intl.message('Please enter full name', desc: 'Error message for form field');
 
