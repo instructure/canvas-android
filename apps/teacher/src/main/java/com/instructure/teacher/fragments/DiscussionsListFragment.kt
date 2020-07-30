@@ -66,10 +66,18 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     override fun getPresenterFactory(): PresenterFactory<DiscussionListPresenter>  = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
 
-    override fun onPresenterPrepared(presenter: DiscussionListPresenter?) {
+    override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.discussionRecyclerView, R.id.emptyPandaView, emptyTitle)
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.discussionRecyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = emptyTitle
+        )
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

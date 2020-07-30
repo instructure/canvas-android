@@ -30,7 +30,7 @@ class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         TeacherPrefs.safeClearPrefs()
-        CanvasRecipientManager.getInstance(ContextKeeper.appContext).clearCache()
+        CanvasRecipientManager.getInstance().clearCache()
     }
 
     override fun createLoginIntent(context: Context): Intent {

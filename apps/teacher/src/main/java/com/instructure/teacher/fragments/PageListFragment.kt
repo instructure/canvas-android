@@ -59,9 +59,17 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     override fun layoutResId(): Int = R.layout.fragment_page_list
     override fun getRecyclerView(): RecyclerView = pageRecyclerView
     override fun getPresenterFactory(): PresenterFactory<PageListPresenter> = PageListPresenterFactory(mCanvasContext)
-    override fun onPresenterPrepared(presenter: PageListPresenter?) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.pageRecyclerView, R.id.emptyPandaView, getString(R.string.noPages))
+    override fun onPresenterPrepared(presenter: PageListPresenter) {
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.pageRecyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = getString(R.string.noPages)
+        )
 
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

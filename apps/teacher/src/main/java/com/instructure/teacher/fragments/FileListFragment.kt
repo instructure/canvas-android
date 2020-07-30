@@ -139,10 +139,17 @@ class FileListFragment : BaseSyncFragment<
     override fun getPresenterFactory() = FileListPresenterFactory(currentFolder, mCanvasContext)
     override fun getRecyclerView(): RecyclerView = fileListRecyclerView
 
-    override fun onPresenterPrepared(presenter: FileListPresenter?) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
-                presenter, R.id.swipeRefreshLayout, R.id.fileListRecyclerView, R.id.emptyPandaView,
-                getString(R.string.noFiles))
+    override fun onPresenterPrepared(presenter: FileListPresenter) {
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.fileListRecyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = getString(R.string.noFiles)
+        )
     }
 
     override fun onReadySetGo(presenter: FileListPresenter) {
