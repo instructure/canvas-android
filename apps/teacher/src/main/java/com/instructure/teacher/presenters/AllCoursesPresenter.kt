@@ -16,62 +16,61 @@
 
 package com.instructure.teacher.presenters
 
-import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.utils.hasActiveEnrollment
 import com.instructure.teacher.viewinterface.AllCoursesView
 import instructure.androidblueprint.SyncPresenter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import retrofit2.Response
 
 class AllCoursesPresenter : SyncPresenter<Course, AllCoursesView>(Course::class.java) {
+
+    private var loadJob: Job? = null
 
     init {
         EventBus.getDefault().register(this)
     }
 
     override fun loadData(forceNetwork: Boolean) {
-        if(forceNetwork) {
-            mFavoriteCoursesCallback.reset()
+        // Do nothing if we already have data and we're not forcing a refresh
+        if (data.size() > 0 && !forceNetwork) return
+
+        // Cancel existing job, if any
+        loadJob?.cancel()
+
+        // Start new job to load data
+        loadJob = GlobalScope.launch(Dispatchers.Main) {
             clearData()
-        } else if (data.size() > 0) {
-            return
-        }
-        viewCallback?.onRefreshStarted()
-        CourseManager.getCoursesTeacher(forceNetwork, mFavoriteCoursesCallback)
-    }
-
-    override fun refresh(forceNetwork: Boolean) {
-        mFavoriteCoursesCallback.reset()
-        clearData()
-        loadData(forceNetwork)
-    }
-
-    private val mFavoriteCoursesCallback = object : StatusCallback<List<Course>>() {
-        override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-            val courses = response.body() ?: return
-            val validCourses = courses.filter {
-                (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment()
+            viewCallback?.onRefreshStarted()
+            ColorApiHelper.awaitSync()
+            try {
+                val courses: List<Course> = awaitApi { CourseManager.getCoursesTeacher(forceNetwork, it) }
+                val validCourses = courses.filter {
+                    (it.isTeacher || it.isTA || it.isDesigner) && it.hasActiveEnrollment()
+                }
+                data.addOrUpdate(validCourses)
+            } catch (ignore: Throwable) {
             }
-            data.addOrUpdate(validCourses)
-        }
-
-        override fun onFinished(type: ApiType) {
             viewCallback?.onRefreshFinished()
             viewCallback?.checkIfEmpty()
         }
     }
 
+    override fun refresh(forceNetwork: Boolean) = loadData(forceNetwork)
+
     override fun compare(item1: Course, item2: Course): Int =
             item1.name.toLowerCase().compareTo(item2.name.toLowerCase())
 
     override fun onDestroyed() {
+        loadJob?.cancel()
         super.onDestroyed()
         EventBus.getDefault().unregister(this)
     }

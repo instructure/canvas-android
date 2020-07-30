@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncPresenter
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +43,7 @@ class CoursesPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) 
         onRefreshStarted()
 
         dashboardJob = GlobalScope.launch(Dispatchers.Main) {
+            ColorApiHelper.awaitSync()
             loadCourses(forceNetwork)
         }
     }
