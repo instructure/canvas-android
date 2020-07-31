@@ -72,13 +72,13 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
       expect(find.text('Full Name'), findsOneWidget);
-      expect(find.text('Full Name...'), findsOneWidget);
+      expect(find.text('Full Name…'), findsOneWidget);
 
       expect(find.text('Email Address'), findsOneWidget);
-      expect(find.text('Email...'), findsOneWidget);
+      expect(find.text('Email…'), findsOneWidget);
 
       expect(find.text('Password'), findsOneWidget);
-      expect(find.text('Password...'), findsOneWidget);
+      expect(find.text('Password…'), findsOneWidget);
 
       expect(find.byIcon(CanvasIcons.eye), findsOneWidget);
 
@@ -138,9 +138,9 @@ void main() {
 
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
-      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name...'), 'hodor');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Email...'), 'hodor@hodor.com');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Password...'), '12345678');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name…'), 'hodor');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor@hodor.com');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '12345678');
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
 
@@ -176,7 +176,7 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextFormField, 'Password...'), '1234567');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '1234567');
 
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
@@ -193,7 +193,7 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextFormField, 'Email...'), 'hodor');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor');
 
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
       await tester.pumpAndSettle();
@@ -321,9 +321,9 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name...'), 'hodor');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Email...'), 'hodor@hodor.com');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Password...'), '12345678');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name…'), 'hodor');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor@hodor.com');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '12345678');
 
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
 
@@ -344,9 +344,9 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name...'), 'hodor');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Email...'), 'hodor@hodor.com');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Password...'), '12345678');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name…'), 'hodor');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor@hodor.com');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '12345678');
 
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
 
@@ -371,9 +371,9 @@ void main() {
       await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name...'), 'hodor');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Email...'), 'hodor@hodor.com');
-      await tester.enterText(find.widgetWithText(TextFormField, 'Password...'), '12345678');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Full Name…'), 'hodor');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor@hodor.com');
+      await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '12345678');
 
       await tester.drag(find.byType(Scaffold), Offset(0, -500));
 
