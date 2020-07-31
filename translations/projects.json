@@ -18,12 +18,6 @@
     "extension": "xml"
   },
   {
-    "name": "parent",
-    "source_path": "apps/parent/src/main/res/values/strings.xml",
-    "resource_dir": "apps/parent/src/main/res",
-    "extension": "xml"
-  },
-  {
     "name": "rceditor",
     "source_path": "libs/rceditor/src/main/res/values/rce_strings.xml",
     "resource_dir": "libs/rceditor/src/main/res",
