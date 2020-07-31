@@ -59,14 +59,13 @@ class DioConfig {
     int retries,
   }) {
     return DioConfig(
-      baseUrl: baseUrl ?? this.baseUrl,
-      baseHeaders: baseHeaders ?? this.baseHeaders,
-      cacheMaxAge: cacheMaxAge ?? this.cacheMaxAge,
-      forceRefresh: forceRefresh ?? this.forceRefresh,
-      pageSize: pageSize ?? this.pageSize,
-      extraQueryParams: extraQueryParams ?? this.extraQueryParams,
-      retries: retries ?? this.retries
-    );
+        baseUrl: baseUrl ?? this.baseUrl,
+        baseHeaders: baseHeaders ?? this.baseHeaders,
+        cacheMaxAge: cacheMaxAge ?? this.cacheMaxAge,
+        forceRefresh: forceRefresh ?? this.forceRefresh,
+        pageSize: pageSize ?? this.pageSize,
+        extraQueryParams: extraQueryParams ?? this.extraQueryParams,
+        retries: retries ?? this.retries);
   }
 
   /// Creates a [Dio] instance using this configuration

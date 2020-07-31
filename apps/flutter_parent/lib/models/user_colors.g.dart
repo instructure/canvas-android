@@ -37,7 +37,6 @@ class _$UserColorsSerializer implements StructuredSerializer<UserColors> {
       final key = iterator.current as String;
       iterator.moveNext();
       final dynamic value = iterator.current;
-      if (value == null) continue;
       switch (key) {
         case 'custom_colors':
           result.customColors.replace(serializers.deserialize(value,

@@ -24,7 +24,6 @@ import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverViewS
 object PairObserverPresenter : Presenter<PairObserverModel, PairObserverViewState> {
     override fun present(model: PairObserverModel, context: Context): PairObserverViewState {
         if (model.isLoading) return PairObserverViewState.Loading
-
         if (!model.pairingCode.isValid() || model.accountId == null) return PairObserverViewState.Failed
 
         return PairObserverViewState.Loaded(

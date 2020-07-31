@@ -138,7 +138,13 @@ class LoginLandingScreen extends StatelessWidget {
   Widget _qrLogin(BuildContext context) {
     return InkWell(
         onTap: () {
-          locator<QRLoginUtil>().launchQRTutorial(context);
+          if (_isQRAccountCreationEnabled()) {
+            // Launches the choice between qr login and qr create
+            locator<QRLoginUtil>().launchQRTutorial(context);
+          } else {
+            // Just show the normal qr login tutorial
+            locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
+          }
         },
         child: Container(
           padding: EdgeInsets.all(12.0),
@@ -155,6 +161,12 @@ class LoginLandingScreen extends StatelessWidget {
                 ),
               ]),
         ));
+  }
+
+  bool _isQRAccountCreationEnabled() {
+    return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT).toLowerCase() ==
+            'true' &&
+        (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
   }
 
   bool _isQRLoginEnabled() {

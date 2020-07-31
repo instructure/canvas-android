@@ -72,7 +72,8 @@ void main() {
     reset(analytics);
     reset(interactor);
     reset(authApi);
-    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_login_enabled_parent': 'true'});
+    final mockRemoteConfig = setupMockRemoteConfig(
+        valueSettings: {'qr_login_enabled_parent': 'true', 'qr_account_creation_enabled': 'true'});
     await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
   });
 
