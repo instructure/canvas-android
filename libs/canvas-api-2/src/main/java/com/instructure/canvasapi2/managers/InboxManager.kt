@@ -123,6 +123,7 @@ object InboxManager {
         recipientIds: List<String>,
         includedMessageIds: LongArray,
         attachmentIds: LongArray,
+        contextId: String?,
         callback: StatusCallback<Conversation>
     ) {
         val adapter = RestBuilder(callback)
@@ -135,7 +136,8 @@ object InboxManager {
             recipientIds,
             message,
             includedMessageIds,
-            attachmentIds
+            attachmentIds,
+            contextId
         )
     }
 

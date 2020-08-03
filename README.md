@@ -16,6 +16,12 @@ Student | `./gradle/gradlew -p apps :student:assembleDevDebug`
 Teacher | `./gradle/gradlew -p apps :teacher:assembleDevDebug`
 Parent  | `./gradle/gradlew -p apps :parent:assembleDevDebug`
 
+## Running tests
+
+To run unit tests for Student and Teacher
+1. Open the Build Variants window and set the variant to `qaDebug` for the app that you wish to test.
+2. You can run the tests by tapping on the play button next to the test case or the test class.
+
 ## Applications:
 
 #### The Applications we have published on Google Play.

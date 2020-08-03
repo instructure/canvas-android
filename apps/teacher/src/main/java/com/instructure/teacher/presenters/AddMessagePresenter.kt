@@ -125,7 +125,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
 
         // Send message
         val encodedMessage = URLEncoder.encode(message, "UTF-8")
-        InboxManager.addMessage(conversation?.id ?: 0, encodedMessage, recipientIds, messageIds, attachmentIDs, mAddConversationCallback)
+        InboxManager.addMessage(conversation?.id ?: 0, encodedMessage, recipientIds, messageIds, attachmentIDs, conversation?.contextCode, mAddConversationCallback)
     }
 
     private val mAddConversationCallback = object : StatusCallback<Conversation>() {
