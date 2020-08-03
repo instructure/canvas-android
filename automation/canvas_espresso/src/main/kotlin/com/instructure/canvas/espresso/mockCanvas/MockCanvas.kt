@@ -314,7 +314,8 @@ fun MockCanvas.Companion.init(
         teacherCount: Int = 0,
         parentCount: Int = 0,
         accountNotificationCount: Int = 0,
-        createSections: Boolean = false
+        createSections: Boolean = false,
+        publishCourses: Boolean = true
 ): MockCanvas {
     data = MockCanvas()
 
@@ -340,7 +341,7 @@ fun MockCanvas.Companion.init(
                     totalStudents = studentUsers.count()
             )
         }
-        val course = data.addCourse(isFavorite = it < favoriteCourseCount, id = courseId, section = section)
+        val course = data.addCourse(isFavorite = it < favoriteCourseCount, id = courseId, section = section, isPublic = publishCourses)
     }
     repeat(pastCourseCount) { data.addCourse(concluded = true) }
 
@@ -401,7 +402,8 @@ fun MockCanvas.addCourse(
         isFavorite: Boolean = false,
         concluded: Boolean = false,
         id: Long = newItemId(),
-        section: Section? = null
+        section: Section? = null,
+        isPublic: Boolean = true
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
@@ -413,7 +415,8 @@ fun MockCanvas.addCourse(
             term = terms.values.first(),
             endAt = endAt,
             isFavorite = isFavorite,
-            sections = if(section != null) listOf(section) else listOf<Section>()
+            sections = if(section != null) listOf(section) else listOf<Section>(),
+            isPublic = isPublic
     )
     courses += course.id to course
 
