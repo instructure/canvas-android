@@ -57,7 +57,7 @@ class CoursesListPage : BasePage() {
         emptyMessageLayout.assertDisplayed()
     }
 
-    fun assertHasCourses(mCourses: List<CourseApiModel>) {
+    fun assertHasCourses(mCourses: List<Course>) {
         coursesLabel.assertDisplayed()
         seeAllCoursesLabel.assertDisplayed()
 

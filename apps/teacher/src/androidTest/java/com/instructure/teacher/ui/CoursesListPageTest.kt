@@ -17,49 +17,53 @@
 
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.TestRail
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.espresso.ditto.DittoMode
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class CoursesListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3108898")
     override fun displaysPageObjects() {
-        logIn()
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto(mode = DittoMode.LIVE)
     @TestRail(ID = "C3109494")
     fun displaysNoCoursesView() {
-        val data = seedData(teachers = 1, pastCourses = 1)
-        tokenLogin(data.teachersList[0])
+        val data = MockCanvas.init(teacherCount = 1, pastCourseCount = 1)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.assertDisplaysNoCoursesView()
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3108898")
     fun displaysCourseList() {
-        val data = seedData(teachers = 1, favoriteCourses = 3)
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = MockCanvas.init(teacherCount = 1, favoriteCourseCount = 3, courseCount = 3)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.assertHasCourses(data.favoriteCourses)
+        coursesListPage.assertHasCourses(data.courses.values.toList())
     }
 
     @Test
-    @Ditto
     fun displaysCourseListWithOnlyUnpublishedCourses() {
-        val data = seedData(teachers = 1, courses = 1, publishCourses = false)
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, publishCourses = false)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
-        coursesListPage.assertHasCourses(data.coursesList)
+        coursesListPage.assertHasCourses(data.courses.values.toList())
     }
 }
