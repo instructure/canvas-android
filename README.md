@@ -2,13 +2,29 @@
 
 Instructure's Open Source Android Code
 
-The open source code provided by the Android Team at Instructure. 
+The open source code provided by the Android Team at Instructure.
 
 ## Building
 
 First, install the Flutter SDK using the instructions found [here](https://flutter.dev/docs/get-started/install).
 
 Next, run `./open_source.sh` once. You may now use Gradle to build the apps. Prior to building the Student app for the first time, navigate to `libs/flutter_student_embed` and run the command `flutter pub get`.
+
+### Student and Teacher
+
+1. Open `apps/build.gradle` in Android Studio
+```
+Android Studio > Import Project > canvas-android/apps/build.gradle
+```
+
+2. Select the app from the list of configurations (`student` or `teacher`)
+3. Tap 'Run' (`^R`) to run the app
+
+### Parent
+
+1. Open `canvas-android/apps/flutter_parent` in Android Studio.
+2. Make sure the `main.dart` configuration is selected
+3. Tap 'Run' (`^R`) to run the app
 
 App | Command
 --- | ---
@@ -22,7 +38,7 @@ Parent  | `./gradle/gradlew -p apps :parent:assembleDevDebug`
 
 App | Description
 --- | ---
-[Canvas Student][canvas]      | Used by Students all over the world to be smarter, go faster, and do more. 
+[Canvas Student][canvas]      | Used by Students all over the world to be smarter, go faster, and do more.
 [Canvas Teacher][teacher]     | User by Teachers all over the world to update course content or grade on the go.
 [Canvas Parent][parent]       | Used by Parents all over the world to be parents.
 [Canvas Polls][polls]         | Used to take live polls. 
@@ -47,7 +63,7 @@ SoSeedyCLI   | CLI for using data seeding API manually
 SoSeedyGRPC  | gRPC server for using data seeding with iOS from Xcode
 Foosball     | A Foosball Application created and used interally to boost fun by over 120%.
 Login-Api    | *Deprecated* - The Library used to making logging in and getting a token relatively easy. (deprecated)
-Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable. 
+Login-Api-2  | The libarary used to make logging in and getting a token relative easy and is testable.
 PandaUtils   | The junk drawer of things.
 PandaRecyclerView | A fancy RecyclerView library that supports expanding and collapsing, pagination, and stuff like that.
 Rceditor     | A wrapper for rich content editing used in Canvas Teacher.
@@ -56,7 +72,7 @@ Rceditor     | A wrapper for rich content editing used in Canvas Teacher.
 
 ```
 Copyright (C) 2016 - present  Instructure, Inc.
- 
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, version 3 of the License.
@@ -78,9 +94,9 @@ Copyright (C) 2016 - present Instructure, Inc.
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
- 
+
     http://www.apache.org/licenses/LICENSE-2.0
- 
+
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
