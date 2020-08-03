@@ -42,6 +42,7 @@ class DiscussionEntryHtmlConverter {
             canReply: Boolean,
             canEdit: Boolean,
             allowLiking: Boolean,
+            showLikes: Boolean,
             canDelete: Boolean,
             reachedViewableEnd: Boolean,
             indent: Int,
@@ -50,7 +51,7 @@ class DiscussionEntryHtmlConverter {
             deletedText: String): String {
 
         val repliesButtonText = context.resources.getQuantityString(R.plurals.utils_discussionsReplies, discussionEntry.totalChildren, discussionEntry.totalChildren.localized)
-        val likeCountLabel = getLikeCountAllyText(context, discussionEntry)
+        val likeCountLabel = getLikeCountText(context, discussionEntry)
         val likeEntryLabel = context.resources.getString(R.string.likeEntryLabel)
 
         val htmlListener = getItemClickListener(discussionEntry.id.toString())
@@ -81,8 +82,10 @@ class DiscussionEntryHtmlConverter {
         var indentDisplay5 = "display: none;"
         val attachments = getAttachments(discussionEntry)
 
+        val showingLikes = if(showLikes) "display: flex;" else "display: none;"
         val liking = if(allowLiking) "display: flex;" else "display: none;"
-        val likingSum = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum.localized + ")"
+        val likeCountShort = if(discussionEntry.ratingSum == 0) "" else "(" + discussionEntry.ratingSum.localized + ")"
+        val likeSum = if(allowLiking) likeCountShort else likeCountLabel
         val likingIcon = if(discussionEntry._hasRated) likeImage else "file:///android_asset/discussion_unliked.png"
         val likingColor = if(discussionEntry._hasRated) brandColor else likeColor
 
@@ -178,11 +181,13 @@ class DiscussionEntryHtmlConverter {
         return template
                 .replace("__GROUP__", "display: block;")
                 .replace("__LIKE_ICON__", likingIcon)
-                .replace("__LIKE_COUNT__", likingSum)
+                .replace("__LIKE_COUNT_SHORT__", likeCountShort)
+                .replace("__LIKE_COUNT__", likeSum)
                 .replace("__LIKE_ARIA__", likeEntryLabel)
                 .replace("__LIKE_CHECKED_ARIA__", discussionEntry._hasRated.toString())
                 .replace("__LIKE_COUNT_ARIA__", likeCountLabel)
                 .replace("__LIKE_ALLOWED__", liking)
+                .replace("__SHOW_LIKES__", showingLikes)
                 .replace("__LIKE_COLOR__", colorToHex(likingColor))
                 .replace("__BRAND_COLOR__", colorToHex(brandColor))
                 .replace("__ATTACHMENTS_WRAPPER__", attachments)
@@ -283,7 +288,7 @@ class DiscussionEntryHtmlConverter {
     }
 
     companion object {
-        fun getLikeCountAllyText(context: Context, discussionEntry: DiscussionEntry): String {
+        fun getLikeCountText(context: Context, discussionEntry: DiscussionEntry): String {
             return if (discussionEntry.ratingSum == 0) "" else context.resources.getQuantityString(
                 R.plurals.likeCountLabel,
                 discussionEntry.ratingSum,
