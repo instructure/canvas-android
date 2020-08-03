@@ -15,18 +15,17 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.TestRail
 import com.instructure.espresso.randomString
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class CourseSettingsPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3108914")
     override fun displaysPageObjects() {
         navigateToCourseSettings()
@@ -34,18 +33,16 @@ class CourseSettingsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto(sequential = true)
     @TestRail(ID = "C3108915")
     fun editCourseName() {
         navigateToCourseSettings()
         courseSettingsPage.clickCourseName()
-        val newCourseName = mockableString("new-course-name") { randomString() }
+        val newCourseName = randomString()
         courseSettingsPage.editCourseName(newCourseName)
         courseSettingsPage.assertCourseNameChanged(newCourseName)
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3108916")
     fun editCourseHomePage() {
         navigateToCourseSettings()
@@ -55,9 +52,14 @@ class CourseSettingsPageTest : TeacherTest() {
     }
 
     private fun navigateToCourseSettings() {
-        val data = seedData(teachers = 1, favoriteCourses = 1)
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                favoriteCourseCount = 1,
+                courseCount = 1
+        )
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourseAtPosition(0)
         courseBrowserPage.clickSettingsButton()
     }

@@ -38,6 +38,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.ui.models.CanvasUser
+import org.hamcrest.CoreMatchers.allOf
+import org.hamcrest.Matchers.anyOf
 import java.io.*
 
 
@@ -372,7 +374,10 @@ fun TeacherTest.tokenLogin(domain: String, token: String, user: User) {
     }
     // Sometimes, especially on slow FTL emulators, it can take a bit for the dashboard to show
     // up after a token login.  Add some tolerance for that.
-    waitForMatcherWithSleeps(withId(R.id.courseRecyclerView), 20000)
+    waitForMatcherWithSleeps(anyOf(
+                allOf(withId(R.id.courseRecyclerView), isDisplayed()),
+                allOf(withId(R.id.emptyCoursesView), isDisplayed())),
+            20000)
             .check(matches(isDisplayed()))
     coursesListPage.assertPageObjects()
 }

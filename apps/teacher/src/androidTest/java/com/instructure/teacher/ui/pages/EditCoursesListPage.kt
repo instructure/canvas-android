@@ -21,6 +21,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Course
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.WaitForViewWithId
@@ -39,7 +40,7 @@ class EditCoursesListPage : BasePage() {
 
     private val star by WaitForViewWithId(R.id.star)
 
-    fun assertHasCourses(mCourses: List<CourseApiModel>) {
+    fun assertHasCourses(mCourses: List<Course>) {
 
         // Check that the recyclerview count matches course count
         favoritesRecyclerView.check(RecyclerViewItemCountAssertion(mCourses.size))
@@ -47,19 +48,19 @@ class EditCoursesListPage : BasePage() {
         for (course in mCourses) onView(withText(course.name)).assertDisplayed()
     }
 
-    fun assertCourseFavorited(course: CourseApiModel) {
+    fun assertCourseFavorited(course: Course) {
         val resources = InstrumentationRegistry.getTargetContext()
         val match = String.format(Locale.getDefault(), resources.getString(R.string.favorited_content_description), course.name, resources.getString(R.string.content_description_favorite))
         onViewWithText(course.name).check(matches(withContentDescription(match)))
     }
 
-    fun assertCourseUnfavorited(course: CourseApiModel) {
+    fun assertCourseUnfavorited(course: Course) {
         val resources = InstrumentationRegistry.getTargetContext()
         val match = String.format(Locale.getDefault(), resources.getString(R.string.favorited_content_description), course.name, resources.getString(R.string.content_description_not_favorite))
         onViewWithText(course.name).check(matches(withContentDescription(match)))
     }
 
-    fun toggleFavoritingCourse(course: CourseApiModel) {
+    fun toggleFavoritingCourse(course: Course) {
         waitForViewWithText(course.name).click()
     }
 }
