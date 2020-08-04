@@ -18,6 +18,10 @@ import 'package:built_collection/built_collection.dart';
 import 'package:built_value/iso_8601_date_time_serializer.dart';
 import 'package:built_value/serializer.dart';
 import 'package:built_value/standard_json_plugin.dart';
+import 'package:flutter_parent/models/account_creation_models/create_account_post_body.dart';
+import 'package:flutter_parent/models/account_creation_models/post_pairing_code.dart';
+import 'package:flutter_parent/models/account_creation_models/post_pseudonym.dart';
+import 'package:flutter_parent/models/account_creation_models/post_user.dart';
 import 'package:flutter_parent/models/account_notification.dart';
 import 'package:flutter_parent/models/account_permissions.dart';
 import 'package:flutter_parent/models/alert.dart';
@@ -113,6 +117,7 @@ part 'serializers.g.dart';
   CourseTab,
   CreateAssignmentInfo,
   CreateAssignmentWrapper,
+  CreateAccountPostBody,
   CreateCourseInfo,
   CreateCourseWrapper,
   CreateEnrollmentInfo,
@@ -141,6 +146,9 @@ part 'serializers.g.dart';
   Plannable,
   PlannerItem,
   PlannerSubmission,
+  PostPairingCode,
+  PostPseudonym,
+  PostUser,
   Pseudonym,
   Quiz,
   Recipient,

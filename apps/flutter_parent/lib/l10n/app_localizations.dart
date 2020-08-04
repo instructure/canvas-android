@@ -1129,6 +1129,71 @@ class AppLocalizations {
   String get qrLoginNewAccount => Intl.message('I don\'t have a Canvas account',
       desc: 'Option to select for users that don\'t have a canvas account');
 
+  String get qrCreateAccount => Intl.message('Create Account', desc: 'Button text for account creation confirmation');
+
+  String get qrCreateAccountLabelName => Intl.message('Full Name');
+
+  String get qrCreateAccountLabelEmail => Intl.message('Email Address');
+
+  String get qrCreateAccountLabelPassword => Intl.message('Password');
+
+  String get qrCreateAccountHintName => Intl.message('Full Name…', desc: 'hint label for inside form field');
+
+  String get qrCreateAccountHintEmail => Intl.message('Email…', desc: 'hint label for inside form field');
+
+  String get qrCreateAccountHintPassword => Intl.message('Password…', desc: 'hint label for inside form field');
+
+  String get qrCreateAccountNameError => Intl.message('Please enter full name', desc: 'Error message for form field');
+
+  String get qrCreateAccountEmailError =>
+      Intl.message('Please enter an email address', desc: 'Error message for form field');
+
+  String get qrCreateAccountInvalidEmailError =>
+      Intl.message('Please enter a valid email address', desc: 'Error message for form field');
+
+  String get qrCreateAccountPasswordError => Intl.message('Password is required', desc: 'Error message for form field');
+
+  String get qrCreateAccountPasswordLengthError =>
+      Intl.message('Password must contain at least 8 characters', desc: 'Error message for form field');
+
+  String qrCreateAccountTos(String termsOfService, String privacyPolicy) => Intl.message(
+      """By tapping 'Create Account', you agree to the $termsOfService and acknowledge the $privacyPolicy""",
+      name: 'qrCreateAccountTos',
+      desc: 'The text show on the account creation screen',
+      args: [termsOfService, privacyPolicy]);
+
+  String get qrCreateAccountTermsOfService => Intl.message(
+        'Terms of Service',
+        desc:
+            'Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable',
+      );
+
+  String get qrCreateAccountPrivacyPolicy => Intl.message(
+        'Privacy Policy',
+        desc:
+            'Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable',
+      );
+
+  String get qrCreateAccountViewPrivacy => Intl.message('View the Privacy Policy');
+
+  String get qrCreateAccountSignIn1 => Intl.message('Already have an account? ',
+      desc: 'Part of multiline text span, includes AccountSignIn1-2, in that order');
+
+  String get qrCreateAccountSignIn2 =>
+      Intl.message('Sign In', desc: 'Part of multiline text span, includes AccountSignIn1-2, in that order');
+
+  String get qrCreateAccountEyeOffSemantics =>
+      Intl.message('Hide Password', desc: 'content description for password hide button');
+
+  String get qrCreateAccountEyeSemantics =>
+      Intl.message('Show Password', desc: 'content description for password show button');
+
+  String get qrCreateAccountTosSemantics =>
+      Intl.message('Terms of Service Link', desc: 'content description for terms of service link');
+
+  String get qrCreateAccountPrivacySemantics =>
+      Intl.message('Privacy Policy Link', desc: 'content description for privacy policy link');
+
   /// Event details
 
   String get eventDetailsTitle => Intl.message('Event', desc: 'Title for the event details screen');

@@ -17,42 +17,38 @@
 
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class EditCoursesPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109572")
     override fun displaysPageObjects() {
-        logIn()
+        setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
         coursesListPage.openEditFavorites()
         editCoursesListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109572")
     fun displaysCourseList() {
-        val data = seedData(teachers = 1, courses = 1)
-        val courses = data.coursesList
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
+        val courses = data.courses.values.toList()
+        val teacher = data.teachers[0]
         coursesListPage.openEditFavorites()
         editCoursesListPage.assertHasCourses(courses)
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109574")
     fun favoriteCourse() {
-        val data = seedData(teachers = 1, courses = 1)
-        val courses = data.coursesList
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 0)
+        val courses = data.courses.values.toList()
+        val teacher = data.teachers[0]
 
         coursesListPage.openEditFavorites()
         editCoursesListPage.toggleFavoritingCourse(courses[0])
@@ -60,16 +56,22 @@ class EditCoursesPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109575")
     fun unfavoriteCourse() {
-        val data = seedData(teachers = 1, favoriteCourses = 1)
-        val courses = data.coursesList
-        val teacher = data.teachersList[0]
-        tokenLogin(teacher)
+        val data = setUpAndSignIn(numCourses = 1, numFavoriteCourses = 1)
+        val courses = data.courses.values.toList()
+        val teacher = data.teachers[0]
 
         coursesListPage.openEditFavorites()
         editCoursesListPage.toggleFavoritingCourse(courses[0])
         editCoursesListPage.assertCourseUnfavorited(courses[0])
+    }
+
+    private fun setUpAndSignIn(numCourses: Int = 1, numFavoriteCourses: Int = 1) : MockCanvas {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = numCourses, favoriteCourseCount = numFavoriteCourses)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+        return data
     }
 }

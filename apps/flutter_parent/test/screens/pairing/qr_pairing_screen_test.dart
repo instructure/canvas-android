@@ -107,6 +107,26 @@ void main() {
     verify(nav.replaceRoute(any, PandaRouter.rootSplash()));
   });
 
+  testWidgetsWithAccessibilityChecks('Navigates to account creation screen on success if is account creation',
+      (tester) async {
+    var code = '123';
+    var domain = 'hodor.com';
+    var accountId = '12345';
+    when(interactor.scanQRCode()).thenAnswer((_) async => QRPairingScanResult.success(code, domain, accountId));
+
+    await tester.pumpWidget(TestApp(DummyWidget()));
+    await tester.pumpAndSettle();
+
+    BuildContext context = tester.state(find.byType(DummyWidget)).context;
+    QuickNav().push(context, QRPairingScreen(isCreatingAccount: true));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(l10n.next.toUpperCase()));
+    await tester.pumpAndSettle();
+
+    verify(nav.pushRoute(any, PandaRouter.accountCreation(code, domain, accountId)));
+  });
+
   testWidgetsWithAccessibilityChecks('Displays camera permission error', (tester) async {
     await tester.pumpWidget(TestApp(QRPairingScreen()));
     await tester.pumpAndSettle();

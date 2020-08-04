@@ -25,6 +25,11 @@ import 'package:flutter_parent/utils/web_view_utils.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsOfUseScreen extends StatefulWidget {
+  final String accountId;
+  final String domain;
+
+  const TermsOfUseScreen({this.accountId, this.domain, Key key}) : super(key: key);
+
   @override
   _TermsOfUseScreenState createState() => _TermsOfUseScreenState();
 }
@@ -34,8 +39,14 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
 
   @override
   void initState() {
-    _tosFuture = locator<AccountsApi>().getTermsOfService();
+    _tosFuture = getTosFuture();
     super.initState();
+  }
+
+  Future<TermsOfService> getTosFuture() {
+    return (widget.accountId != null && widget.domain != null)
+        ? locator<AccountsApi>().getTermsOfServiceForAccount(widget.accountId, widget.domain)
+        : locator<AccountsApi>().getTermsOfService();
   }
 
   @override
@@ -57,7 +68,7 @@ class _TermsOfUseScreenState extends State<TermsOfUseScreen> {
               return ErrorPandaWidget(
                 L10n(context).errorLoadingTermsOfUse,
                 () => setState(() {
-                  _tosFuture = locator<AccountsApi>().getTermsOfService();
+                  _tosFuture = getTosFuture();
                 }),
               );
             }

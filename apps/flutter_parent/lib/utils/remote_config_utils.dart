@@ -21,6 +21,7 @@ enum RemoteConfigParams {
   TEST_STRING,
   MOBILE_VERIFY_BETA_ENABLED,
   QR_LOGIN_ENABLED_PARENT,
+  QR_ACCOUNT_CREATION_ENABLED_PARENT,
 }
 
 class RemoteConfigUtils {
@@ -120,6 +121,8 @@ class RemoteConfigUtils {
         return 'qr_login_enabled_parent';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
         return 'mobile_verify_beta_enabled';
+      case RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT:
+        return 'qr_account_creation_enabled';
       default:
         return '';
     }
@@ -136,6 +139,8 @@ class RemoteConfigUtils {
       case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
         return 'false';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
+        return 'false';
+      case RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT:
         return 'false';
       default:
         return '';

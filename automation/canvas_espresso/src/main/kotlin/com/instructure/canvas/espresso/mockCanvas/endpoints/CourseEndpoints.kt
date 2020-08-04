@@ -26,6 +26,8 @@ import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
 import java.util.*
 
@@ -80,6 +82,32 @@ object CourseEndpoint : Endpoint(
                 } else {
                     request.unauthorizedResponse()
                 }
+            }
+
+            PUT {
+                val course = data.courses[pathVars.courseId]!!
+
+                // Handle course name change request if present
+                val newCourseName = request.url().queryParameter("course[name]")
+                if(newCourseName != null) {
+                    course.globalName = newCourseName
+                }
+
+                // Handle course default view change request, if present
+                val newHomePage = request.url().queryParameter("course[default_view]")
+                if(newHomePage != null) {
+                    course.homePage = when(newHomePage) {
+                        "feed" -> Course.HomePage.HOME_FEED
+                        "assignments" -> Course.HomePage.HOME_ASSIGNMENTS
+                        "modules" -> Course.HomePage.HOME_MODULES
+                        "syllabus" -> Course.HomePage.HOME_SYLLABUS
+                        "wiki" -> Course.HomePage.HOME_WIKI
+                        else -> Course.HomePage.HOME_MODULES
+                    }
+                }
+
+                // Return the updated course
+                request.successResponse(course)
             }
         }
 )

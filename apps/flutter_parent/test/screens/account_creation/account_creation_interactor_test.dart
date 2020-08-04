@@ -13,7 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter_parent/network/api/accounts_api.dart';
-import 'package:flutter_parent/screens/domain_search/domain_search_interactor.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
@@ -35,21 +35,27 @@ void main() {
     reset(api);
   });
 
-  test('perform search calls the api', () {
-    final search = 'xyz';
-    DomainSearchInteractor().performSearch(search);
-    verify(api.searchDomains(search)).called(1);
+  test('getToSForAccount calls the api', () {
+    AccountCreationInteractor().getToSForAccount('123', 'hodor.com');
+    verify(api.getTermsOfServiceForAccount(any, any));
   });
 
-  test('open canvas guides calls the url launcher', () {
-    DomainSearchInteractor().openCanvasGuides();
+  test('createNewAccount calls the api', () {
+    AccountCreationInteractor().createNewAccount('123', '12345', 'hodor', 'hodor@hodor.com', 'hodor', 'hodor.com');
+    verify(api.createNewAccount(any, any, any, any, any, any));
+  });
+
+  test('launchDefaultToS calls the url launcher', () {
+    AccountCreationInteractor().launchDefaultToS();
     verify(
-      launcher.launch('https://community.canvaslms.com/docs/DOC-9902-canvas-parent-android-guide-table-of-contents'),
+      launcher.launch('https://www.instructure.com/policies/terms-of-use-canvas/'),
     ).called(1);
   });
 
-  test('open canvas support calls the url launcher', () {
-    DomainSearchInteractor().openCanvasSupport();
-    verify(launcher.launch('https://community.canvaslms.com/docs/DOC-17624-how-to-contact-canvas-support')).called(1);
+  test('launchPrivacyPolicy calls the url launcher', () {
+    AccountCreationInteractor().launchPrivacyPolicy();
+    verify(
+      launcher.launch('https://www.instructure.com/policies/privacy/'),
+    ).called(1);
   });
 }

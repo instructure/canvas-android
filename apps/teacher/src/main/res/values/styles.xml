@@ -71,9 +71,6 @@
         <item name="android:src">@drawable/vd_overflow</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
     <style name="Theme.BottomSheet" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/teacher_colorPrimary</item>
         <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
@@ -85,36 +82,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="SwitchStylePublished">
-        <item name="colorControlActivated">@color/publishedGreen</item>
-    </style>
-
-    <style name="SettingsItem">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:minHeight">?android:listPreferredItemHeightLarge</item>
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-    </style>
-
-    <style name="RecipientEditTextViewBase">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@null</item>
-        <item name="android:inputType">textEmailAddress|textMultiLine</item>
-        <item name="android:minHeight">@dimen/chip_height</item>
-        <item name="android:popupBackground">@null</item>
-        <item name="android:textAlignment" tools:ignore="NewApi">viewStart</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textDirection" tools:ignore="NewApi">locale</item>
-    </style>
-
-    <style name="RecipientEditTextView" parent="@style/RecipientEditTextViewBase">
-        <item name="android:imeOptions">actionNext|flagNoFullscreen</item>
     </style>
 
     <style name="ChipAutocompleteWrapperStyle">
@@ -188,36 +155,6 @@
         <item name="android:paddingLeft">8dp</item>
     </style>
 
-    <style name="DetailViewTitleBar">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:background">@color/teacher_colorPrimary</item>
-        <item name="android:lines">1</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-        <item name="android:paddingLeft">20dp</item>
-        <item name="android:paddingRight">12dp</item>
-        <item name="android:paddingTop">12dp</item>
-        <item name="android:paddingBottom">20dp</item>
-        <item name="android:gravity">center_vertical|start</item>
-        <item name="android:elevation">6dp</item>
-    </style>
-
-    <style name="DetailsViewText">
-        <item name="android:textColor">@color/teacher_colorPrimary</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:maxLines">2</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="DetailsViewText.Date">
-        <item name="android:textColor">#364A5A</item>
-    </style>
-
-    <style name="CourseNameAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/canvasDefaultButton</item>
-    </style>
-
     <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -227,29 +164,10 @@
         <item name="android:background">#00FFFFFF</item>
     </style>
 
-    <style name="EditCourseHomePageRadioButton" parent="Theme.AppCompat.Light">
-        <item name="colorControlNormal">@color/defaultPrimary</item>
-        <item name="colorControlActivated">@color/canvasDefaultButton</item>
-    </style>
-
     <style name="TextInputLabel" parent="TextAppearance.Design.Hint">
         <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textStyle">normal</item>
-    </style>
-    <style name="TextInputLabelModified" parent="TextAppearance.Design.Hint">
-        <item name="android:textSize">14sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="EditAssignmentSubSection" parent="TextFont.Medium">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingEnd">3dp</item>
-        <item name="android:paddingStart">3dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:textColor">@color/defaultTextGray</item>
     </style>
 
     <style name="OverrideViewTextInputLayoutDate">

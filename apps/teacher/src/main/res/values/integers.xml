@@ -16,10 +16,6 @@
   -->
 
 <resources>
-    <integer name="ripple_duration">400</integer>
-    <integer name="ripple_duration_short">200</integer>
-    <integer name="ripple_duration_very_short">100</integer>
-    <integer name="ripple_alpha">100</integer>
 
     <integer name="course_list_span_count">2</integer>
 </resources>

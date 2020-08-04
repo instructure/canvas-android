@@ -22,6 +22,7 @@ import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/router_error_screen.dart';
+import 'package:flutter_parent/screens/account_creation/account_creation_screen.dart';
 import 'package:flutter_parent/screens/announcements/announcement_details_screen.dart';
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
@@ -60,6 +61,12 @@ class PandaRouter {
   static final Router router = Router();
 
   static bool _isInitialized = false;
+
+  static final _accountCreation = '/account_creation';
+
+  static String accountCreation(String code, String domain, String accountId) {
+    return '$_accountCreation?${_RouterKeys.pairingCode}=${Uri.encodeQueryComponent(code)}&${_RouterKeys.domain}=${Uri.encodeQueryComponent(domain)}&${_RouterKeys.accountId}=${Uri.encodeQueryComponent(accountId)}';
+  }
 
   static final String alerts = '/alerts';
 
@@ -124,7 +131,7 @@ class PandaRouter {
   static String _qrPairing = '/qr_pairing';
 
   static String qrPairing({String pairingUri, bool isCreatingAccount = false}) {
-    if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount ? 1 : 0}';
+    if (isCreatingAccount) return '$_qrPairing?${_RouterKeys.isCreatingAccount}=${isCreatingAccount}';
     if (pairingUri == null) return _qrPairing;
     return '$_qrPairing?${_RouterKeys.qrPairingInfo}=${Uri.encodeQueryComponent(pairingUri)}';
   }
@@ -146,7 +153,13 @@ class PandaRouter {
 
   static String syllabus(String courseId) => '/courses/$courseId/assignments/syllabus';
 
-  static String termsOfUse() => '/terms_of_use';
+  static String termsOfUse({String accountId, String domain}) {
+    if (accountId != null && domain != null) {
+      return '/terms_of_use?${_RouterKeys.accountId}=${Uri.encodeQueryComponent(accountId)}&${_RouterKeys.url}=${Uri.encodeQueryComponent(domain)}';
+    } else {
+      return '/terms_of_use';
+    }
+  }
 
   static void init() {
     if (!_isInitialized) {
@@ -160,6 +173,7 @@ class PandaRouter {
       router.define(rootSplash(), handler: _rootSplashHandler);
 
       // INTERNAL
+      router.define(_accountCreation, handler: _accountCreationHandler);
       router.define(alerts, handler: _alertHandler);
       // RIP Alphabetical Order, syllabus needs to appear before assignment details, otherwise they conflict
       router.define(syllabus(':${_RouterKeys.courseId}'), handler: _syllabusHandler);
@@ -193,6 +207,13 @@ class PandaRouter {
   }
 
   // Handlers
+  static Handler _accountCreationHandler =
+      Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    var pairingInfo = QRPairingScanResult.success(
+        params[_RouterKeys.pairingCode][0], params[_RouterKeys.domain][0], params[_RouterKeys.accountId][0]);
+    return AccountCreationScreen(pairingInfo);
+  });
+
   static Handler _alertHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return DashboardScreen(
       startingPage: DashboardContentScreens.Alerts,
@@ -316,7 +337,7 @@ class PandaRouter {
 
   static Handler _qrPairingHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     var pairingInfo = QRUtils.parsePairingInfo(params[_RouterKeys.qrPairingInfo]?.elementAt(0));
-    var isCreatingAccount = params[_RouterKeys.isCreatingAccount]?.elementAt(0) == '1';
+    var isCreatingAccount = params[_RouterKeys.isCreatingAccount]?.elementAt(0) == 'true';
     if (pairingInfo is QRPairingInfo) {
       return QRPairingScreen(pairingInfo: pairingInfo);
     } else if (isCreatingAccount) {
@@ -350,7 +371,14 @@ class PandaRouter {
   });
 
   static Handler _termsOfUseHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-    return TermsOfUseScreen();
+    final domain = params[_RouterKeys.url]?.elementAt(0);
+    final accountId = params[_RouterKeys.accountId]?.elementAt(0);
+
+    if ((domain != null && domain.isNotEmpty) && (accountId != null && accountId.isNotEmpty)) {
+      return TermsOfUseScreen(accountId: accountId, domain: domain);
+    } else {
+      return TermsOfUseScreen();
+    }
   });
 
   /// Used to handled external urls routed by the intent-filter -> MainActivity.kt
@@ -461,10 +489,12 @@ class PandaRouter {
 
 /// Simple helper class to keep route keys/params consistently named
 class _RouterKeys {
+  static final accountId = 'accountId';
   static final accountNotificationId = 'accountNotificationId';
   static final announcementId = 'announcementId';
   static final assignmentId = 'assignmentId';
   static final authenticationProvider = 'authenticationProvider';
+  static final pairingCode = 'pairing_code';
   static final calendarStart = 'view_start';
   static final calendarView = 'view_name';
   static final courseId = 'courseId';

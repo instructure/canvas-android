@@ -15,23 +15,23 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class CourseBrowserPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3108909")
     override fun displaysPageObjects() {
-        val data = seedData(teachers = 1, favoriteCourses = 3)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        tokenLogin(teacher)
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 3, favoriteCourseCount = 3)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.assertPageObjects()
     }
