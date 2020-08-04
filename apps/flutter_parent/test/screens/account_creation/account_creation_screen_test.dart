@@ -18,6 +18,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_screen.dart';
@@ -42,6 +43,8 @@ import '../courses/course_summary_screen_test.dart';
 void main() {
   final interactor = MockAccountCreationInteractor();
   final mockNav = MockQuickNav();
+  final analytics = MockAnalytics();
+
   final tos = TermsOfService((b) => b
     ..accountId = '123'
     ..id = '123'
@@ -59,6 +62,7 @@ void main() {
   setupTestLocator((locator) {
     locator.registerFactory<AccountCreationInteractor>(() => interactor);
     locator.registerLazySingleton<QuickNav>(() => mockNav);
+    locator.registerLazySingleton<Analytics>(() => analytics);
   });
 
   setUp(() {
@@ -332,6 +336,10 @@ void main() {
       await tester.tap(find.byType(RaisedButton));
 
       verify(mockNav.pushRoute(any, PandaRouter.loginWeb('hodor.com', loginFlow: LoginFlow.normal)));
+      verify(analytics.logEvent(
+        AnalyticsEventConstants.QR_ACCOUNT_SUCCESS,
+        extras: {AnalyticsParamConstants.DOMAIN_PARAM: 'hodor.com'},
+      ));
     }, a11yExclusions: {A11yExclusion.minTapSize});
 
     testWidgetsWithAccessibilityChecks('account creation with invalid pairing code shows error', (tester) async {
@@ -359,6 +367,10 @@ void main() {
       await tester.pump();
 
       expect(find.text('Your code is incorrect or expired.', skipOffstage: false), findsOneWidget);
+      verify(analytics.logEvent(
+        AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
+        extras: {AnalyticsParamConstants.DOMAIN_PARAM: 'hodor.com'},
+      ));
     }, a11yExclusions: {A11yExclusion.minTapSize});
 
     testWidgetsWithAccessibilityChecks('account creation with invalid email shows error', (tester) async {
@@ -386,6 +398,10 @@ void main() {
       await tester.pump();
 
       expect(find.text('Please enter a valid email address'), findsOneWidget);
+      verify(analytics.logEvent(
+        AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
+        extras: {AnalyticsParamConstants.DOMAIN_PARAM: 'hodor.com'},
+      ));
     }, a11yExclusions: {A11yExclusion.minTapSize});
   });
 }
