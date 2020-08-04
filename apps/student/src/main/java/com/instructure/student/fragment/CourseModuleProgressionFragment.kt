@@ -291,7 +291,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
 
                 setupNextModule(getModuleItemGroup(currentPos))
-                setupPrevModuleName(getModuleItemGroup(currentPos))
 
                 // Update the module list fragment to show that these requirements are done,
                 ModuleUpdatedEvent(modules[groupPos]).post()
