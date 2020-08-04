@@ -112,7 +112,7 @@ class InboxFragment : ParentFragment() {
         val rootView = layoutInflater.inflate(R.layout.fragment_inbox, container, false)
         adapter = InboxAdapter(requireContext(), adapterToFragmentCallback)
         val recyclerView = configureRecyclerView(rootView, requireContext(), adapter, R.id.swipeRefreshLayout, R.id.emptyInboxView, R.id.inboxRecyclerView)
-        recyclerView.addItemDecoration(DividerDecoration(context))
+        recyclerView.addItemDecoration(DividerDecoration(requireContext()))
         return rootView
     }
 

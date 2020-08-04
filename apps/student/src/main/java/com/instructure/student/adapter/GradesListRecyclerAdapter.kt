@@ -42,8 +42,6 @@ import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
-import com.instructure.student.binders.EmptyBinder
-import com.instructure.student.binders.ExpandableHeaderBinder
 import com.instructure.student.binders.GradeBinder
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.holders.EmptyViewHolder
@@ -113,8 +111,8 @@ open class GradesListRecyclerAdapter(
     }
 
     override fun itemLayoutResId(viewType: Int): Int = when (viewType) {
-        Types.TYPE_HEADER -> ExpandableViewHolder.holderResId()
-        Types.TYPE_EMPTY_CELL -> EmptyViewHolder.holderResId()
+        Types.TYPE_HEADER -> ExpandableViewHolder.HOLDER_RES_ID
+        Types.TYPE_EMPTY_CELL -> EmptyViewHolder.HOLDER_RES_ID
         else -> GradeViewHolder.HOLDER_RES_ID
     }
 
@@ -336,11 +334,11 @@ open class GradesListRecyclerAdapter(
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup, isExpanded: Boolean) {
-        ExpandableHeaderBinder.bind(context, canvasContext, holder as ExpandableViewHolder, assignmentGroup, assignmentGroup.name, isExpanded, viewHolderHeaderClicked)
+        (holder as ExpandableViewHolder).bind(context, assignmentGroup, assignmentGroup.name, isExpanded, viewHolderHeaderClicked)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {
-        EmptyBinder.bind(holder as EmptyViewHolder, context.resources.getString(R.string.noAssignmentsInGroup))
+        (holder as EmptyViewHolder).bind(context.resources.getString(R.string.noAssignmentsInGroup))
     }
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<AssignmentGroup> {

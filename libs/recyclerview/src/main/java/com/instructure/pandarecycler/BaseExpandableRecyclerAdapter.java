@@ -19,7 +19,6 @@ package com.instructure.pandarecycler;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 
@@ -27,8 +26,9 @@ import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public abstract class BaseExpandableRecyclerAdapter<GROUP, ITEM, VIEWHOLDER extends RecyclerView.ViewHolder> extends PaginatedRecyclerAdapter<VIEWHOLDER> {
@@ -352,6 +352,11 @@ public abstract class BaseExpandableRecyclerAdapter<GROUP, ITEM, VIEWHOLDER exte
      */
     public int getGroupItemCount(GROUP group) {
         return mGroupSortedList.getGroupItemCount(group);
+    }
+
+    public int getGroupItemCount(int position) {
+        GROUP group = getGroup(position);
+        return getGroupItemCount(group);
     }
 
     /**

@@ -56,7 +56,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
         override fun setTermSpinnerState(isEnabled: Boolean) {
             termSpinner?.isEnabled = isEnabled
-            termAdapter?.setIsLoading(!isEnabled)
+            termAdapter?.isLoading = !isEnabled
             termAdapter?.notifyDataSetChanged()
         }
 
@@ -135,7 +135,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private fun setupGradingPeriods(periods: List<GradingPeriod>) {
         val adapter = TermSpinnerAdapter(
-            context,
+            requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
             periods + allTermsGradingPeriod
         )
@@ -148,10 +148,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                 } else {
                     recyclerAdapter.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
                     termSpinner.isEnabled = false
-                    adapter.setIsLoading(true)
+                    adapter.isLoading = true
                     adapter.notifyDataSetChanged()
                 }
-                recyclerAdapter.setCurrentGradingPeriod(adapter.getItem(i))
+                recyclerAdapter.currentGradingPeriod = adapter.getItem(i)
             }
 
             override fun onNothingSelected(adapterView: AdapterView<*>) {}

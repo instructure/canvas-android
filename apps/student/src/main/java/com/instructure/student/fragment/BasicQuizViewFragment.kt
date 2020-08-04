@@ -64,7 +64,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             getQuizDetails(apiURL!!)
         } else if (quiz != null && quiz?.lockInfo != null && CanvasContext.Type.isCourse(canvasContext) && !(canvasContext as Course).isTeacher) {
             // If the quiz is locked we don't care if they're a teacher
-            populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo, activity, R.string.lockedQuizDesc))
+            populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo!!, requireContext(), R.string.lockedQuizDesc))
         } else if (quizId != 0L) {
             getQuizDetails(quizId)
         } else {
@@ -186,7 +186,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private suspend fun processQuizDetails(url: String?) {
         // Only show the lock if submissions are empty, otherwise let them view their submission
         if (quiz?.lockInfo != null && awaitApi<QuizSubmissionResponse> { QuizManager.getFirstPageQuizSubmissions(canvasContext, quiz!!.id, true, it) }.quizSubmissions.isEmpty()) {
-            populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo, activity, R.string.lockedQuizDesc))
+            populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo!!, requireContext(), R.string.lockedQuizDesc))
         } else {
             val authenticatedUrl = tryOrNull {
                 awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url!!, it) }.sessionUrl

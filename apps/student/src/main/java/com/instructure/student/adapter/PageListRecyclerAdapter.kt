@@ -21,7 +21,6 @@ import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import com.instructure.student.R
-import com.instructure.student.binders.PageBinder
 import com.instructure.student.holders.FrontPageViewHolder
 import com.instructure.student.holders.PageViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -29,7 +28,6 @@ import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitPaginated
@@ -78,7 +76,7 @@ open class PageListRecyclerAdapter(
 
     override fun bindHolder(page: Page, holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is PageViewHolder -> PageBinder.bind(context, holder, page, canvasContext.color, adapterToFragmentCallback)
+            is PageViewHolder -> holder.bind(context, page, canvasContext.color, adapterToFragmentCallback)
             else -> FrontPageViewHolder.bind(context, holder as FrontPageViewHolder, page, adapterToFragmentCallback)
         }
     }

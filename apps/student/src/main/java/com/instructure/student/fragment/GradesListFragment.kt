@@ -193,7 +193,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             if (!isAdded) return
             termSpinner.isEnabled = isEnabled
             termAdapter?.let {
-                it.setIsLoading(!isEnabled)
+                it.isLoading = !isEnabled
                 it.notifyDataSetChanged()
             }
         }
@@ -251,7 +251,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                         if(termAdapter?.isEmpty == false) {
                             recyclerAdapter.loadAssignmentsForGradingPeriod(termAdapter?.getItem(position)?.id ?: 0, true)
                             termSpinner.isEnabled = false
-                            termAdapter?.setIsLoading(true)
+                            termAdapter?.isLoading = true
                             termAdapter?.notifyDataSetChanged()
                         }
                     }

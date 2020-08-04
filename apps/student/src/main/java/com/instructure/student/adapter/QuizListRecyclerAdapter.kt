@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitPaginated
@@ -36,7 +35,6 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.binders.ExpandableHeaderBinder
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.QuizViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -114,7 +112,7 @@ class QuizListRecyclerAdapter(
     }
 
     override fun itemLayoutResId(viewType: Int) = when (viewType) {
-        Types.TYPE_HEADER -> ExpandableViewHolder.holderResId()
+        Types.TYPE_HEADER -> ExpandableViewHolder.HOLDER_RES_ID
         else -> QuizViewHolder.HOLDER_RES_ID
     }
 
@@ -123,7 +121,7 @@ class QuizListRecyclerAdapter(
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, s: String, isExpanded: Boolean) {
-        ExpandableHeaderBinder.bind(context, canvasContext, holder as ExpandableViewHolder, s, s, isExpanded, viewHolderHeaderClicked)
+        (holder as ExpandableViewHolder).bind(context, s, s, isExpanded, viewHolderHeaderClicked)
     }
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<String> {

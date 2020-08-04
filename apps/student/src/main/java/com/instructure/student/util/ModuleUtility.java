@@ -234,7 +234,7 @@ public class ModuleUtility {
             pageName = URLDecoder.decode(pageName, "UTF-8");
         }
         catch (UnsupportedEncodingException e) {
-            LoggingUtility.LogConsole(e.getMessage());
+            LoggingUtility.logConsole(e.getMessage());
         }
 
         return pageName;

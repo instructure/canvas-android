@@ -39,17 +39,12 @@ import com.instructure.canvasapi2.utils.LinkHeaders;
 import com.instructure.pandarecycler.util.GroupSortedList;
 import com.instructure.pandarecycler.util.Types;
 import com.instructure.student.R;
-import com.instructure.student.binders.ExpandableHeaderBinder;
-import com.instructure.student.binders.NotificationBinder;
 import com.instructure.student.fragment.NotificationListFragment;
 import com.instructure.student.holders.ExpandableViewHolder;
 import com.instructure.student.holders.NotificationViewHolder;
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,9 +108,9 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
     @Override
     public int itemLayoutResId(int viewType) {
         if (viewType == Types.TYPE_HEADER) {
-            return ExpandableViewHolder.holderResId();
+            return ExpandableViewHolder.HOLDER_RES_ID;
         } else {
-            return NotificationViewHolder.holderResId();
+            return NotificationViewHolder.HOLDER_RES_ID;
         }
     }
 
@@ -126,12 +121,12 @@ public class NotificationListRecyclerAdapter extends ExpandableRecyclerAdapter<D
 
     @Override
     public void onBindChildHolder(RecyclerView.ViewHolder holder, Date date, StreamItem streamItem) {
-        NotificationBinder.Companion.bind(getContext(), (NotificationViewHolder) holder, streamItem, mNotificationCheckboxCallback, mAdapterToFragmentCallback);
+        ((NotificationViewHolder) holder).bind(getContext(), streamItem, mNotificationCheckboxCallback, mAdapterToFragmentCallback);
     }
 
     @Override
     public void onBindHeaderHolder(RecyclerView.ViewHolder holder, Date date, boolean isExpanded) {
-        ExpandableHeaderBinder.bind(getContext(), mCanvasContext, (ExpandableViewHolder) holder, date, DateHelper.getFormattedDate(getContext(), date), isExpanded, getViewHolderHeaderClicked());
+        ((ExpandableViewHolder) holder).bind(getContext(), date, DateHelper.getFormattedDate(getContext(), date), isExpanded, getViewHolderHeaderClicked());
     }
 
     // region Pagination
