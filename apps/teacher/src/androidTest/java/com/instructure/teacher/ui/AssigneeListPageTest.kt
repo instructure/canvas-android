@@ -15,38 +15,36 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SeedApi
-import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedAssignments
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class AssigneeListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToAssigneeListPage()
         assigneeListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysEveryoneItem() {
         getToAssigneeListPage()
         assigneeListPage.assertDisplaysAssigneeOptions(sectionNames = listOf("Everyone"))
     }
 
     @Test
-    @Ditto
     fun displaysStudentItems() {
-        val students = getToAssigneeListPage(students = 2).studentsList
+        val students = getToAssigneeListPage(students = 2).students
         assigneeListPage.assertDisplaysAssigneeOptions(
                 sectionNames = listOf("Everyone"),
                 studentNames = students.map { it.name }
@@ -54,9 +52,8 @@ class AssigneeListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun selectsStudents() {
-        val studentNames = getToAssigneeListPage(students = 2).studentsList.map{ it.name }
+        val studentNames = getToAssigneeListPage(students = 2).students.map{ it.name }
         assigneeListPage.assertDisplaysAssigneeOptions(
                 sectionNames = listOf("Everyone"),
                 studentNames = studentNames
@@ -70,32 +67,32 @@ class AssigneeListPageTest : TeacherTest() {
         for (assignee in expectedAssignees) assignText.assertContainsText(assignee)
     }
 
-    private fun getToAssigneeListPage(
-            assignments: Int = 1,
-            withDescription: Boolean = false,
-            lockAt: String = "",
-            unlockAt: String = "",
-            students: Int = 0,
-            submissionTypes: List<SubmissionType> = emptyList(),
-            submissions: List<Pair<String, Int>> = emptyList()): SeedApi.SeededDataApiModel {
+    private fun getToAssigneeListPage(students: Int = 0): MockCanvas {
 
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val assignment = seedAssignments(
-                assignments = assignments,
-                courseId = course.id,
-                withDescription = withDescription,
-                lockAt = lockAt,
-                unlockAt = unlockAt,
-                submissionTypes = submissionTypes,
-                teacherToken = teacher.token)
+        val data = MockCanvas.init(
+                teacherCount = 1,
+                courseCount = 1,
+                favoriteCourseCount = 1,
+                studentCount = students,
+                createSections = true)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
 
-        tokenLogin(teacher)
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val assignment = data.addAssignment(
+                    courseId = course.id,
+                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignment.assignmentList[0])
+        assignmentListPage.clickAssignment(assignment)
 
         assignmentDetailsPage.openEditPage()
         editAssignmentDetailsPage.editAssignees()

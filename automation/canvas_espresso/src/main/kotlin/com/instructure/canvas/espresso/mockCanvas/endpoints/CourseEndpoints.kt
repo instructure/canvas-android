@@ -72,6 +72,8 @@ object CourseEndpoint : Endpoint(
         Segment("users") to CourseUsersEndpoint,
         Segment("permissions") to CoursePermissionsEndpoint,
         Segment("lti_apps") to CourseLTIAppsEndpoint,
+        Segment("grading_periods") to CourseGradingPeriodsEndpoint,
+        Segment("sections") to CourseSectionsEndpoint,
 
         response = {
             GET {
@@ -111,6 +113,28 @@ object CourseEndpoint : Endpoint(
             }
         }
 )
+
+/**
+ * Endpoint for sections
+ */
+object CourseSectionsEndpoint : Endpoint( response = {
+    GET {
+        val courseId = pathVars.courseId
+        val sections = data.courses.values.filter {course -> course.id == courseId}.first().sections
+        request.successResponse(sections)
+    }
+})
+/**
+ * Endpoint for grading periods
+ *
+ * Returns an empty list if no grading periods have been created for the course
+ */
+object CourseGradingPeriodsEndpoint : Endpoint(response = {
+    GET {
+        val gradingPeriods = data.courseGradingPeriods[pathVars.courseId] ?: listOf<GradingPeriod>()
+        request.successResponse(GradingPeriodResponse(gradingPeriods))
+    }
+})
 
 /**
  * Endpoint for course LTI apps

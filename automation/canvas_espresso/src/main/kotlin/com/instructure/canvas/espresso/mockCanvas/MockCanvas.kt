@@ -106,6 +106,9 @@ class MockCanvas {
     /** Map of group ID to tabs for the group */
     val groupTabs = mutableMapOf<Long, MutableList<Tab>>()
 
+    /** Map of course id to grading period list */
+    val courseGradingPeriods = mutableMapOf<Long, MutableList<GradingPeriod>>()
+
     /** Map of course ID to pages for the course */
     val coursePages = mutableMapOf<Long, MutableList<Page>>()
 
@@ -315,7 +318,8 @@ fun MockCanvas.Companion.init(
         parentCount: Int = 0,
         accountNotificationCount: Int = 0,
         createSections: Boolean = false,
-        publishCourses: Boolean = true
+        publishCourses: Boolean = true,
+        withGradingPeriods: Boolean = false
 ): MockCanvas {
     data = MockCanvas()
 
@@ -331,7 +335,7 @@ fun MockCanvas.Companion.init(
     repeat(courseCount) {
         val courseId = data.newItemId()
         var section: Section? = null
-        if(createSections) {
+        if (createSections) {
             val sectionId = data.newItemId()
             section = Section(
                     id = sectionId,
@@ -341,8 +345,14 @@ fun MockCanvas.Companion.init(
                     totalStudents = studentUsers.count()
             )
         }
-        val course = data.addCourse(isFavorite = it < favoriteCourseCount, id = courseId, section = section, isPublic = publishCourses)
+        val course = data.addCourse(
+                isFavorite = it < favoriteCourseCount,
+                id = courseId,
+                section = section,
+                isPublic = publishCourses,
+                withGradingPeriod = withGradingPeriods)
     }
+
     repeat(pastCourseCount) { data.addCourse(concluded = true) }
 
     // Add enrollments
@@ -382,7 +392,7 @@ fun MockCanvas.Companion.init(
 /**
  * Not ideal, but in order to create realistic users, we have to add enrollments to them...
  * Unfortunately, in order to create enrollments, we have to have users first, hence the
- * copy nonesense seen here.
+ * copy nonsense seen here.
  */
 fun MockCanvas.updateUserEnrollments() {
     users.values.forEach { user ->
@@ -403,7 +413,8 @@ fun MockCanvas.addCourse(
         concluded: Boolean = false,
         id: Long = newItemId(),
         section: Section? = null,
-        isPublic: Boolean = true
+        isPublic: Boolean = true,
+        withGradingPeriod: Boolean = false
 ): Course {
     val randomCourseName = Randomizer.randomCourseName()
     val endAt = if (concluded) OffsetDateTime.now().minusWeeks(1).toApiString() else null
@@ -425,7 +436,22 @@ fun MockCanvas.addCourse(
     val quizzesTab = Tab(position = 1, label = "Quizzes", visibility = "public", tabId = Tab.QUIZZES_ID)
     courseTabs += course.id to mutableListOf(assignmentsTab, quizzesTab)
 
+    if(withGradingPeriod) {
+        val id = this.newItemId()
+        val gradingPeriod = GradingPeriod(id, "Grading Period $id")
+        addGradingPeriod(course.id, gradingPeriod)
+    }
+
     return course
+}
+
+fun MockCanvas.addGradingPeriod(courseId : Long, gradingPeriod: GradingPeriod) {
+    var gpList = courseGradingPeriods[courseId]
+    if(gpList == null) {
+        gpList = mutableListOf<GradingPeriod>()
+        courseGradingPeriods[courseId] = gpList
+    }
+    gpList.add(gradingPeriod)
 }
 
 /** Adds the provided permissions to the course */
@@ -651,41 +677,48 @@ fun MockCanvas.addAssignment(
         dueAt: String? = null,
         name: String = Randomizer.randomCourseName(),
         pointsPossible: Int = 10,
-        description: String = ""
+        description: String = "",
+        lockAt: String? = null,
+        unlockAt: String? = null,
+        withDescription: Boolean = false
 ) : Assignment {
     val assignmentId = newItemId()
     var assignment = Assignment(
-        id = assignmentId,
-        assignmentGroupId = assignmentGroupId,
-        courseId = courseId,
-        name = name,
-        submissionTypesRaw = listOf(submissionType.apiString),
-        lockInfo = lockInfo,
-        lockedForUser = lockInfo != null,
-        userSubmitted = userSubmitted,
-        dueAt = dueAt,
-        pointsPossible = pointsPossible.toDouble(),
-        description = description
+            id = assignmentId,
+            assignmentGroupId = assignmentGroupId,
+            courseId = courseId,
+            name = name,
+            submissionTypesRaw = listOf(submissionType.apiString),
+            lockInfo = lockInfo,
+            lockedForUser = lockInfo != null,
+            userSubmitted = userSubmitted,
+            dueAt = dueAt,
+            pointsPossible = pointsPossible.toDouble(),
+            description = description,
+            lockAt = lockAt,
+            unlockAt = unlockAt,
+            published = true,
+            allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
+            gradingType = "percent" // hard-code for now
     )
 
-    if(isQuizzesNext) {
+    if (isQuizzesNext) {
         assignment = assignment.copy(
-            url = "https://mobiledev.instructure.com/api/v1/courses/1567973/external_tools/sessionless_launch?assignment_id=24378681&launch_type=assessment"
+                url = "https://mobiledev.instructure.com/api/v1/courses/1567973/external_tools/sessionless_launch?assignment_id=24378681&launch_type=assessment"
         )
     }
 
     // Figure out which assignment group in which to track the assignment
     var assignmentGroupList = assignmentGroups[courseId]
-    if(assignmentGroupList == null) {
+    if (assignmentGroupList == null) {
         assignmentGroupList = mutableListOf<AssignmentGroup>()
-        assignmentGroups[courseId]= assignmentGroupList
+        assignmentGroups[courseId] = assignmentGroupList
     }
 
-    var group = assignmentGroupList.find {it.id == assignmentGroupId}
-    if(group == null) {
+    var group = assignmentGroupList.find { it.id == assignmentGroupId }
+    if (group == null) {
         assignmentGroupList.add(AssignmentGroup(id = assignmentGroupId, assignments = listOf(assignment)))
-    }
-    else {
+    } else {
         val newList = group.assignments.toMutableList()
         newList.add(assignment)
         val newGroup = group.copy(
