@@ -18,6 +18,7 @@ package com.instructure.teacher.ui
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.Assignment
@@ -27,7 +28,6 @@ import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_UPLOAD
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -45,11 +45,11 @@ class AssignmentDetailsPageTest : TeacherTest() {
     @Test
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
-//        getToAssignmentDetailsPage(
-//                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-//                students = 1,
-//                submissions = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = ONLINE_TEXT_ENTRY)))
-//        assignmentDetailsPage.assertPageObjects()
+        getToAssignmentDetailsPage(
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                students = 1,
+                withSubmission = true)
+        assignmentDetailsPage.assertPageObjects()
     }
 
     @Test
@@ -125,14 +125,14 @@ class AssignmentDetailsPageTest : TeacherTest() {
         assignmentDetailsPage.assertSubmissionTypeOnlineUpload()
     }
 
-//    @Test
-//    fun displaysSubmittedDonut() {
-//        getToAssignmentDetailsPage(
-//                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
-//                students = 1,
-//                submissions = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = ONLINE_TEXT_ENTRY)))
-//        assignmentDetailsPage.assertHasSubmitted()
-//    }
+    @Test
+    fun displaysSubmittedDonut() {
+        getToAssignmentDetailsPage(
+                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
+                students = 1,
+                withSubmission = true)
+        assignmentDetailsPage.assertHasSubmitted()
+    }
 
     @Test
     fun displaysNotSubmittedDonut() {
@@ -147,9 +147,8 @@ class AssignmentDetailsPageTest : TeacherTest() {
             submissionTypes: List<SubmissionType> = emptyList(),
             students: Int = 0,
             dueAt: String? = null,
-            submissions: List<SubmissionsApi.SubmissionSeedInfo> = emptyList()): Assignment {
+            withSubmission: Boolean = false): Assignment {
 
-        //val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = students)
         val teacher = data.teachers[0]
         val course = data.courses.values.first()
@@ -168,24 +167,15 @@ class AssignmentDetailsPageTest : TeacherTest() {
                 dueAt = dueAt
         )
 
-//        val assignment = seedAssignments(
-//                assignments = assignments,
-//                courseId = course.id,
-//                withDescription = withDescription,
-//                lockAt = lockAt,
-//                unlockAt = unlockAt,
-//                submissionTypes = submissionTypes,
-//                teacherToken = teacher.token)
-
-        // TODO
-//        if (!submissions.isEmpty()) {
-//            seedAssignmentSubmission(
-//                    submissionSeeds = submissions,
-//                    assignmentId = assignment.assignmentList[0].id,
-//                    courseId = course.id,
-//                    studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token
-//            )
-//        }
+        if(withSubmission) {
+            if(students == 0) {
+                throw Exception("Can't have withSubmission == true and student count == 0")
+            }
+            if(!submissionTypes.contains(ONLINE_TEXT_ENTRY)) {
+                throw Exception("If withSubmission == true, ONLINE_TEXT_ENTRY needs to be allowed")
+            }
+            data.addSubmissionForAssignment(assignment.id, data.students[0].id, "A submission")
+        }
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)

@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.SubmissionSummary
 
 /**
  * Endpoint for assignment index, for a course
@@ -40,6 +41,7 @@ object AssignmentIndexEndpoint : Endpoint(
  */
 object AssignmentEndpoint : Endpoint(
     Segment("submissions") to SubmissionIndexEndpoint,
+    Segment("submission_summary") to SubmissionSummaryEndpoint,
     response = {
         GET {
             val assignment = data.assignments[pathVars.assignmentId]
@@ -53,6 +55,26 @@ object AssignmentEndpoint : Endpoint(
         }
     }
 )
+
+/**
+ * Endpoint that returns a submission summary for a specified assignment
+ */
+object SubmissionSummaryEndpoint : Endpoint( response = {
+    GET {
+        val assignment = data.assignments[pathVars.assignmentId]
+        val courseId = pathVars.courseId
+        val studentCount = data.enrollments.values.filter {e -> e.courseId == courseId && e.isStudent}.size
+        val submissionCount = data.submissions[assignment?.id]?.size ?: 0
+        val gradedCount = data.submissions[assignment?.id]?.filter {submission -> submission.isGraded}?.size ?: 0
+        request.successResponse(
+                SubmissionSummary(
+                        notSubmitted = studentCount - submissionCount,
+                        graded = gradedCount,
+                        ungraded = submissionCount - gradedCount
+                )
+        )
+    }
+})
 
 /**
  * Endpoint for assignment groups for a course
