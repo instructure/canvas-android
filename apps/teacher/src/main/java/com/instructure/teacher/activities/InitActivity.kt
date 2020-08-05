@@ -270,12 +270,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItem_stopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_startMasquerading.setOnClickListener(navDrawerOnClick)
 
-        @Suppress("ConstantConditionIf")
-        if (BuildConfig.IS_ROBO_TESTING) {
-            navigationDrawerItem_changeUser.setVisible(false)
-            navigationDrawerItem_logout.setVisible(false)
-        }
-
         // Set up Color Overlay setting
         setUpColorOverlaySwitch()
 

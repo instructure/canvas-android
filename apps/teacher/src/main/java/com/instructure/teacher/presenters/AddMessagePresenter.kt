@@ -64,7 +64,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
                     }
 
                 }
-                viewCallback?.addCoursesAndGroups(courses, groups)
+                viewCallback?.addCoursesAndGroups(courses!!, groups!!)
             } catch (ignore: Throwable) {
             }
         }

@@ -103,9 +103,18 @@ class CourseBrowserFragment : BaseSyncFragment<
     }
 
     override fun onCreateView(view: View?) = Unit
-    override fun onPresenterPrepared(presenter: CourseBrowserPresenter?) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.courseBrowserRecyclerView, R.id.emptyView, getString(R.string.no_items_to_display_short))
+
+    override fun onPresenterPrepared(presenter: CourseBrowserPresenter) {
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.courseBrowserRecyclerView,
+            emptyViewResId = R.id.emptyView,
+            emptyViewText = getString(R.string.no_items_to_display_short)
+        )
         appBarLayout.addOnOffsetChangedListener(this)
         collapsingToolbarLayout.isTitleEnabled = false
     }

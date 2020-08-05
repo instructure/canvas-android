@@ -99,16 +99,13 @@ class EditFavoritesFragment : BaseSyncFragment<
 
     override fun getAdapter(): EditFavoritesAdapter {
         if (mAdapter == null) {
-            mAdapter = EditFavoritesAdapter(requireContext(), presenter, AdapterToEditFavoriteCoursesCallback {
-                canvasContext,
-                isFavorite -> presenter.setFavorite(canvasContext, isFavorite)
+            mAdapter = EditFavoritesAdapter(requireContext(), presenter, object : AdapterToEditFavoriteCoursesCallback {
+                override fun onRowClicked(canvasContext: CanvasContext, isFavorite: Boolean) {
+                    presenter.setFavorite(canvasContext, isFavorite)
+                }
             })
         }
         return mAdapter
-    }
-
-    override fun showMessage(messageResId: Int) {
-        Toast.makeText(requireContext(), messageResId, Toast.LENGTH_SHORT).show()
     }
 
     private fun setupToolbar() {

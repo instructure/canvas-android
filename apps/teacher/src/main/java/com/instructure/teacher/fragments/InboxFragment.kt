@@ -71,7 +71,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         }
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
-    override fun getPresenterFactory(): PresenterFactory<InboxPresenter> = InboxPresenterFactory()
+    override fun getPresenterFactory(): InboxPresenterFactory = InboxPresenterFactory()
     override fun onCreateView(view: View?) {}
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -184,15 +184,18 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         return mAdapter
     }
 
-    private val mAdapterCallback = AdapterToFragmentCallback<Conversation> { conversation, position ->
-        //we send a parcel copy so that we can properly propagate updates through our events
-        if (resources.getBoolean(R.bool.isDeviceTablet)) { //but tablets need reference, since the detail view remains in view
-            val args = MessageThreadFragment.createBundle(conversation, position, InboxApi.conversationScopeToString(presenter.scope))
-            RouteMatcher.route(requireContext(), Route(null, MessageThreadFragment::class.java, null, args))
-        } else { //phones use the parcel copy
-            val args = MessageThreadFragment.createBundle(conversation.parcelCopy(), position, InboxApi.conversationScopeToString(presenter.scope))
-            RouteMatcher.route(requireContext(), Route(null, MessageThreadFragment::class.java, null, args))
+    private val mAdapterCallback = object : AdapterToFragmentCallback<Conversation> {
+        override fun onRowClicked(model: Conversation, position: Int) {
+            //we send a parcel copy so that we can properly propagate updates through our events
+            if (resources.getBoolean(R.bool.isDeviceTablet)) { //but tablets need reference, since the detail view remains in view
+                val args = MessageThreadFragment.createBundle(model, position, InboxApi.conversationScopeToString(presenter.scope))
+                RouteMatcher.route(requireContext(), Route(null, MessageThreadFragment::class.java, null, args))
+            } else { //phones use the parcel copy
+                val args = MessageThreadFragment.createBundle(model.parcelCopy(), position, InboxApi.conversationScopeToString(presenter.scope))
+                RouteMatcher.route(requireContext(), Route(null, MessageThreadFragment::class.java, null, args))
+            }
         }
+
     }
 
     override fun onRefreshStarted() {

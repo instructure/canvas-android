@@ -103,9 +103,17 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         }
     }
 
-    override fun onPresenterPrepared(presenter: DueDatesPresenter?) {
-        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
+    override fun onPresenterPrepared(presenter: DueDatesPresenter) {
+        RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.recyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = getString(R.string.no_items_to_display_short)
+        )
         addSwipeToRefresh(swipeRefreshLayout)
     }
 

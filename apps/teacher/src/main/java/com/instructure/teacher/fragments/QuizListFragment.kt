@@ -63,9 +63,17 @@ class QuizListFragment : BaseExpandableSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_quiz_list
     override fun getRecyclerView(): RecyclerView = quizRecyclerView
     override fun getPresenterFactory(): PresenterFactory<QuizListPresenter> = QuizListPresenterFactory(mCanvasContext)
-    override fun onPresenterPrepared(presenter: QuizListPresenter?) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.quizRecyclerView, R.id.emptyPandaView, getString(R.string.noQuizzesSubtext))
+    override fun onPresenterPrepared(presenter: QuizListPresenter) {
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.quizRecyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = getString(R.string.noQuizzesSubtext)
+        )
     }
 
     override fun onCreateView(view: View) {

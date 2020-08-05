@@ -170,7 +170,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     }
 
     private val conversation: Conversation?
-        get() = presenter.conversation
+        get() = presenter.getConversation()
 
     override fun onStart() {
         super.onStart()
@@ -200,10 +200,11 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         emptyPandaView.setLoading()
     }
 
-    override fun getPresenterFactory(): PresenterFactory<MessageThreadPresenter> {
+    override fun getPresenterFactory(): MessageThreadPresenterFactory {
         if (arguments?.containsKey(Const.CONVERSATION_ID) == true) {
             // We are coming from a push notification
-            return MessageThreadPresenterFactory(nonNullArgs.getLong(Const.CONVERSATION_ID, 0)) // No way to know from the push notification where in the conversation we should be; position = 0
+            // No way to know from the push notification where in the conversation we should be; position = 0
+            return MessageThreadPresenterFactory(conversationId = nonNullArgs.getLong(Const.CONVERSATION_ID, 0))
         }
 
         return MessageThreadPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CONVERSATION) as Conversation, nonNullArgs.getInt(Const.POSITION))
@@ -330,31 +331,35 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
 
     private fun replyAllMessage() {
         val args = AddMessageFragment.createBundle(
-                true,
-                conversation!!,
-                presenter.participants,
-                presenter.getMessageChainForMessage(null), null)
+            isReply = true,
+            conversation = conversation!!,
+            participants = presenter.participants,
+            messages = presenter.getMessageChainForMessage(null),
+            currentMessage = null
+        )
         RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
     }
 
     // Same as reply all but scoped to a message
     private fun replyAllMessage(message: Message) {
         val args = AddMessageFragment.createBundle(
-                true,
-                conversation!!,
-                getMessageRecipientsForReplyAll(message),
-                presenter.getMessageChainForMessage(null),
-                message)
+            isReply = true,
+            conversation = conversation!!,
+            participants = getMessageRecipientsForReplyAll(message),
+            messages = presenter.getMessageChainForMessage(null),
+            currentMessage = message
+        )
         RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
     }
 
     private fun addMessage(message: Message, isReply: Boolean) {
         val args = AddMessageFragment.createBundle(
-                isReply,
-                conversation!!,
-                getMessageRecipientsForReply(message),
-                presenter.getMessageChainForMessage(message),
-                message)
+            isReply = isReply,
+            conversation = conversation!!,
+            participants = getMessageRecipientsForReply(message),
+            messages = presenter.getMessageChainForMessage(message),
+            currentMessage = message
+        )
         RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
     }
 

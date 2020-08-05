@@ -48,7 +48,6 @@ import com.instructure.teacher.presenters.AddMessagePresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.viewinterface.AddMessageView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_add_message.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -171,7 +170,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     override fun onPresenterPrepared(presenter: AddMessagePresenter) {}
 
-    override fun getPresenterFactory(): PresenterFactory<AddMessagePresenter> {
+    override fun getPresenterFactory(): AddMessagePresenterFactory {
         val conversation = arguments?.getParcelable<Conversation>(Const.CONVERSATION)
         val participants = arguments?.getParcelableArrayList<BasicUser>(KEY_PARTICIPANTS)
         val messages = arguments?.getParcelableArrayList<Message>(Const.MESSAGE)
@@ -263,7 +262,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     override fun addCoursesAndGroups(courses: ArrayList<Course>, groups: ArrayList<Group>) {
         val adapter = CanvasContextSpinnerAdapter.newAdapterInstance(requireContext(), courses, groups)
-        courseSpinner.adapter = NothingSelectedSpinnerAdapter(adapter, R.layout.spinner_item_nothing_selected, requireContext())
+        courseSpinner.adapter = NothingSelectedSpinnerAdapter(
+            adapter = adapter,
+            nothingSelectedLayout = R.layout.spinner_item_nothing_selected,
+            context = requireContext()
+        )
         if (selectedCourse != null) {
             courseSpinner.onItemSelectedListener = null // Prevent listener from firing when the selection is placed
             courseSpinner.setSelection(adapter.getPosition(selectedCourse) + 1, false) //  + 1 is for the nothingSelected position
@@ -532,12 +535,12 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_ID = "message_students_context_id"
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL = "message_students_is_personal"
 
-        fun createBundle(isReply: Boolean, conversation: Conversation, participants: ArrayList<BasicUser>, messages: ArrayList<Message>, currentMessage: Message?): Bundle =
+        fun createBundle(isReply: Boolean, conversation: Conversation, participants: ArrayList<BasicUser>, messages: List<Message>, currentMessage: Message?): Bundle =
                 Bundle().apply {
                     putBoolean(KEY_IS_REPLY, isReply)
                     putParcelable(Const.CONVERSATION, conversation)
                     putParcelableArrayList(KEY_PARTICIPANTS, participants)
-                    putParcelableArrayList(Const.MESSAGE, messages)
+                    putParcelableArrayList(Const.MESSAGE, ArrayList(messages))
                     putParcelable(Const.MESSAGE_TO_USER, currentMessage)
                 }
 
