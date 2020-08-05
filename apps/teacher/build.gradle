@@ -51,10 +51,6 @@ android {
 
         /* BuildConfig fields */
         buildConfigField "boolean", "IS_TESTING", "false"
-        buildConfigField "boolean", "IS_ROBO_TESTING", "false"
-        buildConfigField "String", "ROBO_USER_TOKEN", "\"\""
-        buildConfigField "String", "ROBO_USER_DOMAIN", "\"\""
-        buildConfigField "String", "ROBO_USER_JSON", "\"\""
 
         /* Release Versions */
         buildConfigField "boolean", "POINT_ONE", "true"
