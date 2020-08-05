@@ -21,6 +21,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/terms_of_service.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/account_creation/account_creation_interactor.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
@@ -414,11 +415,22 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
         if (response.statusCode == 200) {
           setState(() => _isLoading = false);
 
+          locator<Analytics>().logEvent(
+            AnalyticsEventConstants.QR_ACCOUNT_SUCCESS,
+            extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
+          );
+
           // Route them to the login page with their domain
           locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(widget.pairingInfo.domain));
         }
       } catch (e) {
         setState(() => _isLoading = false);
+
+        locator<Analytics>().logEvent(
+          AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
+          extras: {AnalyticsParamConstants.DOMAIN_PARAM: widget.pairingInfo.domain},
+        );
+
         if (e is DioError) {
           _handleDioError(e);
         } else {

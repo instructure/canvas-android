@@ -39,6 +39,8 @@ class AnalyticsEventConstants {
   static const QR_LOGIN_CLICKED = 'qr_code_login_clicked';
   static const QR_LOGIN_FAILURE = 'qr_code_login_failure';
   static const QR_LOGIN_SUCCESS = 'qr_code_login_success';
+  static const QR_ACCOUNT_FAILURE = 'qr_account_creation_failure';
+  static const QR_ACCOUNT_SUCCESS = 'qr_account_creation_success';
   static const RATING_DIALOG = 'rating_dialog';
   static const RATING_DIALOG_SHOW = 'rating_dialog_show';
   static const RATING_DIALOG_DONT_SHOW_AGAIN = 'rating_dialog_dont_show_again';
