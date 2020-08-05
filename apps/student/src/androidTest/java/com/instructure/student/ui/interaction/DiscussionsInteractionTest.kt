@@ -267,6 +267,43 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionDetailsPage.assertLikeCount(discussionEntry, 0)
     }
 
+    // Tests that like count is shown if only graders can like
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussionLikes_whenOnlyGradersCanRate() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course = data.courses.values.first()
+        val user = data.users.values.first()
+        val topicName = "Discussion where only graders can like"
+        val topicDescription = "likable discussion"
+        val replyMessage = "A grader liked me!"
+
+        val topicHeader = data.addDiscussionTopicToCourse(
+                course = course,
+                user = user,
+                topicTitle = topicName,
+                topicDescription = topicDescription,
+                allowRating = true,
+                onlyGradersCanRate = true
+        )
+        val discussionEntry = data.addReplyToDiscussion(
+                topicHeader = topicHeader,
+                user = user,
+                replyMessage = replyMessage,
+                ratingSum = 1
+        )
+
+        // Bring up discussion page
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed(topicName)
+        discussionListPage.selectTopic(topicName)
+
+        // Check that ratings show
+        discussionDetailsPage.assertFavoritingDisabled(discussionEntry)
+        discussionDetailsPage.assertLikeCount(discussionEntry, 1)
+    }
+
     // Tests that discussion entry liking is not available when disabled
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)

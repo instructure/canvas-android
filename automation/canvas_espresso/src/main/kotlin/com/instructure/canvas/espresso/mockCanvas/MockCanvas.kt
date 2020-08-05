@@ -1090,6 +1090,7 @@ fun MockCanvas.addDiscussionTopicToCourse(
         topicTitle: String = Randomizer.randomConversationSubject(),
         topicDescription: String = Randomizer.randomPageTitle(),
         allowRating: Boolean = true,
+        onlyGradersCanRate: Boolean = false,
         allowReplies: Boolean = true,
         allowAttachments: Boolean = true,
         attachment: RemoteFile? = null,
@@ -1110,6 +1111,7 @@ fun MockCanvas.addDiscussionTopicToCourse(
     topicHeader.author = DiscussionParticipant(id = user.id, displayName = user.name)
     topicHeader.published = true
     topicHeader.allowRating = allowRating
+    topicHeader.onlyGradersCanRate = onlyGradersCanRate
     topicHeader.permissions = DiscussionTopicPermission(attach = allowAttachments, reply = allowReplies)
     topicHeader.id = newItemId()
     topicHeader.postedDate = Calendar.getInstance().time
@@ -1147,7 +1149,8 @@ fun MockCanvas.addReplyToDiscussion(
         topicHeader: DiscussionTopicHeader,
         user: User,
         replyMessage: String = Faker.instance().chuckNorris().fact(),
-        attachment: RemoteFile? = null
+        attachment: RemoteFile? = null,
+        ratingSum: Int = 0
 ) : DiscussionEntry {
     val topic = discussionTopics[topicHeader.id]
     val entry = DiscussionEntry(
@@ -1158,7 +1161,8 @@ fun MockCanvas.addReplyToDiscussion(
                     id = user.id,
                     displayName = user.name
             ),
-            createdAt = Calendar.getInstance().time.toString()
+            createdAt = Calendar.getInstance().time.toString(),
+            ratingSum = ratingSum
     )
     if(attachment != null) {
         entry.attachments = mutableListOf(attachment)

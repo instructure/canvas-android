@@ -305,6 +305,7 @@ object DiscussionUtils {
                 allowReplies(canvasContext, discussionTopicHeader),
                 allowEditing(canvasContext),
                 allowLiking(canvasContext, discussionTopicHeader),
+                discussionTopicHeader.allowRating,
                 allowDeleting(canvasContext),
                 reachedViewableEnd,
                 indent,
@@ -391,16 +392,10 @@ object DiscussionUtils {
     }
 
     private fun allowLiking(canvasContext: CanvasContext?, header: DiscussionTopicHeader): Boolean {
-        if (header.allowRating) {
-            if (header.onlyGradersCanRate) {
-                if (canvasContext?.type == CanvasContext.Type.COURSE) {
-                    return (canvasContext as Course).isTeacher || canvasContext.isTA
-                }
-            } else {
-                return true
-            }
-        }
-        return false
+        val isGrader = ((canvasContext as Course).isTeacher || canvasContext.isTA)
+        return header.allowRating && (
+            !header.onlyGradersCanRate || isGrader
+        )
     }
 
     private fun allowDeleting(canvasContext: CanvasContext?): Boolean {
