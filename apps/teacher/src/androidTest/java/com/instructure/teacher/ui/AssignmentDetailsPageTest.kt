@@ -35,9 +35,6 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
-import okreplay.DittoResponseMod
-import okreplay.JsonObjectResponseMod
-import okreplay.JsonObjectValueMod
 import org.junit.Test
 
 class AssignmentDetailsPageTest : TeacherTest() {
@@ -174,7 +171,12 @@ class AssignmentDetailsPageTest : TeacherTest() {
             if(!submissionTypes.contains(ONLINE_TEXT_ENTRY)) {
                 throw Exception("If withSubmission == true, ONLINE_TEXT_ENTRY needs to be allowed")
             }
-            data.addSubmissionForAssignment(assignment.id, data.students[0].id, "A submission")
+            data.addSubmissionForAssignment(
+                    assignmentId = assignment.id,
+                    userId = data.students[0].id,
+                    type = "online_text_entry",
+                    body = "A submission"
+            )
         }
 
         val token = data.tokenFor(teacher)!!
@@ -184,14 +186,6 @@ class AssignmentDetailsPageTest : TeacherTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.waitForRender()
         return assignment
-    }
-
-    private fun getAssignmentLockDateMod(dateString: String): DittoResponseMod {
-        return JsonObjectResponseMod(
-            Regex("""(.*)/api/v1/courses/\d+/assignments/\d+\?(.*)"""),
-            JsonObjectValueMod("lock_at", dateString),
-            JsonObjectValueMod("all_dates[0]:lock_at", dateString)
-        )
     }
 
 }

@@ -28,11 +28,14 @@ import com.instructure.canvasapi2.models.canvadocs.CanvaDocInkList
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.toDate
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import okhttp3.mockwebserver.RecordedRequest
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.OffsetDateTime
+import java.time.LocalDate.now
 import java.util.*
 
 class MockCanvas {
@@ -747,6 +750,9 @@ fun MockCanvas.addSubmissionForAssignment(
         attachment: Attachment? = null,
         comment: SubmissionComment? = null
 ) : Submission {
+    val assignment = assignments[assignmentId]!!
+    val assignmentDueDate = assignment.dueAt?.toDate()
+    val isLate = (assignmentDueDate != null) && assignmentDueDate.before(Calendar.getInstance().time)
     val submission = Submission(
             id = newItemId(),
             submittedAt = Date(),
@@ -758,7 +764,7 @@ fun MockCanvas.addSubmissionForAssignment(
             submissionType = type,
             assignmentId = assignmentId,
             userId = userId,
-            late = false,
+            late = isLate,
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
             submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
             mediaContentType = if(attachment != null) attachment.contentType else null
@@ -777,7 +783,7 @@ fun MockCanvas.addSubmissionForAssignment(
             submissionType = type,
             assignmentId = assignmentId,
             userId = userId,
-            late = false,
+            late = isLate,
             submissionHistory = listOf(submission),
             attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
             submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
@@ -791,8 +797,7 @@ fun MockCanvas.addSubmissionForAssignment(
     }
     submissionList.add(rootSubmission)
 
-    val assignment = assignments[assignmentId]
-    assignment?.submission = rootSubmission
+    assignment.submission = rootSubmission
 
     return rootSubmission
 }
@@ -836,7 +841,8 @@ fun MockCanvas.addEnrollment(
             userId = user.id,
             observedUser = observedUser,
             grades = Grades(currentScore = 88.1, currentGrade = "B+"),
-            courseSectionId = courseSectionId
+            courseSectionId = courseSectionId,
+            user = user
     )
     enrollments += enrollment.id to enrollment
     course.enrollments?.add(enrollment) // You won't see grades in the dashboard unless the course has enrollments

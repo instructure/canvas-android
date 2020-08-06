@@ -74,6 +74,7 @@ object CourseEndpoint : Endpoint(
         Segment("lti_apps") to CourseLTIAppsEndpoint,
         Segment("grading_periods") to CourseGradingPeriodsEndpoint,
         Segment("sections") to CourseSectionsEndpoint,
+        Segment("enrollments") to CourseEnrollmentsEndpoint,
 
         response = {
             GET {
@@ -114,6 +115,17 @@ object CourseEndpoint : Endpoint(
         }
 )
 
+/**
+ * Endpoint for course enrollments
+ */
+object CourseEnrollmentsEndpoint : Endpoint( response = {
+    GET {
+        // TODO: Pay closer attention to query variables (e.g., "include[]=avatar_url", "state[]=active")
+        val courseId = pathVars.courseId
+        val courseEnrollments =  data.enrollments.values.filter {e -> e.courseId == courseId}
+        request.successResponse(courseEnrollments)
+    }
+})
 /**
  * Endpoint for sections
  */

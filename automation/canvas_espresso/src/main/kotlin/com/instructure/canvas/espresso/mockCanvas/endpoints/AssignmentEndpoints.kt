@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.GradeableStudent
 import com.instructure.canvasapi2.models.SubmissionSummary
 
 /**
@@ -42,6 +43,7 @@ object AssignmentIndexEndpoint : Endpoint(
 object AssignmentEndpoint : Endpoint(
     Segment("submissions") to SubmissionIndexEndpoint,
     Segment("submission_summary") to SubmissionSummaryEndpoint,
+    Segment("gradeable_students") to GradeableStudentsEndpoint,
     response = {
         GET {
             val assignment = data.assignments[pathVars.assignmentId]
@@ -56,6 +58,19 @@ object AssignmentEndpoint : Endpoint(
     }
 )
 
+/**
+ * Endpoint that returns gradeable students for an assignment
+ */
+object GradeableStudentsEndpoint : Endpoint ( response = {
+    GET {
+        val assignment = data.assignments[pathVars.assignmentId]
+        val courseId = pathVars.courseId
+        val gradeableStudents = data.enrollments.values
+                        .filter {e -> e.courseId == courseId && e.isStudent}
+                        .map {e -> GradeableStudent(id = e.userId, displayName = e.user?.shortName ?: "", pronouns = e.user?.pronouns)}
+        request.successResponse(gradeableStudents)
+    }
+})
 /**
  * Endpoint that returns a submission summary for a specified assignment
  */
