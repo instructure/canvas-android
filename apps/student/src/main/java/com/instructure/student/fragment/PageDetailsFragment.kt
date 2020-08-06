@@ -105,9 +105,19 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean {
+                return !RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
+            }
+            override fun launchInternalWebViewFragment(url: String) {
+                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, isLTITool))
+            }
+        }
+        /*
+        getCanvasWebView()?.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
             override fun launchInternalWebViewFragment(url: String) = InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(canvasContext, url, isLTITool))
         }
+         */
 
         // Add to the webview client for clearing webview history after an update to prevent going back to old data
         val callback = getCanvasWebView()?.canvasWebViewClientCallback
