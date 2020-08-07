@@ -71,7 +71,7 @@ object InboxApi {
         fun deleteMessages(@Path("conversationId") conversationId: Long, @Query("remove[]") messageIds: List<Long>): Call<Conversation>
 
         @POST("conversations/{conversationId}/add_message?group_conversation=true")
-        fun addMessage(@Path("conversationId") conversationId: Long, @Query("recipients[]") recipientIds: List<String>, @Query(value = "body", encoded = true) body: String, @Query("included_messages[]") includedMessageIds: LongArray, @Query("attachment_ids[]") attachmentIds: LongArray): Call<Conversation>
+        fun addMessage(@Path("conversationId") conversationId: Long, @Query("recipients[]") recipientIds: List<String>, @Query(value = "body", encoded = true) body: String, @Query("included_messages[]") includedMessageIds: LongArray, @Query("attachment_ids[]") attachmentIds: LongArray, @Query("context_code") contextCode: String?): Call<Conversation>
 
         @PUT("conversations")
         fun markConversationAsUnread(@Query("conversation_ids[]") conversationId: Long, @Query("event") conversationEvent: String): Call<Void>
@@ -130,8 +130,8 @@ object InboxApi {
         callback.addCall(adapter.build(InboxInterface::class.java, params).deleteMessages(conversationId, messageIds)).enqueue(callback)
     }
 
-    fun addMessage(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long, recipientIds: List<String>, message: String, includedMessageIds: LongArray, attachmentIds: LongArray) {
-        callback.addCall(adapter.build(InboxInterface::class.java, params).addMessage(conversationId, recipientIds, message, includedMessageIds, attachmentIds)).enqueue(callback)
+    fun addMessage(adapter: RestBuilder, callback: StatusCallback<Conversation>, params: RestParams, conversationId: Long, recipientIds: List<String>, message: String, includedMessageIds: LongArray, attachmentIds: LongArray, contextCode: String?) {
+        callback.addCall(adapter.build(InboxInterface::class.java, params).addMessage(conversationId, recipientIds, message, includedMessageIds, attachmentIds, contextCode)).enqueue(callback)
     }
 
     fun markConversationAsUnread(adapter: RestBuilder, callback: StatusCallback<Void>, params: RestParams, conversationId: Long, conversationEvent: String) {

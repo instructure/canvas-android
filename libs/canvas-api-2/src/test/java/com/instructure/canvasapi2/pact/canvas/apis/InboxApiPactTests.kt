@@ -348,7 +348,8 @@ class InboxApiPactTests : ApiPactTestBase() {
                 recipientIds = listOf("8","9"),
                 body="addedMessageBody",
                 includedMessageIds=longArrayOf(),
-                attachmentIds=longArrayOf())
+                attachmentIds=longArrayOf(),
+                contextCode=null)
         val addMessageResult = addMessageCall.execute()
 
         assertQueryParamsAndPath(addMessageCall, addMessageQuery, addMessagePath)
