@@ -70,6 +70,7 @@ class SettingsInteractionTest : StudentTest() {
     }
 
     // Should open the Canvas guides in a WebView
+    @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_searchCanvasGuides() {
