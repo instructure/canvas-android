@@ -30,9 +30,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.validOrNull
-import com.instructure.pandautils.utils.ColorUtils
-import com.instructure.pandautils.utils.DisplayGrade
-import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.util.StringUtilities
 
@@ -41,29 +39,11 @@ open class BaseBinder {
 
         private const val NO_GRADE_INDICATOR = "-"
 
-        fun setVisible(v: View?) {
-            if (v == null) return
-            v.visibility = View.VISIBLE
-        }
+        fun setVisible(v: View?) = v?.setVisible()
 
-        fun setInvisible(v: View?) {
-            if (v == null) return
-            v.visibility = View.INVISIBLE
-        }
+        fun setInvisible(v: View?) = v?.setInvisible()
 
-        fun setGone(v: View?) {
-            if (v == null) return
-            v.visibility = View.GONE
-        }
-
-        fun ifHasTextSetVisibleElseGone(v: TextView?) {
-            if (v == null) return
-            if (TextUtils.isEmpty(v.text)) {
-                setGone(v)
-            } else {
-                setVisible(v)
-            }
-        }
+        fun setGone(v: View?) = v?.setGone()
 
         fun getHtmlAsText(html: String?): String? {
             return if (!html.isNullOrBlank()) {
@@ -141,13 +121,8 @@ open class BaseBinder {
             }
 
             // Numeric grade
-            if (StringUtilities.isStringNumeric(submission.grade!!, true)) {
-                val parsedGrade = grade.toDoubleOrNull()
-                val formattedGrade = when {
-                    parsedGrade != null -> NumberHelper.formatDecimal(parsedGrade, 2, true)
-                    '.' in grade -> grade.take(grade.lastIndexOf('.') + 3)
-                    else -> grade
-                }
+            submission.grade?.toDoubleOrNull()?.let { parsedGrade ->
+                val formattedGrade = NumberHelper.formatDecimal(parsedGrade, 2, true)
                 return DisplayGrade(
                     context.getString(
                         R.string.gradeFormatScoreOutOfPointsPossible,

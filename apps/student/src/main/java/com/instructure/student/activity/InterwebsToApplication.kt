@@ -76,7 +76,7 @@ class InterwebsToApplication : AppCompatActivity() {
             val host = data.host.orEmpty() // example: "mobiledev.instructure.com"
 
             // Do some logging
-            LoggingUtility.Log(this@InterwebsToApplication, Log.WARN, data.toString())
+            LoggingUtility.log(Log.WARN, data.toString())
 
             val token = ApiPrefs.getValidToken()
             val signedIn = token.isNotEmpty()

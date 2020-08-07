@@ -14,46 +14,35 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.student.holders
 
 import android.content.Context
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.Page
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.MasteryPathAssignment
+import com.instructure.pandautils.utils.ColorKeeper.getColoredDrawable
 import com.instructure.student.R
+import com.instructure.student.binders.BaseBinder.Companion.getAssignmentIcon
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.android.synthetic.main.viewholder_page.view.*
+import kotlinx.android.synthetic.main.viewholder_mastery_paths_assignment.view.*
 
-class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+class MasteryAssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(
         context: Context,
-        page: Page,
+        masteryPathAssignment: MasteryPathAssignment,
         courseColor: Int,
-        adapterToFragmentCallback: AdapterToFragmentCallback<Page>
+        adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
     ) = with(itemView) {
-        title.text = page.title
-
-        if (page.frontPage) {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_pages, courseColor))
-        } else {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, courseColor))
+        title.text = masteryPathAssignment.model!!.name
+        val drawable = getAssignmentIcon(masteryPathAssignment.model)
+        icon.setImageDrawable(getColoredDrawable(context, drawable, courseColor))
+        rootView.setOnClickListener {
+            adapterToFragmentCallback.onRowClicked(masteryPathAssignment.model!!, 0, true)
         }
-
-        modified.text = String.format(
-            context.getString(R.string.lastModified),
-            DateHelper.getFormattedDate(context, page.updatedAt)
-        )
-
-        setOnClickListener { adapterToFragmentCallback.onRowClicked(page, adapterPosition, true) }
     }
 
     companion object {
-        const val HOLDER_RES_ID: Int = R.layout.viewholder_page
+        const val HOLDER_RES_ID: Int = R.layout.viewholder_mastery_paths_assignment
     }
 }

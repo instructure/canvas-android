@@ -22,8 +22,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Point
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -63,10 +61,8 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.activity.VideoViewActivity
 import com.instructure.student.adapter.ExpandableRecyclerAdapter
-import com.instructure.student.decorations.DividerItemDecoration
 import com.instructure.student.decorations.ExpandableGridSpacingDecorator
 import com.instructure.student.decorations.GridSpacingDecorator
-import com.instructure.student.interfaces.ConfigureRecyclerView
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.LoggingUtility
 import com.instructure.student.util.StudentPrefs
@@ -75,7 +71,7 @@ import com.instructure.student.view.EmptyView
 import java.io.File
 import java.io.FileOutputStream
 
-abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, FragmentInteractions {
+abstract class ParentFragment : DialogFragment(), FragmentInteractions {
 
     private var openMediaBundle: Bundle? = null
     private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null
@@ -166,18 +162,18 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Create")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Create")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Create View")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Create View")
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Activity Created")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Activity Created")
 
         LoaderUtils.restoreLoaderFromBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(requireActivity().supportLoaderManager, savedInstanceState, loaderCallbacks, R.id.openMediaLoaderID, Const.OPEN_MEDIA_LOADER_BUNDLE)
     }
@@ -196,14 +192,14 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
                 inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             }
         } catch (e: Exception) {
-            LoggingUtility.Log(requireActivity(), Log.DEBUG, "An exception was thrown while trying to dismiss the keyboard: " + e.message)
+            LoggingUtility.log(Log.DEBUG, "An exception was thrown while trying to dismiss the keyboard: " + e.message)
         }
         super.onDetach()
     }
 
     override fun onStart() {
         super.onStart()
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Start")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Start")
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -221,12 +217,12 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
 
     override fun onResume() {
         super.onResume()
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Resume")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Resume")
     }
 
     override fun onPause() {
         super.onPause()
-        LoggingUtility.Log(requireActivity(), Log.DEBUG, Logger.getFragmentName(this) + " --> On Pause.")
+        LoggingUtility.log(Log.DEBUG, Logger.getFragmentName(this) + " --> On Pause.")
     }
 
     open fun handleBackPressed(): Boolean = false
@@ -378,17 +374,17 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
 
     // endregion
 
-    override fun configureRecyclerView(
+    fun configureRecyclerView(
             rootView: View,
             context: Context,
             baseRecyclerAdapter: BaseRecyclerAdapter<*>,
             swipeRefreshLayoutResId: Int,
             emptyViewResId: Int,
             recyclerViewResId: Int): PandaRecyclerView {
-        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(R.string.noItemsToDisplayShort), false)
+        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(R.string.noItemsToDisplayShort))
     }
 
-    override fun configureRecyclerView(
+    fun configureRecyclerView(
             rootView: View,
             context: Context,
             baseRecyclerAdapter: BaseRecyclerAdapter<*>,
@@ -396,40 +392,18 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
             emptyViewResId: Int,
             recyclerViewResId: Int,
             emptyViewStringResId: Int): PandaRecyclerView {
-        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(emptyViewStringResId), false)
+        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(emptyViewStringResId))
     }
 
-    override fun configureRecyclerView(
+    fun configureRecyclerView(
             rootView: View,
             context: Context,
             baseRecyclerAdapter: BaseRecyclerAdapter<*>,
             swipeRefreshLayoutResId: Int,
             emptyViewResId: Int,
             recyclerViewResId: Int,
-            emptyViewString: String): PandaRecyclerView {
-        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewString, false)
-    }
-
-    override fun configureRecyclerView(
-            rootView: View,
-            context: Context,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int,
-            withDividers: Boolean): PandaRecyclerView {
-        return configureRecyclerView(rootView, context, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, resources.getString(R.string.noItemsToDisplayShort), withDividers)
-    }
-
-    override fun configureRecyclerView(
-            rootView: View,
-            context: Context,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int,
-            emptyViewString: String,
-            withDivider: Boolean): PandaRecyclerView {
+            emptyViewString: String
+    ): PandaRecyclerView {
         val emptyViewInterface = rootView.findViewById<View>(emptyViewResId) as EmptyViewInterface
         val recyclerView = rootView.findViewById<PandaRecyclerView>(recyclerViewResId)
 
@@ -440,9 +414,6 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
         emptyViewInterface.setNoConnectionText(getString(R.string.noConnection))
         recyclerView.isSelectionEnabled = true
         recyclerView.adapter = baseRecyclerAdapter
-        if (withDivider) {
-            recyclerView.addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL_LIST))
-        }
 
         swipeRefreshLayout = rootView.findViewById(swipeRefreshLayoutResId)
         swipeRefreshLayout!!.setOnRefreshListener {
@@ -456,81 +427,20 @@ abstract class ParentFragment : DialogFragment(), ConfigureRecyclerView, Fragmen
         return recyclerView
     }
 
-    override fun configureRecyclerViewAsGrid(
-            rootView: View,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int) {
-        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, R.string.noItemsToDisplayShort)
-    }
-
-    override fun configureRecyclerViewAsGrid(rootView: View, baseRecyclerAdapter: BaseRecyclerAdapter<*>, swipeRefreshLayoutResId: Int, emptyViewResId: Int, recyclerViewResId: Int, emptyViewStringResId: Int, span: Int) {
-        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewStringResId, span, null)
-    }
-
-    override fun configureRecyclerViewAsGrid(
+    fun configureRecyclerViewAsGrid(
             rootView: View,
             baseRecyclerAdapter: BaseRecyclerAdapter<*>,
             swipeRefreshLayoutResId: Int,
             emptyViewResId: Int,
             recyclerViewResId: Int,
             emptyViewStringResId: Int,
-            vararg emptyImage: Drawable) {
-        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewStringResId, null, *emptyImage)
-    }
-
-    override fun configureRecyclerViewAsGrid(
-            rootView: View,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int,
-            emptyViewStringResId: Int,
-            emptyImageClickListener: View.OnClickListener?,
-            vararg emptyImage: Drawable) {
-
-        val minCardWidth = resources.getDimensionPixelOffset(R.dimen.course_card_min_width)
-        val display = requireActivity().windowManager.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        val width = size.x
-        val cardPadding = resources.getDimensionPixelOffset(R.dimen.card_outer_margin)
-
-        //Sets a dynamic span size based on the min card width we need to display the color chooser.
-        val span: Int
-        if (width != 0) {
-            span = width / (minCardWidth + cardPadding)
-        } else {
-            span = 1
-        }
-
-        configureRecyclerViewAsGrid(rootView, baseRecyclerAdapter, swipeRefreshLayoutResId, emptyViewResId, recyclerViewResId, emptyViewStringResId, if (span < 1) 1 else span, emptyImageClickListener, *emptyImage)
-    }
-
-    override fun configureRecyclerViewAsGrid(
-            rootView: View,
-            baseRecyclerAdapter: BaseRecyclerAdapter<*>,
-            swipeRefreshLayoutResId: Int,
-            emptyViewResId: Int,
-            recyclerViewResId: Int,
-            emptyViewStringResId: Int,
-            span: Int,
-            emptyImageClickListener: View.OnClickListener?,
-            vararg emptyImage: Drawable) {
-
+            span: Int
+    ) {
         val cardPadding = resources.getDimensionPixelOffset(R.dimen.card_outer_margin)
         val emptyViewInterface = rootView.findViewById<View>(emptyViewResId) as EmptyViewInterface
         val recyclerView = rootView.findViewById<PandaRecyclerView>(recyclerViewResId)
         emptyViewInterface.emptyViewText(emptyViewStringResId)
         emptyViewInterface.setNoConnectionText(getString(R.string.noConnection))
-
-        if (emptyImage.isNotEmpty()) {
-            emptyViewInterface.emptyViewImage(emptyImage[0])
-            if (emptyImageClickListener != null && emptyViewInterface.emptyViewImage != null) {
-                emptyViewInterface.emptyViewImage.setOnClickListener(emptyImageClickListener)
-            }
-        }
 
         val layoutManager = GridLayoutManager(
             context,

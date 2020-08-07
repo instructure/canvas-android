@@ -187,7 +187,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         setPageObject(page)
 
         if (page.lockInfo != null) {
-            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo, activity, R.string.lockedPageDesc)
+            val lockedMessage = LockInfoHTMLHelper.getLockedInfoHTML(page.lockInfo!!, requireContext(), R.string.lockedPageDesc)
             populateWebView(lockedMessage, getString(R.string.pages))
             return
         }

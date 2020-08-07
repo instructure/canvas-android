@@ -43,7 +43,6 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.R
-import com.instructure.student.binders.EmptyBinder
 import com.instructure.student.binders.ModuleBinder
 import com.instructure.student.binders.ModuleHeaderBinder
 import com.instructure.student.holders.ModuleEmptyViewHolder
@@ -117,9 +116,9 @@ open class ModuleListRecyclerAdapter(
         // Keep displaying No connection as long as the result is not from network
         // Doing so will cause the user to toggle the expand to refresh the list, if they had expanded a module while offline
         if (mModuleItemCallbacks.containsKey(moduleObject.id) && mModuleItemCallbacks[moduleObject.id]!!.isFromNetwork) {
-            EmptyBinder.bind(moduleEmptyViewHolder, getPrerequisiteString(moduleObject))
+            moduleEmptyViewHolder.bind(getPrerequisiteString(moduleObject))
         } else {
-            EmptyBinder.bind(moduleEmptyViewHolder, context.getString(R.string.noConnection))
+            moduleEmptyViewHolder.bind(context.getString(R.string.noConnection))
         }
     }
 
@@ -127,7 +126,7 @@ open class ModuleListRecyclerAdapter(
         return when (viewType) {
             Types.TYPE_HEADER -> R.layout.viewholder_header_module
             Types.TYPE_SUB_HEADER -> R.layout.viewholder_sub_header_module
-            Types.TYPE_EMPTY_CELL -> ModuleEmptyViewHolder.holderResId()
+            Types.TYPE_EMPTY_CELL -> ModuleEmptyViewHolder.HOLDER_RES_ID
             else -> R.layout.viewholder_module
         }
     }

@@ -28,7 +28,7 @@ import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.holders.GradeViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 
-object GradeBinder : BaseBinder() {
+object GradeBinder {
 
     @JvmStatic
     fun bind(
@@ -64,9 +64,9 @@ object GradeBinder : BaseBinder() {
                 holder.icon.setNestedIcon(R.drawable.vd_published, courseColor)
             } else {
                 holder.points.setVisible()
-                val (grade, contentDescription) = getGrade(assignment, submission, context)
+                val (grade, contentDescription) = BaseBinder.getGrade(assignment, submission, context)
                 holder.points.text = grade
-                holder.points.contentDescription = contentDescription ?: grade
+                holder.points.contentDescription = contentDescription
             }
         }
 
