@@ -22,6 +22,7 @@ import android.util.Log
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.endpoints.pairingCodeCount
 import com.instructure.canvas.espresso.mockCanvas.init
