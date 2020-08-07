@@ -22,12 +22,13 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder
+import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.android.synthetic.main.viewholder_quiz.view.*
 import java.util.*
@@ -41,7 +42,7 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         title.text = item.title
 
         // Description
-        val desc = BaseBinder.getHtmlAsText(item.description)
+        val desc = BinderUtils.getHtmlAsText(item.description)
         description.text = desc
         description.setVisible(!desc.isNullOrBlank())
 
@@ -63,7 +64,7 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         points.setVisible(possiblePoints > 0).text = context.resources.getQuantityString(
             R.plurals.pointCount,
             possiblePoints.toInt(),
-            BaseBinder.getPointsPossible(possiblePoints)
+            NumberHelper.formatDecimal(possiblePoints, 2, true)
         )
         bulletPointsAndQuestions.setVisible(points.isVisible)
         val count = item.questionCount

@@ -99,7 +99,6 @@ class TextSubmissionViewFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(text: String) = TextSubmissionViewFragment().apply {
             submissionText = text
         }

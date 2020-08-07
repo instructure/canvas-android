@@ -324,7 +324,6 @@ class DashboardFragment : ParentFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(route: Route) =
                 DashboardFragment().apply {
                     arguments = route.canvasContext?.makeBundle(route.arguments) ?: route.arguments

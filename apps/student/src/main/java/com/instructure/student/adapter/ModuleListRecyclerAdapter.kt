@@ -43,8 +43,6 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.R
-import com.instructure.student.binders.ModuleBinder
-import com.instructure.student.binders.ModuleHeaderBinder
 import com.instructure.student.holders.ModuleEmptyViewHolder
 import com.instructure.student.holders.ModuleHeaderViewHolder
 import com.instructure.student.holders.ModuleSubHeaderViewHolder
@@ -59,7 +57,8 @@ open class ModuleListRecyclerAdapter(
         val courseContext: CanvasContext,
         var defaultExpandedModuleId: Long = -1,
         context: Context,
-        val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
+        val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
+) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
     private val mModuleItemCallbacks = HashMap<Long, ModuleItemCallback>()
     private var mModuleObjectCallback: StatusCallback<List<ModuleObject>>? = null
@@ -94,21 +93,19 @@ open class ModuleListRecyclerAdapter(
         if (holder is ModuleSubHeaderViewHolder) {
             val groupItemCount = getGroupItemCount(moduleObject)
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
-
-            ModuleBinder.bindSubHeader(holder, moduleObject, moduleItem,
-                    itemPosition == 0, itemPosition == groupItemCount - 1)
+            holder.bind(moduleItem, itemPosition == 0, itemPosition == groupItemCount - 1)
         } else {
             val courseColor = ColorKeeper.getOrGenerateColor(courseContext)
             val groupItemCount = getGroupItemCount(moduleObject)
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
 
-            ModuleBinder.bind(holder as ModuleViewHolder, moduleObject, moduleItem, context, adapterToFragmentCallback, isSequentiallyEnabled(moduleObject, moduleItem), courseColor,
+            (holder as ModuleViewHolder).bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
                     itemPosition == 0, itemPosition == groupItemCount - 1)
         }
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, moduleObject: ModuleObject, isExpanded: Boolean) {
-        ModuleHeaderBinder.bind(holder as ModuleHeaderViewHolder, moduleObject, context, courseContext, getGroupItemCount(moduleObject), viewHolderHeaderClicked, isExpanded)
+        (holder as ModuleHeaderViewHolder).bind(moduleObject, context, viewHolderHeaderClicked, isExpanded)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, moduleObject: ModuleObject) {
@@ -124,10 +121,10 @@ open class ModuleListRecyclerAdapter(
 
     override fun itemLayoutResId(viewType: Int): Int {
         return when (viewType) {
-            Types.TYPE_HEADER -> R.layout.viewholder_header_module
-            Types.TYPE_SUB_HEADER -> R.layout.viewholder_sub_header_module
+            Types.TYPE_HEADER -> ModuleHeaderViewHolder.HOLDER_RES_ID
+            Types.TYPE_SUB_HEADER -> ModuleSubHeaderViewHolder.HOLDER_RES_ID
             Types.TYPE_EMPTY_CELL -> ModuleEmptyViewHolder.HOLDER_RES_ID
-            else -> R.layout.viewholder_module
+            else -> ModuleViewHolder.HOLDER_RES_ID
         }
     }
 

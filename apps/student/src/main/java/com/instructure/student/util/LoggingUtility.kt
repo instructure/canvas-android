@@ -31,7 +31,6 @@ object LoggingUtility {
      * @param msg The message to log to console
      * @see android.util.Log.d
      */
-    @JvmStatic
     fun logConsole(msg: String?) {
         // Only logcat.
         android.util.Log.d(TAG, msg)
@@ -45,13 +44,11 @@ object LoggingUtility {
      * @see Crashlytics.log
      * @see android.util.Log.d
      */
-    @JvmStatic
     fun log(priority: Int, msg: String?) {
         // Will write to crashlytics and logcat
         if (canLogUserDetails()) Crashlytics.log(priority, TAG, msg)
     }
 
-    @JvmStatic
     fun logIntent(intent: Intent?): String {
         intent ?: return ""
         val bundle = intent.extras

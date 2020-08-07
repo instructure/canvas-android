@@ -209,13 +209,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext) = Route(AssignmentListFragment::class.java, canvasContext)
 
-        @JvmStatic
         fun validateRoute(route: Route) = route.canvasContext?.isCourse == true
 
-        @JvmStatic
         fun newInstance(route: Route): AssignmentListFragment? {
             if (!validateRoute(route)) return null
             return AssignmentListFragment().withArgs(route.canvasContext!!.makeBundle())

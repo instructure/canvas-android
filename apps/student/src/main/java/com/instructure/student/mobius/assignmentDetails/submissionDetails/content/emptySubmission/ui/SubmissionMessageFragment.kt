@@ -51,7 +51,6 @@ class SubmissionMessageFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(title: Int = -1, subtitle: Int = -1, message: Int = -1, iconRes: Int = 0, iconUri: Uri? = null) = SubmissionMessageFragment().apply {
             titleRes = title
             subtitleRes = subtitle

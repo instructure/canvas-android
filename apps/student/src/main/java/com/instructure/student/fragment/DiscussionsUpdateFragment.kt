@@ -150,7 +150,6 @@ class DiscussionsUpdateFragment : ParentFragment() {
         private const val DISCUSSION_TOPIC_HEADER_ID = "DISCUSSION_TOPIC_HEADER_ID"
         private const val DISCUSSION_ENTRY = "DISCUSSION_ENTRY"
 
-        @JvmStatic
         fun makeRoute(
                 canvasContext: CanvasContext?,
                 discussionTopicHeaderId: Long,
@@ -163,7 +162,6 @@ class DiscussionsUpdateFragment : ParentFragment() {
             return Route(DiscussionsUpdateFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
             DiscussionsUpdateFragment().apply {
                 arguments = route.canvasContext!!.makeBundle(route.arguments)

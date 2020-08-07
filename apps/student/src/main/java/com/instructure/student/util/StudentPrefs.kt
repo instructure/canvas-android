@@ -20,15 +20,15 @@ import com.instructure.canvasapi2.utils.*
 
 object StudentPrefs : PrefManager("candroidSP") {
 
-    @JvmStatic
+    
     var tempCaptureUri by NStringPref()
 
-    @JvmStatic
+    
     var showGradesOnCard by BooleanPref(true)
 
     var hideCourseColorOverlay by BooleanPref(false)
 
-    @JvmStatic
+    
     var staleFolderIds by SetPref(Long::class)
 
     var conferenceDashboardBlacklist by StringSetPref()

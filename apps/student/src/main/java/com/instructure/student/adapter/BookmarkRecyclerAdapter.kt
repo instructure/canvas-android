@@ -69,7 +69,7 @@ class BookmarkRecyclerAdapter(context: Context, isShortcutActivity: Boolean, pri
         bookmarksCallback = object : StatusCallback<List<Bookmark>>() {
 
             override fun onResponse(response: retrofit2.Response<List<Bookmark>>, linkHeaders: LinkHeaders, type: ApiType) {
-                addAll(response.body())
+                addAll(response.body()!!)
                 setNextUrl(linkHeaders.nextUrl)
                 mAdapterToFragmentCallback.onRefreshFinished()
             }

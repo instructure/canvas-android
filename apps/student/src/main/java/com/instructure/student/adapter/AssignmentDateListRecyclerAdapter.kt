@@ -274,7 +274,6 @@ open class AssignmentDateListRecyclerAdapter(
         const val HEADER_POSITION_PAST = 3
 
         // Decoupled for testability
-        @JvmStatic
         val itemCallback = object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
             private val sameCheck = compareBy<Assignment>({ it.dueAt }, { it.name })
             override fun areContentsTheSame(old: Assignment, new: Assignment) = sameCheck.compare(old, new) == 0

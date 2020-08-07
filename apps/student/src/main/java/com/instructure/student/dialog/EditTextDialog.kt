@@ -43,7 +43,6 @@ class EditTextDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, title: String, defaultText: String, callback: (String) -> Unit) : EditTextDialog {
             manager.dismissExisting<EditTextDialog>()
             return EditTextDialog().apply {
@@ -53,7 +52,6 @@ class EditTextDialog : AppCompatDialogFragment() {
             }
         }
 
-        @JvmStatic
         fun show(manager: FragmentManager, title: String, defaultText: String, callback: (String) -> Unit) {
             getInstance(manager, title, defaultText, callback).show(manager, EditTextDialog::class.java.simpleName)
         }

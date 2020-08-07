@@ -85,6 +85,20 @@ inline fun <T> tryOrNull(block: () -> T?): T? {
     }
 }
 
+/**
+ * Returns the first element matching the given [predicate], or `null` if no such element was found.
+ * @param [predicate] function that takes the current element and previous element, and returns a boolean. The
+ * previous element will always be null for the first element in the list.
+ */
+fun <E> List<E>.findWithPrevious(predicate: (previous: E?, it: E) -> Boolean): E? {
+    var previous: E? = null
+    forEach {
+        if (predicate(previous, it)) return it
+        previous = it
+    }
+    return null
+}
+
 val Locale.isRtl get() = TextUtilsCompat.getLayoutDirectionFromLocale(this) == ViewCompat.LAYOUT_DIRECTION_RTL
 
 /** Creates a range surrounding this number */

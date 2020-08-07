@@ -744,13 +744,12 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         //we don't want to add subheaders or external tools into the list. subheaders don't do anything and we
         //don't support external tools.
-        fun shouldAddModuleItem(context: Context, moduleItem: ModuleItem): Boolean = when {
-            moduleItem.type == "UnlockRequirements" -> false
-            moduleItem.type == "SubHeader" -> false
+        fun shouldAddModuleItem(context: Context, moduleItem: ModuleItem): Boolean = when (moduleItem.type) {
+            "UnlockRequirements" -> false
+            "SubHeader" -> false
             else -> !moduleItem.title.equals(context.getString(R.string.loading), ignoreCase = true)
         }
 
-        @JvmStatic
         fun makeRoute(moduleObjects: ArrayList<ModuleObject>, itemList: ArrayList<ArrayList<ModuleItem>>, canvasContext: CanvasContext, groupPos: Int, childPos: Int): Route {
             return Route(null, CourseModuleProgressionFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
                 putParcelableArrayList(MODULE_OBJECTS, moduleObjects)
@@ -760,13 +759,11 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             }))
         }
 
-        @JvmStatic
         fun newInstance(route: Route): CourseModuleProgressionFragment? = if (validRoute(route)) CourseModuleProgressionFragment().apply {
             arguments = route.arguments
             moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: ""
         } else null
 
-        @JvmStatic
         private fun validRoute(route: Route): Boolean = route.canvasContext != null
                 && (route.arguments.containsKey(MODULE_OBJECTS) && route.arguments.containsKey(MODULE_ITEMS))
                 || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }

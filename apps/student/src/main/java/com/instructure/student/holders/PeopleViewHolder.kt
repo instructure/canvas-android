@@ -17,7 +17,6 @@
 package com.instructure.student.holders
 
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Pronouns
@@ -26,9 +25,8 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder
+import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.viewholder_people.view.*
 
 class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -55,7 +53,7 @@ class PeopleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             role.setGone()
         }
 
-        BaseBinder.updateShadows(isFirstItem, isLastItem, shadowTop, shadowBottom)
+        BinderUtils.updateShadows(isFirstItem, isLastItem, shadowTop, shadowBottom)
     }
 
     companion object {

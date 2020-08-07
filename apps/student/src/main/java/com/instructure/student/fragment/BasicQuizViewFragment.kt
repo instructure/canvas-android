@@ -204,7 +204,6 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
     companion object {
 
-        @JvmStatic
         fun newInstance(route: Route) : BasicQuizViewFragment? {
             return if(validRoute(route)) BasicQuizViewFragment().apply {
                 arguments = route.arguments
@@ -220,7 +219,6 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             } else null
         }
 
-        @JvmStatic
         private fun validRoute(route: Route): Boolean {
             return route.canvasContext != null &&
                     (route.arguments.containsKey(Const.URL) ||
@@ -229,12 +227,10 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                      route.paramsHash.containsKey(RouterParams.QUIZ_ID))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, url: String): Route {
             return Route(null, BasicQuizViewFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { putString(Const.URL, url) }))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, url: String, apiUrl: String): Route {
             return Route(null, BasicQuizViewFragment::class.java, canvasContext, canvasContext.makeBundle(
                     Bundle().apply {
@@ -243,7 +239,6 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                     }))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, quiz: Quiz, url: String): Route {
             return Route(null, BasicQuizViewFragment::class.java, canvasContext, canvasContext.makeBundle(
                     Bundle().apply {

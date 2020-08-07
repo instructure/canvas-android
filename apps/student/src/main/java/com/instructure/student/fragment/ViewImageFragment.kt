@@ -128,7 +128,6 @@ class ViewImageFragment : Fragment(), ShareableFile {
     }
 
     companion object {
-        @JvmStatic
         @JvmOverloads
         fun newInstance(title: String, uri: Uri, contentType: String, showToolbar: Boolean = true, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewImageFragment().apply {
             mTitle = title
@@ -139,10 +138,8 @@ class ViewImageFragment : Fragment(), ShareableFile {
             mEditableFile = editableFile
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = ViewImageFragment().apply { arguments = bundle }
 
-        @JvmStatic
         fun newInstance(route: Route) = ViewImageFragment().apply { arguments = route.arguments }
     }
 }

@@ -145,7 +145,6 @@ class BookmarkCreationDialog : AppCompatDialogFragment() {
             return dialog
         }
 
-        @JvmStatic
         fun <F> newInstance(context: Activity, topFragment: F?, peakingFragment: F?): BookmarkCreationDialog? where F : Fragment {
             if(topFragment is Bookmarkable && peakingFragment is Bookmarkable && topFragment.bookmark.canBookmark && peakingFragment.bookmark.canBookmark) {
                 val bookmark = topFragment.bookmark

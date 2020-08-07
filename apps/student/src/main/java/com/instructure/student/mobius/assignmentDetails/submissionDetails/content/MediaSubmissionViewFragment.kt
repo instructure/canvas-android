@@ -140,7 +140,6 @@ class MediaSubmissionViewFragment : Fragment() {
 
     companion object {
 
-        @JvmStatic
         fun newInstance(media: SubmissionDetailsContentType.MediaContent) = MediaSubmissionViewFragment().apply {
             uri = media.uri
             thumbnailUrl = media.thumbnailUrl

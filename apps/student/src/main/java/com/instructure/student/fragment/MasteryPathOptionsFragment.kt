@@ -111,7 +111,6 @@ class MasteryPathOptionsFragment : ParentFragment() {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(
             canvasContext: CanvasContext,
             assignments: Array<MasteryPathAssignment>,
@@ -136,7 +135,6 @@ class MasteryPathOptionsFragment : ParentFragment() {
                     && route.arguments.getLong(Const.MODULE_ITEM) > 0
         }
 
-        @JvmStatic
         fun newInstance(route: Route): MasteryPathOptionsFragment? {
             if (!validateRoute(route)) return null
             return MasteryPathOptionsFragment().withArgs(route.argsWithContext)

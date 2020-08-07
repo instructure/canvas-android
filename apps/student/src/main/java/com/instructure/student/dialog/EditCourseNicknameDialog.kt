@@ -40,7 +40,6 @@ class EditCourseNicknameDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, course: Course, callback: (String) -> Unit) : EditCourseNicknameDialog {
             manager.dismissExisting<EditCourseNicknameDialog>()
             val dialog = EditCourseNicknameDialog()

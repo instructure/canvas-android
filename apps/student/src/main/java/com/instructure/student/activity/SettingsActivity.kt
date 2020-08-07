@@ -53,7 +53,7 @@ class SettingsActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialo
     }
 
     companion object {
-        @JvmStatic fun createIntent(context: Context): Intent {
+         fun createIntent(context: Context): Intent {
             return Intent(context, SettingsActivity::class.java)
         }
     }

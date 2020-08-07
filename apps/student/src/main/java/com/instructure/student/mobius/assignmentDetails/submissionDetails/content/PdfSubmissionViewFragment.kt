@@ -33,7 +33,6 @@ class PdfSubmissionViewFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(url: String) = PdfSubmissionViewFragment().apply {
             pdfUrl = url
         }

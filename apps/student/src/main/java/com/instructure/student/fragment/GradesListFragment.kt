@@ -479,7 +479,6 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     companion object {
 
-        @JvmStatic
         fun newInstance(route: Route) : GradesListFragment? {
             return if(validRoute(route)) GradesListFragment().apply {
                 arguments = route.arguments
@@ -487,12 +486,10 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             } else null
         }
 
-        @JvmStatic
         private fun validRoute(route: Route): Boolean {
             return route.canvasContext != null && route.canvasContext is Course // Only courses are supported in Grades List
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext): Route {
             return Route(null, GradesListFragment::class.java, canvasContext, canvasContext.makeBundle())
         }

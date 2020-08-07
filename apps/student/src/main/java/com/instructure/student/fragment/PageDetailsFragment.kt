@@ -324,7 +324,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         const val PAGE = "pageDetails"
         const val PAGE_URL = "pageUrl"
 
-        @JvmStatic
         fun newInstance(route: Route): PageDetailsFragment? {
             return if (validRoute(route)) PageDetailsFragment().apply {
                 arguments = route.arguments
@@ -335,7 +334,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             } else null
         }
 
-        @JvmStatic
         private fun validRoute(route: Route): Boolean {
             return route.canvasContext != null &&
                     (route.arguments.containsKey(PAGE) ||
@@ -343,12 +341,10 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                             route.paramsHash.containsKey(RouterParams.PAGE_ID))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, pageName: String?): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { if (pageName != null) putString(PAGE_NAME, pageName) }))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, pageName: String?, pageUrl: String?): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
                 if (pageName != null)
@@ -358,7 +354,6 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             }))
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, page: Page): Route {
             return Route(null, PageDetailsFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply { putParcelable(PAGE, page) }))
         }

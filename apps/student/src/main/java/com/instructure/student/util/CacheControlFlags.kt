@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.utils.PrefManager
  */
 object CacheControlFlags : PrefManager("candroidSP") {
 
-    @JvmStatic
     var forceRefreshBookmarks by BooleanResetPref()
 
 }

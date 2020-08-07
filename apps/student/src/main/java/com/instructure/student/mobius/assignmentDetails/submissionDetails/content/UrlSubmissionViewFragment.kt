@@ -53,7 +53,6 @@ class UrlSubmissionViewFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(url: String, previewUrl: String?) = UrlSubmissionViewFragment().apply {
             this.url = url
             this.previewUrl = previewUrl

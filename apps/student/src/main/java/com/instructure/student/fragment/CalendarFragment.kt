@@ -117,7 +117,6 @@ class CalendarFragment : ParentFragment() {
         get() = (childFragmentManager.findFragmentById(R.id.flutter_calendar_fragment) as? FlutterCalendarFragment?)
 
     companion object {
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) CalendarFragment() else null
 
         private fun validRoute(route: Route) = route.primaryClass == CalendarFragment::class.java

@@ -19,6 +19,8 @@ package com.instructure.student.adapter
 
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +32,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder
+import com.instructure.student.util.BinderUtils
 import java.util.*
 
 class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList<CanvasContext>) : ArrayAdapter<CanvasContext>(context, R.layout.canvas_context_spinner_adapter_item, mData) {
@@ -65,8 +67,7 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
         if (item != null) {
             viewHolder.title!!.text = item.name
             viewHolder.indicator!!.visibility = View.VISIBLE
-            viewHolder.indicator!!.background = BaseBinder.createIndicatorBackground(
-                    ColorKeeper.getOrGenerateColor(item))
+            viewHolder.indicator!!.background = createIndicatorBackground(ColorKeeper.getOrGenerateColor(item))
         } else {
             viewHolder.indicator!!.visibility = View.GONE
             viewHolder.title!!.text = ""
@@ -100,12 +101,17 @@ class CanvasContextSpinnerAdapter(context: Context, private val mData: ArrayList
             } else {
                 viewHolder.title!!.setTypeface(null, Typeface.NORMAL)
                 viewHolder.indicator!!.visibility = View.VISIBLE
-                viewHolder.indicator!!.background = BaseBinder.createIndicatorBackground(
-                        ColorKeeper.getOrGenerateColor(item))
+                viewHolder.indicator!!.background = createIndicatorBackground(ColorKeeper.getOrGenerateColor(item))
             }
         }
 
         return convertView
+    }
+
+    private fun createIndicatorBackground(color: Int): ShapeDrawable {
+        val circle = ShapeDrawable(OvalShape())
+        circle.paint.color = color
+        return circle
     }
 
     private class CanvasContextViewHolder {

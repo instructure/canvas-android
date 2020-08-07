@@ -31,7 +31,6 @@ object AnimationHelpers {
     /**
      * Creates a CircularReveal Animator which reveals from the center
      */
-    @JvmStatic
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     fun createRevealAnimator(view: View): Animator {
         val animator: Animator
@@ -53,7 +52,6 @@ object AnimationHelpers {
     /**
      * Helper to remove GlobalLayoutListeners. This stops the animation from being called multiple times.
      */
-    @JvmStatic
     fun removeGlobalLayoutListeners(view: View, victim: ViewTreeObserver.OnGlobalLayoutListener?) {
         view.viewTreeObserver.removeOnGlobalLayoutListener(victim)
     }

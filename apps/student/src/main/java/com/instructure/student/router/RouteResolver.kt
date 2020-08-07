@@ -21,12 +21,12 @@ import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object RouteResolver {
 
-    @JvmStatic
+    
     fun getFragment(route: Route): Fragment? {
         return getFragment(route.canvasContext, route)
     }
 
-    @JvmStatic
+    
     fun getFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return if (canvasContext == null && route.canvasContext == null) { // Typically areas like inbox or notifications where a canvasContext may not apply
             if (route.primaryClass != null) {

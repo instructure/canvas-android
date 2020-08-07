@@ -50,7 +50,6 @@ class PickerBadExtensionDialog : DialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun show(manager: FragmentManager, allowedExtensions: List<String>) =
             PickerBadExtensionDialog().apply {
                 manager.dismissExisting<PickerBadExtensionDialog>()

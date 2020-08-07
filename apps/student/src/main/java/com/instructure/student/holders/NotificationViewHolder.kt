@@ -31,7 +31,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
 import com.instructure.student.adapter.NotificationListRecyclerAdapter
-import com.instructure.student.binders.BaseBinder
+import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import kotlinx.android.synthetic.main.viewholder_notification.view.*
 
@@ -45,7 +45,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     ) = with(itemView) {
 
         setOnClickListener {
-            if (checkboxCallback.isEditMode) {
+            if (checkboxCallback.isEditMode()) {
                 checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             } else {
                 adapterToFragmentCallback.onRowClicked(item, adapterPosition, true)
@@ -73,7 +73,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         // Description
         if (!TextUtils.isEmpty(item.getMessage(context))) {
-            description.text = BaseBinder.getHtmlAsText(item.getMessage(context)!!)
+            description.text = BinderUtils.getHtmlAsText(item.getMessage(context)!!)
             description.setVisible()
         } else {
             description.text = ""

@@ -342,7 +342,6 @@ class LTIWebViewFragment : InternalWebviewFragment() {
         const val HIDE_TOOLBAR = "hideToolbar"
         const val FLIPGRID = "Flipgrid"
 
-        @JvmStatic
         fun makeLTIBundle(ltiUrl: String, title: String, sessionLessLaunch: Boolean): Bundle {
             val args = Bundle()
             args.putString(LTI_URL, ltiUrl)

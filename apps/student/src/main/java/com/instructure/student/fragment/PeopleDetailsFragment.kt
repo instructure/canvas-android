@@ -148,13 +148,11 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(userId: Long, canvasContext: CanvasContext): Route {
             val bundle = Bundle().apply { putLong(Const.USER_ID, userId) }
             return Route(null, PeopleDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(user: User, canvasContext: CanvasContext) : Route {
             val bundle = Bundle().apply { putParcelable(Const.USER, user) }
             return Route(null, PeopleDetailsFragment::class.java, canvasContext, bundle)
@@ -166,7 +164,6 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
             return route.canvasContext != null && hasUserId
         }
 
-        @JvmStatic
         fun newInstance(route: Route): PeopleDetailsFragment? {
             if (!validateRoute(route)) return null
             route.paramsHash[RouterParams.USER_ID]?.let { route.arguments.putLong(Const.USER_ID, it.toLong()) }

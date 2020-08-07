@@ -48,17 +48,14 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(course: Course): Route {
             return Route(null, SyllabusFragment::class.java, course, course.makeBundle())
         }
 
-        @JvmStatic
         fun validRoute(route: Route): Boolean {
             return route.canvasContext is Course
         }
 
-        @JvmStatic
         fun newInstance(route: Route): SyllabusFragment? {
             if (!validRoute(route)) return null
 

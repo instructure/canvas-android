@@ -39,9 +39,7 @@ class AnnouncementListFragment : DiscussionListFragment() {
                     }
                 } else null
 
-        @JvmStatic
-        fun makeRoute(canvasContext: CanvasContext?) =
-                Route(AnnouncementListFragment::class.java, canvasContext)
+        fun makeRoute(canvasContext: CanvasContext?) = Route(AnnouncementListFragment::class.java, canvasContext)
 
         private fun validateRoute(route: Route) = route.canvasContext != null
     }

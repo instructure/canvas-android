@@ -23,8 +23,8 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.MasteryPathAssignment
 import com.instructure.pandautils.utils.ColorKeeper.getColoredDrawable
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder.Companion.getAssignmentIcon
 import com.instructure.student.interfaces.AdapterToFragmentCallback
+import com.instructure.student.util.BinderUtils
 import kotlinx.android.synthetic.main.viewholder_mastery_paths_assignment.view.*
 
 class MasteryAssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -35,7 +35,7 @@ class MasteryAssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(item
         adapterToFragmentCallback: AdapterToFragmentCallback<Assignment>
     ) = with(itemView) {
         title.text = masteryPathAssignment.model!!.name
-        val drawable = getAssignmentIcon(masteryPathAssignment.model)
+        val drawable = BinderUtils.getAssignmentIcon(masteryPathAssignment.model)
         icon.setImageDrawable(getColoredDrawable(context, drawable, courseColor))
         rootView.setOnClickListener {
             adapterToFragmentCallback.onRowClicked(masteryPathAssignment.model!!, 0, true)

@@ -41,7 +41,6 @@ class ColorPickerDialog : AppCompatDialogFragment() {
     private var mCallback: (Int) -> Unit by Delegates.notNull()
 
     companion object {
-        @JvmStatic
         fun newInstance(manager: FragmentManager, course: Course, callback: (Int) -> Unit): ColorPickerDialog {
             manager.dismissExisting<ColorPickerDialog>()
             val dialog = ColorPickerDialog()

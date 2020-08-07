@@ -142,7 +142,6 @@ class ModuleQuizDecider : ParentFragment() {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, url: String, apiURL: String): Route {
             val bundle = Bundle().apply {
                 putString(Const.URL, url)
@@ -157,7 +156,6 @@ class ModuleQuizDecider : ParentFragment() {
                     && route.arguments.containsKey(Const.API_URL)
         }
 
-        @JvmStatic
         fun newInstance(route: Route): ModuleQuizDecider? {
             if (!validateRoute(route)) return null
             return ModuleQuizDecider().withArgs(route.argsWithContext)
