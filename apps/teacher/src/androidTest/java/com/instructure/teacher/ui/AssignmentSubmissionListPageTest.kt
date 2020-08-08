@@ -15,29 +15,30 @@
  */
 package com.instructure.teacher.ui
 
-import android.util.Log
-import com.instructure.dataseeding.api.SeedApi
-import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.dataseeding.model.SubmissionType.ONLINE_TEXT_ENTRY
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class AssignmentSubmissionListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         goToAssignmentSubmissionListPage()
         assignmentSubmissionListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysNoSubmissionsView() {
         goToAssignmentSubmissionListPage(
                 students = 0,
@@ -47,11 +48,9 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun filterLateSubmissions() {
         goToAssignmentSubmissionListPage(
-                dueAt = 7.days.ago.iso8601,
-                checkForLateStatus = true
+                dueAt = 7.days.ago.iso8601
         )
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmissions()
@@ -63,7 +62,6 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun filterUngradedSubmissions() {
         goToAssignmentSubmissionListPage()
         assignmentSubmissionListPage.clickFilterButton()
@@ -76,14 +74,12 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysAssignmentStatusSubmitted() {
         goToAssignmentSubmissionListPage()
         assignmentSubmissionListPage.assertSubmissionStatusSubmitted()
     }
 
     @Test
-    @Ditto
     fun displaysAssignmentStatusMissing() {
         goToAssignmentSubmissionListPage(
                 students = 1,
@@ -94,7 +90,6 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysAssignmentStatusNotSubmitted() {
         goToAssignmentSubmissionListPage(
                 students = 1,
@@ -104,7 +99,6 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysAssignmentStatusLate() {
         goToAssignmentSubmissionListPage(
                 dueAt = 7.days.ago.iso8601
@@ -113,12 +107,11 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun messageStudentsWho() {
         val data = goToAssignmentSubmissionListPage(
                 students = 1
         )
-        val student = data.studentsList[0]
+        val student = data.students[0]
         assignmentSubmissionListPage.clickAddMessage()
         addMessagePage.assertPageObjects()
         addMessagePage.assertHasStudentRecipient(student)
@@ -127,33 +120,38 @@ class AssignmentSubmissionListPageTest : TeacherTest() {
     private fun goToAssignmentSubmissionListPage(
             students: Int = 1,
             submissions: Int = 1,
-            dueAt: String = "",
-            checkForLateStatus: Boolean = false
-    ): SeedApi.SeededDataApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
-        val course = data.coursesList[0]
-        val teacher = data.teachersList[0]
-        val assignment = seedAssignments(
+            dueAt: String? = null
+    ): MockCanvas {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = students, courseCount = 1, favoriteCourseCount = 1)
+        val course = data.courses.values.first()
+        val teacher = data.teachers[0]
+
+        // TODO: Make this part of MockCanvas.init()
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val assignment = data.addAssignment(
                 courseId = course.id,
-                assignments = 1,
-                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
-                dueAt = dueAt,
-                teacherToken = teacher.token).assignmentList[0]
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                dueAt = dueAt
+        )
 
         for (s in 0 until submissions) {
-            seedAssignmentSubmission(
-                    listOf(
-                            SubmissionsApi.SubmissionSeedInfo(
-                                    amount = 1,
-                                    submissionType = ONLINE_TEXT_ENTRY,
-                                    checkForLateStatus = checkForLateStatus)
-                    ),
-                    assignment.id,
-                    course.id,
-                    data.studentsList[s].token)
+            if(students == 0) {
+                throw Exception("Can't specify submissions without students")
+            }
+            data.addSubmissionForAssignment(
+                    assignmentId = assignment.id,
+                    userId = data.students[0].id,
+                    type = "online_text_entry",
+                    body = "A submission"
+            )
         }
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)

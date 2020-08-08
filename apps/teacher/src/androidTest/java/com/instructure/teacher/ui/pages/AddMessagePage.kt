@@ -22,6 +22,7 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.teacher.R
+import com.instructure.canvasapi2.models.User
 
 class AddMessagePage: BasePage() {
 
@@ -62,6 +63,9 @@ class AddMessagePage: BasePage() {
 
     fun assertHasStudentRecipient(student: CanvasUserApiModel) {
         recipientsEditTextView.assertContainsText(student.shortName)
+    }
+    fun assertHasStudentRecipient(student: User) {
+        recipientsEditTextView.assertContainsText(student.shortName!!)
     }
 
     fun addNewMessage() {
