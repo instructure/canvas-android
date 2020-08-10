@@ -95,13 +95,13 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
                 this@loadHtmlWithIframes.addJavascriptInterface(JsExternalToolInterface(jsCallback), "accessor")
             }
 
-            loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
+            loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(handleBlankTarget(newHTML)), contentDescription)
         } catch {
             Crashlytics.logException(it)
             Logger.e("loadHtmlWithIframe caught an exception: " + it.message)
         }
     } else {
-        loadHtml(html, contentDescription)
+        loadHtml(handleBlankTarget(html), contentDescription)
         return null
     }
 }
@@ -145,6 +145,32 @@ fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String)
 
     return newHtml
 }
+
+/**
+ * Goal is to strip target="_blank" from a tags i.e. <a href="https://google.com" target="_blank">
+ *
+ * This enables us to keep canvasWebView.settings.setSupportMultipleWindows(true) set to true
+ * but still keep RCE image/links working properly in a webview
+ */
+fun handleBlankTarget(html: String): String {
+    if(html.contains("<a href")) {
+        var newHtml = html
+        val matcher = Pattern.compile("<a href=\"([^\"]+)\" target=\"_blank\">").matcher(html)
+
+        while(matcher.find()) {
+            val originalLink = matcher.group(0)
+            val srcUrl = matcher.group(1)
+
+            val newLink = "<a href=\"$srcUrl\">"
+            newHtml = newHtml.replace(originalLink, newLink)
+        }
+
+        return newHtml
+    } else {
+        return html
+    }
+}
+
 
 suspend fun authenticateLTIUrl(ltiUrl: String): String {
     return awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
