@@ -387,7 +387,7 @@ class InboxComposeMessageFragment : ParentFragment() {
             val attachmentIds = attachments.map { it.id }.toLongArray()
             val recipientIds = selectedRecipients.map { it.destination }
             val conversation = awaitApi<Conversation> {
-                InboxManager.addMessage(conversation?.id ?: 0, formattedMessage, recipientIds, includedMessageIds, attachmentIds, it)
+                InboxManager.addMessage(conversation?.id ?: 0, formattedMessage, recipientIds, includedMessageIds, attachmentIds, conversation?.contextCode, it)
             }
             messageSuccess(conversation)
         } catch {

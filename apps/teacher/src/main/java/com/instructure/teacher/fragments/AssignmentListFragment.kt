@@ -69,9 +69,17 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_assignment_list
     override fun getRecyclerView(): RecyclerView = assignmentRecyclerView
     override fun getPresenterFactory(): PresenterFactory<AssignmentListPresenter> = AssignmentListPresenterFactory(mCanvasContext)
-    override fun onPresenterPrepared(presenter: AssignmentListPresenter?) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
-                R.id.assignmentRecyclerView, R.id.emptyPandaView, getString(R.string.noAssignments))
+    override fun onPresenterPrepared(presenter: AssignmentListPresenter) {
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(
+            rootView = mRootView,
+            context = requireContext(),
+            recyclerAdapter = adapter,
+            presenter = presenter,
+            swipeToRefreshLayoutResId = R.id.swipeRefreshLayout,
+            recyclerViewResId = R.id.assignmentRecyclerView,
+            emptyViewResId = R.id.emptyPandaView,
+            emptyViewText = getString(R.string.noAssignments)
+        )
         mRecyclerView.setHeaderVisibilityListener(divider)
     }
 

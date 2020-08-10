@@ -65,7 +65,7 @@ abstract class ParentActivity : BaseActionBarActivity(), OnTouchListener {
     public override fun onCreate(savedInstanceState: Bundle?) {
         // Add progress indicator to action bar
         super.onCreate(savedInstanceState)
-        LoggingUtility.Log(this, Log.DEBUG, this.javaClass.simpleName + " --> On Create")
+        LoggingUtility.log(Log.DEBUG, this.javaClass.simpleName + " --> On Create")
 
         try {
             //Fixes an error with devices with a menu key when clicking the overflow menu item.
@@ -149,7 +149,7 @@ abstract class ParentActivity : BaseActionBarActivity(), OnTouchListener {
      * Reads information out of the intent extras.
      */
     protected open fun handleIntent() {
-        LoggingUtility.LogIntent(this, intent)
+        LoggingUtility.logIntent(intent)
     }
 
     companion object {
@@ -161,7 +161,7 @@ abstract class ParentActivity : BaseActionBarActivity(), OnTouchListener {
          * @param layoutId The R layout integer, such as R.layout.example_layout.
          * @return An Intent
          */
-        protected fun createIntent(context: Context?, type: Class<out ParentActivity>?, layoutId: Int): Intent {
+        fun createIntent(context: Context?, type: Class<out ParentActivity>?, layoutId: Int): Intent {
             val intent: Intent
 
             if (context != null) {

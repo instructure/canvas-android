@@ -103,7 +103,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         (activity as? InitActivity)?.attachNavigationDrawer(toDoToolbar)
         toDoToolbar.requestAccessibilityFocus()
     }
-    
+
     public override fun getAdapter(): ToDoAdapter {
         if (mAdapter == null) {
             mAdapter = ToDoAdapter(requireActivity(), presenter, mAdapterCallback)
@@ -111,15 +111,17 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         return mAdapter
     }
 
-    private val mAdapterCallback = AdapterToFragmentCallback<ToDo> { toDo, _ ->
-        // if the layout is refreshing we don't want them to select a different item
-        if (swipeRefreshLayout.isRefreshing) return@AdapterToFragmentCallback
+    private val mAdapterCallback = object : AdapterToFragmentCallback<ToDo> {
+        override fun onRowClicked(model: ToDo, position: Int) {
+            // if the layout is refreshing we don't want them to select a different item
+            if (swipeRefreshLayout.isRefreshing) return
 
-        if (toDo.assignment == null) {
-            toast(R.string.errorOccurred)
-            return@AdapterToFragmentCallback
+            if (model.assignment == null) {
+                toast(R.string.errorOccurred)
+                return
+            }
+            presenter.goToUngradedSubmissions(model.assignment!!, model.canvasContext!!.id)
         }
-        presenter.goToUngradedSubmissions(toDo.assignment!!, toDo.canvasContext!!.id)
     }
 
     override fun onRefreshStarted() {

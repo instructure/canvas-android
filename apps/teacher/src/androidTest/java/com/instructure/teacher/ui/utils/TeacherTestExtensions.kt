@@ -37,7 +37,6 @@ import com.instructure.interactions.router.Route
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.ui.models.CanvasUser
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers.anyOf
 import java.io.*

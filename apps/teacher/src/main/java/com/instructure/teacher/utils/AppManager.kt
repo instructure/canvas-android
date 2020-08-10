@@ -41,8 +41,6 @@ import io.fabric.sdk.android.Fabric
 class AppManager : com.instructure.canvasapi2.AppManager() {
 
     override fun onCreate() {
-        // Set preferences to create a pre-logged-in state. This should only be used for the 'robo' app flavor.
-        if (BuildConfig.IS_ROBO_TESTING) RoboTesting.setAppStatePrefs()
         if (MissingSplitsManagerFactory.create(this).disableAppIfMissingRequiredSplits()) {
             // Skip app initialization.
             return

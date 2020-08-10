@@ -36,8 +36,6 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.binders.PeopleBinder
-import com.instructure.student.binders.PeopleHeaderBinder
 import com.instructure.student.holders.PeopleHeaderViewHolder
 import com.instructure.student.holders.PeopleViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
@@ -124,18 +122,18 @@ class PeopleListRecyclerAdapter(
             if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder(v) else PeopleViewHolder(v)
 
     override fun itemLayoutResId(viewType: Int): Int =
-            if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder.holderResId() else PeopleViewHolder.holderResId()
+            if (viewType == Types.TYPE_HEADER) PeopleHeaderViewHolder.HOLDER_RES_ID else PeopleViewHolder.HOLDER_RES_ID
 
     override fun contextReady() = Unit
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, peopleGroupType: EnrollmentType, user: User) {
         val groupItemCount = getGroupItemCount(peopleGroupType)
         val itemPosition = storedIndexOfItem(peopleGroupType, user)
-        PeopleBinder.bind(user, holder as PeopleViewHolder, mAdapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
+        (holder as PeopleViewHolder).bind(user, mAdapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, enrollmentType: EnrollmentType?, isExpanded: Boolean) {
-        PeopleHeaderBinder.bind(context, mCanvasContext, holder as PeopleHeaderViewHolder, enrollmentType, getHeaderTitle(enrollmentType), isExpanded, viewHolderHeaderClicked)
+        (holder as PeopleHeaderViewHolder).bind(enrollmentType, getHeaderTitle(enrollmentType), isExpanded, viewHolderHeaderClicked)
     }
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<EnrollmentType> {

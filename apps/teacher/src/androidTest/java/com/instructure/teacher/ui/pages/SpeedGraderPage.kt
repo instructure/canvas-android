@@ -16,18 +16,14 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.annotation.StringRes
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.models.Submission
-import com.instructure.teacher.utils.getSubmissionFormattedDate
 import org.hamcrest.Matchers
 
 @Suppress("unused")
@@ -52,21 +48,11 @@ class SpeedGraderPage : BasePage() {
         submissionVersionDialogTitle.assertDisplayed()
     }
 
-    fun assertSubmissionSelected(submission: Submission) {
-        submissionDropDown.check(ViewAssertions
-                .matches(ViewMatchers.withText(submission.submittedAt.getSubmissionFormattedDate(InstrumentationRegistry.getContext()))))
-    }
-
     fun openSubmissionsDialog() {
         ClickUntilMethod.run(
                 onView(withId(R.id.submissionVersionsButton)),
                 onView(withText(R.string.submission_versions))
         )
-    }
-
-    fun selectSubmissionFromDialog(submission: Submission) {
-        waitForViewWithText(submission.submittedAt.getSubmissionFormattedDate(InstrumentationRegistry.getTargetContext())).click()
-        waitForViewWithText(android.R.string.ok).click()
     }
 
     fun selectGradesTab() {

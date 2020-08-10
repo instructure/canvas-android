@@ -31,11 +31,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
-import com.instructure.student.binders.AssignmentBinder
-import com.instructure.student.binders.EmptyBinder
-import com.instructure.student.binders.ExpandableHeaderBinder
 import com.instructure.student.holders.AssignmentViewHolder
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
@@ -61,7 +58,7 @@ open class AssignmentDateListRecyclerAdapter(
     private val undated: AssignmentGroup
     private val past: AssignmentGroup
     private var assignmentGroupCallback: StatusCallback<List<AssignmentGroup>>? = null
-    private var currentGradingPeriod: GradingPeriod? = null
+    override var currentGradingPeriod: GradingPeriod? = null
     private var apiJob: WeaveJob? = null
     private var assignmentGroups: List<AssignmentGroup> = emptyList()
 
@@ -117,9 +114,9 @@ open class AssignmentDateListRecyclerAdapter(
 
     override fun itemLayoutResId(viewType: Int): Int {
         return when (viewType) {
-            Types.TYPE_HEADER -> ExpandableViewHolder.holderResId()
-            Types.TYPE_EMPTY_CELL -> EmptyViewHolder.holderResId()
-            else -> AssignmentViewHolder.holderResId()
+            Types.TYPE_HEADER -> ExpandableViewHolder.HOLDER_RES_ID
+            Types.TYPE_EMPTY_CELL -> EmptyViewHolder.HOLDER_RES_ID
+            else -> AssignmentViewHolder.HOLDER_RES_ID
         }
     }
 
@@ -180,14 +177,11 @@ open class AssignmentDateListRecyclerAdapter(
         assignmentGroup: AssignmentGroup,
         assignment: Assignment
     ) {
-        AssignmentBinder.bind(
-            context, holder as AssignmentViewHolder, assignment,
-            ColorKeeper.getOrGenerateColor(canvasContext), adapterToAssignmentsCallback
-        )
+        (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.color, adapterToAssignmentsCallback)
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup) {
-        EmptyBinder.bind(holder as EmptyViewHolder, context.resources.getString(R.string.noAssignmentsInGroup))
+        (holder as EmptyViewHolder).bind(context.resources.getString(R.string.noAssignmentsInGroup))
     }
 
     override fun onBindHeaderHolder(
@@ -195,10 +189,8 @@ open class AssignmentDateListRecyclerAdapter(
         assignmentGroup: AssignmentGroup,
         isExpanded: Boolean
     ) {
-        ExpandableHeaderBinder.bind(
+        (holder as ExpandableViewHolder).bind(
             context,
-            canvasContext,
-            holder as ExpandableViewHolder,
             assignmentGroup,
             assignmentGroup.name ?: "",
             isExpanded,
@@ -224,14 +216,6 @@ open class AssignmentDateListRecyclerAdapter(
 
     override fun loadAssignment() {
         AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext.id, isRefresh, assignmentGroupCallback!!)
-    }
-
-    override fun getCurrentGradingPeriod(): GradingPeriod? {
-        return currentGradingPeriod
-    }
-
-    override fun setCurrentGradingPeriod(gradingPeriod: GradingPeriod) {
-        currentGradingPeriod = gradingPeriod
     }
 
     private fun populateData() {

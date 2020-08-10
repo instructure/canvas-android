@@ -15,13 +15,23 @@
  */
 package com.instructure.teacher.ui.pages
 
+
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import com.instructure.dataseeding.model.AssignmentApiModel
-import com.instructure.espresso.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasContentDescription
+import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.assertNotHasText
+import com.instructure.espresso.assertVisible
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-
-
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
 import com.instructure.teacher.R
@@ -75,8 +85,8 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         viewAllSubmissions.click()
     }
 
-    fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        assignmentNameTextView.assertHasText(assignment.name)
+    fun assertAssignmentDetails(assignment: Assignment) {
+        assignmentNameTextView.assertHasText(assignment.name!!)
         if (assignment.published) {
             publishStatusTextView.assertHasText(R.string.published)
         } else {

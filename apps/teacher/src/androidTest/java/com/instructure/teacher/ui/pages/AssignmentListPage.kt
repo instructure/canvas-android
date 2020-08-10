@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -43,12 +44,16 @@ class AssignmentListPage : BasePage() {
         waitForViewWithText(assignment.name).click()
     }
 
+    fun clickAssignment(assignment: Assignment) {
+        waitForViewWithText(assignment.name!!).click()
+    }
+
     fun assertDisplaysNoAssignmentsView() {
         emptyPandaView.assertDisplayed()
     }
 
-    fun assertHasAssignment(assignment: AssignmentApiModel) {
-        waitForViewWithText(assignment.name).assertDisplayed()
+    fun assertHasAssignment(assignment: Assignment) {
+        waitForViewWithText(assignment.name!!).assertDisplayed()
     }
 
     fun assertHasGradingPeriods() {

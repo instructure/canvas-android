@@ -159,14 +159,16 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun getAdapter(): PeopleListRecyclerAdapter {
         if (mAdapter == null) {
-            mAdapter = PeopleListRecyclerAdapter(requireContext(), presenter, AdapterToFragmentCallback { user, _ ->
-                val canvasContext = nonNullArgs.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)!!
-                if (canvasContext.isDesigner()) {
-                    showToast(R.string.errorIsDesigner)
-                    return@AdapterToFragmentCallback
+            mAdapter = PeopleListRecyclerAdapter(requireContext(), presenter, object : AdapterToFragmentCallback<User> {
+                override fun onRowClicked(model: User, position: Int) {
+                    val canvasContext = nonNullArgs.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)!!
+                    if (canvasContext.isDesigner()) {
+                        showToast(R.string.errorIsDesigner)
+                        return
+                    }
+                    val bundle = StudentContextFragment.makeBundle(model.id, canvasContext.id, true)
+                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, canvasContext, bundle))
                 }
-                val bundle = StudentContextFragment.makeBundle(user.id, canvasContext.id, true)
-                RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, canvasContext, bundle))
             })
         }
         return mAdapter

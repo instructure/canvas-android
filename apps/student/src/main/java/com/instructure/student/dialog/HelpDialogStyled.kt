@@ -141,7 +141,7 @@ class HelpDialogStyled : DialogFragment() {
             versionName = pInfo.versionName
             versionCode = pInfo.versionCode
         } catch (e: PackageManager.NameNotFoundException) {
-            LoggingUtility.LogConsole(e.message)
+            LoggingUtility.logConsole(e.message)
         }
 
         intent.putExtra(Intent.EXTRA_SUBJECT, "[$subject] Issue with Canvas [Android] $versionName")

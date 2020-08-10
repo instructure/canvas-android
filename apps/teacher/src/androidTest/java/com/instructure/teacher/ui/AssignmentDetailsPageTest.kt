@@ -15,37 +15,41 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Assignment.SubmissionType
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_UPLOAD
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.TestRail
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.dataseeding.model.SubmissionType
-import com.instructure.dataseeding.model.SubmissionType.*
-import com.instructure.teacher.ui.utils.*
-import okreplay.DittoResponseMod
-import okreplay.JsonObjectResponseMod
-import okreplay.JsonObjectValueMod
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class AssignmentDetailsPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToAssignmentDetailsPage(
-                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
                 students = 1,
-                submissions = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = ONLINE_TEXT_ENTRY)))
+                withSubmission = true)
         assignmentDetailsPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     fun displaysCorrectDetails() {
         val assignment = getToAssignmentDetailsPage()
@@ -53,7 +57,6 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     fun displaysInstructions() {
         getToAssignmentDetailsPage(withDescription = true)
@@ -61,7 +64,6 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134480")
     fun displaysNoInstructionsMessage() {
         getToAssignmentDetailsPage()
@@ -69,7 +71,6 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
         getToAssignmentDetailsPage(lockAt = 7.days.ago.iso8601)
@@ -77,17 +78,14 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134482")
     fun displaysNoFromDate() {
         val lockAt = 7.days.fromNow.iso8601
-        addDittoMod(getAssignmentLockDateMod(lockAt))
         getToAssignmentDetailsPage(lockAt = lockAt)
         assignmentDetailsPage.assertToFilledAndFromEmpty()
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
         getToAssignmentDetailsPage(unlockAt = 7.days.ago.iso8601)
@@ -95,99 +93,99 @@ class AssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysSubmissionTypeNone() {
-        getToAssignmentDetailsPage(submissionTypes = listOf(NO_TYPE))
+        getToAssignmentDetailsPage(submissionTypes = listOf(SubmissionType.NONE))
         assignmentDetailsPage.assertSubmissionTypeNone()
     }
 
     @Test
-    @Ditto
     fun displaysSubmissionTypeOnPaper() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ON_PAPER))
         assignmentDetailsPage.assertSubmissionTypeOnPaper()
     }
 
     @Test
-    @Ditto
     fun displaysSubmissionTypeOnlineTextEntry() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_TEXT_ENTRY))
         assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
     }
 
     @Test
-    @Ditto
     fun displaysSubmissionTypeOnlineUrl() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_URL))
         assignmentDetailsPage.assertSubmissionTypeOnlineUrl()
     }
 
     @Test
-    @Ditto
     fun displaysSubmissionTypeOnlineUpload() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_UPLOAD))
         assignmentDetailsPage.assertSubmissionTypeOnlineUpload()
     }
 
     @Test
-    @Ditto
     fun displaysSubmittedDonut() {
         getToAssignmentDetailsPage(
                 submissionTypes = listOf(ONLINE_TEXT_ENTRY),
                 students = 1,
-                submissions = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = ONLINE_TEXT_ENTRY)))
+                withSubmission = true)
         assignmentDetailsPage.assertHasSubmitted()
     }
 
     @Test
-    @Ditto
     fun displaysNotSubmittedDonut() {
         getToAssignmentDetailsPage(students = 1)
         assignmentDetailsPage.assertNotSubmitted()
     }
 
     private fun getToAssignmentDetailsPage(
-            assignments: Int = 1,
             withDescription: Boolean = false,
-            lockAt: String = "",
-            unlockAt: String = "",
+            lockAt: String? = null,
+            unlockAt: String? = null,
             submissionTypes: List<SubmissionType> = emptyList(),
             students: Int = 0,
-            submissions: List<SubmissionsApi.SubmissionSeedInfo> = emptyList()): AssignmentApiModel {
+            dueAt: String? = null,
+            withSubmission: Boolean = false): Assignment {
 
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val assignment = seedAssignments(
-                assignments = assignments,
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = students)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val assignment = data.addAssignment(
                 courseId = course.id,
-                withDescription = withDescription,
+                submissionType = if(submissionTypes.isEmpty()) SubmissionType.ONLINE_TEXT_ENTRY else submissionTypes.first(),
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionTypes = submissionTypes,
-                teacherToken = teacher.token)
+                description = if(withDescription) Randomizer.randomCourseDescription() else "",
+                dueAt = dueAt
+        )
 
-        if (!submissions.isEmpty()) {
-            seedAssignmentSubmission(
-                    submissionSeeds = submissions,
-                    assignmentId = assignment.assignmentList[0].id,
-                    courseId = course.id,
-                    studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token
+        if(withSubmission) {
+            if(students == 0) {
+                throw Exception("Can't have withSubmission == true and student count == 0")
+            }
+            if(!submissionTypes.contains(ONLINE_TEXT_ENTRY)) {
+                throw Exception("If withSubmission == true, ONLINE_TEXT_ENTRY needs to be allowed")
+            }
+            data.addSubmissionForAssignment(
+                    assignmentId = assignment.id,
+                    userId = data.students[0].id,
+                    type = "online_text_entry",
+                    body = "A submission"
             )
         }
 
-        tokenLogin(teacher)
-        routeTo("courses/${course.id}/assignments/${assignment.assignmentList[0].id}")
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+        coursesListPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.waitForRender()
-        return assignment.assignmentList[0]
-    }
-
-    private fun getAssignmentLockDateMod(dateString: String): DittoResponseMod {
-        return JsonObjectResponseMod(
-            Regex("""(.*)/api/v1/courses/\d+/assignments/\d+\?(.*)"""),
-            JsonObjectValueMod("lock_at", dateString),
-            JsonObjectValueMod("all_dates[0]:lock_at", dateString)
-        )
+        return assignment
     }
 
 }

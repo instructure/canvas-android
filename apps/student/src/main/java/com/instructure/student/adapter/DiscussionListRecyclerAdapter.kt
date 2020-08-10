@@ -35,7 +35,6 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
-import com.instructure.student.binders.EmptyBinder
 import com.instructure.student.holders.DiscussionExpandableViewHolder
 import com.instructure.student.holders.DiscussionListHolder
 import com.instructure.student.holders.EmptyViewHolder
@@ -108,7 +107,7 @@ open class DiscussionListRecyclerAdapter(
     }
 
     override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder?, group: String?) {
-        EmptyBinder.bind(holder as EmptyViewHolder, context.resources.getString(R.string.utils_emptyDiscussions))
+        (holder as EmptyViewHolder).bind(context.resources.getString(R.string.utils_emptyDiscussions))
     }
 
     override fun loadData() {

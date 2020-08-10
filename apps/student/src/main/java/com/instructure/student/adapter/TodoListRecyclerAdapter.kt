@@ -33,8 +33,6 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
-import com.instructure.student.binders.ExpandableHeaderBinder
-import com.instructure.student.binders.TodoBinder
 import com.instructure.student.fragment.FavoritedCourses
 import com.instructure.student.fragment.FilterMode
 import com.instructure.student.fragment.NoFilter
@@ -94,13 +92,13 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
 
     override fun itemLayoutResId(viewType: Int): Int {
         return when (viewType) {
-            Types.TYPE_HEADER -> ExpandableViewHolder.holderResId()
+            Types.TYPE_HEADER -> ExpandableViewHolder.HOLDER_RES_ID
             else -> TodoViewHolder.HOLDER_RES_ID
         }
     }
 
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, date: Date, todo: ToDo) {
-        TodoBinder.bind(context, holder as TodoViewHolder, todo, adapterToFragmentCallback, todoCheckboxCallback!!)
+        (holder as TodoViewHolder).bind(context, todo, adapterToFragmentCallback, todoCheckboxCallback!!)
     }
 
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, date: Date, isExpanded: Boolean) {
@@ -114,7 +112,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
             DateHelper.getFormattedDate(context, date)
         }
 
-        ExpandableHeaderBinder.bind(context, canvasContext, holder as ExpandableViewHolder, date, displayDate, isExpanded, viewHolderHeaderClicked)
+        (holder as ExpandableViewHolder).bind(context, date, displayDate, isExpanded, viewHolderHeaderClicked)
     }
 
     fun getFilterMode(): FilterMode {
@@ -139,7 +137,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
         ToDoManager.getTodosWithUngradedQuizzes(todoCallback!!, isRefresh)
     }
 
-    override fun onCallbackFinished(type: ApiType) {
+    override fun onCallbackFinished(type: ApiType?) {
         // Workaround for the multiple callbacks, some will succeed while others don't
         isLoadedFirstPage = true
         shouldShowLoadingFooter()

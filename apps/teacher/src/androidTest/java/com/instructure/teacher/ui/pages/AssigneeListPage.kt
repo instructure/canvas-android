@@ -22,8 +22,17 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.actionOnHolderItem
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToHolder
 import androidx.test.espresso.matcher.BoundedMatcher
-import androidx.test.espresso.matcher.ViewMatchers.*
-import com.instructure.espresso.*
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.espresso.OnViewWithContentDescription
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.OnViewWithText
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.teacher.R
@@ -45,7 +54,9 @@ class AssigneeListPage : BasePage(pageResId = R.id.assigneeListPage) {
             groupNames: List<String> = emptyList(),
             studentNames: List<String> = emptyList()) {
         for (assigneeName in (sectionNames + groupNames + studentNames)) {
-            onView(allOf(withText(assigneeName), hasSibling(withId(R.id.assigneeTitleView)))).assertDisplayed()
+            var targetView = allOf(withText(assigneeName), hasSibling(withId(R.id.assigneeTitleView)))
+            scrollRecyclerView(R.id.recyclerView, targetView)
+            onView(targetView).assertDisplayed()
         }
     }
 

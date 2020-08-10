@@ -343,7 +343,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     private fun updateDiscussionLikedState(discussionEntry: DiscussionEntry, methodName: String) {
         val likingSum = if (discussionEntry.ratingSum == 0) "" else "(${discussionEntry.ratingSum})"
-        val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountAllyText(requireContext(), discussionEntry)
+        val likingSumAllyText = DiscussionEntryHtmlConverter.getLikeCountText(requireContext(), discussionEntry)
         val likingColor = DiscussionUtils.getHexColorString(if (discussionEntry._hasRated) ThemePrefs.brandColor else ContextCompat.getColor(requireContext(), R.color.discussionLiking))
         activity?.runOnUiThread {
             discussionRepliesWebView.loadUrl("javascript:$methodName('${discussionEntry.id}')")
