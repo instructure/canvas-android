@@ -154,6 +154,7 @@ fun handleLTIPlaceHolders(placeHolderList: ArrayList<Placeholder>, html: String)
  */
 fun handleBlankTarget(html: String): String {
     if(html.contains("<a href")) {
+        var newHtml = html
         val matcher = Pattern.compile("<a href=\"([^\"]+)\" target=\"_blank\">").matcher(html)
 
         while(matcher.find()) {
@@ -161,10 +162,10 @@ fun handleBlankTarget(html: String): String {
             val srcUrl = matcher.group(1)
 
             val newLink = "<a href=\"$srcUrl\">"
-            return html.replace(originalLink, newLink)
+            newHtml = newHtml.replace(originalLink, newLink)
         }
 
-        return html
+        return newHtml
     } else {
         return html
     }
