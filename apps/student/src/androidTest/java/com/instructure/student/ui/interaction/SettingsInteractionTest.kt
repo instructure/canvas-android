@@ -74,7 +74,7 @@ class SettingsInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
-    fun testHelp_searchCanvasGuides() {x
+    fun testHelp_searchCanvasGuides() {
         setUpAndSignIn()
 
         dashboardPage.launchSettingsPage()
