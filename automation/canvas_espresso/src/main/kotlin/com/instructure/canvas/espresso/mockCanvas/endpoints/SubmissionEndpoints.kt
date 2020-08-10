@@ -95,6 +95,12 @@ object SubmissionIndexEndpoint : Endpoint(
                 request.unauthorizedResponse()
             }
         }
+
+        GET {
+            // Grab the submission for the specified assignment
+            val submissions = data.submissions[pathVars.assignmentId] ?: listOf<Submission>()
+            request.successResponse(submissions)
+        }
     }
 )
 

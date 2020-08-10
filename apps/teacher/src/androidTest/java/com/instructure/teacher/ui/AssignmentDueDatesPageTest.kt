@@ -15,23 +15,24 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.TestRail
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedAssignments
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class AssignmentDueDatesPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134131")
     override fun displaysPageObjects() {
         getToDueDatesPage()
@@ -39,7 +40,6 @@ class AssignmentDueDatesPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134484")
     fun displaysNoDueDate() {
         getToDueDatesPage()
@@ -47,7 +47,6 @@ class AssignmentDueDatesPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134485")
     fun displaysSingleDueDate() {
         getToDueDatesPage(dueAt = 7.days.fromNow.iso8601)
@@ -55,27 +54,32 @@ class AssignmentDueDatesPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134486")
     fun displaysAvailabilityDates() {
         getToDueDatesPage(lockAt = 7.days.fromNow.iso8601, unlockAt = 7.days.ago.iso8601)
         assignmentDueDatesPage.assertDisplaysAvailabilityDates()
     }
 
-    private fun getToDueDatesPage(dueAt: String = "", lockAt: String = "", unlockAt: String = ""): AssignmentApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1)
-        val course = data.coursesList[0]
-        val teacher = data.teachersList[0]
-        val assignments = seedAssignments(
+    private fun getToDueDatesPage(dueAt: String? = null, lockAt: String? = null, unlockAt: String? = null): Assignment {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val course = data.courses.values.first()
+        val teacher = data.teachers[0]
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val assignment = data.addAssignment(
                 courseId = course.id,
-                assignments = 1,
                 dueAt = dueAt,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                teacherToken = teacher.token)
-        val assignment = assignments.assignmentList[0]
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+        )
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)

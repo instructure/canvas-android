@@ -16,25 +16,24 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.TestRail
 import com.instructure.espresso.randomDouble
 import com.instructure.espresso.randomString
-import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedAssignments
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.espresso.ditto.DittoMode
 import org.junit.Test
 
 class EditAssignmentDetailsPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109580")
     override fun displaysPageObjects() {
         getToEditAssignmentDetailsPage()
@@ -42,30 +41,27 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto(sequential = true)
     @TestRail(ID = "C3134126")
     fun editAssignmentName() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickAssignmentNameEditText()
-        val newAssignmentName = mockableString("new-assignment-name") { randomString() }
+        val newAssignmentName = randomString()
         editAssignmentDetailsPage.editAssignmentName(newAssignmentName)
         assignmentDetailsPage.assertAssignmentNameChanged(newAssignmentName)
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134126")
     fun editAssignmentPoints() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickPointsPossibleEditText()
-        val newPoints = mockableDouble("edit-assignment-points") { randomDouble() }
+        val newPoints = randomDouble()
         editAssignmentDetailsPage.editAssignmentPoints(newPoints)
         val stringPoints = NumberHelper.formatDecimal(newPoints, 1, true)
         assignmentDetailsPage.assertAssignmentPointsChanged(stringPoints)
     }
 
     @Test
-    @Ditto
     fun editDueDate() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueDate()
@@ -74,7 +70,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editDueTime() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueTime()
@@ -83,7 +78,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editUnlockDate() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditUnlockDate()
@@ -92,7 +86,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editUnlockTime() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditUnlockTime()
@@ -101,7 +94,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editLockDate() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditLockDate()
@@ -110,7 +102,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editLockTime() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditLockTime()
@@ -119,7 +110,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun addOverride() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickAddOverride()
@@ -128,7 +118,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun removeOverride() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickAddOverride()
@@ -139,7 +128,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun dueDateBeforeUnlockDateError() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueDate()
@@ -151,7 +139,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun dueDateAfterLockDateError() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditDueDate()
@@ -163,7 +150,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun unlockDateAfterLockDateError() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickEditUnlockDate()
@@ -175,7 +161,6 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun noAssigneesError() {
         getToEditAssignmentDetailsPage()
         editAssignmentDetailsPage.clickAddOverride()
@@ -186,31 +171,38 @@ class EditAssignmentDetailsPageTest : TeacherTest() {
     }
 
     private fun getToEditAssignmentDetailsPage(
-            assignments: Int = 1,
             withDescription: Boolean = false,
             lockAt: String = "",
             unlockAt: String = "",
-            submissionTypes: List<SubmissionType> = emptyList()): AssignmentApiModel {
+            submissionTypes: List<Assignment.SubmissionType> = emptyList()): Assignment {
 
-        val data = seedData(teachers = 1, favoriteCourses = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val assignment = seedAssignments(
-                assignments = assignments,
+        val data = MockCanvas.init(teacherCount = 1, favoriteCourseCount = 1, courseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+
+        val assignment = data.addAssignment(
                 courseId = course.id,
                 withDescription = withDescription,
                 lockAt = lockAt,
                 unlockAt = unlockAt,
-                submissionTypes = submissionTypes,
-                teacherToken = teacher.token)
+                submissionType = submissionTypes.firstOrNull()
+                        ?: Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+        )
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignment.assignmentList[0])
+        assignmentListPage.clickAssignment(assignment)
 
         assignmentDetailsPage.openEditPage()
-        return assignment.assignmentList[0]
+        return assignment
     }
 }

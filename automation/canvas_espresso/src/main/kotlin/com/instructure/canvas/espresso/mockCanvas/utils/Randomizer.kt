@@ -42,6 +42,9 @@ object Randomizer {
     /** Creates random name for a course */
     fun randomCourseName(): String = faker.educator().course() + " " + randomUUID()
 
+    /** Creates a random description for a course */
+    fun randomCourseDescription() : String = faker.lorem().sentence()
+
     /** Creates random name for a course section */
     fun randomSectionName(): String = faker.pokemon().name() + " Section"
 
