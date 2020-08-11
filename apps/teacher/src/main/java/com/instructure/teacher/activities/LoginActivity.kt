@@ -77,9 +77,7 @@ class LoginActivity : BaseLoginInitActivity() {
         }
     }
 
-    override fun isTesting(): Boolean {
-        return BuildConfig.IS_TESTING
-    }
+    override val isTesting: Boolean = BuildConfig.IS_TESTING
 
     override fun userAgent(): String = Const.TEACHER_USER_AGENT
 

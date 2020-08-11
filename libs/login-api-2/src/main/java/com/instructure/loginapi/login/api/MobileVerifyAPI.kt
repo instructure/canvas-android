@@ -35,7 +35,7 @@ object MobileVerifyAPI {
 
     internal interface OAuthInterface {
         @GET("mobile_verify.json")
-        fun mobileVerify(@Query(value = "domain", encoded = false) domain: String?, @Query("user_agent") userAgent: String?): Call<DomainVerificationResult?>
+        fun mobileVerify(@Query(value = "domain", encoded = false) domain: String?, @Query("user_agent") userAgent: String?): Call<DomainVerificationResult>
     }
 
     private fun getAuthenticationRetrofit(domain: String?) : Retrofit {
@@ -67,7 +67,7 @@ object MobileVerifyAPI {
         }
 
     @JvmStatic
-    fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult?>) {
+    fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult>) {
         if (paramIsNull(callback, domain)) {
             return
         }

@@ -79,18 +79,18 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
         override fun onResponse(response: Response<List<AccountDomain>>, linkHeaders: LinkHeaders, type: ApiType) {
             if (type.isCache) return
 
-            val domains = response.body()?.toMutableList()
+            val domains = response.body()?.toMutableList() ?: mutableListOf()
 
             val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
 
             if (isDebuggable) {
                 // Put these domains first
-                domains?.add(0, createAccountForDebugging("mobiledev.instructure.com"))
-                domains?.add(1, createAccountForDebugging("mobiledev.beta.instructure.com"))
-                domains?.add(2, createAccountForDebugging("mobileqa.instructure.com"))
-                domains?.add(3, createAccountForDebugging("mobileqat.instructure.com"))
-                domains?.add(4, createAccountForDebugging("clare.instructure.com"))
-                domains?.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
+                domains.add(0, createAccountForDebugging("mobiledev.instructure.com"))
+                domains.add(1, createAccountForDebugging("mobiledev.beta.instructure.com"))
+                domains.add(2, createAccountForDebugging("mobileqa.instructure.com"))
+                domains.add(3, createAccountForDebugging("mobileqat.instructure.com"))
+                domains.add(4, createAccountForDebugging("clare.instructure.com"))
+                domains.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
             }
 
             if (mDomainAdapter != null) {
