@@ -19,10 +19,11 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.presenters.AttendanceListPresenter
+import com.instructure.teacher.viewinterface.AttendanceListView
 
 import instructure.androidblueprint.PresenterFactory
 
-class AttendanceListPresenterFactory(private val mCanvasContext: CanvasContext, private val mTab: Tab) : PresenterFactory<AttendanceListPresenter> {
+class AttendanceListPresenterFactory(private val mCanvasContext: CanvasContext, private val mTab: Tab) : PresenterFactory<AttendanceListView, AttendanceListPresenter> {
 
     override fun create(): AttendanceListPresenter {
         return AttendanceListPresenter(mCanvasContext, mTab)

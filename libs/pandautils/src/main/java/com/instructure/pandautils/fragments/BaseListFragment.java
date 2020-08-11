@@ -18,10 +18,6 @@
 package com.instructure.pandautils.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +27,10 @@ import com.instructure.pandautils.R;
 import com.instructure.pandautils.interfaces.NavigationCallbacks;
 import com.instructure.pandautils.utils.Const;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 import instructure.androidblueprint.ListFragment;
 import instructure.androidblueprint.ListManager;
 import instructure.androidblueprint.ListPresenter;
@@ -41,7 +41,7 @@ public abstract class BaseListFragment<
         PRESENTER extends ListPresenter<MODEL, VIEW>,
         VIEW extends ListManager<MODEL>,
         HOLDER extends RecyclerView.ViewHolder,
-        ADAPTER extends ListRecyclerAdapter<MODEL, HOLDER>> extends ListFragment<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER>
+        ADAPTER extends ListRecyclerAdapter<MODEL, HOLDER, VIEW>> extends ListFragment<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER>
         implements NavigationCallbacks {
 
     private CanvasContext mCanvasContext;

@@ -14,17 +14,30 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
+abstract class FragmentPresenter<VIEW : FragmentViewInterface> : Presenter<VIEW> {
+    abstract fun loadData(forceNetwork: Boolean)
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
+    abstract fun refresh(forceNetwork: Boolean)
 
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
+    var viewCallback: VIEW? = null
+        private set
+
+    override fun onViewAttached(view: VIEW): Presenter<VIEW> {
+        viewCallback = view
+        return this
+    }
+
+    override fun onViewDetached() {
+        viewCallback = null
+    }
+
+    override fun onDestroyed() {
+        viewCallback = null
+    }
+
+    protected fun onRefreshStarted() {
+        viewCallback?.onRefreshStarted()
     }
 }

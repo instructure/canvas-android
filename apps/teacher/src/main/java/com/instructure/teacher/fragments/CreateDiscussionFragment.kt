@@ -61,14 +61,23 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.CreateDiscussionView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Date
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.any
+import kotlin.collections.arrayListOf
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.forEachIndexed
+import kotlin.collections.hashMapOf
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.plusAssign
+import kotlin.collections.toList
 
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
@@ -195,7 +204,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<CreateDiscussionPresenter> = CreateDiscussionPresenterFactory(mCanvasContext, mDiscussionTopicHeader?.assignment)
+    override fun getPresenterFactory() = CreateDiscussionPresenterFactory(mCanvasContext, mDiscussionTopicHeader?.assignment)
 
     override fun onPresenterPrepared(presenter: CreateDiscussionPresenter?) { }
 

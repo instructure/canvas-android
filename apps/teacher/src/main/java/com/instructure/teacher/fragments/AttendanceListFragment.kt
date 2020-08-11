@@ -53,6 +53,7 @@ import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.presenters.AttendanceListPresenter
 import com.instructure.interactions.router.Route
+import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.isTablet
@@ -73,7 +74,6 @@ class AttendanceListFragment : BaseSyncFragment<
     private var mTab: Tab by ParcelableArg(default = Tab("", "", type = TYPE_INTERNAL))
 
     private lateinit var mRecyclerView: RecyclerView
-    override fun getList() = presenter.data
 
     private var ltiJob: WeaveJob? = null
 
@@ -138,7 +138,7 @@ class AttendanceListFragment : BaseSyncFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<AttendanceListPresenter> = AttendanceListPresenterFactory(mCanvasContext, mTab)
+    override fun getPresenterFactory() = AttendanceListPresenterFactory(mCanvasContext, mTab)
 
     override fun onPresenterPrepared(presenter: AttendanceListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
@@ -146,25 +146,22 @@ class AttendanceListFragment : BaseSyncFragment<
         addSwipeToRefresh(swipeRefreshLayout)
     }
 
-    override fun getAdapter(): AttendanceListRecyclerAdapter {
-        if (mAdapter == null) {
-            mAdapter = AttendanceListRecyclerAdapter(requireContext(), presenter, object : AttendanceToFragmentCallback<Attendance> {
-                override fun onRowClicked(attendance: Attendance, position: Int) {
-                    presenter?.markAttendance(attendance)
-                }
+    override fun createAdapter(): AttendanceListRecyclerAdapter {
+        return AttendanceListRecyclerAdapter(requireContext(), presenter, object : AttendanceToFragmentCallback<Attendance> {
+            override fun onRowClicked(attendance: Attendance, position: Int) {
+                presenter?.markAttendance(attendance)
+            }
 
-                override fun onAvatarClicked(model: Attendance?, position: Int) {
-                    if(model != null && mCanvasContext.id != 0L) {
-                        val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
-                        RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
-                    }
+            override fun onAvatarClicked(model: Attendance?, position: Int) {
+                if(model != null && mCanvasContext.id != 0L) {
+                    val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
+                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
                 }
-            })
-        }
-        return mAdapter
+            }
+        })
     }
 
-    override fun getRecyclerView(): RecyclerView = mRecyclerView
+    override val recyclerView: RecyclerView get() = mRecyclerView
     override fun withPagination(): Boolean = true
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 

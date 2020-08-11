@@ -19,8 +19,9 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.teacher.presenters.FileListPresenter
+import com.instructure.teacher.viewinterface.FileListView
 import instructure.androidblueprint.PresenterFactory
 
-class FileListPresenterFactory(private val currentFolder: FileFolder, val mCanvasContext: CanvasContext) : PresenterFactory<FileListPresenter> {
+class FileListPresenterFactory(private val currentFolder: FileFolder, val mCanvasContext: CanvasContext) : PresenterFactory<FileListView, FileListPresenter> {
     override fun create(): FileListPresenter = FileListPresenter(currentFolder, mCanvasContext)
 }

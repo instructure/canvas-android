@@ -21,9 +21,10 @@ import android.view.View
 import com.instructure.teacher.holders.DueDateViewHolder
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.presenters.DueDatesPresenter
+import com.instructure.teacher.viewinterface.DueDatesView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-class DueDatesAdapter(context: Context, val presenter: DueDatesPresenter) : SyncRecyclerAdapter<DueDateGroup, DueDateViewHolder>(context, presenter) {
+class DueDatesAdapter(context: Context, val presenter: DueDatesPresenter) : SyncRecyclerAdapter<DueDateGroup, DueDateViewHolder, DueDatesView>(context, presenter) {
     override fun itemLayoutResId(viewType: Int) = DueDateViewHolder.HOLDER_RES_ID
     override fun createViewHolder(v: View, viewType: Int) = DueDateViewHolder(v)
     override fun bindHolder(model: DueDateGroup, holder: DueDateViewHolder, position: Int)

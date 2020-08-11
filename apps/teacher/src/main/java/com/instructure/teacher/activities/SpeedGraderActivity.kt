@@ -116,7 +116,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     }
 
     override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
-        adapter = SubmissionContentAdapter(assignment, presenter.course, submissions)
+        adapter = SubmissionContentAdapter(assignment, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.dividerColor)

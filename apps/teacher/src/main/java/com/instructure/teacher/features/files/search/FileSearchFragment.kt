@@ -47,21 +47,20 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     override fun layoutResId() = R.layout.fragment_file_search
-    override fun getList() = presenter.data
     override fun onCreateView(view: View?) = Unit
     override fun getPresenterFactory() = FileSearchPresenterFactory(canvasContext!!)
-    override fun getRecyclerView(): RecyclerView = fileSearchRecyclerView
+    override val recyclerView: RecyclerView = fileSearchRecyclerView
 
     override fun onPresenterPrepared(presenter: FileSearchPresenter) {
         fileSearchRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onReadySetGo(presenter: FileSearchPresenter) {
-        if (recyclerView.adapter == null) fileSearchRecyclerView.adapter = adapter
+        if (recyclerView.adapter == null) fileSearchRecyclerView.adapter = createAdapter()
         setupViews()
     }
 
-    override fun getAdapter(): FileSearchAdapter = searchAdapter
+    override fun createAdapter(): FileSearchAdapter = searchAdapter
 
     override fun onRefreshStarted() {
         progressBar.setVisible()

@@ -48,7 +48,6 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_or_edit_announcement.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -95,8 +94,7 @@ class CreateOrEditAnnouncementFragment :
     override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter?) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
 
-    override fun getPresenterFactory(): PresenterFactory<CreateOrEditAnnouncementPresenter> =
-            CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
+    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
 
     override fun onStart() {
         super.onStart()

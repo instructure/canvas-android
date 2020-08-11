@@ -25,7 +25,9 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
@@ -134,10 +136,9 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun layoutResId() = R.layout.fragment_file_list
-    override fun getList() = presenter.data
     override fun onCreateView(view: View?) = Unit
     override fun getPresenterFactory() = FileListPresenterFactory(currentFolder, mCanvasContext)
-    override fun getRecyclerView(): RecyclerView = fileListRecyclerView
+    override val recyclerView: RecyclerView get() = fileListRecyclerView
 
     override fun onPresenterPrepared(presenter: FileListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
@@ -175,30 +176,25 @@ class FileListFragment : BaseSyncFragment<
         setupViews()
     }
 
-    override fun getAdapter(): FileListAdapter {
-        if (mAdapter == null) {
-            mAdapter = FileListAdapter(requireContext(), courseColor, presenter) {
-
-                if (it.displayName.isValid()) {
-                    // This is a file
-                    val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.vd_document)
-                    if (it.isHtmlFile) {
-                        /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
-                        accessed as an authenticated preview to work correctly */
-                        val bundle = ViewHtmlFragment.makeAuthSessionBundle(mCanvasContext, it, it.displayName.orEmpty(), courseColor, editableFile)
-                        RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
-                    } else {
-                        viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, courseColor, editableFile)
-                    }
+    override fun createAdapter(): FileListAdapter {
+        return FileListAdapter(requireContext(), courseColor, presenter) {
+            if (it.displayName.isValid()) {
+                // This is a file
+                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.vd_document)
+                if (it.isHtmlFile) {
+                    /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
+                    accessed as an authenticated preview to work correctly */
+                    val bundle = ViewHtmlFragment.makeAuthSessionBundle(mCanvasContext, it, it.displayName.orEmpty(), courseColor, editableFile)
+                    RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
                 } else {
-                    // This is a folder
-                    val args = FileListFragment.makeBundle(presenter.mCanvasContext, it)
-                    RouteMatcher.route(requireContext(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
+                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, courseColor, editableFile)
                 }
+            } else {
+                // This is a folder
+                val args = FileListFragment.makeBundle(presenter.mCanvasContext, it)
+                RouteMatcher.route(requireContext(), Route(FileListFragment::class.java, presenter.mCanvasContext, args))
             }
         }
-
-        return mAdapter
     }
 
     override fun onRefreshStarted() {

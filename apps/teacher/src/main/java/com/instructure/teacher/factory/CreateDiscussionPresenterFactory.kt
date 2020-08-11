@@ -19,9 +19,10 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.CreateDiscussionPresenter
+import com.instructure.teacher.viewinterface.CreateDiscussionView
 import instructure.androidblueprint.PresenterFactory
 
 
-class CreateDiscussionPresenterFactory(private var canvasContext: CanvasContext, private var assignment: Assignment?) : PresenterFactory<CreateDiscussionPresenter> {
+class CreateDiscussionPresenterFactory(private var canvasContext: CanvasContext, private var assignment: Assignment?) : PresenterFactory<CreateDiscussionView, CreateDiscussionPresenter> {
     override fun create(): CreateDiscussionPresenter = CreateDiscussionPresenter(canvasContext, assignment)
 }

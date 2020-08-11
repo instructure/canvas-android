@@ -18,9 +18,10 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.teacher.presenters.AssignmentDetailsPresenter
+import com.instructure.teacher.viewinterface.AssignmentDetailsView
 
 import instructure.androidblueprint.PresenterFactory
 
-class AssignmentDetailPresenterFactory(val assignment: Assignment) : PresenterFactory<AssignmentDetailsPresenter> {
+class AssignmentDetailPresenterFactory(val assignment: Assignment) : PresenterFactory<AssignmentDetailsView, AssignmentDetailsPresenter> {
     override fun create() = AssignmentDetailsPresenter(assignment)
 }

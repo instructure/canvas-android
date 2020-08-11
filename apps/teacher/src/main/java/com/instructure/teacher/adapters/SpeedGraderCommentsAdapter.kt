@@ -24,16 +24,17 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.teacher.holders.SpeedGraderCommentHolder
 import com.instructure.teacher.models.SubmissionCommentWrapper
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
+import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import instructure.androidblueprint.ListRecyclerAdapter
 
 class SpeedGraderCommentsAdapter(
         context: Context,
-        val presenter: SpeedGraderCommentsPresenter,
+        override val presenter: SpeedGraderCommentsPresenter,
         val courseId: Long,
         val assignee: Assignee,
         val mGradeAnonymously: Boolean,
         val onAttachmentClicked: (Attachment) -> Unit
-) : ListRecyclerAdapter<SubmissionCommentWrapper, SpeedGraderCommentHolder>(context, presenter) {
+) : ListRecyclerAdapter<SubmissionCommentWrapper, SpeedGraderCommentHolder, SpeedGraderCommentsView>(context, presenter) {
     private val currentUser = ApiPrefs.user ?: throw IllegalStateException("Current user must not be null")
 
     override fun itemLayoutResId(viewType: Int) = SpeedGraderCommentHolder.HOLDER_RES_ID

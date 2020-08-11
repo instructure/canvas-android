@@ -14,13 +14,10 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
-
-
-public interface ListChangeCallback {
-    void onInserted(int position, int count);
-    void onRemoved(int position, int count);
-    void onMoved(int fromPosition, int toPosition);
-    void onChanged(int position, int count);
+interface FragmentViewInterface {
+    // UI Updating
+    fun onRefreshFinished()
+    fun onRefreshStarted()
 }

@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.parcelCopy
 import com.instructure.interactions.router.Route
-import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -46,7 +45,6 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.InboxView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_inbox.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -56,14 +54,12 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
     private val CANVAS_CONTEXT = "canvas_context"
     private var canvasContextSelected: CanvasContext? = null
-    private lateinit var recyclerView: RecyclerView
     //used to keep track of scope for configuration changes
     private var currentScope = InboxApi.Scope.ALL
 
     override fun layoutResId(): Int = R.layout.fragment_inbox
-    override fun getList(): UpdatableSortedList<Conversation> = presenter.data
     override fun withPagination() = true
-    override fun getRecyclerView(): RecyclerView = inboxRecyclerView
+    override val recyclerView: RecyclerView get() = inboxRecyclerView
     override fun checkIfEmpty() {
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
@@ -97,7 +93,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     }
 
     override fun onPresenterPrepared(presenter: InboxPresenter) {
-        recyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.inboxRecyclerView, R.id.emptyPandaView, getString(R.string.nothingUnread))
         onScopeChanged(currentScope)
 
@@ -177,11 +173,8 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
             presenter.refresh(true)
         }
     }
-    public override fun getAdapter(): InboxAdapter {
-        if (mAdapter == null) {
-            mAdapter = InboxAdapter(requireActivity(), presenter, mAdapterCallback)
-        }
-        return mAdapter
+    public override fun createAdapter(): InboxAdapter {
+        return InboxAdapter(requireActivity(), presenter, mAdapterCallback)
     }
 
     private val mAdapterCallback = object : AdapterToFragmentCallback<Conversation> {
@@ -311,7 +304,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
                 //for removed stars and archives, we need to update the list completely
                 presenter.refresh(true)
             else
-                mAdapter.notifyItemChanged(it)
+                adapter.notifyItemChanged(it)
         }
     }
 

@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 import com.instructure.teacher.presenters.AddMessagePresenter
+import com.instructure.teacher.viewinterface.AddMessageView
 import instructure.androidblueprint.PresenterFactory
 import java.util.*
 
@@ -27,6 +28,6 @@ class AddMessagePresenterFactory(
     private val mParticipants: ArrayList<BasicUser>?,
     private val mMessages: ArrayList<Message>?,
     private val mIsReply: Boolean
-) : PresenterFactory<AddMessagePresenter?> {
+) : PresenterFactory<AddMessageView, AddMessagePresenter> {
     override fun create() = AddMessagePresenter(mConversation, mParticipants, mMessages, mIsReply)
 }

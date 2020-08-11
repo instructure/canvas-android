@@ -28,6 +28,7 @@ import com.instructure.teacher.factory.InternalWebViewPresenterFactory
 import com.instructure.teacher.fragments.InternalWebViewFragment
 import com.instructure.teacher.presenters.InternalWebViewPresenter
 import com.instructure.teacher.viewinterface.InternalWebView
+import instructure.androidblueprint.PresenterFactory
 
 class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, InternalWebView>(), InternalWebView {
 

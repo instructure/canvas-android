@@ -64,8 +64,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 
     override fun layoutResId() = R.layout.fragment_assignee_list
-    override fun getList() = presenter.data
-    override fun getRecyclerView() = assigneeRecyclerView
+    override val recyclerView get() = assigneeRecyclerView
     override fun withPagination() = false
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun getPresenterFactory() = AssigneeListPresenterFactory(mDateGroups, mTargetIdx, sections, groups, students)
@@ -139,12 +138,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, assigneeRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    override fun getAdapter(): AssigneeListAdapter {
-        if (mAdapter == null) {
-            mAdapter = AssigneeListAdapter(requireContext(), presenter)
-        }
-        return mAdapter
-    }
+    override fun createAdapter() = AssigneeListAdapter(requireContext(), presenter)
 
     override fun notifyItemChanged(position: Int) {
         adapter.notifyItemChanged(position)

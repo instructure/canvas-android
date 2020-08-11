@@ -83,9 +83,8 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
-    override fun getRecyclerView(): RecyclerView = submissionsRecyclerView
-    override fun getList() = presenter.data
-    override fun getPresenterFactory(): PresenterFactory<AssignmentSubmissionListPresenter> = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
+    override val recyclerView: RecyclerView get() = submissionsRecyclerView
+    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
     override fun onCreateView(view: View?) = Unit
     override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
@@ -126,18 +125,15 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         EventBus.getDefault().unregister(this)
     }
 
-    override fun getAdapter(): GradeableStudentSubmissionAdapter {
-        if(mAdapter == null) {
-            mAdapter = GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
-                withRequireNetwork {
-                    val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
-                    val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
-                    val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)
-                    RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
-                }
+    override fun createAdapter(): GradeableStudentSubmissionAdapter {
+        return GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
+            withRequireNetwork {
+                val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
+                val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
+                val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)
+                RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
-        return mAdapter
     }
 
     override fun onRefreshStarted() {

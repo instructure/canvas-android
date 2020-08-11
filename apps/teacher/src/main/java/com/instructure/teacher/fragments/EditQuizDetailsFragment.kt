@@ -55,14 +55,12 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_edit_quiz_details.*
 import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
@@ -149,7 +147,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<EditQuizDetailsPresenter> = EditQuizDetailsPresenterFactory(mQuiz, mAssignment, mCourse)
+    override fun getPresenterFactory() = EditQuizDetailsPresenterFactory(mQuiz, mAssignment, mCourse)
 
     override fun onPresenterPrepared(presenter: EditQuizDetailsPresenter?) {}
     override fun onRefreshFinished() {}

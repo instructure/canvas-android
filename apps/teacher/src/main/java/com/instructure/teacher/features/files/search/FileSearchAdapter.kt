@@ -27,7 +27,7 @@ class FileSearchAdapter(
     private val courseColor: Int,
     presenter: FileSearchPresenter,
     private val callback: (FileFolder) -> Unit
-) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder>(context, presenter) {
+) : SyncRecyclerAdapter<FileFolder, FileFolderViewHolder, FileSearchView>(context, presenter) {
 
     override fun itemLayoutResId(viewType: Int) = FileFolderViewHolder.HOLDER_RES_ID
 

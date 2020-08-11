@@ -17,12 +17,13 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.teacher.presenters.MessageThreadPresenter
+import com.instructure.teacher.viewinterface.MessageThreadView
 import instructure.androidblueprint.PresenterFactory
 
 class MessageThreadPresenterFactory(
     private val conversation: Conversation? = null,
     private val position: Int = 0,
     private val conversationId: Long = conversation?.id ?: 0
-) : PresenterFactory<MessageThreadPresenter?> {
+) : PresenterFactory<MessageThreadView, MessageThreadPresenter> {
     override fun create() = MessageThreadPresenter(conversation, position, conversationId)
 }

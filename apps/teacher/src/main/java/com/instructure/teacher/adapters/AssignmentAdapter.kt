@@ -26,10 +26,11 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.teacher.holders.AssignmentGroupHeaderViewHolder
 import com.instructure.teacher.holders.AssignmentViewHolder
 import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
 class AssignmentAdapter(context: Context, expandablePresenter: AssignmentListPresenter, private val mCourseColor: Int, private val mCallback: (Assignment) -> Unit) :
-        SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(context, expandablePresenter) {
+        SyncExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder, AssignmentListView>(context, expandablePresenter) {
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType) {

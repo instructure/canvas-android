@@ -18,11 +18,6 @@
 package com.instructure.pandautils.fragments;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +29,11 @@ import com.instructure.pandautils.R;
 import com.instructure.pandautils.interfaces.NavigationCallbacks;
 import com.instructure.pandautils.utils.Const;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 import instructure.androidblueprint.SyncFragment;
 import instructure.androidblueprint.SyncManager;
 import instructure.androidblueprint.SyncPresenter;
@@ -44,7 +44,7 @@ public abstract class BaseSyncFragment<
         PRESENTER extends SyncPresenter<MODEL, VIEW>,
         VIEW extends SyncManager<MODEL>,
         HOLDER extends RecyclerView.ViewHolder,
-        ADAPTER extends SyncRecyclerAdapter<MODEL, HOLDER>> extends SyncFragment<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER>
+        ADAPTER extends SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> extends SyncFragment<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER>
         implements NavigationCallbacks {
 
     private CanvasContext mCanvasContext;

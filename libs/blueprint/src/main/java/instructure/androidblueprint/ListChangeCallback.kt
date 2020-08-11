@@ -14,14 +14,11 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
-
-public interface SyncInterface {
-
-    //UI Updating
-    void onRefreshFinished();
-    void onRefreshStarted();
-    void checkIfEmpty();
-    void clearAdapter();
+interface ListChangeCallback {
+    fun onInserted(position: Int, count: Int)
+    fun onRemoved(position: Int, count: Int)
+    fun onMoved(fromPosition: Int, toPosition: Int)
+    fun onChanged(position: Int, count: Int)
 }

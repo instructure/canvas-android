@@ -62,14 +62,15 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     var mIsGroupMessage by BooleanArg()
     var mGradeAnonymously by BooleanArg()
 
-    private val mCommentsAdapter by lazy { SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked) }
+    override fun createAdapter(): SpeedGraderCommentsAdapter {
+        return SpeedGraderCommentsAdapter(requireContext(), presenter, mCourseId, presenter.assignee, mGradeAnonymously, onAttachmentClicked)
+    }
+
     private val mLayoutManager by lazy { LinearLayoutManager(requireContext())
         .apply { this.stackFromEnd = true }}
 
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
-    override fun getList() = presenter.data
-    override fun getAdapter() = mCommentsAdapter
-    override fun getRecyclerView(): RecyclerView = speedGraderCommentsRecyclerView
+    override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
     override fun onCreateView(view: View?) {}
     override fun onRefreshStarted() {}

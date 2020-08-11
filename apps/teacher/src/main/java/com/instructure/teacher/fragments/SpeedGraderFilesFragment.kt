@@ -42,7 +42,6 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
         AttachmentViewHolder,
         AttachmentAdapter>(), SpeedGraderFilesView {
 
-    lateinit private var mRecyclerView: RecyclerView
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
 
     companion object {
@@ -52,35 +51,29 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
         }
     }
 
-    override fun getList() = presenter.data
-    override fun getRecyclerView(): RecyclerView = speedGraderFilesRecyclerView
+    override val recyclerView: RecyclerView get() = speedGraderFilesRecyclerView
     override fun layoutResId() = R.layout.fragment_speedgrader_files
     override fun getPresenterFactory() = SpeedGraderFilesPresenterFactory(mSubmission)
     override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: SpeedGraderFilesPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.speedGraderFilesRecyclerView, R.id.speedGraderFilesEmptyView, getString(R.string.no_items_to_display_short))
         swipeRefreshLayout.isEnabled = false
     }
 
     override fun onReadySetGo(presenter: SpeedGraderFilesPresenter) {
-        if (mAdapter == null) {
-            mRecyclerView.adapter = adapter
-        }
+        recyclerView.adapter = adapter
         presenter.loadData(false)
     }
 
-    override fun getAdapter(): AttachmentAdapter {
-        if (mAdapter == null) {
-            mAdapter = AttachmentAdapter(requireContext(), presenter) {
-                EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter?.getSubmission()?.id ?: -1, it))
-            }
+    override fun createAdapter(): AttachmentAdapter {
+        return AttachmentAdapter(requireContext(), presenter) {
+            EventBus.getDefault().post(SubmissionFileSelectedEvent(presenter?.getSubmission()?.id ?: -1, it))
         }
-        return mAdapter
     }
 
     override fun checkIfEmpty() {
-        RecyclerViewUtils.checkIfEmpty(speedGraderFilesEmptyView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(speedGraderFilesEmptyView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
     override fun onRefreshFinished() {}

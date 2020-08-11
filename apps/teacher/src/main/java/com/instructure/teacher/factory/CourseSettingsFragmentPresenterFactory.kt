@@ -17,8 +17,9 @@
 package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.CourseSettingsFragmentPresenter
+import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
 import instructure.androidblueprint.PresenterFactory
 
-class CourseSettingsFragmentPresenterFactory : PresenterFactory<CourseSettingsFragmentPresenter> {
+class CourseSettingsFragmentPresenterFactory : PresenterFactory<CourseSettingsFragmentView, CourseSettingsFragmentPresenter> {
     override fun create() = CourseSettingsFragmentPresenter()
 }

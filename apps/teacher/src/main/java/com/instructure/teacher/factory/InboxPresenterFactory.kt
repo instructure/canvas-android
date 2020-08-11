@@ -16,8 +16,9 @@
 package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.InboxPresenter
+import com.instructure.teacher.viewinterface.InboxView
 import instructure.androidblueprint.PresenterFactory
 
-class InboxPresenterFactory : PresenterFactory<InboxPresenter?> {
+class InboxPresenterFactory : PresenterFactory<InboxView, InboxPresenter> {
     override fun create() = InboxPresenter()
 }

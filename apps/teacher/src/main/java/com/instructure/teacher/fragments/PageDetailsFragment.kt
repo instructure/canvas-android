@@ -47,7 +47,6 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.PageDetailsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_page_details.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -159,7 +158,7 @@ class PageDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<PageDetailsPresenter> = PageDetailsPresenterFactory(mCanvasContext, mPage)
+    override fun getPresenterFactory() = PageDetailsPresenterFactory(mCanvasContext, mPage)
     override fun onPresenterPrepared(presenter: PageDetailsPresenter?) = Unit
 
     override fun layoutResId() = R.layout.fragment_page_details

@@ -18,12 +18,13 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.DiscussionsReplyPresenter
+import com.instructure.teacher.viewinterface.DiscussionsReplyView
 import instructure.androidblueprint.PresenterFactory
 
 class DiscussionsReplyFactory(
         val canvasContext: CanvasContext,
         val discussionTopicHeaderId: Long,
-        val discussionEntryId: Long) : PresenterFactory<DiscussionsReplyPresenter> {
+        val discussionEntryId: Long) : PresenterFactory<DiscussionsReplyView, DiscussionsReplyPresenter> {
 
     override fun create(): DiscussionsReplyPresenter {
         return DiscussionsReplyPresenter(canvasContext, discussionTopicHeaderId, discussionEntryId)

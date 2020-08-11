@@ -16,9 +16,10 @@
 package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ChooseRecipientsPresenter
+import com.instructure.teacher.viewinterface.ChooseRecipientsView
 import instructure.androidblueprint.PresenterFactory
 
 class ChooseRecipientsPresenterFactory(private val mRootContextId: String) :
-    PresenterFactory<ChooseRecipientsPresenter> {
+    PresenterFactory<ChooseRecipientsView, ChooseRecipientsPresenter> {
     override fun create() = ChooseRecipientsPresenter(mRootContextId)
 }

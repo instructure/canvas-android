@@ -14,10 +14,7 @@
  *     limitations under the License.
  *
  */
-
-package instructure.androidblueprint;
-
-import androidx.annotation.NonNull;
+package instructure.androidblueprint
 
 /**
  * Presenter Responsibilities
@@ -31,8 +28,8 @@ import androidx.annotation.NonNull;
  * Retrieving or updating data from the Model and preparing the data so the View can display it
  * Is not aware of Context, Activity or any thing of that sort - getApplicationContext() might be okay
  */
-public interface Presenter<VIEW> {
-    Presenter onViewAttached(@NonNull VIEW view);
-    void onViewDetached();
-    void onDestroyed();
+interface Presenter<VIEW> {
+    fun onViewAttached(view: VIEW): Presenter<VIEW>
+    fun onViewDetached()
+    fun onDestroyed()
 }

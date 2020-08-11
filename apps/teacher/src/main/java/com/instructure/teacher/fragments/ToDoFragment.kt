@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
-import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.requestAccessibilityFocus
@@ -43,7 +42,6 @@ import com.instructure.teacher.presenters.ToDoPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.viewinterface.ToDoView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_todo.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -54,14 +52,13 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_todo
-    override fun getList(): UpdatableSortedList<ToDo> = presenter.data
     override fun withPagination() = true
-    override fun getRecyclerView(): RecyclerView = toDoRecyclerView
+    override val recyclerView: RecyclerView get() = toDoRecyclerView
     override fun checkIfEmpty() {
         emptyPandaView.setMessageText(R.string.noTodosSubtext)
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
-    override fun getPresenterFactory(): PresenterFactory<ToDoPresenter> = ToDoPresenterFactory()
+    override fun getPresenterFactory() = ToDoPresenterFactory()
     override fun onCreateView(view: View?) {}
 
     override fun onPresenterPrepared(presenter: ToDoPresenter) {
@@ -104,11 +101,8 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         toDoToolbar.requestAccessibilityFocus()
     }
 
-    public override fun getAdapter(): ToDoAdapter {
-        if (mAdapter == null) {
-            mAdapter = ToDoAdapter(requireActivity(), presenter, mAdapterCallback)
-        }
-        return mAdapter
+    public override fun createAdapter(): ToDoAdapter {
+        return ToDoAdapter(requireActivity(), presenter, mAdapterCallback)
     }
 
     private val mAdapterCallback = object : AdapterToFragmentCallback<ToDo> {

@@ -18,11 +18,6 @@
 package com.instructure.pandautils.activities;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -31,11 +26,14 @@ import com.instructure.canvasapi2.models.CanvasContext;
 import com.instructure.pandautils.R;
 import com.instructure.pandautils.interfaces.NavigationCallbacks;
 import com.instructure.pandautils.utils.Const;
-import com.instructure.pandautils.utils.ThemePrefs;
-import com.instructure.pandautils.utils.ToolbarColorizeHelper;
 
-import java.util.List;
+import java.util.*;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import instructure.androidblueprint.SyncActivity;
 import instructure.androidblueprint.SyncManager;
 import instructure.androidblueprint.SyncPresenter;
@@ -47,7 +45,7 @@ public abstract class BaseSyncActivity<
         PRESENTER extends SyncPresenter<MODEL, VIEW>,
         VIEW extends SyncManager<MODEL>,
         HOLDER extends RecyclerView.ViewHolder,
-        ADAPTER extends SyncRecyclerAdapter<MODEL, HOLDER>> extends SyncActivity<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER> {
+        ADAPTER extends SyncRecyclerAdapter<MODEL, HOLDER, VIEW>> extends SyncActivity<MODEL, PRESENTER, VIEW, HOLDER, ADAPTER> {
 
     private CanvasContext mCanvasContext;
 

@@ -26,6 +26,6 @@ class AnnotationCommentListPresenterFactory(
         val docSession: DocSession,
         val apiValues: ApiValues,
         val assigneeId: Long,
-        val headAnnotationId: String): PresenterFactory<AnnotationCommentListPresenter> {
+        val headAnnotationId: String): PresenterFactory<AnnotationCommentListView, AnnotationCommentListPresenter> {
     override fun create() = AnnotationCommentListPresenter(annotations, docSession, apiValues, assigneeId, headAnnotationId)
 }

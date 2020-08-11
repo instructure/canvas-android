@@ -14,10 +14,11 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
+import com.instructure.pandarecycler.util.UpdatableSortedList
 
-public interface PresenterFactory <PRESENTER extends Presenter> {
-    PRESENTER create();
+interface ListManager<MODEL> : SyncInterface {
+    // Data Syncing
+    val list: UpdatableSortedList<MODEL>
 }
-

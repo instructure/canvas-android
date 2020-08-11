@@ -25,6 +25,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.binders.MessageBinder
 import com.instructure.teacher.holders.MessageHolder
 import com.instructure.teacher.interfaces.MessageAdapterCallback
+import com.instructure.teacher.presenters.MessageThreadPresenter
+import com.instructure.teacher.viewinterface.MessageThreadView
 
 import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
@@ -32,9 +34,9 @@ import instructure.androidblueprint.SyncRecyclerAdapter
 
 open class MessageAdapter(
         context: Context,
-        presenter: SyncPresenter<*, *>,
+        presenter: MessageThreadPresenter,
         protected var mConversation: Conversation,
-        protected var mCallback: MessageAdapterCallback) : SyncRecyclerAdapter<Message, MessageHolder>(context, presenter) {
+        protected var mCallback: MessageAdapterCallback) : SyncRecyclerAdapter<Message, MessageHolder, MessageThreadView>(context, presenter) {
 
     override fun bindHolder(message: Message, holder: MessageHolder, position: Int) =
         MessageBinder.bind(message, mConversation, mCallback.getParticipantById(message.authorId), holder, position, mCallback)

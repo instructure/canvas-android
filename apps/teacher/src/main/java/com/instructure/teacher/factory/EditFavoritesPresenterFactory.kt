@@ -18,9 +18,10 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.presenters.EditFavoritesPresenter
+import com.instructure.teacher.viewinterface.CanvasContextView
 import instructure.androidblueprint.PresenterFactory
 
-class EditFavoritesPresenterFactory(val filter: (Course) -> Boolean) : PresenterFactory<EditFavoritesPresenter> {
+class EditFavoritesPresenterFactory(val filter: (Course) -> Boolean) : PresenterFactory<CanvasContextView, EditFavoritesPresenter> {
 
     override fun create(): EditFavoritesPresenter {
         return EditFavoritesPresenter(filter)

@@ -225,8 +225,8 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             }
         })
 
-        if (getPresenter().course!!.id != 0L) {
-            chipsAdapter!!.canvasRecipientManager.canvasContext = getPresenter().course
+        if (presenter.course!!.id != 0L) {
+            chipsAdapter!!.canvasRecipientManager.canvasContext = presenter.course
         } else if (selectedCourse != null) {
             courseWasSelected()
             chipsAdapter!!.canvasRecipientManager.canvasContext = selectedCourse
@@ -235,17 +235,17 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
 
         // Don't show the contacts button if there is no selected course and there is no requireContext()_code from the conversation (shouldn't happen, but it does)
-        if (selectedCourse == null && getPresenter().course != null && getPresenter().course!!.id == 0L) {
+        if (selectedCourse == null && presenter.course != null && presenter.course!!.id == 0L) {
             contactsImageButton.visibility = View.INVISIBLE
         }
 
         contactsImageButton.setOnClickListener {
             val canvasContext: CanvasContext? =
-                    if (getPresenter().course != null && getPresenter().course!!.id == 0L) {
+                    if (presenter.course != null && presenter.course!!.id == 0L) {
                         // Presenter doesn't know what the course is, use the selectedCourse instead
                         selectedCourse
                     } else {
-                        getPresenter().course
+                        presenter.course
                     }
 
             RouteMatcher.route(requireContext(), Route(ChooseRecipientsFragment::class.java, canvasContext, ChooseRecipientsFragment.createBundle(canvasContext!!, recipientsFromRecipientEntries)))
@@ -256,7 +256,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
         // Get courses and groups if this is a new compose message
         if (isNewMessage) {
-            getPresenter().getAllCoursesAndGroups(true)
+            presenter.getAllCoursesAndGroups(true)
         }
     }
 

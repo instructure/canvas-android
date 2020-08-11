@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.teacher.holders.GradeableStudentSubmissionViewHolder
 import com.instructure.teacher.presenters.AssignmentSubmissionListPresenter
+import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class GradeableStudentSubmissionAdapter(
@@ -29,7 +30,7 @@ class GradeableStudentSubmissionAdapter(
         private val mCourseId: Long,
         private val mContext: Context,
         private val presenter: AssignmentSubmissionListPresenter,
-        val mCallback: (GradeableStudentSubmission) -> Unit) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder>(mContext, presenter){
+        val mCallback: (GradeableStudentSubmission) -> Unit) : SyncRecyclerAdapter<GradeableStudentSubmission, GradeableStudentSubmissionViewHolder, AssignmentSubmissionListView>(mContext, presenter){
 
 
     override fun bindHolder(model: GradeableStudentSubmission, holderSubmission: GradeableStudentSubmissionViewHolder, position: Int) {

@@ -77,8 +77,7 @@ class CourseBrowserFragment : BaseSyncFragment<
 
     override fun layoutResId(): Int = R.layout.fragment_course_browser
 
-    override fun getList() = presenter.data
-    override fun getRecyclerView(): RecyclerView = courseBrowserRecyclerView
+    override val recyclerView: RecyclerView get() = courseBrowserRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = CourseBrowserPresenterFactory(mCanvasContext) { tab, attendanceId ->
         //Filter for white-list supported features
@@ -198,76 +197,73 @@ class CourseBrowserFragment : BaseSyncFragment<
         }
     }
 
-    override fun getAdapter(): CourseBrowserAdapter {
-        if (mAdapter == null) {
-            mAdapter = CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.color) { tab ->
-                when (tab.tabId) {
-                    Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
+    override fun createAdapter(): CourseBrowserAdapter {
+        return CourseBrowserAdapter(requireActivity(), presenter, presenter.canvasContext.color) { tab ->
+            when (tab.tabId) {
+                Tab.ASSIGNMENTS_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(AssignmentListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.QUIZZES_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(QuizListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.DISCUSSIONS_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(DiscussionsListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.ANNOUNCEMENTS_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(AnnouncementListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.PEOPLE_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(PeopleListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.FILES_ID -> {
+                    val args = FileListFragment.makeBundle(presenter.canvasContext)
+                    RouteMatcher.route(
                         requireContext(),
-                        Route(AssignmentListFragment::class.java, presenter.canvasContext)
+                        Route(FileListFragment::class.java, presenter.canvasContext, args)
                     )
-                    Tab.QUIZZES_ID -> RouteMatcher.route(
-                        requireContext(),
-                        Route(QuizListFragment::class.java, presenter.canvasContext)
-                    )
-                    Tab.DISCUSSIONS_ID -> RouteMatcher.route(
-                        requireContext(),
-                        Route(DiscussionsListFragment::class.java, presenter.canvasContext)
-                    )
-                    Tab.ANNOUNCEMENTS_ID -> RouteMatcher.route(
-                        requireContext(),
-                        Route(AnnouncementListFragment::class.java, presenter.canvasContext)
-                    )
-                    Tab.PEOPLE_ID -> RouteMatcher.route(
-                        requireContext(),
-                        Route(PeopleListFragment::class.java, presenter.canvasContext)
-                    )
-                    Tab.FILES_ID -> {
-                        val args = FileListFragment.makeBundle(presenter.canvasContext)
-                        RouteMatcher.route(
-                            requireContext(),
-                            Route(FileListFragment::class.java, presenter.canvasContext, args)
-                        )
-                    }
-                    Tab.PAGES_ID -> RouteMatcher.route(
-                        requireContext(),
-                        Route(PageListFragment::class.java, presenter.canvasContext)
-                    )
-                    Tab.MODULES_ID -> {
-                        val bundle = ModuleListFragment.makeBundle(presenter.canvasContext)
-                        RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, null, bundle))
-                    }
-                    Tab.STUDENT_VIEW -> {
-                        Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
-                        presenter.handleStudentViewClick()
-                    }
-                    else -> {
-                        if (tab.type == Tab.TYPE_EXTERNAL) {
-                            // if the user is a designer we don't want to let them look at LTI tools (like attendance)
-                            if ((presenter.canvasContext as? Course)?.isDesigner == true) {
-                                toast(R.string.errorIsDesigner)
-                                return@CourseBrowserAdapter
-                            }
-                            val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
-                            if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
-                                val args = AttendanceListFragment.makeBundle(tab)
-                                RouteMatcher.route(
-                                    requireContext(),
-                                    Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
-                                )
-                            } else {
-                                val args = LTIWebViewFragment.makeLTIBundle(tab)
-                                RouteMatcher.route(
-                                    requireContext(),
-                                    Route(LTIWebViewFragment::class.java, presenter.canvasContext, args)
-                                )
-                            }
+                }
+                Tab.PAGES_ID -> RouteMatcher.route(
+                    requireContext(),
+                    Route(PageListFragment::class.java, presenter.canvasContext)
+                )
+                Tab.MODULES_ID -> {
+                    val bundle = ModuleListFragment.makeBundle(presenter.canvasContext)
+                    RouteMatcher.route(requireContext(), Route(ModuleListFragment::class.java, null, bundle))
+                }
+                Tab.STUDENT_VIEW -> {
+                    Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
+                    presenter.handleStudentViewClick()
+                }
+                else -> {
+                    if (tab.type == Tab.TYPE_EXTERNAL) {
+                        // if the user is a designer we don't want to let them look at LTI tools (like attendance)
+                        if ((presenter.canvasContext as? Course)?.isDesigner == true) {
+                            toast(R.string.errorIsDesigner)
+                            return@CourseBrowserAdapter
+                        }
+                        val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
+                        if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
+                            val args = AttendanceListFragment.makeBundle(tab)
+                            RouteMatcher.route(
+                                requireContext(),
+                                Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
+                            )
+                        } else {
+                            val args = LTIWebViewFragment.makeLTIBundle(tab)
+                            RouteMatcher.route(
+                                requireContext(),
+                                Route(LTIWebViewFragment::class.java, presenter.canvasContext, args)
+                            )
                         }
                     }
                 }
             }
         }
-        return mAdapter
     }
 
     override fun onRefreshFinished() {

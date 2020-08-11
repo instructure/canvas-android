@@ -18,14 +18,13 @@ package com.instructure.teacher.fragments
 import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.color
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_course_browser_empty.*
 
 class CourseBrowserEmptyFragment: BasePresenterFragment<
@@ -54,9 +53,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
         setupToolbar(presenter?.course?.color)
     }
 
-    override fun getPresenterFactory(): PresenterFactory<CourseBrowserEmptyPresenter> {
-        return CourseBrowserEmptyViewFactory(mCourse)
-    }
+    override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)
 
     override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter?) {}
 

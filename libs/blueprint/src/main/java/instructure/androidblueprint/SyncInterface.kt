@@ -14,12 +14,12 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
-
-
-public interface FragmentViewInterface {
-    //UI Updating
-    void onRefreshFinished();
-    void onRefreshStarted();
+interface SyncInterface {
+    // UI Updating
+    fun onRefreshFinished()
+    fun onRefreshStarted()
+    fun checkIfEmpty()
+    fun clearAdapter()
 }

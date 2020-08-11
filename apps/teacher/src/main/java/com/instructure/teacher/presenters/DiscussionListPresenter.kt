@@ -176,7 +176,7 @@ class DiscussionListPresenter(
         const val DELETE = "delete"
     }
 
-    override fun compare(group: String?, item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Int {
+    override fun compare(group: String, item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Int {
         return when {
             PINNED == group -> item1.position.compareTo(item2.position)
             mIsAnnouncements -> item2.position.compareTo(item1.position) // The api appears to return it in reverse order from how web displays it ¯\_(ツ)_/¯
@@ -184,21 +184,19 @@ class DiscussionListPresenter(
         }
     }
 
-    override fun compare(group1: String?, group2: String?): Int {
-        if(group1 == null || group2 == null) return super.compare(group1, group2)
+    override fun compare(group1: String, group2: String): Int {
         return group1.compareTo(group2)
     }
 
-    override fun areItemsTheSame(group1: String?, group2: String?): Boolean {
-        if(group1 == null || group2 == null) return super.areItemsTheSame(group1, group2)
+    override fun areItemsTheSame(group1: String, group2: String): Boolean {
         return group1 == group2
     }
 
-    override fun areItemsTheSame(item1: DiscussionTopicHeader?, item2: DiscussionTopicHeader?): Boolean {
-        return item1?.id == item2?.id
+    override fun areItemsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean {
+        return item1.id == item2.id
     }
 
-    override fun getUniqueItemId(item: DiscussionTopicHeader?): Long {
-        return item?.id ?: super.getUniqueItemId(item)
+    override fun getUniqueItemId(item: DiscussionTopicHeader): Long {
+        return item.id
     }
 }

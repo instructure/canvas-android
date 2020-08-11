@@ -49,7 +49,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     private val mPdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
 
-    override fun onPresenterPrepared(presenter: ViewPdfFragmentPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: ViewPdfFragmentPresenter) = Unit
     override fun onRefreshFinished() = Unit
     override fun onRefreshStarted() = Unit
 
@@ -105,7 +105,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     override fun getPresenterFactory() = ViewPdfFragmentPresenterFactory(mUrl)
 
-    override fun onReadySetGo(presenter: ViewPdfFragmentPresenter?) { presenter?.loadData(false) }
+    override fun onReadySetGo(presenter: ViewPdfFragmentPresenter) { presenter.loadData(false) }
 
     override fun onLoadingStarted() {
         pdfProgressBar.setVisible()

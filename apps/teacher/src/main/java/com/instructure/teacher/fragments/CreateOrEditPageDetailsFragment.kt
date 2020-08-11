@@ -45,7 +45,6 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_or_edit_page.*
 
 class CreateOrEditPageDetailsFragment :
@@ -73,9 +72,7 @@ class CreateOrEditPageDetailsFragment :
     override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter?) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_page
 
-    override fun getPresenterFactory(): PresenterFactory<CreateOrEditPagePresenter> {
-        return CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())
-    }
+    override fun getPresenterFactory() = CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())
 
     override fun onReadySetGo(presenter: CreateOrEditPagePresenter) {
         setupViews()

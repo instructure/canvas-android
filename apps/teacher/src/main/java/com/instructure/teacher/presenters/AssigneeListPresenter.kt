@@ -113,14 +113,14 @@ class AssigneeListPresenter(
         return compareValues(item1, item2)
     }
 
-    override fun areContentsTheSame(item1: CanvasComparable<*>?, item2: CanvasComparable<*>?): Boolean {
+    override fun areContentsTheSame(item1: CanvasComparable<*>, item2: CanvasComparable<*>): Boolean {
         if (item1 is EveryoneAssignee && item2 is EveryoneAssignee) {
             return item1.displayAsEveryoneElse == item2.displayAsEveryoneElse
         }
         return super.areContentsTheSame(item1, item2)
     }
 
-    override fun getUniqueItemId(item: CanvasComparable<*>?) = when (item) {
+    override fun getUniqueItemId(item: CanvasComparable<*>) = when (item) {
         is EveryoneAssignee -> 0L
         is Section -> 100000L + item.id
         is Group -> 200000L + item.id

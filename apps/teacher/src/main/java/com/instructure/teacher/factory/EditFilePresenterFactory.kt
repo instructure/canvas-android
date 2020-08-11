@@ -19,9 +19,10 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.License
 import com.instructure.teacher.presenters.EditFileFolderPresenter
+import com.instructure.teacher.view.EditFileView
 import instructure.androidblueprint.PresenterFactory
 import java.util.*
 
-class EditFilePresenterFactory(val fileFolder: FileFolder, val usageRightsEnabled: Boolean, val licenseList: ArrayList<License>, val courseId: Long) : PresenterFactory<EditFileFolderPresenter> {
+class EditFilePresenterFactory(val fileFolder: FileFolder, val usageRightsEnabled: Boolean, val licenseList: ArrayList<License>, val courseId: Long) : PresenterFactory<EditFileView, EditFileFolderPresenter> {
     override fun create(): EditFileFolderPresenter = EditFileFolderPresenter(fileFolder, usageRightsEnabled, licenseList, courseId)
 }

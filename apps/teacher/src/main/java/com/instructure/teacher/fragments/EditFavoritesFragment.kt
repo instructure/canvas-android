@@ -19,7 +19,6 @@ package com.instructure.teacher.fragments
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -51,8 +50,7 @@ class EditFavoritesFragment : BaseSyncFragment<
     private var mAppType: AppType by SerializableArg(default = AppType.TEACHER)
     private lateinit var mLayoutManager : LinearLayoutManager
     override fun layoutResId() = R.layout.fragment_edit_favorites
-    override fun getList() = presenter.data
-    override fun getRecyclerView(): RecyclerView = mRecyclerView
+    override val recyclerView: RecyclerView get() = mRecyclerView
 
     override fun onCreateView(view: View) {
        mLayoutManager = LinearLayoutManager(
@@ -97,15 +95,16 @@ class EditFavoritesFragment : BaseSyncFragment<
         mRecyclerView.itemAnimator = null
     }
 
-    override fun getAdapter(): EditFavoritesAdapter {
-        if (mAdapter == null) {
-            mAdapter = EditFavoritesAdapter(requireContext(), presenter, object : AdapterToEditFavoriteCoursesCallback {
+    override fun createAdapter(): EditFavoritesAdapter {
+        return EditFavoritesAdapter(
+            requireContext(),
+            presenter,
+            object : AdapterToEditFavoriteCoursesCallback {
                 override fun onRowClicked(canvasContext: CanvasContext, isFavorite: Boolean) {
                     presenter.setFavorite(canvasContext, isFavorite)
                 }
-            })
-        }
-        return mAdapter
+            }
+        )
     }
 
     private fun setupToolbar() {

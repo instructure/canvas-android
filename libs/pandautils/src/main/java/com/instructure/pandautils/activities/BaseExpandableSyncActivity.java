@@ -18,11 +18,6 @@
 package com.instructure.pandautils.activities;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -32,8 +27,13 @@ import com.instructure.pandautils.R;
 import com.instructure.pandautils.interfaces.NavigationCallbacks;
 import com.instructure.pandautils.utils.Const;
 
-import java.util.List;
+import java.util.*;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import instructure.androidblueprint.SyncExpandableActivity;
 import instructure.androidblueprint.SyncExpandableManager;
 import instructure.androidblueprint.SyncExpandablePresenter;
@@ -41,11 +41,11 @@ import instructure.androidblueprint.SyncExpandableRecyclerAdapter;
 
 public abstract class BaseExpandableSyncActivity<
         GROUP,
-        MODEL extends CanvasComparable,
+        MODEL extends CanvasComparable<?>,
         VIEW extends SyncExpandableManager<GROUP, MODEL>,
         PRESENTER extends SyncExpandablePresenter<GROUP, MODEL, VIEW>,
         HOLDER extends RecyclerView.ViewHolder,
-        ADAPTER extends SyncExpandableRecyclerAdapter<GROUP, MODEL, HOLDER>> extends SyncExpandableActivity<GROUP, MODEL, VIEW, PRESENTER, HOLDER, ADAPTER> {
+        ADAPTER extends SyncExpandableRecyclerAdapter<GROUP, MODEL, HOLDER, VIEW>> extends SyncExpandableActivity<GROUP, MODEL, VIEW, PRESENTER, HOLDER, ADAPTER> {
 
     private CanvasContext mCanvasContext;
 

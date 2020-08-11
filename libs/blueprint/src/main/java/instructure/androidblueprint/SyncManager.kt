@@ -23,5 +23,5 @@ import com.instructure.pandarecycler.util.UpdatableSortedList
 
 interface SyncManager<MODEL : CanvasComparable<*>> : SyncInterface {
     // Data Syncing
-    fun getList(): UpdatableSortedList<MODEL>
+    val list: UpdatableSortedList<MODEL>
 }

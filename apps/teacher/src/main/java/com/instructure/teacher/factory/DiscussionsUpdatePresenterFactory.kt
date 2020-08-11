@@ -20,13 +20,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.teacher.presenters.DiscussionsUpdatePresenter
+import com.instructure.teacher.viewinterface.DiscussionsUpdateView
 import instructure.androidblueprint.PresenterFactory
 
 class DiscussionsUpdatePresenterFactory(
         val canvasContext: CanvasContext,
         val discussionTopicHeaderId: Long,
         val discussionEntry: DiscussionEntry,
-        val discussionTopic: DiscussionTopic) : PresenterFactory<DiscussionsUpdatePresenter> {
+        val discussionTopic: DiscussionTopic) : PresenterFactory<DiscussionsUpdateView, DiscussionsUpdatePresenter> {
 
     override fun create(): DiscussionsUpdatePresenter {
         return DiscussionsUpdatePresenter(canvasContext, discussionTopicHeaderId, discussionEntry, discussionTopic)

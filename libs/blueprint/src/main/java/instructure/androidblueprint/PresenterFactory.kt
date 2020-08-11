@@ -14,14 +14,8 @@
  *     limitations under the License.
  *
  */
+package instructure.androidblueprint
 
-package instructure.androidblueprint;
-
-import com.instructure.canvasapi2.models.CanvasComparable;
-import com.instructure.pandarecycler.util.GroupSortedList;
-
-
-public interface SyncExpandableManager<GROUP, MODEL extends CanvasComparable> extends SyncInterface {
-    //Data Syncing
-    GroupSortedList<GROUP, MODEL> getList();
+interface PresenterFactory<VIEW, PRESENTER : Presenter<VIEW>> {
+    fun create(): PRESENTER
 }

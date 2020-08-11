@@ -180,7 +180,7 @@ class AssignmentListPresenter(private val mCanvasContext: CanvasContext) :
     fun getGradingPeriods() = mGradingPeriods
     fun getCanvasContext() = mCanvasContext
 
-    override fun compare(group: AssignmentGroup?, item1: Assignment, item2: Assignment): Int {
+    override fun compare(group: AssignmentGroup, item1: Assignment, item2: Assignment): Int {
         var result = item1.position.compareTo(item2.position)
         if (result == 0) {
             result = item1.name!!.compareTo(item2.name!!,true)
