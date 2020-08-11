@@ -105,8 +105,8 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private fun getFormattedDueDate(context: Context, date: Date?): String {
         if(date == null) return ""
-        val dueDate = DateHelper.getDayMonthDateFormatUniversal().format(date)
-        val dueTime = DateHelper.getDayAbbreviationFormat(context).format(date)
+        val dueDate = DateHelper.dayMonthDateFormatUniversal.format(date)
+        val dueTime = DateHelper.getPreferredTimeFormat(context).format(date)
         return context.getString(R.string.due_date_at_time).format(dueDate, dueTime)
     }
 

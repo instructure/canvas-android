@@ -61,7 +61,7 @@ class HelpDialogStyled : DialogFragment() {
                 val installed = requireActivity().packageManager
                         .getPackageInfo(requireActivity().packageName, 0)
                         .firstInstallTime
-                DateHelper.getDayMonthYearFormat().format(Date(installed))
+                DateHelper.dayMonthYearFormat.format(Date(installed))
             } catch (e: Exception) {
                 ""
             }

@@ -195,7 +195,7 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
 
 
     override fun compare(item1: User, item2: User): Int {
-        return NaturalOrderComparator.getInstance().compare(item1.sortableName?.toLowerCase().orEmpty(), item2.sortableName?.toLowerCase().orEmpty())
+        return NaturalOrderComparator.compare(item1.sortableName?.toLowerCase().orEmpty(), item2.sortableName?.toLowerCase().orEmpty())
     }
 
 

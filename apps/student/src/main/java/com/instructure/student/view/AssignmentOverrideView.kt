@@ -36,7 +36,7 @@ class AssignmentOverrideView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private var mDueDateGroup: DueDateGroup by Delegates.notNull()
-    private val mDateFormat = DateHelper.getFullMonthNoLeadingZeroDateFormat()
+    private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(context) }
 
     // Default time to use if none is set; 11:59pm

@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch

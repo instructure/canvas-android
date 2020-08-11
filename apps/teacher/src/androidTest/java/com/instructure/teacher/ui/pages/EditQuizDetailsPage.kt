@@ -53,7 +53,7 @@ class EditQuizDetailsPage : BasePage() {
     fun editQuizTitle(newName: String) {
         // Combination of scroll and click randomly selects the text sometimes.
         // This opens a contextual menu and blocks the background view to receive focus and fails the test.
-        // That is why, `quizTitleEditText.scrollTo()` is not needed.    
+        // That is why, `quizTitleEditText.scrollTo()` is not needed.
         quizTitleEditText.replaceText(newName)
         saveQuiz()
     }
@@ -104,7 +104,7 @@ class EditQuizDetailsPage : BasePage() {
 
     fun assertDateChanged(year: Int, month: Int, dayOfMonth: Int, id: Int) {
         val cal = Calendar.getInstance().apply { set(year, month, dayOfMonth) }
-        waitForViewWithId(id).assertHasText(DateHelper.getFullMonthNoLeadingZeroDateFormat().format(cal.time))
+        waitForViewWithId(id).assertHasText(DateHelper.fullMonthNoLeadingZeroDateFormat.format(cal.time))
     }
 
     fun assertTimeChanged(hour: Int, min: Int, id: Int) {

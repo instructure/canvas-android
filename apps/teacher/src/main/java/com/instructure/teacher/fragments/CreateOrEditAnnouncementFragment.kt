@@ -72,7 +72,7 @@ class CreateOrEditAnnouncementFragment :
     private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     /* Formats for displaying the delayed post date */
-    private val mDateFormat by lazy { DateHelper.getFullMonthNoLeadingZeroDateFormat() }
+    private val mDateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()

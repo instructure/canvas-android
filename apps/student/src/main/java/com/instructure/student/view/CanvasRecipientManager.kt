@@ -244,7 +244,7 @@ class CanvasRecipientManager private constructor() : RecipientManager {
     }
 
     fun clearCache() {
-        FileUtils.DeleteFile(ContextKeeper.appContext, RECIPIENTS_CACHE)
+        FileUtils.deleteFile(ContextKeeper.appContext, RECIPIENTS_CACHE)
         allRecipients = ArrayList()
     }
 
@@ -254,7 +254,7 @@ class CanvasRecipientManager private constructor() : RecipientManager {
         override fun doInBackground(vararg params: String): Serializable? {
             path = params[0]
             try {
-                return FileUtils.FileToSerializable(ContextKeeper.appContext, path)
+                return FileUtils.fileToSerializable(ContextKeeper.appContext, path)
             } catch (E: Exception) {
                 e("NO CACHE: $path")
             }
@@ -269,7 +269,7 @@ class CanvasRecipientManager private constructor() : RecipientManager {
                     serializable as ArrayList<RecipientEntry>
                 } catch (exception: ClassCastException) {
                     Log.d(TAG, "Unable to read cache file")
-                    FileUtils.DeleteFile(ContextKeeper.appContext, RECIPIENTS_CACHE)
+                    FileUtils.deleteFile(ContextKeeper.appContext, RECIPIENTS_CACHE)
                     ArrayList()
                 }
             }

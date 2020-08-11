@@ -111,12 +111,11 @@ data class Quiz(
     override fun compareTo(other: Quiz) = compareQuizzes(this, other)
 
     private fun compareQuizzes(quiz1: Quiz, quiz2: Quiz): Int {
-        val comparator = NaturalOrderComparator.getInstance()
         //quizzes sort by due date first, then by title alphabetically
         if(quiz1.dueAt != null && quiz2.dueAt != null) {
             val result = quiz1.dueAt.toDate()!!.compareTo(quiz2.dueAt.toDate())
             return if (result == 0) {
-                comparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
+                NaturalOrderComparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
             } else {
                 result
             }
@@ -126,7 +125,7 @@ data class Quiz(
             return -1
         }
 
-        return comparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
+        return NaturalOrderComparator.compare(quiz1.title?.toLowerCase().orEmpty(), quiz2.title?.toLowerCase().orEmpty())
     }
 
     val url: String?

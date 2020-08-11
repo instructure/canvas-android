@@ -101,7 +101,7 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
 
         when {
             item.endedAt != null -> {
-                val date = DateHelper.getDayMonthDateFormat(context).format(item.endedAt)
+                val date = DateHelper.dayMonthDateFormat.format(item.endedAt)
                 val time = DateHelper.getFormattedTime(context, item.endedAt)
                 label = context.getString(R.string.conferenceConcludedDateAtTime, date, time)
                 labelTint = ContextCompat.getColor(context, R.color.defaultTextGray)

@@ -18,7 +18,6 @@ package com.instructure.student.mobius.conferences.conference_details
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
-import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.ConferenceRecording
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.validOrNull
@@ -31,12 +30,12 @@ object ConferenceDetailsPresenter : Presenter<ConferenceDetailsModel, Conference
     override fun present(model: ConferenceDetailsModel, context: Context): ConferenceDetailsViewState {
         val status : String = when {
             model.conference.endedAt != null -> {
-                val date = DateHelper.getDayMonthDateFormat(context).format(model.conference.endedAt)
+                val date = DateHelper.dayMonthDateFormat.format(model.conference.endedAt)
                 val time = DateHelper.getFormattedTime(context, model.conference.endedAt)
                 context.getString(R.string.conferenceConcludedDateAtTime, date, time)
             }
             model.conference.startedAt != null -> {
-                val date = DateHelper.getDayMonthDateFormat(context).format(model.conference.startedAt)
+                val date = DateHelper.dayMonthDateFormat.format(model.conference.startedAt)
                 val time = DateHelper.getFormattedTime(context, model.conference.startedAt)
                 context.getString(R.string.conferenceStartedDateAtTime, date, time)
             }

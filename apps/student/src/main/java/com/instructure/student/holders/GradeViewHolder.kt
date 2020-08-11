@@ -81,7 +81,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         }
 
         if (assignment.dueAt != null) {
-            date.text = DateHelper.getDayMonthDateString(context, assignment.dueDate)
+            date.text = DateHelper.getDayMonthDateString(context, assignment.dueDate!!)
         } else {
             date.text = ""
         }

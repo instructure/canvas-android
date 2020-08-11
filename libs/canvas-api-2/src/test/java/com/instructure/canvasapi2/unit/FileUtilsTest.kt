@@ -28,8 +28,6 @@ import java.io.IOException
 import java.util.ArrayList
 
 import org.junit.Assert.assertEquals
-import org.junit.Before
-
 
 class FileUtilsTest {
 
@@ -81,17 +79,17 @@ class FileUtilsTest {
 
     @Test
     fun getFileExtensionFromMimetype_null() {
-        assertEquals("", FileUtils.getFileExtensionFromMimetype(null))
+        assertEquals("", FileUtils.getFileExtensionFromMimeType(null))
     }
 
     @Test
     fun getFileExtensionFromMimetype_validInput() {
-        assertEquals("png", FileUtils.getFileExtensionFromMimetype("image/png"))
+        assertEquals("png", FileUtils.getFileExtensionFromMimeType("image/png"))
     }
 
     @Test
     fun getFileExtensionFromMimetype_invalidInput() {
-        assertEquals("jpg", FileUtils.getFileExtensionFromMimetype("jpg"))
+        assertEquals("jpg", FileUtils.getFileExtensionFromMimeType("jpg"))
     }
 
     @Test

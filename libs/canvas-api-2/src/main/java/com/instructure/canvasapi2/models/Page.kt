@@ -51,11 +51,10 @@ data class Page(
     override fun compareTo(other: Page) = comparePages(this, other)
 
     private fun comparePages(page1: Page, page2: Page): Int {
-        val comparator = NaturalOrderComparator.getInstance()
         return when {
             page1.frontPage -> -1
             page2.frontPage -> 1
-            else -> comparator.compare(page1.title?.toLowerCase().orEmpty(), page2.title?.toLowerCase().orEmpty())
+            else -> NaturalOrderComparator.compare(page1.title?.toLowerCase().orEmpty(), page2.title?.toLowerCase().orEmpty())
         }
     }
 

@@ -63,7 +63,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     private var mUsageType: FileUsageRightsJustification? = null
     private var mLicenseType: License? = null
 
-    private val mDateFormat = DateHelper.getFullMonthNoLeadingZeroDateFormat()
+    private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
     private var lockDate: Date? = null
     private var unlockDate: Date? = null

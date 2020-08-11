@@ -100,12 +100,11 @@ data class FileFolder(
     override fun compareTo(other: FileFolder) = compareFiles(this, other)
 
     private fun compareFiles(file1: FileFolder, file2: FileFolder): Int{
-        val comparator = NaturalOrderComparator.getInstance()
         return when {
             (file1.fullName == null && file2.fullName != null) -> 1
             (file1.fullName != null && file2.fullName == null) -> -1
-            (file1.fullName != null && file2.fullName != null) -> comparator.compare(file1.fullName.toLowerCase(), file2.fullName.toLowerCase())
-            else -> comparator.compare(file1.displayName?.toLowerCase(), file2.displayName?.toLowerCase())
+            (file1.fullName != null && file2.fullName != null) -> NaturalOrderComparator.compare(file1.fullName.toLowerCase(), file2.fullName.toLowerCase())
+            else -> NaturalOrderComparator.compare(file1.displayName?.toLowerCase(), file2.displayName?.toLowerCase())
         }
     }
 
