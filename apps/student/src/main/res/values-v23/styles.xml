@@ -23,13 +23,4 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">#EEE</item>
     </style>
-
-    <style name="OssTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/dimLighterGray</item>
-        <item name="colorAccent">@color/canvasDefaultAccent</item>
-        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
-        <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
 </resources>

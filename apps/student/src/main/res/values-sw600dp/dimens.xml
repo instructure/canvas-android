@@ -17,41 +17,12 @@
   -->
 
 <resources>
-    <!-- MANUALLY MANAGED (Changes value on orientation change) -->
-
-    <dimen name="floatingCardVerticalPadding">32dp</dimen>
-    <dimen name="floatingCardHorizontalPadding">32dp</dimen>
-
-    <!-- END MANUALLY MANAGED -->
-
-    <dimen name="calendar_vertical_grid_spacing">16dp</dimen>
-    <dimen name="calendar_text_size">16sp</dimen>
-
-    <dimen name="grid_column_header_height">120dp</dimen>
-    <dimen name="grid_header_text_size">24sp</dimen>
-    <dimen name="grid_grade_text_size">20sp</dimen>
-
-    <dimen name="profileBackdropHeight">240dp</dimen>
 
     <dimen name="listHeaderHeight">44dp</dimen>
 
-    <dimen name="widgetAddingPreviewWidth">260dp</dimen>
-
     <dimen name="navigation_drawer_width">340dp</dimen>
-
-    <dimen name="actionbar_course_title_width">260dp</dimen>
-    <dimen name="actionbar_course_navigation_width">260dp</dimen>
-
-    <dimen name="course_grid_header_text_size">22sp</dimen>
-
-    <dimen name="tabIconPaddingLeft">30dp</dimen>
-    <dimen name="tabIconPaddingRight">30dp</dimen>
 
     <dimen name="card_outer_margin">12dp</dimen>
     <dimen name="card_header_margins">16dp</dimen>
-    <dimen name="card_header_checkbox_margins">24dp</dimen>
-    <dimen name="card_header_indicator_size">28dp</dimen>
-
-    <dimen name="conversation_card_min_width">260dp</dimen>
 
 </resources>
