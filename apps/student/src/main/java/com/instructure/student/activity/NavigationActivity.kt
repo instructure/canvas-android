@@ -776,25 +776,27 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
-    override fun getTopFragment(): Fragment? {
-        val stackSize = supportFragmentManager.backStackEntryCount
-        if(stackSize > 0) {
-            val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
-            return supportFragmentManager.findFragmentByTag(fragmentTag)
+    override val topFragment: Fragment?
+        get() {
+            val stackSize = supportFragmentManager.backStackEntryCount
+            if (stackSize > 0) {
+                val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 1).name
+                return supportFragmentManager.findFragmentByTag(fragmentTag)
+            }
+            return null
         }
-        return null
-    }
 
-    override fun getPeekingFragment(): Fragment? {
-        val stackSize = supportFragmentManager.backStackEntryCount
-        if(stackSize > 1) {
-            val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 2).name
-            return supportFragmentManager.findFragmentByTag(fragmentTag)
+    override val peekingFragment: Fragment?
+        get() {
+            val stackSize = supportFragmentManager.backStackEntryCount
+            if (stackSize > 1) {
+                val fragmentTag = supportFragmentManager.getBackStackEntryAt(stackSize - 2).name
+                return supportFragmentManager.findFragmentByTag(fragmentTag)
+            }
+            return null
         }
-        return null
-    }
 
-    override fun getCurrentFragment(): Fragment? = supportFragmentManager.findFragmentById(R.id.fullscreen)
+    override val currentFragment: Fragment? get() = supportFragmentManager.findFragmentById(R.id.fullscreen)
 
     private fun clearBackStack(cls: Class<*>?) {
         val fragment = topFragment

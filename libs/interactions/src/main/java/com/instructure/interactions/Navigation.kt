@@ -14,23 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+package com.instructure.interactions
 
-package com.instructure.interactions;
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.Toolbar;
+interface Navigation {
+    val topFragment: Fragment?
+    val peekingFragment: Fragment?
+    val currentFragment: Fragment?
 
-public interface Navigation {
+    fun popCurrentFragment()
+    fun updateCalendarStartDay()
+    fun addBookmark()
 
-    @Nullable Fragment getTopFragment();
-    @Nullable Fragment getPeekingFragment();
-    @Nullable Fragment getCurrentFragment();
-
-    void popCurrentFragment();
-    void updateCalendarStartDay();
-    void addBookmark();
-
-    <F extends Fragment & FragmentInteractions> void attachNavigationDrawer(@NonNull F fragment, @NonNull Toolbar toolbar);
+    fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions
 }
