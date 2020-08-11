@@ -29,6 +29,26 @@
     <string name="help_locale" translatable="false">Locale:</string>
     <string name="installDate" translatable="false">Install Date:</string>
 
+    <string name="arabic" translatable="false">العربية</string>
+    <string name="chineseTraditional" translatable="false">中文 (繁體)</string>
+    <string name="chineseSimplified" translatable="false">中文 (简体)</string>
+    <string name="danish" translatable="false">Dansk</string>
+    <string name="dutch" translatable="false">Nederlands</string>
+    <string name="englishUS" translatable="false">English (US)</string>
+    <string name="englishAustralia" translatable="false">English (AU)</string>
+    <string name="englishUK" translatable="false">English (UK)</string>
+    <string name="french" translatable="false">Français (France)</string>
+    <string name="frenchCanada" translatable="false">Français (Canada)</string>
+    <string name="german" translatable="false">Deutsch</string>
+    <string name="japanese" translatable="false">日本語</string>
+    <string name="maori" translatable="false">Reo Māori</string>
+    <string name="norwegian" translatable="false">Norwegian (Bokmål)</string>
+    <string name="polish" translatable="false">Polski</string>
+    <string name="portuguese" translatable="false">Português</string>
+    <string name="portugueseBrazil" translatable="false">Português do Brasil</string>
+    <string name="russian" translatable="false">рýсский</string>
+    <string name="spanish" translatable="false">Español</string>
+    <string name="swedish" translatable="false">Svenska</string>
     <string name="featureFlagsTitle" translatable="false">Feature Flags</string>
 
 </resources>

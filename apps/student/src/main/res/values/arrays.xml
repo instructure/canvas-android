@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+
+    <string-array name="supported_languages">
+        <item>@string/systemDefault</item>
+        <item>@string/arabic</item>
+        <item>@string/chineseTraditional</item>
+        <item>@string/chineseSimplified</item>
+        <item>@string/danish</item>
+        <item>@string/dutch</item>
+        <item>@string/englishAustralia</item>
+        <item>@string/englishUK</item>
+        <item>@string/englishUS</item>
+        <item>@string/french</item>
+        <item>@string/frenchCanada</item>
+        <item>@string/german</item>
+        <item>@string/japanese</item>
+        <item>@string/maori</item>
+        <item>@string/norwegian</item>
+        <item>@string/polish</item>
+        <item>@string/portuguese</item>
+        <item>@string/portugueseBrazil</item>
+        <item>@string/russian</item>
+        <item>@string/spanish</item>
+        <item>@string/swedish</item>
+    </string-array>
+
+</resources>
