@@ -17,16 +17,8 @@
   -->
 
 <resources>
-    <integer name="slide_up_down_duration">200</integer>
-    <integer name="panda_animation_frame_duration">50</integer>
 
-    <integer name="course_actionbar_max_length">48</integer>
     <integer name="course_card_columns">2</integer>
     <integer name="group_card_columns">1</integer>
-
-    <integer name="ripple_duration">400</integer>
-    <integer name="ripple_duration_short">200</integer>
-    <integer name="ripple_duration_very_short">100</integer>
-    <integer name="ripple_alpha">100</integer>
 
 </resources>
