@@ -144,7 +144,7 @@ object SubmissionUserEndpoint : Endpoint(
     response = {
         GET {
             // We may need to tweak this later.
-            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == request.user!!.id}
+            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == pathVars.userId}
             if(submission != null) {
                 Log.d("<--", "get-submission-user comments: ${submission.submissionComments.joinToString()}")
                 request.successResponse(submission)
@@ -162,10 +162,11 @@ object SubmissionUserEndpoint : Endpoint(
         }
 
         PUT { // add a comment or grade the submission
-            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == request.user!!.id}
+            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == pathVars.userId}
             if(submission != null) {
                 val comment = request.url().queryParameter("comment[text_comment]")
                 val user = request.user!!
+                val grade = request.url().queryParameter("submission[posted_grade]")
                 if(comment != null && comment.length > 0) {
                     val newCommentList = mutableListOf<SubmissionComment>().apply {addAll(submission.submissionComments)}
                     newCommentList.add(SubmissionComment(
@@ -183,8 +184,17 @@ object SubmissionUserEndpoint : Endpoint(
                     Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")
                     request.successResponse(submission)
                 }
+                else if(grade != null) {
+                    val updatedSubmission = submission.copy(
+                            grade = grade
+                    )
+
+                    data.submissions[pathVars.assignmentId]?.remove(submission)
+                    data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
+                    request.successResponse(updatedSubmission)
+                }
                 else {
-                    // grade?
+                    // We don't know why we're here
                     throw Exception("Unhandled submission-user-put")
                 }
             }

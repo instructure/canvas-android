@@ -19,6 +19,8 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.espresso.*
@@ -71,6 +73,10 @@ class SpeedGraderPage : BasePage() {
         onViewWithText(student.name).assertCompletelyDisplayed()
     }
 
+    fun assertGradingStudent(student: User) {
+        onViewWithText(student.name).assertCompletelyDisplayed()
+    }
+
     fun goToSubmissionPage(index: Int) {
         submissionPager.pageToItem(index)
     }
@@ -100,6 +106,10 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun assertDisplaysUrlSubmissionLink(submission: SubmissionApiModel) {
+        waitForViewWithId(R.id.urlTextView).assertCompletelyDisplayed().assertHasText(submission.url!!)
+    }
+
+    fun assertDisplaysUrlSubmissionLink(submission: Submission) {
         waitForViewWithId(R.id.urlTextView).assertCompletelyDisplayed().assertHasText(submission.url!!)
     }
 

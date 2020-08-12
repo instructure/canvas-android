@@ -35,7 +35,14 @@ import org.json.JSONObject
  * - `{assignmentId}` -> [Assignment]
  */
 object AssignmentIndexEndpoint : Endpoint(
-    LongId(PathVars::assignmentId) to AssignmentEndpoint
+    LongId(PathVars::assignmentId) to AssignmentEndpoint,
+    response = {
+        GET {
+            val courseId = pathVars.courseId
+            val assignments = data.assignments.values.filter {assignment -> assignment.courseId == courseId}
+            request.successResponse(assignments)
+        }
+    }
 )
 
 /**

@@ -17,6 +17,7 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -83,6 +84,11 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     fun clickSubmission(student: CanvasUserApiModel) {
+        waitForMatcherWithRefreshes(withText(student.name))
+        waitForViewWithText(student.name).click()
+    }
+
+    fun clickSubmission(student: User) {
         waitForMatcherWithRefreshes(withText(student.name))
         waitForViewWithText(student.name).click()
     }

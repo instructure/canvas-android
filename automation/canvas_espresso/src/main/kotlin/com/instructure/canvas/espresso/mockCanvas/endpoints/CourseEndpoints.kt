@@ -75,6 +75,9 @@ object CourseEndpoint : Endpoint(
         Segment("grading_periods") to CourseGradingPeriodsEndpoint,
         Segment("sections") to CourseSectionsEndpoint,
         Segment("enrollments") to CourseEnrollmentsEndpoint,
+        Segment("features") to Endpoint(
+                Segment("enabled") to CourseEnabledFeaturesEndpoint
+        ),
 
         response = {
             GET {
@@ -114,6 +117,15 @@ object CourseEndpoint : Endpoint(
             }
         }
 )
+
+/**
+ * Endpoint for course features
+ */
+object CourseEnabledFeaturesEndpoint : Endpoint( response = {
+    GET {
+        request.successResponse(listOf<String>()) // Empty string for now.
+    }
+})
 
 /**
  * Endpoint for course enrollments
