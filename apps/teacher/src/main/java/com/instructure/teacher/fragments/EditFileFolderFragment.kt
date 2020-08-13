@@ -112,7 +112,7 @@ class EditFileFolderFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = EditFilePresenterFactory(currentFileOrFolder, usageRightsEnabled, licenseList, courseId)
 
-    override fun onPresenterPrepared(presenter: EditFileFolderPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: EditFileFolderPresenter) = Unit
     override fun onRefreshFinished() = Unit
     override fun onRefreshStarted() = Unit
 

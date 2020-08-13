@@ -68,9 +68,9 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
 
     override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntry, mDiscussionTopic)
 
-    override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter?) {
+    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter) {
         rceTextEditor.setHint(R.string.rce_empty_description)
         rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
 

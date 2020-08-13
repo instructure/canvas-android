@@ -64,7 +64,7 @@ object FileUtils {
     /**
      * deleteAllFilesInDirectory will RECURSIVELY delete all files/folders in a directory
      */
-    fun deleteAllFilesInDirectory(startFile: File): Boolean = startFile.deleteRecursively()
+    fun deleteAllFilesInDirectory(startFile: File?): Boolean = startFile?.deleteRecursively() ?: false
 
     /**
      * getFileExtensionFromMimeType returns what's after the /.

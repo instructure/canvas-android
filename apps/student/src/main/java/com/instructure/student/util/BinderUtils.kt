@@ -139,7 +139,7 @@ object BinderUtils {
             textView.contentDescription = contentDescription
             textView.setTextAppearance(R.style.TextStyle_Grade)
             textView.background =
-                ColorUtils.colorIt(color, ContextCompat.getDrawable(context, R.drawable.grade_background))
+                ColorUtils.colorIt(color, ContextCompat.getDrawable(context, R.drawable.grade_background)!!)
         } else {
             textView.text = grade
             textView.setTextAppearance(R.style.TextStyle_NoGrade)

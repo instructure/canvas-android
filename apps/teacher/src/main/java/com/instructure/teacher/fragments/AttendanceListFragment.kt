@@ -53,14 +53,11 @@ import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
 import com.instructure.teacher.presenters.AttendanceListPresenter
 import com.instructure.interactions.router.Route
-import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AttendanceListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_attendance_list.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import org.json.JSONObject
@@ -141,7 +138,7 @@ class AttendanceListFragment : BaseSyncFragment<
     override fun getPresenterFactory() = AttendanceListPresenterFactory(mCanvasContext, mTab)
 
     override fun onPresenterPrepared(presenter: AttendanceListPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         addSwipeToRefresh(swipeRefreshLayout)
     }

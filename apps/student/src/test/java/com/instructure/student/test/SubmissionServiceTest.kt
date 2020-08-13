@@ -134,7 +134,7 @@ class SubmissionServiceTest : Assert() {
 
         every { context.startService(capture(intent)) } returns null
 
-        mockkStatic(FileUtils::class)
+        mockkObject(FileUtils)
         every { FileUtils.getMimeType(any()) } returns "video"
         SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, mediaFilePath)
 

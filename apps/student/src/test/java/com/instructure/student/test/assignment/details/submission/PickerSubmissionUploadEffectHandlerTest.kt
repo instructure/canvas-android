@@ -112,7 +112,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         mockkStatic(PermissionUtils::class)
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns true
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
 
         mockkStatic(FileProvider::class)
@@ -186,9 +186,9 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val fileName = "file"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri, mimeType) } returns fileName
+        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
         every {
             FileUploadUtils.getFileSubmitObjectFromInputStream(
                 context,
@@ -216,9 +216,9 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val fileName = "file"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri, mimeType) } returns fileName
+        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
         every {
             FileUploadUtils.getFileSubmitObjectFromInputStream(
                 context,
@@ -252,9 +252,9 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext")
         val allowedExtensions = listOf("bad", "other")
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri, mimeType) } returns fileName
+        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
         every {
             FileUploadUtils.getFileSubmitObjectFromInputStream(
                 context,
@@ -282,9 +282,9 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val errorMessage = "error"
         val file = FileSubmitObject(fileName, 1L, mimeType, "fullPath.ext", errorMessage)
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getFileMimeType(any(), uri) } returns mimeType
-        every { FileUploadUtils.getFileNameWithDefault(any(), uri, mimeType) } returns fileName
+        every { FileUploadUtils.getFileNameWithDefault(any(), uri) } returns fileName
         every {
             FileUploadUtils.getFileSubmitObjectFromInputStream(
                 context,

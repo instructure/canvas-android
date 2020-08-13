@@ -76,13 +76,13 @@ class AnnotationCommentListFragment : BaseListFragment<
 
     override val recyclerView: RecyclerView = annotationCommentsRecyclerView
     override fun layoutResId() = R.layout.fragment_annotation_comment_list
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
     override fun checkIfEmpty() {} // we don't display this view if its empty, so no need to check
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun getPresenterFactory() = AnnotationCommentListPresenterFactory(mAnnotationList, mDocSession, mApiValues, mAssigneeId, mHeadAnnotationId)
 
-    override fun onPresenterPrepared(presenter: AnnotationCommentListPresenter?) {
+    override fun onPresenterPrepared(presenter: AnnotationCommentListPresenter) {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = layoutManager

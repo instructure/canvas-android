@@ -127,7 +127,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             DiscussionsDetailsPresenterFactory(mCanvasContext, mDiscussionTopicHeader, mDiscussionTopic,
                     if(mSkipId.isEmpty()) DiscussionsDetailsFragment::class.java.simpleName + UUID.randomUUID().toString() else mSkipId)
 
-    override fun onPresenterPrepared(presenter: DiscussionsDetailsPresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsDetailsPresenter) {}
 
     override fun onReadySetGo(presenter: DiscussionsDetailsPresenter) {
 

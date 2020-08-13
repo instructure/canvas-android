@@ -135,7 +135,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_edit_assignment_details
 
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

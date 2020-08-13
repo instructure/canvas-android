@@ -68,7 +68,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -92,7 +92,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         setupViews()
     }
 
-    override fun onCreateView(view: View?) {
+    override fun onCreateView(view: View) {
         mLinearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 

@@ -148,7 +148,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
 
     override fun onPresenterPrepared(presenter: PeopleListPresenter) {
-        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         addSwipeToRefresh(swipeRefreshLayout!!)
     }

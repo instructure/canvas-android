@@ -14,19 +14,11 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.pandautils.models;
-
-import java.util.HashMap;
-
-
-public class FormatHtmlObject {
-
-    public String html;
-    public HashMap<String, String> vimeoIds = new HashMap<>();
-
-    public FormatHtmlObject(String html, HashMap<String, String> vimeoIds){
-        this.html = html;
-        this.vimeoIds = vimeoIds;
-    }
+enum class AppType(val packageName: String) {
+    STUDENT("com.instructure.candroid"),
+    POLLING("com.instructure.androidpolling"),
+    PARENT("com.instructure.parentapp"),
+    TEACHER("com.instructure.teacher")
 }

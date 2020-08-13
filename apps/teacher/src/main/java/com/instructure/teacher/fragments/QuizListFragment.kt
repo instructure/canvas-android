@@ -64,7 +64,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     override fun getPresenterFactory() = QuizListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: QuizListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

@@ -238,7 +238,7 @@ object RouteMatcher : BaseRouteMatcher() {
         route(context, route)
     }
 
-    
+
     fun route(context: Context, route: Route?) {
 
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
@@ -305,7 +305,7 @@ object RouteMatcher : BaseRouteMatcher() {
         Logger.i("RouteMatcher:handleWebViewRoute()")
     }
 
-    private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? {
+    private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
         if (openMediaCallbacks == null) {
 
             openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
@@ -328,27 +328,27 @@ object RouteMatcher : BaseRouteMatcher() {
                     dialog?.dismiss()
                     try {
                         if (loadedMedia.isError) {
-                            if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ERROR_TYPE.NO_APPS) {
-                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent.data!!, (loader as OpenMediaAsyncTaskLoader).filename, loadedMedia.intent.type!!, null, R.drawable.vd_attachment).nonNullArgs
+                            if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS) {
+                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent!!.data!!, (loader as OpenMediaAsyncTaskLoader).filename!!, loadedMedia.intent!!.type!!, null, R.drawable.vd_attachment).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewUnsupportedFileFragment::class.java, null, args))
                             } else {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()
                             }
                         } else if (loadedMedia.isHtmlFile) {
-                            val args = ViewHtmlFragment.newInstance(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!).nonNullArgs
+                            val args = ViewHtmlFragment.newInstance(loadedMedia.bundle!!.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle!!.getString(Const.ACTION_BAR_TITLE)!!).nonNullArgs
                             RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
-                            if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
+                            if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
-                                val uri = loadedMedia.intent.data
+                                val uri = loadedMedia.intent!!.data
                                 val submissionTarget = loadedMedia.bundle?.getParcelable<ShareFileSubmissionTarget>(Const.SUBMISSION_TARGET)
                                 FileUtils.showPdfDocument(uri, loadedMedia, activity, submissionTarget)
-                            } else if (loadedMedia.intent.type == "video/mp4") {
-                                val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent.data!!.toString(), null, "video/mp4", loadedMedia.intent.dataString, true)
+                            } else if (loadedMedia.intent?.type == "video/mp4") {
+                                val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent!!.data!!.toString(), null, "video/mp4", loadedMedia.intent!!.dataString, true)
                                 RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
 
-                            } else if (loadedMedia.intent.type!!.startsWith("image/")) {
-                                val args = ViewImageFragment.newInstance(loadedMedia.intent.dataString!!, loadedMedia.intent.data!!, "image/*", true, 0).nonNullArgs
+                            } else if (loadedMedia.intent?.type?.startsWith("image/") == true) {
+                                val args = ViewImageFragment.newInstance(loadedMedia.intent!!.dataString!!, loadedMedia.intent!!.data!!, "image/*", true, 0).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewImageFragment::class.java, null, args))
                             } else {
                                 activity.startActivity(loadedMedia.intent)
@@ -366,7 +366,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 }
             }
         }
-        return openMediaCallbacks
+        return openMediaCallbacks!!
     }
 
     fun openMedia(activity: FragmentActivity?, url: String?) {
@@ -429,7 +429,7 @@ object RouteMatcher : BaseRouteMatcher() {
      *                         also true, the user will be routed to UnsupportedFeatureFragment for such urls.
      * @return
      */
-    
+
     @JvmOverloads
     fun canRouteInternally(
         context: Context,
@@ -444,18 +444,18 @@ object RouteMatcher : BaseRouteMatcher() {
         return canRoute
     }
 
-    
+
     fun generateUrl(url: String?, queryParams: HashMap<String, String>): String? {
         if(url == null) return null
         return createQueryParamString(url, queryParams)
     }
 
-    
+
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, replacementParams: HashMap<String, String>): String? {
         return generateUrl(type, masterCls, null, replacementParams, null)
     }
 
-    
+
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, detailCls: Class<out Fragment>?, replacementParams: HashMap<String, String>?, queryParams: HashMap<String, String>?): String? {
         val domain = ApiPrefs.fullDomain
         val urlRoute = getInternalRoute(masterCls, detailCls)
@@ -475,7 +475,7 @@ object RouteMatcher : BaseRouteMatcher() {
         return null
     }
 
-    
+
     fun getContextIdFromURL(url: String?): String? {
         return getContextIdFromURL(url, routes)
     }

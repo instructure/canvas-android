@@ -136,13 +136,13 @@ class FileListFragment : BaseSyncFragment<
     }
 
     override fun layoutResId() = R.layout.fragment_file_list
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
     override fun getPresenterFactory() = FileListPresenterFactory(currentFolder, mCanvasContext)
     override val recyclerView: RecyclerView get() = fileListRecyclerView
 
     override fun onPresenterPrepared(presenter: FileListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

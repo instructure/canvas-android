@@ -47,7 +47,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     override fun layoutResId() = R.layout.fragment_file_search
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
     override fun getPresenterFactory() = FileSearchPresenterFactory(canvasContext!!)
     override val recyclerView: RecyclerView = fileSearchRecyclerView
 

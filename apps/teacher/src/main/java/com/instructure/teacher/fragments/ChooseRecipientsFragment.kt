@@ -183,8 +183,6 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
 
     override fun onHandleBackPressed(): Boolean = presenter.popBackStack()
 
-    override fun unBundle(extras: Bundle) {}
-
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
     companion object {

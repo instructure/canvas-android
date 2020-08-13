@@ -33,7 +33,7 @@ class NotATeacherFragment : BaseFragment() {
 
     override fun layoutResId(): Int = R.layout.fragment_not_a_teacher
 
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

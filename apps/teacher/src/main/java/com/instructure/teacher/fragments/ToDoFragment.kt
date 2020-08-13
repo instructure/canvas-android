@@ -59,10 +59,10 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
     override fun getPresenterFactory() = ToDoPresenterFactory()
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onPresenterPrepared(presenter: ToDoPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.toDoRecyclerView, R.id.emptyPandaView, getString(R.string.noTodos))
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_sleeping))
         emptyPandaView.setMessageText(R.string.noTodosSubtext)

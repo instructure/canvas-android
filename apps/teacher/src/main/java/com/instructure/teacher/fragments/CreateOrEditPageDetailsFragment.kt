@@ -69,7 +69,7 @@ class CreateOrEditPageDetailsFragment :
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
-    override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter?) {}
+    override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_page
 
     override fun getPresenterFactory() = CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())

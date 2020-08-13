@@ -83,7 +83,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     protected abstract fun launchApplicationMainActivityIntent(): Intent
     protected abstract fun refreshWidgets()
-    protected abstract fun userAgent(): String?
+    protected abstract fun userAgent(): String
 
     private lateinit var webView: WebView
     private var canvasLogin = 0

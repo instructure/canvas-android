@@ -91,7 +91,7 @@ class PageDetailsFragment : BasePresenterFragment<
         loading.setVisible()
     }
 
-    override fun onReadySetGo(presenter: PageDetailsPresenter?) {
+    override fun onReadySetGo(presenter: PageDetailsPresenter) {
 
         if (mPage.frontPage) {
             presenter?.getFrontPage(mCanvasContext, true)
@@ -159,7 +159,7 @@ class PageDetailsFragment : BasePresenterFragment<
     }
 
     override fun getPresenterFactory() = PageDetailsPresenterFactory(mCanvasContext, mPage)
-    override fun onPresenterPrepared(presenter: PageDetailsPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: PageDetailsPresenter) = Unit
 
     override fun layoutResId() = R.layout.fragment_page_details
 

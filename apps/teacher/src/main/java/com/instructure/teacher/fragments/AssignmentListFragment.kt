@@ -70,7 +70,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     override fun getPresenterFactory() = AssignmentListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: AssignmentListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -173,7 +173,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, Color.WHITE)
 
         //setup popup menu
-        val menuItemView = mRootView.findViewById<View>(R.id.menu_grading_periods_filter)
+        val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
         mGradingPeriodMenu = PopupMenu(requireContext(), menuItemView, Gravity.TOP, 0,
                 R.style.Widget_AppCompat_PopupMenu_Overflow)
 

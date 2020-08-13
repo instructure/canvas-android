@@ -59,7 +59,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     override fun layoutResId() = R.layout.fragment_course_settings
     override fun getPresenterFactory() = CourseSettingsFragmentPresenterFactory()
 
-    override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter?) {
+    override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
         courseImage.setCourseImage(mCourse, mCourseColor, !TeacherPrefs.hideCourseColorOverlay)
     }
@@ -74,7 +74,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         }
     }
 
-    override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter?) {
+    override fun onPresenterPrepared(presenter: CourseSettingsFragmentPresenter) {
         editCourseNameRoot.onClickWithRequireNetwork {
             presenter?.editCourseNameClicked()
         }

@@ -56,7 +56,7 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
     override fun getPresenterFactory() = SpeedGraderFilesPresenterFactory(mSubmission)
     override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: SpeedGraderFilesPresenter) {
-        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.speedGraderFilesRecyclerView, R.id.speedGraderFilesEmptyView, getString(R.string.no_items_to_display_short))
         swipeRefreshLayout.isEnabled = false
     }

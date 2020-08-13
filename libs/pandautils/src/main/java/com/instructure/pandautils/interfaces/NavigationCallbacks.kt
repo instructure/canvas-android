@@ -14,17 +14,18 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandautils.interfaces
 
-package com.instructure.pandautils;
+interface NavigationCallbacks {
+    /**
+     * Gives fragments the opportunity to deal with back pressed events
+     * @return True is for when the fragment handles the back press event, False otherwise
+     */
+    fun onHandleBackPressed(): Boolean
 
-import android.app.Application;
-import android.test.ApplicationTestCase;
-
-/**
- * <a href="http://d.android.com/tools/testing/testing_android.html">Testing Fundamentals</a>
- */
-public class ApplicationTest extends ApplicationTestCase<Application> {
-    public ApplicationTest() {
-        super(Application.class);
-    }
+    /**
+     * Gives fragments the opportunity to deal with close events, usually an arrow or x in the top corner.
+     * @return True is for when the fragment handles the back press event, False otherwise
+     */
+    fun onHandleClose(): Boolean
 }

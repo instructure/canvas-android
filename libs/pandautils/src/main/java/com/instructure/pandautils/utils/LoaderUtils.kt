@@ -14,36 +14,21 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.pandautils.utils;
+import android.os.Bundle
+import androidx.loader.app.LoaderManager
 
-import android.os.Bundle;
-
-import com.instructure.pandautils.utils.Const;
-import androidx.loader.app.LoaderManager;
-
-public class LoaderUtils {
-
-
+object LoaderUtils {
     /**
      * Helper utility to save loader bundles during onSaveInstanceState
      * @param outState - reference to a fragments outstate bundle
      * @param loaderBundle - reference to a loaders "data" bundle to be stored into outstate
      */
-    public static void saveLoaderBundle(Bundle outState, Bundle loaderBundle){
-        saveLoaderBundle(outState, loaderBundle, Const.LOADER_BUNDLE);
+    @JvmOverloads
+    fun saveLoaderBundle(outState: Bundle?, loaderBundle: Bundle?, bundleId: String? = Const.LOADER_BUNDLE) {
+        if (loaderBundle != null && outState != null) outState.putBundle(bundleId, loaderBundle)
     }
-
-    /**
-     * overloaded version for unique loader ID
-     * @param bundleId unique ID for bundle saveState
-     */
-    public static void saveLoaderBundle(Bundle outState, Bundle loaderBundle, String bundleId){
-        if(loaderBundle != null && outState != null){
-            outState.putBundle(bundleId, loaderBundle);
-        }
-    }
-
 
     /**
      * Helper utility to restore loader during fragment creation
@@ -51,24 +36,22 @@ public class LoaderUtils {
      * @param saveState - save state from fragment
      * @param callback - reference to the fragment that extends loaderCallbacks
      * @param loaderId - identifier for loader to restart
-     * @param <G> - generic reference to callback
+     * @param <G> - generic reference to callback </G>
      */
-    public static <G extends LoaderManager.LoaderCallbacks> void restoreLoaderFromBundle(LoaderManager loaderManager, Bundle saveState, G callback, int loaderId) {
-        restoreLoaderFromBundle(loaderManager, saveState, callback, loaderId, Const.LOADER_BUNDLE);
+    fun <G : LoaderManager.LoaderCallbacks<*>> restoreLoaderFromBundle(loaderManager: LoaderManager?, saveState: Bundle?, callback: G, loaderId: Int) {
+        restoreLoaderFromBundle(loaderManager, saveState, callback, loaderId, Const.LOADER_BUNDLE)
     }
-
 
     /**
      * Overloaded version for unique loader ID, default is Const.LOADER_BUNDLE
      * @param bundleId - unique ID for bundle saveState
      */
-    public static <G extends LoaderManager.LoaderCallbacks> void restoreLoaderFromBundle(LoaderManager loaderManager, Bundle saveState, G callback, int loaderId, String bundleId) {
+    fun <G : LoaderManager.LoaderCallbacks<*>> restoreLoaderFromBundle(loaderManager: LoaderManager?, saveState: Bundle?, callback: G, loaderId: Int, bundleId: String?) {
         if (loaderManager != null && saveState != null && saveState.getBundle(bundleId) != null) {
-            //This will restart any loaders previously started with this ID
-            loaderManager.initLoader(loaderId, saveState.getBundle(bundleId), callback);
+            // This will restart any loaders previously started with this ID
+            loaderManager.initLoader(loaderId, saveState.getBundle(bundleId), callback)
         }
     }
-
 
     /**
      * Helper utility to start new loader
@@ -76,9 +59,9 @@ public class LoaderUtils {
      * @param loaderBundle - arguments for loader
      * @param callback - reference to the fragment that extends loaderCallbacks
      * @param loaderId - identifier for loader to restart
-     * @param <G> - generic reference to callback
+     * @param <G> - generic reference to callback </G>
      */
-    public static <G extends LoaderManager.LoaderCallbacks> void restartLoaderWithBundle(LoaderManager loaderManager, Bundle loaderBundle, G callback, int loaderId){
-        loaderManager.restartLoader(loaderId, loaderBundle, callback).forceLoad();
+    fun <G : LoaderManager.LoaderCallbacks<*>> restartLoaderWithBundle(loaderManager: LoaderManager, loaderBundle: Bundle?, callback: G, loaderId: Int) {
+        loaderManager.restartLoader(loaderId, loaderBundle, callback).forceLoad()
     }
 }

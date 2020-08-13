@@ -64,9 +64,9 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     override fun getPresenterFactory() = DiscussionsReplyFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntryId)
 
-    override fun onPresenterPrepared(presenter: DiscussionsReplyPresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsReplyPresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsReplyPresenter?) {
+    override fun onReadySetGo(presenter: DiscussionsReplyPresenter) {
         rceTextEditor.setHint(R.string.rce_empty_message)
         rceTextEditor.requestEditorFocus()
         rceTextEditor.showEditorToolbar()

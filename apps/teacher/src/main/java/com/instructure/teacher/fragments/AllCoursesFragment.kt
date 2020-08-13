@@ -64,7 +64,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     override fun onCreateView(view: View) {}
 
     override fun onPresenterPrepared(presenter: AllCoursesPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         val gridLayoutManager = GridLayoutManager(
             requireContext(),

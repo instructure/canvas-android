@@ -64,7 +64,7 @@ class CourseBrowserFragment : BaseSyncFragment<
 
     private var mCanvasContext: CanvasContext by ParcelableArg(Course())
 
-    private val mCourseBrowserHeader by lazy { mRootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
+    private val mCourseBrowserHeader by lazy { rootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
 
     companion object {
         @JvmStatic
@@ -101,11 +101,11 @@ class CourseBrowserFragment : BaseSyncFragment<
         }
     }
 
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
 
     override fun onPresenterPrepared(presenter: CourseBrowserPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

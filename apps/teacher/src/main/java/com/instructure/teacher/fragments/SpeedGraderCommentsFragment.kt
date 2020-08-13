@@ -72,7 +72,7 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun layoutResId() = R.layout.fragment_speedgrader_comments
     override val recyclerView: RecyclerView get() = speedGraderCommentsRecyclerView
     override fun getPresenterFactory() = SpeedGraderCommentsPresenterFactory(mRawComments, mSubmissionHistory, mAssignee, mCourseId, mAssignmentId, mIsGroupMessage)
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
     override fun onRefreshStarted() {}
     override fun onRefreshFinished() {}
 

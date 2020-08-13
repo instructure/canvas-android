@@ -55,7 +55,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     override val recyclerView get() = dueDateRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = DueDatesPresenterFactory(mAssignment)
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onResume() {
         super.onResume()
@@ -104,7 +104,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
 
     override fun onPresenterPrepared(presenter: DueDatesPresenter) {
         RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

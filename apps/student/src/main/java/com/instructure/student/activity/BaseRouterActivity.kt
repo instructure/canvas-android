@@ -110,10 +110,10 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                             if (loadedMedia.isError) {
                                 toast(loadedMedia.errorMessage, Toast.LENGTH_LONG)
                             } else if (loadedMedia.isHtmlFile) {
-                                InternalWebviewFragment.loadInternalWebView(this@BaseRouterActivity, InternalWebviewFragment.makeRoute(loadedMedia.bundle))
+                                InternalWebviewFragment.loadInternalWebView(this@BaseRouterActivity, InternalWebviewFragment.makeRoute(loadedMedia.bundle!!))
                             } else if (loadedMedia.intent != null) {
-                                if (loadedMedia.intent.type!!.contains("pdf")) {
-                                    val uri = loadedMedia.intent.data
+                                if (loadedMedia.intent!!.type!!.contains("pdf")) {
+                                    val uri = loadedMedia.intent!!.data
                                     FileUtils.showPdfDocument(uri, loadedMedia, context)
                                 } else {
                                     context.startActivity(loadedMedia.intent)

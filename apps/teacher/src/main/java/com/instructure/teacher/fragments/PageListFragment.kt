@@ -59,7 +59,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     override fun getPresenterFactory() = PageListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: PageListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

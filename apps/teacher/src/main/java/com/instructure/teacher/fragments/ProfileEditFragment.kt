@@ -68,8 +68,8 @@ class ProfileEditFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = ProfileEditFragmentPresenterFactory()
 
-    override fun onReadySetGo(presenter: ProfileEditFragmentPresenter?) {
-        presenter?.loadData(false)
+    override fun onReadySetGo(presenter: ProfileEditFragmentPresenter) {
+        presenter.loadData(false)
     }
 
     private val saveButton: TextView? get() = view?.findViewById(R.id.menu_save)
@@ -238,7 +238,7 @@ class ProfileEditFragment : BasePresenterFragment<
 
     override fun onRefreshFinished() {}
 
-    override fun onPresenterPrepared(presenter: ProfileEditFragmentPresenter?) {}
+    override fun onPresenterPrepared(presenter: ProfileEditFragmentPresenter) {}
 
     private fun hideProgressBar() {
         profileCameraLoadingIndicator.setGone()

@@ -188,7 +188,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     override fun insertImageIntoRCE(text: String, alt: String) = descriptionRCEView.insertImage(text, alt)
 
-    override fun onReadySetGo(presenter: CreateDiscussionPresenter?) {
+    override fun onReadySetGo(presenter: CreateDiscussionPresenter) {
         // If we already have something in the edit date groups we already have the full assignment and don't need to get it again.
         mDiscussionTopicHeader?.assignment?.let {
             // Get the full assignment with overrides
@@ -206,7 +206,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = CreateDiscussionPresenterFactory(mCanvasContext, mDiscussionTopicHeader?.assignment)
 
-    override fun onPresenterPrepared(presenter: CreateDiscussionPresenter?) { }
+    override fun onPresenterPrepared(presenter: CreateDiscussionPresenter) { }
 
     override fun layoutResId(): Int = R.layout.fragment_create_discussion
 

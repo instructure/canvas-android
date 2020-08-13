@@ -48,7 +48,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_assignment_submission_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -85,9 +84,9 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
     override val recyclerView: RecyclerView get() = submissionsRecyclerView
     override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.submissionsRecyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         mRecyclerView.setHeaderVisibilityListener(divider)
 

@@ -14,20 +14,26 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandautils.utils
 
-package com.instructure.pandautils.interfaces;
+object RequestCodes {
+    const val NONE = 0
 
+    // Dashboard
+    const val TODO = 1001
 
-public interface NavigationCallbacks {
-    /**
-     * Gives fragments the opportunity to deal with back pressed events
-     * @return True is for when the fragment handles the back press event, False otherwise
-     */
-    boolean onHandleBackPressed();
+    // Messages
+    const val COMPOSE_MESSAGE = 2000
 
-    /**
-     * Gives fragments the opportunity to deal with close events, usually an arrow or x in the top corner.
-     * @return True is for when the fragment handles the back press event, False otherwise
-     */
-    boolean onHandleClose();
+    // Notorious Request
+    const val SELECT_MEDIA = 3001
+    const val TAKE_VIDEO = 3002
+
+    // Profile Fragment
+    const val CAMERA_PIC_REQUEST = 4000
+    const val PICK_IMAGE_GALLERY = 4001
+    const val CROP_IMAGE = 4003
+
+    // Canvas Context
+    const val CANVAS_CONTEXT = 8000
 }

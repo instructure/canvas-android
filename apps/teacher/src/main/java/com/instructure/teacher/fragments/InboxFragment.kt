@@ -68,7 +68,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
     override fun getPresenterFactory(): InboxPresenterFactory = InboxPresenterFactory()
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -93,7 +93,7 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
     }
 
     override fun onPresenterPrepared(presenter: InboxPresenter) {
-        RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.inboxRecyclerView, R.id.emptyPandaView, getString(R.string.nothingUnread))
         onScopeChanged(currentScope)
 

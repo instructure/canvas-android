@@ -67,7 +67,7 @@ object ToolbarColorizeHelper {
             setOverflowButtonColor(toolbarIconsColor, activity)
 
             // Step 5: When not using setSupportActionbar this method is used to color the overflow icon
-            toolbar.overflowIcon = ColorUtils.tintIt(toolbarIconsColor, toolbar.overflowIcon)
+            toolbar.overflowIcon = ColorUtils.tintIt(toolbarIconsColor, toolbar.overflowIcon!!)
         }
     }
 

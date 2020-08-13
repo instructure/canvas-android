@@ -149,7 +149,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = EditQuizDetailsPresenterFactory(mQuiz, mAssignment, mCourse)
 
-    override fun onPresenterPrepared(presenter: EditQuizDetailsPresenter?) {}
+    override fun onPresenterPrepared(presenter: EditQuizDetailsPresenter) {}
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
 

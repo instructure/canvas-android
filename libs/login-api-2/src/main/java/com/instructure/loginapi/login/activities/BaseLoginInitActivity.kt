@@ -55,7 +55,7 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
     @ColorInt
     protected abstract fun themeColor(): Int
 
-    protected abstract fun userAgent(): String?
+    protected abstract fun userAgent(): String
 
     protected abstract val isTesting: Boolean
 

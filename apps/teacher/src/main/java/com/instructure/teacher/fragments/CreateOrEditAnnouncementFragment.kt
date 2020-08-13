@@ -91,7 +91,7 @@ class CreateOrEditAnnouncementFragment :
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
-    override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter?) {}
+    override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
 
     override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())

@@ -87,10 +87,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     override fun unBundle(extras: Bundle) = Unit
 
-    override fun onPresenterPrepared(presenter: SpeedGraderPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: SpeedGraderPresenter) = Unit
 
-    override fun onReadySetGo(presenter: SpeedGraderPresenter?) {
-        presenter?.setupData()
+    override fun onReadySetGo(presenter: SpeedGraderPresenter) {
+        presenter.setupData()
     }
 
     // This is here to prevent transaction too large exceptions, possibly caused by pdfFragment's saving.

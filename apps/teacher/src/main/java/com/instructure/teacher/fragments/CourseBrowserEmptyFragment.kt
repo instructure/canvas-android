@@ -47,7 +47,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     override fun onRefreshStarted() {}
 
-    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter?) {
+    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) {
         textCourseName.text = presenter?.course?.name
         textCourseTerm.text = presenter?.course?.term?.name
         setupToolbar(presenter?.course?.color)
@@ -55,7 +55,7 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)
 
-    override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter?) {}
+    override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter) {}
 
     companion object {
         @JvmStatic

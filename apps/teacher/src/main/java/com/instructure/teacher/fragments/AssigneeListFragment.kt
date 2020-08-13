@@ -68,7 +68,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     override fun withPagination() = false
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun getPresenterFactory() = AssigneeListPresenterFactory(mDateGroups, mTargetIdx, sections, groups, students)
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     private fun performSave() {
         presenter.save()
@@ -95,7 +95,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
 
     override fun onPresenterPrepared(presenter: AssigneeListPresenter) {
         RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,

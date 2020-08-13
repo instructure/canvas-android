@@ -85,6 +85,7 @@ import com.instructure.canvasapi2.utils.Logger;
 import com.instructure.pandautils.R;
 import com.instructure.pandautils.utils.Const;
 import com.instructure.pandautils.utils.FileUploadUtils;
+import com.instructure.pandautils.utils.PandaViewUtils;
 import com.instructure.pandautils.utils.PermissionUtilsKt;
 import com.instructure.pandautils.utils.Utils;
 import com.instructure.pandautils.video.VideoWebChromeClient;
@@ -362,7 +363,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             TextView title = new TextView(mContext);
             title.setText(result.getExtra());
             title.setTextColor(mContext.getResources().getColor(R.color.canvasTextDark));
-            int padding = (int)Utils.dpToPx(mContext, 8);
+            int padding = (int) PandaViewUtils.DP(mContext, 8);
             title.setPadding(padding*2, padding, padding*2, 0);
 
             menu.setHeaderView(title);
@@ -523,7 +524,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             // Check to see if we need to do anything with the link that was clicked
 
             // Default headers
-            Map<String, String> extraHeaders = Utils.getReferer(getContext());
+            Map<String, String> extraHeaders = Utils.getReferer();
 
             if (url.contains("yellowdig") && yellowdigInstalled()) {
                 // Pertaining to the Yellowdig LTI:
@@ -635,7 +636,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
             super.onReceivedError(view, errorCode, description, failingUrl);
             if (failingUrl != null && failingUrl.startsWith("file://")) {
                 failingUrl = failingUrl.replaceFirst("file://", "https://");
-                view.loadUrl(failingUrl, Utils.getReferer(getContext()));
+                view.loadUrl(failingUrl, Utils.getReferer());
             }
         }
     }
@@ -858,7 +859,7 @@ public class CanvasWebView extends WebView implements NestedScrollingChild {
         final List<Intent> cameraIntents = new ArrayList<>();
         if (allowRecording) {
             String fileName = "vid_" + System.currentTimeMillis() + ".mp4";
-            File file = new File(FileUploadUtils.getExternalCacheDir(mContext), fileName);
+            File file = new File(FileUploadUtils.INSTANCE.getExternalCacheDir(mContext), fileName);
 
             Uri cameraImageUri = FileProvider.getUriForFile(mContext, mContext.getPackageName() + Const.FILE_PROVIDER_AUTHORITY, file);
             // Camera.

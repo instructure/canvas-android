@@ -333,7 +333,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         }
 
         val fileName = "pic_" + System.currentTimeMillis().toString() + ".jpg"
-        val file = File(FileUploadUtils.getExternalCacheDir(context), fileName)
+        val file = File(FileUploadUtils.getExternalCacheDir(requireContext()), fileName)
 
         cameraImageUri = FileProvider.getUriForFile(requireContext(), requireContext().packageName + Const.FILE_PROVIDER_AUTHORITY, file)
 
@@ -485,8 +485,8 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             val submitObject = inBackground<FileSubmitObject?> {
                 val cr = requireActivity().contentResolver
                 val mimeType = FileUploadUtils.getFileMimeType(cr, fileUri)
-                val fileName = FileUploadUtils.getFileNameWithDefault(cr, fileUri, mimeType)
-                FileUploadUtils.getFileSubmitObjectFromInputStream(activity, fileUri, fileName, mimeType)
+                val fileName = FileUploadUtils.getFileNameWithDefault(cr, fileUri)
+                FileUploadUtils.getFileSubmitObjectFromInputStream(requireContext(), fileUri, fileName, mimeType)
             }
 
             submitObject?.let {

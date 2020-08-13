@@ -88,7 +88,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
 
     // region OpenMediaAsyncTaskLoader
 
-    private val loaderCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>?
+    private val loaderCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>
         get() {
             if (openMediaCallbacks == null) {
                 openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
@@ -100,7 +100,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
                     override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
                         try {
                             if (loadedMedia.isError) {
-                                if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ERROR_TYPE.NO_APPS && isAdded && view != null) {
+                                if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS && isAdded && view != null) {
                                     this@ParentFragment.loadedMedia = loadedMedia
                                     Snackbar.make(view!!, getString(R.string.noAppsShort), Snackbar.LENGTH_LONG)
                                             .setAction(getString(R.string.download), snackbarClickListener)
@@ -112,14 +112,14 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
                                     }
                                 }
                             } else if (loadedMedia.isHtmlFile) {
-                                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(loadedMedia.bundle))
+                                InternalWebviewFragment.loadInternalWebView(activity, InternalWebviewFragment.makeRoute(loadedMedia.bundle!!))
                             } else if (loadedMedia.intent != null && context != null) {
                                 // Show pdf with PSPDFkit
-                                if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
-                                    val uri = loadedMedia.intent.data
+                                if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
+                                    val uri = loadedMedia.intent!!.data
                                     FileUtils.showPdfDocument(uri, loadedMedia, requireContext())
-                                } else if (loadedMedia.intent.type == "video/mp4") {
-                                    activity?.startActivity(VideoViewActivity.createIntent(requireContext(), loadedMedia.intent.dataString))
+                                } else if (loadedMedia.intent?.type == "video/mp4") {
+                                    activity?.startActivity(VideoViewActivity.createIntent(requireContext(), loadedMedia.intent!!.dataString))
                                 } else {
                                     activity?.startActivity(loadedMedia.intent)
                                 }
@@ -137,7 +137,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
                     override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {}
                 }
             }
-            return openMediaCallbacks
+            return openMediaCallbacks!!
         }
 
     open fun onMediaLoadingStarted(){}
@@ -145,7 +145,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
 
     var snackbarClickListener: View.OnClickListener = View.OnClickListener {
         try {
-            downloadFileToDownloadDir(requireContext(), loadedMedia!!.intent.data!!.path)
+            downloadFileToDownloadDir(requireContext(), loadedMedia?.intent?.data?.path!!)
         } catch (e: Exception) {
             e.printStackTrace()
             Toast.makeText(requireActivity(), R.string.errorOccurred, Toast.LENGTH_LONG).show()
@@ -528,10 +528,10 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
         }
 
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: $url")
-        val attachmentFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), loadedMedia!!.intent.data!!.lastPathSegment)
+        val attachmentFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), loadedMedia!!.intent!!.data!!.lastPathSegment)
 
         // We've downloaded and cached this file already, so we'll just move it to the download directory
-        val src = requireContext().contentResolver.openInputStream(loadedMedia!!.intent.data!!)
+        val src = requireContext().contentResolver.openInputStream(loadedMedia!!.intent!!.data!!)
         val dst = FileOutputStream(attachmentFile)
 
         val buffer = ByteArray(1024)
