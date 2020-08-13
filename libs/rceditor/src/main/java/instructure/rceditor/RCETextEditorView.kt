@@ -157,7 +157,7 @@ class RCETextEditorView @JvmOverloads constructor(
                 .setListener { url, alt ->
                     if (URLUtil.isValidUrl(url)) { // Checks if the url contains any valid schema, etc
                         editor.insertLink(url, alt)
-                    } else { 
+                    } else {
                         // For now, we'll default to https always
                         editor.insertLink("https://$url", alt)
                     }
@@ -206,7 +206,7 @@ class RCETextEditorView @JvmOverloads constructor(
         @ColorInt themeColor: Int,
         @ColorInt buttonColor: Int
     ) {
-        editor.applyHtml(html, accessibilityTitle)
+        editor.applyHtml(html.orEmpty(), accessibilityTitle)
         editor.setPlaceholder(hint)
         setThemeColor(themeColor)
         this.buttonColor = buttonColor

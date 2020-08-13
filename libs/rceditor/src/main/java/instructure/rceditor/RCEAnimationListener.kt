@@ -14,15 +14,17 @@
  *     limitations under the License.
  *
  */
-package instructure.rceditor;
+package instructure.rceditor
 
-public class RCEConst {
-    public static final int RCE_RESULT_CODE = 4325;
-    public static final String HTML_RESULT = "HTML_CONTENT_RESULT";
+import android.animation.Animator
+import androidx.annotation.RestrictTo
 
-    static final String HTML_CONTENT = "HTML_CONTENT";
-    static final String HTML_TITLE = "HTML_TITLE";
-    static final String HTML_ACCESSIBILITY_TITLE = "HTML_ACCESSIBILITY_TITLE";
-    static final String THEME_COLOR = "THEME_COLOR";
-    static final String BUTTON_COLOR = "BUTTON_COLOR";
+@RestrictTo(RestrictTo.Scope.LIBRARY)
+abstract class RCEAnimationListener : Animator.AnimatorListener {
+    open fun onAnimationBegin(animation: Animator) {}
+    open fun onAnimationFinish(animation: Animator) {}
+    override fun onAnimationCancel(animation: Animator) {}
+    override fun onAnimationRepeat(animation: Animator) {}
+    override fun onAnimationStart(animation: Animator) = onAnimationBegin(animation)
+    override fun onAnimationEnd(animation: Animator) = onAnimationFinish(animation)
 }

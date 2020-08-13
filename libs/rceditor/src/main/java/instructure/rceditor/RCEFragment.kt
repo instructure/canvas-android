@@ -33,7 +33,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import instructure.rceditor.RCEConst.*
+import instructure.rceditor.RCEConst.BUTTON_COLOR
+import instructure.rceditor.RCEConst.HTML_ACCESSIBILITY_TITLE
+import instructure.rceditor.RCEConst.HTML_CONTENT
+import instructure.rceditor.RCEConst.HTML_RESULT
+import instructure.rceditor.RCEConst.HTML_TITLE
+import instructure.rceditor.RCEConst.THEME_COLOR
 import kotlinx.android.synthetic.main.rce_color_picker.*
 import kotlinx.android.synthetic.main.rce_controller.*
 import kotlinx.android.synthetic.main.rce_fragment_layout.*
