@@ -755,6 +755,8 @@ fun MockCanvas.addSubmissionForAssignment(
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
     val isLate = (assignmentDueDate != null) && assignmentDueDate.before(Calendar.getInstance().time)
+
+    // Create the new submission object
     val submission = Submission(
             id = newItemId(),
             submittedAt = Date(),
@@ -772,36 +774,41 @@ fun MockCanvas.addSubmissionForAssignment(
             mediaContentType = if(attachment != null) attachment.contentType else null
     )
 
-    // Submission details looks to pull attachments from the first item in the submission history, so we need a "root"
-    // submission to hold it all together.
-    val rootSubmission = Submission(
-            id = newItemId(),
-            submittedAt = Date(),
-            attempt = 1,
-            body = body,
-            url = url,
-            previewUrl = url,
-            workflowState = state,
-            submissionType = type,
-            assignmentId = assignmentId,
-            userId = userId,
-            late = isLate,
-            submissionHistory = listOf(submission),
-            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
-            mediaContentType = if(attachment != null) attachment.contentType else null
-    )
-
+    // Get the submission list for the assignment, creating it if necessary
     var submissionList = submissions[assignmentId]
     if(submissionList == null) {
         submissionList = mutableListOf<Submission>()
         submissions[assignmentId] = submissionList
     }
-    submissionList.add(rootSubmission)
 
-    assignment.submission = rootSubmission
+    // Get the user's root submission for the assignment, creating it if necessary
+    var userRootSubmission = submissionList.firstOrNull {sub -> sub.userId == userId}
+    if(userRootSubmission == null) {
+        userRootSubmission = Submission(
+                id = newItemId(), // Most of these are probably unnecessary in the root submission object
+                submittedAt = Date(),
+                attempt = 1,
+                body = body,
+                url = url,
+                previewUrl = url,
+                workflowState = state,
+                submissionType = type,
+                assignmentId = assignmentId,
+                userId = userId,
+                late = isLate,
+                submissionHistory = mutableListOf(submission),
+                attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
+                submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
+                mediaContentType = if(attachment != null) attachment.contentType else null
+        )
+        submissionList.add(userRootSubmission)
+    }
 
-    return rootSubmission
+    assignment.submission = userRootSubmission // May have already been set
+
+    // Now add the new submission to the user's root submission's history
+    (userRootSubmission.submissionHistory as MutableList<Submission?>).add(submission)
+    return userRootSubmission
 }
 
 fun MockCanvas.addLTITool(name: String, url: String): LTITool {
