@@ -239,17 +239,6 @@ void main() {
     ApiPrefs.clean();
   });
 
-  testWidgetsWithAccessibilityChecks('Tapping help button shows help dialog', (tester) async {
-    await tester.pumpWidget(TestApp(LoginLandingScreen()));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byIcon(CanvasIcons.question));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ErrorReportDialog), findsOneWidget);
-    verify(analytics.logEvent(any)).called(1);
-  });
-
   testWidgetsWithAccessibilityChecks('Uses two-finger double-tap to cycle login flows', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();

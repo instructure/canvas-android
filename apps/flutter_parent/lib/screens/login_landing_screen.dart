@@ -85,7 +85,6 @@ class LoginLandingScreen extends StatelessWidget {
                   child: FullScreenScrollContainer(
                     horizontalPadding: 0,
                     children: <Widget>[
-                      _helpRequestButton(context),
                       Expanded(child: _body(context)),
                       SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
                     ],
