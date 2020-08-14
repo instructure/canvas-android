@@ -36,7 +36,7 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(
         moduleObject: ModuleObject,
         context: Context,
-        viewHolderHeaderClicked: ViewHolderHeaderClicked<ModuleObject?>,
+        viewHolderHeaderClicked: ViewHolderHeaderClicked<ModuleObject>,
         expanded: Boolean
     ) = with(itemView){
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)

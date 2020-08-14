@@ -14,11 +14,14 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandarecycler.interfaces
 
-package com.instructure.pandarecycler.interfaces;
+import android.graphics.drawable.Drawable
 
-import android.view.View;
-
-public interface ViewHolderHeaderClicked<HEADER> {
-    void viewClicked(View view, HEADER header);
+interface EmptyInterface : EmptyViewInterface {
+    fun setTitleText(s: String)
+    fun setTitleText(sResId: Int)
+    fun setMessageText(s: String)
+    fun setMessageText(sResId: Int)
+    fun setEmptyViewImage(drawable: Drawable)
 }

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandarecycler.PaginatedScrollListener.PaginatedScrollCallback
 import com.instructure.pandarecycler.util.GroupSortedList
 
 abstract class SyncExpandableFragment<
@@ -123,12 +122,7 @@ abstract class SyncExpandableFragment<
     private fun addPagination() {
         if (withPagination()) {
             recyclerView.clearOnScrollListeners()
-            recyclerView.addOnScrollListener(
-                PaginatedScrollListener(
-                    PaginatedScrollCallback { hitRockBottom() },
-                    perPageCount()
-                )
-            )
+            recyclerView.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
         }
     }
 

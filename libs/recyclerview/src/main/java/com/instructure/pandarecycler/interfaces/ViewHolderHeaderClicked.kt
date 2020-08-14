@@ -14,16 +14,10 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandarecycler.interfaces
 
-package com.instructure.pandarecycler.util;
+import android.view.View
 
-public class Types {
-    
-    public static final int TYPE_EMPTY_CELL = 99;
-    public static final int TYPE_TOP_HEADER = 100;
-    public static final int TYPE_HEADER = 101;
-    public static final int TYPE_ITEM = 102;
-    public static final int TYPE_SUB_HEADER = 103;
-    public static final int TYPE_ATTACHMENT = 104;
-    public static final int TYPE_SYLLABUS = 105;
+interface ViewHolderHeaderClicked<HEADER> {
+    fun viewClicked(view: View?, header: HEADER)
 }

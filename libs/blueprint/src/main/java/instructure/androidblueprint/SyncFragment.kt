@@ -25,7 +25,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.utils.ApiPrefs.perPageCount
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandarecycler.PaginatedScrollListener.PaginatedScrollCallback
 import com.instructure.pandarecycler.util.UpdatableSortedList
 
 abstract class SyncFragment<
@@ -113,12 +112,7 @@ abstract class SyncFragment<
 
     protected fun addPagination() {
         if (withPagination()) {
-            recyclerView!!.addOnScrollListener(
-                PaginatedScrollListener(
-                    PaginatedScrollCallback { hitRockBottom() },
-                    perPageCount()
-                )
-            )
+            recyclerView!!.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
         }
     }
 

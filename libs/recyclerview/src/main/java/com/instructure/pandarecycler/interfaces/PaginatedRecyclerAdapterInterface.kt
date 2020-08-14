@@ -14,14 +14,11 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandarecycler.interfaces
 
-package com.instructure.pandarecycler.interfaces;
-
-import androidx.recyclerview.widget.RecyclerView;
-import android.view.ViewGroup;
-
-public interface PaginatedLoadingFooterRecyclerAdapterInterface<T extends RecyclerView.ViewHolder> {
-    T onCreateLoadingFooterViewHolder(ViewGroup parent);
-
-    void onBindLoadingFooterViewHolder(RecyclerView.ViewHolder holder, int position);
+interface PaginatedRecyclerAdapterInterface {
+    fun setupCallbacks()
+    fun loadFirstPage()
+    fun loadNextPage(nextURL: String)
+    fun resetData()
 }

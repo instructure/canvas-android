@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.utils.ApiPrefs.perPageCount
 import com.instructure.pandarecycler.PaginatedScrollListener
-import com.instructure.pandarecycler.PaginatedScrollListener.PaginatedScrollCallback
 import com.instructure.pandarecycler.util.UpdatableSortedList
 
 abstract class ListFragment<
@@ -114,12 +113,7 @@ abstract class ListFragment<
     private fun addPagination() {
         if (withPagination()) {
             recyclerView.clearOnScrollListeners()
-            recyclerView.addOnScrollListener(
-                PaginatedScrollListener(
-                    PaginatedScrollCallback { hitRockBottom() },
-                    perPageCount()
-                )
-            )
+            recyclerView.addOnScrollListener(PaginatedScrollListener(perPageCount()) { hitRockBottom() })
         }
     }
 

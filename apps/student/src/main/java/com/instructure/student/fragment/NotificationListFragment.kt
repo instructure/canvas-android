@@ -61,7 +61,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<StreamItem> =
         object : NotificationAdapterToFragmentCallback<StreamItem> {
             override fun onRowClicked(streamItem: StreamItem, position: Int, isOpenDetail: Boolean) {
-                recyclerAdapter.selectedPosition = position
+                recyclerAdapter.setSelectedPosition(position)
                 onRowClick(streamItem)
             }
 

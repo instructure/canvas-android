@@ -89,7 +89,7 @@ class QuizListPresenter(private val mCanvasContext: CanvasContext) :
             .onEach { it._assignment = assignmentsByQuizId[it.id] }
             .groupBy { it.quizType }
             .forEach { (quizType, quizList) ->
-                data.addOrUpdateAllItems(quizType, quizList)
+                data.addOrUpdateAllItems(quizType!!, quizList)
             }
         viewCallback?.onRefreshFinished()
         viewCallback?.checkIfEmpty()

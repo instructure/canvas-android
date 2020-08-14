@@ -14,12 +14,14 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandarecycler
 
-package com.instructure.pandarecycler.interfaces;
-
-public interface PaginatedRecyclerAdapterInterface {
-    void setupCallbacks();
-    void loadFirstPage();
-    void loadNextPage(String nextURL);
-    void resetData();
+data class Item(
+    var cmpField: Int = (Math.random() * 1000).toInt(),
+    val id: Int = idCounter++,
+    var data: Int = (Math.random() * 1000).toInt() //used for comparison
+) {
+    companion object {
+        var idCounter = 0
+    }
 }

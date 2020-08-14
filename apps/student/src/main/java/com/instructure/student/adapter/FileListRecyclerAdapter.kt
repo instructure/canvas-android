@@ -73,7 +73,7 @@ open class FileListRecyclerAdapter(
 
     override fun itemLayoutResId(viewType: Int) = FileViewHolder.HOLDER_RES_ID
 
-    override fun isPaginated() = true
+    override val isPaginated get() = true
 
     override fun loadFirstPage() {
         apiCall?.cancel()

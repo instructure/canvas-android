@@ -59,7 +59,7 @@ abstract class BaseListRecyclerAdapter<MODEL : CanvasComparable<*>, T : Recycler
         list = UpdatableSortedList(
             klazz,
             callback,
-            UpdatableSortedList.ItemCallback { model: MODEL -> itemCallback.getUniqueItemId(model) },
+            { model: MODEL -> itemCallback.getUniqueItemId(model) },
             DEFAULT_LIST_SIZE
         )
 

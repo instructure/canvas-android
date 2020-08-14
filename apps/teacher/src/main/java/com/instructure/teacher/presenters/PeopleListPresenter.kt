@@ -77,7 +77,7 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
 
     private val mUserListCallback = object : StatusCallback<List<User>>() {
         override fun onResponse(response: Response<List<User>>, linkHeaders: LinkHeaders, type: ApiType) {
-            data.addOrUpdate(response.body())
+            data.addOrUpdate(response.body()!!)
             mUserList.addAll(response.body()!!)
             viewCallback?.checkIfEmpty()
             viewCallback?.onRefreshFinished()

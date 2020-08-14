@@ -14,20 +14,11 @@
  *     limitations under the License.
  *
  */
+package com.instructure.pandarecycler.util
 
-package com.instructure.pandarecycler.interfaces;
-
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-
-public interface EmptyViewInterface {
-    void setLoading();
-    void setDisplayNoConnection(boolean isNoConnection);
-    void setListEmpty();
-    void setVisibility(int visibility);
-    void emptyViewText(String s);
-    void emptyViewText(int sResId);
-    void setNoConnectionText(String s);
-    void emptyViewImage(Drawable drawable);
-    ImageView getEmptyViewImage();
+object Types {
+    const val TYPE_EMPTY_CELL = 99
+    const val TYPE_HEADER = 101
+    const val TYPE_ITEM = 102
+    const val TYPE_SUB_HEADER = 103
 }

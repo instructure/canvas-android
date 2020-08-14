@@ -318,7 +318,7 @@ open class GradesListRecyclerAdapter(
     override fun setupCallbacks() {
         selectedItemCallback = object : SetSelectedItemCallback {
             override fun setSelected(position: Int) {
-                selectedPosition = position
+                setSelectedPosition(position)
             }
         }
     }

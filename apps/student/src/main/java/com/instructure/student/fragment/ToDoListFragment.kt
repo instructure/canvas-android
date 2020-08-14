@@ -50,7 +50,7 @@ class ToDoListFragment : ParentFragment() {
 
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<ToDo> = object : NotificationAdapterToFragmentCallback<ToDo> {
         override fun onRowClicked(todo: ToDo, position: Int, isOpenDetail: Boolean) {
-            recyclerAdapter.selectedPosition = position
+            recyclerAdapter.setSelectedPosition(position)
             onRowClick(todo)
         }
 

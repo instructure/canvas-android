@@ -62,27 +62,27 @@ class EditFavoritesRecyclerAdapter(
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<ItemType, CanvasComparable<*>> {
         return object : GroupSortedList.ItemComparatorCallback<ItemType, CanvasComparable<*>> {
-            override fun compare(group: ItemType?, o1: CanvasComparable<*>?, o2: CanvasComparable<*>?) = when {
+            override fun compare(group: ItemType, o1: CanvasComparable<*>, o2: CanvasComparable<*>) = when {
                 o1 is Course && o2 is Course -> o1.compareTo(o2)
                 o1 is Group && o2 is Group -> o1.compareTo(o2)
                 else -> -1
             }
 
-            override fun areContentsTheSame(oldItem: CanvasComparable<*>?, newItem: CanvasComparable<*>?) = false
+            override fun areContentsTheSame(oldItem: CanvasComparable<*>, newItem: CanvasComparable<*>) = false
 
-            override fun areItemsTheSame(item1: CanvasComparable<*>?, item2: CanvasComparable<*>?) = when {
+            override fun areItemsTheSame(item1: CanvasComparable<*>, item2: CanvasComparable<*>) = when {
                 item1 is Course && item2 is Course -> item1.contextId.hashCode() == item2.contextId.hashCode()
                 item1 is Group && item2 is Group -> item1.contextId.hashCode() == item2.contextId.hashCode()
                 else -> false
             }
 
-            override fun getUniqueItemId(item: CanvasComparable<*>?) = when (item) {
+            override fun getUniqueItemId(item: CanvasComparable<*>) = when (item) {
                 is Course -> item.contextId.hashCode().toLong()
                 is Group -> item.contextId.hashCode().toLong()
                 else -> -1L
             }
 
-            override fun getChildType(group: ItemType?, item: CanvasComparable<*>?) = when (item) {
+            override fun getChildType(group: ItemType, item: CanvasComparable<*>) = when (item) {
                 is Course -> ItemType.COURSE.ordinal
                 is Group -> ItemType.GROUP.ordinal
                 else -> -1

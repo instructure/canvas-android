@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2020 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,18 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.pandarecycler.util
 
-package com.instructure.pandarecycler.interfaces;
+import androidx.recyclerview.widget.SortedList
 
-import android.graphics.drawable.Drawable;
-
-
-public interface EmptyInterface extends EmptyViewInterface {
-    void setTitleText(String s);
-    void setTitleText(int sResId);
-    void setMessageText(String s);
-    void setMessageText(int sResId);
-    void setEmptyViewImage(Drawable drawable);
-}
+fun <T> SortedList<T>.toList(): List<T> = (0 until size()).map { get(it) }

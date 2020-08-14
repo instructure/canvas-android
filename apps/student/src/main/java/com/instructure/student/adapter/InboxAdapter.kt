@@ -82,7 +82,7 @@ class InboxAdapter(
 
     override fun setupCallbacks() = Unit
 
-    override fun isPaginated() = true
+    override val isPaginated get() = true
 
     override fun resetData() {
         apiCall?.cancel()

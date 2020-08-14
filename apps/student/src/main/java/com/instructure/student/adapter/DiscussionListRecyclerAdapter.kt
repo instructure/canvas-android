@@ -106,7 +106,7 @@ open class DiscussionListRecyclerAdapter(
         }
     }
 
-    override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder?, group: String?) {
+    override fun onBindEmptyHolder(holder: RecyclerView.ViewHolder, group: String) {
         (holder as EmptyViewHolder).bind(context.resources.getString(R.string.utils_emptyDiscussions))
     }
 
@@ -219,7 +219,7 @@ open class DiscussionListRecyclerAdapter(
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<String> {
         return object : GroupSortedList.GroupComparatorCallback<String> {
-            override fun compare(group1: String?, group2: String?): Int {
+            override fun compare(group1: String, group2: String): Int {
                 if (group1 == null || group2 == null) return -1
                 return group1.compareTo(group2)
             }
@@ -242,7 +242,7 @@ open class DiscussionListRecyclerAdapter(
                     }
 
             override fun areContentsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean = item1.title == item2.title && item1.status == item2.status
-            override fun areItemsTheSame(item1: DiscussionTopicHeader?, item2: DiscussionTopicHeader?): Boolean = item1?.id == item2?.id
+            override fun areItemsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean = item1?.id == item2?.id
             override fun getUniqueItemId(discussionTopicHeader: DiscussionTopicHeader): Long = discussionTopicHeader.id
             override fun getChildType(group: String, item: DiscussionTopicHeader): Int = Types.TYPE_ITEM
         }

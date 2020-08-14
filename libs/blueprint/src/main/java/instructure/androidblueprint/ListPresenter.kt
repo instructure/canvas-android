@@ -59,7 +59,7 @@ abstract class ListPresenter<MODEL, VIEW : ListManager<MODEL>>(clazz: Class<MODE
             override fun areItemsTheSame(item1: MODEL, item2: MODEL): Boolean {
                 return this@ListPresenter.areItemsTheSame(item1, item2)
             }
-        }, UpdatableSortedList.ItemCallback { model -> getItemId(model) })
+        }, { model -> getItemId(model) })
     }
 
     var viewCallback: VIEW? = null

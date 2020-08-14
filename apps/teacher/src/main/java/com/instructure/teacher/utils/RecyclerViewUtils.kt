@@ -39,7 +39,7 @@ object RecyclerViewUtils {
     ): RecyclerView {
         val emptyInterface: EmptyInterface = rootView.findViewById<View>(emptyViewResId) as EmptyInterface
         val recyclerView: RecyclerView = rootView.findViewById(recyclerViewResId)
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -66,7 +66,7 @@ object RecyclerViewUtils {
         emptyInterface: EmptyInterface,
         emptyViewText: String?
     ): RecyclerView {
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -95,7 +95,7 @@ object RecyclerViewUtils {
     ): RecyclerView {
         val emptyInterface: EmptyInterface = rootView.findViewById<View>(emptyViewResId) as EmptyInterface
         val recyclerView: RecyclerView = rootView.findViewById(recyclerViewResId)
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL

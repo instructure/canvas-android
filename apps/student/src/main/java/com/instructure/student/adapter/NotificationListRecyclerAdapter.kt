@@ -109,7 +109,7 @@ class NotificationListRecyclerAdapter(
         )
     }
 
-    override fun isPaginated(): Boolean = true
+    override val isPaginated get() = true
 
     override fun loadFirstPage() {
         getCourses(true, coursesCallback)
@@ -246,7 +246,7 @@ class NotificationListRecyclerAdapter(
                 adapterToRecyclerViewCallback.setDisplayNoConnection(false)
                 // We check mStreamItems here as onCallbackFinished is called prior to populating the adapter
                 if (streamItems != null) {
-                    getAdapterToRecyclerViewCallback().setIsEmpty(isAllPagesLoaded && streamItems!!.isEmpty())
+                    adapterToRecyclerViewCallback.setIsEmpty(isAllPagesLoaded && streamItems!!.isEmpty())
                 }
             }
         }

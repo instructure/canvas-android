@@ -116,11 +116,11 @@ abstract class SyncExpandableRecyclerAdapter<
     val list: GroupSortedList<GROUP, MODEL>
         get() = presenter.data
 
-    fun addOrUpdateAllItems(group: GROUP, items: List<MODEL?>?) {
+    fun addOrUpdateAllItems(group: GROUP, items: List<MODEL>) {
         list.addOrUpdateAllItems(group, items)
     }
 
-    fun addOrUpdateAllItems(group: GROUP, items: Array<MODEL?>?) {
+    fun addOrUpdateAllItems(group: GROUP, items: Array<MODEL>) {
         list.addOrUpdateAllItems(group, items)
     }
 
@@ -170,7 +170,7 @@ abstract class SyncExpandableRecyclerAdapter<
         val groups = groups
         for (group in groups!!) {
             for (model in getItems(group)!!) {
-                if (model!!.id == itemId) {
+                if (model.id == itemId) {
                     return model
                 }
             }
@@ -179,14 +179,14 @@ abstract class SyncExpandableRecyclerAdapter<
     }
 
     fun getChildItemId(position: Int): Long {
-        return list.getItemId(list.getItem(position))
+        return list.getItemId(list.getItem(position)!!)
     }
 
     override fun getItemId(position: Int): Long {
         throw UnsupportedOperationException("Method getItemId() is unimplemented in BaseExpandableRecyclerAdapter. Use getChildItemId instead.")
     }
 
-    fun getItems(group: GROUP): ArrayList<MODEL?>? {
+    private fun getItems(group: GROUP): ArrayList<MODEL>? {
         return list.getItems(group)
     }
 
@@ -194,7 +194,7 @@ abstract class SyncExpandableRecyclerAdapter<
         return list.storedIndexOfItem(group, item)
     }
 
-    fun addOrUpdateAllGroups(groups: Array<GROUP>?) {
+    fun addOrUpdateAllGroups(groups: Array<GROUP>) {
         list.addOrUpdateAllGroups(groups)
     }
 

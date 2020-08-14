@@ -97,7 +97,7 @@ class BookmarksFragment : ParentFragment() {
     }
 
     private fun applyEmptyImage() {
-        emptyView.emptyViewImage?.setImageResource(R.drawable.vd_panda_nobookmarks)
+        emptyView.getEmptyViewImage()?.setImageResource(R.drawable.vd_panda_nobookmarks)
         emptyView.setTitleText(R.string.noBookmarks)
         emptyView.setMessageText(R.string.noBookmarksSubtext)
         emptyView.setListEmpty()

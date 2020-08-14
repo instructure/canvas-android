@@ -113,6 +113,6 @@ abstract class SyncPresenter<
             override fun areItemsTheSame(item1: MODEL, item2: MODEL): Boolean {
                 return this@SyncPresenter.areItemsTheSame(item1, item2)
             }
-        }, UpdatableSortedList.ItemCallback { model -> model!!.id })
+        }, { model -> model.id })
     }
 }

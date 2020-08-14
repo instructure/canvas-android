@@ -80,7 +80,7 @@ class FileSearchAdapter(
 
     override fun itemLayoutResId(viewType: Int) = FileViewHolder.HOLDER_RES_ID
 
-    override fun isPaginated() = false
+    override val isPaginated get() = true
 
     private fun performSearch() {
         apiCall = tryWeave {
