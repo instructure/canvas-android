@@ -72,7 +72,7 @@ class InternalWebViewActivity : BaseActionBarActivity() {
 
     private fun setActionBarStatusBarColors(actionBarColor: Int, statusBarColor: Int) {
         val colorDrawable = ColorDrawable(actionBarColor)
-        supportActionBar!!.setBackgroundDrawable(colorDrawable)
+        supportActionBar?.setBackgroundDrawable(colorDrawable)
         if (statusBarColor != Int.MAX_VALUE) window.statusBarColor = statusBarColor
     }
 
