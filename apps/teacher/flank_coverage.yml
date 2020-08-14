@@ -1,0 +1,32 @@
+gcloud:
+  project: delta-essence-114723
+# Use the next two lines to run locally
+#  app: ./build/outputs/apk/qa/debug/teacher-qa-debug.apk
+#  test: ./build/outputs/apk/androidTest/qa/debug/teacher-qa-debug-androidTest.apk
+  app: ./apps/teacher/build/outputs/apk/qa/debug/teacher-qa-debug.apk
+  test: ./apps/teacher/build/outputs/apk/androidTest/qa/debug/teacher-qa-debug-androidTest.apk
+  results-bucket: android-teacher
+  auto-google-login: true
+  use-orchestrator: true
+  performance-metrics: false
+  record-video: true
+  num-flaky-test-attempts: 2
+  timeout: 60m
+  environment-variables:
+    coverage: true
+    coverageFilePath: /sdcard/
+    clearPackageData: true
+  directories-to-pull:
+    - /sdcard/
+  device:
+  - model: NexusLowRes
+    version: 25
+    locale: en_US
+    orientation: portrait
+
+flank:
+  testShards: 16
+  testRuns: 1
+  files-to-download:
+  - .*\.ec$
+

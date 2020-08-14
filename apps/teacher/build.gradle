@@ -278,7 +278,7 @@ if (coverageEnabled) {
         def buildType = 'debug'
 
         classDirectories = fileTree(
-                dir: "${project.buildDir}/intermediates/classes/${productFlavor}/${buildType}",
+                dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
                 excludes: ['**/R.class',
                            '**/R$*.class',
                            '**/*$ViewInjector*.*',
@@ -289,7 +289,7 @@ if (coverageEnabled) {
 
         // project.buildDir is /canvas-android/apps/teacher/build
         sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData = files("${project.buildDir}/firebase.ec")
+        executionData = fileTree(dir: "results", includes: ['**/*.ec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
