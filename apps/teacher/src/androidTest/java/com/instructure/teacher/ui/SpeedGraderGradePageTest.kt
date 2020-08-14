@@ -52,7 +52,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
         }
         goToSpeedGraderGradePage()
         speedGraderGradePage.openGradeDialog()
-        val grade = "20"
+        val grade = "19"
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
         // sleep(10000)

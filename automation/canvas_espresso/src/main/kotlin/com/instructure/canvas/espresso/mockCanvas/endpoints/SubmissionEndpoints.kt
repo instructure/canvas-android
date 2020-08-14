@@ -144,12 +144,11 @@ object SubmissionUserEndpoint : Endpoint(
     response = {
         GET {
             // We may need to tweak this later.
-            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == pathVars.userId}
-            if(submission != null) {
+            val submission = data.submissions[pathVars.assignmentId]?.find { it.userId == pathVars.userId }
+            if (submission != null) {
                 Log.d("<--", "get-submission-user comments: ${submission.submissionComments.joinToString()}")
                 request.successResponse(submission)
-            }
-            else {
+            } else {
                 // Sigh... Unauthorized result blocks access to submission details screen.
                 // Return empty submission?
                 //request.unauthorizedResponse()
@@ -162,13 +161,13 @@ object SubmissionUserEndpoint : Endpoint(
         }
 
         PUT { // add a comment or grade the submission
-            val submission = data.submissions[pathVars.assignmentId]?.find {it.userId == pathVars.userId}
-            if(submission != null) {
+            val submission = data.submissions[pathVars.assignmentId]?.find { it.userId == pathVars.userId }
+            if (submission != null) {
                 val comment = request.url().queryParameter("comment[text_comment]")
                 val user = request.user!!
                 val grade = request.url().queryParameter("submission[posted_grade]")
-                if(comment != null && comment.length > 0) {
-                    val newCommentList = mutableListOf<SubmissionComment>().apply {addAll(submission.submissionComments)}
+                if (comment != null && comment.length > 0) {
+                    val newCommentList = mutableListOf<SubmissionComment>().apply { addAll(submission.submissionComments) }
                     newCommentList.add(SubmissionComment(
                             id = data.newItemId(),
                             authorId = user.id,
@@ -184,11 +183,16 @@ object SubmissionUserEndpoint : Endpoint(
                     Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")
                     request.successResponse(submission)
                 }
-                else if(grade != null) {
+                else if (grade != null) {
+                    val assignment = data.assignments[pathVars.assignmentId]!!
                     val updatedSubmission = submission.copy(
-                            grade = grade
+                            grade = grade,
+                            score = when (assignment.gradingType) {
+                                "points" -> grade.toDouble() // For "points" and "percent" grades, let's be accurate
+                                "percent" -> grade.toDouble()
+                                else -> 90.0 // for everything else, make something up for now
+                            }
                     )
-
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
                     request.successResponse(updatedSubmission)
