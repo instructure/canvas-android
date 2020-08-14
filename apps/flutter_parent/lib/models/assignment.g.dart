@@ -146,8 +146,6 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
       'published',
       serializers.serialize(object.published,
           specifiedType: const FullType(bool)),
-      'muted',
-      serializers.serialize(object.muted, specifiedType: const FullType(bool)),
       'user_submitted',
       serializers.serialize(object.userSubmitted,
           specifiedType: const FullType(bool)),
@@ -359,10 +357,6 @@ class _$AssignmentSerializer implements StructuredSerializer<Assignment> {
           result.published = serializers.deserialize(value,
               specifiedType: const FullType(bool)) as bool;
           break;
-        case 'muted':
-          result.muted = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
-          break;
         case 'group_category_id':
           result.groupCategoryId = serializers.deserialize(value,
               specifiedType: const FullType(String)) as String;
@@ -521,8 +515,6 @@ class _$Assignment extends Assignment {
   @override
   final bool published;
   @override
-  final bool muted;
-  @override
   final String groupCategoryId;
   @override
   final bool userSubmitted;
@@ -564,7 +556,6 @@ class _$Assignment extends Assignment {
       this.lockExplanation,
       this.freeFormCriterionComments,
       this.published,
-      this.muted,
       this.groupCategoryId,
       this.userSubmitted,
       this.onlyVisibleToOverrides,
@@ -604,9 +595,6 @@ class _$Assignment extends Assignment {
     }
     if (published == null) {
       throw new BuiltValueNullFieldError('Assignment', 'published');
-    }
-    if (muted == null) {
-      throw new BuiltValueNullFieldError('Assignment', 'muted');
     }
     if (userSubmitted == null) {
       throw new BuiltValueNullFieldError('Assignment', 'userSubmitted');
@@ -661,7 +649,6 @@ class _$Assignment extends Assignment {
         lockExplanation == other.lockExplanation &&
         freeFormCriterionComments == other.freeFormCriterionComments &&
         published == other.published &&
-        muted == other.muted &&
         groupCategoryId == other.groupCategoryId &&
         userSubmitted == other.userSubmitted &&
         onlyVisibleToOverrides == other.onlyVisibleToOverrides &&
@@ -692,18 +679,18 @@ class _$Assignment extends Assignment {
                                                                 $jc(
                                                                     $jc(
                                                                         $jc(
-                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode), useRubricForGrading.hashCode),
-                                                                                submissionWrapper.hashCode),
-                                                                            assignmentGroupId.hashCode),
-                                                                        position.hashCode),
-                                                                    lockInfo.hashCode),
-                                                                lockedForUser.hashCode),
-                                                            lockAt.hashCode),
-                                                        unlockAt.hashCode),
-                                                    lockExplanation.hashCode),
-                                                freeFormCriterionComments.hashCode),
-                                            published.hashCode),
-                                        muted.hashCode),
+                                                                            $jc($jc($jc($jc($jc($jc($jc($jc($jc($jc($jc(0, id.hashCode), name.hashCode), description.hashCode), dueAt.hashCode), pointsPossible.hashCode), courseId.hashCode), gradingType.hashCode), htmlUrl.hashCode), url.hashCode), quizId.hashCode),
+                                                                                useRubricForGrading.hashCode),
+                                                                            submissionWrapper.hashCode),
+                                                                        assignmentGroupId.hashCode),
+                                                                    position.hashCode),
+                                                                lockInfo.hashCode),
+                                                            lockedForUser.hashCode),
+                                                        lockAt.hashCode),
+                                                    unlockAt.hashCode),
+                                                lockExplanation.hashCode),
+                                            freeFormCriterionComments.hashCode),
+                                        published.hashCode),
                                     groupCategoryId.hashCode),
                                 userSubmitted.hashCode),
                             onlyVisibleToOverrides.hashCode),
@@ -738,7 +725,6 @@ class _$Assignment extends Assignment {
           ..add('lockExplanation', lockExplanation)
           ..add('freeFormCriterionComments', freeFormCriterionComments)
           ..add('published', published)
-          ..add('muted', muted)
           ..add('groupCategoryId', groupCategoryId)
           ..add('userSubmitted', userSubmitted)
           ..add('onlyVisibleToOverrides', onlyVisibleToOverrides)
@@ -846,10 +832,6 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
   bool get published => _$this._published;
   set published(bool published) => _$this._published = published;
 
-  bool _muted;
-  bool get muted => _$this._muted;
-  set muted(bool muted) => _$this._muted = muted;
-
   String _groupCategoryId;
   String get groupCategoryId => _$this._groupCategoryId;
   set groupCategoryId(String groupCategoryId) =>
@@ -918,7 +900,6 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
       _lockExplanation = _$v.lockExplanation;
       _freeFormCriterionComments = _$v.freeFormCriterionComments;
       _published = _$v.published;
-      _muted = _$v.muted;
       _groupCategoryId = _$v.groupCategoryId;
       _userSubmitted = _$v.userSubmitted;
       _onlyVisibleToOverrides = _$v.onlyVisibleToOverrides;
@@ -972,7 +953,6 @@ class AssignmentBuilder implements Builder<Assignment, AssignmentBuilder> {
               lockExplanation: lockExplanation,
               freeFormCriterionComments: freeFormCriterionComments,
               published: published,
-              muted: muted,
               groupCategoryId: groupCategoryId,
               userSubmitted: userSubmitted,
               onlyVisibleToOverrides: onlyVisibleToOverrides,

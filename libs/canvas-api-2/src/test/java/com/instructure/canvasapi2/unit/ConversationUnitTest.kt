@@ -474,7 +474,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_quiz"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/836357/assignments/3568225",
               "needs_grading_count": 0,
               "quiz_id": 1298486,
@@ -538,7 +537,6 @@ class ConversationUnitTest : Assert() {
                 "online_url",
                 "media_recording"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/24219/assignments/405404",
               "needs_grading_count": 2,
               "use_rubric_for_grading": false,
@@ -839,7 +837,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_text_entry"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/24219/assignments/3562637",
               "needs_grading_count": 0,
               "locked_for_user": false
@@ -898,7 +895,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_text_entry"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/24219/assignments/2978687",
               "needs_grading_count": 2,
               "locked_for_user": false
@@ -999,7 +995,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_text_entry"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/3507913",
               "needs_grading_count": 1,
               "locked_for_user": false
@@ -1059,7 +1054,6 @@ class ConversationUnitTest : Assert() {
                 "online_text_entry",
                 "online_url"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/24219/assignments/3563900",
               "needs_grading_count": 1,
               "locked_for_user": false
@@ -1118,7 +1112,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "none"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/836357/assignments/3488393",
               "needs_grading_count": 0,
               "locked_for_user": false
@@ -1180,7 +1173,6 @@ class ConversationUnitTest : Assert() {
                 "media_recording",
                 "online_upload"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/24219/assignments/3562410",
               "needs_grading_count": 1,
               "locked_for_user": false
@@ -1253,7 +1245,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_text_entry"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/3510750",
               "needs_grading_count": 0,
               "locked_for_user": false
@@ -1319,7 +1310,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "online_quiz"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/2241845",
               "needs_grading_count": 0,
               "quiz_id": 757313,
@@ -1380,7 +1370,6 @@ class ConversationUnitTest : Assert() {
               "submission_types": [
                 "none"
               ],
-              "muted": false,
               "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/3484476",
               "needs_grading_count": 0,
               "locked_for_user": false

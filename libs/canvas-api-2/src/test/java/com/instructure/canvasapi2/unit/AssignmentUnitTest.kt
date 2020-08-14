@@ -139,7 +139,6 @@ class AssignmentUnitTest : Assert() {
           "online_text_entry",
           "media_recording"
         ],
-        "muted": false,
         "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/2241839",
         "allowed_extensions": [
           "doc",
@@ -192,7 +191,6 @@ class AssignmentUnitTest : Assert() {
           "media_recording",
           "online_upload"
         ],
-        "muted": false,
         "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/3119886",
         "use_rubric_for_grading": true,
         "free_form_criterion_comments": false,
@@ -406,7 +404,6 @@ class AssignmentUnitTest : Assert() {
           "online_url"
         ],
         "description": null,
-        "muted": false,
         "html_url": "https://mobiledev.instructure.com/courses/836357/assignments/3546452",
         "locked_for_user": true,
         "lock_explanation": "unlocked"
