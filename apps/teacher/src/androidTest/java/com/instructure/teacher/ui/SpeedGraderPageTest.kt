@@ -26,8 +26,6 @@ import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_TEXT_E
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.SubmissionListApiModel
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
@@ -114,7 +112,6 @@ class SpeedGraderPageTest : TeacherTest() {
         speedGraderPage.assertDisplaysEmptyState(R.string.noSubmissionTeacher)
     }
 
-    // Ditto doesn't support WebViews
     @Test
     fun displaysUrlSubmission() {
         val data = goToSpeedGraderPage(submissionType = ONLINE_URL, submissions = listOf(1))
@@ -159,17 +156,6 @@ class SpeedGraderPageTest : TeacherTest() {
                         )
                     }
                 }
-//        val assignmentSubmissions =
-//                (0 until submissions.size).map {
-//                    seedAssignmentSubmission(
-//                            submissionSeeds = listOf(
-//                                    SubmissionsApi.SubmissionSeedInfo(submissionType = submissionType, amount = submissions[it])
-//                            ),
-//                            assignmentId = assignment.id,
-//                            courseId = course.id,
-//                            studentToken = data.studentsList[it].token
-//                    )
-//                }
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)

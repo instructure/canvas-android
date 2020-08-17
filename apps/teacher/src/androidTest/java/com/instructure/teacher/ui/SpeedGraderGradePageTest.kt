@@ -55,8 +55,6 @@ class SpeedGraderGradePageTest : TeacherTest() {
         val grade = "19"
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
-        // sleep(10000)
-        // TODO: Shows *a* grade, but not the correct grade (shows 0/20).  Can we fix this?
     }
 
     @Test
