@@ -85,6 +85,7 @@ class LoginLandingScreen extends StatelessWidget {
                   child: FullScreenScrollContainer(
                     horizontalPadding: 0,
                     children: <Widget>[
+                      // _helpRequestButton(context), // add back after we make mobile login better
                       Expanded(child: _body(context)),
                       SizedBox(height: 56.0), // Sizedbox to offset helpRequestButton
                     ],

@@ -125,7 +125,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
             startActivity(i)
         }
 
-        helpButton.setHidden(true)
+        helpButton.setHidden(true) // hiding the help button until we make mobile login better
         helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
         val remoteConfigParam = when {
