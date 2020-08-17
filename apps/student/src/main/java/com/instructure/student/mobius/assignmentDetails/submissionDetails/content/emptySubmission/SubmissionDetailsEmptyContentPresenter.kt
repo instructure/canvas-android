@@ -17,6 +17,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState
 import com.instructure.student.mobius.common.ui.Presenter
@@ -29,17 +30,24 @@ import org.threeten.bp.temporal.ChronoUnit
 object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
     override fun present(model: SubmissionDetailsEmptyContentModel, context: Context): SubmissionDetailsEmptyContentViewState {
         return SubmissionDetailsEmptyContentViewState.Loaded(
-            allowedToSubmit(model.assignment),
+            allowedToSubmit(model.assignment, model.course),
             model.assignment.getDueString(context),
             getSubmitButtonTextResource(context, model.assignment),
             model.isObserver
         )
     }
 
-    private fun allowedToSubmit(assignment: Assignment): Boolean =
-        if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL)
+    private fun allowedToSubmit(assignment: Assignment, course: Course): Boolean {
+        return if(!course.isValidForCurrentDate()) {
+            // Don't show submit if the course is soft concluded
+            return false
+        } else if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL) {
             assignment.isAllowedToSubmit
-        else true
+        } else {
+            true
+        }
+    }
+
 
     private fun getSubmitButtonTextResource(context: Context, assignment: Assignment): String {
         val isExternalToolSubmission = assignment.getSubmissionTypes()

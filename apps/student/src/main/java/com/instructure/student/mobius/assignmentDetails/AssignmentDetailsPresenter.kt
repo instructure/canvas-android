@@ -18,14 +18,8 @@ package com.instructure.student.mobius.assignmentDetails
 
 import android.content.Context
 import androidx.core.content.ContextCompat
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.isDiscussionAuthorNull
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.canvasapi2.utils.isRtl
-import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.R
@@ -62,7 +56,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         val quiz = model.quizResult?.dataOrNull
 
         // Loaded state
-        return presentLoadedState(assignment, quiz, model.databaseSubmission, context, model.isObserver)
+        return presentLoadedState(assignment, quiz, model.databaseSubmission, context, model.isObserver, model.course)
     }
 
     private fun presentLoadedState(
@@ -70,7 +64,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         quiz: Quiz?,
         databaseSubmission: Submission?,
         context: Context,
-        isObserver: Boolean
+        isObserver: Boolean,
+        course: Course
     ): AssignmentDetailsViewState.Loaded {
         val visibilities = AssignmentDetailsVisibilities()
 
@@ -184,8 +179,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.allowedAttempts = assignment.allowedAttempts != -1L
         visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
-        if (isObserver) {
+        if (isObserver || !course.isValidForCurrentDate()) {
             // Observers shouldn't see the submit button
+            // OR if the course is soft concluded
             visibilities.submitButton = false
         } else {
             //Configure stickied submit button visibility state,

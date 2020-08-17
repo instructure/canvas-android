@@ -200,6 +200,46 @@ data class Course(
         return false
     }
 
+
+    /**
+     * Helper function to check if the course is within a valid date range for use
+     */
+    fun isValidForCurrentDate(): Boolean {
+        val now = Date()
+        if (accessRestrictedByDate) return false
+
+        if (workflowState == "completed") return false
+
+        val isWithinCourseDates = isWithinDates(
+                startAt.toDate(),
+                endAt.toDate(),
+                now
+        )
+
+        return if (accessRestrictedByDate) {
+            isWithinCourseDates
+        } else {
+            val isWithinTermDates = isWithinDates(term?.startDate, term?.endDate, now)
+
+            val isWithinAnySection: Boolean = if (sections.isEmpty()) {
+                true
+            } else {
+                // TODO - does it only return sections that the student is in
+                sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
+            }
+
+            isWithinCourseDates || isWithinTermDates || isWithinAnySection
+        }
+    }
+
+    private fun isWithinDates(startAt: Date?, endAt: Date?, now: Date): Boolean {
+        // If the dates are null, we have to show it
+        val isValidStartAt: Boolean = if (startAt == null) true else now.after(startAt)
+        val isValidEndAt: Boolean = if (endAt == null) true else now.before(endAt)
+
+        return isValidEndAt && isValidStartAt
+    }
+
     /**
      * Get home page label returns the fragment identifier.
      *
