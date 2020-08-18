@@ -1,0 +1,2 @@
+# Private info for data seeding
+private_consts.dart=../../lib/network/utils/private_consts.dart
