@@ -71,7 +71,6 @@ class SettingsInteractionTest : StudentTest() {
     }
 
     // Should open the Canvas guides in a WebView
-    @Stub
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testHelp_searchCanvasGuides() {
@@ -82,7 +81,7 @@ class SettingsInteractionTest : StudentTest() {
         helpPage.launchGuides()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle -- the web content could be changed by another team
-                WebViewTextCheck(Locator.ID, "links", "Community Guidelines", 25)
+                WebViewTextCheck(Locator.CLASS_NAME, "lia-panel-heading-bar-title", "Guides by Product", 25)
         )
     }
 
