@@ -498,7 +498,6 @@ class InboxComposeMessageFragment : ParentFragment() {
         private const val IS_REPLY = "is_reply"
         private const val PARTICIPANTS = "participants"
 
-        @JvmStatic
         fun makeRoute(
             isReply: Boolean,
             conversation: Conversation,
@@ -516,10 +515,8 @@ class InboxComposeMessageFragment : ParentFragment() {
             return Route(InboxComposeMessageFragment::class.java, null, bundle)
         }
 
-        @JvmStatic
         fun makeRoute() = Route(InboxComposeMessageFragment::class.java, null, Bundle())
 
-        @JvmStatic
         fun makeRoute(
             canvasContext: CanvasContext,
             participants: ArrayList<BasicUser>
@@ -543,7 +540,6 @@ class InboxComposeMessageFragment : ParentFragment() {
             }
         }
 
-        @JvmStatic
         fun newInstance(route: Route): InboxComposeMessageFragment? {
             if (!validateRoute(route)) return null
             return InboxComposeMessageFragment().apply {

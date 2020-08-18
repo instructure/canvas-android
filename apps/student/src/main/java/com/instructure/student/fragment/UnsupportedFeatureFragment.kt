@@ -72,7 +72,6 @@ open class UnsupportedFeatureFragment : ParentFragment() {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, title: String, url: String? = null): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
@@ -86,7 +85,6 @@ open class UnsupportedFeatureFragment : ParentFragment() {
             return route.canvasContext != null || (route.canvasContext != null && route.arguments.getString(Const.URL) != null)
         }
 
-        @JvmStatic
         fun newInstance(route: Route): UnsupportedFeatureFragment? {
             // Set external route Uri as bundle URL
             if (route.uri != null && !route.arguments.containsKey(Const.URL)) {

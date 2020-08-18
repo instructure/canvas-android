@@ -49,7 +49,6 @@ class NothingToSeeHereFragment : ParentFragment() {
             return NothingToSeeHereFragment()
         }
 
-        @JvmStatic
         fun makeRoute() = Route(NothingToSeeHereFragment::class.java, null)
     }
 }

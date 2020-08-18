@@ -221,13 +221,11 @@ class FileDetailsFragment : ParentFragment() {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, fileUrl: String): Route {
             val bundle = Bundle().apply { putString(Const.FILE_URL, fileUrl) }
             return Route(null, FileDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, moduleObject: ModuleObject, itemId: Long, fileUrl: String): Route {
             val bundle = Bundle().apply {
                 putString(Const.FILE_URL, fileUrl)
@@ -241,7 +239,6 @@ class FileDetailsFragment : ParentFragment() {
             return route.canvasContext != null && route.arguments.containsKey(Const.FILE_URL)
         }
 
-        @JvmStatic
         fun newInstance(route: Route): FileDetailsFragment? {
             if (!validateRoute(route)) return null
             return FileDetailsFragment().withArgs(route.canvasContext!!.makeBundle(route.arguments))

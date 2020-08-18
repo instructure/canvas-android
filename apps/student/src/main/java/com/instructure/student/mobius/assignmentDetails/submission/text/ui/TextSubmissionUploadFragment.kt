@@ -47,7 +47,6 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false): Route {
             val bundle = course.makeBundle{
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
@@ -59,13 +58,11 @@ class TextSubmissionUploadFragment : MobiusFragment<TextSubmissionUploadModel, T
             return Route(null, TextSubmissionUploadFragment::class.java, course, bundle)
         }
 
-        @JvmStatic
         fun validRoute(route: Route): Boolean {
             return route.canvasContext is Course &&
                     route.arguments.containsKey(Const.ASSIGNMENT_ID)
         }
 
-        @JvmStatic
         fun newInstance(route: Route): TextSubmissionUploadFragment? {
             if (!validRoute(route)) return null
             return TextSubmissionUploadFragment().withArgs(route.arguments)

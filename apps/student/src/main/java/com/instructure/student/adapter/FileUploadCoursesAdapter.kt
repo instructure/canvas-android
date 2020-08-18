@@ -19,6 +19,8 @@ package com.instructure.student.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,9 +28,8 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.ColorKeeper.getOrGenerateColor
+import com.instructure.pandautils.utils.color
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder.Companion.createIndicatorBackground
 
 class FileUploadCoursesAdapter(
     context: Context,
@@ -71,7 +72,7 @@ class FileUploadCoursesAdapter(
         viewHolder.title.text = item.name
         if (!bold) viewHolder.title.setTypeface(null, Typeface.NORMAL)
         viewHolder.indicator.visibility = View.VISIBLE
-        viewHolder.indicator.background = createIndicatorBackground(getOrGenerateColor(item))
+        viewHolder.indicator.background = ShapeDrawable(OvalShape()).apply { paint.color = item.color }
 
         return view
     }
@@ -79,7 +80,6 @@ class FileUploadCoursesAdapter(
     private data class CourseViewHolder (val title: TextView, val indicator: ImageView )
 
     companion object {
-        @JvmStatic
         fun getFilteredCourseList(courses: List<Course>, filterType: Type): List<Course> {
             return courses.filter {
                 when (filterType) {

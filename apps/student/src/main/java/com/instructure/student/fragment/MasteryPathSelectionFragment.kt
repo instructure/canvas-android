@@ -181,7 +181,6 @@ class MasteryPathSelectionFragment : ParentFragment() {
         const val MODULE_OBJECT_ID = "module_object_id"
         const val MODULE_ITEM_ID = "module_item_ud"
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, masteryPath: MasteryPath, moduleObjectId: Long, moduleItemId: Long): Route {
             val bundle = Bundle().apply {
                 putParcelable(MASTERY_PATH, masteryPath)
@@ -191,7 +190,6 @@ class MasteryPathSelectionFragment : ParentFragment() {
             return Route(MasteryPathSelectionFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
             MasteryPathSelectionFragment().withArgs(route.argsWithContext)
         } else null

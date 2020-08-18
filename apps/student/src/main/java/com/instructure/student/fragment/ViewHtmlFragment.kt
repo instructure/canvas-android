@@ -86,15 +86,15 @@ class ViewHtmlFragment : InternalWebviewFragment() {
     }
 
     companion object {
-        @JvmStatic @JvmOverloads fun newInstance(htmlUrl: String, title: String, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewHtmlFragment().apply {
+         @JvmOverloads fun newInstance(htmlUrl: String, title: String, toolbarColor: Int = 0, editableFile: EditableFile? = null) = ViewHtmlFragment().apply {
             mHtmlUrl = htmlUrl
             this.title = title
             mToolbarColor = toolbarColor
             mEditableFile = editableFile
         }
 
-        @JvmStatic fun newInstance(bundle: Bundle) = ViewHtmlFragment().apply { arguments = bundle }
+         fun newInstance(bundle: Bundle) = ViewHtmlFragment().apply { arguments = bundle }
 
-        @JvmStatic fun newInstance(route: Route) = ViewHtmlFragment().apply { arguments = route.arguments }
+         fun newInstance(route: Route) = ViewHtmlFragment().apply { arguments = route.arguments }
     }
 }

@@ -294,17 +294,14 @@ class CreateAnnouncementFragment : ParentFragment() {
     //endregion
 
     companion object {
-        @JvmStatic
         private val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
                     CreateAnnouncementFragment().apply {
                         arguments = route.arguments
                     }
                 } else null
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader?): Route =
                 Route(CreateAnnouncementFragment::class.java, canvasContext, canvasContext.makeBundle().apply {
                     putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)

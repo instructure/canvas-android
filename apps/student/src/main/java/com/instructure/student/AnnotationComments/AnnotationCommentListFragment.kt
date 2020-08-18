@@ -225,23 +225,20 @@ class AnnotationCommentListFragment : ParentFragment() {
     }
 
     companion object {
-        @JvmStatic val ANNOTATIONS = "annotations"
-        @JvmStatic val ASSIGNEE_ID = "assigneeId"
-        @JvmStatic val DOC_SESSION = "docSession"
-        @JvmStatic val API_VALUES = "apiValues"
-        @JvmStatic val HEAD_ANNOTATION_ID = "headAnnotationId"
+        private const val ANNOTATIONS = "annotations"
+        private const val ASSIGNEE_ID = "assigneeId"
+        private const val DOC_SESSION = "docSession"
+        private const val API_VALUES = "apiValues"
+        private const val HEAD_ANNOTATION_ID = "headAnnotationId"
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
 
-        @JvmStatic
         fun makeRoute(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Route {
             val args = makeBundle(annotations, headAnnotationId, docSession, apiValues, assigneeId)
 
             return Route(null, AnnotationCommentListFragment::class.java, null, args)
         }
 
-        @JvmStatic
         fun validRoute(route: Route): Boolean {
             return route.arguments.containsKey(ANNOTATIONS)
                     && route.arguments.containsKey(HEAD_ANNOTATION_ID)
@@ -250,13 +247,11 @@ class AnnotationCommentListFragment : ParentFragment() {
                     && route.arguments.containsKey(ASSIGNEE_ID)
         }
 
-        @JvmStatic
         fun newInstance(route: Route): AnnotationCommentListFragment? {
             if (!validRoute(route)) return null
             return AnnotationCommentListFragment().withArgs(route.arguments)
         }
 
-        @JvmStatic
         fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Bundle {
             val args = Bundle()
             args.putParcelableArrayList(ANNOTATIONS, annotations)

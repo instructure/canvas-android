@@ -239,7 +239,7 @@ object RouteMatcher : BaseRouteMatcher() {
         route(context, route)
     }
 
-    @JvmStatic
+    
     fun route(context: Context, route: Route?) {
 
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
@@ -430,7 +430,7 @@ object RouteMatcher : BaseRouteMatcher() {
      *                         also true, the user will be routed to UnsupportedFeatureFragment for such urls.
      * @return
      */
-    @JvmStatic
+    
     @JvmOverloads
     fun canRouteInternally(
         context: Context,
@@ -445,18 +445,18 @@ object RouteMatcher : BaseRouteMatcher() {
         return canRoute
     }
 
-    @JvmStatic
+    
     fun generateUrl(url: String?, queryParams: HashMap<String, String>): String? {
         if(url == null) return null
         return createQueryParamString(url, queryParams)
     }
 
-    @JvmStatic
+    
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, replacementParams: HashMap<String, String>): String? {
         return generateUrl(type, masterCls, null, replacementParams, null)
     }
 
-    @JvmStatic
+    
     fun generateUrl(type: CanvasContext.Type, masterCls: Class<out Fragment>?, detailCls: Class<out Fragment>?, replacementParams: HashMap<String, String>?, queryParams: HashMap<String, String>?): String? {
         val domain = ApiPrefs.fullDomain
         val urlRoute = getInternalRoute(masterCls, detailCls)
@@ -476,7 +476,7 @@ object RouteMatcher : BaseRouteMatcher() {
         return null
     }
 
-    @JvmStatic
+    
     fun getContextIdFromURL(url: String?): String? {
         return getContextIdFromURL(url, routes)
     }

@@ -33,7 +33,7 @@ class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
     override fun onCleanup() {
         FlutterComm.reset()
         StudentPrefs.safeClearPrefs()
-        CanvasRecipientManager.getInstance(ContextKeeper.appContext).clearCache()
+        CanvasRecipientManager.getInstance().clearCache()
         WidgetUpdater.updateWidgets()
     }
 

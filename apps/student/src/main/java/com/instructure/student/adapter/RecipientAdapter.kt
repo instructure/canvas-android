@@ -24,7 +24,5 @@ class RecipientAdapter(context: Context) : BaseRecipientAdapter(context) {
     override fun getRecipientManager() = canvasRecipientManager
 
     val canvasRecipientManager: CanvasRecipientManager
-        get() = CanvasRecipientManager.getInstance(context)
-            .setRecipientCallback(this)
-            .setPhotoCallback(this)
+        get() = CanvasRecipientManager.getInstance().setRecipientCallback(this)
 }

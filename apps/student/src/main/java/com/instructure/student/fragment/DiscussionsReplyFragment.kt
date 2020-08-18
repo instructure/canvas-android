@@ -230,7 +230,6 @@ class DiscussionsReplyFragment : ParentFragment() {
         private const val DISCUSSION_ENTRY_ID = "DISCUSSION_ENTRY_ID"
         private const val CAN_ATTACH = "CAN_ATTACH"
 
-        @JvmStatic
         fun makeRoute(
                 canvasContext: CanvasContext?,
                 discussionTopicHeaderId: Long,
@@ -246,7 +245,6 @@ class DiscussionsReplyFragment : ParentFragment() {
             return Route(DiscussionsReplyFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
                     DiscussionsReplyFragment().apply {
                         arguments = route.canvasContext!!.makeBundle(route.arguments)

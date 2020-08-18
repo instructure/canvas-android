@@ -192,8 +192,8 @@ class BookmarksFragment : ParentFragment() {
                     override fun onResponse(response: retrofit2.Response<Bookmark>, linkHeaders: LinkHeaders, type: ApiType) {
                         if (response.code() == 200 && isAdded) {
                             CacheControlFlags.forceRefreshBookmarks = true
-                            val newBookmark = response.body()
-                            newBookmark?.courseId = bookmark.courseId
+                            val newBookmark = response.body()!!
+                            newBookmark.courseId = bookmark.courseId
                             recyclerAdapter?.add(newBookmark)
                             showToast(R.string.bookmarkUpdated)
                         }

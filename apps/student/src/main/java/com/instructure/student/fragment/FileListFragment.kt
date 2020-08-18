@@ -490,13 +490,11 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, fileFolder: FileFolder): Route {
             val bundle = Bundle().apply { putParcelable(Const.FOLDER, fileFolder) }
             return Route(null, FileListFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, folderId: Long = 0L): Route {
             val bundle = Bundle().apply { putLong(Const.FOLDER_ID, folderId) }
             return Route(null, FileListFragment::class.java, canvasContext, bundle)
@@ -506,7 +504,6 @@ class FileListFragment : ParentFragment(), Bookmarkable {
             return route.canvasContext != null
         }
 
-        @JvmStatic
         fun newInstance(route: Route): FileListFragment? {
             if (!validateRoute(route)) return null
             return FileListFragment().withArgs(route.canvasContext!!.makeBundle(route.arguments))

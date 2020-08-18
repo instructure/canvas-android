@@ -58,14 +58,12 @@ class ConferenceListFragment :
         )
 
     companion object {
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext): Route {
             return Route(null, ConferenceListFragment::class.java, canvasContext, canvasContext.makeBundle())
         }
 
         private fun validRoute(route: Route) = route.canvasContext != null
 
-        @JvmStatic
         fun newInstance(route: Route): ConferenceListFragment? {
             if (!validRoute(
                     route

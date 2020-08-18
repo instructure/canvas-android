@@ -69,7 +69,6 @@ class SubmissionDetailsEmptyContentFragment :
         const val VIDEO_REQUEST_CODE = 45520
         const val CHOOSE_MEDIA_REQUEST_CODE = 45521
 
-        @JvmStatic
         fun newInstance(course: Course, assignment: Assignment, isStudioEnabled: Boolean, quiz: Quiz? = null, studioLTITool: LTITool? = null, isObserver: Boolean = false, ltiTool: LTITool? = null): SubmissionDetailsEmptyContentFragment {
             val bundle = course.makeBundle {
                 putBoolean(Const.IS_OBSERVER, isObserver)

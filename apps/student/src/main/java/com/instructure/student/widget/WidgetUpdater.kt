@@ -10,7 +10,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
  */
 object WidgetUpdater {
 
-    @JvmStatic fun updateWidgets() {
+     fun updateWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(ContextKeeper.appContext)
 
         updateNotificationsWidget(appWidgetManager)

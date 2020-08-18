@@ -56,7 +56,6 @@ class ConferenceDetailsFragment :
         )
 
     companion object {
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, conference: Conference): Route {
             val bundle = canvasContext.makeBundle {
                 putParcelable(Const.CONFERENCE, conference)
@@ -67,7 +66,6 @@ class ConferenceDetailsFragment :
         private fun validRoute(route: Route) =
             route.canvasContext != null && route.arguments.containsKey(Const.CONFERENCE)
 
-        @JvmStatic
         fun newInstance(route: Route): ConferenceDetailsFragment? {
             if (!validRoute(route)) return null
             return ConferenceDetailsFragment()

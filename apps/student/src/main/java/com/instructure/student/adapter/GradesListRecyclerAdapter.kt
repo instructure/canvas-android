@@ -42,7 +42,6 @@ import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
-import com.instructure.student.binders.GradeBinder
 import com.instructure.student.dialog.WhatIfDialogStyled
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
@@ -327,9 +326,9 @@ open class GradesListRecyclerAdapter(
     override fun onBindChildHolder(holder: RecyclerView.ViewHolder, assignmentGroup: AssignmentGroup, assignment: Assignment) {
         val isEdit = adapterToGradesCallback?.isEdit ?: false
         if (isEdit) {
-            GradeBinder.bind(holder as GradeViewHolder, context, ColorKeeper.getOrGenerateColor(canvasContext), assignmentsHash[assignment.id]!!, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
+            (holder as GradeViewHolder).bind(context, ColorKeeper.getOrGenerateColor(canvasContext), assignmentsHash[assignment.id]!!, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
         } else {
-            GradeBinder.bind(holder as GradeViewHolder, context, ColorKeeper.getOrGenerateColor(canvasContext), assignment, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
+            (holder as GradeViewHolder).bind(context, ColorKeeper.getOrGenerateColor(canvasContext), assignment, adapterToGradesCallback!!.isEdit, whatIfDialogCallback!!, adapterToFragmentCallback!!, selectedItemCallback!!)
         }
     }
 

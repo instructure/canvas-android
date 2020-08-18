@@ -74,20 +74,17 @@ class AssignmentDetailsFragment :
         const val VIDEO_REQUEST_CODE = 45519
         const val CHOOSE_MEDIA_REQUEST_CODE = 45520
 
-        @JvmStatic
         fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
             val bundle = course.makeBundle { putLong(Const.ASSIGNMENT_ID, assignmentId) }
             return Route(null, AssignmentDetailsFragment::class.java, course, bundle)
         }
 
-        @JvmStatic
         fun validRoute(route: Route): Boolean {
             return route.canvasContext is Course &&
                     (route.arguments.containsKey(Const.ASSIGNMENT_ID) ||
                             route.paramsHash.containsKey(RouterParams.ASSIGNMENT_ID))
         }
 
-        @JvmStatic
         fun newInstance(route: Route): AssignmentDetailsFragment? {
             if (!validRoute(route)) return null
 

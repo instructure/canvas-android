@@ -106,7 +106,7 @@ class InboxConversationFragment : ParentFragment() {
                 AttachmentView.AttachmentAction.REMOVE -> Unit // Do nothing
 
                 AttachmentView.AttachmentAction.PREVIEW -> openMedia(attachment.contentType, attachment.url, attachment.filename, ApiPrefs.user!!)
-                
+
                 AttachmentView.AttachmentAction.DOWNLOAD -> {
                     if (PermissionUtils.hasPermissions(requireActivity(), PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
                         FileDownloadJobIntentService.scheduleDownloadJob(requireContext(), attachment = attachment)
@@ -401,7 +401,6 @@ class InboxConversationFragment : ParentFragment() {
 
     companion object {
 
-        @JvmStatic
         fun makeRoute(conversation: Conversation, scope: String?): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CONVERSATION, conversation)
@@ -410,20 +409,17 @@ class InboxConversationFragment : ParentFragment() {
             return Route(null, InboxConversationFragment::class.java, null, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(conversationId: Long): Route {
             val bundle = Bundle().apply { putLong(Const.CONVERSATION_ID, conversationId) }
             return Route(null, InboxConversationFragment::class.java, null, bundle)
         }
 
-        @JvmStatic
         fun validateRoute(route: Route): Boolean {
             return route.arguments.containsKey(Const.CONVERSATION)
                     || route.arguments.containsKey(Const.CONVERSATION_ID)
                     || route.paramsHash.containsKey(RouterParams.CONVERSATION_ID)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) : InboxConversationFragment? {
             if (!validateRoute(route)) return null
             route.paramsHash[RouterParams.CONVERSATION_ID]?.let {

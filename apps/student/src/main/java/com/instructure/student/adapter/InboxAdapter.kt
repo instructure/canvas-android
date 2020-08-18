@@ -34,7 +34,7 @@ class InboxAdapter(
 ) : BaseListRecyclerAdapter<Conversation, InboxViewHolder>(
     context,
     Conversation::class.java,
-    emptyList<Conversation>()
+    emptyList()
 ) {
 
     var scope: InboxApi.Scope = InboxApi.Scope.ALL

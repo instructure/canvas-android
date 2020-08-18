@@ -53,7 +53,6 @@ class MasteryPathLockedFragment : ParentFragment() {
     companion object {
         const val MODULE_ITEM = "module_item"
 
-        @JvmStatic
         fun makeRoute(moduleItemName: String): Route {
             val bundle = Bundle().apply {
                 putString(MODULE_ITEM, moduleItemName)
@@ -61,7 +60,6 @@ class MasteryPathLockedFragment : ParentFragment() {
             return Route(MasteryPathLockedFragment::class.java, null, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) { MasteryPathLockedFragment().apply {
                 arguments = route.arguments
             }

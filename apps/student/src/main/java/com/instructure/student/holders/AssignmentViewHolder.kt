@@ -19,8 +19,6 @@ package com.instructure.student.holders
 import android.content.Context
 import android.graphics.Typeface
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -28,7 +26,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
-import com.instructure.student.binders.BaseBinder
+import com.instructure.student.util.BinderUtils
 import com.instructure.student.interfaces.AdapterToFragmentCallback
 import kotlinx.android.synthetic.main.viewholder_card_generic.view.*
 
@@ -49,15 +47,15 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val submission = assignment.submission
 
         // Posted At now determines if an assignment is muted, even for old gradebook
-        if (assignment.submission?.postedAt == null) {
+        if (submission?.postedAt == null) {
             // Mute that score
             points.visibility = View.GONE
         } else {
             points.visibility = View.VISIBLE
-            BaseBinder.setupGradeText(context, points, assignment, submission, courseColor)
+            BinderUtils.setupGradeText(context, points, assignment, submission, courseColor)
         }
 
-        val drawable = BaseBinder.getAssignmentIcon(assignment)
+        val drawable = BinderUtils.getAssignmentIcon(assignment)
         icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, drawable, color))
 
         if (assignment.dueAt != null) {
@@ -71,7 +69,7 @@ class AssignmentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             descriptionText = context.getString(R.string.excusedAssignment)
             description.setTypeface(null, Typeface.BOLD)
         } else {
-            descriptionText = BaseBinder.getHtmlAsText(assignment.description ?: "")
+            descriptionText = BinderUtils.getHtmlAsText(assignment.description ?: "")
             description.setTypeface(null, Typeface.NORMAL)
         }
 

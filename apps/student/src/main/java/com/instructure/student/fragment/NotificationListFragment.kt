@@ -54,15 +54,9 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         return url + canvasContext.toAPIString()
     }
 
-    interface OnNotificationCountInvalidated {
-        fun invalidateNotificationsCount()
-    }
-
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private lateinit var recyclerAdapter: NotificationListRecyclerAdapter
-
-    private val onNotificationCountInvalidated: OnNotificationCountInvalidated? = null
 
     private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<StreamItem> =
         object : NotificationAdapterToFragmentCallback<StreamItem> {
@@ -108,7 +102,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, onNotificationCountInvalidated, adapterToFragmentCallback)
+        recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
             requireContext(),
@@ -197,7 +191,6 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
         get() = Bookmarker(canvasContext.isCourseOrGroup, canvasContext)
 
     companion object {
-        @JvmStatic
         fun addFragmentForStreamItem(streamItem: StreamItem, context: Context, fromWidget: Boolean) {
             if (fromWidget) {
                 RouteMatcher.routeUrl(context, streamItem.url ?: streamItem.htmlUrl ?: "") // If we get null URLs, we can't route, so the behavior will just launch the app to whatever screen they were on last

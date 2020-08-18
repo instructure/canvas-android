@@ -228,7 +228,6 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         var SUBMISSIONS_ROUTE = "submissions"
         var RUBRIC_ROUTE = "rubric"
 
-        @JvmStatic
         fun parseCourseId(courseId: String): Long? {
             return try {
                 courseId.toLong()

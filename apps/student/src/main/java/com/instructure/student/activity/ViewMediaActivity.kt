@@ -12,7 +12,6 @@ class ViewMediaActivity : BaseViewMediaActivity() {
     override fun handleEditing(editableFile: EditableFile) {}
 
     companion object {
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, ViewMediaActivity::class.java)
             intent.putExtras(route.arguments)

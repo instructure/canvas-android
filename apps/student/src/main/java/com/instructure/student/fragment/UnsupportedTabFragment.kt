@@ -45,7 +45,6 @@ class UnsupportedTabFragment : InternalWebviewFragment() {
 
         } else null
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, tabId: String): Route {
             val info = extractInfo(canvasContext, tabId)
             val bundle = InternalWebviewFragment.makeRoute(info.first, info.second, true, true, false)

@@ -187,7 +187,6 @@ open class InboxRecipientAdapter(
     companion object {
 
         // Decoupled for testability
-        @JvmStatic
         val inboxItemCallback = object : BaseListRecyclerAdapter.ItemComparableCallback<Recipient>() {
 
             val comparator = compareBy<Recipient>(

@@ -20,10 +20,10 @@ package com.instructure.canvasapi2.models
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-class HiddenStreamItem : Serializable {
+data class HiddenStreamItem(
     @SerializedName("hidden")
     val isHidden: Boolean = false
-
+) : Serializable {
     companion object {
         private const val serialVersionUID = 1L
     }

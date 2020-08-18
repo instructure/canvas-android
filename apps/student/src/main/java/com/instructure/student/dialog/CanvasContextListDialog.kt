@@ -55,7 +55,6 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
 
     companion object {
 
-        @JvmStatic
         fun getInstance(
             manager: FragmentManager,
             callback: (canvasContext: CanvasContext) -> Unit

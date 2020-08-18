@@ -193,7 +193,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
         if (sharedURI == null) {
             Toast.makeText(applicationContext, R.string.uploadingFromSourceFailed, Toast.LENGTH_LONG).show()
         } else {
-            uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI, courses))
+            uploadFileSourceFragment = ShareFileDestinationDialog.newInstance(ShareFileDestinationDialog.createBundle(sharedURI!!, courses!!))
             uploadFileSourceFragment!!.show(supportFragmentManager, ShareFileDestinationDialog.TAG)
         }
     }
@@ -208,10 +208,6 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
             intent.getParcelableExtra(Intent.EXTRA_STREAM)
         } else null
 
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        finish()
     }
 
     override fun onCancel(dialog: DialogInterface?) {

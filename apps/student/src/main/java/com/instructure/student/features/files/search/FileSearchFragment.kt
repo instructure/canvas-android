@@ -139,7 +139,6 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
             return route.canvasContext != null
         }
 
-        @JvmStatic
         fun newInstance(route: Route): FileSearchFragment? {
             if (!validateRoute(route)) return null
             return FileSearchFragment().withArgs(route.canvasContext!!.makeBundle())

@@ -789,7 +789,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         private const val JS_CONST_SET_LIKED = "setLiked"
         private const val JS_CONST_SET_UNLIKED = "setUnliked"
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
@@ -798,7 +797,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeaderId: Long, title: String? = null): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
@@ -808,7 +806,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun makeRoute(
                 canvasContext: CanvasContext,
                 discussionTopicHeader: DiscussionTopicHeader,
@@ -825,7 +822,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             return Route(null, DiscussionDetailsFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
             DiscussionDetailsFragment().apply {
                 arguments = route.canvasContext!!.makeBundle(route.arguments)

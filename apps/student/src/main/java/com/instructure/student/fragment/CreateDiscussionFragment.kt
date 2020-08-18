@@ -460,10 +460,8 @@ class CreateDiscussionFragment : ParentFragment() {
     //endregion
 
     companion object {
-        @JvmStatic
         private val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
 
-        @JvmStatic
         fun makeRoute(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader? = null): Route {
             val bundle = Bundle().apply {
                 putParcelable(DISCUSSION_TOPIC_HEADER, discussionTopicHeader)
@@ -472,7 +470,6 @@ class CreateDiscussionFragment : ParentFragment() {
             return Route(CreateDiscussionFragment::class.java, canvasContext, bundle)
         }
 
-        @JvmStatic
         fun newInstance(route: Route) = if (validRoute(route)) {
             CreateDiscussionFragment().apply {
                 arguments = route.canvasContext!!.makeBundle(route.arguments)

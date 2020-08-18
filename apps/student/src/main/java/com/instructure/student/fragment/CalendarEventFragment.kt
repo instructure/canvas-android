@@ -306,7 +306,6 @@ class CalendarEventFragment : ParentFragment() {
         fun makeRoute(canvasContext: CanvasContext, scheduleItemId: Long): Route =
                 Route(null, CalendarEventFragment::class.java, canvasContext, canvasContext.makeBundle { putLong(SCHEDULE_ITEM_ID, scheduleItemId) })
 
-        @JvmStatic
         fun newInstance(route: Route): CalendarEventFragment? =
                 if (validRoute(route)) CalendarEventFragment().apply {
                     arguments = route.arguments
