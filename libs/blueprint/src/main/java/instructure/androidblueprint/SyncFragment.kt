@@ -102,7 +102,7 @@ abstract class SyncFragment<
     }
 
     fun clearAdapter() {
-        createAdapter().clear()
+        adapter.clear()
     }
 
     // Override in case of fragment not implementing Presenter<View> interface
