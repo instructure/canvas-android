@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui
 
+import android.os.SystemClock.sleep
 import com.instructure.dataseeding.api.SeedApi
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.clickInboxTab
@@ -59,6 +60,8 @@ class ChooseRecipientsPageTest: TeacherTest() {
         inboxPage.clickAddMessageFAB()
         addMessagePage.clickCourseSpinner()
         addMessagePage.selectCourseFromSpinner(course)
+        // Sigh... Sometimes, at least on my local machine, it takes a beat for this button to become responsive
+        sleep(2000)
         addMessagePage.clickAddContacts()
         return data
     }

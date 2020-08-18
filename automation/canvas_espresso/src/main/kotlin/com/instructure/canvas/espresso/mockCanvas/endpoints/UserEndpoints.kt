@@ -85,16 +85,18 @@ object UserTodoEndpoint : Endpoint (
                     ))
                 }
 
-                // Gather our quizzes, assuming that all are "to-do"
-                userCourseIds.forEach {courseId ->
-                    data.courseQuizzes[courseId]?.forEach { quiz ->
-                        toDoList.add(ToDo(
-                                type = ToDo.Type.UPCOMING_ASSIGNMENT,
-                                courseId = courseId,
-                                quiz = quiz
-                        ))
-                    }
-                }
+                // Since we are now creating "shadow assignments" along with each quiz,
+                // we will no longer return quiz info explicitly for this call.
+//                // Gather our quizzes, assuming that all are "to-do"
+//                userCourseIds.forEach {courseId ->
+//                    data.courseQuizzes[courseId]?.forEach { quiz ->
+//                        toDoList.add(ToDo(
+//                                type = ToDo.Type.UPCOMING_ASSIGNMENT,
+//                                courseId = courseId,
+//                                quiz = quiz
+//                        ))
+//                    }
+//                }
 
                 // TODO: Be more picky about which assignments and quizzes are "to-do"
 

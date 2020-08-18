@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.matchers.RecyclerViewMatcher
@@ -35,9 +36,9 @@ class SpeedGraderFilesPage : BasePage() {
         emptySpeedGraderFileView.assertDisplayed()
     }
 
-    fun assertHasFiles(attachments: MutableList<AttachmentApiModel>) {
+    fun assertHasFiles(attachments: MutableList<Attachment>) {
         speedGraderFileRecyclerView.check(RecyclerViewItemCountAssertion(attachments.size))
-        for (attachment in attachments) onView(withText(attachment.fileName))
+        for (attachment in attachments) onView(withText(attachment.filename))
     }
 
     fun assertFileSelected(position: Int) {
