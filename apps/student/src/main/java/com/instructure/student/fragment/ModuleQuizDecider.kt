@@ -115,7 +115,7 @@ class ModuleQuizDecider : ParentFragment() {
                 quizDue.setGone()
                 quizDueDetails.text = getString(R.string.toDoNoDueDate)
             }
-            quizDetails.loadHtml(quiz.description, "")
+            quizDetails.loadHtml(quiz.description.orEmpty(), "")
             quizDetails.setBackgroundColor(ContextCompat.getColor(requireActivity(), R.color.transparent))
 
             // Set some callbacks in case there is a link in the quiz description. We want it to open up in a new InternalWebViewFragment

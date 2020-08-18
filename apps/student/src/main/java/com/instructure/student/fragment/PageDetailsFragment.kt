@@ -113,13 +113,13 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
         val callback = getCanvasWebView()?.canvasWebViewClientCallback
         callback?.let {
             getCanvasWebView()?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by it {
-                override fun onPageFinishedCallback(webView: WebView?, url: String?) {
+                override fun onPageFinishedCallback(webView: WebView, url: String) {
                     it.onPageFinishedCallback(webView, url)
                     // Only clear history after an update
                     if (isUpdated) getCanvasWebView()?.clearHistory()
                 }
 
-                override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+                override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                     RouteMatcher.openMedia(activity, url)
                 }
             }

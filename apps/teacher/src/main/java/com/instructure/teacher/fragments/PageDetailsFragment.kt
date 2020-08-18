@@ -136,16 +136,19 @@ class PageDetailsFragment : BasePresenterFragment<
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        canvasWebView.setMediaDownloadCallback { _, url, filename ->
-            downloadUrl = url
-            downloadFileName = filename
+        canvasWebView.setMediaDownloadCallback (object : CanvasWebView.MediaDownloadCallback{
+            override fun downloadMedia(mime: String?, url: String?, filename: String?) {
+                downloadUrl = url
+                downloadFileName = filename
 
-            if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-                downloadFile()
-            } else {
-                requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    downloadFile()
+                } else {
+                    requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                }
             }
-        }
+
+        })
 
         EventBus.getDefault().getStickyEvent(PageDeletedEvent::class.java)?.once(javaClass.simpleName + ".onResume()") {
             if (it.id == mPage.id) {

@@ -58,7 +58,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
 
-        val originalCallback = canvasWebView.canvasWebViewClientCallback
+        val originalCallback = canvasWebView.canvasWebViewClientCallback!!
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by originalCallback {
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 originalCallback.onPageFinishedCallback(webView, url)

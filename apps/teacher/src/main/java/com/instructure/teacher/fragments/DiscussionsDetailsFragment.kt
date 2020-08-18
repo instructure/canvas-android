@@ -498,23 +498,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object: CanvasWebView.CanvasWebViewClientCallback {
-            override fun routeInternallyCallback(url: String?) {
-                if (url != null) {
-                    if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
-                        val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                        RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
-                    }
+            override fun routeInternallyCallback(url: String) {
+                if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
+                    val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
+                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
                 }
             }
-            override fun canRouteInternallyDelegate(url: String?): Boolean {
-                return url != null
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return true
             }
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 showToast(R.string.downloadingFile)
-                RouteMatcher.openMedia(activity, url ?: "")
+                RouteMatcher.openMedia(activity, url)
             }
-            override fun onPageStartedCallback(webView: WebView?, url: String?) {}
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
         }
 
         webView.addVideoClient(requireActivity())

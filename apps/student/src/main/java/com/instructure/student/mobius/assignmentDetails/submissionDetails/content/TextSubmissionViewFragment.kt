@@ -58,14 +58,14 @@ class TextSubmissionViewFragment : Fragment() {
         }
 
         textSubmissionWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) = Unit
-            override fun onPageStartedCallback(webView: WebView?, url: String?) = Unit
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) = Unit
-            override fun canRouteInternallyDelegate(url: String?) =
-                RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, false)
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
+            override fun canRouteInternallyDelegate(url: String) =
+                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
 
-            override fun routeInternallyCallback(url: String?) {
-                RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, true)
+            override fun routeInternallyCallback(url: String) {
+                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
             }
         }
 
