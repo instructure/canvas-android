@@ -1244,7 +1244,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         every { intent.action } returns ""
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
 
         mockkStatic(FileProvider::class)

@@ -545,7 +545,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
 
         mockkStatic(FileProvider::class)

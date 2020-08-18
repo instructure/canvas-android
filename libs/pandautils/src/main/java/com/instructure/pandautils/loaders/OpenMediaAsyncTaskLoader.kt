@@ -188,7 +188,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             if (mimeType == null) throw IOException()
         }
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "mimeType: $mimeType")
-        if (filename.isValid()) {
+        if (!filename.isValid()) {
             // parse filename from Content-Disposition header which is a response field that is normally used to set the file name
             val headerField = connection.getHeaderField("Content-Disposition")
             if (headerField != null) {
