@@ -22,11 +22,34 @@ import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.canvas.espresso.mockCanvas.utils.AuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.DontCareAuthModel
+import com.instructure.canvas.espresso.mockCanvas.utils.LongId
+import com.instructure.canvas.espresso.mockCanvas.utils.PathVars
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.StringId
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.grabJsonFromMultiPartBody
+import com.instructure.canvas.espresso.mockCanvas.utils.noContentResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successPaginatedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.DiscussionParticipant
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.GradingPeriodResponse
+import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.QuizSubmissionResponse
+import com.instructure.canvasapi2.models.QuizSubmissionTime
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
 import java.util.*
@@ -75,6 +98,9 @@ object CourseEndpoint : Endpoint(
         Segment("grading_periods") to CourseGradingPeriodsEndpoint,
         Segment("sections") to CourseSectionsEndpoint,
         Segment("enrollments") to CourseEnrollmentsEndpoint,
+        Segment("features") to Endpoint(
+                Segment("enabled") to CourseEnabledFeaturesEndpoint
+        ),
 
         response = {
             GET {
@@ -114,6 +140,15 @@ object CourseEndpoint : Endpoint(
             }
         }
 )
+
+/**
+ * Endpoint for course features
+ */
+object CourseEnabledFeaturesEndpoint : Endpoint( response = {
+    GET {
+        request.successResponse(listOf<String>()) // Empty string for now.
+    }
+})
 
 /**
  * Endpoint for course enrollments
@@ -547,53 +582,11 @@ private fun getQuizSubmissionResponse(
         userId: Long
 ) : QuizSubmissionResponse {
     val quiz = data.courseQuizzes[courseId]!!.find {it.id == quizId}!!
-    val now = Calendar.getInstance().time.time // ms
-    val submission = QuizSubmission(
-            id = data.newItemId(),
-            quizId = quizId,
-            userId = userId,
-            startedAt = Date(now).toApiString(),
-            endAt = Date(now + quiz.timeLimit * 1000).toApiString(),
-            workflowState = "untaken",
-            validationToken = "abcd" // just so it's not null??
-    )
-    var submissionList = data.quizSubmissions[quizId]
-    if(submissionList == null) {
-        submissionList = mutableListOf<QuizSubmission>()
-        data.quizSubmissions[quizId] = submissionList!!
-    }
-    submissionList!!.add(submission)
+    val user = data.users[userId]!!
+    data.addQuizSubmission(quiz, user)
+    val quizSubmissionList = data.quizSubmissions[quiz.id]
 
-    Log.d("<--", "New submission: $submission")
-
-    // It seems like we will need to populate a list of QuizSubmissionQuestions
-    // for this submission, to match the QuizQuestions for the quiz.  We'll do that
-    // right now.
-    val submissionQuestionList = mutableListOf<QuizSubmissionQuestion>()
-    val questionList = data.quizQuestions[quizId] ?: listOf<QuizQuestion>()
-    for(q in questionList) {
-        val submissionAnswers = mutableListOf<QuizSubmissionAnswer>()
-        if(q.answers != null) {
-            for (a in q.answers!!) {
-                submissionAnswers.add(QuizSubmissionAnswer(
-                        text = a.answerText,
-                        weight = a.answerWeight
-                ))
-            }
-        }
-        val sq = QuizSubmissionQuestion(
-                id = q.id,
-                quizId = quizId,
-                questionName = q.questionName,
-                questionType = q.questionTypeString,
-                questionText = q.questionText,
-                answers = submissionAnswers.toTypedArray()
-        )
-        submissionQuestionList.add(sq)
-    }
-    data.quizSubmissionQuestions[submission.id] = submissionQuestionList
-
-    val response = QuizSubmissionResponse(quizSubmissions = submissionList!!)
+    val response = QuizSubmissionResponse(quizSubmissions = quizSubmissionList!!)
     return response
 }
 

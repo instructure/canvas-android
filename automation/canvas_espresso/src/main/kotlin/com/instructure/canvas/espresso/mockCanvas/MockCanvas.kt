@@ -683,7 +683,8 @@ fun MockCanvas.addAssignment(
         description: String = "",
         lockAt: String? = null,
         unlockAt: String? = null,
-        withDescription: Boolean = false
+        withDescription: Boolean = false,
+        gradingType: String = "percent"
 ) : Assignment {
     val assignmentId = newItemId()
     var assignment = Assignment(
@@ -702,7 +703,7 @@ fun MockCanvas.addAssignment(
             unlockAt = unlockAt,
             published = true,
             allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
-            gradingType = "percent" // hard-code for now
+            gradingType = gradingType
     )
 
     if (isQuizzesNext) {
@@ -748,11 +749,14 @@ fun MockCanvas.addSubmissionForAssignment(
         body: String? = null,
         url: String? = null,
         attachment: Attachment? = null,
-        comment: SubmissionComment? = null
+        comment: SubmissionComment? = null,
+        state: String = "submitted"
 ) : Submission {
     val assignment = assignments[assignmentId]!!
     val assignmentDueDate = assignment.dueAt?.toDate()
     val isLate = (assignmentDueDate != null) && assignmentDueDate.before(Calendar.getInstance().time)
+
+    // Create the new submission object
     val submission = Submission(
             id = newItemId(),
             submittedAt = Date(),
@@ -760,7 +764,7 @@ fun MockCanvas.addSubmissionForAssignment(
             body = body,
             url = url,
             previewUrl = url,
-            workflowState = "submitted",
+            workflowState = state,
             submissionType = type,
             assignmentId = assignmentId,
             userId = userId,
@@ -770,36 +774,41 @@ fun MockCanvas.addSubmissionForAssignment(
             mediaContentType = if(attachment != null) attachment.contentType else null
     )
 
-    // Submission details looks to pull attachments from the first item in the submission history, so we need a "root"
-    // submission to hold it all together.
-    val rootSubmission = Submission(
-            id = newItemId(),
-            submittedAt = Date(),
-            attempt = 1,
-            body = body,
-            url = url,
-            previewUrl = url,
-            workflowState = "submitted",
-            submissionType = type,
-            assignmentId = assignmentId,
-            userId = userId,
-            late = isLate,
-            submissionHistory = listOf(submission),
-            attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
-            submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
-            mediaContentType = if(attachment != null) attachment.contentType else null
-    )
-
+    // Get the submission list for the assignment, creating it if necessary
     var submissionList = submissions[assignmentId]
     if(submissionList == null) {
         submissionList = mutableListOf<Submission>()
         submissions[assignmentId] = submissionList
     }
-    submissionList.add(rootSubmission)
 
-    assignment.submission = rootSubmission
+    // Get the user's root submission for the assignment, creating it if necessary
+    var userRootSubmission = submissionList.firstOrNull {sub -> sub.userId == userId}
+    if(userRootSubmission == null) {
+        userRootSubmission = Submission(
+                id = newItemId(), // Most of these are probably unnecessary in the root submission object
+                submittedAt = Date(),
+                attempt = 1,
+                body = body,
+                url = url,
+                previewUrl = url,
+                workflowState = state,
+                submissionType = type,
+                assignmentId = assignmentId,
+                userId = userId,
+                late = isLate,
+                submissionHistory = mutableListOf(submission),
+                attachments = if(attachment != null) arrayListOf(attachment) else arrayListOf<Attachment>(),
+                submissionComments = if(comment != null) listOf(comment) else listOf<SubmissionComment>(),
+                mediaContentType = if(attachment != null) attachment.contentType else null
+        )
+        submissionList.add(userRootSubmission)
+    }
 
-    return rootSubmission
+    assignment.submission = userRootSubmission // May have already been set
+
+    // Now add the new submission to the user's root submission's history
+    (userRootSubmission.submissionHistory as MutableList<Submission?>).add(submission)
+    return userRootSubmission
 }
 
 fun MockCanvas.addLTITool(name: String, url: String): LTITool {
@@ -1334,10 +1343,28 @@ fun MockCanvas.addQuizToCourse(
         description: String = Faker.instance().hitchhikersGuideToTheGalaxy().marvinQuote(),
         quizType: String = Quiz.TYPE_PRACTICE,
         timeLimitSecs: Int = 300,
-        dueAt: String? = null
+        dueAt: String? = null,
+        published: Boolean = true
 ) : Quiz {
     val quizId = newItemId()
     val quizUrl = "https://mock-data.instructure.com/api/v1/courses/${course.id}/quizzes/$quizId"
+    var assignment : Assignment? = null
+
+    // For quizzes that are actual assignments, create an associated Assignment object
+    if(quizType == Quiz.TYPE_ASSIGNMENT) {
+        assignment = Assignment(
+                id = newItemId(),
+                name = title,
+                description = description,
+                dueAt = dueAt,
+                submissionTypesRaw = listOf("online_quiz"),
+                quizId = quizId,
+                courseId = course.id
+        )
+
+        assignments.put(assignment.id, assignment)
+    }
+
     val result = Quiz(
             id = quizId,
             title = title,
@@ -1346,7 +1373,9 @@ fun MockCanvas.addQuizToCourse(
             mobileUrl = quizUrl,
             htmlUrl = quizUrl,
             timeLimit = timeLimitSecs,
-            dueAt = dueAt
+            dueAt = dueAt,
+            published = published,
+            assignmentId = assignment?.id ?: 0
     )
 
     var quizList = courseQuizzes[course.id]
@@ -1413,6 +1442,63 @@ fun MockCanvas.addQuestionToQuiz(
     // return the quiz question
     return result
 }
+
+fun MockCanvas.addQuizSubmission(quiz: Quiz, user: User, state: String = "untaken") : QuizSubmission {
+
+    val now = Calendar.getInstance().time.time // ms
+    var quizSubmission = QuizSubmission(
+            id = newItemId(),
+            quizId = quiz.id,
+            userId = user.id,
+            submissionId = newItemId(),
+            startedAt = Date(now).toApiString(),
+            endAt = Date(now + quiz.timeLimit * 1000).toApiString(), // ??
+            workflowState = state,
+            validationToken = "abcd" // just so it's not null??
+    )
+
+    // Don't forget to add some sort of submission to the related assignment
+    if(quiz.assignmentId != 0L) {
+        val assignment = assignments[quiz.assignmentId]
+        this.addSubmissionForAssignment(assignmentId = quiz.assignmentId, userId = user.id, type = "online_quiz", state = state)
+    }
+
+    var submissionList = quizSubmissions[quiz.id]
+    if(submissionList == null) {
+        submissionList = mutableListOf<QuizSubmission>()
+        quizSubmissions[quiz.id] = submissionList
+    }
+    submissionList.add(quizSubmission)
+
+    // It seems like we will need to populate a list of QuizSubmissionQuestions
+    // for this submission, to match the QuizQuestions for the quiz.  We'll do that
+    // right now.
+    val submissionQuestionList = mutableListOf<QuizSubmissionQuestion>()
+    val questionList = quizQuestions[quiz.id] ?: listOf<QuizQuestion>()
+    for(q in questionList) {
+        val submissionAnswers = mutableListOf<QuizSubmissionAnswer>()
+        if(q.answers != null) {
+            for (a in q.answers!!) {
+                submissionAnswers.add(QuizSubmissionAnswer(
+                        text = a.answerText,
+                        weight = a.answerWeight
+                ))
+            }
+        }
+        val sq = QuizSubmissionQuestion(
+                id = q.id,
+                quizId = quiz.id,
+                questionName = q.questionName,
+                questionType = q.questionTypeString,
+                questionText = q.questionText,
+                answers = submissionAnswers.toTypedArray()
+        )
+        submissionQuestionList.add(sq)
+    }
+    quizSubmissionQuestions[quizSubmission.id] = submissionQuestionList
+    return quizSubmission
+}
+
 
 // Add rubric criteria to an assignment
 fun MockCanvas.addRubricToAssignment(assignmentId: Long, criteria : List<RubricCriterion>) {

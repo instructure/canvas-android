@@ -15,80 +15,81 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.util.*
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class SpeedGraderQuizSubmissionPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToQuizSubmissionPage()
         speedGraderQuizSubmissionPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysNoSubmission() {
         getToQuizSubmissionPage(submitQuiz = false)
         speedGraderQuizSubmissionPage.assertShowsNoSubmissionState()
     }
 
     @Test
-    @Ditto
     fun displaysPendingReviewState() {
-        getToQuizSubmissionPage(addQuestion = true)
+        getToQuizSubmissionPage(addQuestion = true, state = "pending_review")
         speedGraderQuizSubmissionPage.assertShowsPendingReviewState()
     }
 
     @Test
-    @Ditto
     fun displaysViewQuizState() {
-        getToQuizSubmissionPage()
+        getToQuizSubmissionPage(state = "untaken")
         speedGraderQuizSubmissionPage.assertShowsViewQuizState()
     }
 
-    private fun getToQuizSubmissionPage(addQuestion: Boolean = false, submitQuiz: Boolean = true) {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
-        val course = data.coursesList[0]
-        val courseId = course.id
+    private fun getToQuizSubmissionPage(addQuestion: Boolean = false, submitQuiz: Boolean = true, state: String = "untaken") {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, favoriteCourseCount = 1, courseCount = 1)
+        val teacher = data.teachers[0]
+        val student = data.students[0]
+        val course = data.courses.values.first()
 
-        // note that the quiz is set to unpublished if we're adding questions
-        val quiz = seedQuizzes(
-                courseId = courseId,
-                quizzes = 1,
-                withDescription = false,
-                lockAt = 1.week.fromNow.iso8601,
-                unlockAt = 2.days.ago.iso8601,
-                published = !addQuestion,
-                teacherToken = teacher.token).quizList[0]
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val quiz = data.addQuizToCourse(course = course, published = true, quizType = Quiz.TYPE_ASSIGNMENT)
         val quizId = quiz.id
 
         if (addQuestion) {
-            seedQuizQuestion(
-                    courseId = courseId,
+            data.addQuestionToQuiz(
+                    course = course,
                     quizId = quizId,
-                    teacherToken = teacher.token
+                    questionName = "Mock Question",
+                    questionText = "What's your favorite color?",
+                    answers = arrayOf(
+                            QuizAnswer(id =  data.newItemId(), answerText = "Red", answerWeight = 1),
+                            QuizAnswer(id =  data.newItemId(), answerText = "Yellow", answerWeight = 0),
+                            QuizAnswer(id =  data.newItemId(), answerText = "Blue", answerWeight = 0),
+                            QuizAnswer(id =  data.newItemId(), answerText = "Green", answerWeight = 0)
+                    )
             )
 
-            publishQuiz(courseId = courseId,
-                    quizId = quizId,
-                    teacherToken = teacher.token)
         }
 
         if (submitQuiz) {
-            seedQuizSubmission(
-                    courseId = courseId,
-                    quizId = quizId,
-                    studentToken = student.token
-            )
+            data.addQuizSubmission(quiz, student, state)
         }
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
 

@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -45,6 +46,10 @@ class QuizListPage : BasePage() {
 
     fun clickQuiz(quiz: QuizApiModel) {
         waitForViewWithText(quiz.title).click()
+    }
+
+    fun clickQuiz(quiz: Quiz) {
+        waitForViewWithText(quiz.title!!).click()
     }
 
     fun openSearch() {

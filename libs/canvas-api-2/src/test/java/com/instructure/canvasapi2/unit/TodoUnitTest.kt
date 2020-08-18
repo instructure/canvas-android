@@ -77,7 +77,6 @@ class TodoUnitTest : Assert() {
               "online_upload"
             ],
             "has_submitted_submissions": true,
-            "muted": false,
             "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/5848306",
             "has_overrides": false,
             "published": true,
@@ -119,7 +118,6 @@ class TodoUnitTest : Assert() {
               "media_recording"
             ],
             "has_submitted_submissions": true,
-            "muted": false,
             "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/5375271",
             "has_overrides": false,
             "use_rubric_for_grading": true,
@@ -258,7 +256,6 @@ class TodoUnitTest : Assert() {
               "media_recording"
             ],
             "has_submitted_submissions": false,
-            "muted": false,
             "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/6624879",
             "has_overrides": true,
             "published": true,
@@ -297,7 +294,6 @@ class TodoUnitTest : Assert() {
               "online_quiz"
             ],
             "has_submitted_submissions": true,
-            "muted": false,
             "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/4691021",
             "has_overrides": false,
             "quiz_id": 1642787,
@@ -339,7 +335,6 @@ class TodoUnitTest : Assert() {
               "online_quiz"
             ],
             "has_submitted_submissions": true,
-            "muted": false,
             "html_url": "https://mobiledev.instructure.com/courses/833052/assignments/6881563",
             "has_overrides": false,
             "quiz_id": 2421689,

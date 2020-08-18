@@ -60,7 +60,7 @@ class UpdatableSortedListTest : Assert() {
         sortedList = UpdatableSortedList(
             Item::class.java,
             callback,
-            UpdatableSortedList.ItemCallback<Item> { item -> item.id.toLong() }
+            { item -> item.id.toLong() }
         )
     }
 

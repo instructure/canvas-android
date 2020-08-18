@@ -239,6 +239,7 @@ void main() {
     ApiPrefs.clean();
   });
 
+  /* Hiding the help button until we make mobile login better
   testWidgetsWithAccessibilityChecks('Tapping help button shows help dialog', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));
     await tester.pumpAndSettle();
@@ -249,6 +250,7 @@ void main() {
     expect(find.byType(ErrorReportDialog), findsOneWidget);
     verify(analytics.logEvent(any)).called(1);
   });
+   */
 
   testWidgetsWithAccessibilityChecks('Uses two-finger double-tap to cycle login flows', (tester) async {
     await tester.pumpWidget(TestApp(LoginLandingScreen()));

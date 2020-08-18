@@ -15,112 +15,90 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.SubmissionApiModel
-import com.instructure.dataseeding.model.SubmissionListApiModel
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.espresso.ditto.DittoMode
-import com.instructure.dataseeding.model.FileType
-import com.instructure.dataseeding.model.SubmissionType.ONLINE_UPLOAD
-import com.instructure.teacher.ui.utils.*
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class SpeedGraderFilesPageTest : TeacherTest() {
 
-    // MBL-11593: We set DittoMode to LIVE for all of these tests because they potentially
-    //            involve the downloading of PDF files, which can mess up the Ditto/OkReplay
-    //            yaml logic.
+    // Just good enough to mock the *representation* of a file, not to mock the file itself.
+    val attachment = Attachment(
+            id = 131313,
+            contentType = "text/plain",
+            filename = "sampleFile",
+            displayName = "sampleFile",
+            url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
+    )
 
     @Test
-    @Ditto(mode= DittoMode.LIVE)
     override fun displaysPageObjects() {
-        goToSpeedGraderFilesPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_UPLOAD,
-                                fileType = FileType.TEXT
-                        )
-                )
-        )
+        goToSpeedGraderFilesPage(submissionCount = 1)
         speedGraderFilesPage.assertPageObjects()
     }
 
     @Test
-    @Ditto(mode= DittoMode.LIVE)
     fun displaysEmptyFilesView() {
         goToSpeedGraderFilesPage()
         speedGraderFilesPage.assertDisplaysEmptyView()
     }
 
     @Test
-    @Ditto(mode= DittoMode.LIVE)
     fun displaysFilesList() {
-        val submissions = goToSpeedGraderFilesPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_UPLOAD,
-                                fileType = FileType.TEXT
-                        )
-                )
-        )
-        speedGraderFilesPage.assertHasFiles(submissions.submissionList[0].submissionAttachments!!.toMutableList())
+        val submissions = goToSpeedGraderFilesPage(submissionCount = 1)
+        speedGraderFilesPage.assertHasFiles(mutableListOf(attachment))
     }
 
     @Test
-    @Ditto(mode= DittoMode.LIVE)
     fun displaysSelectedFile() {
-        goToSpeedGraderFilesPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_UPLOAD,
-                                fileType = FileType.TEXT
-                        )
-                )
-        )
+        goToSpeedGraderFilesPage(submissionCount = 1)
         val position = 0
 
         speedGraderFilesPage.selectFile(position)
         speedGraderFilesPage.assertFileSelected(position)
     }
 
-    private fun goToSpeedGraderFilesPage(assignments: Int = 1,
-                                         withDescription: Boolean = false,
-                                         lockAt: String = "",
-                                         unlockAt: String = "",
-                                         submissions: List<SubmissionsApi.SubmissionSeedInfo> = emptyList(),
-                                         submissionComments: List<SubmissionsApi.CommentSeedInfo> = emptyList()): SubmissionListApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val student = data.studentsList[0]
-        val assignments = seedAssignments(
-                assignments = assignments,
-                courseId = course.id,
-                withDescription = withDescription,
-                lockAt = lockAt,
-                unlockAt = unlockAt,
-                submissionTypes = submissions.map { it.submissionType },
-                teacherToken = teacher.token)
+    private fun goToSpeedGraderFilesPage(submissionCount: Int = 0): MockCanvas {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+        val student = data.students[0]
 
-        val submissionList = seedAssignmentSubmission(
-                submissionSeeds = submissions,
-                assignmentId = assignments.assignmentList[0].id,
-                courseId = course.id,
-                studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token,
-                commentSeeds = submissionComments
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
         )
 
-        tokenLogin(teacher)
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD
+        )
+
+        repeat(submissionCount) {
+            val submission = data.addSubmissionForAssignment(
+                    assignmentId = assignment.id,
+                    userId = student.id,
+                    type = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                    attachment = attachment
+            )
+        }
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignments.assignmentList[0])
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
 
         speedGraderPage.selectFilesTab()
-        return submissionList
+        return data
     }
 }

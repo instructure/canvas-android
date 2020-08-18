@@ -91,7 +91,7 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         // Indicator
         indicator.setGone()
-        if (moduleItem.completionRequirement != null && moduleItem.completionRequirement!!.completed) {
+        if (moduleItem.completionRequirement?.completed == true) {
             val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_check_white_24dp, courseColor)
             indicator.setImageDrawable(drawable)
             indicator.setVisible()

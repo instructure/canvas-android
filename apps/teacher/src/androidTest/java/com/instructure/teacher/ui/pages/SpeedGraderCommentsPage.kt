@@ -20,6 +20,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.matchers.WaitForViewMatcher
@@ -44,18 +45,18 @@ class SpeedGraderCommentsPage : BasePage() {
                 .assertHasText(comment)
     }
 
-    fun assertDisplaysCommentAttachment(attachment: AttachmentApiModel) {
-        onViewWithId(R.id.attachmentNameTextView).assertHasText(attachment.displayName)
+    fun assertDisplaysCommentAttachment(attachment: Attachment) {
+        onViewWithId(R.id.attachmentNameTextView).assertHasText(attachment.displayName!!)
     }
 
     fun assertDisplaysSubmission() {
         onViewWithId(R.id.commentSubmissionAttachmentView).assertDisplayed()
     }
 
-    fun assertDisplaysSubmissionFile(attachment: AttachmentApiModel) {
+    fun assertDisplaysSubmissionFile(attachment: Attachment) {
         val parentMatcher = ViewMatchers.withParent(ViewMatchers.withId(R.id.commentSubmissionAttachmentView))
         val match = Espresso.onView(Matchers.allOf(parentMatcher, ViewMatchers.withId(R.id.titleTextView)))
-        match.assertHasText(attachment.displayName)
+        match.assertHasText(attachment.displayName!!)
     }
 
     fun addComment(comment: String) {

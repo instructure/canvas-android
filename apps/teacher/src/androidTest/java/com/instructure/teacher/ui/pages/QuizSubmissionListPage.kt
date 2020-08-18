@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -76,6 +77,10 @@ class QuizSubmissionListPage : BasePage() {
     }
 
     fun clickSubmission(student: CanvasUserApiModel) {
+        waitForViewWithText(student.name).click()
+    }
+
+    fun clickSubmission(student: User) {
         waitForViewWithText(student.name).click()
     }
 

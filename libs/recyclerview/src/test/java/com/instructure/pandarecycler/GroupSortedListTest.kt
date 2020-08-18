@@ -940,7 +940,7 @@ class GroupSortedListTest : Assert() {
     }
 
     private fun setChildrenAboveGroup() {
-        groupList.isChildrenAboveGroupMap = true
+        groupList.isChildrenAboveGroup = true
     }
 
     private fun getItemViewType(position: Int): Int = groupList.getItemViewType(position)

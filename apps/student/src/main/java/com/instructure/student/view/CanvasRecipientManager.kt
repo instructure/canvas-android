@@ -146,8 +146,8 @@ class CanvasRecipientManager private constructor() : RecipientManager {
                         recipient.userCount,
                         recipient.itemCount,
                         true,
-                        if (recipient.commonCourses != null) recipient.commonCourses!!.keys else null,
-                        if (recipient.commonGroups != null) recipient.commonGroups!!.keys else null
+                        recipient.commonCourses?.keys,
+                        recipient.commonGroups?.keys
                     )
                     if (!allRecipients.contains(entry)) {
                         allRecipients.add(entry)
@@ -228,7 +228,7 @@ class CanvasRecipientManager private constructor() : RecipientManager {
             recipient.photoBytes = stream.toByteArray()
             callback?.onPhotoBytesAsynchronouslyPopulated()
         } catch (e: Exception) {
-            callback!!.onPhotoBytesAsyncLoadFailed()
+            callback?.onPhotoBytesAsyncLoadFailed()
         }
     }
 

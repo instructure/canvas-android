@@ -88,6 +88,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         routes.add(Route(courseOrGroup("/:course_id/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id/download"), RouteContext.FILE))
+        routes.add(Route(courseOrGroup("/:course_id/files/:file_id/preview"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:course_id/files/:file_id"), RouteContext.FILE))
         // Tries to get the folder or preview of file. File can be multiple folders deep (files/folder/folder1/folder2/folder3)...
         routes.add(Route(courseOrGroup("/:course_id/files/folder(\\/.*)*"), FileListFragment::class.java))

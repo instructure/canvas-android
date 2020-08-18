@@ -16,23 +16,26 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.SubmissionType.ONLINE_TEXT_ENTRY
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class SpeedGraderGradePageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysGradeDialog() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.openGradeDialog()
@@ -40,7 +43,6 @@ class SpeedGraderGradePageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysNewGrade() {
         if(isLowResDevice()) {
             // We don't want to run accessibility tests on this device, because it's impossible to
@@ -50,34 +52,43 @@ class SpeedGraderGradePageTest : TeacherTest() {
         }
         goToSpeedGraderGradePage()
         speedGraderGradePage.openGradeDialog()
-        val grade = "20"
+        val grade = "19"
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertHasGrade(grade)
     }
 
     @Test
-    @Ditto
     fun hidesRubricWhenMissing() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertRubricHidden()
     }
 
     private fun goToSpeedGraderGradePage() {
-        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
-        val teacher = data.teachersList[0]
-        val student = data.studentsList[0]
-        val course = data.coursesList[0]
-        val assignment = seedAssignments(
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
+        val teacher = data.teachers[0]
+        val student = data.students[0]
+        val course = data.courses.values.first()
+
+        data.addCoursePermissions(
                 course.id,
-                submissionTypes = listOf(ONLINE_TEXT_ENTRY),
-                teacherToken = teacher.token).assignmentList[0]
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
 
-        seedAssignmentSubmission(
-                listOf(
-                        SubmissionsApi.SubmissionSeedInfo(submissionType = ONLINE_TEXT_ENTRY, amount = 1)
-                ), assignment.id, course.id, student.token)
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                pointsPossible = 20,
+                gradingType = "points"
+        )
 
-        tokenLogin(teacher)
+        val submission = data.addSubmissionForAssignment(
+                assignmentId = assignment.id,
+                userId = student.id,
+                type = "online_text_entry"
+        )
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)

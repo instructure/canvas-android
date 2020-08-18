@@ -15,189 +15,181 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SubmissionsApi
-import com.instructure.dataseeding.model.SubmissionApiModel
-import com.instructure.dataseeding.model.SubmissionListApiModel
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.randomString
-import com.instructure.dataseeding.model.FileType.TEXT
-import com.instructure.dataseeding.model.SubmissionType.*
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.espresso.ditto.DittoMode
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class SpeedGraderCommentsPageTest : TeacherTest() {
 
-    // MBL-11593: We set DittoMode to LIVE for all of these tests because they potentially
-    //            involve the downloading of PDF files, which can mess up the Ditto/OkReplay
-    //            yaml logic.
+    // Just good enough to mock the *representation* of a file, not to mock the file itself.
+    val attachment = Attachment(
+            id = 131313,
+            contentType = "text/plain",
+            filename = "sampleFile",
+            displayName = "sampleFile",
+            url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
+    )
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     override fun displaysPageObjects() {
         goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                )
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
 
         speedGraderCommentsPage.assertPageObjects()
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun displaysAuthorName() {
-        val submissions = goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                ),
-                submissionComments = listOf(SubmissionsApi.CommentSeedInfo())
+        val submission = goToSpeedGraderCommentsPage(
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                withComment = true
         )
 
-        val authorName = submissions.submissionList[0].submissionComments[0].authorName
+        val authorName = submission!!.submissionComments[0].authorName!!
         speedGraderCommentsPage.assertDisplaysAuthorName(authorName)
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun displaysCommentText() {
-        val submissions = goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                ),
-                submissionComments = listOf(SubmissionsApi.CommentSeedInfo())
+        val submission = goToSpeedGraderCommentsPage(
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                withComment = true
         )
 
-        val commentText = submissions.submissionList[0].submissionComments[0].comment
+        val commentText = submission!!.submissionComments[0].comment!!
         speedGraderCommentsPage.assertDisplaysCommentText(commentText)
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun displaysCommentAttachment() {
-        val submissions = goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                ),
-                submissionComments = listOf(SubmissionsApi.CommentSeedInfo(fileType = TEXT))
+        val submission = goToSpeedGraderCommentsPage(
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                withComment = true,
+                attachment = attachment
         )
 
-        val attachment = submissions.submissionList[0].submissionComments[0].attachments?.get(0)
-        speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment!!)
+        val attachment = submission!!.submissionComments[0].attachments.get(0)
+        speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment)
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun displaysSubmissionHistory() {
         goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                )
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
 
         speedGraderCommentsPage.assertDisplaysSubmission()
     }
+
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun displaysSubmissionFile() {
-        val submissions = goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_UPLOAD,
-                                fileType = TEXT
-                        )
-                )
+        val submission = goToSpeedGraderCommentsPage(
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD,
+                attachment = attachment
         )
 
-        val fileAttachments = submissions.submissionList[0].submissionAttachments?.get(0)
-        speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments!!)
+        val fileAttachments = submission!!.attachments.get(0)
+        speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments)
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE, sequential = true)
     fun addsNewTextComment() {
         goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 1,
-                                submissionType = ONLINE_TEXT_ENTRY
-                        )
-                )
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
         )
 
-        val newComment = mockableString("new comment") { randomString(32) }
+        val newComment = randomString(32)
         speedGraderCommentsPage.addComment(newComment)
         speedGraderCommentsPage.assertDisplaysCommentText(newComment)
     }
 
     @Test
-    @Ditto(mode=DittoMode.LIVE)
     fun showsNoCommentsMessage() {
         goToSpeedGraderCommentsPage(
-                submissions = listOf(
-                        SubmissionsApi.SubmissionSeedInfo(
-                                amount = 0,
-                                submissionType = ON_PAPER
-                        )
-                )
+                submissionCount = 0,
+                submissionType = Assignment.SubmissionType.ON_PAPER
         )
 
         speedGraderCommentsPage.assertDisplaysEmptyState()
     }
 
+    /**
+     * Common setup routine
+     *
+     * [submissionCount] is the number of submissions for the created assignment.  Typically 0 or 1.
+     * [submissionType] is the submission type for the assignment.
+     * [withComment] if true, include a (student) comment with the submission.
+     * [attachment] if non-null, is either a comment attachment (if withComment is true) or a submission
+     * attachment (if withComment is false).
+     *
+     */
     private fun goToSpeedGraderCommentsPage(
-            assignments: Int = 1,
-            withDescription: Boolean = false,
-            lockAt: String = "",
-            unlockAt: String = "",
-            submissions: List<SubmissionsApi.SubmissionSeedInfo> = emptyList(),
-            submissionComments: List<SubmissionsApi.CommentSeedInfo> = emptyList()): SubmissionListApiModel {
+            submissionCount: Int = 1,
+            submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+            withComment: Boolean = false,
+            attachment: Attachment? = null): Submission? {
 
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val student = data.studentsList[0]
-        val assignments = seedAssignments(
-                assignments = assignments,
-                courseId = course.id,
-                withDescription = withDescription,
-                lockAt = lockAt,
-                unlockAt = unlockAt,
-                submissionTypes = submissions.map { it.submissionType },
-                teacherToken = teacher.token)
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+        val student = data.students[0]
 
-        val submissionList = seedAssignmentSubmission(
-                submissionSeeds = submissions,
-                assignmentId = assignments.assignmentList[0].id,
-                courseId = course.id,
-                studentToken = if (data.studentsList.isEmpty()) "" else data.studentsList[0].token,
-                commentSeeds = submissionComments
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
         )
 
-        tokenLogin(teacher)
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = submissionType
+        )
+
+        var submissionComment : SubmissionComment? = null
+        if(withComment) {
+            submissionComment = SubmissionComment(
+                    id = data.newItemId(),
+                    authorId = student.id,
+                    // Allows Espresso to distinguish between this and the full name, which is elsewhere on the page
+                    authorName = student.shortName,
+                    authorPronouns = student.pronouns,
+                    comment = "a comment",
+                    attachments = if(attachment == null) arrayListOf<Attachment>() else arrayListOf(attachment)
+            )
+        }
+
+        var submission: Submission? = null
+        repeat(submissionCount) {
+            submission = data.addSubmissionForAssignment(
+                    assignmentId = assignment.id,
+                    userId = student.id,
+                    type = submissionType.apiString,
+                    comment = submissionComment,
+                    attachment = if (withComment) null else attachment
+            )
+        }
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        assignmentListPage.clickAssignment(assignments.assignmentList[0])
+        assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
-        return submissionList
+
+        return submission
     }
 }
