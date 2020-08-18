@@ -106,8 +106,6 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
 
   bool get published;
 
-  bool get muted;
-
   @nullable
   @BuiltValueField(wireName: 'group_category_id')
   String get groupCategoryId;
@@ -139,7 +137,6 @@ abstract class Assignment implements Built<Assignment, AssignmentBuilder> {
     ..lockedForUser = false
     ..freeFormCriterionComments = false
     ..published = false
-    ..muted = false
     ..userSubmitted = false
     ..onlyVisibleToOverrides = false
     ..anonymousPeerReviews = false

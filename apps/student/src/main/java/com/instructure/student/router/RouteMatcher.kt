@@ -115,6 +115,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files"), FileListFragment::class.java))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder/:${RouterParams.FOLDER_NAME}"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/download"), RouteContext.FILE)) // trigger webview's download listener
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}/preview"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/:${RouterParams.FILE_ID}"), RouteContext.FILE))
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/files/folder(\\/.*)*/:${RouterParams.FILE_ID}"), RouteContext.FILE))
         routes.add(Route("/files/folder(\\/.*)*/:${RouterParams.FILE_ID}", RouteContext.FILE))
