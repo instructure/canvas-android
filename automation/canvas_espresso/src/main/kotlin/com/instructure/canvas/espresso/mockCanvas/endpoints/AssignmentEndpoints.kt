@@ -129,12 +129,14 @@ object SubmissionSummaryEndpoint : Endpoint( response = {
         val studentCount = data.enrollments.values.filter {e -> e.courseId == courseId && e.isStudent}.size
         val submissionCount = data.submissions[assignment?.id]?.size ?: 0
         val gradedCount = data.submissions[assignment?.id]?.filter {submission -> submission.isGraded}?.size ?: 0
+        val summary = SubmissionSummary(
+                notSubmitted = studentCount - submissionCount,
+                graded = gradedCount,
+                ungraded = submissionCount - gradedCount
+        )
+
         request.successResponse(
-                SubmissionSummary(
-                        notSubmitted = studentCount - submissionCount,
-                        graded = gradedCount,
-                        ungraded = submissionCount - gradedCount
-                )
+                summary
         )
     }
 })
