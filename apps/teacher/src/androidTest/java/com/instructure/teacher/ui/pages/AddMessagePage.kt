@@ -16,13 +16,18 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.dataseeding.model.CourseApiModel
-import com.instructure.espresso.*
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.randomString
+import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
-import com.instructure.canvasapi2.models.User
 
 class AddMessagePage: BasePage() {
 
@@ -53,7 +58,7 @@ class AddMessagePage: BasePage() {
         coursesSpinner.click()
     }
 
-    fun selectCourseFromSpinner(course: CourseApiModel) {
+    fun selectCourseFromSpinner(course: Course) {
         waitForViewWithText(course.name).click()
     }
 

@@ -2,7 +2,7 @@ package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
@@ -17,7 +17,7 @@ class NavDrawerPage: BasePage() {
     private val logout by OnViewWithId(R.id.navigationDrawerItem_logout)
     private val version by OnViewWithId(R.id.navigationDrawerVersion)
 
-    fun assertProfileDetails(teacher: CanvasUserApiModel) {
+    fun assertProfileDetails(teacher: User) {
         userName.check(matches(withText(teacher.shortName)))
     }
 }

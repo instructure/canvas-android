@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -35,8 +36,8 @@ class AnnouncementsListPage : BasePage() {
         waitForViewWithText(discussion.title).click()
     }
 
-    fun assertHasAnnouncement(discussion: DiscussionApiModel) {
-        waitForViewWithText(discussion.title).assertDisplayed()
+    fun assertHasAnnouncement(discussion: DiscussionTopicHeader) {
+        waitForViewWithText(discussion.title!!).assertDisplayed()
     }
 
     fun assertFAB() {

@@ -17,33 +17,33 @@
 
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.clickProfileMenu
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class NavDrawerPageTest: TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToNavDrawerMenu()
         navDrawerPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysNavDrawerDetails() {
         val teacher = getToNavDrawerMenu()
         navDrawerPage.assertProfileDetails(teacher)
     }
 
-    private fun getToNavDrawerMenu(): CanvasUserApiModel {
-        val teacher = seedData(teachers = 1, courses = 1).teachersList[0]
-        tokenLogin(teacher)
+    private fun getToNavDrawerMenu(): User {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.clickProfileMenu()
         return teacher
     }

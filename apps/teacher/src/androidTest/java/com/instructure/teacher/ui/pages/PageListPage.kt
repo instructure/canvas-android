@@ -16,10 +16,15 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
-import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.espresso.*
+import com.instructure.canvasapi2.models.Page
+import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.waitForCheck
 import com.instructure.teacher.R
 
 class PageListPage : BasePage() {
@@ -32,8 +37,8 @@ class PageListPage : BasePage() {
 
     private val toolbar by OnViewWithId(R.id.pageListToolbar)
 
-    fun assertHasPage(page: PageApiModel) {
-        waitForViewWithText(page.title).assertDisplayed()
+    fun assertHasPage(page: Page) {
+        waitForViewWithText(page.title!!).assertDisplayed()
     }
 
     fun openSearch() {
