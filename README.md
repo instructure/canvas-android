@@ -26,11 +26,11 @@ Android Studio > Import Project > canvas-android/apps/build.gradle
 2. Make sure the `main.dart` configuration is selected
 3. Tap 'Run' (`^R`) to run the app
 
-App | Command
---- | ---
-Student | `./gradle/gradlew -p apps :student:assembleDevDebug`
-Teacher | `./gradle/gradlew -p apps :teacher:assembleDevDebug`
-Parent  | `./gradle/gradlew -p apps :parent:assembleDevDebug`
+App | Command | Build Status
+--- | --- | ---
+Student | `./gradle/gradlew -p apps :student:assembleDevDebug` | ![Student build Status](https://app.bitrise.io/app/43a4503585e48423/status.svg?token=bc7_jMRgJ9zqs1bsppHW6A&branch=master)
+Teacher | `./gradle/gradlew -p apps :teacher:assembleDevDebug` | ![Teacher build Status](https://app.bitrise.io/app/758ed6bba9746be5/status.svg?token=RviCENyAVhQcrb8kI4C7-w&branch=master)
+Parent  | (in apps/flutter_parent) `flutter pub get; flutter build apk` | 
 
 ## Running tests
 
