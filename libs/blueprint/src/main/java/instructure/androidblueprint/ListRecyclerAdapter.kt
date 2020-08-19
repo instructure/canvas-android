@@ -31,7 +31,7 @@ import java.lang.ref.WeakReference
 @Suppress("LeakingThis")
 abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW : ListManager<MODEL>>(
     context: Context,
-    protected open val presenter: ListPresenter<MODEL, VIEW>
+    val presenter: ListPresenter<MODEL, VIEW>
 ) : RecyclerView.Adapter<HOLDER>() {
 
     private val contextReference: WeakReference<Context>?
@@ -73,11 +73,11 @@ abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW
 
     override fun onBindViewHolder(baseHolder: HOLDER, position: Int) {
         if (position < list.size()) {
-            bindHolder(list[position], baseHolder, baseHolder!!.adapterPosition)
+            bindHolder(list[position], baseHolder, baseHolder.adapterPosition)
         }
     }
 
-    fun size(): Int = presenter.data?.size() ?: 0
+    fun size(): Int = presenter.data.size()
 
     override fun getItemCount(): Int = size()
 
@@ -124,7 +124,7 @@ abstract class ListRecyclerAdapter<MODEL, HOLDER : RecyclerView.ViewHolder, VIEW
 
     // endregion
     val list: UpdatableSortedList<MODEL>
-        get() = presenter.data!!
+        get() = presenter.data
 
     protected val context: Context?
         get() = contextReference?.get()
