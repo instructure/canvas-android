@@ -16,35 +16,35 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.randomString
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedData
-import com.instructure.teacher.ui.utils.seedQuizzes
 import com.instructure.teacher.ui.utils.tokenLogin
-import com.instructure.espresso.ditto.Ditto
 import org.junit.Test
 
 class EditQuizDetailsPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.assertPageObjects()
     }
 
     @Test
-    @Ditto(sequential = true)
     fun editQuizTitle() {
         getToEditQuizDetailsPage()
-        val newName = mockableString("quiz title") { randomString() }
+        val newName = randomString()
         editQuizDetailsPage.editQuizTitle(newName)
         quizDetailsPage.assertQuizTitleChanged(newName)
     }
 
     @Test
-    @Ditto
     fun editAccessCode() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickAccessCode()
@@ -53,7 +53,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editDueDate() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditDueDate()
@@ -62,7 +61,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editDueTime() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditDueTime()
@@ -71,7 +69,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editUnlockDate() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditUnlockDate()
@@ -80,7 +77,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editUnlockTime() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditUnlockTime()
@@ -89,7 +85,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editLockDate() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditLockDate()
@@ -98,7 +93,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun editLockTime() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditLockTime()
@@ -107,7 +101,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun addOverride() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickAddOverride()
@@ -116,7 +109,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun removeOverride() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickAddOverride()
@@ -127,7 +119,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun dueDateBeforeUnlockDateError() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditDueDate()
@@ -139,7 +130,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun dueDateAfterLockDateError() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditDueDate()
@@ -151,7 +141,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun unlockDateAfterLockDateError() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickEditUnlockDate()
@@ -163,7 +152,6 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun noAssigneesError() {
         getToEditQuizDetailsPage()
         editQuizDetailsPage.clickAddOverride()
@@ -174,16 +162,23 @@ class EditQuizDetailsPageTest : TeacherTest() {
     }
 
     private fun getToEditQuizDetailsPage() {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val quiz = seedQuizzes(
-                courseId = course.id,
-                quizzes = 1,
-                withDescription = false,
-                teacherToken = teacher.token).quizList[0]
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
 
-        tokenLogin(teacher)
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val quiz = data.addQuizToCourse(
+                course = course,
+                quizType = Quiz.TYPE_ASSIGNMENT,
+                description = ""
+        )
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
 
         coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()

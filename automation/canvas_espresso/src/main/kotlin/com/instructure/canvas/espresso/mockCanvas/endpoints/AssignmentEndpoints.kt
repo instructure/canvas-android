@@ -79,25 +79,20 @@ object AssignmentEndpoint : Endpoint(
                 val jsonObject = JSONObject(stringOutput)
 
                 // Then extract the modified assignment object from the json object
-                val assignmentObject = jsonObject.getJSONObject("assignment")
+                val assignmentObject = jsonObject.getJSONObject("assignment")!!
 
-                // Now see if we have either a name or points_possible object to apply to a modified assignment
+                // Right now, we are only cognizant of changes to the name and points_possible fields,
+                // because that's all that is required.  In the future, we might need to be cognizant of
+                // additional fields.
                 // TODO: Support additional fields being changed?
-                val newName = assignmentObject?.getString("name")
-                val newPoints = assignmentObject?.getDouble("points_possible")
-                if(newName != null || newPoints != null) {
-                    val name = newName ?: assignment.name
-                    val points = newPoints ?: assignment.pointsPossible
-                    val modifiedAssignment = assignment.copy(
-                            name = name,
-                            pointsPossible = points
-                    )
-                    data.assignments.put(pathVars.assignmentId, modifiedAssignment)
-                }
-
-                // May or may not have been modified
-                val finalAssignment = data.assignments[pathVars.assignmentId]
-                request.successResponse(finalAssignment!!)
+                val newName = assignmentObject.optString("name", null) ?: assignment.name
+                val newPoints = if(assignmentObject.has("points_possible")) assignmentObject.getDouble("points_possible") else assignment.pointsPossible
+                val modifiedAssignment = assignment.copy(
+                        name = newName,
+                        pointsPossible = newPoints
+                )
+                data.assignments.put(pathVars.assignmentId, modifiedAssignment)
+                request.successResponse(modifiedAssignment)
             }
             else {
                 request.unauthorizedResponse()
