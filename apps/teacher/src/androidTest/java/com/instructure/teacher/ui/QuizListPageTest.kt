@@ -16,69 +16,74 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.ditto.Ditto
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedData
-import com.instructure.teacher.ui.utils.seedQuizzes
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class QuizListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToQuizzesPage()
         quizListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysNoQuizzesView() {
         getToQuizzesPage(quizCount = 0)
         quizListPage.assertDisplaysNoQuizzesView()
     }
 
     @Test
-    @Ditto
     fun displaysQuiz() {
         val quizzes = getToQuizzesPage()
         quizListPage.assertHasQuiz(quizzes[0])
     }
 
     @Test
-    @Ditto
     fun searchesQuizzes() {
         val quizzes = getToQuizzesPage(quizCount = 3)
         val searchQuiz = quizzes[2]
         quizListPage.assertQuizCount(quizzes.size + 1) // +1 to account for header
         quizListPage.openSearch()
-        quizListPage.enterSearchQuery(searchQuiz.title.take(searchQuiz.title.length / 2))
+        quizListPage.enterSearchQuery(searchQuiz.title!!.take(searchQuiz.title!!.length / 2))
         quizListPage.assertQuizCount(2) // header + single search result
         quizListPage.assertHasQuiz(searchQuiz)
     }
 
-    private fun getToQuizzesPage(quizCount: Int = 1): List<QuizApiModel> {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = 1)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val quizzes = mutableListOf<QuizApiModel>()
+    private fun getToQuizzesPage(quizCount: Int = 1): List<Quiz> {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+        val quizzes = mutableListOf<Quiz>()
 
-        if (quizCount > 0) {
-            quizzes += seedQuizzes(
-                courseId = course.id,
-                quizzes = quizCount,
-                withDescription = false,
-                lockAt = 1.days.ago.iso8601,
-                unlockAt = 2.days.ago.iso8601,
-                teacherToken = teacher.token).quizList
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        repeat(quizCount) {
+            val quiz = data.addQuizToCourse(
+                    course = course,
+                    quizType = Quiz.TYPE_ASSIGNMENT,
+                    lockAt = 1.days.ago.iso8601,
+                    unlockAt = 2.days.ago.iso8601
+            )
+
+            quizzes += quiz
         }
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
 

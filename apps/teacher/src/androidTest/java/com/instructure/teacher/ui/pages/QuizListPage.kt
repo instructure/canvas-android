@@ -40,8 +40,8 @@ class QuizListPage : BasePage() {
         emptyPandaView.assertDisplayed()
     }
 
-    fun assertHasQuiz(quiz: QuizApiModel) {
-        waitForViewWithText(quiz.title).assertDisplayed()
+    fun assertHasQuiz(quiz: Quiz) {
+        waitForViewWithText(quiz.title!!).assertDisplayed()
     }
 
     fun clickQuiz(quiz: QuizApiModel) {

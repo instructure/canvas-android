@@ -52,6 +52,8 @@ import com.instructure.canvasapi2.models.QuizSubmissionResponse
 import com.instructure.canvasapi2.models.QuizSubmissionTime
 import com.instructure.canvasapi2.utils.globalName
 import com.instructure.canvasapi2.utils.toApiString
+import okio.Buffer
+import org.json.JSONObject
 import java.util.*
 
 /**
@@ -515,6 +517,46 @@ object CourseQuizListEndpoint : Endpoint(
                         val quiz = data.courseQuizzes[pathVars.courseId]?.find {it.id == pathVars.quizId }
                         if(quiz != null) {
                             request.successResponse(quiz)
+                        }
+                        else {
+                            request.unauthorizedResponse()
+                        }
+                    }
+
+                    PUT {
+                        // Edit a quiz
+                        val courseId = pathVars.courseId
+                        val quizId = pathVars.quizId
+                        val courseQuizList = data.courseQuizzes[courseId]
+                        val quiz = courseQuizList?.firstOrNull { q -> q.id == quizId }
+
+                        if(quiz != null) {
+                            // Grab the QuizPostBodyWrapper in JSON format
+                            val buffer = Buffer()
+                            request.body()?.writeTo(buffer)
+                            val stringOutput = buffer.readUtf8()
+                            val jsonObject = JSONObject(stringOutput)
+
+                            // Then extract the QuizPostBody object from the json object
+                            val quizPostBody = jsonObject.getJSONObject("quiz")
+
+                            // Make a new quiz object based on the requested changes
+                            // Right now, we are only cognizant of changes to the "title" and "access_code"
+                            // fields, because that's all it takes to get our tests to work.  In the future,
+                            // we may need to recognize / handle additional fields.
+                            val newTitle = quizPostBody.optString("title", null) ?: quiz.title
+                            val newAccessCode = quizPostBody.optString("access_code", null) ?: quiz.accessCode
+                            val newQuiz = quiz.copy(
+                                    title = newTitle,
+                                    accessCode = newAccessCode
+                            )
+
+                            // Now substitute the new quiz for the original quiz
+                            courseQuizList.remove(quiz)
+                            courseQuizList.add(newQuiz)
+
+                            // And return the new quiz
+                            request.successResponse(newQuiz)
                         }
                         else {
                             request.unauthorizedResponse()

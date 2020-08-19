@@ -16,26 +16,32 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.api.SeedApi
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.*
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class QuizSubmissionListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         goToQuizSubmissionListPage()
         quizSubmissionListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun displaysNoSubmissionsView() {
         goToQuizSubmissionListPage(
                 students = 0,
@@ -45,7 +51,6 @@ class QuizSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun filterLateSubmissions() {
         goToQuizSubmissionListPage(
                 dueAt = 7.days.ago.iso8601
@@ -60,7 +65,6 @@ class QuizSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun filterPendingReviewSubmissions() {
         goToQuizSubmissionListPage(addQuestion = true)
         quizSubmissionListPage.clickFilterButton()
@@ -73,14 +77,12 @@ class QuizSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysQuizStatusComplete() {
         goToQuizSubmissionListPage(complete = true)
         quizSubmissionListPage.assertSubmissionStatusSubmitted()
     }
 
     @Test
-    @Ditto
     fun displaysQuizStatusMissing() {
         goToQuizSubmissionListPage(
                 students = 1,
@@ -91,10 +93,9 @@ class QuizSubmissionListPageTest : TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun messageStudentsWho() {
         val data = goToQuizSubmissionListPage()
-        val student = data.studentsList[0]
+        val student = data.students[0]
         quizSubmissionListPage.clickAddMessage()
         addMessagePage.assertPageObjects()
         addMessagePage.assertHasStudentRecipient(student)
@@ -103,38 +104,51 @@ class QuizSubmissionListPageTest : TeacherTest() {
     private fun goToQuizSubmissionListPage(
             students: Int = 1,
             submissions: Int = 1,
-            dueAt: String = "",
+            dueAt: String? = null,
             complete: Boolean = true,
-            addQuestion: Boolean = false): SeedApi.SeededDataApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
-        val course = data.coursesList[0]
-        val teacher = data.teachersList[0]
-        val quiz = seedQuizzes(
-                courseId = course.id,
-                quizzes = 1,
+            addQuestion: Boolean = false): MockCanvas {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = students, courseCount = 1, favoriteCourseCount = 1)
+        val course = data.courses.values.first()
+        val teacher = data.teachers[0]
+
+        if(submissions > 0 && students < 1) {
+            throw Exception("Need at least one student in order to have a submission")
+        }
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val quiz = data.addQuizToCourse(
+                course = course,
                 dueAt = dueAt,
-                published = !addQuestion,
-                teacherToken = teacher.token).quizList[0]
+                quizType = Quiz.TYPE_ASSIGNMENT,
+                published = true
+        )
 
         if (addQuestion) {
-            seedQuizQuestion(
-                    courseId = course.id,
+            data.addQuestionToQuiz(
+                    course = course,
                     quizId = quiz.id,
-                    teacherToken = teacher.token
-            )
-
-            publishQuiz(
-                    courseId = course.id,
-                    quizId = quiz.id,
-                    teacherToken = teacher.token
+                    questionName = "Here's a question",
+                    questionText = "Who's the best college football coach ever?",
+                    answers = arrayOf(
+                            QuizAnswer(id = data.newItemId(), answerText = "Bear Bryant", answerWeight = 1),
+                            QuizAnswer(id = data.newItemId(), answerText = "Nick Saban", answerWeight = 0),
+                            QuizAnswer(id = data.newItemId(), answerText = "Urban Meyer", answerWeight = 0),
+                            QuizAnswer(id = data.newItemId(), answerText = "Jimmy Johnson", answerWeight = 0)
+                    )
             )
         }
 
         for (s in 0 until submissions) {
-            seedQuizSubmission(course.id, quiz.id, data.studentsList[s].token, complete)
+            val student = data.students[0]
+            data.addQuizSubmission(quiz = quiz, user = student, state = if(complete) "complete" else "untaken")
         }
 
-        tokenLogin(teacher)
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openQuizzesTab()
         quizListPage.clickQuiz(quiz)

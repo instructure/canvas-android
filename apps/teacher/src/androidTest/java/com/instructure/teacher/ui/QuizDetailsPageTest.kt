@@ -15,23 +15,26 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.QuizApiModel
+import android.os.SystemClock.sleep
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
+import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.TestRail
-import com.instructure.espresso.ditto.Ditto
-import com.instructure.teacher.ui.utils.*
-import okreplay.DittoResponseMod
-import okreplay.JsonObjectResponseMod
-import okreplay.JsonObjectValueMod
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class QuizDetailsPageTest: TeacherTest() {
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     override fun displaysPageObjects() {
         getToQuizDetailsPage()
@@ -39,7 +42,6 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     fun displaysCorrectDetails() {
         val quiz = getToQuizDetailsPage()
@@ -47,7 +49,6 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3109579")
     fun displaysInstructions() {
         getToQuizDetailsPage(withDescription = true)
@@ -55,7 +56,6 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134480")
     fun displaysNoInstructionsMessage() {
         getToQuizDetailsPage()
@@ -63,7 +63,6 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134481")
     fun displaysClosedAvailability() {
         getToQuizDetailsPage(lockAt = 1.days.ago.iso8601)
@@ -71,18 +70,14 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134482")
     fun displaysNoFromDate() {
         val lockAt = 2.days.fromNow.iso8601
-        addDittoMod(getQuizLockDateMod(lockAt))
-        addDittoMod(getAssignmentLockDateMod(lockAt))
         getToQuizDetailsPage(lockAt = lockAt)
         quizDetailsPage.assertToFilledAndFromEmpty()
     }
 
     @Test
-    @Ditto
     @TestRail(ID = "C3134483")
     fun displaysNoToDate() {
         getToQuizDetailsPage(unlockAt = 2.days.ago.iso8601)
@@ -90,14 +85,12 @@ class QuizDetailsPageTest: TeacherTest() {
     }
 
     @Test
-    @Ditto
     fun displaysSubmittedDonut() {
         getToQuizDetailsPage(students = 1, submissions = 1)
         quizDetailsPage.assertHasSubmitted()
     }
 
     @Test
-    @Ditto
     fun displaysNotSubmittedDonut() {
         getToQuizDetailsPage(students = 1, submissions = 0)
         quizDetailsPage.assertNotSubmitted()
@@ -105,45 +98,48 @@ class QuizDetailsPageTest: TeacherTest() {
 
     private fun getToQuizDetailsPage(
             withDescription: Boolean = false,
-            lockAt: String = "",
-            unlockAt: String = "",
+            lockAt: String? = null,
+            unlockAt: String? = null,
             students: Int = 0,
-            submissions: Int = 0): QuizApiModel {
-        val data = seedData(teachers = 1, favoriteCourses = 1, students = students)
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-        val quiz = seedQuizzes(
-                courseId = course.id,
-                quizzes = 1,
-                withDescription = withDescription,
-                lockAt = lockAt,
-                unlockAt = unlockAt,
-                teacherToken = teacher.token).quizList[0]
+            submissions: Int = 0): Quiz {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = students, courseCount = 1, favoriteCourseCount = 1)
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
 
-        for (s in 0 until submissions) {
-            seedQuizSubmission(course.id, quiz.id, data.studentsList[s].token, true)
+        if(submissions > 0 && students < 1) {
+            throw Exception("Need at least one student for a submission")
         }
 
-        tokenLogin(teacher)
-        routeTo("courses/${course.id}/quizzes/${quiz.id}")
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val quiz = data.addQuizToCourse(
+                course = course,
+                quizType = Quiz.TYPE_ASSIGNMENT,
+                lockAt = lockAt,
+                unlockAt = unlockAt,
+                description = if(withDescription) "Here's a description!" else ""
+        )
+
+        for (s in 0 until submissions) {
+            data.addQuizSubmission(
+                    quiz = quiz,
+                    user = data.students[0],
+                    state = "complete",
+                    grade = "4" // in the context of this test, "submitted" = "graded"
+
+            )
+        }
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+        coursesListPage.openCourse(course)
+        courseBrowserPage.openQuizzesTab()
+        quizListPage.clickQuiz(quiz)
         quizDetailsPage.waitForRender()
         return quiz
-    }
-
-    private fun getQuizLockDateMod(dateString: String): DittoResponseMod {
-        return JsonObjectResponseMod(
-            Regex("""(.*)/api/v1/courses/\d+/quizzes/\d+"""),
-            JsonObjectValueMod("lock_at", dateString),
-            JsonObjectValueMod("all_dates[0]:lock_at", dateString)
-        )
-    }
-
-    private fun getAssignmentLockDateMod(dateString: String): DittoResponseMod {
-        return JsonObjectResponseMod(
-            Regex("""(.*)/api/v1/courses/\d+/assignments/\d+\?(.*)"""),
-            JsonObjectValueMod("lock_at", dateString),
-            JsonObjectValueMod("all_dates[0]:lock_at", dateString)
-        )
     }
 
 }

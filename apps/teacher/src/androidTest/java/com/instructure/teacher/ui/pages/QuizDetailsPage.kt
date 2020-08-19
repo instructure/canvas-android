@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
@@ -71,8 +72,8 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
         viewAllSubmissions.click()
     }
 
-    fun assertQuizDetails(quiz: QuizApiModel) {
-        quizTitleTextView.assertHasText(quiz.title)
+    fun assertQuizDetails(quiz: Quiz) {
+        quizTitleTextView.assertHasText(quiz.title!!)
         if (quiz.published) {
             publishStatusTextView.assertHasText(R.string.published)
         } else {
