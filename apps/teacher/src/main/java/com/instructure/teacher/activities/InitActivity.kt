@@ -73,7 +73,6 @@ import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.utils.AppType
 import com.instructure.teacher.viewinterface.InitActivityView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.activity_init.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
 import kotlinx.coroutines.Job

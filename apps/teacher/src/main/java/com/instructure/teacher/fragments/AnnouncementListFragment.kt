@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.fragments
 
-import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 
 class AnnouncementListFragment : DiscussionsListFragment() {

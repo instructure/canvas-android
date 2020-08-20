@@ -44,7 +44,6 @@ import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.StudentContextView
-import instructure.androidblueprint.PresenterFactory
 import instructure.androidblueprint.PresenterFragment
 import kotlinx.android.synthetic.main.fragment_student_context.*
 import org.greenrobot.eventbus.EventBus

@@ -48,7 +48,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHolder, ToDoAdapter>(), ToDoView {
-    private lateinit var mRecyclerView: RecyclerView
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_todo
@@ -56,13 +55,13 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     override val recyclerView: RecyclerView get() = toDoRecyclerView
     override fun checkIfEmpty() {
         emptyPandaView.setMessageText(R.string.noTodosSubtext)
-        RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
     override fun getPresenterFactory() = ToDoPresenterFactory()
     override fun onCreateView(view: View) {}
 
     override fun onPresenterPrepared(presenter: ToDoPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.toDoRecyclerView, R.id.emptyPandaView, getString(R.string.noTodos))
         emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_sleeping))
         emptyPandaView.setMessageText(R.string.noTodosSubtext)

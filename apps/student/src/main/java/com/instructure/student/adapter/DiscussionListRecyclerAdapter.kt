@@ -242,7 +242,7 @@ open class DiscussionListRecyclerAdapter(
                     }
 
             override fun areContentsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean = item1.title == item2.title && item1.status == item2.status
-            override fun areItemsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean = item1?.id == item2?.id
+            override fun areItemsTheSame(item1: DiscussionTopicHeader, item2: DiscussionTopicHeader): Boolean = item1.id == item2.id
             override fun getUniqueItemId(discussionTopicHeader: DiscussionTopicHeader): Long = discussionTopicHeader.id
             override fun getChildType(group: String, item: DiscussionTopicHeader): Int = Types.TYPE_ITEM
         }
