@@ -669,16 +669,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
         @JvmStatic private val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         @JvmStatic private val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"
 
-        @JvmStatic
         fun newInstance(args: Bundle) = CreateDiscussionFragment().withArgs(args)
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)
                 }
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)
@@ -686,7 +683,6 @@ class CreateDiscussionFragment : BasePresenterFragment<
                 }
 
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader, shouldScrollToDates: Boolean): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)

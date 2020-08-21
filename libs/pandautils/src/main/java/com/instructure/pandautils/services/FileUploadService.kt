@@ -329,7 +329,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
         private const val DISCUSSION_ATTACHMENT_PATH = "discussion attachments"
         const val ACTION_CANCEL_UPLOAD = "ACTION_CANCEL_UPLOAD"
 
-        @JvmStatic
         fun shutDown(context: Context) {
             // We won't want to cancel the notification if it's shared with another service, so only cancel our NOTIFICATION_ID
             try {
@@ -361,7 +360,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             notificationManager.createNotificationChannel(channel)
         }
 
-        @JvmStatic
         fun getUserFilesBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 parentFolderId: Long?
@@ -370,7 +368,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             parentFolderId?.let { putLong(Const.PARENT_FOLDER_ID, it) }
         }
 
-        @JvmStatic
         fun getQuizFileBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 parentFolderId: Long?,
@@ -387,7 +384,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             parentFolderId?.let { putLong(Const.PARENT_FOLDER_ID, it) }
         }
 
-        @JvmStatic
         fun getCourseFilesBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 courseId: Long,
@@ -398,7 +394,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             parentFolderId?.let { putLong(Const.PARENT_FOLDER_ID, it) }
         }
 
-        @JvmStatic
         fun getAssignmentSubmissionBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 courseId: Long,
@@ -413,7 +408,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             additionalAttachmentIds?.let { putLongArray(Const.ATTACHMENTS, it.toLongArray()) }
         }
 
-        @JvmStatic
         fun getMessageBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 messageText: String,
@@ -424,7 +418,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             putString(Const.MESSAGE, messageText)
         }
 
-        @JvmStatic
         fun getNewMessageBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 userIds: ArrayList<String>,
@@ -441,7 +434,6 @@ class FileUploadService @JvmOverloads constructor(name: String = FileUploadServi
             putString(Const.CONTEXT_ID, contextId)
         }
 
-        @JvmStatic
         fun getSubmissionCommentBundle(
                 fileSubmitObjects: ArrayList<FileSubmitObject>,
                 courseId: Long,

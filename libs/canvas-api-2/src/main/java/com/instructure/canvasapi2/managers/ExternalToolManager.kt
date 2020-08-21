@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object ExternalToolManager {
 
-    @JvmStatic
     fun getExternalToolsForCanvasContext(
         canvasContext: CanvasContext,
         callback: StatusCallback<List<LTITool>>,

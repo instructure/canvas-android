@@ -429,19 +429,16 @@ class CreateOrEditAnnouncementFragment :
     override fun insertImageIntoRCE(text: String, alt: String) = announcementRCEView.insertImage(text, alt)
 
     companion object {
-        @JvmStatic
         fun newInstance(bundle: Bundle) =
                 CreateOrEditAnnouncementFragment().apply {
                     arguments = bundle
                 }
 
-        @JvmStatic
         fun newInstanceCreate(canvasContext: CanvasContext) =
                 CreateOrEditAnnouncementFragment().apply {
                     mCanvasContext = canvasContext
                 }
 
-        @JvmStatic
         fun newInstanceEdit(canvasContext: CanvasContext, editAnnouncement: DiscussionTopicHeader) =
                 CreateOrEditAnnouncementFragment().apply {
                     mCanvasContext = canvasContext

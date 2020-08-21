@@ -25,14 +25,12 @@ import com.instructure.canvasapi2.models.UnreadCount
 
 object UnreadCountManager {
 
-    @JvmStatic
     fun getUnreadConversationCount(callback: StatusCallback<UnreadConversationCount>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UnreadCountAPI.getUnreadConversationCount(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUnreadAlertCount(studentId: Long, callback: StatusCallback<UnreadCount>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

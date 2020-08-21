@@ -47,7 +47,6 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
     companion object {
         const val URL = "url"
 
-        @JvmStatic
         fun newInstance(url: String) = SimpleWebViewFragment().apply {
             this.url = url
         }

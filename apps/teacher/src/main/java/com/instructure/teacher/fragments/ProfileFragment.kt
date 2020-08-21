@@ -105,7 +105,6 @@ class ProfileFragment : BaseFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(bundle: Bundle) = ProfileFragment().apply {
             arguments = bundle
         }

@@ -39,7 +39,6 @@ class TimePickerDialogFragment : AppCompatDialogFragment(), TimePickerDialog.OnT
     private fun TimePickerDialog() { }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, defaultDate: Date? = null, callback: (Int, Int) -> Unit) : TimePickerDialogFragment {
             manager.dismissExisting<TimePickerDialogFragment>()
             val dialog = TimePickerDialogFragment()

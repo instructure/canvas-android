@@ -32,7 +32,6 @@ import java.util.*
 
 object GroupManager {
 
-    @JvmStatic
     fun getFavoriteGroups(callback: StatusCallback<List<Group>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
@@ -45,7 +44,6 @@ object GroupManager {
         GroupAPI.getFavoriteGroups(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getAllGroups(callback: StatusCallback<List<Group>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
@@ -58,21 +56,18 @@ object GroupManager {
         GroupAPI.getFirstPageGroups(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getDetailedGroup(groupId: Long, callback: StatusCallback<Group>, forceNetwork: Boolean) {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
         GroupAPI.getDetailedGroup(adapter, callback, params, groupId)
     }
 
-    @JvmStatic
     fun addGroupToFavorites(groupId: Long, callback: StatusCallback<Favorite>) {
         val params = RestParams()
         val adapter = RestBuilder(callback)
         GroupAPI.addGroupToFavorites(adapter, callback, params, groupId)
     }
 
-    @JvmStatic
     fun removeGroupFromFavorites(groupId: Long, callback: StatusCallback<Favorite>) {
         val params = RestParams()
         val adapter = RestBuilder(callback)
@@ -86,7 +81,6 @@ object GroupManager {
      * @throws IOException
      */
     @Throws(IOException::class)
-    @JvmStatic
     fun getGroupsSynchronous(forceNetwork: Boolean): List<Group> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -106,7 +100,6 @@ object GroupManager {
     private fun <T> nextUrl(response: Response<T>): String? =
         APIHelper.parseLinkHeaderResponse(response.headers()).nextUrl
 
-    @JvmStatic
     fun getAllGroupsForCourse(courseId: Long, callback: StatusCallback<List<Group>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
@@ -120,7 +113,6 @@ object GroupManager {
     }
 
     @Throws(IOException::class)
-    @JvmStatic
     fun getFavoriteGroupsSynchronous(forceNetwork: Boolean): List<Group> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -129,7 +121,6 @@ object GroupManager {
         else arrayListOf()
     }
 
-    @JvmStatic
     fun createGroupMap(groups: List<Group>): Map<Long, Group> = groups.associateBy { it.id }
 
     fun getPermissionsAsync(

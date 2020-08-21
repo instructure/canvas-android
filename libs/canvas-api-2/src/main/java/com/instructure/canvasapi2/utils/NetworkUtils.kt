@@ -29,10 +29,8 @@ object NetworkUtils {
             return connectivityManager.activeNetworkInfo
         }
 
-    @JvmStatic
     val isNetworkAvailable: Boolean get() = activeNetworkInfo?.isConnected ?: false
 
-    @JvmStatic
     val isUsingMobileData: Boolean
         get() = when (activeNetworkInfo?.type) {
             ConnectivityManager.TYPE_MOBILE,

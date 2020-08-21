@@ -45,7 +45,6 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
     private var mSubmission: Submission? by NullableParcelableArg(default = Submission())
 
     companion object {
-        @JvmStatic
         fun newInstance(submission: Submission?) = SpeedGraderFilesFragment().apply {
             mSubmission = submission
         }

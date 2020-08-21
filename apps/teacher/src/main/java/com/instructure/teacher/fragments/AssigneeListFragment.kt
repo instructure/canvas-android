@@ -152,7 +152,6 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         @JvmStatic val STUDENTS = "students"
 
         @Suppress("UNCHECKED_CAST")
-        @JvmStatic
         fun newInstance(args: Bundle) = AssigneeListFragment().apply {
             this.mDateGroups = args.getParcelableArrayList(DATE_GROUPS)
             this.mTargetIdx = args.getInt(TARGET_INDEX)
@@ -161,7 +160,6 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
             this.students = args.getParcelableArrayList(STUDENTS)
         }
 
-        @JvmStatic
         fun makeBundle(dateGroups: EditDateGroups, targetIdx: Int, sections: List<Section>, groups: List<Group>, students: List<User>): Bundle {
             val args = Bundle()
             args.putSerializable(AssigneeListFragment.DATE_GROUPS, ArrayList(dateGroups))

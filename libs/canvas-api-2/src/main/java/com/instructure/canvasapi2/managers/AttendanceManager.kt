@@ -25,7 +25,6 @@ import java.util.*
 
 object AttendanceManager {
 
-    @JvmStatic
     fun getAttendance(
         sectionId: Long,
         date: Calendar,
@@ -49,7 +48,6 @@ object AttendanceManager {
         AttendanceAPI.getAttendance(sectionId, date, token, cookie, adapter, callback, params)
     }
 
-    @JvmStatic
     fun markAttendance(
         attendance: Attendance,
         token: String,

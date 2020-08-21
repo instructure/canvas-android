@@ -26,7 +26,6 @@ import com.instructure.teacher.R
 
 
 object MediaDownloader {
-    @JvmStatic
     fun download(context: Context, url: String?, filenameForDownload: String, downloadDescription: String) {
         // Ensure the URL is valid
         if (url == null || url.isBlank()) {

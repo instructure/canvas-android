@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.CanvasTheme
 
 object ThemeManager {
 
-    @JvmStatic
     fun getTheme(callback: StatusCallback<CanvasTheme>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork, isForceReadFromCache = !forceNetwork)

@@ -25,14 +25,12 @@ import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 
 object RecipientManager {
 
-    @JvmStatic
     fun searchRecipients(searchQuery: String?, context: String, callback: StatusCallback<List<Recipient>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true)
         RecipientAPI.getRecipients(searchQuery, context, callback, adapter, params)
     }
 
-    @JvmStatic
     fun searchAllRecipients(
         forceNetwork: Boolean,
         searchQuery: String?,
@@ -57,7 +55,6 @@ object RecipientManager {
      * @param context
      * @param callback
      */
-    @JvmStatic
     fun searchAllRecipientsNoSyntheticContexts(
         forceNetwork: Boolean,
         searchQuery: String?,

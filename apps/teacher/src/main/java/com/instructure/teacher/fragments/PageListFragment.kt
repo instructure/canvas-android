@@ -201,7 +201,6 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
     companion object {
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = PageListFragment().apply {
             mCanvasContext = canvasContext
         }

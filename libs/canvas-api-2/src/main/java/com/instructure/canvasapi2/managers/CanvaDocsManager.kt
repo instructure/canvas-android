@@ -27,14 +27,12 @@ import okhttp3.ResponseBody
 
 object CanvaDocsManager {
 
-    @JvmStatic
     fun getCanvaDoc(previewUrl: String, callback: StatusCallback<DocSession>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(domain = ApiPrefs.fullDomain, apiVersion = "")
         CanvaDocsAPI.getCanvaDoc(previewUrl, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getAnnotations(
         sessionId: String,
         canvaDocDomain: String,
@@ -45,7 +43,6 @@ object CanvaDocsManager {
         CanvaDocsAPI.getAnnotations(sessionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun putAnnotation(
         sessionId: String,
         annotationId: String,
@@ -58,7 +55,6 @@ object CanvaDocsManager {
         CanvaDocsAPI.putAnnotation(sessionId, annotationId, annotation, adapter, params, callback)
     }
 
-    @JvmStatic
     fun deleteAnnotation(
         sessionId: String,
         annotationId: String,

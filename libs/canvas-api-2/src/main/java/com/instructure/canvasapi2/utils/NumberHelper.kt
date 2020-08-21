@@ -35,17 +35,14 @@ object NumberHelper {
      * @return The formatted String
      */
     @JvmOverloads
-    @JvmStatic
     fun doubleToPercentage(number: Double?, maxFractionDigits: Int = 2): String {
         val f = NumberFormat.getPercentInstance(Locale.getDefault())
         f.maximumFractionDigits = maxFractionDigits
         return f.format(number!! / 100)
     }
 
-    @JvmStatic
     fun formatInt(number: Int?): String = NumberFormat.getIntegerInstance().format(number) ?: ""
 
-    @JvmStatic
     fun formatInt(number: Long?): String = NumberFormat.getIntegerInstance().format(number) ?: ""
 
     /**
@@ -55,7 +52,6 @@ object NumberHelper {
      * @param trimZero Whether to include decimal places if everything after the decimal would be zero.
      * @return The formatted string
      */
-    @JvmStatic
     fun formatDecimal(number: Double, decimalPlaces: Int, trimZero: Boolean): String {
         val format = DecimalFormat()
         format.maximumFractionDigits = decimalPlaces
@@ -69,7 +65,6 @@ object NumberHelper {
         return format.format(number)
     }
 
-    @JvmStatic
     fun readableFileSize(context: Context, size: Long): String {
         val units = context.resources.getStringArray(R.array.file_size_units)
         var digitGroups = 0

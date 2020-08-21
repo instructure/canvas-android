@@ -298,7 +298,6 @@ class AvatarCropActivity : AppCompatActivity() {
          * @param config An instance of [AvatarCropConfig] which should contain a valid source [Uri].
          * @return An [Intent]
          */
-        @JvmStatic
         fun createIntent(context: Context, config: AvatarCropConfig): Intent {
             return Intent(context, AvatarCropActivity::class.java).apply {
                 putExtra(KEY_CONFIG, config)

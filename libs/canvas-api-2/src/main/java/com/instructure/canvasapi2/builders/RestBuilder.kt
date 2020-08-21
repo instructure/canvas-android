@@ -76,7 +76,6 @@ class RestBuilder(callback: StatusCallback<*> = object : StatusCallback<Any>(){}
     companion object {
         var isPact: Boolean = false
 
-        @JvmStatic
         fun clearCacheDirectory(): Boolean {
             return try {
                 cacheDirectory.delete()

@@ -180,7 +180,6 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     companion object {
-        @JvmStatic
         fun getInstance() = CoursesFragment()
     }
 

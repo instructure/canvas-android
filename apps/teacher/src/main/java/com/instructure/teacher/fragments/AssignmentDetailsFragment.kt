@@ -443,19 +443,16 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         @JvmStatic val ASSIGNMENT = "assignment"
         @JvmStatic val ASSIGNMENT_ID = "assignmentId"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = AssignmentDetailsFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment): Bundle {
             val args = Bundle()
             args.putParcelable(AssignmentDetailsFragment.ASSIGNMENT, assignment)
             return args
         }
 
-        @JvmStatic
         fun makeBundle(assignmentId: Long): Bundle {
             val args = Bundle()
             args.putLong(AssignmentDetailsFragment.ASSIGNMENT_ID, assignmentId)

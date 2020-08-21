@@ -51,7 +51,6 @@ class DiscussionsMoveToDialog : DialogFragment() {
         const val GROUP = "group"
         const val DISCUSSION_TOPIC_HEADER = "discussionTopicHeader"
 
-        @JvmStatic
         fun show(manager: FragmentManager, group: String, discussionTopicHeader: DiscussionTopicHeader, callback: (String) -> Unit) {
             manager.dismissExisting<DiscussionsMoveToDialog>()
             val dialog = DiscussionsMoveToDialog()

@@ -34,7 +34,6 @@ object AnalyticsAPI {
         fun getStudentSummaryForCourse(@Path("courseId") courseId: Long, @Query("student_id") studentId: Long): Call<List<StudentSummary>>
     }
 
-    @JvmStatic
     fun getStudentSummaryForCourse(studentId: Long, courseId: Long, adapter: RestBuilder, params: RestParams, callback: StatusCallback<List<StudentSummary>>) {
         callback.addCall(adapter.build(AnalyticsInterface::class.java, params).getStudentSummaryForCourse(courseId, studentId)).enqueue(callback)
     }

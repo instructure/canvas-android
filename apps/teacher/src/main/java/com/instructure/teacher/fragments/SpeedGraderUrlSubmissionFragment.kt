@@ -49,7 +49,6 @@ class SpeedGraderUrlSubmissionFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(url: String, previewUrl: String?) = SpeedGraderUrlSubmissionFragment().apply {
             mUrl = url
             mPreviewUrl = previewUrl

@@ -27,7 +27,6 @@ object AccountDomainManager {
      * @param query Any string, strings less than 3 characters are rejected. Any string with a "." will use the domain search.
      * @param callback Any valid status callback
      */
-    @JvmStatic
     fun searchAccounts(query: String, callback: StatusCallback<List<AccountDomain>>) {
         AccountDomainAPI.searchAccounts(query, callback)
     }

@@ -170,7 +170,6 @@ class FetchFileAsyncTask private constructor(
         // A value of 33 targets ~30 updates per second
         private const val MIN_UPDATE_THRESHOLD: Long = 33
 
-        @JvmStatic
         fun download(cache: SimpleDiskCache, url: String, callback: FetchFileCallback) = FetchFileAsyncTask(cache, url, callback).apply { execute() }
     }
 }

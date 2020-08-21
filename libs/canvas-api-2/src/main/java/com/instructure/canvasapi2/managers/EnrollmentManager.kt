@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object EnrollmentManager {
 
-    @JvmStatic
     fun getAllEnrollmentsForCourse(
         courseId: Long,
         enrollmentType: String?,
@@ -45,7 +44,6 @@ object EnrollmentManager {
         EnrollmentAPI.getFirstPageEnrollmentsForCourse(adapter, params, courseId, enrollmentType, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getAllEnrollmentsForUserInCourse(
         courseId: Long,
         userId: Long,
@@ -63,7 +61,6 @@ object EnrollmentManager {
         EnrollmentAPI.getFirstPageEnrollmentsForUserInCourse(adapter, params, courseId, userId, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getSelfEnrollments(
         types: List<String>?,
         states: List<String>?,
@@ -81,7 +78,6 @@ object EnrollmentManager {
         EnrollmentAPI.getSelfEnrollments(types, states, adapter, params, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getObserveeEnrollments(forceNetwork: Boolean, callback: StatusCallback<List<Enrollment>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -98,7 +94,6 @@ object EnrollmentManager {
             = apiAsync<List<Enrollment>> { getObserveeEnrollments(forceNetwork, it) }
 
 
-    @JvmStatic
     fun handleInvite(courseId: Long, enrollmentId: Long, acceptInvite: Boolean, callback: StatusCallback<Void>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

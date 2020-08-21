@@ -40,7 +40,6 @@ object ToolbarColorizeHelper {
      * @param toolbarIconsColor the target color of toolbar icons
      * @param activity reference to activity needed to register observers
      */
-    @JvmStatic
     fun colorizeToolbar(toolbar: Toolbar, toolbarIconsColor: Int, activity: Activity) {
         toolbar.children.forEach { v ->
             when (v) {

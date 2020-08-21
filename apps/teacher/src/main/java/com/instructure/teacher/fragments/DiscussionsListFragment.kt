@@ -283,7 +283,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun onHandleBackPressed() = discussionListToolbar.closeSearch()
 
     companion object {
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = DiscussionsListFragment().apply {
             mCanvasContext = canvasContext
         }

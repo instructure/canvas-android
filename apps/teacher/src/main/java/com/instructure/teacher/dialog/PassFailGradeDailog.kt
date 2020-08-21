@@ -43,7 +43,6 @@ class PassFailGradeDailog : AppCompatDialogFragment() {
     private var mPassFailGradeCallback: (String, Boolean) -> Unit by Delegates.notNull()
 
     companion object {
-        @JvmStatic
         fun getInstance(fragmentManager: FragmentManager, grade: String?, callback: (String, Boolean) -> Unit) : PassFailGradeDailog {
             fragmentManager.dismissExisting<PassFailGradeDailog>()
             val dialog = PassFailGradeDailog()

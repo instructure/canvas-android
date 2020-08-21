@@ -48,13 +48,11 @@ class EmptyFragment: Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(course: Course, title: String) = EmptyFragment().apply {
             mCourse = course
             mTitle = title
         }
 
-        @JvmStatic
         fun newInstance(title: String) = EmptyFragment().apply {
             mTitle = title
         }

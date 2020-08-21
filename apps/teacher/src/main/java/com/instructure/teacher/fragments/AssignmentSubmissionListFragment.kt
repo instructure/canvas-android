@@ -329,21 +329,17 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     companion object {
-        @JvmStatic
         private val ASSIGNMENT = "assignment"
         @JvmStatic val FILTER_TYPE = "filter_type"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = AssignmentSubmissionListFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment): Bundle {
             return makeBundle(assignment, SubmissionListFilter.ALL)
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment, filter: SubmissionListFilter): Bundle {
             val args = Bundle()
             args.putSerializable(FILTER_TYPE, filter)

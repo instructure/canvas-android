@@ -38,7 +38,6 @@ object PageViewUtils {
 
     val session = PageViewSession()
 
-    @JvmStatic
     @Suppress("EXPERIMENTAL_FEATURE_WARNING", "MemberVisibilityCanBePrivate")
     fun startEvent(eventName: String, url: String): PageViewEvent? {
         if (ApiPrefs.getValidToken().isBlank()) return null
@@ -63,7 +62,6 @@ object PageViewUtils {
         return event
     }
 
-    @JvmStatic
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun stopEvent(event: PageViewEvent?) {
         if (event == null || event.eventDuration > 0) return
@@ -81,7 +79,6 @@ object PageViewUtils {
         }
     }
 
-    @JvmStatic
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun saveSingleEvent(eventName: String, url: String) {
         startEvent(eventName, url)?.let {

@@ -26,7 +26,6 @@ object NotificationPreferencesManager {
     const val IMMEDIATELY = "immediately"
     const val NEVER = "never"
 
-    @JvmStatic
     fun getNotificationPreferences(
         userId: Long,
         commChannelId: Long,
@@ -44,7 +43,6 @@ object NotificationPreferencesManager {
         )
     }
 
-    @JvmStatic
     fun updatePreferenceCategory(
         categoryName: String,
         channelId: Long,

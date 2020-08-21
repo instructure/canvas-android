@@ -236,14 +236,11 @@ class PageDetailsFragment : BasePresenterFragment<
 
         const val PAGE_ID = "pageDetailsId"
 
-        @JvmStatic
         fun makeBundle(page: Page): Bundle = Bundle().apply { putParcelable(PageDetailsFragment.PAGE, page) }
 
-        @JvmStatic
         fun makeBundle(pageId: String): Bundle = Bundle().apply { putString(PageDetailsFragment.PAGE_ID, pageId) }
 
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = PageDetailsFragment().withArgs(args).apply {
             mCanvasContext = canvasContext
         }

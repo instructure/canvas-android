@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.HelpLinks
 
 object HelpLinksManager {
 
-    @JvmStatic
     fun getHelpLinks(callback: StatusCallback<HelpLinks>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

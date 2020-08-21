@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.utils.PrefManager
 
 object PandaPrefs : PrefManager("pandaSP") {
 
-    @JvmStatic
     var warnForMobileData by BooleanPref(true)
 
 }

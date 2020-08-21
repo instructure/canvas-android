@@ -43,7 +43,6 @@ class AnnotationCommentDialog : AppCompatDialogFragment() {
     private var mTitle by StringArg()
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, currentText: String = "", title: String, callback: (Boolean, String?) -> Unit)  = AnnotationCommentDialog().apply {
             manager.dismissExisting<AnnotationCommentDialog>()
             mFreeTextCallback = callback

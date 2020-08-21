@@ -432,7 +432,6 @@ class EditFileFolderFragment : BasePresenterFragment<
         private const val LIST_OF_LICENSES = "licenseList"
         private const val COURSE_ID = "courseId"
 
-        @JvmStatic
         fun makeBundle(fileFolder: FileFolder, usageRightsEnabled: Boolean, licenseList: List<License>, courseId: Long) = Bundle().apply {
             putParcelable(CURRENT_FILE_OR_FOLDER, fileFolder)
             putBoolean(USAGE_RIGHTS_ENABLED, usageRightsEnabled)
@@ -440,7 +439,6 @@ class EditFileFolderFragment : BasePresenterFragment<
             putLong(COURSE_ID, courseId)
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = EditFileFolderFragment().apply {
             arguments = bundle
             updateFileFolder = currentFileOrFolder.parcelCopy()

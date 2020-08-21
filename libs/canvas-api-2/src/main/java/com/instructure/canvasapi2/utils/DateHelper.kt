@@ -110,7 +110,6 @@ object DateHelper {
         return context?.let { createPrefixedDateTimeString(it, it.resources.getString(prefixResId), date) }
     }
 
-    @JvmStatic
     fun getDateTimeString(context: Context?, date: Date?): String? {
         return context?.let { getFormattedDate(it, date) + " " + getFormattedTime(it, date) }
     }

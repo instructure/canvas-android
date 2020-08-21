@@ -93,7 +93,6 @@ object FileUtils {
     /**
      * GetAssetsFile allows you to open a file that exists in the Assets directory.
      */
-    @JvmStatic
     fun getAssetsFile(context: Context, fileName: String): String {
         return context.assets.open(fileName).bufferedReader().use { it.readText() }
     }

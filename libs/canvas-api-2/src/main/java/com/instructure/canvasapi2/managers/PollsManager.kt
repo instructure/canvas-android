@@ -32,7 +32,6 @@ import okhttp3.ResponseBody
 
 object PollsManager {
 
-    @JvmStatic
     fun getFirstPagePolls(callback: StatusCallback<PollResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -40,7 +39,6 @@ object PollsManager {
         PollsAPI.getFirstPagePolls(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getNextPagePolls(nextUrl: String, callback: StatusCallback<PollResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -48,7 +46,6 @@ object PollsManager {
         PollsAPI.getNextPagePolls(nextUrl, adapter, params, callback)
     }
 
-    @JvmStatic
     fun createPollSession(
         pollId: Long,
         courseId: Long,
@@ -62,7 +59,6 @@ object PollsManager {
         PollsSessionAPI.createPollSession(pollId, courseId, sectionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun openPollSession(pollId: Long, sectionId: Long, callback: StatusCallback<ResponseBody>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -70,7 +66,6 @@ object PollsManager {
         PollsSessionAPI.openPollSession(pollId, sectionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getFirstPagePollSessions(pollId: Long, callback: StatusCallback<PollSessionResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -78,7 +73,6 @@ object PollsManager {
         PollsSessionAPI.getFirstPagePollSessions(pollId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getNextPagePollSessions(nextUrl: String, callback: StatusCallback<PollSessionResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -86,7 +80,6 @@ object PollsManager {
         PollsSessionAPI.getNextPagePollSessions(nextUrl, adapter, params, callback)
     }
 
-    @JvmStatic
     fun updatePoll(pollId: Long, title: String, callback: StatusCallback<PollResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -94,7 +87,6 @@ object PollsManager {
         PollsAPI.updatePoll(pollId, title, adapter, params, callback)
     }
 
-    @JvmStatic
     fun deletePollChoice(
         pollId: Long,
         pollChoiceId: Long,
@@ -107,7 +99,6 @@ object PollsManager {
         PollsChoiceAPI.deletePollChoice(pollId, pollChoiceId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun deletePollSession(
         pollId: Long,
         pollSessionId: Long,
@@ -120,7 +111,6 @@ object PollsManager {
         PollsSessionAPI.deletePollSession(pollId, pollSessionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun createPoll(title: String, callback: StatusCallback<PollResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -128,7 +118,6 @@ object PollsManager {
         PollsAPI.createPoll(title, adapter, params, callback)
     }
 
-    @JvmStatic
     fun createPollChoice(
         pollId: Long,
         text: String,
@@ -143,7 +132,6 @@ object PollsManager {
         PollsChoiceAPI.createPollChoice(pollId, text, isCorrect, position, adapter, params, callback)
     }
 
-    @JvmStatic
     fun updatePollChoice(
         pollId: Long,
         pollChoiceId: Long,
@@ -159,7 +147,6 @@ object PollsManager {
         PollsChoiceAPI.updatePollChoice(pollId, pollChoiceId, text, isCorrect, position, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getClosedSessions(callback: StatusCallback<PollSessionResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -167,7 +154,6 @@ object PollsManager {
         PollsSessionAPI.getClosedSessions(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getOpenSessions(callback: StatusCallback<PollSessionResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -175,7 +161,6 @@ object PollsManager {
         PollsSessionAPI.getOpenSessions(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getSinglePoll(pollId: Long, callback: StatusCallback<PollResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -183,7 +168,6 @@ object PollsManager {
         PollsAPI.getSinglePoll(pollId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getSinglePollSession(
         pollId: Long,
         pollSessionId: Long,
@@ -196,7 +180,6 @@ object PollsManager {
         PollsSessionAPI.getSinglePollSession(pollId, pollSessionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun closePollSession(
         pollId: Long,
         pollSessionId: Long,
@@ -209,7 +192,6 @@ object PollsManager {
         PollsSessionAPI.closePollSession(pollId, pollSessionId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun updatePollSession(
         pollId: Long,
         pollSessionId: Long,
@@ -234,7 +216,6 @@ object PollsManager {
         )
     }
 
-    @JvmStatic
     fun getFirstPagePollChoices(pollId: Long, callback: StatusCallback<PollChoiceResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -242,7 +223,6 @@ object PollsManager {
         PollsChoiceAPI.getFirstPagePollChoices(pollId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getNextPagePollChoices(nextUrl: String, callback: StatusCallback<PollChoiceResponse>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -250,7 +230,6 @@ object PollsManager {
         PollsChoiceAPI.getNextPagePollChoices(nextUrl, adapter, params, callback)
     }
 
-    @JvmStatic
     fun deletePoll(pollId: Long, callback: StatusCallback<ResponseBody>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -258,7 +237,6 @@ object PollsManager {
         PollsAPI.deletePoll(pollId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun createPollSubmission(
         pollId: Long,
         pollSessionId: Long,

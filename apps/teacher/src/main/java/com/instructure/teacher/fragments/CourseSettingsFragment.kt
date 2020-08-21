@@ -132,7 +132,6 @@ class CourseSettingsFragment : BasePresenterFragment<
     override fun onRefreshStarted() {}
 
     companion object {
-        @JvmStatic
         fun newInstance(course: Course) = CourseSettingsFragment().apply {
             mCourse = course
         }

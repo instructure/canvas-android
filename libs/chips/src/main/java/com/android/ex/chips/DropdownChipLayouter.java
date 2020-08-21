@@ -76,7 +76,7 @@ public class DropdownChipLayouter {
     public View bindView(View convertView, ViewGroup parent, RecipientEntry entry, int position,
             AdapterType type, String constraint, StateListDrawable deleteDrawable) {
         // Default to show all the information
-        CharSequence displayName = Pronouns.span(entry.getName(), entry.getPronouns());
+        CharSequence displayName = Pronouns.INSTANCE.span(entry.getName(), entry.getPronouns());
         String destination = entry.getDestination();
         boolean showImage = true;
 
@@ -160,8 +160,8 @@ public class DropdownChipLayouter {
         if (showImage) {
             switch (type) {
                 case BASE_RECIPIENT: {
-                    if(ProfileUtils.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
-                        view.setImageBitmap(ProfileUtils.getInitialsAvatarBitMap(mContext, entry.getName()));
+                    if(ProfileUtils.INSTANCE.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
+                        view.setImageBitmap(ProfileUtils.INSTANCE.getInitialsAvatarBitMap(mContext, entry.getName()));
                     } else {
                         byte[] photoBytes = entry.getPhotoBytes();
                         if (photoBytes != null && photoBytes.length > 0) {
@@ -174,8 +174,8 @@ public class DropdownChipLayouter {
                     break;
                 }
                 case SINGLE_RECIPIENT: {
-                    if(ProfileUtils.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
-                        view.setImageBitmap(ProfileUtils.getInitialsAvatarBitMap(mContext, entry.getName()));
+                    if(ProfileUtils.INSTANCE.shouldLoadAltAvatarImage(entry.getAvatarUrl())) {
+                        view.setImageBitmap(ProfileUtils.INSTANCE.getInitialsAvatarBitMap(mContext, entry.getName()));
                     } else {
                         byte[] photoBytes = entry.getPhotoBytes();
                         if (photoBytes != null && photoBytes.length > 0) {

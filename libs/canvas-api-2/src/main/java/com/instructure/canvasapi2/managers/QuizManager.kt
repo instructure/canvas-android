@@ -32,7 +32,6 @@ import java.util.*
 
 object QuizManager {
 
-    @JvmStatic
     fun getAllQuizzes(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<List<Quiz>>) {
         val adapter = RestBuilder(callback)
         val depaginatedCallback = object : ExhaustiveListCallback<Quiz>(callback) {
@@ -44,7 +43,6 @@ object QuizManager {
         QuizAPI.getFirstPageQuizzes(courseId, forceNetwork, adapter, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean, callback: StatusCallback<Quiz>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -56,7 +54,6 @@ object QuizManager {
         getQuiz(courseId, quizId, forceNetwork, it)
     }
 
-    @JvmStatic
     fun editQuiz(courseId: Long, quizId: Long, body: QuizPostBody, callback: StatusCallback<Quiz>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -66,7 +63,6 @@ object QuizManager {
         QuizAPI.editQuiz(courseId, quizId, bodyWrapper, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getFirstPageQuizList(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -78,7 +74,6 @@ object QuizManager {
         QuizAPI.getFirstPageQuizList(canvasContext, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getNextPageQuizList(nextPage: String, forceNetwork: Boolean, callback: StatusCallback<List<Quiz>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -86,7 +81,6 @@ object QuizManager {
         QuizAPI.getNextPageQuizList(nextPage, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getDetailedQuiz(
         canvasContext: CanvasContext,
         quizId: Long,
@@ -99,7 +93,6 @@ object QuizManager {
         QuizAPI.getDetailedQuiz(canvasContext, quizId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getDetailedQuizByUrl(quizUrl: String, forceNetwork: Boolean, callback: StatusCallback<Quiz>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -107,7 +100,6 @@ object QuizManager {
         QuizAPI.getDetailedQuizByUrl(quizUrl, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getFirstPageQuizSubmissions(
         canvasContext: CanvasContext,
         quizId: Long,

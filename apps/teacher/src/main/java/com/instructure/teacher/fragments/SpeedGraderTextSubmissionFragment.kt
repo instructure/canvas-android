@@ -84,7 +84,6 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(text: String) = SpeedGraderTextSubmissionFragment().apply {
             mSubmissionText = text
         }

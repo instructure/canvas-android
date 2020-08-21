@@ -262,7 +262,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     companion object {
         @JvmStatic val PAIRED_WITH_SUBMISSIONS = "pairedWithSubmissions"
 
-        @JvmStatic
         fun getInstance(canvasContext: CanvasContext, args: Bundle) = AssignmentListFragment().apply {
             mPairedWithSubmissions = args.getBoolean(PAIRED_WITH_SUBMISSIONS, false)
             mCanvasContext = canvasContext

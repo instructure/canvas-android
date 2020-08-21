@@ -174,7 +174,6 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     companion object {
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = QuizListFragment().apply {
             mCanvasContext = canvasContext
         }

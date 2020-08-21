@@ -222,7 +222,6 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
         private const val DESTROY_ON_EXIT = "destroy_on_eit"
         private const val EDITABLE_FILE = "editable_file"
 
-        @JvmStatic
         @JvmOverloads
         fun makeBundle(
                 url: String,
@@ -240,7 +239,6 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
             putParcelable(EDITABLE_FILE, editableFile)
         }
 
-        @JvmStatic
         fun makeBundle(
                 file: File?,
                 contentType: String,
@@ -253,7 +251,6 @@ abstract class BaseViewMediaActivity : AppCompatActivity() {
             putBoolean(DESTROY_ON_EXIT, destroyOnExit)
         }
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, BaseViewMediaActivity::class.java)
             intent.putExtras(route.arguments)

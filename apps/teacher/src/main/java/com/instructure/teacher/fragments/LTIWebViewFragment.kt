@@ -307,14 +307,12 @@ class LTIWebViewFragment : InternalWebViewFragment() {
         private const val SESSION_LESS = "session_less"
         private const val HIDE_TOOLBAR = "hideToolbar"
 
-        @JvmStatic
         fun makeLTIBundle(ltiTab: Tab): Bundle {
             val args = Bundle()
             args.putParcelable(TAB, ltiTab)
             return args
         }
 
-        @JvmStatic
         fun makeLTIBundle(ltiUrl: String, title: String, sessionLessLaunch: Boolean): Bundle {
             val args = Bundle()
             args.putString(LTI_URL, ltiUrl)
@@ -323,7 +321,6 @@ class LTIWebViewFragment : InternalWebViewFragment() {
             return args
         }
 
-        @JvmStatic
         fun newInstance(args: Bundle) = LTIWebViewFragment().apply {
             ltiUrl = args.getString(LTI_URL, "")
             title = args.getString(TITLE, "")
@@ -336,7 +333,6 @@ class LTIWebViewFragment : InternalWebViewFragment() {
             setShouldLoadUrl(false)
         }
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, url: String, title: String, sessionLessLaunch: Boolean, hideToolbar: Boolean): Bundle {
             val extras = createBundle(canvasContext)
             extras.putBoolean(AUTHENTICATE, false)

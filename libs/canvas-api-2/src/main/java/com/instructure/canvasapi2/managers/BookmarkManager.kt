@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.models.Bookmark
 
 object BookmarkManager {
 
-    @JvmStatic
     fun getBookmarks(callback: StatusCallback<List<Bookmark>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -31,7 +30,6 @@ object BookmarkManager {
         BookmarkAPI.getBookmarks(adapter, params, callback);
     }
 
-    @JvmStatic
     fun createBookmark(bookmark: Bookmark, callback: StatusCallback<Bookmark>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -39,7 +37,6 @@ object BookmarkManager {
         BookmarkAPI.createBookmark(bookmark, adapter, params, callback);
     }
 
-    @JvmStatic
     fun deleteBookmark(bookmarkId: Long, callback: StatusCallback<Bookmark>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -47,7 +44,6 @@ object BookmarkManager {
         BookmarkAPI.deleteBookmark(bookmarkId, adapter, params, callback);
     }
 
-    @JvmStatic
     fun updateBookmark(bookmark: Bookmark, callback: StatusCallback<Bookmark>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

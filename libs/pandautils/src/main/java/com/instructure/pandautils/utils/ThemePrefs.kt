@@ -34,35 +34,25 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     const val DARK_MULTIPLIER = 0.85f
     const val ALPHA_VALUE = 0x32
 
-    @JvmStatic
     var brandColor by ColorPref(R.color.canvasDefaultPrimary)
 
-    @JvmStatic
     var fontColor by ColorPref(R.color.canvasDefaultPrimary)
 
-    @JvmStatic
     var primaryColor by ColorPref(R.color.canvasDefaultPrimary)
 
-    @JvmStatic
     val darkPrimaryColor: Int
         get() = darker(primaryColor, DARK_MULTIPLIER)
 
-    @JvmStatic
     var primaryTextColor by ColorPref(R.color.canvasDefaultPrimaryText)
 
-    @JvmStatic
     var accentColor by ColorPref(R.color.canvasDefaultAccent)
 
-    @JvmStatic
     var buttonColor by ColorPref(R.color.canvasDefaultButton)
 
-    @JvmStatic
     var buttonTextColor by ColorPref(R.color.canvasDefaultButtonText)
 
-    @JvmStatic
     var logoUrl by StringPref()
 
-    @JvmStatic
     var isThemeApplied by BooleanPref()
 
     override fun onClearPrefs() {
@@ -72,7 +62,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
      * Returns darker version of specified `color`.
      * StatusBar color example would be 0.85F
      */
-    @JvmStatic
     @JvmOverloads
     fun darker(color: Int, factor: Float = DARK_MULTIPLIER): Int {
         val a = Color.alpha(color)
@@ -90,7 +79,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
      * Returns darker version of specified `color`.
      * StatusBar color example would be 0.85F
      */
-    @JvmStatic
     @JvmOverloads
     fun increaseAlpha(color: Int, factor: Int = ALPHA_VALUE): Int {
         val a = factor
@@ -101,7 +89,6 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     }
 
-    @JvmStatic
     fun themeViewBackground(view: View, color: Int) {
         val viewTreeObserver = view.viewTreeObserver
         viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -116,13 +103,11 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         })
     }
 
-    @JvmStatic
     fun themeEditTextBackground(editText: EditText, color: Int) {
         editText.setTextColor(color)
         themeViewBackground(editText, color)
     }
 
-    @JvmStatic
     fun applyCanvasTheme(theme: CanvasTheme) {
         brandColor = parseColor(theme.brand, brandColor)
         fontColor = parseColor(theme.fontColorDark, fontColor)

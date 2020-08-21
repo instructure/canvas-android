@@ -157,10 +157,8 @@ class AnnotationCommentListFragment : BaseListFragment<
         @JvmStatic val API_VALUES = "mApiValues"
         @JvmStatic val HEAD_ANNOTATION_ID = "mHeadAnnotationId"
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
 
-        @JvmStatic
         fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Bundle {
             val args = Bundle()
             args.putParcelableArrayList(ANNOTATIONS, annotations)

@@ -280,7 +280,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
          */
         private const val MAX_HISTORY_THRESHOLD = 8
 
-        @JvmStatic
         fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
@@ -313,7 +312,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, SpeedGraderActivity::class.java).apply {
                 if(!route.arguments.isEmpty) {
@@ -333,7 +331,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             return intent
         }
 
-        @JvmStatic
         fun createIntent(context: Context, courseId: Long, assignmentId: Long, submissionId: Long) = Intent(context, SpeedGraderActivity::class.java).apply {
             // We've come from a push notification, we'll use these ids to grab the data we need later
             putExtras(Bundle().apply {

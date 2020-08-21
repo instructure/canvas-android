@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object SubmissionManager {
 
-    @JvmStatic
     fun getSingleSubmission(
         courseId: Long,
         assignmentId: Long,
@@ -47,7 +46,6 @@ object SubmissionManager {
         forceNetwork: Boolean
     ) = apiAsync<Submission> { getSingleSubmission(courseId, assignmentId, studentId, it, forceNetwork) }
 
-    @JvmStatic
     fun getSubmissionsForMultipleAssignments(
         studentId: Long,
         courseId: Long,
@@ -82,7 +80,6 @@ object SubmissionManager {
         )
     }
 
-    @JvmStatic
     fun updateRubricAssessment(
         courseId: Long,
         assignmentId: Long,
@@ -103,7 +100,6 @@ object SubmissionManager {
         )
     }
 
-    @JvmStatic
     fun postSubmissionComment(
         courseId: Long,
         assignmentId: Long,
@@ -128,7 +124,6 @@ object SubmissionManager {
         )
     }
 
-    @JvmStatic
     fun postSubmissionGrade(
         courseId: Long,
         assignmentId: Long,
@@ -144,7 +139,6 @@ object SubmissionManager {
         SubmissionAPI.postSubmissionGrade(courseId, assignmentId, userId, score, isExcused, adapter, callback, params)
     }
 
-    @JvmStatic
     fun postSubmissionExcusedStatus(
         courseId: Long,
         assignmentId: Long,
@@ -159,7 +153,6 @@ object SubmissionManager {
         SubmissionAPI.postSubmissionExcusedStatus(courseId, assignmentId, userId, isExcused, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getSubmissionSummary(
         courseId: Long,
         assignmentId: Long,
@@ -172,7 +165,6 @@ object SubmissionManager {
         SubmissionAPI.getSubmissionSummary(courseId, assignmentId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun postTextSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -185,7 +177,6 @@ object SubmissionManager {
         SubmissionAPI.postTextSubmission(canvasContext.id, assignmentId, text, adapter, params, callback)
     }
 
-    @JvmStatic
     fun postUrlSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -200,7 +191,6 @@ object SubmissionManager {
         SubmissionAPI.postUrlSubmission(canvasContext.id, assignmentId, type, url, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getLtiFromAuthenticationUrl(url: String, callback: StatusCallback<LTITool>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -211,7 +201,6 @@ object SubmissionManager {
     fun getLtiFromAuthenticationUrlAsync(url: String, forceNetwork: Boolean) =
         apiAsync<LTITool> { getLtiFromAuthenticationUrl(url, it, forceNetwork) }
 
-    @JvmStatic
     fun postMediaSubmissionComment(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -237,7 +226,6 @@ object SubmissionManager {
         )
     }
 
-    @JvmStatic
     fun postMediaSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -261,7 +249,6 @@ object SubmissionManager {
         )
     }
 
-    @JvmStatic
     fun postSubmissionAttachmentsSynchronous(
         courseId: Long,
         assignmentId: Long,

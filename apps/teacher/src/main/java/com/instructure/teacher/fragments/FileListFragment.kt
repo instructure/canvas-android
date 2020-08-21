@@ -330,13 +330,11 @@ class FileListFragment : BaseSyncFragment<
         private const val CANVAS_CONTEXT = "canvasContext"
         private const val CURRENT_FOLDER = "currentFolder"
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = FileListFragment().apply {
             mCanvasContext = args.getParcelable(CANVAS_CONTEXT) ?: canvasContext
             currentFolder = args.getParcelable(CURRENT_FOLDER) ?: FileFolder(id = -1L, name = "")
         }
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, currentFolder: FileFolder? = null): Bundle {
             val args = Bundle()
             val folder = currentFolder ?: FileFolder(id = -1L, name = "")
@@ -345,7 +343,6 @@ class FileListFragment : BaseSyncFragment<
             return args
         }
 
-        @JvmStatic
         fun createBundle(folderId: Long, canvasContext: CanvasContext): Bundle {
             val args = Bundle()
             args.putParcelable(CANVAS_CONTEXT, canvasContext)

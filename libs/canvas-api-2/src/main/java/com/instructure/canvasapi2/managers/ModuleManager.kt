@@ -28,7 +28,6 @@ object ModuleManager {
 
     const val MODULE_ASSET_MODULE_ITEM = "ModuleItem"
 
-    @JvmStatic
     fun getFirstPageModuleObjects(
         canvasContext: CanvasContext,
         callback: StatusCallback<List<ModuleObject>>,
@@ -57,14 +56,12 @@ object ModuleManager {
         ModuleAPI.getFirstPageModulesWithItems(adapter, params, canvasContext.id, callback)
     }
 
-    @JvmStatic
     fun getNextPageModuleObjects(nextUrl: String, callback: StatusCallback<List<ModuleObject>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = false, isForceReadFromNetwork = forceNetwork)
         ModuleAPI.getNextPageModuleObjects(adapter, params, nextUrl, callback)
     }
 
-    @JvmStatic
     fun getFirstPageModuleItems(
         canvasContext: CanvasContext,
         moduleId: Long,
@@ -80,14 +77,12 @@ object ModuleManager {
         ModuleAPI.getFirstPageModuleItems(adapter, params, canvasContext.id, moduleId, callback)
     }
 
-    @JvmStatic
     fun getNextPageModuleItems(nextUrl: String, callback: StatusCallback<List<ModuleItem>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         ModuleAPI.getNextPageModuleItems(adapter, params, nextUrl, callback)
     }
 
-    @JvmStatic
     fun getAllModuleItems(
         canvasContext: CanvasContext,
         moduleId: Long,
@@ -110,14 +105,12 @@ object ModuleManager {
         ModuleAPI.getAllModuleItems(adapter, params, canvasContext.id, moduleId, depaginatedCallback)
     }
 
-    @JvmStatic
     fun markAsDone(canvasContext: CanvasContext, moduleId: Long, itemId: Long, callback: StatusCallback<ResponseBody>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext)
         ModuleAPI.markModuleAsDone(adapter, params, canvasContext, moduleId, itemId, callback)
     }
 
-    @JvmStatic
     fun markAsNotDone(
         canvasContext: CanvasContext,
         moduleId: Long,
@@ -129,7 +122,6 @@ object ModuleManager {
         ModuleAPI.markModuleAsNotDone(adapter, params, canvasContext, moduleId, itemId, callback)
     }
 
-    @JvmStatic
     fun markModuleItemAsRead(
         canvasContext: CanvasContext,
         moduleId: Long,
@@ -141,7 +133,6 @@ object ModuleManager {
         ModuleAPI.markModuleItemAsRead(adapter, params, canvasContext, moduleId, itemId, callback)
     }
 
-    @JvmStatic
     fun selectMasteryPath(
         canvasContext: CanvasContext,
         moduleId: Long,
@@ -155,7 +146,6 @@ object ModuleManager {
         ModuleAPI.selectMasteryPath(adapter, params, canvasContext, moduleId, itemId, assignmentSetId, callback)
     }
 
-    @JvmStatic
     fun getModuleItemSequence(
         canvasContext: CanvasContext,
         assetType: String,

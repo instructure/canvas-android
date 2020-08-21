@@ -165,7 +165,6 @@ class PeopleListFilterDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, canvasContextIdList: ArrayList<Long>, canvasContext: CanvasContext, shouldIncludeGroups: Boolean, callback: (canvasContexts: ArrayList<CanvasContext>) -> Unit) : PeopleListFilterDialog {
             manager.dismissExisting<PeopleListFilterDialog>()
             val args = Bundle().apply {

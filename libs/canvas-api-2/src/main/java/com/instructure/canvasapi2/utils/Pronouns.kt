@@ -31,7 +31,6 @@ object Pronouns {
      * Returns a [Spanned] that contains the provided [name] and [pronouns], where [pronouns] will be italicized and
      * wrapped in parentheses. If [pronouns] is not a valid string then the return value will only contain the [name].
      */
-    @JvmStatic
     fun span(name: String?, pronouns: String?) : Spanned {
         val span = SpannableStringBuilder(name.orEmpty())
         if (pronouns.isValid()) {
@@ -69,7 +68,6 @@ object Pronouns {
      *
      * If [pronouns] is not a valid string then no additional styling will be applied.
      */
-    @JvmStatic
     fun resource(context: Context, @StringRes resId: Int, pronouns: String?, vararg formatArgs: Any) : Spanned {
         var text: CharSequence = context.getString(resId, *formatArgs)
         if (pronouns.isValid()) {
@@ -90,7 +88,6 @@ object Pronouns {
      * Whenever possible, prefer calling [span] over this function in order to add visual emphasis to the
      * user's chosen pronouns.
      */
-    @JvmStatic
     fun html(name: String?, pronouns: String?) : String {
         pronouns.validOrNull() ?: return name.orEmpty()
         return """${name.orEmpty()} <i>($pronouns)</i>"""

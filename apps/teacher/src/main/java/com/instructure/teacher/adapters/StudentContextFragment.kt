@@ -300,14 +300,12 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
     }
 
     companion object {
-        @JvmStatic
         fun makeBundle(studentId: Long, courseId: Long, launchSubmissions: Boolean = false) = StudentContextFragment().apply {
             mStudentId = studentId
             mCourseId = courseId
             mLaunchSubmissions = launchSubmissions
         }.nonNullArgs
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = StudentContextFragment().apply { arguments = bundle }
     }
 

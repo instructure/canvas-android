@@ -90,7 +90,6 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
 
     companion object {
 
-        @JvmStatic
         fun createIntent(context: Context, url: String, title: String, authenticate: Boolean): Intent {
             // Assumes no canvasContext
             val extras = createBundle(null, url, title, authenticate)
@@ -99,7 +98,6 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, url: String, html: String, title: String, authenticate: Boolean): Intent {
             // Assumes no canvasContext
             val extras = createBundle(null, url, title, authenticate)
@@ -109,7 +107,6 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route, title: String, authenticate: Boolean)
                 = createIntent(context, route.uri?.toString() ?: "", title, authenticate)
 

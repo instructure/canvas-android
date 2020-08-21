@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.utils.StringPref
 object FilePrefs : PrefManager("FilePreferences") {
 
     /* Temporary URI used in FileUploadDialog */
-    @JvmStatic
     var tempCaptureUri by StringPref()
 
 }

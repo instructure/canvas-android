@@ -53,7 +53,6 @@ class DiscussionTopicPostBody {
     var isLocked: Boolean? = null
 
     companion object {
-        @JvmStatic
         fun fromAnnouncement(announcement: DiscussionTopicHeader, shouldRemoveAttachment: Boolean) = DiscussionTopicPostBody().apply {
             title = announcement.title
             message = announcement.message

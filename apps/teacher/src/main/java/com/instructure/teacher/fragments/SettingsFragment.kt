@@ -78,7 +78,6 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
     override fun onPresenterPrepared(presenter: ProfileSettingsFragmentPresenter) {}
 
     companion object {
-        @JvmStatic
         fun newInstance(args: Bundle) = SettingsFragment().apply { arguments = args }
     }
 }

@@ -49,49 +49,41 @@ import com.instructure.pandautils.R
 
 object ViewStyler {
 
-    @JvmStatic
     fun setToolbarElevationSmall(context: Context, toolbar: Toolbar) {
         ViewCompat.setElevation(toolbar, context.resources.getDimension(R.dimen.utils_toolbar_elevation_small))
     }
 
-    @JvmStatic
     fun setToolbarElevation(context: Context, toolbar: Toolbar) {
         ViewCompat.setElevation(toolbar, context.resources.getDimension(R.dimen.utils_toolbar_elevation))
     }
 
-    @JvmStatic
     fun setToolbarElevation(context: Context, toolbar: Toolbar, @DimenRes elevation: Int) {
         ViewCompat.setElevation(toolbar, context.resources.getDimension(elevation))
     }
 
-    @JvmStatic
     fun colorToolbarIconsAndText(activity: Activity, toolbar: Toolbar, @ColorInt color: Int) {
         toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
         toolbar.setSubtitleTextAppearance(activity, R.style.ToolbarStyle_Subtitle)
         ToolbarColorizeHelper.colorizeToolbar(toolbar, color, activity)
     }
 
-    @JvmStatic
     fun themeEditText(context: Context, editText: AppCompatEditText, @ColorInt brand: Int) {
         val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
         editText.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
         editText.highlightColor = ThemePrefs.increaseAlpha(brand)
     }
 
-    @JvmStatic
     fun themeRadioButton(context: Context, radioButton: AppCompatRadioButton, @ColorInt brand: Int) {
         val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
         radioButton.supportButtonTintList = makeColorStateList(defaultColor, brand)
         radioButton.highlightColor = ThemePrefs.increaseAlpha(defaultColor)
     }
 
-    @JvmStatic
     fun themeSpinner(context: Context, spinner: AppCompatSpinner, @ColorInt brand: Int) {
         val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
         spinner.supportBackgroundTintList = makeColorStateList(defaultColor, brand)
     }
 
-    @JvmStatic
     fun themeSwitch(context: Context, switch: SwitchCompat, @ColorInt brand: Int = ThemePrefs.brandColor) {
         val thumbColor = brand
 
@@ -112,7 +104,6 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun themeInputTextLayout(textInputLayout: TextInputLayout, @ColorInt color: Int) {
         try {
             val fDefaultTextColor = TextInputLayout::class.java.getDeclaredField("mDefaultTextColor")
@@ -125,7 +116,6 @@ object ViewStyler {
         } catch (e: Exception) { }
     }
 
-    @JvmStatic
     fun themeActionBar(activity: Activity?, actionBar: ActionBar?, @ColorInt backgroundColor: Int) {
         if (activity != null && actionBar != null) {
             val colorDrawable = ColorDrawable(backgroundColor)
@@ -134,18 +124,15 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun themeToolbar(activity: Activity, toolbar: Toolbar?, canvasContext: CanvasContext?) {
         if(toolbar == null || canvasContext == null) return
         themeToolbar(activity, toolbar, canvasContext.color, Color.WHITE, true)
     }
 
-    @JvmStatic
     fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int) {
         themeToolbar(activity, toolbar, backgroundColor, contentColor, true)
     }
 
-    @JvmStatic
     fun themeToolbar(activity: Activity, toolbar: Toolbar, @ColorInt backgroundColor: Int, @ColorInt contentColor: Int, darkStatusBar: Boolean) {
         toolbar.setBackgroundColor(backgroundColor)
         toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
@@ -158,7 +145,6 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun themeToolbarBottomSheet(activity: Activity, isTablet: Boolean, toolbar: Toolbar, @ColorInt contentColor: Int, darkStatusBar: Boolean) {
         toolbar.setBackgroundColor(Color.WHITE)
         toolbar.setTitleTextAppearance(activity, R.style.ToolbarStyle)
@@ -173,27 +159,23 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun themeProgressBar(progressBar: ProgressBar, @ColorInt brand: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             progressBar.indeterminateTintList = makeColorStateList(brand, brand)
         }
     }
 
-    @JvmStatic
     fun themeCheckBox(context: Context, checkBox: AppCompatCheckBox, @ColorInt brand: Int) {
         val defaultColor = ContextCompat.getColor(context, R.color.canvasEditTextColor)
         checkBox.supportButtonTintList = makeColorStateList(defaultColor, brand)
         checkBox.highlightColor = ThemePrefs.increaseAlpha(defaultColor)
     }
 
-    @JvmStatic
     fun themeFAB(fab: FloatingActionButton, @ColorInt brand: Int) {
         fab.backgroundTintList = makeColorStateList(brand, ThemePrefs.darker(brand))
         fab.setImageDrawable(ColorUtils.colorIt(Color.WHITE, fab.drawable))
     }
 
-    @JvmStatic
     fun themeButton(button: Button) {
         val drawable = button.background
         drawable.mutate().colorFilter = PorterDuffColorFilter(ThemePrefs.buttonColor, PorterDuff.Mode.SRC_ATOP)
@@ -201,7 +183,6 @@ object ViewStyler {
         button.setTextColor(ThemePrefs.buttonTextColor)
     }
 
-    @JvmStatic
     fun themeButton(button: Button, backgroundColor: Int, textColor: Int) {
         val drawable = button.background
         drawable.mutate().colorFilter = PorterDuffColorFilter(backgroundColor, PorterDuff.Mode.SRC_ATOP)
@@ -209,7 +190,6 @@ object ViewStyler {
         button.setTextColor(textColor)
     }
 
-    @JvmStatic
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.window.statusBarColor = ThemePrefs.darker(color)
@@ -221,7 +201,6 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun setStatusBarLight(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
@@ -231,14 +210,12 @@ object ViewStyler {
         }
     }
 
-    @JvmStatic
     fun colorImageView(imageView: ImageView, color: Int) {
         val drawable = imageView.drawable ?: return
         drawable.mutate().colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         imageView.setImageDrawable(drawable)
     }
 
-    @JvmStatic
     fun makeColorStateList(defaultColor: Int, brand: Int) = generateColorStateList(
             intArrayOf(-android.R.attr.state_enabled) to defaultColor,
             intArrayOf(android.R.attr.state_focused, -android.R.attr.state_pressed) to brand,
@@ -248,25 +225,21 @@ object ViewStyler {
             intArrayOf() to defaultColor
     )
 
-    @JvmStatic
     fun makeColorStateListForButton() = generateColorStateList(
             intArrayOf() to ThemePrefs.buttonColor
     )
 
-    @JvmStatic
     fun makeColorStateListForRadioGroup(uncheckedColor: Int, checkedColor: Int) = generateColorStateList(
             intArrayOf(-android.R.attr.state_checked) to uncheckedColor,
             intArrayOf(android.R.attr.state_checked) to checkedColor,
             intArrayOf() to uncheckedColor
     )
 
-    @JvmStatic
     fun generateColorStateList(vararg stateColors: Pair<IntArray, Int>) = ColorStateList(
             Array(stateColors.size) { stateColors[it].first },
             Array(stateColors.size) { stateColors[it].second }.toIntArray()
     )
 
-    @JvmStatic
     fun applyKerning(src: CharSequence?, kerning: Float): Spannable? {
         if (src == null) return null
         val srcLength = src.length

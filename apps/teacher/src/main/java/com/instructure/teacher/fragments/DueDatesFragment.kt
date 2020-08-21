@@ -138,12 +138,10 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     companion object {
         @JvmStatic val ASSIGNMENT = "assignment"
 
-        @JvmStatic
         fun getInstance(course: Course, args: Bundle) = DueDatesFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment): Bundle {
             val args = Bundle()
             args.putParcelable(DueDatesFragment.ASSIGNMENT, assignment)

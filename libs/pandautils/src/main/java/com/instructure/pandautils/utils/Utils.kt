@@ -36,7 +36,6 @@ object Utils {
         return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) || pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)
     }
 
-    @JvmStatic
     fun getAttachmentsDirectory(context: Context): File {
         return context.externalCacheDir?.let { File(it, "attachments") } ?: context.filesDir
     }
@@ -47,7 +46,6 @@ object Utils {
         return connectivityManager?.activeNetworkInfo?.isConnected == true
     }
 
-    @JvmStatic
     val referer: Map<String, String>
         get() = mapOf("Referer" to domain)
 

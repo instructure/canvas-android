@@ -87,7 +87,6 @@ class SpeedGraderQuizSubmissionFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(content: QuizContent) = SpeedGraderQuizSubmissionFragment().apply {
             mCourseId = content.courseId
             mAssignmentId = content.assignmentId

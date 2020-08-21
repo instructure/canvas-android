@@ -169,7 +169,6 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         private const val DISCUSSION_ENTRY_ID = "DISCUSSION_ENTRY_ID"
         private const val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
 
-        @JvmStatic
         fun makeBundle(discussionTopicHeaderId: Long, discussionEntryId: Long, isAnnouncement: Boolean): Bundle =
                 Bundle().apply {
                     putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
@@ -177,7 +176,6 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
                     putBoolean(IS_ANNOUNCEMENT, isAnnouncement)
                 }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
                 DiscussionsReplyFragment().apply {
                     mDiscussionTopicHeaderId = args.getLong(DISCUSSION_TOPIC_HEADER_ID)

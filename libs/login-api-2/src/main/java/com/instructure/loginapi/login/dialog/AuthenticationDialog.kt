@@ -70,7 +70,6 @@ class AuthenticationDialog : DialogFragment() {
     companion object {
         private const val DOMAIN = "domain"
 
-        @JvmStatic
         fun newInstance(domain: String?, vararg target: Fragment?): AuthenticationDialog {
             val dialog = AuthenticationDialog()
             val args = Bundle()

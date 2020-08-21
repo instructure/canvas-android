@@ -29,22 +29,18 @@ object Analytics {
 
     lateinit var firebase: FirebaseAnalytics
 
-    @JvmStatic
     fun logEvent(eventName: String, bundle: Bundle? = null) {
         firebase.logEvent(eventName, bundle)
     }
 
-    @JvmStatic
     fun logEvent(eventName: String) {
         firebase.logEvent(eventName, null)
     }
 
-    @JvmStatic
     fun setUserProperty(propertyName: String, propertyValue: String) {
         firebase.setUserProperty(propertyName, propertyValue)
     }
 
-    @JvmStatic
     fun createOriginBundle(origin: String): Bundle {
         return Bundle().apply {
             putString(AnalyticsParamConstants.SCREEN_OF_ORIGIN, origin)

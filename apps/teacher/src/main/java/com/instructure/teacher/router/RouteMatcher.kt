@@ -141,12 +141,10 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
     }
 
-    @JvmStatic
     private fun routeUrl(context: Context, url: String) {
         routeUrl(context, url, ApiPrefs.domain)
     }
 
-    @JvmStatic
     fun routeUrl(context: Context, url: String, domain: String) {
         /* Possible activity types we can navigate to: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
@@ -157,7 +155,6 @@ object RouteMatcher : BaseRouteMatcher() {
         route(context, getInternalRoute(url, domain))
     }
 
-    @JvmStatic
     fun route(context: Context, route: Route?) {
         if (route == null || route.routeContext === RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
@@ -278,7 +275,6 @@ object RouteMatcher : BaseRouteMatcher() {
     /**
      * Pass in a route and a course, get a fragment back!
      */
-    @JvmStatic
     fun getFullscreenFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
 
         return if (canvasContext == null) {
@@ -300,19 +296,16 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    @JvmStatic
     fun getMasterFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         //TODO: INBOX
         return getFrag(route.primaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getDetailFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         //TODO: INBOX
         return getFrag(route.secondaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getBottomSheetFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return getFrag(route.primaryClass, canvasContext, route)
     }
@@ -445,7 +438,6 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    @JvmStatic
     fun <Type : Fragment> getClassDisplayName(context: Context, cls: Class<Type>?): String {
         return when {
             cls == null -> return ""

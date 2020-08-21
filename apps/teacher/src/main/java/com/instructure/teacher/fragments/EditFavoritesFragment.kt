@@ -131,12 +131,10 @@ class EditFavoritesFragment : BaseSyncFragment<
     companion object {
         @JvmStatic val APP_TYPE = "appType"
 
-        @JvmStatic
         fun newInstance(args: Bundle) = EditFavoritesFragment().apply {
             mAppType = args.getSerializable(APP_TYPE) as AppType
         }
 
-        @JvmStatic
         fun makeBundle(appType: AppType): Bundle {
             val args = Bundle()
             args.putSerializable(EditFavoritesFragment.APP_TYPE, appType)

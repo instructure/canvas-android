@@ -275,7 +275,6 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         private val collapsePercent = 0.65F
         private val expandPercent = 1.0F
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, MasterDetailActivity::class.java)
             intent.putExtra(Route.ROUTE, route as Parcelable)

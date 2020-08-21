@@ -193,7 +193,6 @@ class RatingDialog : DialogFragment() {
          * that they can press
          * @param context A valid context
          */
-        @JvmStatic
         fun showRatingDialog(context: FragmentActivity, appType: AppType) {
             if (Prefs.dontShowAgain || BuildConfig.IS_TESTING) return
             if (Prefs.dateFirstLaunched == 0L) {
@@ -205,7 +204,6 @@ class RatingDialog : DialogFragment() {
         }
 
         @Suppress("MemberVisibilityCanPrivate")
-        @JvmStatic
         fun showRateDialog(context: FragmentActivity, appType: AppType) {
             RatingDialog.newInstance(appType).show(context.supportFragmentManager, RatingDialog::class.java.simpleName)
         }

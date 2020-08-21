@@ -79,7 +79,6 @@ class CreateFolderDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun show(fm: FragmentManager, callback: (String) -> Unit) {
             fm.dismissExisting<CreateFolderDialog>()
             CreateFolderDialog().apply {

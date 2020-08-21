@@ -228,7 +228,6 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(args: Bundle) = ProfileEditFragment().apply {
             arguments = args
         }

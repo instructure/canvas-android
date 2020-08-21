@@ -97,7 +97,6 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(courseId: Long, assignmentId: Long, studentId: Long, url: String)= SpeedGraderQuizWebViewFragment().apply {
             mCourseId = courseId
             mAssignmentId = assignmentId
@@ -105,7 +104,6 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
             this.url = url
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = SpeedGraderQuizWebViewFragment().apply { arguments = bundle }
     }
 }

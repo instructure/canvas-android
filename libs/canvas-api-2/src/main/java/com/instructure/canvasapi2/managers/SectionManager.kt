@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object SectionManager {
 
-    @JvmStatic
     fun getAllSectionsForCourse(courseId: Long, callback: StatusCallback<List<Section>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
@@ -43,7 +42,6 @@ object SectionManager {
         getAllSectionsForCourse(courseId, it, forceNetwork)
     }
 
-    @JvmStatic
     fun getSection(courseId: Long, sectionId: Long, callback: StatusCallback<Section>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)

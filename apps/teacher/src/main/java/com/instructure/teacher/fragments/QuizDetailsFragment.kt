@@ -469,13 +469,10 @@ class QuizDetailsFragment : BasePresenterFragment<
         @JvmStatic val QUIZ_ID = "quiz_details_quiz_id"
         @JvmStatic val QUIZ = "quiz_details_quiz"
 
-        @JvmStatic
         fun makeBundle(quizId: Long): Bundle = Bundle().apply { putLong(QuizDetailsFragment.QUIZ_ID, quizId) }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz): Bundle = Bundle().apply { putParcelable(QuizDetailsFragment.QUIZ, quiz) }
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = QuizDetailsFragment().withArgs(args).apply { mCourse = course }
     }
 }

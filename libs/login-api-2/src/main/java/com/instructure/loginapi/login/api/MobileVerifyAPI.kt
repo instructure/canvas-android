@@ -66,7 +66,6 @@ object MobileVerifyAPI {
                     .build()
         }
 
-    @JvmStatic
     fun mobileVerify(domain: String?, callback: StatusCallback<DomainVerificationResult>) {
         if (paramIsNull(callback, domain)) {
             return

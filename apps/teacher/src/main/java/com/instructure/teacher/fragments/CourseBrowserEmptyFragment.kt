@@ -58,7 +58,6 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
     override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter) {}
 
     companion object {
-        @JvmStatic
         fun newInstance(course: Course) = CourseBrowserEmptyFragment().apply {
             mCourse = course
         }

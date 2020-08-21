@@ -275,7 +275,6 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                 return mHttpCacheDirectory!!
             }
 
-        @JvmStatic
         val okHttpClient: OkHttpClient
             get() {
                 if (mCache == null) {

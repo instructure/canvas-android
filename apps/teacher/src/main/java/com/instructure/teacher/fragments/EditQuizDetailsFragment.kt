@@ -492,12 +492,10 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         @JvmStatic val ASSIGNMENT = "assignment"
         @JvmStatic val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = EditQuizDetailsFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz, scrollToDates: Boolean): Bundle {
             val args = Bundle()
             args.putBoolean(EditQuizDetailsFragment.SHOULD_SCROLL_TO_DATES, scrollToDates)
@@ -505,14 +503,12 @@ class EditQuizDetailsFragment : BasePresenterFragment<
             return args
         }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz): Bundle {
             return Bundle().apply {
                 putParcelable(QUIZ, quiz)
             }
         }
 
-        @JvmStatic
         fun makeBundle(quizId: Long): Bundle {
             return Bundle().apply {
                 putLong(QUIZ_ID, quizId)

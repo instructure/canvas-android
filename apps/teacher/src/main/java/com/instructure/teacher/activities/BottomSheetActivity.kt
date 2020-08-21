@@ -75,7 +75,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
         } else {
 
             mRoute = intent.extras.getParcelable(Route.ROUTE)
-            
+
             if (mRoute == null) {
                 finish()
                 return
@@ -219,7 +219,6 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
 
     companion object {
         private val ANIMATION_COMPLETE = "ANIMATION_COMPLETE"
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, BottomSheetActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)

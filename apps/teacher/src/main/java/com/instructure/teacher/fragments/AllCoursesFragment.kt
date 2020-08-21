@@ -139,7 +139,6 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     }
 
     companion object {
-        @JvmStatic
         fun getInstance() = AllCoursesFragment()
     }
 }

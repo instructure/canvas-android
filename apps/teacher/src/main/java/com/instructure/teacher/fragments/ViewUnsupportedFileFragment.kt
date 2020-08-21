@@ -159,7 +159,6 @@ class ViewUnsupportedFileFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         @JvmOverloads
         fun newInstance(
                 uri: Uri,
@@ -179,7 +178,6 @@ class ViewUnsupportedFileFragment : Fragment() {
             mEditableFile = editableFile
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = ViewUnsupportedFileFragment().apply { arguments = bundle }
     }
 }

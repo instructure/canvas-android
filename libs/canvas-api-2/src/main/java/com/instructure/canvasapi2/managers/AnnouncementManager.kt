@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 
 object AnnouncementManager {
 
-    @JvmStatic
     fun getAllAnnouncements(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,

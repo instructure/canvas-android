@@ -120,7 +120,6 @@ class FileSearchFragment : BaseSyncFragment<
 
     companion object {
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = FileSearchFragment().withArgs {
             putParcelable(Const.CANVAS_CONTEXT, canvasContext)
         }

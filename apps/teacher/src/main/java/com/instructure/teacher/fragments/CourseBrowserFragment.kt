@@ -67,7 +67,6 @@ class CourseBrowserFragment : BaseSyncFragment<
     private val mCourseBrowserHeader by lazy { rootView.findViewById<CourseBrowserHeaderView>(R.id.courseBrowserHeader) }
 
     companion object {
-        @JvmStatic
         fun newInstance(context: CanvasContext) = CourseBrowserFragment().apply {
             mCanvasContext = context
         }

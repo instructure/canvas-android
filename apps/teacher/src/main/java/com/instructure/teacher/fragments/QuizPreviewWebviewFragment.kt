@@ -105,13 +105,11 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
         @JvmStatic val URL = "url"
         @JvmStatic val TITLE = "title"
 
-        @JvmStatic
         fun newInstance(args: Bundle) = QuizPreviewWebviewFragment().apply {
             url = args.getString(URL)
             title = args.getString(TITLE)
         }
 
-        @JvmStatic
         fun makeBundle(url: String, title: String): Bundle {
             val args = Bundle()
             args.putString(URL, url)

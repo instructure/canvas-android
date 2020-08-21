@@ -598,12 +598,10 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             }
         }
 
-        @JvmStatic
         fun getInstance(args: Bundle, callback: (Int) -> Unit): UploadFilesDialog {
             return getInstance(args).apply { dialogCallback = callback }
         }
 
-        @JvmStatic
         fun getInstance(args: Bundle, callback: (Int, FileSubmitObject?) -> Unit): UploadFilesDialog {
             return getInstance(args).apply { dialogAttachmentCallback = callback }
         }
@@ -612,7 +610,6 @@ class UploadFilesDialog : AppCompatDialogFragment() {
          * Typically what is used in Canvas Student and Teacher. Returns a status of the dialog fragment.
          * When file(s are selected the file(s) will trigger the [FileUploadService] to begin the upload.
          */
-        @JvmStatic
         fun show(fragmentManager: FragmentManager?, args: Bundle, callback: (Int) -> Unit) {
             if (fragmentManager != null) // Manager can be null if the user hits the back button too quickly
                 UploadFilesDialog.getInstance(args, callback).show(fragmentManager, UploadFilesDialog::class.java.simpleName)
@@ -621,13 +618,11 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         /**
          * Only used to pick a file and get an attachment object back. No file uploads are triggered when calling this function.
          */
-        @JvmStatic
         fun show(fragmentManager: FragmentManager?, args: Bundle, callback: (Int, FileSubmitObject?) -> Unit) {
             fragmentManager ?: return
             UploadFilesDialog.getInstance(args, callback).show(fragmentManager, UploadFilesDialog::class.java.simpleName)
         }
 
-        @JvmStatic
         fun createBundle(submitURI: Uri?, type: FileUploadType, parentFolderId: Long?): Bundle {
             val bundle = Bundle()
             if(submitURI != null) bundle.putParcelable(Const.URI, submitURI)
@@ -636,26 +631,22 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             return bundle
         }
 
-        @JvmStatic
         fun createMessageAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
             val bundle = createBundle(null, FileUploadType.MESSAGE, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
 
-        @JvmStatic
         fun createDiscussionsBundle(defaultFileList: ArrayList<FileSubmitObject>): Bundle {
             val bundle = createBundle(null, FileUploadType.DISCUSSION, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)
             return bundle
         }
 
-        @JvmStatic
         fun createFilesBundle(submitURI: Uri?, parentFolderId: Long?): Bundle {
             return createBundle(submitURI, FileUploadType.USER, parentFolderId)
         }
 
-        @JvmStatic
         fun createContextBundle(submitURI: Uri?, context: CanvasContext, parentFolderId: Long?): Bundle {
             return when {
                 context.isCourse -> createCourseBundle(submitURI, context as Course, parentFolderId)
@@ -664,28 +655,24 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             }
         }
 
-        @JvmStatic
         private fun createCourseBundle(submitURI: Uri?, course: Course, parentFolderId: Long?): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.COURSE, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
             return bundle
         }
 
-        @JvmStatic
         private fun createGroupBundle(submitURI: Uri?, group: Group, parentFolderId: Long?): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.GROUP, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, group)
             return bundle
         }
 
-        @JvmStatic
         private fun createUserBundle(submitURI: Uri?, user: User, parentFolderId: Long?): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.USER, parentFolderId)
             bundle.putParcelable(Const.CANVAS_CONTEXT, user)
             return bundle
         }
 
-        @JvmStatic
         fun createAssignmentBundle(submitURI: Uri?, course: Course, assignment: Assignment): Bundle {
             val bundle = createBundle(submitURI, FileUploadType.ASSIGNMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
@@ -693,7 +680,6 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             return bundle
         }
 
-        @JvmStatic
         fun createQuizFileBundle(quizQuestionId: Long, courseId: Long, quizId: Long, position: Int): Bundle {
             val bundle = createBundle(null, FileUploadType.QUIZ, null)
             bundle.putLong(Const.QUIZ_ANSWER_ID, quizQuestionId)
@@ -703,7 +689,6 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             return bundle
         }
 
-        @JvmStatic
         fun createSubmissionCommentBundle(course: Course, assignment: Assignment, defaultFileList: java.util.ArrayList<FileSubmitObject>): Bundle {
             val bundle = createBundle(null, FileUploadType.SUBMISSION_COMMENT, null)
             bundle.putParcelable(Const.CANVAS_CONTEXT, course)
@@ -712,7 +697,6 @@ class UploadFilesDialog : AppCompatDialogFragment() {
             return bundle
         }
 
-        @JvmStatic
         fun createAttachmentsBundle(defaultFileList: ArrayList<FileSubmitObject> = ArrayList()): Bundle {
             val bundle = createBundle(null, FileUploadType.MESSAGE, null)
             bundle.putParcelableArrayList(Const.FILES, defaultFileList)

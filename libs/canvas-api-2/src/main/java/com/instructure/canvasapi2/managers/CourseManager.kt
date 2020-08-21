@@ -30,7 +30,6 @@ import java.util.HashMap
 
 object CourseManager {
 
-    @JvmStatic
     fun getAllFavoriteCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -45,7 +44,6 @@ object CourseManager {
         CourseAPI.getFirstPageFavoriteCourses(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         if (ApiPrefs.isStudentView) {
             getCoursesTeacher(forceNetwork, callback)
@@ -65,7 +63,6 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -73,7 +70,6 @@ object CourseManager {
         CourseAPI.getDashboardCourses(adapter, callback, params)
     }
 
-    @JvmStatic
     fun getCoursesWithSyllabus(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -88,7 +84,6 @@ object CourseManager {
         CourseAPI.getFirstPageCoursesWithSyllabus(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getCoursesTeacher(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -104,7 +99,6 @@ object CourseManager {
         CourseAPI.getFirstPageCoursesTeacher(adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getGradingPeriodsForCourse(callback: StatusCallback<GradingPeriodResponse>, courseId: Long, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -112,7 +106,6 @@ object CourseManager {
         CourseAPI.getGradingPeriodsForCourse(adapter, callback, params, courseId)
     }
 
-    @JvmStatic
     fun getCourse(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -120,7 +113,6 @@ object CourseManager {
         CourseAPI.getCourse(courseId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getCourseWithSyllabus(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -138,7 +130,6 @@ object CourseManager {
         CourseAPI.getCourseSettings(courseId, adapter, it, params)
     }
 
-    @JvmStatic
     fun getCourseWithGrade(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -150,7 +141,6 @@ object CourseManager {
         getCourseWithGrade(courseId, it, forceNetwork)
     }
 
-    @JvmStatic
     fun getCourseStudent(courseId: Long, studentId: Long, callback: StatusCallback<User>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -158,7 +148,6 @@ object CourseManager {
         CourseAPI.getCourseStudent(courseId, studentId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun addCourseToFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -166,7 +155,6 @@ object CourseManager {
         CourseAPI.addCourseToFavorites(courseId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun removeCourseFromFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -174,7 +162,6 @@ object CourseManager {
         CourseAPI.removeCourseFromFavorites(courseId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val queryParams = HashMap<String, String>()
         queryParams["course[name]"] = newCourseName
@@ -185,7 +172,6 @@ object CourseManager {
         CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
     }
 
-    @JvmStatic
     fun editCourseHomePage(
         courseId: Long,
         newHomePage: String,
@@ -201,7 +187,6 @@ object CourseManager {
         CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getCoursesWithEnrollmentType(forceNetwork: Boolean, callback: StatusCallback<List<Course>>, type: String) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -216,7 +201,6 @@ object CourseManager {
         getCoursesWithEnrollmentType(forceNetwork, it, type)
     }
 
-    @JvmStatic
     fun getGroupsForCourse(courseId: Long, callback: StatusCallback<List<Group>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -229,7 +213,6 @@ object CourseManager {
         CourseAPI.getFirstPageGroups(courseId, adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getCoursePermissions(
         courseId: Long,
         requestedPermissions: List<String>,
@@ -247,7 +230,6 @@ object CourseManager {
         forceNetwork: Boolean = false
     ) = apiAsync<CanvasContextPermission> { getCoursePermissions(courseId, requestedPermissions, it, forceNetwork) }
 
-    @JvmStatic
     fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
         userId: Long,
@@ -261,7 +243,6 @@ object CourseManager {
     }
 
     @Throws(IOException::class)
-    @JvmStatic
     fun getCoursesSynchronous(forceNetwork: Boolean): List<Course> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -270,10 +251,8 @@ object CourseManager {
         return data ?: ArrayList()
     }
 
-    @JvmStatic
     fun createCourseMap(courses: List<Course>?): Map<Long, Course> = courses?.associateBy { it.id } ?: emptyMap()
 
-    @JvmStatic
     fun getRubricSettings(courseId: Long, rubricId: Long, forceNetwork: Boolean, callback: StatusCallback<RubricSettings>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.ErrorReportResult
 
 object ErrorReportManager {
 
-    @JvmStatic
     fun postErrorReport(errorReport: ErrorReport, isGeneric: Boolean, callback: StatusCallback<ErrorReportResult>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(

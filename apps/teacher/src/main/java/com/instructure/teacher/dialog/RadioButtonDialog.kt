@@ -127,7 +127,6 @@ class RadioButtonDialog : AppCompatDialogFragment() {
 
     companion object {
 
-        @JvmStatic
         fun getInstance(manager: FragmentManager, title: String, options: ArrayList<String>,
                         selectedIdx: Int,
                         callback: OnRadioButtonSelected): RadioButtonDialog {

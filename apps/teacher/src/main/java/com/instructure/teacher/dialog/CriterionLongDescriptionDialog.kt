@@ -45,7 +45,6 @@ class CriterionLongDescriptionDialog : DialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun show(manager: FragmentManager, description: String, longDescription: String) = CriterionLongDescriptionDialog().apply {
             manager.dismissExisting<CriterionLongDescriptionDialog>()
             mDescription = description

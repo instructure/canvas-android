@@ -174,7 +174,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         private const val DISCUSSION_TOPIC = "DISCUSSION_TOPIC"
         private const val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
 
-        @JvmStatic
         fun makeBundle(
                 discussionTopicHeaderId: Long,
                 discussionEntryId: DiscussionEntry?,
@@ -186,7 +185,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
             putParcelable(DISCUSSION_TOPIC, discussionTopic)
         }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
             DiscussionsUpdateFragment().withArgs(args).apply { mCanvasContext = canvasContext }
     }

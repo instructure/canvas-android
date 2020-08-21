@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 class AnnouncementListFragment : DiscussionsListFragment() {
 
     companion object {
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = AnnouncementListFragment().apply {
             mCanvasContext = canvasContext
             mIsAnnouncements = true

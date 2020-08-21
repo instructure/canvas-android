@@ -308,17 +308,14 @@ class CreateOrEditPageDetailsFragment :
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(bundle: Bundle) = CreateOrEditPageDetailsFragment().apply {
             arguments = bundle
         }
 
-        @JvmStatic
         fun newInstanceCreate(canvasContext: CanvasContext) = CreateOrEditPageDetailsFragment().apply {
             mCanvasContext = canvasContext
         }
 
-        @JvmStatic
         fun newInstanceEdit(canvasContext: CanvasContext, page: Page)
                 = CreateOrEditPageDetailsFragment().apply {
             mCanvasContext = canvasContext

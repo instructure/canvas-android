@@ -135,7 +135,6 @@ class ViewHtmlFragment : InternalWebViewFragment() {
             }
         }
 
-        @JvmStatic
         @JvmOverloads
         fun makeDownloadBundle(
             downloadUrl: String,

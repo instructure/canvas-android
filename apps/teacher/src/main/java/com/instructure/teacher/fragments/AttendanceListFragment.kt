@@ -294,14 +294,12 @@ class AttendanceListFragment : BaseSyncFragment<
     }
 
     companion object {
-        @JvmStatic
         fun makeBundle(ltiTab: Tab): Bundle {
             val args = Bundle()
             args.putParcelable(Const.TAB, ltiTab)
             return args
         }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = AttendanceListFragment().apply {
             mCanvasContext = canvasContext
             mTab = args.getParcelable(Const.TAB)

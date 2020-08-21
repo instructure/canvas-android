@@ -101,7 +101,6 @@ object QRLogin {
         return tokenResponse
     }
 
-    @JvmStatic
     fun verifySSOLoginUri(uri: Uri?, isTeacher: Boolean = false): Boolean {
         if (uri == null) return false
         val codeParam = if(isTeacher) QR_AUTH_CODE_TEACHER else QR_AUTH_CODE_STUDENT
