@@ -203,32 +203,37 @@ data class Course(
 
     /**
      * Helper function to check if the course is within a valid date range for use
+     *
+     * Useful for setting content to read-only, such as submissions
      */
-    fun isValidForCurrentDate(): Boolean {
+    fun isReadOnlyForCurrentDate(): Boolean {
         val now = Date()
         if (accessRestrictedByDate) return false
 
         if (workflowState == "completed") return false
 
-        val isWithinCourseDates = isWithinDates(
+        val isValidForCourse = isWithinDates(
                 startAt.toDate(),
                 endAt.toDate(),
                 now
         )
 
-        return if (accessRestrictedByDate) {
-            isWithinCourseDates
+        return if (restrictEnrollmentsToCourseDate && !isValidForCourse) {
+            false
         } else {
-            val isWithinTermDates = isWithinDates(term?.startDate, term?.endDate, now)
+            val isValidForTerm = isWithinDates(term?.startDate, term?.endDate, now)
 
-            val isWithinAnySection: Boolean = if (sections.isEmpty()) {
-                true
+            if(isValidForTerm) {
+                // check the sections
+                if (sections.isEmpty()) {
+                    true
+                } else {
+                    // All we need is one valid section
+                    sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
+                }
             } else {
-                // TODO - does it only return sections that the student is in
-                sections.any { section -> isWithinDates(section.startAt.toDate(), section.endAt.toDate(), now) }
+                false
             }
-
-            isWithinCourseDates || isWithinTermDates || isWithinAnySection
         }
     }
 

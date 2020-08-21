@@ -20,7 +20,6 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
-import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.student.R
 import com.instructure.student.Submission
@@ -179,7 +178,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.allowedAttempts = assignment.allowedAttempts != -1L
         visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
-        if (isObserver || !course.isValidForCurrentDate()) {
+        if (isObserver || !course.isReadOnlyForCurrentDate()) {
             // Observers shouldn't see the submit button
             // OR if the course is soft concluded
             visibilities.submitButton = false
