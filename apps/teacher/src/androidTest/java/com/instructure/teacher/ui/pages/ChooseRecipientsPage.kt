@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.pages
 
+import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
@@ -49,7 +50,7 @@ class ChooseRecipientsPage: BasePage() {
         waitForViewWithText("Students").click()
     }
 
-    fun clickStudent(student: CanvasUserApiModel) {
-        waitForViewWithText(student.shortName).click()
+    fun clickStudent(student: User) {
+        waitForViewWithText(student.shortName!!).click()
     }
 }

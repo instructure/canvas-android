@@ -15,41 +15,60 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.PageApiModel
-import com.instructure.espresso.ditto.Ditto
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
+import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.ui.utils.TeacherTest
-import com.instructure.teacher.ui.utils.seedCoursePage
-import com.instructure.teacher.ui.utils.seedData
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
 
 class PageListPageTest : TeacherTest() {
 
     @Test
-    @Ditto
     override fun displaysPageObjects() {
         getToPageListPage()
         pageListPage.assertPageObjects()
     }
 
     @Test
-    @Ditto
     fun searchesPages() {
         val pages = getToPageListPage(pageCount = 3)
         val searchPage = pages[2]
         pageListPage.assertPageCount(pages.size)
         pageListPage.openSearch()
-        pageListPage.enterSearchQuery(searchPage.title.take(searchPage.title.length / 2))
+        pageListPage.enterSearchQuery(searchPage.title!!.take(searchPage.title!!.length / 2))
         pageListPage.assertPageCount(1)
         pageListPage.assertHasPage(searchPage)
     }
 
-    private fun getToPageListPage(pageCount: Int = 1): List<PageApiModel> {
-        val data = seedData(teachers = 1, favoriteCourses = 1)
-        val course = data.coursesList[0]
-        val teacher = data.teachersList[0]
-        val pages = (0 until pageCount).map { seedCoursePage(course = course, teacher = teacher) }
-        tokenLogin(teacher)
+    private fun getToPageListPage(pageCount: Int = 1): List<Page> {
+        val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val course = data.courses.values.first()
+        val teacher = data.teachers[0]
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission() // Just need to have some sort of permissions object registered
+        )
+
+        val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
+        data.courseTabs[course.id]!! += pagesTab // TODO: MockCanvas.addTab()
+
+        val pages = mutableListOf<Page>()
+        repeat(pageCount) {
+            pages += data.addPageToCourse(
+                    courseId = course.id,
+                    pageId = data.newItemId(),
+                    published = true
+            )
+        }
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
         coursesListPage.openCourse(course)
         courseBrowserPage.openPagesTab()
         return pages
