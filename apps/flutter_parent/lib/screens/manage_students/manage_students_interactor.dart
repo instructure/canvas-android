@@ -16,22 +16,17 @@ import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/enrollments_api.dart';
+import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class ManageStudentsInteractor {
   Future<List<User>> getStudents({bool forceRefresh = false}) async {
-    var enrollments = await _enrollmentsApi().getObserveeEnrollments(forceRefresh: forceRefresh);
-    List<User> users = filterStudents(enrollments);
+    var users = await locator<UserApi>().getObservees(forceRefresh: forceRefresh);
     sortUsers(users);
     return users;
   }
 
-  List<User> filterStudents(List<Enrollment> enrollments) =>
-      enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList();
-
   void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName.compareTo(user2.sortableName));
-
-  EnrollmentsApi _enrollmentsApi() => locator<EnrollmentsApi>();
 
   Future<bool> shouldAllowPairing() => locator<AccountsApi>().getPairingAllowed();
 }

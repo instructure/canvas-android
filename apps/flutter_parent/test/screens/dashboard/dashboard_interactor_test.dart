@@ -32,14 +32,14 @@ import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   test('getStudents calls getObserveeEnrollments from EnrollmentsApi', () {
-    var api = MockEnrollmentsApi();
-    setupTestLocator((l) => l.registerLazySingleton<EnrollmentsApi>(() => api));
-    when(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh')))
-        .thenAnswer((_) => Future.value(<Enrollment>[]));
+    var api = MockUserApi();
+    setupTestLocator((l) => l.registerLazySingleton<UserApi>(() => api));
+    when(api.getObservees(forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value(<User>[]));
 
     var interactor = DashboardInteractor();
     interactor.getStudents();
-    verify(api.getObserveeEnrollments(forceRefresh: anyNamed('forceRefresh'))).called(1);
+    verify(api.getObservees(forceRefresh: anyNamed('forceRefresh'))).called(1);
   });
 
   test('getSelf calls UserApi', () async {
@@ -97,35 +97,6 @@ void main() {
     interactor.sortUsers(startingList);
 
     expect(startingList, expectedSortedList);
-  });
-
-  test('Filter out enrollments with no observee', () {
-    // Create the lists
-    var startingList = [
-      _mockEnrollment(null),
-      _mockEnrollment(_mockStudent('Alex').toBuilder()),
-      _mockEnrollment(null)
-    ];
-    var expectedSortedList = [_mockStudent('Alex')];
-
-    // Run the logic
-    var interactor = DashboardInteractor();
-    var result = interactor.filterStudents(startingList);
-
-    expect(result, expectedSortedList);
-  });
-
-  test('Filter out duplicate enrollments', () {
-    var enrollment = _mockEnrollment(_mockStudent('Alex').toBuilder());
-    // Create the lists
-    var startingList = [enrollment, enrollment, enrollment, enrollment];
-    var expectedSortedList = [_mockStudent('Alex')];
-
-    // Run the logic
-    var interactor = DashboardInteractor();
-    var result = interactor.filterStudents(startingList);
-
-    expect(result, expectedSortedList);
   });
 
   test('Returns InboxCountNotifier from locator', () {

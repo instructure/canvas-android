@@ -39,4 +39,12 @@ class UserApi {
     var queryParams = {'hexcode': hexCode};
     return fetch(canvasDio().put('users/self/colors/$contextId', queryParameters: queryParams));
   }
+
+  Future<List<User>> getObservees({bool forceRefresh = false}) async {
+    var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
+    var params = {
+      'include': ['avatar_url'],
+    };
+    return fetchList(dio.get('users/self/observees', queryParameters: params), depaginateWith: dio);
+  }
 }

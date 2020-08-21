@@ -12,9 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:flutter_parent/models/enrollment.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/api/enrollments_api.dart';
 import 'package:flutter_parent/network/api/user_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/alert_notifier.dart';
@@ -24,8 +22,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class DashboardInteractor {
   Future<List<User>> getStudents({bool forceRefresh = false}) async =>
-      locator<EnrollmentsApi>().getObserveeEnrollments(forceRefresh: forceRefresh).then<List<User>>((enrollments) {
-        List<User> users = filterStudents(enrollments);
+      locator<UserApi>().getObservees(forceRefresh: forceRefresh).then<List<User>>((users) {
         sortUsers(users);
         return users;
       });
@@ -36,9 +33,6 @@ class DashboardInteractor {
         ApiPrefs.setUser(user, app: app);
         return user;
       });
-
-  List<User> filterStudents(List<Enrollment> enrollments) =>
-      enrollments.map((enrollment) => enrollment.observedUser).where((student) => student != null).toSet().toList();
 
   void sortUsers(List<User> users) => users.sort((user1, user2) => user1.sortableName.compareTo(user2.sortableName));
 
