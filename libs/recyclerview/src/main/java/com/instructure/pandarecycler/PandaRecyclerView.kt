@@ -45,7 +45,7 @@ class PandaRecyclerView @JvmOverloads constructor(
         }
 
         override fun setDisplayNoConnection(isNoConnection: Boolean) {
-            emptyView!!.setDisplayNoConnection(isNoConnection)
+            emptyView?.setDisplayNoConnection(isNoConnection)
             setIsEmpty(isNoConnection)
         }
 
@@ -55,12 +55,12 @@ class PandaRecyclerView @JvmOverloads constructor(
         }
     }
 
-    private val mPaginatedScrollListener = PaginatedScrollListener { baseRecyclerAdapter!!.loadData() }
+    private val mPaginatedScrollListener = PaginatedScrollListener { baseRecyclerAdapter?.loadData() }
 
     init {
         addOnItemTouchListener(
             RecyclerItemClickListener(context) { _, position ->
-                if (isSelectionEnabled) (adapter as BaseRecyclerAdapter<*>?)!!.setSelectedPosition(position)
+                if (isSelectionEnabled) (adapter as BaseRecyclerAdapter<*>?)?.setSelectedPosition(position)
             }
         )
     }
@@ -88,11 +88,11 @@ class PandaRecyclerView @JvmOverloads constructor(
         oldAdapter?.unregisterAdapterDataObserver(observer)
         super.setAdapter(adapter)
         baseRecyclerAdapter = adapter as BaseRecyclerAdapter<*>?
-        if (adapter != null) {
+        baseRecyclerAdapter?.let {
             reset()
-            adapter.registerAdapterDataObserver(observer)
-            baseRecyclerAdapter!!.adapterToRecyclerViewCallback = mAdapterToRecyclerViewCallback
-            if (baseRecyclerAdapter!!.isPaginated) {
+            it.registerAdapterDataObserver(observer)
+            it.adapterToRecyclerViewCallback = mAdapterToRecyclerViewCallback
+            if (it.isPaginated) {
                 addOnScrollListener(mPaginatedScrollListener)
             }
         }
@@ -109,19 +109,19 @@ class PandaRecyclerView @JvmOverloads constructor(
     }
 
     private fun checkIfEmpty() {
-        if (emptyView != null && adapter != null) {
-            if (baseRecyclerAdapter!!.size() == 0 && !isRefresh) {
-                this.visibility = View.GONE
-                emptyView!!.setVisibility(View.VISIBLE)
-                if (isEmpty) {
-                    emptyView!!.setListEmpty()
-                } else {
-                    emptyView!!.setLoading()
-                }
+        val emptyView = emptyView ?: return
+        val adapter = baseRecyclerAdapter ?: return
+        if (adapter.size() == 0 && !isRefresh) {
+            this.visibility = View.GONE
+            emptyView.setVisibility(View.VISIBLE)
+            if (isEmpty) {
+                emptyView.setListEmpty()
             } else {
-                this.visibility = View.VISIBLE
-                emptyView!!.setVisibility(View.GONE)
+                emptyView.setLoading()
             }
+        } else {
+            this.visibility = View.VISIBLE
+            emptyView.setVisibility(View.GONE)
         }
     }
 }

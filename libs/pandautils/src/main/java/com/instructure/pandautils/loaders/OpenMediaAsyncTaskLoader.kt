@@ -80,7 +80,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
     }
 
     private var mimeType: String? = null
-    var url: String? = null
+    var url: String = ""
     var filename: String? = null
         private set
     private var isSubmission = false
@@ -91,7 +91,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
 
     init {
         if (args != null) {
-            url = args.getString(Const.URL)
+            url = args.getString(Const.URL) ?: throw IllegalArgumentException("Argument ${Const.URL} cannot be null")
             isUseOutsideApps = args.getBoolean(Const.OPEN_OUTSIDE)
             if (args.containsKey(Const.MIME) && args.containsKey(Const.FILE_URL)) {
                 mimeType = args.getString(Const.MIME)
@@ -120,7 +120,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             val intent = Intent(Intent.ACTION_VIEW)
             intent.putExtra(Const.IS_MEDIA_TYPE, true)
             if (isHtmlFile && canvasContext != null) {
-                val file = downloadFile(context, url!!, filename)
+                val file = downloadFile(context, url, filename)
                 val bundle = createTaskLoaderBundle(
                     canvasContext,
                     FileProvider.getUriForFile(
@@ -146,7 +146,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
                     loadedMedia.intent = intent
                     if (extras != null) loadedMedia.bundle = extras
                     Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Intent can be handled: " + isIntentHandledByActivity(intent))
-                    attemptDownloadFile(context, intent, loadedMedia, url!!, filename)
+                    attemptDownloadFile(context, intent, loadedMedia, url, filename)
                 } else {
                     loadedMedia.errorMessage = R.string.noDataConnection
                 }
@@ -173,7 +173,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
      * @return Uri if there's a connection, returns null otherwise
      */
     @Throws(IOException::class)
-    private fun attemptConnection(url: String?): Uri? {
+    private fun attemptConnection(url: String): Uri? {
         var uri: Uri? = null
         val hc = URL(url).openConnection() as HttpURLConnection
         val connection = redirectURL(hc)
@@ -292,7 +292,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             return filename
         }
 
-        fun makeFilenameUnique(filename: String?, url: String?): String {
+        fun makeFilenameUnique(filename: String?, url: String): String {
             val matcher = Pattern.compile("(.*)\\.(.*)").matcher(filename)
             return if (matcher.find()) {
                 val actualFilename = matcher.group(1)

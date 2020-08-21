@@ -50,10 +50,10 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         val errorText = root.findViewById<TextView>(R.id.errorMessage)
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(root)
-        builder.setTitle(arguments!!.getString(TITLE))
+        builder.setTitle(arguments?.getString(TITLE))
         builder.setPositiveButton(R.string.rce_dialogDone, null) // Override listener in onShow
         builder.setNegativeButton(R.string.rce_dialogCancel) { _, _ -> dismiss() }
-        val themeColor = arguments!!.getInt(THEME_COLOR, Color.BLACK)
+        val themeColor = arguments?.getInt(THEME_COLOR, Color.BLACK) ?: Color.BLACK
         val highlightColor = increaseAlpha(themeColor)
         val colorStateList = makeEditTextColorStateList(Color.BLACK, themeColor)
         altEditText = root.findViewById(R.id.altEditText)
@@ -64,14 +64,14 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         urlEditText.supportBackgroundTintList = colorStateList
         val dialog = builder.create()
         dialog.setOnShowListener {
-            val buttonColor = arguments!!.getInt(BUTTON_COLOR, Color.BLACK)
+            val buttonColor = arguments?.getInt(BUTTON_COLOR, Color.BLACK) ?: Color.BLACK
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(buttonColor)
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(buttonColor)
             val button = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             // Override onClick here to prevent dismissing during error checks
             button.setOnClickListener {
                 if (callback != null) {
-                    val isVerifyUrl = arguments!!.getBoolean(VERIFY_URL, false)
+                    val isVerifyUrl = arguments?.getBoolean(VERIFY_URL, false) ?: false
                     val url = urlEditText.text.toString()
                     val alt = altEditText.text.toString()
                     if (isVerifyUrl) {

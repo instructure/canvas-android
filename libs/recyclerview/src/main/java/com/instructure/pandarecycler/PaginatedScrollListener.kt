@@ -36,10 +36,8 @@ class PaginatedScrollListener(
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         visibleItemCount = recyclerView.childCount
-        totalItemCount = recyclerView.layoutManager!!.itemCount
-        if (recyclerView.layoutManager is LinearLayoutManager) { // TODO staggered grid won't work here
-            firstVisibleItem = (recyclerView.layoutManager as LinearLayoutManager?)!!.findFirstVisibleItemPosition()
-        }
+        totalItemCount = recyclerView.layoutManager?.itemCount ?: 0
+        firstVisibleItem = (recyclerView.layoutManager as? LinearLayoutManager?)?.findFirstVisibleItemPosition() ?: 0
         if (isLoading) {
             if (totalItemCount > previousTotal) {
                 isLoading = false

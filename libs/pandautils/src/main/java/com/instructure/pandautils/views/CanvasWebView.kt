@@ -280,7 +280,7 @@ class CanvasWebView @JvmOverloads constructor(
      */
     fun handleGoBack(): Boolean {
         if (webChromeClient?.isVideoFullscreen == true) {
-            return webChromeClient!!.onBackPressed()
+            return webChromeClient?.onBackPressed() ?: false
         } else if (super.canGoBack()) {
             super.goBack()
             return true

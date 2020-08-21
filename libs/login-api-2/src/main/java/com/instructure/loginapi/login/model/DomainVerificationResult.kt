@@ -17,22 +17,23 @@
 package com.instructure.loginapi.login.model
 
 import android.os.Parcelable
+import androidx.annotation.VisibleForTesting
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class DomainVerificationResult(
-    var authorized: Boolean = false,
+    val authorized: Boolean = false,
     @SerializedName("result")
     var resultCode: Int = 0,
     @SerializedName("client_id")
-    var clientId: String = "",
+    val clientId: String = "",
     @SerializedName("client_secret")
-    var clientSecret: String = "",
+    val clientSecret: String = "",
     @SerializedName("api_key")
-    var apiKey: String = "",
+    val apiKey: String = "",
     @SerializedName("base_url")
-    var url: String = ""
+    val url: String = ""
 ) : Parcelable {
     val baseUrl: String get() = url.substringAfter("://")
     val protocol: String get() = url.substringBefore("://", "https")
