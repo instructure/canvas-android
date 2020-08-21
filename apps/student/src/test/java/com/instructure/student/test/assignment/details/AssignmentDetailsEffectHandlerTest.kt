@@ -83,7 +83,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         course = Course()
         userId = 6789L
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = userId)
 
         mockkStatic("com.instructure.student.db.ExtensionsKt")
@@ -791,7 +791,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val submissionType = Assignment.SubmissionType.ONLINE_QUIZ
         val assignment = assignment.copy(quizId = quizId)
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
@@ -815,7 +815,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val assignment = assignment.copy(discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId))
         val course = Course()
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
@@ -886,7 +886,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val assignment = Assignment()
         val effect = AssignmentDetailsEffect.RouteInternally(url, course, assignment)
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.domain } returns domain
 
         connection.accept(effect)
@@ -894,7 +894,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
             view.routeInternally(url, domain, course, assignment)
         }
         confirmVerified(view)
-        unmockkStatic(ApiPrefs::class)
+        unmockkObject(ApiPrefs)
     }
 
     @Test
@@ -904,7 +904,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val domain = "domain.com"
         val ltiUrl = "domain.com//courses/0/external_tools/0/resource_selection?launch_type=homework_submission&assignment_id=2468"
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.fullDomain } returns domain
 
         val assignment = assignment.copy(submissionTypesRaw = listOf("online_upload"))
@@ -921,7 +921,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         }
 
         confirmVerified(view)
-        unmockkStatic(ApiPrefs::class)
+        unmockkObject(ApiPrefs)
     }
 
     @Test
@@ -1250,7 +1250,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         mockkStatic(FileProvider::class)
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
-        mockkStatic(FilePrefs::class)
+        mockkObject(FilePrefs)
         every { FilePrefs.tempCaptureUri = any() }
 
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
@@ -1296,7 +1296,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
         // Mock both so we can mockk the class and the extensions in the same file
-        mockkStatic(PermissionUtils::class)
+        mockkObject(PermissionUtils)
         mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns hasPermission andThen permissionGranted
 

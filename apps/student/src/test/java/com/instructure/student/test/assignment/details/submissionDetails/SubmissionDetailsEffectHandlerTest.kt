@@ -75,7 +75,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Network(errorMessage))
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(assignmentId, courseId))
@@ -114,7 +114,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Fail(Failure.Authorization(errorMessage))
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(assignmentId, courseId))
@@ -173,7 +173,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
@@ -231,7 +231,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
@@ -282,7 +282,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(ltiTool)
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
@@ -334,7 +334,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(quiz)
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
         every { ApiPrefs.fullDomain} returns "https://www.instructure.com"
 
@@ -384,7 +384,7 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(listOf(studioLTITool))
         }
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
 
         connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))

@@ -99,7 +99,7 @@ class SyllabusEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
-        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), any(), any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
@@ -149,7 +149,7 @@ class SyllabusEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
-        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignments)
         }
@@ -186,7 +186,7 @@ class SyllabusEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
-        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignments)
         }
@@ -223,7 +223,7 @@ class SyllabusEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
 
-        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
@@ -276,7 +276,7 @@ class SyllabusEffectHandlerTest : Assert() {
             coEvery { await() } returns DataResult.Success(course)
         }
 
-        mockkStatic(CalendarEventManager::class) // mockkObject wasn't working here ¯\_(ツ)_/¯
+        mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(assignments)
         }

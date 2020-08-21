@@ -312,7 +312,7 @@ class SubmissionCommentsEffectHandlerTest : Assert(){
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
         // Mock both so we can mockk the class and the extensions in the same file
-        mockkStatic(PermissionUtils::class)
+        mockkObject(PermissionUtils)
         mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns hasPermission andThen permissionGranted
 
