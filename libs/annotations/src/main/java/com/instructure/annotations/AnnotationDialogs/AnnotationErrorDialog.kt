@@ -58,7 +58,6 @@ class AnnotationErrorDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, callback: () -> Unit) : AnnotationErrorDialog {
             manager.dismissExisting<AnnotationErrorDialog>()
             val dialog = AnnotationErrorDialog()

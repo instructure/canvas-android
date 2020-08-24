@@ -24,14 +24,12 @@ import com.instructure.canvasapi2.models.LaunchDefinition
 
 object LaunchDefinitionsManager {
 
-    @JvmStatic
     fun getLaunchDefinitions(callback: StatusCallback<List<LaunchDefinition>?>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         LaunchDefinitionsAPI.getLaunchDefinitions(adapter, callback, params)
     }
 
-    @JvmStatic
     fun getLaunchDefinitionsForCourse(
         courseId: Long,
         callback: StatusCallback<List<LaunchDefinition>>,

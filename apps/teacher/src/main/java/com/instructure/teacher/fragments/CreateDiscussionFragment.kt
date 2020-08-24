@@ -61,14 +61,23 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.CreateDiscussionView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_discussion.*
 import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.Date
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.any
+import kotlin.collections.arrayListOf
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.forEachIndexed
+import kotlin.collections.hashMapOf
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.plusAssign
+import kotlin.collections.toList
 
 class CreateDiscussionFragment : BasePresenterFragment<
         CreateDiscussionPresenter,
@@ -179,7 +188,7 @@ class CreateDiscussionFragment : BasePresenterFragment<
 
     override fun insertImageIntoRCE(text: String, alt: String) = descriptionRCEView.insertImage(text, alt)
 
-    override fun onReadySetGo(presenter: CreateDiscussionPresenter?) {
+    override fun onReadySetGo(presenter: CreateDiscussionPresenter) {
         // If we already have something in the edit date groups we already have the full assignment and don't need to get it again.
         mDiscussionTopicHeader?.assignment?.let {
             // Get the full assignment with overrides
@@ -195,9 +204,9 @@ class CreateDiscussionFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<CreateDiscussionPresenter> = CreateDiscussionPresenterFactory(mCanvasContext, mDiscussionTopicHeader?.assignment)
+    override fun getPresenterFactory() = CreateDiscussionPresenterFactory(mCanvasContext, mDiscussionTopicHeader?.assignment)
 
-    override fun onPresenterPrepared(presenter: CreateDiscussionPresenter?) { }
+    override fun onPresenterPrepared(presenter: CreateDiscussionPresenter) { }
 
     override fun layoutResId(): Int = R.layout.fragment_create_discussion
 
@@ -660,16 +669,13 @@ class CreateDiscussionFragment : BasePresenterFragment<
         @JvmStatic private val DISCUSSION_TOPIC_HEADER = "discussion_topic_header"
         @JvmStatic private val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"
 
-        @JvmStatic
         fun newInstance(args: Bundle) = CreateDiscussionFragment().withArgs(args)
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)
                 }
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)
@@ -677,7 +683,6 @@ class CreateDiscussionFragment : BasePresenterFragment<
                 }
 
 
-        @JvmStatic
         fun makeBundle(canvasContext: CanvasContext, discussionTopicHeader: DiscussionTopicHeader, shouldScrollToDates: Boolean): Bundle =
                 Bundle().apply {
                     putParcelable(CANVAS_CONTEXT, canvasContext)

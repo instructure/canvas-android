@@ -18,8 +18,9 @@ package com.instructure.teacher.factory
 
 
 import com.instructure.teacher.presenters.AllCoursesPresenter
+import com.instructure.teacher.viewinterface.AllCoursesView
 import instructure.androidblueprint.PresenterFactory
 
-class AllCoursesPresenterFactory : PresenterFactory<AllCoursesPresenter> {
+class AllCoursesPresenterFactory : PresenterFactory<AllCoursesView, AllCoursesPresenter> {
     override fun create() = AllCoursesPresenter()
 }

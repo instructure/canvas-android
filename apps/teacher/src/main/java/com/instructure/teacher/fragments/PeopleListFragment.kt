@@ -41,25 +41,21 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.PeopleListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_people_list_layout.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
+import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.recyclerView as peopleRecyclerView
 import java.util.*
 
 class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleListView, UserViewHolder, PeopleListRecyclerAdapter>(), PeopleListView, SearchView.OnQueryTextListener {
 
     private var mCanvasContextsSelected: ArrayList<CanvasContext>? = null
 
-    internal var mRecyclerView: RecyclerView? = null
-
     override fun layoutResId(): Int = R.layout.fragment_people_list_layout
 
     override fun onCreateView(view: View) {}
 
     override fun onReadySetGo(presenter: PeopleListPresenter) {
-        if (mRecyclerView?.adapter == null) {
-            mRecyclerView?.adapter = adapter
-        }
+        recyclerView?.adapter = adapter
 
         setupViews()
         presenter.loadData(false)
@@ -147,31 +143,28 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     }
 
 
-    override fun getPresenterFactory(): PresenterFactory<PeopleListPresenter> =
+    override fun getPresenterFactory() =
             PeopleListPresenterFactory(nonNullArgs.getParcelable<Parcelable>(Const.CANVAS_CONTEXT) as CanvasContext)
 
 
     override fun onPresenterPrepared(presenter: PeopleListPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         addSwipeToRefresh(swipeRefreshLayout!!)
     }
 
-    override fun getAdapter(): PeopleListRecyclerAdapter {
-        if (mAdapter == null) {
-            mAdapter = PeopleListRecyclerAdapter(requireContext(), presenter, object : AdapterToFragmentCallback<User> {
-                override fun onRowClicked(model: User, position: Int) {
-                    val canvasContext = nonNullArgs.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)!!
-                    if (canvasContext.isDesigner()) {
-                        showToast(R.string.errorIsDesigner)
-                        return
-                    }
-                    val bundle = StudentContextFragment.makeBundle(model.id, canvasContext.id, true)
-                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, canvasContext, bundle))
+    override fun createAdapter(): PeopleListRecyclerAdapter {
+        return PeopleListRecyclerAdapter(requireContext(), presenter, object : AdapterToFragmentCallback<User> {
+            override fun onRowClicked(model: User, position: Int) {
+                val canvasContext = nonNullArgs.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)!!
+                if (canvasContext.isDesigner()) {
+                    showToast(R.string.errorIsDesigner)
+                    return
                 }
-            })
-        }
-        return mAdapter
+                val bundle = StudentContextFragment.makeBundle(model.id, canvasContext.id, true)
+                RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, canvasContext, bundle))
+            }
+        })
     }
 
     override fun onQueryTextSubmit(query: String): Boolean = false
@@ -182,7 +175,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         return true
     }
 
-    override fun getRecyclerView(): RecyclerView? = mRecyclerView
+    override val recyclerView: RecyclerView? get() = peopleRecyclerView
 
     override fun withPagination(): Boolean = true
 
@@ -201,7 +194,7 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     }
 
     override fun checkIfEmpty() {
-        RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+        RecyclerViewUtils.checkIfEmpty(emptyPandaView, recyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
     companion object {

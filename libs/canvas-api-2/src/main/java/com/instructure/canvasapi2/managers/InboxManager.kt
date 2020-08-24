@@ -25,7 +25,6 @@ import java.io.IOException
 
 object InboxManager {
 
-    @JvmStatic
     fun createConversation(
         userIDs: List<String>,
         message: String,
@@ -50,14 +49,12 @@ object InboxManager {
         )
     }
 
-    @JvmStatic
     fun getConversations(scope: InboxApi.Scope, forceNetwork: Boolean, callback: StatusCallback<List<Conversation>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         InboxApi.getConversations(scope, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getConversationsFiltered(
         scope: InboxApi.Scope,
         canvasContext: String,
@@ -69,14 +66,12 @@ object InboxManager {
         InboxApi.getConversationsFiltered(scope, canvasContext, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getConversation(conversationId: Long, forceNetwork: Boolean, callback: StatusCallback<Conversation>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         InboxApi.getConversation(adapter, callback, params, conversationId)
     }
 
-    @JvmStatic
     fun starConversation(
         conversationId: Long,
         starred: Boolean,
@@ -88,7 +83,6 @@ object InboxManager {
         InboxApi.updateConversation(adapter, callback, params, conversationId, workFlowState, starred)
     }
 
-    @JvmStatic
     fun archiveConversation(conversationId: Long, archive: Boolean, callback: StatusCallback<Conversation>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -102,21 +96,18 @@ object InboxManager {
         )
     }
 
-    @JvmStatic
     fun deleteConversation(conversationId: Long, callback: StatusCallback<Conversation>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         InboxApi.deleteConversation(adapter, callback, params, conversationId)
     }
 
-    @JvmStatic
     fun deleteMessages(conversationId: Long, messageIds: List<Long>, callback: StatusCallback<Conversation>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         InboxApi.deleteMessages(adapter, callback, params, conversationId, messageIds)
     }
 
-    @JvmStatic
     fun addMessage(
         conversationId: Long,
         message: String,
@@ -141,14 +132,12 @@ object InboxManager {
         )
     }
 
-    @JvmStatic
     fun markConversationAsUnread(conversationId: Long, conversationEvent: String, callback: StatusCallback<Void>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         InboxApi.markConversationAsUnread(adapter, callback, params, conversationId, conversationEvent)
     }
 
-    @JvmStatic
     fun getConversationSynchronous(conversationId: Long, forceNetwork: Boolean): Conversation? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

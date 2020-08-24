@@ -21,17 +21,14 @@ import android.os.Bundle
 class FullscreenInternalWebViewFragment : InternalWebViewFragment() {
 
     companion object {
-        @JvmStatic
         fun newInstance(url: String) = FullscreenInternalWebViewFragment().apply {
             this.url = url
         }
-        @JvmStatic
         fun newInstance(url: String, html: String) = InternalWebViewFragment().apply {
             this.url = url
             this.html = html
         }
 
-        @JvmStatic
         fun newInstance(args: Bundle) = InternalWebViewFragment().apply {
             url = args.getString(URL)
             title = args.getString(TITLE)

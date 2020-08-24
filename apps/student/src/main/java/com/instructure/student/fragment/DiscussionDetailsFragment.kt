@@ -365,22 +365,20 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun routeInternallyCallback(url: String?) {
-                if (url != null) {
-                    if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)) {
-                        RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(url, url, false, ""))
-                    }
+            override fun routeInternallyCallback(url: String) {
+                if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)) {
+                    RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(url, url, false, ""))
                 }
             }
 
-            override fun canRouteInternallyDelegate(url: String?): Boolean = url != null
+            override fun canRouteInternallyDelegate(url: String): Boolean = true
 
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
-                openMedia(canvasContext, url ?: "", filename)
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                openMedia(canvasContext, url, filename)
             }
 
-            override fun onPageStartedCallback(webView: WebView?, url: String?) {}
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
         }
 
         webView.addVideoClient(requireActivity())

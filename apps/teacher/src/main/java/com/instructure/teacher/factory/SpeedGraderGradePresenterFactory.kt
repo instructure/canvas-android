@@ -21,8 +21,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.teacher.presenters.SpeedGraderGradePresenter
+import com.instructure.teacher.viewinterface.SpeedGraderGradeView
 import instructure.androidblueprint.PresenterFactory
 
-class SpeedGraderGradePresenterFactory(val submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : PresenterFactory<SpeedGraderGradePresenter> {
+class SpeedGraderGradePresenterFactory(val submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : PresenterFactory<SpeedGraderGradeView, SpeedGraderGradePresenter> {
     override fun create(): SpeedGraderGradePresenter = SpeedGraderGradePresenter(submission, assignment, course, assignee)
 }

@@ -211,7 +211,6 @@ data class ScheduleItem(
     }
 
     companion object {
-        @JvmStatic
         fun createSyllabus(title: String?, description: String?): ScheduleItem =
                 ScheduleItem(
                         itemType = Type.TYPE_SYLLABUS,

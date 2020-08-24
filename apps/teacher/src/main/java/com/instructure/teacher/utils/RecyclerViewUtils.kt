@@ -30,7 +30,7 @@ object RecyclerViewUtils {
     fun buildRecyclerView(
         rootView: View,
         context: Context,
-        recyclerAdapter: SyncRecyclerAdapter<*, *>?,
+        recyclerAdapter: SyncRecyclerAdapter<*, *, *>?,
         presenter: SyncPresenter<*, *>,
         swipeToRefreshLayoutResId: Int,
         recyclerViewResId: Int,
@@ -39,7 +39,7 @@ object RecyclerViewUtils {
     ): RecyclerView {
         val emptyInterface: EmptyInterface = rootView.findViewById<View>(emptyViewResId) as EmptyInterface
         val recyclerView: RecyclerView = rootView.findViewById(recyclerViewResId)
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -59,14 +59,14 @@ object RecyclerViewUtils {
 
     fun buildRecyclerView(
         context: Context,
-        recyclerAdapter: ListRecyclerAdapter<*, *>?,
+        recyclerAdapter: ListRecyclerAdapter<*, *, *>?,
         presenter: ListPresenter<*, *>,
         swipeRefreshLayout: SwipeRefreshLayout,
         recyclerView: RecyclerView,
         emptyInterface: EmptyInterface,
         emptyViewText: String?
     ): RecyclerView {
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -86,7 +86,7 @@ object RecyclerViewUtils {
     fun buildRecyclerView(
         rootView: View,
         context: Context,
-        recyclerAdapter: SyncExpandableRecyclerAdapter<*, *, *>?,
+        recyclerAdapter: SyncExpandableRecyclerAdapter<*, *, *, *>?,
         presenter: SyncExpandablePresenter<*, *, *>,
         swipeToRefreshLayoutResId: Int,
         recyclerViewResId: Int,
@@ -95,7 +95,7 @@ object RecyclerViewUtils {
     ): RecyclerView {
         val emptyInterface: EmptyInterface = rootView.findViewById<View>(emptyViewResId) as EmptyInterface
         val recyclerView: RecyclerView = rootView.findViewById(recyclerViewResId)
-        emptyInterface.setTitleText(emptyViewText)
+        emptyViewText?.let { emptyInterface.setTitleText(it) }
         emptyInterface.setNoConnectionText(context.getString(R.string.noConnection))
         val layoutManager = LinearLayoutManager(context)
         layoutManager.orientation = RecyclerView.VERTICAL
@@ -117,7 +117,7 @@ object RecyclerViewUtils {
         emptyPandaView: EmptyInterface?,
         recyclerView: RecyclerView?,
         swipeRefreshLayout: SwipeRefreshLayout,
-        adapter: SyncRecyclerAdapter<*, *>?,
+        adapter: SyncRecyclerAdapter<*, *, *>?,
         isEmpty: Boolean
     ) {
         if (emptyPandaView != null && adapter != null && recyclerView != null) {
@@ -140,7 +140,7 @@ object RecyclerViewUtils {
         emptyPandaView: EmptyInterface?,
         recyclerView: RecyclerView?,
         swipeRefreshLayout: SwipeRefreshLayout,
-        adapter: ListRecyclerAdapter<*, *>?,
+        adapter: ListRecyclerAdapter<*, *, *>?,
         isEmpty: Boolean
     ) {
         if (emptyPandaView != null && adapter != null && recyclerView != null) {
@@ -163,7 +163,7 @@ object RecyclerViewUtils {
         emptyPandaView: EmptyInterface?,
         recyclerView: RecyclerView?,
         swipeRefreshLayout: SwipeRefreshLayout,
-        adapter: SyncExpandableRecyclerAdapter<*, *, *>?,
+        adapter: SyncExpandableRecyclerAdapter<*, *, *, *>?,
         isEmpty: Boolean
     ) {
         if (emptyPandaView != null && adapter != null && recyclerView != null) {

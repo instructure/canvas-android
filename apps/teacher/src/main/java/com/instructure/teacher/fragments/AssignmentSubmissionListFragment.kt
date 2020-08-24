@@ -48,7 +48,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_assignment_submission_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -83,12 +82,11 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_submission_list
-    override fun getRecyclerView(): RecyclerView = submissionsRecyclerView
-    override fun getList() = presenter.data
-    override fun getPresenterFactory(): PresenterFactory<AssignmentSubmissionListPresenter> = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
-    override fun onCreateView(view: View?) = Unit
+    override val recyclerView: RecyclerView get() = submissionsRecyclerView
+    override fun getPresenterFactory() = AssignmentSubmissionListPresenterFactory(mAssignment, mFilter)
+    override fun onCreateView(view: View) = Unit
     override fun onPresenterPrepared(presenter: AssignmentSubmissionListPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.submissionsRecyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         mRecyclerView.setHeaderVisibilityListener(divider)
 
@@ -126,18 +124,15 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         EventBus.getDefault().unregister(this)
     }
 
-    override fun getAdapter(): GradeableStudentSubmissionAdapter {
-        if(mAdapter == null) {
-            mAdapter = GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
-                withRequireNetwork {
-                    val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
-                    val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
-                    val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)
-                    RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
-                }
+    override fun createAdapter(): GradeableStudentSubmissionAdapter {
+        return GradeableStudentSubmissionAdapter(mAssignment, mCourse.id, requireContext(), presenter) { gradeableStudentSubmission ->
+            withRequireNetwork {
+                val filteredSubmissions = (0 until presenter.data.size()).map { presenter.data[it] }
+                val selectedIdx = filteredSubmissions.indexOf(gradeableStudentSubmission)
+                val bundle = SpeedGraderActivity.makeBundle(mCourse.id, mAssignment.id, filteredSubmissions, selectedIdx)
+                RouteMatcher.route(requireContext(), Route(bundle, RouteContext.SPEED_GRADER))
             }
         }
-        return mAdapter
     }
 
     override fun onRefreshStarted() {
@@ -334,21 +329,17 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
     }
 
     companion object {
-        @JvmStatic
         private val ASSIGNMENT = "assignment"
         @JvmStatic val FILTER_TYPE = "filter_type"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = AssignmentSubmissionListFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment): Bundle {
             return makeBundle(assignment, SubmissionListFilter.ALL)
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment, filter: SubmissionListFilter): Bundle {
             val args = Bundle()
             args.putSerializable(FILTER_TYPE, filter)

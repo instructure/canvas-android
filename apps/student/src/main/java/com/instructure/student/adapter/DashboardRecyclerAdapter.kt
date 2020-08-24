@@ -92,7 +92,7 @@ class DashboardRecyclerAdapter(
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<ItemType, Any> {
         return object : GroupSortedList.ItemComparatorCallback<ItemType, Any> {
-            override fun compare(group: ItemType?, o1: Any?, o2: Any?) = when {
+            override fun compare(group: ItemType, o1: Any, o2: Any) = when {
                 o1 is AccountNotification && o2 is AccountNotification -> o1.compareTo(o2)
                 o1 is Course && o2 is Course -> -1 // Don't sort courses, the api returns in the users order
                 o1 is Group && o2 is Group -> o1.compareTo(o2)
@@ -100,9 +100,9 @@ class DashboardRecyclerAdapter(
                 else -> -1
             }
 
-            override fun areContentsTheSame(oldItem: Any?, newItem: Any?) = false
+            override fun areContentsTheSame(oldItem: Any, newItem: Any) = false
 
-            override fun areItemsTheSame(item1: Any?, item2: Any?) = when {
+            override fun areItemsTheSame(item1: Any, item2: Any) = when {
                 item1 is AccountNotification && item2 is AccountNotification -> item1.id == item2.id
                 item1 is Course && item2 is Course -> item1.contextId.hashCode() == item2.contextId.hashCode()
                 item1 is Group && item2 is Group -> item1.contextId.hashCode() == item2.contextId.hashCode()
@@ -110,7 +110,7 @@ class DashboardRecyclerAdapter(
                 else -> false
             }
 
-            override fun getUniqueItemId(item: Any?) = when (item) {
+            override fun getUniqueItemId(item: Any) = when (item) {
                 is AccountNotification -> item.id
                 is Enrollment -> item.id
                 is Course -> item.contextId.hashCode().toLong()
@@ -119,7 +119,7 @@ class DashboardRecyclerAdapter(
                 else -> -1L
             }
 
-            override fun getChildType(group: ItemType?, item: Any?) = when (item) {
+            override fun getChildType(group: ItemType, item: Any) = when (item) {
                 is AccountNotification -> ItemType.ANNOUNCEMENT.ordinal
                 is Enrollment -> ItemType.INVITATION.ordinal
                 is Conference -> ItemType.CONFERENCE.ordinal

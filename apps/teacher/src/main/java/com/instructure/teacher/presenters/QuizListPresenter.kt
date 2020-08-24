@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.managers.QuizManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.utils.NaturalOrderComparator
 import com.instructure.canvasapi2.utils.filterWithQuery
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
@@ -90,7 +89,7 @@ class QuizListPresenter(private val mCanvasContext: CanvasContext) :
             .onEach { it._assignment = assignmentsByQuizId[it.id] }
             .groupBy { it.quizType }
             .forEach { (quizType, quizList) ->
-                data.addOrUpdateAllItems(quizType, quizList)
+                data.addOrUpdateAllItems(quizType!!, quizList)
             }
         viewCallback?.onRefreshFinished()
         viewCallback?.checkIfEmpty()

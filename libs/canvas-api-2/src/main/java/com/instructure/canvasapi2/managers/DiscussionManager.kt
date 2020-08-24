@@ -32,7 +32,6 @@ import java.io.File
 
 object DiscussionManager {
 
-    @JvmStatic
     fun createDiscussion(
         canvasContext: CanvasContext,
         newDiscussionHeader: DiscussionTopicHeader,
@@ -44,7 +43,6 @@ object DiscussionManager {
         DiscussionAPI.createDiscussion(adapter, params, canvasContext, newDiscussionHeader, attachment, callback)
     }
 
-    @JvmStatic
     fun createStudentDiscussion(
         canvasContext: CanvasContext,
         newDiscussionHeader: DiscussionTopicHeader,
@@ -63,7 +61,6 @@ object DiscussionManager {
         )
     }
 
-    @JvmStatic
     fun editDiscussionTopic(
         canvasContext: CanvasContext,
         discussionHeaderId: Long,
@@ -82,7 +79,6 @@ object DiscussionManager {
         )
     }
 
-    @JvmStatic
     fun getAllDiscussionTopicHeaders(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -104,7 +100,6 @@ object DiscussionManager {
         DiscussionAPI.getFirstPageDiscussionTopicHeaders(canvasContext, adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getFullDiscussionTopic(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -116,7 +111,6 @@ object DiscussionManager {
         DiscussionAPI.getFullDiscussionTopic(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun getDetailedDiscussion(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -128,7 +122,6 @@ object DiscussionManager {
         DiscussionAPI.getDetailedDiscussion(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun rateDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -141,7 +134,6 @@ object DiscussionManager {
         DiscussionAPI.rateDiscussionEntry(adapter, canvasContext, topicId, entryId, rating, callback, params)
     }
 
-    @JvmStatic
     fun markDiscussionTopicEntryRead(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -153,7 +145,6 @@ object DiscussionManager {
         DiscussionAPI.markDiscussionTopicEntryRead(adapter, canvasContext, topicId, entryId, callback, params)
     }
 
-    @JvmStatic
     fun markDiscussionTopicEntryUnread(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -165,7 +156,6 @@ object DiscussionManager {
         DiscussionAPI.markDiscussionTopicEntryUnread(adapter, canvasContext, topicId, entryId, callback, params)
     }
 
-    @JvmStatic
     fun replyToDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -178,7 +168,6 @@ object DiscussionManager {
         DiscussionAPI.replyToDiscussionEntry(adapter, canvasContext, topicId, entryId, message, callback, params)
     }
 
-    @JvmStatic
     fun replyToDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -203,7 +192,6 @@ object DiscussionManager {
         )
     }
 
-    @JvmStatic
     fun updateDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -224,7 +212,6 @@ object DiscussionManager {
         )
     }
 
-    @JvmStatic
     fun postToDiscussionTopic(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -236,7 +223,6 @@ object DiscussionManager {
         DiscussionAPI.postToDiscussionTopic(adapter, canvasContext, topicId, message, callback, params)
     }
 
-    @JvmStatic
     fun postToDiscussionTopic(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -259,7 +245,6 @@ object DiscussionManager {
         )
     }
 
-    @JvmStatic
     fun pinDiscussionTopicHeader(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -270,7 +255,6 @@ object DiscussionManager {
         DiscussionAPI.pinDiscussion(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun unpinDiscussionTopicHeader(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -281,7 +265,6 @@ object DiscussionManager {
         DiscussionAPI.unpinDiscussion(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun lockDiscussionTopicHeader(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -292,7 +275,6 @@ object DiscussionManager {
         DiscussionAPI.lockDiscussion(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun unlockDiscussionTopicHeader(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -303,14 +285,12 @@ object DiscussionManager {
         DiscussionAPI.unlockDiscussion(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun deleteDiscussionTopicHeader(canvasContext: CanvasContext, topicId: Long, callback: StatusCallback<Void>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         DiscussionAPI.deleteDiscussionTopicHeader(adapter, canvasContext, topicId, callback, params)
     }
 
-    @JvmStatic
     fun deleteDiscussionEntry(
         canvasContext: CanvasContext,
         topicId: Long,
@@ -322,7 +302,6 @@ object DiscussionManager {
         DiscussionAPI.deleteDiscussionEntry(adapter, canvasContext, topicId, entryId, callback, params)
     }
 
-    @JvmStatic
     fun createDiscussion(
         canvasContext: CanvasContext,
         title: String,

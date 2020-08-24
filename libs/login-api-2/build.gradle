@@ -98,6 +98,8 @@ dependencies {
     /* AndroidTest Dependencies */
     androidTestImplementation Libs.JUNIT
 
+    implementation "com.squareup.okhttp3:logging-interceptor:3.13.1"
+
     /* Support Dependencies */
     implementation Libs.ANDROIDX_ANNOTATION
     implementation Libs.ANDROIDX_APPCOMPAT

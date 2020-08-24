@@ -43,45 +43,33 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     const val ACCOUNT_LOCALE: String = "account"
 
     @Deprecated("Deprecated in favor of accessToken")
-    @JvmStatic
     var token by StringPref()
 
-    @JvmStatic
     var accessToken by StringPref()
 
-    @JvmStatic
     var refreshToken by StringPref()
 
     // TODO - Remove in favor of just access token once refresh is 100%
-    @JvmStatic
     fun getValidToken(): String = if (accessToken.isNotEmpty()) accessToken else token
 
-    @JvmStatic
     var protocol by StringPref("https", "api_protocol")
 
-    @JvmStatic
     var userAgent by StringPref("", "user_agent")
 
-    @JvmStatic
     var clientId by StringPref("", "client_id")
 
-    @JvmStatic
     var clientSecret by StringPref("", "client_secret")
 
-    @JvmStatic
     var perPageCount = 100
 
-    @JvmStatic
     var theme: CanvasTheme? by GsonPref(CanvasTheme::class.java, null)
 
     /* Non-masquerading Prefs */
     internal var originalDomain by StringPref("", "domain")
     private var originalUser: User? by GsonPref(User::class.java, null, "user")
 
-    @JvmStatic
     var selectedLocale by StringPref(ACCOUNT_LOCALE)
 
-    @JvmStatic
     val effectiveLocale: String
         get() {
             return selectedLocale.takeUnless { it == ACCOUNT_LOCALE }
@@ -91,15 +79,10 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
         }
 
     /* Masquerading Prefs */
-    @JvmStatic
     var canBecomeUser by NBooleanPref()
-    @JvmStatic
     var isMasquerading by BooleanPref()
-    @JvmStatic
     var isStudentView by BooleanPref()
-    @JvmStatic
     var isMasqueradingFromQRCode by BooleanPref()
-    @JvmStatic
     var masqueradeId by LongPref(-1L)
     internal var masqueradeDomain by StringPref()
     internal var masqueradeUser: User? by GsonPref(User::class.java, null, "masq-user")
@@ -107,7 +90,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     // Used to determine if a student can generate a pairing code, saved during splash
     var canGeneratePairingCode by NBooleanPref()
 
-    @JvmStatic
     var domain: String
         get() = if (isMasquerading || isStudentView) masqueradeDomain else originalDomain
         set(newDomain) {
@@ -115,7 +97,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
             if (isMasquerading || isStudentView) masqueradeDomain = strippedDomain else originalDomain = strippedDomain
         }
 
-    @JvmStatic
     val fullDomain: String
         get() = if (isMasquerading || isStudentView)  {
             when {
@@ -131,7 +112,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
             }
         }
 
-    @JvmStatic
     var user: User?
         get() = if (isMasquerading || isStudentView) masqueradeUser else originalUser
         set(newUser) {
@@ -139,13 +119,10 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
         }
 
     /* Notorious Prefs */
-    @JvmStatic
     var notoriousDomain by StringPref()
 
-    @JvmStatic
     var notoriousToken by StringPref()
 
-    @JvmStatic
     val fullNotoriousDomain: String
         get() = when {
             notoriousDomain.isBlank() || protocol.isBlank() -> ""
@@ -155,7 +132,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var pandataInfo by GsonPref(PandataInfo::class.java)
 
-    @JvmStatic
     var airwolfDomain by StringPref("", "airwolf_domain")
 
     /**
@@ -163,7 +139,6 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
      * Clears all data including credentials and cache.
      * @return true if caches files were deleted
      */
-    @JvmStatic
     fun clearAllData(): Boolean {
         // Clear preferences
         clearPrefs()

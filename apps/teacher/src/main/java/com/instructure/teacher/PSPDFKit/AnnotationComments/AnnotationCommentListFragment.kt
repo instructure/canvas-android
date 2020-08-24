@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.canvasapi2.models.ApiValues
-import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.DocSession
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -47,8 +47,9 @@ class AnnotationCommentListFragment : BaseListFragment<
     private var mDocSession by ParcelableArg<DocSession>()
     private var mApiValues by ParcelableArg<ApiValues>()
     private var mHeadAnnotationId by StringArg()
-    private val mAnnotationCommentsAdapter by lazy {
-        AnnotationCommentListAdapter(requireContext(), presenter, { annotation, position ->
+
+    override fun createAdapter(): AnnotationCommentListAdapter {
+        return AnnotationCommentListAdapter(requireContext(), presenter, { annotation, position ->
             AnnotationCommentDialog.getInstance(requireFragmentManager(), annotation.contents ?: "", getString(R.string.editComment)) { cancelled, text ->
                 if(!cancelled) {
                     annotation.contents = text
@@ -73,17 +74,15 @@ class AnnotationCommentListFragment : BaseListFragment<
         })
     }
 
-    override fun getAdapter() = mAnnotationCommentsAdapter
-    override fun getRecyclerView(): RecyclerView = annotationCommentsRecyclerView
-    override fun getList() = presenter.data
+    override val recyclerView: RecyclerView = annotationCommentsRecyclerView
     override fun layoutResId() = R.layout.fragment_annotation_comment_list
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
     override fun checkIfEmpty() {} // we don't display this view if its empty, so no need to check
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun getPresenterFactory() = AnnotationCommentListPresenterFactory(mAnnotationList, mDocSession, mApiValues, mAssigneeId, mHeadAnnotationId)
 
-    override fun onPresenterPrepared(presenter: AnnotationCommentListPresenter?) {
+    override fun onPresenterPrepared(presenter: AnnotationCommentListPresenter) {
         val layoutManager = LinearLayoutManager(requireContext())
         layoutManager.orientation = RecyclerView.VERTICAL
         recyclerView.layoutManager = layoutManager
@@ -158,10 +157,8 @@ class AnnotationCommentListFragment : BaseListFragment<
         @JvmStatic val API_VALUES = "mApiValues"
         @JvmStatic val HEAD_ANNOTATION_ID = "mHeadAnnotationId"
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = AnnotationCommentListFragment().apply { arguments = bundle }
 
-        @JvmStatic
         fun makeBundle(annotations: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues, assigneeId: Long): Bundle {
             val args = Bundle()
             args.putParcelableArrayList(ANNOTATIONS, annotations)

@@ -31,10 +31,8 @@ object FileCache {
         SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir, BuildConfig.VERSION_CODE, DEFAULT_DISK_CACHE_SIZE.toLong())
     }
 
-    @JvmStatic
     fun getInputStream(url: String, callback: FetchFileAsyncTask.FetchFileCallback) = FetchFileAsyncTask.download(mSimpleDiskCache, url, callback)
 
-    @JvmStatic
     fun putInputStream(url: String, inputStream: InputStream) {
         mSimpleDiskCache.put(url, inputStream)
     }

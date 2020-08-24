@@ -30,7 +30,6 @@ object HelpLinksAPI {
         fun getHelpLinks(): Call<HelpLinks>
     }
 
-    @JvmStatic
     fun getHelpLinks(adapter: RestBuilder, params: RestParams, callback: StatusCallback<HelpLinks>) {
         callback.addCall(adapter.build(HelpLinksAPI::class.java, params).getHelpLinks()).enqueue(callback)
     }

@@ -82,7 +82,6 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(
             submission: Submission?,
             assignment: Assignment,

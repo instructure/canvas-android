@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.teacher.presenters.SpeedGraderCommentsPresenter
+import com.instructure.teacher.viewinterface.SpeedGraderCommentsView
 import instructure.androidblueprint.PresenterFactory
 
 class SpeedGraderCommentsPresenterFactory(
@@ -29,6 +30,6 @@ class SpeedGraderCommentsPresenterFactory(
         val courseId: Long,
         val assignmentId: Long,
         val groupMessage: Boolean
-) : PresenterFactory<SpeedGraderCommentsPresenter> {
+) : PresenterFactory<SpeedGraderCommentsView, SpeedGraderCommentsPresenter> {
     override fun create() = SpeedGraderCommentsPresenter(rawComments, submissionHistory, assignee, courseId, assignmentId, groupMessage)
 }

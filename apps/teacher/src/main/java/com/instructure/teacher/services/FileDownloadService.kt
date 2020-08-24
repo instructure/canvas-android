@@ -136,7 +136,7 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
         // parse filename from Content-Disposition header which is a response field that is normally used to set the file name
         val headerField = connection.getHeaderField("Content-Disposition")
         if (headerField != null) {
-            filename = OpenMediaAsyncTaskLoader.parseFilename(headerField)
+            filename = OpenMediaAsyncTaskLoader.parseFilename(headerField).orEmpty()
             filename = OpenMediaAsyncTaskLoader.makeFilenameUnique(filename, url)
         } else {
             filename = "" + url.hashCode()

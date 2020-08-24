@@ -116,7 +116,7 @@ open class InboxRecipientAdapter(
         return false
     }
 
-    override fun isPaginated() = true
+    override val isPaginated get() = true
 
     override fun loadFirstPage() {
         recipientCall?.cancel()
@@ -149,7 +149,7 @@ open class InboxRecipientAdapter(
         }
     }
 
-    override fun loadNextPage(nextURL: String?) {
+    override fun loadNextPage(nextURL: String) {
         recipientCall?.next()
     }
 

@@ -63,7 +63,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     private var mUsageType: FileUsageRightsJustification? = null
     private var mLicenseType: License? = null
 
-    private val mDateFormat = DateHelper.getFullMonthNoLeadingZeroDateFormat()
+    private val mDateFormat = DateHelper.fullMonthNoLeadingZeroDateFormat
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
     private var lockDate: Date? = null
     private var unlockDate: Date? = null
@@ -112,7 +112,7 @@ class EditFileFolderFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = EditFilePresenterFactory(currentFileOrFolder, usageRightsEnabled, licenseList, courseId)
 
-    override fun onPresenterPrepared(presenter: EditFileFolderPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: EditFileFolderPresenter) = Unit
     override fun onRefreshFinished() = Unit
     override fun onRefreshStarted() = Unit
 
@@ -432,7 +432,6 @@ class EditFileFolderFragment : BasePresenterFragment<
         private const val LIST_OF_LICENSES = "licenseList"
         private const val COURSE_ID = "courseId"
 
-        @JvmStatic
         fun makeBundle(fileFolder: FileFolder, usageRightsEnabled: Boolean, licenseList: List<License>, courseId: Long) = Bundle().apply {
             putParcelable(CURRENT_FILE_OR_FOLDER, fileFolder)
             putBoolean(USAGE_RIGHTS_ENABLED, usageRightsEnabled)
@@ -440,7 +439,6 @@ class EditFileFolderFragment : BasePresenterFragment<
             putLong(COURSE_ID, courseId)
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = EditFileFolderFragment().apply {
             arguments = bundle
             updateFileFolder = currentFileOrFolder.parcelCopy()

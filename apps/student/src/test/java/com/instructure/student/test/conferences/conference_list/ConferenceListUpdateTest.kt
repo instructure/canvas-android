@@ -35,6 +35,7 @@ import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import org.junit.After
@@ -57,7 +58,7 @@ class ConferenceListUpdateTest : Assert() {
         canvasContext = Course(id = 123L)
         initModel = ConferenceListModel(canvasContext)
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.fullDomain } returns fakeDomain
     }
 

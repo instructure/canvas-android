@@ -58,7 +58,6 @@ class DatePickerDialogFragment : AppCompatDialogFragment(), DatePickerDialog.OnD
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, defaultDate: Date? = null, callback: (Int, Int, Int) -> Unit) : DatePickerDialogFragment {
             manager.dismissExisting<DatePickerDialogFragment>()
             val dialog = DatePickerDialogFragment()

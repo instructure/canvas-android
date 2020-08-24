@@ -238,7 +238,7 @@ abstract class GroupedRecyclerAdapter<T : Any, C : ListItemCallback>(
      * See [GroupSortedList.getItemId]
      */
     fun getChildItemId(position: Int): Long {
-        return sortedList.getItemId(sortedList.getItem(position))
+        return sortedList.getItemId(sortedList.getItem(position)!!)
     }
 
     override fun getItemId(position: Int): Long {

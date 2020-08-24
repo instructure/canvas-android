@@ -19,6 +19,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.teacher.presenters.SpeedGraderPresenter
+import com.instructure.teacher.viewinterface.SpeedGraderView
 import instructure.androidblueprint.PresenterFactory
 import java.util.*
 
@@ -28,6 +29,6 @@ class SpeedGraderPresenterFactory(
         private val submissions: ArrayList<GradeableStudentSubmission>,
         private val submissionId: Long, // Id used when we are coming from a push notification
         private val discussionEntries:  DiscussionTopicHeader?
-) : PresenterFactory<SpeedGraderPresenter> {
+) : PresenterFactory<SpeedGraderView, SpeedGraderPresenter> {
     override fun create() = SpeedGraderPresenter(courseId, assignmentId, submissions, submissionId, discussionEntries)
 }

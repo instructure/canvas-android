@@ -149,7 +149,6 @@ class ViewMediaFragment : Fragment(), ShareableFile {
 
     companion object {
 
-        @JvmStatic
         fun newInstance(media: MediaContent) = ViewMediaFragment().apply {
             mUri = media.uri
             mThumbnailUrl = media.thumbnailUrl
@@ -157,7 +156,6 @@ class ViewMediaFragment : Fragment(), ShareableFile {
             mDisplayName = media.displayName
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = ViewMediaFragment().apply { arguments = bundle }
     }
 }

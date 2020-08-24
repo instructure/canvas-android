@@ -24,21 +24,16 @@ import com.instructure.canvasapi2.utils.StringPref
 
 object TeacherPrefs : PrefManager(AppManager.PREF_FILE_NAME) {
 
-    @JvmStatic
     var isConfirmedTeacher by BooleanPref()
 
     /* Whether the user has viewed the 'Swipe to view other students' tutorial in SpeedGrader */
-    @JvmStatic
     var hasViewedSwipeTutorial by BooleanPref()
 
     /* Whether the user has viewed the 'Tap and hold for description' Rubric tutorial in SpeedGrader */
-    @JvmStatic
     var hasViewedRubricTutorial by BooleanPref()
 
-    @JvmStatic
     var pendingSubmissionComments by GsonListPref(PendingSubmissionComment::class.java)
 
-    @JvmStatic
     var attendanceExternalToolId by StringPref()
 
     var hideCourseColorOverlay by BooleanPref()

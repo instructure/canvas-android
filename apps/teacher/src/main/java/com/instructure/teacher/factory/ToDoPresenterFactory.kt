@@ -18,10 +18,11 @@
 package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.ToDoPresenter
+import com.instructure.teacher.viewinterface.ToDoView
 import instructure.androidblueprint.PresenterFactory
 
 
-class ToDoPresenterFactory : PresenterFactory<ToDoPresenter> {
+class ToDoPresenterFactory : PresenterFactory<ToDoView, ToDoPresenter> {
 
     override fun create(): ToDoPresenter {
         return ToDoPresenter()

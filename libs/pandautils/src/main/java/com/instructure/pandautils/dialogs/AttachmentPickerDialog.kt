@@ -44,7 +44,6 @@ class AttachmentPickerDialog : AppCompatDialogFragment() {
     companion object {
         val ATTACHMENT_LIST = "attachmentList"
 
-        @JvmStatic
         fun show(manager: FragmentManager, attachments: ArrayList<Attachment>, callback: (Attachment) -> Unit) {
             manager.dismissExisting<AttachmentPickerDialog>()
             val dialog = AttachmentPickerDialog()
@@ -55,7 +54,6 @@ class AttachmentPickerDialog : AppCompatDialogFragment() {
             dialog.show(manager, AttachmentPickerDialog::class.java.simpleName)
         }
 
-        @JvmStatic
         fun hide(manager: FragmentManager) {
             manager.dismissExisting<AttachmentPickerDialog>()
         }

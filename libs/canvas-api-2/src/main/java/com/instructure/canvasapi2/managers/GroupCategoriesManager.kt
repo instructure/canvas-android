@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 
 object GroupCategoriesManager {
 
-    @JvmStatic
     fun getAllGroupsForCategory(categoryId: Long, callback: StatusCallback<List<Group>>, forceNetwork: Boolean) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)

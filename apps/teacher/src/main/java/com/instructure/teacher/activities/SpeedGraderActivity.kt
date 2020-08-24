@@ -87,10 +87,10 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     override fun unBundle(extras: Bundle) = Unit
 
-    override fun onPresenterPrepared(presenter: SpeedGraderPresenter?) = Unit
+    override fun onPresenterPrepared(presenter: SpeedGraderPresenter) = Unit
 
-    override fun onReadySetGo(presenter: SpeedGraderPresenter?) {
-        presenter?.setupData()
+    override fun onReadySetGo(presenter: SpeedGraderPresenter) {
+        presenter.setupData()
     }
 
     // This is here to prevent transaction too large exceptions, possibly caused by pdfFragment's saving.
@@ -116,7 +116,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
     }
 
     override fun onDataSet(assignment: Assignment, submissions: List<GradeableStudentSubmission>) {
-        adapter = SubmissionContentAdapter(assignment, presenter.course, submissions)
+        adapter = SubmissionContentAdapter(assignment, presenter!!.course, submissions)
         submissionContentPager.offscreenPageLimit = 1
         submissionContentPager.pageMargin = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, resources.displayMetrics))
         submissionContentPager.setPageMarginDrawable(R.color.dividerColor)
@@ -280,7 +280,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
          */
         private const val MAX_HISTORY_THRESHOLD = 8
 
-        @JvmStatic
         fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
@@ -313,7 +312,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, SpeedGraderActivity::class.java).apply {
                 if(!route.arguments.isEmpty) {
@@ -333,7 +331,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
             return intent
         }
 
-        @JvmStatic
         fun createIntent(context: Context, courseId: Long, assignmentId: Long, submissionId: Long) = Intent(context, SpeedGraderActivity::class.java).apply {
             // We've come from a push notification, we'll use these ids to grab the data we need later
             putExtras(Bundle().apply {

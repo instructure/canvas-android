@@ -54,8 +54,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     private var mNeedToForceNetwork = false
 
     override fun layoutResId() = R.layout.fragment_courses
-    override fun getList() = presenter.data
-    override fun getRecyclerView(): RecyclerView = courseRecyclerView
+    override val recyclerView: RecyclerView get() = courseRecyclerView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
@@ -148,11 +147,8 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
         }
     }
 
-    override fun getAdapter(): CoursesAdapter {
-        if (mAdapter == null) {
-            mAdapter = CoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
-        }
-        return mAdapter
+    override fun createAdapter(): CoursesAdapter {
+        return CoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
     }
 
     override fun onRefreshStarted() {
@@ -184,14 +180,13 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     companion object {
-        @JvmStatic
         fun getInstance() = CoursesFragment()
     }
 
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
-        mAdapter?.notifyDataSetChanged()
+        adapter?.notifyDataSetChanged()
     }
 
     @Suppress("unused")

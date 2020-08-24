@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.pandarecycler.util.UpdatableSortedList
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
@@ -40,7 +39,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.PageListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_page_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -57,11 +55,11 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_page_list
-    override fun getRecyclerView(): RecyclerView = pageRecyclerView
-    override fun getPresenterFactory(): PresenterFactory<PageListPresenter> = PageListPresenterFactory(mCanvasContext)
+    override val recyclerView: RecyclerView get() = pageRecyclerView
+    override fun getPresenterFactory() = PageListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: PageListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -84,9 +82,6 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
         setupViews()
     }
-
-    override fun getList(): UpdatableSortedList<Page> = presenter.data
-
 
     override fun onCreateView(view: View) {
         mLinearLayoutManager.orientation = RecyclerView.VERTICAL
@@ -114,14 +109,11 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         EventBus.getDefault().unregister(this)
     }
 
-    override fun getAdapter(): PageListAdapter {
-        if (mAdapter == null) {
-            mAdapter = PageListAdapter(requireContext(), presenter, mCourseColor) { page ->
-                val args = PageDetailsFragment.makeBundle(page)
-                RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, mCanvasContext, args))
-            }
+    override fun createAdapter(): PageListAdapter {
+        return PageListAdapter(requireContext(), presenter, mCourseColor) { page ->
+            val args = PageDetailsFragment.makeBundle(page)
+            RouteMatcher.route(requireContext(), Route(null, PageDetailsFragment::class.java, mCanvasContext, args))
         }
-        return mAdapter
     }
 
 
@@ -209,7 +201,6 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
 
     companion object {
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = PageListFragment().apply {
             mCanvasContext = canvasContext
         }

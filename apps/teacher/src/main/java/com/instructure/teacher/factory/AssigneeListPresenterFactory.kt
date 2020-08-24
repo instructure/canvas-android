@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.User
 import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.utils.EditDateGroups
+import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.PresenterFactory
 
 class AssigneeListPresenterFactory(
@@ -29,6 +30,6 @@ class AssigneeListPresenterFactory(
         val sections: List<Section>,
         val groups: List<Group>,
         val students: List<User>
-) : PresenterFactory<AssigneeListPresenter> {
+) : PresenterFactory<AssigneeListView, AssigneeListPresenter> {
     override fun create() = AssigneeListPresenter(dateGroups, targetIdx, sections, groups, students)
 }

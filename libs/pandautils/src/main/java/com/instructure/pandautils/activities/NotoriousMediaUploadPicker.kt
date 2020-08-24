@@ -213,7 +213,6 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
 
     companion object {
 
-        @JvmStatic
         fun createIntentForAssignmentSubmission(context: Context, assignment: Assignment): Intent {
             return Intent(context, NotoriousMediaUploadPicker::class.java).apply {
                 putExtra(Const.ACTION, NotoriousUploadService.ACTION.ASSIGNMENT_SUBMISSION)
@@ -221,7 +220,6 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
             }
         }
 
-        @JvmStatic
         fun createIntentForSubmissionComment(context: Context, assignment: Assignment): Intent {
             return Intent(context, NotoriousMediaUploadPicker::class.java).apply {
                 putExtra(Const.ACTION, NotoriousUploadService.ACTION.SUBMISSION_COMMENT)
@@ -229,7 +227,6 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
             }
         }
 
-        @JvmStatic
         fun createIntentForTeacherSubmissionComment(
             context: Context,
             assignment: Assignment,
@@ -242,7 +239,6 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
             putExtra(Const.IS_GROUP, isGroupComment)
         }
 
-        @JvmStatic
         fun createIntentForDiscussionReply(
             context: Context,
             discussionEntry: DiscussionEntry,

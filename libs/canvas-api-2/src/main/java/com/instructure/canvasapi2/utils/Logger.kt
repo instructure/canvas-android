@@ -52,7 +52,6 @@ object Logger {
         Log.d(LOG_TAG, s + ": " + sdf.format(Date(date.timeInMillis)))
     }
 
-    @JvmStatic
     fun logBundle(extras: Bundle?) {
         if (extras != null) {
             d("---====---LOGGING BUNDLE---====---")
@@ -90,7 +89,6 @@ object Logger {
      * country then this method will return false.
      * @return True if user detail logging is allowed, false otherwise.
      */
-    @JvmStatic
     fun canLogUserDetails(): Boolean {
         val telephonyManager = ContextKeeper.appContext.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         val networkCountryCode = telephonyManager.networkCountryIso.toUpperCase(Locale.US)

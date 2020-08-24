@@ -21,7 +21,6 @@ object RouteResolver {
     /**
      * Pass in a route and a course, get a fragment back!
      */
-    @JvmStatic
     fun getFullscreenFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
 
         return if (canvasContext == null) {
@@ -42,17 +41,14 @@ object RouteResolver {
         }
     }
 
-    @JvmStatic
     fun getMasterFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return getFrag(route.primaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getDetailFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return getFrag(route.secondaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getBottomSheetFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return getFrag(route.primaryClass, canvasContext, route)
     }

@@ -49,7 +49,6 @@ class EditRubricCommentDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun show(
                 manager: FragmentManager,
                 criterionId: String,

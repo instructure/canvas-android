@@ -77,7 +77,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         assignment = Assignment(id = 2468, courseId = course.id, name = "Instructure")
         userId = 6789L
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = userId)
 
         mockkStatic("com.instructure.student.db.ExtensionsKt")
@@ -289,7 +289,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         val submissionType = Assignment.SubmissionType.ONLINE_QUIZ
         val assignment = assignment.copy(quizId = quizId)
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
@@ -312,7 +312,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         val submissionType = Assignment.SubmissionType.DISCUSSION_TOPIC
         val assignment = assignment.copy(discussionTopicHeader = DiscussionTopicHeader(id = discussionTopicId))
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.protocol } returns protocol
         every { ApiPrefs.domain } returns domain
 
@@ -545,13 +545,13 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
 
-        mockkStatic(FileUploadUtils::class)
+        mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
 
         mockkStatic(FileProvider::class)
         every { FileProvider.getUriForFile(any(), any(), any()) } returns uri
 
-        mockkStatic(FilePrefs::class)
+        mockkObject(FilePrefs)
         every { FilePrefs.tempCaptureUri = any() }
 
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
@@ -574,7 +574,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
     private fun mockPermissions(hasPermission: Boolean, permissionGranted: Boolean = false) {
         // Mock both so we can mock the class and the extensions in the same file
-        mockkStatic(PermissionUtils::class)
+        mockkObject(PermissionUtils)
         mockkStatic("${PermissionUtils::class.java.canonicalName}Kt")
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns hasPermission andThen permissionGranted
 

@@ -38,7 +38,7 @@ class RouteUtilsTest : Assert() {
         user = User()
         route = Route()
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
         every { ApiPrefs.fullDomain } returns "https://domain.instructure.com"
     }

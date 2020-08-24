@@ -52,18 +52,16 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.view
 import com.instructure.teacher.viewinterface.MessageThreadView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_message_thread.*
 import kotlinx.android.synthetic.main.fragment_message_thread.view.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
+import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.recyclerView as messageRecyclerView
 import kotlinx.android.synthetic.main.toolbar_layout.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, MessageThreadView, MessageHolder, MessageAdapter>(), MessageThreadView, Identity {
-
-    internal var recyclerView: RecyclerView? = null
 
     private var conversationScope: String? = null
 
@@ -223,7 +221,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
     }
 
     private fun setupRecyclerView() {
-        recyclerView = RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView, requireContext(), adapter,
+        RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         recyclerView?.let {
             val linearLayoutManager = LinearLayoutManager(requireContext())
@@ -322,11 +320,8 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         ToolbarColorizeHelper.colorizeToolbar(toolbar, textColor, requireActivity())
     }
 
-    override fun getAdapter(): MessageAdapter {
-        if (mAdapter == null) {
-            mAdapter = MessageAdapter(requireContext(), presenter, conversation!!, adapterCallback)
-        }
-        return mAdapter
+    override fun createAdapter(): MessageAdapter {
+        return MessageAdapter(requireContext(), presenter, conversation!!, adapterCallback)
     }
 
     private fun replyAllMessage() {
@@ -383,7 +378,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         }
     }
 
-    override fun getRecyclerView(): RecyclerView? = recyclerView
+    override val recyclerView: RecyclerView? get() = messageRecyclerView
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false

@@ -27,9 +27,10 @@ import com.instructure.teacher.holders.AssigneeTypeViewHolder
 import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.presenters.AssigneeListPresenter
+import com.instructure.teacher.viewinterface.AssigneeListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
-class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder>(context, presenter) {
+class AssigneeListAdapter(context: Context, val presenter: AssigneeListPresenter) : SyncExpandableRecyclerAdapter<AssigneeCategory, CanvasComparable<*>, AssigneeViewHolder, AssigneeListView>(context, presenter) {
     override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: AssigneeCategory, isExpanded: Boolean) {
         (holder as? AssigneeTypeViewHolder)?.bind(group)
     }

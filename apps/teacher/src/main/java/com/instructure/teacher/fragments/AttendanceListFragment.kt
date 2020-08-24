@@ -55,11 +55,9 @@ import com.instructure.teacher.presenters.AttendanceListPresenter
 import com.instructure.interactions.router.Route
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
-import com.instructure.teacher.utils.isTablet
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AttendanceListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_attendance_list.*
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import org.json.JSONObject
@@ -73,7 +71,6 @@ class AttendanceListFragment : BaseSyncFragment<
     private var mTab: Tab by ParcelableArg(default = Tab("", "", type = TYPE_INTERNAL))
 
     private lateinit var mRecyclerView: RecyclerView
-    override fun getList() = presenter.data
 
     private var ltiJob: WeaveJob? = null
 
@@ -138,33 +135,30 @@ class AttendanceListFragment : BaseSyncFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<AttendanceListPresenter> = AttendanceListPresenterFactory(mCanvasContext, mTab)
+    override fun getPresenterFactory() = AttendanceListPresenterFactory(mCanvasContext, mTab)
 
     override fun onPresenterPrepared(presenter: AttendanceListPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         addSwipeToRefresh(swipeRefreshLayout)
     }
 
-    override fun getAdapter(): AttendanceListRecyclerAdapter {
-        if (mAdapter == null) {
-            mAdapter = AttendanceListRecyclerAdapter(requireContext(), presenter, object : AttendanceToFragmentCallback<Attendance> {
-                override fun onRowClicked(attendance: Attendance, position: Int) {
-                    presenter?.markAttendance(attendance)
-                }
+    override fun createAdapter(): AttendanceListRecyclerAdapter {
+        return AttendanceListRecyclerAdapter(requireContext(), presenter, object : AttendanceToFragmentCallback<Attendance> {
+            override fun onRowClicked(attendance: Attendance, position: Int) {
+                presenter?.markAttendance(attendance)
+            }
 
-                override fun onAvatarClicked(model: Attendance?, position: Int) {
-                    if(model != null && mCanvasContext.id != 0L) {
-                        val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
-                        RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
-                    }
+            override fun onAvatarClicked(model: Attendance?, position: Int) {
+                if(model != null && mCanvasContext.id != 0L) {
+                    val bundle = StudentContextFragment.makeBundle(model.studentId, mCanvasContext.id, true)
+                    RouteMatcher.route(requireContext(), Route(null, StudentContextFragment::class.java, mCanvasContext, bundle))
                 }
-            })
-        }
-        return mAdapter
+            }
+        })
     }
 
-    override fun getRecyclerView(): RecyclerView = mRecyclerView
+    override val recyclerView: RecyclerView get() = mRecyclerView
     override fun withPagination(): Boolean = true
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 
@@ -300,14 +294,12 @@ class AttendanceListFragment : BaseSyncFragment<
     }
 
     companion object {
-        @JvmStatic
         fun makeBundle(ltiTab: Tab): Bundle {
             val args = Bundle()
             args.putParcelable(Const.TAB, ltiTab)
             return args
         }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = AttendanceListFragment().apply {
             mCanvasContext = canvasContext
             mTab = args.getParcelable(Const.TAB)

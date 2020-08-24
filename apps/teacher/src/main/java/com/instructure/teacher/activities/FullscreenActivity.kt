@@ -148,7 +148,6 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
     }
 
     companion object {
-        @JvmStatic
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, FullscreenActivity::class.java)
             intent.putExtra(Route.ROUTE, route as Parcelable)

@@ -37,7 +37,6 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.QuizListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_quiz_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -61,11 +60,11 @@ class QuizListFragment : BaseExpandableSyncFragment<
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_quiz_list
-    override fun getRecyclerView(): RecyclerView = quizRecyclerView
-    override fun getPresenterFactory(): PresenterFactory<QuizListPresenter> = QuizListPresenterFactory(mCanvasContext)
+    override val recyclerView: RecyclerView get() = quizRecyclerView
+    override fun getPresenterFactory() = QuizListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: QuizListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -109,14 +108,11 @@ class QuizListFragment : BaseExpandableSyncFragment<
         super.onPause()
     }
 
-    override fun getAdapter(): QuizListAdapter {
-        if (mAdapter == null) {
-            mAdapter = QuizListAdapter(requireContext(), presenter, mCourseColor) { quiz ->
-                val args = QuizDetailsFragment.makeBundle(quiz)
-                RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
-            }
+    override fun createAdapter(): QuizListAdapter {
+        return QuizListAdapter(requireContext(), presenter, mCourseColor) { quiz ->
+            val args = QuizDetailsFragment.makeBundle(quiz)
+            RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
         }
-        return mAdapter
     }
 
 
@@ -178,7 +174,6 @@ class QuizListFragment : BaseExpandableSyncFragment<
 
     companion object {
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = QuizListFragment().apply {
             mCanvasContext = canvasContext
         }

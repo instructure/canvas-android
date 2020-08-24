@@ -67,13 +67,16 @@ open class ModuleListRecyclerAdapter(
     protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), 0, context, null) // Callback not needed for testing, cast to null
 
     init {
-        viewHolderHeaderClicked = ViewHolderHeaderClicked { _, moduleObject ->
-            val moduleItemsCallback = getModuleItemsCallback(moduleObject, false)
-            if (!moduleItemsCallback.isFromNetwork && !isGroupExpanded(moduleObject)) {
-                ModuleManager.getFirstPageModuleItems(courseContext, moduleObject.id, moduleItemsCallback, true)
-            } else {
-                expandCollapseGroup(moduleObject)
+        viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
+            override fun viewClicked(view: View?, moduleObject: ModuleObject) {
+                val moduleItemsCallback = getModuleItemsCallback(moduleObject, false)
+                if (!moduleItemsCallback.isFromNetwork && !isGroupExpanded(moduleObject)) {
+                    ModuleManager.getFirstPageModuleItems(courseContext, moduleObject.id, moduleItemsCallback, true)
+                } else {
+                    expandCollapseGroup(moduleObject)
+                }
             }
+
         }
         isExpandedByDefault = false
         isDisplayEmptyCell = true
@@ -314,7 +317,7 @@ open class ModuleListRecyclerAdapter(
     }
 
     // region Pagination
-    override fun isPaginated(): Boolean = true
+    override val isPaginated get() = true
 
     override fun setupCallbacks() {
         mModuleObjectCallback = object : StatusCallback<List<ModuleObject>>() {
@@ -404,7 +407,7 @@ open class ModuleListRecyclerAdapter(
         if (moduleObject.state != null &&
                 moduleObject.state == ModuleObject.State.Locked.apiString &&
                 getGroupItemCount(moduleObject) > 0 &&
-                getItem(moduleObject, 0).type == ModuleObject.State.UnlockRequirements.apiString) {
+                getItem(moduleObject, 0)?.type == ModuleObject.State.UnlockRequirements.apiString) {
 
             val reqs = StringBuilder()
             val ids = moduleObject.prerequisiteIds

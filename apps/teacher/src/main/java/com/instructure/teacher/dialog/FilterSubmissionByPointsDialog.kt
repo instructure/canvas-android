@@ -43,7 +43,6 @@ class FilterSubmissionByPointsDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, title: String, points: Double, callback: (Double) -> Unit) : FilterSubmissionByPointsDialog {
             manager.dismissExisting<FilterSubmissionByPointsDialog>()
             val dialog = FilterSubmissionByPointsDialog()

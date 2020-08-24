@@ -70,9 +70,7 @@ class LoginActivity : BaseLoginInitActivity() {
         super.finish()
     }
 
-    override fun isTesting(): Boolean {
-        return BuildConfig.IS_TESTING
-    }
+    override val isTesting: Boolean = BuildConfig.IS_TESTING
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val startNewRelic =

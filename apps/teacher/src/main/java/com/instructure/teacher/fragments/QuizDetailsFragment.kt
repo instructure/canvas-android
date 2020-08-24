@@ -340,17 +340,17 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         instructionsWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(requireActivity(), url)
             }
 
-            override fun onPageStartedCallback(webView: WebView?, url: String?) {}
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-            override fun routeInternallyCallback(url: String?) {
-                RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, true)
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun routeInternallyCallback(url: String) {
+                RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)
             }
 
-            override fun canRouteInternallyDelegate(url: String?): Boolean = RouteMatcher.canRouteInternally(activity, url!!, ApiPrefs.domain, false)
+            override fun canRouteInternallyDelegate(url: String): Boolean = RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
 
         }
 
@@ -469,13 +469,10 @@ class QuizDetailsFragment : BasePresenterFragment<
         @JvmStatic val QUIZ_ID = "quiz_details_quiz_id"
         @JvmStatic val QUIZ = "quiz_details_quiz"
 
-        @JvmStatic
         fun makeBundle(quizId: Long): Bundle = Bundle().apply { putLong(QuizDetailsFragment.QUIZ_ID, quizId) }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz): Bundle = Bundle().apply { putParcelable(QuizDetailsFragment.QUIZ, quiz) }
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = QuizDetailsFragment().withArgs(args).apply { mCourse = course }
     }
 }

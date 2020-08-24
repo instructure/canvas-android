@@ -30,20 +30,17 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 
 object UserManager {
 
-    @JvmStatic
     fun getColors(callback: StatusCallback<CanvasColor>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromCache = !forceNetwork, isForceReadFromNetwork = forceNetwork)
         UserAPI.getColors(adapter, callback, params)
     }
 
-    @JvmStatic
     fun setColors(callback: StatusCallback<CanvasColor>, contextId: String, color: Int) {
         val adapter = RestBuilder(callback)
         UserAPI.setColor(adapter, callback, contextId, color)
     }
 
-    @JvmStatic
     fun getSelf(callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(
@@ -53,7 +50,6 @@ object UserManager {
         UserAPI.getSelf(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getSelf(forceNetwork: Boolean, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(
@@ -89,14 +85,12 @@ object UserManager {
         )
     }
 
-    @JvmStatic
     fun getSelfEnrollments(forceNetwork: Boolean, callback: StatusCallback<List<Enrollment>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UserAPI.getSelfEnrollments(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getSelfWithPermissions(forceNetwork: Boolean, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(
@@ -106,21 +100,18 @@ object UserManager {
         UserAPI.getSelfWithPermissions(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUser(userId: Long?, callback: StatusCallback<User>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UserAPI.getUser(adapter, params, userId, callback)
     }
 
-    @JvmStatic
     fun getTestUser(courseId: Long?, callback: StatusCallback<User>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UserAPI.getTestUser(adapter, params, courseId, callback)
     }
 
-    @JvmStatic
     fun getUserForContextId(
         canvasContext: CanvasContext,
         userId: Long,
@@ -132,7 +123,6 @@ object UserManager {
         UserAPI.getUserForContextId(adapter, params, canvasContext, userId, callback)
     }
 
-    @JvmStatic
     fun getAllPeopleList(canvasContext: CanvasContext, callback: StatusCallback<List<User>>, forceNetwork: Boolean) {
         val params = RestParams(
             usePerPageQueryParam = true,
@@ -152,7 +142,6 @@ object UserManager {
         UserAPI.getPeopleList(adapter, params, canvasContext.id, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getAllEnrollmentsPeopleList(
         canvasContext: CanvasContext,
         callback: StatusCallback<List<User>>,
@@ -177,7 +166,6 @@ object UserManager {
         UserAPI.getAllPeopleList(adapter, params, canvasContext.id, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getFirstPagePeopleList(
             canvasContext: CanvasContext,
             enrollmentType: UserAPI.EnrollmentType,
@@ -193,7 +181,6 @@ object UserManager {
         UserAPI.getFirstPagePeopleList(adapter, params, canvasContext.id, enrollmentType, callback)
     }
 
-    @JvmStatic
     fun getFirstPagePeopleList(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -208,35 +195,30 @@ object UserManager {
         UserAPI.getFirstPagePeopleList(adapter, params, canvasContext.id, callback)
     }
 
-    @JvmStatic
     fun getNextPagePeopleList(forceNetwork: Boolean, nextUrl: String, callback: StatusCallback<List<User>>) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
         UserAPI.getNextPagePeopleList(adapter, params, nextUrl, callback)
     }
 
-    @JvmStatic
     fun updateUserShortName(shortName: String, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         UserAPI.updateUserShortName(adapter, params, shortName, callback)
     }
 
-    @JvmStatic
     fun updateUsersAvatar(urlPath: String, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         AvatarAPI.updateAvatar(adapter, params, urlPath, callback)
     }
 
-    @JvmStatic
     fun updateUsersAvatarWithToken(avatarToken: String, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         AvatarAPI.updateAvatarWithToken(adapter, params, avatarToken, callback)
     }
 
-    @JvmStatic
     fun getTermsOfService(callback: StatusCallback<TermsOfService>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -247,14 +229,12 @@ object UserManager {
         UserAPI.getTermsOfService(RestBuilder(callback), RestParams(isForceReadFromNetwork = forceNetwork), callback)
     }
 
-    @JvmStatic
     fun getSelfAccount(forceNetwork: Boolean, callback: StatusCallback<Account>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         UserAPI.getSelfAccount(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getBecomeUserPermission(
         forceNetwork: Boolean,
         accountId: Long,
@@ -283,7 +263,6 @@ object UserManager {
     fun generatePairingCodeAsync(forceNetwork: Boolean) =
         apiAsync<PairingCode> { generatePairingCode(forceNetwork, it) }
 
-    @JvmStatic
     fun addObserveeWithPairingCode(userId: Long, pairingCode: String, callback: StatusCallback<User>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

@@ -42,12 +42,10 @@ object ProfileUtils {
             "images/messages/avatar-group-50.png"
     )
 
-    @JvmStatic
     fun shouldLoadAltAvatarImage(avatarUrl: String?): Boolean {
         return avatarUrl.isNullOrBlank() || avatarUrl.indexOfAny(noPictureUrls) >= 0
     }
 
-    @JvmStatic
     fun getUserInitials(username: String?): String {
         val name: String = username.takeUnless { it.isNullOrBlank() } ?: return "?"
         val initials = name.trim().split(Regex("\\s+")).map { it.toUpperCase()[0] }
@@ -58,22 +56,18 @@ object ProfileUtils {
         }
     }
 
-    @JvmStatic
     fun loadAvatarForUser(avatar: CircleImageView, user: User) {
         loadAvatarForUser(avatar, user.name, user.avatarUrl)
     }
 
-    @JvmStatic
     fun loadAvatarForUser(avatar: CircleImageView, user: BasicUser) {
         loadAvatarForUser(avatar, user.name, user.avatarUrl)
     }
 
-    @JvmStatic
     fun loadAvatarForUser(avatar: CircleImageView, user: Author) {
         loadAvatarForUser(avatar, user.displayName, user.avatarImageUrl)
     }
 
-    @JvmStatic
     fun loadAvatarForUser(avatar: CircleImageView, name: String?, url: String?) {
         val context = avatar.context
         if (shouldLoadAltAvatarImage(url)) {
@@ -109,7 +103,6 @@ object ProfileUtils {
      *
      * If there are more than two participants, a group avatar will be shown and accessibility will be disabled.
      */
-    @JvmStatic
     fun configureAvatarForConversation(
         avatar: CircleImageView,
         conversation: Conversation,
@@ -140,7 +133,6 @@ object ProfileUtils {
         }
     }
 
-    @JvmStatic
     @JvmOverloads
     fun getInitialsAvatarBitMap(
             context: Context,

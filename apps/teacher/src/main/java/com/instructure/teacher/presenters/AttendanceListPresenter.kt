@@ -307,12 +307,12 @@ class AttendanceListPresenter(private val mCanvasContext: CanvasContext, private
         return -1
     }
 
-    override fun areContentsTheSame(item1: Attendance?, item2: Attendance?): Boolean {
+    override fun areContentsTheSame(item1: Attendance, item2: Attendance): Boolean {
         return false
     }
 
-    override fun areItemsTheSame(item1: Attendance?, item2: Attendance?): Boolean {
-        return item1?.studentId == item2?.studentId
+    override fun areItemsTheSame(item1: Attendance, item2: Attendance): Boolean {
+        return item1.studentId == item2.studentId
     }
 
     override fun onDestroyed() {

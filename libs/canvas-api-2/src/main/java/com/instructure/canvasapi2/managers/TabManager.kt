@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.Tab
 
 object TabManager {
 
-    @JvmStatic
     fun getTabs(canvasContext: CanvasContext, callback: StatusCallback<List<Tab>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext, isForceReadFromNetwork = forceNetwork)

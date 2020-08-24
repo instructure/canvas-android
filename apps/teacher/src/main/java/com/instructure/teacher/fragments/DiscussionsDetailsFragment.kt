@@ -53,7 +53,6 @@ import com.instructure.teacher.presenters.DiscussionsDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.viewinterface.DiscussionsDetailsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_details.*
 import kotlinx.android.synthetic.main.view_submissions_donut_group.*
 import kotlinx.coroutines.Job
@@ -62,8 +61,14 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLDecoder
-import java.util.Date
-import java.util.UUID
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.joinToString
+import kotlin.collections.map
+import kotlin.collections.singleOrNull
 
 class DiscussionsDetailsFragment : BasePresenterFragment<
         DiscussionsDetailsPresenter,
@@ -118,11 +123,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
     override val identity: Long? get() = if(mDiscussionTopicHeaderId != 0L) mDiscussionTopicHeaderId else mDiscussionTopicHeader.id
     override val skipCheck: Boolean get() = mSkipIdentityCheck
 
-    override fun getPresenterFactory(): PresenterFactory<DiscussionsDetailsPresenter> =
+    override fun getPresenterFactory() =
             DiscussionsDetailsPresenterFactory(mCanvasContext, mDiscussionTopicHeader, mDiscussionTopic,
                     if(mSkipId.isEmpty()) DiscussionsDetailsFragment::class.java.simpleName + UUID.randomUUID().toString() else mSkipId)
 
-    override fun onPresenterPrepared(presenter: DiscussionsDetailsPresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsDetailsPresenter) {}
 
     override fun onReadySetGo(presenter: DiscussionsDetailsPresenter) {
 
@@ -493,23 +498,21 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         webView.settings.loadWithOverviewMode = true
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object: CanvasWebView.CanvasWebViewClientCallback {
-            override fun routeInternallyCallback(url: String?) {
-                if (url != null) {
-                    if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
-                        val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
-                        RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
-                    }
+            override fun routeInternallyCallback(url: String) {
+                if (!RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, true)) {
+                    val bundle = InternalWebViewFragment.makeBundle(url, url, false, "")
+                    RouteMatcher.route(requireContext(), Route(FullscreenInternalWebViewFragment::class.java, presenter?.canvasContext, bundle))
                 }
             }
-            override fun canRouteInternallyDelegate(url: String?): Boolean {
-                return url != null
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return true
             }
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 showToast(R.string.downloadingFile)
-                RouteMatcher.openMedia(activity, url ?: "")
+                RouteMatcher.openMedia(activity, url)
             }
-            override fun onPageStartedCallback(webView: WebView?, url: String?) {}
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
         }
 
         webView.addVideoClient(requireActivity())

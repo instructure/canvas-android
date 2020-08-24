@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.loginapi.login.api.MobileVerifyAPI
 import com.instructure.loginapi.login.model.DomainVerificationResult
@@ -46,28 +47,23 @@ object QRLogin {
             data.getQueryParameter(QR_AUTH_CODE_STUDENT)
         }
 
-        val domainVerificationResult = awaitApi<DomainVerificationResult?> {
+        val domainVerificationResult = awaitApi<DomainVerificationResult> {
             MobileVerifyAPI.mobileVerify(domain, it)
         }
 
-        //mobile verify can change the hostname we need to use
-        var updatedDomain = if (domainVerificationResult!!.base_url != null && domainVerificationResult.base_url != "") {
-            domainVerificationResult.base_url
-        } else {
-            domain
-        }
+        // Mobile verify can change the hostname we need to use
+        var updatedDomain = domainVerificationResult.baseUrl.validOrNull() ?: domain
 
         if (updatedDomain.endsWith("/")) {
             updatedDomain = updatedDomain.substring(0, updatedDomain.length - 1)
         }
 
-
         // Set the updated domain
         ApiPrefs.domain = updatedDomain
 
         // Set client id and secret
-        ApiPrefs.clientId = domainVerificationResult.client_id
-        ApiPrefs.clientSecret = domainVerificationResult.client_secret
+        ApiPrefs.clientId = domainVerificationResult.clientId
+        ApiPrefs.clientSecret = domainVerificationResult.clientSecret
 
         // Set the protocol
         ApiPrefs.protocol = domainVerificationResult.protocol
@@ -95,8 +91,8 @@ object QRLogin {
                 token = "",  // TODO - delete once we move over 100% to refresh tokens
                 accessToken = tokenResponse.accessToken!!,
                 refreshToken = tokenResponse.refreshToken!!,
-                clientId = domainVerificationResult.client_id,
-                clientSecret = domainVerificationResult.client_secret,
+                clientId = domainVerificationResult.clientId,
+                clientSecret = domainVerificationResult.clientSecret,
                 calendarFilterPrefs = null,
                 lastLogoutDate = null
             ))
@@ -105,7 +101,6 @@ object QRLogin {
         return tokenResponse
     }
 
-    @JvmStatic
     fun verifySSOLoginUri(uri: Uri?, isTeacher: Boolean = false): Boolean {
         if (uri == null) return false
         val codeParam = if(isTeacher) QR_AUTH_CODE_TEACHER else QR_AUTH_CODE_STUDENT

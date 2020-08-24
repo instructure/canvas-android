@@ -21,14 +21,16 @@ import android.view.View
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.holders.EditFavoritesViewHolder
 import com.instructure.teacher.interfaces.AdapterToEditFavoriteCoursesCallback
+import com.instructure.teacher.presenters.EditFavoritesPresenter
+import com.instructure.teacher.viewinterface.CanvasContextView
 import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class EditFavoritesAdapter(
         context: Context,
-        presenter: SyncPresenter<*, *>,
+        presenter: EditFavoritesPresenter,
         private val mCallback: AdapterToEditFavoriteCoursesCallback
-) : SyncRecyclerAdapter<CanvasContext, EditFavoritesViewHolder>(context, presenter) {
+) : SyncRecyclerAdapter<CanvasContext, EditFavoritesViewHolder, CanvasContextView>(context, presenter) {
 
     override fun bindHolder(canvasContext: CanvasContext, holder: EditFavoritesViewHolder, position: Int) {
         context?.let { holder.bind(it, canvasContext, mCallback)}

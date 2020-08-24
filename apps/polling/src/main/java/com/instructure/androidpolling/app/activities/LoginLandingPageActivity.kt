@@ -42,7 +42,6 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
     override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
 
     companion object {
-        @JvmStatic
         fun createIntent(context: Context): Intent {
             return Intent(context, LoginLandingPageActivity::class.java)
         }

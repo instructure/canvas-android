@@ -22,13 +22,14 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.fragments.AllCoursesFragment
 import com.instructure.teacher.holders.CoursesViewHolder
 import com.instructure.teacher.presenters.CoursesPresenter
+import com.instructure.teacher.viewinterface.CoursesView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class CoursesAdapter(
         context: Context,
         presenter: CoursesPresenter,
         private val mCourseCallback: AllCoursesFragment.CourseBrowserCallback?)
-    : SyncRecyclerAdapter<Course, CoursesViewHolder>(context, presenter) {
+    : SyncRecyclerAdapter<Course, CoursesViewHolder, CoursesView>(context, presenter) {
 
     override fun bindHolder(model: Course, holder: CoursesViewHolder, position: Int) {
         holder.bind(model, mCourseCallback)

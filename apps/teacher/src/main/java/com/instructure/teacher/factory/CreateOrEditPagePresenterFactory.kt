@@ -20,8 +20,9 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.teacher.presenters.CreateOrEditPagePresenter
+import com.instructure.teacher.viewinterface.CreateOrEditPageView
 import instructure.androidblueprint.PresenterFactory
 
-class CreateOrEditPagePresenterFactory(private var canvasContext: CanvasContext, private var page: Page?) : PresenterFactory<CreateOrEditPagePresenter> {
+class CreateOrEditPagePresenterFactory(private var canvasContext: CanvasContext, private var page: Page?) : PresenterFactory<CreateOrEditPageView, CreateOrEditPagePresenter> {
     override fun create(): CreateOrEditPagePresenter = CreateOrEditPagePresenter(canvasContext, page)
 }

@@ -16,8 +16,9 @@
 package com.instructure.teacher.factory
 
 import com.instructure.teacher.presenters.InternalWebViewPresenter
+import com.instructure.teacher.viewinterface.InternalWebView
 import instructure.androidblueprint.PresenterFactory
 
-class InternalWebViewPresenterFactory : PresenterFactory<InternalWebViewPresenter?> {
+class InternalWebViewPresenterFactory : PresenterFactory<InternalWebView, InternalWebViewPresenter> {
     override fun create() = InternalWebViewPresenter()
 }

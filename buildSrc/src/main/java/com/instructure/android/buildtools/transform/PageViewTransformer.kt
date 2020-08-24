@@ -91,13 +91,13 @@ class PageViewTransformer : ClassTransformer() {
     private fun getStartLogic(eventFieldName: String, eventName: String, urlGetterName: String, componentName: String) =
             """
         if ($eventFieldName == null && _getPageViewEventName() == "$eventFieldName") {
-            $eventFieldName = com.instructure.canvasapi2.utils.pageview.PageViewUtils.startEvent("$eventName", $urlGetterName());
+            $eventFieldName = com.instructure.canvasapi2.utils.pageview.PageViewUtils.INSTANCE.startEvent("$eventName", $urlGetterName());
         }
         """
 
     private fun getStopLogic(eventFieldName: String, componentName: String) =
             """
-        com.instructure.canvasapi2.utils.pageview.PageViewUtils.stopEvent($eventFieldName);
+        com.instructure.canvasapi2.utils.pageview.PageViewUtils.INSTANCE.stopEvent($eventFieldName);
         $eventFieldName = null;
         """
 
@@ -256,7 +256,7 @@ class PageViewTransformer : ClassTransformer() {
             val queryMap = (queryMethods + queryFields).toMutableMap()
 
             if (url.isEmpty() && queryMap.isEmpty()) {
-                urlMethodBody = "return com.instructure.canvasapi2.utils.ApiPrefs.getFullDomain();"
+                urlMethodBody = "return com.instructure.canvasapi2.utils.ApiPrefs.INSTANCE.getFullDomain();"
             } else {
                 require(url.count { it == '{' } == url.count { it == '}' }) { "PageView url $url is incorrectly formatted" }
                 val params = url.split("/").filter { it.startsWith('{') && it.endsWith('}') }.map { it.trim('{', '}') }
@@ -295,7 +295,7 @@ class PageViewTransformer : ClassTransformer() {
 
                 urlMethodBody =
                         """
-                        String domain = com.instructure.canvasapi2.utils.ApiPrefs.getFullDomain();
+                        String domain = com.instructure.canvasapi2.utils.ApiPrefs.INSTANCE.getFullDomain();
 
                         String rawUrl = "$url";
                         ${paramSwappers.joinToString("\n")}
@@ -315,7 +315,7 @@ class PageViewTransformer : ClassTransformer() {
                             }
                         }
 
-                        return com.instructure.canvasapi2.utils.ApiPrefs.getFullDomain() + "/" + rawUrl + queryString.toString();
+                        return com.instructure.canvasapi2.utils.ApiPrefs.INSTANCE.getFullDomain() + "/" + rawUrl + queryString.toString();
                         """
             }
 

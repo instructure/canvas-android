@@ -25,6 +25,7 @@ import com.instructure.teacher.holders.DiscussionExpandableViewHolder
 import com.instructure.teacher.holders.DiscussionListHolder
 import com.instructure.teacher.holders.EmptyViewHolder
 import com.instructure.teacher.presenters.DiscussionListPresenter
+import com.instructure.teacher.viewinterface.DiscussionListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
 class DiscussionListAdapter(
@@ -34,7 +35,7 @@ class DiscussionListAdapter(
     private val mIsAnnouncement: Boolean,
     private val mCallback: (DiscussionTopicHeader) -> Unit,
     private val mOverflowCallback: (String?, DiscussionTopicHeader) -> Unit
-) : SyncExpandableRecyclerAdapter<String, DiscussionTopicHeader, RecyclerView.ViewHolder>(context, expandablePresenter) {
+) : SyncExpandableRecyclerAdapter<String, DiscussionTopicHeader, RecyclerView.ViewHolder, DiscussionListView>(context, expandablePresenter) {
 
     init {
         setExpandedByDefault(true)
@@ -54,7 +55,7 @@ class DiscussionListAdapter(
         }
     }
 
-    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder?, group: String, isExpanded: Boolean) {
+    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, group: String, isExpanded: Boolean) {
         if(!mIsAnnouncement) {
             context?.let {
                 (holder as DiscussionExpandableViewHolder).bind(isExpanded, holder, group) { discussionGroup ->
@@ -64,7 +65,7 @@ class DiscussionListAdapter(
         }
     }
 
-    override fun onBindChildHolder(holder: RecyclerView.ViewHolder?, group: String?, item: DiscussionTopicHeader) {
+    override fun onBindChildHolder(holder: RecyclerView.ViewHolder, group: String, item: DiscussionTopicHeader) {
         context?.let { (holder as DiscussionListHolder).bind(it, item, group, mCourseColor, mIsAnnouncement, mCallback, mOverflowCallback) }
     }
 }

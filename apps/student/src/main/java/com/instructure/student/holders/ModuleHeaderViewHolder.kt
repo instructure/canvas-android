@@ -36,7 +36,7 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     fun bind(
         moduleObject: ModuleObject,
         context: Context,
-        viewHolderHeaderClicked: ViewHolderHeaderClicked<ModuleObject?>,
+        viewHolderHeaderClicked: ViewHolderHeaderClicked<ModuleObject>,
         expanded: Boolean
     ) = with(itemView){
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)
@@ -81,7 +81,7 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         } else {
             if (isLocked) R.drawable.vd_lock else R.drawable.vd_module_circle
         }
-        moduleStatus.setImageDrawable(ColorUtils.colorIt(color, ContextCompat.getDrawable(context, drawable)))
+        moduleStatus.setImageDrawable(ColorUtils.colorIt(color, ContextCompat.getDrawable(context, drawable)!!))
     }
 
     companion object {

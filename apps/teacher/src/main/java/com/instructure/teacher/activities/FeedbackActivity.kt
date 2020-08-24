@@ -69,7 +69,6 @@ class FeedbackActivity : AppCompatActivity() {
 
         private val BASE_URL = "docs.google.com/forms/d/e/1FAIpQLSeBW9mUTkwMUXpIr4LOE_jtAXzynjWExUDsfg98_ktBldq_6A/viewform"
 
-        @JvmStatic
         fun createIntent(context: Context): Intent {
             return Intent(context, FeedbackActivity::class.java)
         }

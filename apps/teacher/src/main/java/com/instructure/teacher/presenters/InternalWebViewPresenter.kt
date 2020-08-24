@@ -18,8 +18,8 @@ package com.instructure.teacher.presenters
 import com.instructure.teacher.viewinterface.InternalWebView
 import instructure.androidblueprint.Presenter
 
-class InternalWebViewPresenter : Presenter<InternalWebView?> {
-    override fun onViewAttached(internalWebView: InternalWebView) = this
+class InternalWebViewPresenter : Presenter<InternalWebView> {
+    override fun onViewAttached(view: InternalWebView) = this
     override fun onViewDetached() {}
     override fun onDestroyed() {}
 }

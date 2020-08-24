@@ -64,12 +64,11 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 
     override fun layoutResId() = R.layout.fragment_assignee_list
-    override fun getList() = presenter.data
-    override fun getRecyclerView() = assigneeRecyclerView
+    override val recyclerView get() = assigneeRecyclerView
     override fun withPagination() = false
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun getPresenterFactory() = AssigneeListPresenterFactory(mDateGroups, mTargetIdx, sections, groups, students)
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     private fun performSave() {
         presenter.save()
@@ -96,7 +95,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
 
     override fun onPresenterPrepared(presenter: AssigneeListPresenter) {
         RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -139,12 +138,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, assigneeRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    override fun getAdapter(): AssigneeListAdapter {
-        if (mAdapter == null) {
-            mAdapter = AssigneeListAdapter(requireContext(), presenter)
-        }
-        return mAdapter
-    }
+    override fun createAdapter() = AssigneeListAdapter(requireContext(), presenter)
 
     override fun notifyItemChanged(position: Int) {
         adapter.notifyItemChanged(position)
@@ -158,7 +152,6 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
         @JvmStatic val STUDENTS = "students"
 
         @Suppress("UNCHECKED_CAST")
-        @JvmStatic
         fun newInstance(args: Bundle) = AssigneeListFragment().apply {
             this.mDateGroups = args.getParcelableArrayList(DATE_GROUPS)
             this.mTargetIdx = args.getInt(TARGET_INDEX)
@@ -167,7 +160,6 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
             this.students = args.getParcelableArrayList(STUDENTS)
         }
 
-        @JvmStatic
         fun makeBundle(dateGroups: EditDateGroups, targetIdx: Int, sections: List<Section>, groups: List<Group>, students: List<User>): Bundle {
             val args = Bundle()
             args.putSerializable(AssigneeListFragment.DATE_GROUPS, ArrayList(dateGroups))

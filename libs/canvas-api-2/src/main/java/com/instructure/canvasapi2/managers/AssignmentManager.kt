@@ -28,14 +28,12 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object AssignmentManager {
 
-    @JvmStatic
     fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean, callback: StatusCallback<Assignment>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         AssignmentAPI.getAssignment(courseId, assignmentId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getAssignmentIncludeObservees(assignmentId: Long, courseId: Long, forceNetwork: Boolean, callback: StatusCallback<ObserveeAssignment>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -56,7 +54,6 @@ object AssignmentManager {
         )
     }
 
-    @JvmStatic
     fun getAssignmentGroupsWithAssignments(
         courseId: Long,
         forceNetwork: Boolean,
@@ -79,7 +76,6 @@ object AssignmentManager {
         AssignmentAPI.getFirstPageAssignmentGroupsWithAssignments(courseId, adapter, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
@@ -116,7 +112,6 @@ object AssignmentManager {
         )
     }
 
-    @JvmStatic
     fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
         gradingPeriodId: Long,
@@ -126,7 +121,6 @@ object AssignmentManager {
         getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, gradingPeriodId, false, forceNetwork, callback)
     }
 
-    @JvmStatic
     fun getAssignmentGroup(
         courseId: Long,
         assignmentGroupId: Long,
@@ -139,7 +133,6 @@ object AssignmentManager {
         AssignmentAPI.getAssignmentGroup(courseId, assignmentGroupId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun editAssignment(
         courseId: Long,
         assignmentId: Long,
@@ -155,7 +148,6 @@ object AssignmentManager {
         AssignmentAPI.editAssignment(courseId, assignmentId, bodyWrapper, adapter, callback, params, serializeNulls)
     }
 
-    @JvmStatic
     fun editAssignmentAllowNullValues(
         courseId: Long,
         assignmentId: Long,
@@ -170,7 +162,6 @@ object AssignmentManager {
         AssignmentAPI.editAssignmentAllowNullValues(courseId, assignmentId, bodyWrapper, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getAllGradeableStudentsForAssignment(
         courseId: Long,
         assignmentId: Long,
@@ -191,7 +182,6 @@ object AssignmentManager {
         AssignmentAPI.getFirstPageGradeableStudentsForAssignment(courseId, assignmentId, adapter, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getAllSubmissionsForAssignment(
         courseId: Long,
         assignmentId: Long,
@@ -218,7 +208,6 @@ object AssignmentManager {
         getAllSubmissionsForAssignment(courseId, assignmentId, forceNetwork, it)
     }
 
-    @JvmStatic
     fun getAllAssignments(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
         val adapter = RestBuilder(callback)
         val depaginatedCallback = object : ExhaustiveListCallback<Assignment>(callback) {

@@ -175,7 +175,7 @@ class DiscussionEntryHtmlConverter {
             content = ""
             date = deletedText
         } else if(discussionEntry.updatedAt != null) {
-            date = DateHelper.getDateTimeString(context, discussionEntry.updatedAt.toDate())
+            date = DateHelper.getDateTimeString(context, discussionEntry.updatedAt.toDate())!!
         }
 
         return template

@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.utils.Logger
 
 object OAuthManager {
 
-    @JvmStatic
     fun deleteToken() {
         val callback = object : StatusCallback<Void>() {}
         val adapter = RestBuilder(callback)
@@ -35,21 +34,18 @@ object OAuthManager {
         OAuthAPI.deleteToken(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getToken(clientID: String, clientSecret: String, oAuthRequest: String, callback: StatusCallback<OAuthTokenResponse>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
         OAuthAPI.getToken(adapter, params, clientID, clientSecret, oAuthRequest, callback)
     }
 
-    @JvmStatic
     fun refreshToken(): DataResult<OAuthTokenResponse> {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = true)
         return OAuthAPI.refreshAccessToken(adapter, params)
     }
 
-    @JvmStatic
     fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
@@ -57,7 +53,6 @@ object OAuthManager {
         OAuthAPI.getAuthenticatedSession(targetUrl, params, adapter, callback)
     }
 
-    @JvmStatic
     fun getAuthenticatedSessionSynchronous(targetUrl: String): String? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = true)

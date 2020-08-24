@@ -135,7 +135,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     override fun layoutResId() = R.layout.fragment_edit_assignment_details
 
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -485,12 +485,10 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         private const val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"
         const val EDIT_DATE_GROUPS = "editDateGroups"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = EditAssignmentDetailsFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment, scrollToDates: Boolean): Bundle {
             val args = Bundle()
             args.putBoolean(EditAssignmentDetailsFragment.SHOULD_SCROLL_TO_DATES, scrollToDates)

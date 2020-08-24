@@ -26,7 +26,7 @@ class AnnotationCommentListAdapter(
         presenter: AnnotationCommentListPresenter,
         private val editCallback: (CanvaDocAnnotation, Int) -> Unit,
         private val deleteCallback: (CanvaDocAnnotation, Int) -> Unit
-) : ListRecyclerAdapter<CanvaDocAnnotation, AnnotationCommentViewHolder>(context, presenter) {
+) : ListRecyclerAdapter<CanvaDocAnnotation, AnnotationCommentViewHolder, AnnotationCommentListView>(context, presenter) {
 
     override fun createViewHolder(v: View, viewType: Int): AnnotationCommentViewHolder = AnnotationCommentViewHolder(v)
     override fun itemLayoutResId(viewType: Int) = AnnotationCommentViewHolder.HOLDER_RES

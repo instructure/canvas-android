@@ -34,10 +34,7 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
+import io.mockk.*
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -477,7 +474,7 @@ class SubmissionDetailsUpdateTest : Assert() {
         val url = "https://example.com"
         val quizId = 987L
         val attempt = 2L
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.fullDomain } returns url
 
         verifyGetSubmissionContentType(
@@ -490,7 +487,7 @@ class SubmissionDetailsUpdateTest : Assert() {
                 url + "/courses/${initModel.canvasContext.id}/quizzes/$quizId/history?version=$attempt&headless=1"
             )
         )
-        unmockkStatic(ApiPrefs::class)
+        unmockkObject(ApiPrefs)
     }
 
     @Test

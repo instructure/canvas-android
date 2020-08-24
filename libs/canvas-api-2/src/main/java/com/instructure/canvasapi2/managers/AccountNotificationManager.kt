@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.utils.ExhaustiveListCallback
  */
 object AccountNotificationManager {
 
-    @JvmStatic
     fun getAllAccountNotifications(callback: StatusCallback<List<AccountNotification>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -47,7 +46,6 @@ object AccountNotificationManager {
         AccountNotificationAPI.getAccountNotifications(adapter, params, depaginatedCallback)
     }
 
-    @JvmStatic
     fun deleteAccountNotification(notificationId: Long, callback: StatusCallback<AccountNotification>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -55,7 +53,6 @@ object AccountNotificationManager {
         AccountNotificationAPI.deleteAccountNotification(notificationId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getAccountNotification(
         accountNotificationId: Long,
         callback: StatusCallback<AccountNotification>,

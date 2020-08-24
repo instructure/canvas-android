@@ -58,7 +58,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
 
-        val originalCallback = canvasWebView.canvasWebViewClientCallback
+        val originalCallback = canvasWebView.canvasWebViewClientCallback!!
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by originalCallback {
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 originalCallback.onPageFinishedCallback(webView, url)
@@ -97,7 +97,6 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(courseId: Long, assignmentId: Long, studentId: Long, url: String)= SpeedGraderQuizWebViewFragment().apply {
             mCourseId = courseId
             mAssignmentId = assignmentId
@@ -105,7 +104,6 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
             this.url = url
         }
 
-        @JvmStatic
         fun newInstance(bundle: Bundle) = SpeedGraderQuizWebViewFragment().apply { arguments = bundle }
     }
 }

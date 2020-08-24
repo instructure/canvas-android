@@ -55,8 +55,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     private lateinit var mRecyclerView: RecyclerView
 
 
-    override fun getList() = presenter.data
-    override fun getRecyclerView() = mRecyclerView
+    override val recyclerView get() = mRecyclerView
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
@@ -65,7 +64,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     override fun onCreateView(view: View) {}
 
     override fun onPresenterPrepared(presenter: AllCoursesPresenter) {
-        mRecyclerView = RecyclerViewUtils.buildRecyclerView(mRootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
+        mRecyclerView = RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         val gridLayoutManager = GridLayoutManager(
             requireContext(),
@@ -115,12 +114,7 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
         EventBus.getDefault().unregister(this)
     }
 
-    override fun getAdapter(): AllCoursesAdapter {
-        if (mAdapter == null) {
-            mAdapter = AllCoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
-        }
-        return mAdapter
-    }
+    override fun createAdapter() = AllCoursesAdapter(requireActivity(), presenter, mCourseBrowserCallback)
 
     override fun onRefreshStarted() {
         //this prevents two loading spinners from happening during pull to refresh
@@ -141,11 +135,10 @@ class AllCoursesFragment : BaseSyncFragment<Course, AllCoursesPresenter, AllCour
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
-        mAdapter?.notifyDataSetChanged()
+        adapter.notifyDataSetChanged()
     }
 
     companion object {
-        @JvmStatic
         fun getInstance() = AllCoursesFragment()
     }
 }

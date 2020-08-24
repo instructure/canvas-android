@@ -19,14 +19,12 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.utils.intersectBy
-import com.instructure.canvasapi2.utils.weave.*
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.awaitApis
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.utils.AssignmentUtils2
-import com.instructure.teacher.events.AssignmentUpdatedEvent
-import com.instructure.teacher.events.post
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.viewinterface.AssignmentSubmissionListView
 import instructure.androidblueprint.SyncPresenter
@@ -220,15 +218,15 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
         return mFilteredSubmissions.map { BasicUser.userToBasicUser((it.assignee as StudentAssignee).student) } as ArrayList<BasicUser>
     }
 
-    override fun compare(item1: GradeableStudentSubmission?, item2: GradeableStudentSubmission?): Int {
+    override fun compare(item1: GradeableStudentSubmission, item2: GradeableStudentSubmission): Int {
         // Turns out we do need to sort them by sortable name, but not when anonymous grading is on
-        if (item1?.assignee is StudentAssignee && item2?.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
+        if (item1.assignee is StudentAssignee && item2.assignee is StudentAssignee && !mAssignment.anonymousGrading) {
             return (item1.assignee as StudentAssignee).student.sortableName?.toLowerCase(Locale.getDefault())?.compareTo((item2.assignee as StudentAssignee).student.sortableName?.toLowerCase()!!) ?: -1
         }
         return -1
     }
 
-    override fun areContentsTheSame(item1: GradeableStudentSubmission?, item2: GradeableStudentSubmission?) = false
+    override fun areContentsTheSame(item1: GradeableStudentSubmission, item2: GradeableStudentSubmission) = false
 
     // Put in a companion object so we can use it to route to speedgrader from the to do list
     companion object {

@@ -45,7 +45,6 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditPageView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_or_edit_page.*
 
 class CreateOrEditPageDetailsFragment :
@@ -70,12 +69,10 @@ class CreateOrEditPageDetailsFragment :
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
-    override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter?) {}
+    override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_page
 
-    override fun getPresenterFactory(): PresenterFactory<CreateOrEditPagePresenter> {
-        return CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())
-    }
+    override fun getPresenterFactory() = CreateOrEditPagePresenterFactory(mCanvasContext, mPage?.parcelCopy())
 
     override fun onReadySetGo(presenter: CreateOrEditPagePresenter) {
         setupViews()
@@ -311,17 +308,14 @@ class CreateOrEditPageDetailsFragment :
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(bundle: Bundle) = CreateOrEditPageDetailsFragment().apply {
             arguments = bundle
         }
 
-        @JvmStatic
         fun newInstanceCreate(canvasContext: CanvasContext) = CreateOrEditPageDetailsFragment().apply {
             mCanvasContext = canvasContext
         }
 
-        @JvmStatic
         fun newInstanceEdit(canvasContext: CanvasContext, page: Page)
                 = CreateOrEditPageDetailsFragment().apply {
             mCanvasContext = canvasContext

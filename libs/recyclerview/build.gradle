@@ -16,6 +16,7 @@
  */
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -46,6 +47,9 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation Libs.JUNIT
+
+    /* Kotlin */
+    implementation Libs.KOTLIN_STD_LIB
 
     implementation Libs.ANDROIDX_APPCOMPAT
     implementation Libs.ANDROIDX_RECYCLERVIEW

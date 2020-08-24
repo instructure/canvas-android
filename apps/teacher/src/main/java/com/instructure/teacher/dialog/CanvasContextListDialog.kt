@@ -50,7 +50,6 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
     private var mSelectedCallback: (canvasContext: CanvasContext) -> Unit by Delegates.notNull()
     companion object {
 
-        @JvmStatic
         fun getInstance(manager: FragmentManager, callback: (canvasContext: CanvasContext) -> Unit) : CanvasContextListDialog {
             manager.dismissExisting<CanvasContextListDialog>()
             val dialog = CanvasContextListDialog()

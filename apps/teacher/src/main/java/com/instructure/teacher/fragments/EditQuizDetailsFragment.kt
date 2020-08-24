@@ -55,14 +55,12 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
 import com.instructure.teacher.viewinterface.EditQuizDetailsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_edit_quiz_details.*
 import kotlinx.android.synthetic.main.view_assignment_override.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.ArrayList
-import java.util.Date
+import java.util.*
 
 class EditQuizDetailsFragment : BasePresenterFragment<
         EditQuizDetailsPresenter,
@@ -149,9 +147,9 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<EditQuizDetailsPresenter> = EditQuizDetailsPresenterFactory(mQuiz, mAssignment, mCourse)
+    override fun getPresenterFactory() = EditQuizDetailsPresenterFactory(mQuiz, mAssignment, mCourse)
 
-    override fun onPresenterPrepared(presenter: EditQuizDetailsPresenter?) {}
+    override fun onPresenterPrepared(presenter: EditQuizDetailsPresenter) {}
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
 
@@ -494,12 +492,10 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         @JvmStatic val ASSIGNMENT = "assignment"
         @JvmStatic val SHOULD_SCROLL_TO_DATES = "shouldScrollToDates"
 
-        @JvmStatic
         fun newInstance(course: Course, args: Bundle) = EditQuizDetailsFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz, scrollToDates: Boolean): Bundle {
             val args = Bundle()
             args.putBoolean(EditQuizDetailsFragment.SHOULD_SCROLL_TO_DATES, scrollToDates)
@@ -507,14 +503,12 @@ class EditQuizDetailsFragment : BasePresenterFragment<
             return args
         }
 
-        @JvmStatic
         fun makeBundle(quiz: Quiz): Bundle {
             return Bundle().apply {
                 putParcelable(QUIZ, quiz)
             }
         }
 
-        @JvmStatic
         fun makeBundle(quizId: Long): Bundle {
             return Bundle().apply {
                 putLong(QUIZ_ID, quizId)

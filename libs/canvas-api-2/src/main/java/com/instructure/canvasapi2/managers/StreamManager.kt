@@ -26,7 +26,6 @@ import java.util.*
 
 object StreamManager {
 
-    @JvmStatic
     fun getUserStream(callback: StatusCallback<List<StreamItem>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -34,7 +33,6 @@ object StreamManager {
         StreamAPI.getUserStream(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getCourseStream(
         canvasContext: CanvasContext,
         callback: StatusCallback<List<StreamItem>>,
@@ -50,7 +48,6 @@ object StreamManager {
         StreamAPI.getCourseStream(canvasContext, adapter, params, callback)
     }
 
-    @JvmStatic
     fun hideStreamItem(streamId: Long, callback: StatusCallback<HiddenStreamItem>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -58,7 +55,6 @@ object StreamManager {
         StreamAPI.hideStreamItem(streamId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUserStreamSynchronous(numberToReturn: Int, forceNetwork: Boolean): List<StreamItem> {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

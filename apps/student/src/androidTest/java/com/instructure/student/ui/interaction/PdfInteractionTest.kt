@@ -101,7 +101,7 @@ class PdfInteractionTest : StudentTest() {
                 displayName = pdfFileName,
                 contentType = "application/pdf")
 
-        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, data.folderFiles.values.first().first().url)
+        val uniqueFileName = OpenMediaAsyncTaskLoader.makeFilenameUnique(pdfFileName, data.folderFiles.values.first().first().url!!)
 
         cacheFile(uniqueFileName)
 

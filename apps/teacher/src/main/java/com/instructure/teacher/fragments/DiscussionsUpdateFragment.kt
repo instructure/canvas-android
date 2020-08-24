@@ -45,7 +45,6 @@ import com.instructure.teacher.presenters.DiscussionsUpdatePresenter.Companion.R
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsUpdateView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_edit.*
 
 class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresenter, DiscussionsUpdateView>(), DiscussionsUpdateView {
@@ -67,12 +66,11 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
 
     override fun layoutResId(): Int = R.layout.fragment_discussions_edit
 
-    override fun getPresenterFactory(): PresenterFactory<DiscussionsUpdatePresenter> =
-            DiscussionsUpdatePresenterFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntry, mDiscussionTopic)
+    override fun getPresenterFactory() = DiscussionsUpdatePresenterFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntry, mDiscussionTopic)
 
-    override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsUpdatePresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter?) {
+    override fun onReadySetGo(presenter: DiscussionsUpdatePresenter) {
         rceTextEditor.setHint(R.string.rce_empty_description)
         rceTextEditor.actionUploadImageCallback = { MediaUploadUtils.showPickImageDialog(this) }
 
@@ -176,7 +174,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
         private const val DISCUSSION_TOPIC = "DISCUSSION_TOPIC"
         private const val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
 
-        @JvmStatic
         fun makeBundle(
                 discussionTopicHeaderId: Long,
                 discussionEntryId: DiscussionEntry?,
@@ -188,7 +185,6 @@ class DiscussionsUpdateFragment : BasePresenterFragment<DiscussionsUpdatePresent
             putParcelable(DISCUSSION_TOPIC, discussionTopic)
         }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
             DiscussionsUpdateFragment().withArgs(args).apply { mCanvasContext = canvasContext }
     }

@@ -170,7 +170,7 @@ open class AssignmentDateListRecyclerAdapter(
 
     override fun contextReady() {}
 
-    override fun isPaginated() = false
+    override val isPaginated get() = false
 
     override fun onBindChildHolder(
         holder: RecyclerView.ViewHolder,

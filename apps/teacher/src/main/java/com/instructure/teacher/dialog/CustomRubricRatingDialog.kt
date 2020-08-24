@@ -47,7 +47,6 @@ class CustomRubricRatingDialog : AppCompatDialogFragment() {
     }
 
     companion object {
-        @JvmStatic
         fun show(manager: FragmentManager, criterionId: String, studentId: Long, oldValue: Double, maxValue: Double) = CustomRubricRatingDialog().apply {
             manager.dismissExisting<CustomRubricRatingDialog>()
             mCriterionId = criterionId

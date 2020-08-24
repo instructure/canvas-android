@@ -65,15 +65,15 @@ class SubmissionRubricDescriptionFragment : DialogFragment() {
         }
 
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String?, url: String?, filename: String?) {}
-            override fun onPageStartedCallback(webView: WebView?, url: String?) {}
-            override fun onPageFinishedCallback(webView: WebView?, url: String?) {}
-            override fun canRouteInternallyDelegate(url: String?): Boolean {
-                return RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, false)
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {}
+            override fun onPageStartedCallback(webView: WebView, url: String) {}
+            override fun onPageFinishedCallback(webView: WebView, url: String) {}
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                return RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, false)
             }
 
-            override fun routeInternallyCallback(url: String?) {
-                RouteMatcher.canRouteInternally(requireContext(), url!!, ApiPrefs.domain, true)
+            override fun routeInternallyCallback(url: String) {
+                RouteMatcher.canRouteInternally(requireContext(), url, ApiPrefs.domain, true)
             }
         }
 

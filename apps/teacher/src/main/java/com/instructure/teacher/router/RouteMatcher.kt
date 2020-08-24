@@ -141,12 +141,10 @@ object RouteMatcher : BaseRouteMatcher() {
         bottomSheetFragments.add(CreateOrEditPageDetailsFragment::class.java)
     }
 
-    @JvmStatic
     private fun routeUrl(context: Context, url: String) {
         routeUrl(context, url, ApiPrefs.domain)
     }
 
-    @JvmStatic
     fun routeUrl(context: Context, url: String, domain: String) {
         /* Possible activity types we can navigate to: Unknown Link, InitActivity, Master/Detail, Fullscreen, WebView, ViewMedia */
 
@@ -157,7 +155,6 @@ object RouteMatcher : BaseRouteMatcher() {
         route(context, getInternalRoute(url, domain))
     }
 
-    @JvmStatic
     fun route(context: Context, route: Route?) {
         if (route == null || route.routeContext === RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
@@ -278,7 +275,6 @@ object RouteMatcher : BaseRouteMatcher() {
     /**
      * Pass in a route and a course, get a fragment back!
      */
-    @JvmStatic
     fun getFullscreenFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
 
         return if (canvasContext == null) {
@@ -300,19 +296,16 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    @JvmStatic
     fun getMasterFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         //TODO: INBOX
         return getFrag(route.primaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getDetailFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         //TODO: INBOX
         return getFrag(route.secondaryClass, canvasContext, route)
     }
 
-    @JvmStatic
     fun getBottomSheetFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return getFrag(route.primaryClass, canvasContext, route)
     }
@@ -445,7 +438,6 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    @JvmStatic
     fun <Type : Fragment> getClassDisplayName(context: Context, cls: Class<Type>?): String {
         return when {
             cls == null -> return ""
@@ -457,7 +449,7 @@ object RouteMatcher : BaseRouteMatcher() {
         }
     }
 
-    private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? {
+    private fun getLoaderCallbacks(activity: Activity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
         if (openMediaCallbacks == null) {
             openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
@@ -467,25 +459,25 @@ object RouteMatcher : BaseRouteMatcher() {
                 override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
                     try {
                         if (loadedMedia.isError) {
-                            if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ERROR_TYPE.NO_APPS) {
-                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent.data!!, (loader as OpenMediaAsyncTaskLoader).filename, loadedMedia.intent.type!!, null, R.drawable.vd_attachment).nonNullArgs
+                            if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS) {
+                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent!!.data!!, (loader as OpenMediaAsyncTaskLoader).filename!!, loadedMedia.intent!!.type!!, null, R.drawable.vd_attachment).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewUnsupportedFileFragment::class.java, null, args))
                             } else {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()
                             }
                         } else if (loadedMedia.isHtmlFile) {
-                            val args = ViewHtmlFragment.makeDownloadBundle(loadedMedia.bundle.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle.getString(Const.ACTION_BAR_TITLE)!!)
+                            val args = ViewHtmlFragment.makeDownloadBundle(loadedMedia.bundle!!.getString(Const.INTERNAL_URL)!!, loadedMedia.bundle!!.getString(Const.ACTION_BAR_TITLE)!!)
                             RouteMatcher.route(activity, Route(ViewHtmlFragment::class.java, null, args))
                         } else if (loadedMedia.intent != null) {
-                            if (loadedMedia.intent.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
+                            if (loadedMedia.intent?.type?.contains("pdf") == true && !loadedMedia.isUseOutsideApps) {
                                 // Show pdf with PSPDFkit
-                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url, 0).nonNullArgs
+                                val args = ViewPdfFragment.newInstance((loader as OpenMediaAsyncTaskLoader).url!!, 0).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewPdfFragment::class.java, null, args))
-                            } else if (loadedMedia.intent.type == "video/mp4") {
-                                val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent.data!!.toString(), null, "video/mp4", loadedMedia.intent.dataString, true)
+                            } else if (loadedMedia.intent?.type == "video/mp4") {
+                                val bundle = BaseViewMediaActivity.makeBundle(loadedMedia.intent!!.data!!.toString(), null, "video/mp4", loadedMedia.intent!!.dataString, true)
                                 RouteMatcher.route(activity, Route(bundle, RouteContext.MEDIA))
-                            } else if (loadedMedia.intent.type!!.startsWith("image/")) {
-                                val args = ViewImageFragment.newInstance(loadedMedia.intent.dataString!!, loadedMedia.intent.data!!, "image/*", true, 0).nonNullArgs
+                            } else if (loadedMedia.intent?.type?.startsWith("image/") == true) {
+                                val args = ViewImageFragment.newInstance(loadedMedia.intent!!.dataString!!, loadedMedia.intent!!.data!!, "image/*", true, 0).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewImageFragment::class.java, null, args))
                             } else {
                                 activity.startActivity(loadedMedia.intent)
@@ -501,7 +493,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {}
             }
         }
-        return openMediaCallbacks
+        return openMediaCallbacks!!
     }
 
     fun openMedia(activity: FragmentActivity?, url: String?) {

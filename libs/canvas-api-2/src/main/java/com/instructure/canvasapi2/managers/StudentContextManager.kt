@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.enqueueQuery
 
 object StudentContextManager {
 
-    @JvmStatic
     fun getStudentContext(
         courseId: Long,
         studentId: Long,

@@ -301,7 +301,6 @@ data class Route(
             RouterParams.SUBMISSION_ID
         )
 
-        @JvmStatic
         fun extractCourseId(route: Route?): Long {
             return if (route != null && route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
                 route.paramsHash[RouterParams.COURSE_ID]?.toLong() ?: 0L

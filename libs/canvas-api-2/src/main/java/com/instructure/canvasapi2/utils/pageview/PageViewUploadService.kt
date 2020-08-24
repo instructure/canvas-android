@@ -172,7 +172,6 @@ abstract class PageViewUploadService : JobService() {
          * Schedules the specified PageView upload service to run periodically via [JobScheduler]. Results in a no-op
          * if the job has already been scheduled. Requires the RECEIVE_BOOT_COMPLETED permission.
          */
-        @JvmStatic
         @RequiresPermission(Manifest.permission.RECEIVE_BOOT_COMPLETED)
         fun <T : PageViewUploadService> schedule(context: Context, clazz: Class<T>) {
 

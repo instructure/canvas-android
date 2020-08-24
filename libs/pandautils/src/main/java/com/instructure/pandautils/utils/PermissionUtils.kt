@@ -47,7 +47,6 @@ object PermissionUtils {
      * @param permissions A string of permissions (we have hard coded values in [PermissionUtils])
      * @return a boolean telling if the user has the necessary permissions
      */
-    @JvmStatic
     fun hasPermissions(activity: Activity, vararg permissions: String): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return permissions
@@ -59,7 +58,6 @@ object PermissionUtils {
     }
 
     // Helper to make an array
-    @JvmStatic
     @Suppress("UNCHECKED_CAST")
     fun makeArray(vararg items: String): Array<String> {
         return items as Array<String>
@@ -70,10 +68,8 @@ object PermissionUtils {
      * @param grantResults the array returned from [Activity.onRequestPermissionsResult]
      * @return the result telling if all permissions were granted
      */
-    @JvmStatic
     fun allPermissionsGrantedResultSummary(grantResults: IntArray): Boolean = grantResults.indices.none { grantResults[it] == PackageManager.PERMISSION_DENIED }
 
-    @JvmStatic
     fun permissionGranted(permissions: Array<String>, grantResults: IntArray, permission: String): Boolean {
         var permissionsGranted = false
 

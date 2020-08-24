@@ -27,7 +27,6 @@ import java.io.IOException
 
 object CalendarEventManager {
 
-    @JvmStatic
     fun getCalendarEventsExhaustive(
         allEvents: Boolean,
         type: CalendarEventAPI.CalendarEventType,
@@ -68,7 +67,6 @@ object CalendarEventManager {
         )
     }
 
-    @JvmStatic
     fun getCalendarEventsExhaustiveAsync(
         allEvents: Boolean,
         type: CalendarEventAPI.CalendarEventType,
@@ -79,7 +77,6 @@ object CalendarEventManager {
     ) = apiAsync<List<ScheduleItem>> { CalendarEventManager.getCalendarEventsExhaustive(allEvents, type, startDate, endDate, canvasContexts, it, forceNetwork) }
 
     @Throws(IOException::class)
-    @JvmStatic
     fun getUpcomingEventsSynchronous(forceNetwork: Boolean): List<ScheduleItem> {
         val adapter = RestBuilder()
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -89,21 +86,18 @@ object CalendarEventManager {
         return response.body()?.let { if (response.isSuccessful) it else emptyList() } ?: emptyList()
     }
 
-    @JvmStatic
     fun getCalendarEvent(eventId: Long, callback: StatusCallback<ScheduleItem>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         CalendarEventAPI.getCalendarEvent(eventId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun deleteCalendarEvent(eventId: Long, cancelReason: String, callback: StatusCallback<ScheduleItem>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         CalendarEventAPI.deleteCalendarEvent(eventId, cancelReason, adapter, params, callback)
     }
 
-    @JvmStatic
     fun createCalendarEvent(
         contextCode: String,
         title: String,

@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.models.CourseNickname
 
 object CourseNicknameManager {
 
-    @JvmStatic
     fun setCourseNickname(courseId: Long, nickname: String, callback: StatusCallback<CourseNickname>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)

@@ -26,7 +26,6 @@ import androidx.core.os.ConfigurationCompat
 class ContextKeeper : ContentProvider() {
 
     companion object {
-        @JvmStatic
         lateinit var appContext: Context
 
         fun updateLocale(config: Configuration) {

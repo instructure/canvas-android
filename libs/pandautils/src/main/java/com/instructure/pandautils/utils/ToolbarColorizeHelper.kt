@@ -40,7 +40,6 @@ object ToolbarColorizeHelper {
      * @param toolbarIconsColor the target color of toolbar icons
      * @param activity reference to activity needed to register observers
      */
-    @JvmStatic
     fun colorizeToolbar(toolbar: Toolbar, toolbarIconsColor: Int, activity: Activity) {
         toolbar.children.forEach { v ->
             when (v) {
@@ -67,7 +66,7 @@ object ToolbarColorizeHelper {
             setOverflowButtonColor(toolbarIconsColor, activity)
 
             // Step 5: When not using setSupportActionbar this method is used to color the overflow icon
-            toolbar.overflowIcon = ColorUtils.tintIt(toolbarIconsColor, toolbar.overflowIcon)
+            toolbar.overflowIcon = ColorUtils.tintIt(toolbarIconsColor, toolbar.overflowIcon!!)
         }
     }
 

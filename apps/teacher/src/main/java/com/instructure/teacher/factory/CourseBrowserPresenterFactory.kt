@@ -18,9 +18,10 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.teacher.presenters.CourseBrowserPresenter
+import com.instructure.teacher.viewinterface.CourseBrowserView
 import instructure.androidblueprint.PresenterFactory
 
-class CourseBrowserPresenterFactory(val course: CanvasContext, val filter: (Tab, Long) -> Boolean) : PresenterFactory<CourseBrowserPresenter> {
+class CourseBrowserPresenterFactory(val course: CanvasContext, val filter: (Tab, Long) -> Boolean) : PresenterFactory<CourseBrowserView, CourseBrowserPresenter> {
     override fun create(): CourseBrowserPresenter {
         return CourseBrowserPresenter(course, filter)
     }

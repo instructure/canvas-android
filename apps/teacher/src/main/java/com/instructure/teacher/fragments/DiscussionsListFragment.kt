@@ -37,7 +37,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.DiscussionListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussion_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -62,14 +61,14 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     protected var mIsAnnouncements by BooleanArg()
 
     override fun layoutResId(): Int = R.layout.fragment_discussion_list
-    override fun getRecyclerView(): RecyclerView = discussionRecyclerView
+    override val recyclerView: RecyclerView get() = discussionRecyclerView
 
-    override fun getPresenterFactory(): PresenterFactory<DiscussionListPresenter>  = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
+    override fun getPresenterFactory() = DiscussionListPresenterFactory(mCanvasContext, mIsAnnouncements)
 
     override fun onPresenterPrepared(presenter: DiscussionListPresenter) {
         val emptyTitle = getString(if (mIsAnnouncements) R.string.noAnnouncements else R.string.noDiscussions)
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -93,14 +92,12 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         setupViews()
     }
 
-    override fun onCreateView(view: View?) {
+    override fun onCreateView(view: View) {
         mLinearLayoutManager.orientation = RecyclerView.VERTICAL
     }
 
     override fun onReadySetGo(presenter: DiscussionListPresenter) {
-        if(mAdapter == null) {
-            mRecyclerView.adapter = adapter
-        }
+        mRecyclerView.adapter = adapter
         if (mForceRefresh) {
             presenter.refresh(true)
             mForceRefresh = false
@@ -125,22 +122,26 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         EventBus.getDefault().unregister(this)
     }
 
-    override fun getAdapter(): DiscussionListAdapter {
-        if(mAdapter == null) {
-            mAdapter = DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
-                    { discussionTopicHeader ->
-                        val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
-                        RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
-                    },
-                    { group, discussionTopicHeaderOverflow ->
-                        if(group != null) {
-                            DiscussionsMoveToDialog.show(requireFragmentManager(), group, discussionTopicHeaderOverflow) { newGroup ->
-                                presenter?.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeaderOverflow)
-                            }
-                        }
-                    })
-        }
-        return mAdapter
+    override fun createAdapter(): DiscussionListAdapter {
+        return DiscussionListAdapter(requireContext(), presenter, mCourseColor, mIsAnnouncements,
+            { discussionTopicHeader ->
+                val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader, mIsAnnouncements)
+                RouteMatcher.route(
+                    requireContext(),
+                    Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args)
+                )
+            },
+            { group, discussionTopicHeaderOverflow ->
+                if (group != null) {
+                    DiscussionsMoveToDialog.show(
+                        requireFragmentManager(),
+                        group,
+                        discussionTopicHeaderOverflow
+                    ) { newGroup ->
+                        presenter?.requestMoveDiscussionTopicToGroup(newGroup, group, discussionTopicHeaderOverflow)
+                    }
+                }
+            })
     }
 
     override fun perPageCount() = ApiPrefs.perPageCount
@@ -282,7 +283,6 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     override fun onHandleBackPressed() = discussionListToolbar.closeSearch()
 
     companion object {
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext) = DiscussionsListFragment().apply {
             mCanvasContext = canvasContext
         }

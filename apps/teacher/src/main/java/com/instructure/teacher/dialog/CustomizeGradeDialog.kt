@@ -45,7 +45,6 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
     private var mIsGroupSubmission by BooleanArg()
 
     companion object {
-        @JvmStatic
         fun getInstance(fragmentManager: FragmentManager, pointsPossible: String, grade: String?, gradingType: String, isGroupSubmission: Boolean, callback: (String, Boolean) -> Unit) = CustomizeGradeDialog().apply {
             fragmentManager.dismissExisting<CustomizeGradeDialog>()
             mGrade = grade

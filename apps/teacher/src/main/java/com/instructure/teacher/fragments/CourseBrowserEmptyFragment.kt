@@ -18,14 +18,13 @@ package com.instructure.teacher.fragments
 import android.graphics.Color
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.CourseBrowserEmptyViewFactory
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
-import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.color
 import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_course_browser_empty.*
 
 class CourseBrowserEmptyFragment: BasePresenterFragment<
@@ -48,20 +47,17 @@ class CourseBrowserEmptyFragment: BasePresenterFragment<
 
     override fun onRefreshStarted() {}
 
-    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter?) {
+    override fun onReadySetGo(presenter: CourseBrowserEmptyPresenter) {
         textCourseName.text = presenter?.course?.name
         textCourseTerm.text = presenter?.course?.term?.name
         setupToolbar(presenter?.course?.color)
     }
 
-    override fun getPresenterFactory(): PresenterFactory<CourseBrowserEmptyPresenter> {
-        return CourseBrowserEmptyViewFactory(mCourse)
-    }
+    override fun getPresenterFactory() = CourseBrowserEmptyViewFactory(mCourse)
 
-    override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter?) {}
+    override fun onPresenterPrepared(presenter: CourseBrowserEmptyPresenter) {}
 
     companion object {
-        @JvmStatic
         fun newInstance(course: Course) = CourseBrowserEmptyFragment().apply {
             mCourse = course
         }

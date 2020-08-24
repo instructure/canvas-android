@@ -86,7 +86,7 @@ open class InternalWebViewFragment : BaseFragment() {
         canvasWebView?.saveState(outState)
     }
 
-    override fun onCreateView(view: View?) = Unit
+    override fun onCreateView(view: View) = Unit
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -241,32 +241,27 @@ open class InternalWebViewFragment : BaseFragment() {
         const val DARK_TOOLBAR = "darkToolbar"
         const val AUTHENTICATE = "authenticate"
 
-        @JvmStatic
         fun newInstance(url: String) = InternalWebViewFragment().apply {
             this.url = url
         }
 
-        @JvmStatic
         fun newInstance(url: String, html: String) = InternalWebViewFragment().apply {
             this.url = url
             this.html = html
         }
 
-        @JvmStatic
         fun newInstance(url: String, html: String, title: String) = InternalWebViewFragment().apply {
             this.url = url
             this.html = html
             this.title = title
         }
 
-        @JvmStatic
         fun newInstance(args: Bundle) = InternalWebViewFragment().apply {
             url = args.getString(URL)
             title = args.getString(TITLE)
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
         }
 
-        @JvmStatic
         @JvmOverloads
         fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = ""): Bundle {
             val args = Bundle()
@@ -277,7 +272,6 @@ open class InternalWebViewFragment : BaseFragment() {
             return args
         }
 
-        @JvmStatic
         fun makeBundle(url: String, title: String, darkToolbar: Boolean = false, html: String = "", shouldAuthenticate: Boolean): Bundle {
             val args = Bundle()
             args.putString(URL, url)

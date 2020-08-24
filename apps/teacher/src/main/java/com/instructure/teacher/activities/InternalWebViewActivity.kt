@@ -90,7 +90,6 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
 
     companion object {
 
-        @JvmStatic
         fun createIntent(context: Context, url: String, title: String, authenticate: Boolean): Intent {
             // Assumes no canvasContext
             val extras = createBundle(null, url, title, authenticate)
@@ -99,7 +98,6 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, url: String, html: String, title: String, authenticate: Boolean): Intent {
             // Assumes no canvasContext
             val extras = createBundle(null, url, title, authenticate)
@@ -109,12 +107,12 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
             }
         }
 
-        @JvmStatic
         fun createIntent(context: Context, route: Route, title: String, authenticate: Boolean)
                 = createIntent(context, route.uri?.toString() ?: "", title, authenticate)
 
         fun createBundle(canvasContext: CanvasContext?, route: Route, title: String, authenticate: Boolean): Bundle {
-            return createBundle(canvasContext).apply {
+            return Bundle().apply {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putString(Const.INTERNAL_URL, route.uri?.toString() ?: "")
                 putBoolean(Const.AUTHENTICATE, authenticate)
                 putString(Const.ACTION_BAR_TITLE, title)
@@ -122,7 +120,8 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
         }
 
         fun createBundle(canvasContext: CanvasContext?, url: String, title: String, authenticate: Boolean): Bundle {
-            return createBundle(canvasContext).apply {
+            return Bundle().apply {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
                 putString(Const.INTERNAL_URL, url)
                 putBoolean(Const.AUTHENTICATE, authenticate)
                 putString(Const.ACTION_BAR_TITLE, title)

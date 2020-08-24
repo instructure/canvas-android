@@ -54,7 +54,6 @@ class SpeedGraderEmptyFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(title: String = "", subtitle: String = "", message: String = "", iconRes: Int = 0, iconUri: Uri? = null) = SpeedGraderEmptyFragment().apply {
             mTitle = title
             mSubtitle = subtitle

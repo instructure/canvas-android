@@ -100,10 +100,13 @@ open class InternalWebviewFragment : ParentFragment() {
             canvasWebView.settings.userAgentString = ApiPrefs.userAgent
             canvasWebView.setInitialScale(100)
 
-            canvasWebView.canvasWebChromeClientCallback = CanvasWebView.CanvasWebChromeClientCallback { _, newProgress ->
-                if (newProgress == 100) {
-                    webViewLoading?.setGone()
+            canvasWebView.canvasWebChromeClientCallback = object : CanvasWebView.CanvasWebChromeClientCallback {
+                override fun onProgressChangedCallback(view: WebView?, newProgress: Int) {
+                    if (newProgress == 100) {
+                        webViewLoading?.setGone()
+                    }
                 }
+
             }
 
             // Open a new page to view some types of embedded video content
@@ -131,16 +134,19 @@ open class InternalWebviewFragment : ParentFragment() {
                     RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true, allowUnsupportedRouting)
                 }
             }
-            canvasWebView.setMediaDownloadCallback { _, url, filename ->
-                downloadUrl = url
-                downloadFilename = filename
+            canvasWebView.setMediaDownloadCallback(object : CanvasWebView.MediaDownloadCallback{
+                override fun downloadMedia(mime: String?, url: String?, filename: String?) {
+                    downloadUrl = url
+                    downloadFilename = filename
 
-                if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-                    downloadFile()
-                } else {
-                    requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                    if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                        downloadFile()
+                    } else {
+                        requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                    }
                 }
-            }
+
+            })
             canvasWebView?.restoreState(savedInstanceState)
         }
 

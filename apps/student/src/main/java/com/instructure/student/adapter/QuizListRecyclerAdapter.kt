@@ -59,10 +59,13 @@ class QuizListRecyclerAdapter(
 
     init {
         isExpandedByDefault = true
-        viewHolderHeaderClicked = ViewHolderHeaderClicked { _, groupName ->
-            expandCollapseGroup(groupName)
-            // If this group is collapsed we want to try to load the data to avoid having a progress bar spin forever.
-            if (!isGroupExpanded(groupName)) loadData()
+        viewHolderHeaderClicked = object : ViewHolderHeaderClicked<String> {
+            override fun viewClicked(view: View?, groupName: String) {
+                expandCollapseGroup(groupName)
+                // If this group is collapsed we want to try to load the data to avoid having a progress bar spin forever.
+                if (!isGroupExpanded(groupName)) loadData()
+            }
+
         }
         loadData()
     }

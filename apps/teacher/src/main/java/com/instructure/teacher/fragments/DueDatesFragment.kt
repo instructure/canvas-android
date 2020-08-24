@@ -52,11 +52,10 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     val emptyPandaView by bind<EmptyPandaView>(R.id.emptyPandaView)
 
     override fun layoutResId() = R.layout.fragment_assignment_due_dates
-    override fun getList() = presenter.data
-    override fun getRecyclerView() = dueDateRecyclerView
+    override val recyclerView get() = dueDateRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = DueDatesPresenterFactory(mAssignment)
-    override fun onCreateView(view: View?) {}
+    override fun onCreateView(view: View) {}
 
     override fun onResume() {
         super.onResume()
@@ -105,7 +104,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
 
     override fun onPresenterPrepared(presenter: DueDatesPresenter) {
         RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -118,9 +117,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     }
 
     override fun onReadySetGo(presenter: DueDatesPresenter) {
-        if(mAdapter == null) {
-            dueDateRecyclerView.adapter = adapter
-        }
+        dueDateRecyclerView.adapter = adapter
         presenter.loadData(false)
     }
 
@@ -134,22 +131,17 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, dueDateRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 
-    override fun getAdapter(): DueDatesAdapter {
-        if (mAdapter == null) {
-            mAdapter = DueDatesAdapter(requireContext(), presenter)
-        }
-        return mAdapter
+    override fun createAdapter(): DueDatesAdapter {
+        return DueDatesAdapter(requireContext(), presenter)
     }
 
     companion object {
         @JvmStatic val ASSIGNMENT = "assignment"
 
-        @JvmStatic
         fun getInstance(course: Course, args: Bundle) = DueDatesFragment().withArgs(args).apply {
             mCourse = course
         }
 
-        @JvmStatic
         fun makeBundle(assignment: Assignment): Bundle {
             val args = Bundle()
             args.putParcelable(DueDatesFragment.ASSIGNMENT, assignment)

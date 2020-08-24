@@ -55,7 +55,6 @@ class SpeedGraderLtiSubmissionFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(content: ExternalToolContent) = SpeedGraderLtiSubmissionFragment().apply {
             mCanvasContext = content.canvasContext
             mUrl = content.url

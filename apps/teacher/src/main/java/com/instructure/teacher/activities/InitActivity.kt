@@ -601,7 +601,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         private const val TODO_TAB = 1
         private const val INBOX_TAB = 2
 
-        @JvmStatic
         fun createIntent(context: Context, intentExtra: Bundle?): Intent =
         Intent(context, InitActivity::class.java).apply {
             if (intentExtra != null) {

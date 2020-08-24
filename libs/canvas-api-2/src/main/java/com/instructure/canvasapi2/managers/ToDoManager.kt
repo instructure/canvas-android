@@ -27,33 +27,28 @@ import kotlin.collections.HashSet
 
 object ToDoManager {
 
-    @JvmStatic
     fun getUserTodos(callback: StatusCallback<List<ToDo>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         ToDoAPI.getUserTodos(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUserTodosWithUngradedQuizzes(callback: StatusCallback<List<ToDo>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         ToDoAPI.getUserTodosWithUngradedQuizzes(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getTodosWithUngradedQuizzes(callback: StatusCallback<List<ToDo>>, forceNetwork: Boolean) {
         getUserTodosWithUngradedQuizzes(callback, forceNetwork)
     }
 
-    @JvmStatic
     fun dismissTodo(toDo: ToDo, callback: StatusCallback<Void>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         ToDoAPI.dismissTodo(toDo, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getTodosSynchronous(canvasContext: CanvasContext, forceNetwork: Boolean): List<ToDo>? {
         return if (canvasContext.type == CanvasContext.Type.USER) {
             getUserTodosSynchronous(forceNetwork)
@@ -62,21 +57,18 @@ object ToDoManager {
         }
     }
 
-    @JvmStatic
     fun getUserTodosSynchronous(forceNetwork: Boolean): List<ToDo>? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return ToDoAPI.getUserTodosSynchronous(adapter, params)
     }
 
-    @JvmStatic
     fun getCourseTodosSynchronous(canvasContext: CanvasContext, forceNetwork: Boolean): List<ToDo>? {
         val adapter = RestBuilder()
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return ToDoAPI.getCourseTodosSynchronous(canvasContext, adapter, params)
     }
 
-    @JvmStatic
     fun mergeToDoUpcoming(todoList: List<ToDo>?, eventList: List<ToDo>?): List<ToDo> {
         val todos = todoList ?: emptyList()
         var events = eventList ?: emptyList()

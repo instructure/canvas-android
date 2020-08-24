@@ -48,7 +48,6 @@ import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.withRequireNetwork
 import com.instructure.teacher.viewinterface.CreateOrEditAnnouncementView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_create_or_edit_announcement.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -73,7 +72,7 @@ class CreateOrEditAnnouncementFragment :
     private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSaveAnnouncement)
 
     /* Formats for displaying the delayed post date */
-    private val mDateFormat by lazy { DateHelper.getFullMonthNoLeadingZeroDateFormat() }
+    private val mDateFormat by lazy { DateHelper.fullMonthNoLeadingZeroDateFormat }
     private val mTimeFormat by lazy { DateHelper.getPreferredTimeFormat(requireContext()) }
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
@@ -92,11 +91,10 @@ class CreateOrEditAnnouncementFragment :
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
-    override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter?) {}
+    override fun onPresenterPrepared(presenter: CreateOrEditAnnouncementPresenter) {}
     override fun layoutResId(): Int = R.layout.fragment_create_or_edit_announcement
 
-    override fun getPresenterFactory(): PresenterFactory<CreateOrEditAnnouncementPresenter> =
-            CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
+    override fun getPresenterFactory() = CreateOrEditAnnouncementPresenterFactory(mCanvasContext, mEditAnnouncement?.parcelCopy())
 
     override fun onStart() {
         super.onStart()
@@ -431,19 +429,16 @@ class CreateOrEditAnnouncementFragment :
     override fun insertImageIntoRCE(text: String, alt: String) = announcementRCEView.insertImage(text, alt)
 
     companion object {
-        @JvmStatic
         fun newInstance(bundle: Bundle) =
                 CreateOrEditAnnouncementFragment().apply {
                     arguments = bundle
                 }
 
-        @JvmStatic
         fun newInstanceCreate(canvasContext: CanvasContext) =
                 CreateOrEditAnnouncementFragment().apply {
                     mCanvasContext = canvasContext
                 }
 
-        @JvmStatic
         fun newInstanceEdit(canvasContext: CanvasContext, editAnnouncement: DiscussionTopicHeader) =
                 CreateOrEditAnnouncementFragment().apply {
                     mCanvasContext = canvasContext

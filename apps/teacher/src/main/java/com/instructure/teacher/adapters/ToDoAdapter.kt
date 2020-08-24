@@ -23,12 +23,13 @@ import com.instructure.canvasapi2.models.ToDo
 import com.instructure.teacher.holders.ToDoViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.ToDoPresenter
+import com.instructure.teacher.viewinterface.ToDoView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class ToDoAdapter(context: Context,
                   presenter: ToDoPresenter,
                   private val mCallback: AdapterToFragmentCallback<ToDo>) :
-        SyncRecyclerAdapter<ToDo, ToDoViewHolder>(context,presenter) {
+        SyncRecyclerAdapter<ToDo, ToDoViewHolder, ToDoView>(context,presenter) {
 
     override fun createViewHolder(v: View, viewType: Int) = ToDoViewHolder(v)
 

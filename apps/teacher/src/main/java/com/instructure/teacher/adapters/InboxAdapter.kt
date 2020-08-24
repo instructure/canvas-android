@@ -22,13 +22,14 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.teacher.holders.InboxViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
 import com.instructure.teacher.presenters.InboxPresenter
+import com.instructure.teacher.viewinterface.InboxView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class InboxAdapter(
     context: Context,
     presenter: InboxPresenter,
     private val mCallback: AdapterToFragmentCallback<Conversation>
-) : SyncRecyclerAdapter<Conversation, InboxViewHolder>(context, presenter) {
+) : SyncRecyclerAdapter<Conversation, InboxViewHolder, InboxView>(context, presenter) {
 
     override fun bindHolder(conversation: Conversation, holder: InboxViewHolder, position: Int) {
         holder.bind(conversation, mCallback)

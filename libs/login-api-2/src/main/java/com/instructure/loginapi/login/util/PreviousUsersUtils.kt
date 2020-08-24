@@ -83,7 +83,6 @@ object PreviousUsersUtils {
         return editor.commit()
     }
 
-    @JvmStatic
     fun add(context: Context, signedInUser: SignedInUser): Boolean {
 
         val signedInUserJSON = Gson().toJson(signedInUser)

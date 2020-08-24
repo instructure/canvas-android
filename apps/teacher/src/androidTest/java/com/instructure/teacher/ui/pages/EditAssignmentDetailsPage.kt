@@ -98,7 +98,7 @@ class EditAssignmentDetailsPage : BasePage() {
 
     fun assertDateChanged(year: Int, month: Int, dayOfMonth: Int, id: Int) {
         val cal = Calendar.getInstance().apply {set(year, month, dayOfMonth)}
-        waitForViewWithId(id).assertHasText(DateHelper.getFullMonthNoLeadingZeroDateFormat().format(cal.time))
+        waitForViewWithId(id).assertHasText(DateHelper.fullMonthNoLeadingZeroDateFormat.format(cal.time))
     }
 
     fun assertTimeChanged(hour: Int, min: Int, id: Int) {

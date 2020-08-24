@@ -114,7 +114,6 @@ class AttachmentView(context: Context) : FrameLayout(context) {
             override fun key(): String = "gray-overlay"
         }
 
-        @JvmStatic
         fun setColorAndIcon(
                 context: Context,
                 contentType: String?,

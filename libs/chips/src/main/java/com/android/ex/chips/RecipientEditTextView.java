@@ -1662,7 +1662,7 @@ public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView im
     // Visible for testing.
     // Use this method to generate text to display in a chip.
     /*package*/ CharSequence createChipDisplayText(RecipientEntry entry) {
-        CharSequence display = Pronouns.span(entry.getName(), entry.getPronouns());
+        CharSequence display = Pronouns.INSTANCE.span(entry.getName(), entry.getPronouns());
         String address = entry.getDestination();
         if (TextUtils.isEmpty(display) || TextUtils.equals(display, address)) {
             display = null;

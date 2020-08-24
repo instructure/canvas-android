@@ -17,9 +17,10 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.presenters.CourseBrowserEmptyPresenter
+import com.instructure.teacher.viewinterface.CourseBrowserEmptyView
 import instructure.androidblueprint.PresenterFactory
 
-class CourseBrowserEmptyViewFactory(val course: Course) : PresenterFactory<CourseBrowserEmptyPresenter> {
+class CourseBrowserEmptyViewFactory(val course: Course) : PresenterFactory<CourseBrowserEmptyView, CourseBrowserEmptyPresenter> {
 
     override fun create(): CourseBrowserEmptyPresenter {
         return CourseBrowserEmptyPresenter(course)

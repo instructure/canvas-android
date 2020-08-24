@@ -30,7 +30,6 @@ import java.util.*
 
 object FileFolderManager {
 
-    @JvmStatic
     fun getFileFolderFromURL(url: String, forceNetwork: Boolean, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -42,14 +41,12 @@ object FileFolderManager {
         forceNetwork: Boolean
     ) = apiAsync<FileFolder> { getFileFolderFromURL(url, forceNetwork, it) }
 
-    @JvmStatic
     fun getFileFolderFromURLSynchronous(url: String): FileFolder? {
         val adapter = RestBuilder(object : StatusCallback<String>() {}) // Empty StatusCallback
         val params = RestParams()
         return FileFolderAPI.getFileFolderFromURLSynchronous(adapter, url, params)
     }
 
-    @JvmStatic
     fun getRootFolderForContext(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -60,56 +57,48 @@ object FileFolderManager {
         FileFolderAPI.getRootFolderForContext(adapter, canvasContext, callback, params)
     }
 
-    @JvmStatic
     fun getFolder(folderId: Long, forceNetwork: Boolean, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getFolder(folderId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getCourseFile(courseId: Long, fileId: Long, forceNetwork: Boolean, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getCourseFile(courseId, fileId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUserFile(fileId: Long, forceNetwork: Boolean, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getUserFile(fileId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun getFirstPageFolders(folderId: Long, forceNetwork: Boolean, callback: StatusCallback<List<FileFolder>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getFirstPageFolders(adapter, folderId, callback, params)
     }
 
-    @JvmStatic
     fun getFirstPageFiles(folderId: Long, forceNetwork: Boolean, callback: StatusCallback<List<FileFolder>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getFirstPageFiles(adapter, folderId, callback, params)
     }
 
-    @JvmStatic
     fun getNextPageFilesFolder(url: String, forceNetwork: Boolean, callback: StatusCallback<List<FileFolder>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         FileFolderAPI.getNextPageFilesFolder(adapter, url, callback, params)
     }
 
-    @JvmStatic
     fun deleteFile(fileId: Long, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.deleteFile(adapter, fileId, callback, params)
     }
 
-    @JvmStatic
     fun getAllFoldersRoot(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -128,7 +117,6 @@ object FileFolderManager {
         }, params)
     }
 
-    @JvmStatic
     fun getAllFolders(folderId: Long, forceNetwork: Boolean, callback: StatusCallback<List<FileFolder>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -141,7 +129,6 @@ object FileFolderManager {
         FileFolderAPI.getFirstPageFolders(adapter, folderId, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun getAllFilesRoot(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
@@ -160,7 +147,6 @@ object FileFolderManager {
         }, params)
     }
 
-    @JvmStatic
     fun getAllFiles(folderId: Long, forceNetwork: Boolean, callback: StatusCallback<List<FileFolder>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -173,7 +159,6 @@ object FileFolderManager {
         FileFolderAPI.getFirstPageFiles(adapter, folderId, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun searchFiles(
         query: String,
         canvasContext: CanvasContext,
@@ -191,42 +176,36 @@ object FileFolderManager {
         FileFolderAPI.searchFiles(adapter, query, canvasContext, depaginatedCallback, params)
     }
 
-    @JvmStatic
     fun createFolder(folderId: Long, folder: CreateFolder, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.createFolder(folderId, folder, adapter, callback, params)
     }
 
-    @JvmStatic
     fun deleteFolder(folderId: Long, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.deleteFolder(folderId, adapter, callback, params)
     }
 
-    @JvmStatic
     fun updateFolder(folderId: Long, updateFileFolder: UpdateFileFolder, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.updateFolder(folderId, updateFileFolder, adapter, callback, params)
     }
 
-    @JvmStatic
     fun updateUsageRights(courseId: Long, formParams: Map<String, Any>, callback: StatusCallback<UsageRights>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.updateUsageRights(courseId, formParams, adapter, callback, params)
     }
 
-    @JvmStatic
     fun updateFile(fileId: Long, updateFileFolder: UpdateFileFolder, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         FileFolderAPI.updateFile(fileId, updateFileFolder, adapter, callback, params)
     }
 
-    @JvmStatic
     fun getCourseFileLicenses(courseId: Long, callback: StatusCallback<ArrayList<License>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
@@ -235,7 +214,6 @@ object FileFolderManager {
 
     fun getCourseFileLicensesAsync(courseId: Long) = apiAsync<ArrayList<License>> { getCourseFileLicenses(courseId, it) }
 
-    @JvmStatic
     fun getAvatarFileToken(fileNumber: String, callback: StatusCallback<FileFolder>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()

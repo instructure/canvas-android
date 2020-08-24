@@ -24,11 +24,11 @@ import android.view.MenuItem
 import android.view.WindowManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.fragments.BasePresenterFragment
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
@@ -43,7 +43,6 @@ import com.instructure.teacher.presenters.DiscussionsReplyPresenter.Companion.RE
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.DiscussionsReplyView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_discussions_reply.*
 
 class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter, DiscussionsReplyView>(), DiscussionsReplyView {
@@ -63,12 +62,11 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
 
     override fun layoutResId(): Int = R.layout.fragment_discussions_reply
 
-    override fun getPresenterFactory(): PresenterFactory<DiscussionsReplyPresenter> =
-            DiscussionsReplyFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntryId)
+    override fun getPresenterFactory() = DiscussionsReplyFactory(mCanvasContext, mDiscussionTopicHeaderId, mDiscussionEntryId)
 
-    override fun onPresenterPrepared(presenter: DiscussionsReplyPresenter?) {}
+    override fun onPresenterPrepared(presenter: DiscussionsReplyPresenter) {}
 
-    override fun onReadySetGo(presenter: DiscussionsReplyPresenter?) {
+    override fun onReadySetGo(presenter: DiscussionsReplyPresenter) {
         rceTextEditor.setHint(R.string.rce_empty_message)
         rceTextEditor.requestEditorFocus()
         rceTextEditor.showEditorToolbar()
@@ -171,7 +169,6 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
         private const val DISCUSSION_ENTRY_ID = "DISCUSSION_ENTRY_ID"
         private const val IS_ANNOUNCEMENT = "IS_ANNOUNCEMENT"
 
-        @JvmStatic
         fun makeBundle(discussionTopicHeaderId: Long, discussionEntryId: Long, isAnnouncement: Boolean): Bundle =
                 Bundle().apply {
                     putLong(DISCUSSION_TOPIC_HEADER_ID, discussionTopicHeaderId)
@@ -179,7 +176,6 @@ class DiscussionsReplyFragment : BasePresenterFragment<DiscussionsReplyPresenter
                     putBoolean(IS_ANNOUNCEMENT, isAnnouncement)
                 }
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) =
                 DiscussionsReplyFragment().apply {
                     mDiscussionTopicHeaderId = args.getLong(DISCUSSION_TOPIC_HEADER_ID)

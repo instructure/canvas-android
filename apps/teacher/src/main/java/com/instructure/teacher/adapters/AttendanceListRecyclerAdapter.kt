@@ -22,15 +22,16 @@ import com.instructure.canvasapi2.models.Attendance
 
 import com.instructure.teacher.holders.AttendanceViewHolder
 import com.instructure.teacher.interfaces.AttendanceToFragmentCallback
+import com.instructure.teacher.viewinterface.AttendanceListView
 
 import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class AttendanceListRecyclerAdapter(
         mContext: Context,
-        presenter: SyncPresenter<*, *>,
+        presenter: SyncPresenter<Attendance, AttendanceListView>,
         private val mCallback: AttendanceToFragmentCallback<Attendance>
-) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder>(mContext, presenter) {
+) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 
     override fun bindHolder(attendance: Attendance, holder: AttendanceViewHolder, position: Int) {
         holder.bind(attendance, mCallback, position)

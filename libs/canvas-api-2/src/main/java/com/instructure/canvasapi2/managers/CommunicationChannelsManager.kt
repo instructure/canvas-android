@@ -26,7 +26,6 @@ import retrofit2.Response
 
 object CommunicationChannelsManager {
 
-    @JvmStatic
     fun getCommunicationChannels(
         userId: Long,
         callback: StatusCallback<List<CommunicationChannel>>,
@@ -37,7 +36,6 @@ object CommunicationChannelsManager {
         CommunicationChannelsAPI.getCommunicationChannels(userId, adapter, params, callback)
     }
 
-    @JvmStatic
     fun addNewPushCommunicationChannelSynchronous(
         registrationId: String,
         callback: StatusCallback<ResponseBody>

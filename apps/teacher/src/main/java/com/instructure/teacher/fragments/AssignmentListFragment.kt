@@ -44,7 +44,6 @@ import com.instructure.teacher.utils.setHeaderVisibilityListener
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AssignmentListView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_assignment_list.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -67,11 +66,11 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     private var mNeedToForceNetwork = false
 
     override fun layoutResId(): Int = R.layout.fragment_assignment_list
-    override fun getRecyclerView(): RecyclerView = assignmentRecyclerView
-    override fun getPresenterFactory(): PresenterFactory<AssignmentListPresenter> = AssignmentListPresenterFactory(mCanvasContext)
+    override val recyclerView: RecyclerView get() = assignmentRecyclerView
+    override fun getPresenterFactory() = AssignmentListPresenterFactory(mCanvasContext)
     override fun onPresenterPrepared(presenter: AssignmentListPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(
-            rootView = mRootView,
+            rootView = rootView,
             context = requireContext(),
             recyclerAdapter = adapter,
             presenter = presenter,
@@ -116,31 +115,28 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         super.onPause()
     }
 
-    override fun getAdapter(): AssignmentAdapter {
-        if (mAdapter == null) {
-            mAdapter = AssignmentAdapter(requireContext(), presenter, mCourseColor) { assignment ->
-                if(mPairedWithSubmissions) {
-                    val args = AssignmentSubmissionListFragment.makeBundle(assignment)
-                    RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, mCanvasContext, args))
-                } else {
-                    if(assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
-                        val args = QuizDetailsFragment.makeBundle(assignment.quizId)
-                        RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
-                    } else if(BuildConfig.POINT_FIVE && assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) && assignment.discussionTopicHeader != null) {
-                        val discussionTopicHeader = assignment.discussionTopicHeader!!
+    override fun createAdapter(): AssignmentAdapter {
+        return AssignmentAdapter(requireContext(), presenter, mCourseColor) { assignment ->
+            if (mPairedWithSubmissions) {
+                val args = AssignmentSubmissionListFragment.makeBundle(assignment)
+                RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, mCanvasContext, args))
+            } else {
+                if (assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString)) {
+                    val args = QuizDetailsFragment.makeBundle(assignment.quizId)
+                    RouteMatcher.route(requireContext(), Route(null, QuizDetailsFragment::class.java, mCanvasContext, args))
+                } else if (BuildConfig.POINT_FIVE && assignment.submissionTypesRaw.contains(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString) && assignment.discussionTopicHeader != null) {
+                    val discussionTopicHeader = assignment.discussionTopicHeader!!
 
-                        assignment.discussionTopicHeader = null
-                        discussionTopicHeader.assignment = assignment
-                        val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
-                        RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
-                    } else {
-                        val args = AssignmentDetailsFragment.makeBundle(assignment)
-                        RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
-                    }
+                    assignment.discussionTopicHeader = null
+                    discussionTopicHeader.assignment = assignment
+                    val args = DiscussionsDetailsFragment.makeBundle(discussionTopicHeader)
+                    RouteMatcher.route(requireContext(), Route(null, DiscussionsDetailsFragment::class.java, mCanvasContext, args))
+                } else {
+                    val args = AssignmentDetailsFragment.makeBundle(assignment)
+                    RouteMatcher.route(requireContext(), Route(null, AssignmentDetailsFragment::class.java, mCanvasContext, args))
                 }
             }
         }
-        return mAdapter
     }
 
 
@@ -177,7 +173,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
         ViewStyler.colorToolbarIconsAndText(requireActivity(), assignmentListToolbar, Color.WHITE)
 
         //setup popup menu
-        val menuItemView = mRootView.findViewById<View>(R.id.menu_grading_periods_filter)
+        val menuItemView = rootView.findViewById<View>(R.id.menu_grading_periods_filter)
         mGradingPeriodMenu = PopupMenu(requireContext(), menuItemView, Gravity.TOP, 0,
                 R.style.Widget_AppCompat_PopupMenu_Overflow)
 
@@ -266,7 +262,6 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
     companion object {
         @JvmStatic val PAIRED_WITH_SUBMISSIONS = "pairedWithSubmissions"
 
-        @JvmStatic
         fun getInstance(canvasContext: CanvasContext, args: Bundle) = AssignmentListFragment().apply {
             mPairedWithSubmissions = args.getBoolean(PAIRED_WITH_SUBMISSIONS, false)
             mCanvasContext = canvasContext

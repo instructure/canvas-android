@@ -27,7 +27,6 @@ import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 
 object PageManager {
 
-    @JvmStatic
     fun getFirstPagePages(canvasContext: CanvasContext, callback: StatusCallback<List<Page>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(
@@ -39,7 +38,6 @@ object PageManager {
         PageAPI.getFirstPagePages(adapter, params, canvasContext, callback)
     }
 
-    @JvmStatic
     fun getAllPages(canvasContext: CanvasContext, forceNetwork: Boolean, callback: StatusCallback<List<Page>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(
@@ -58,7 +56,6 @@ object PageManager {
         PageAPI.getFirstPagePages(adapter, params, canvasContext, depaginatedCallback)
     }
 
-    @JvmStatic
     fun getNextPagePages(nextPage: String, callback: StatusCallback<List<Page>>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -66,7 +63,6 @@ object PageManager {
         PageAPI.getNextPagePages(adapter, params, nextPage, callback)
     }
 
-    @JvmStatic
     fun getPageDetails(
         canvasContext: CanvasContext,
         pageId: String,
@@ -79,7 +75,6 @@ object PageManager {
         PageAPI.getDetailedPage(adapter, params, canvasContext, pageId, callback)
     }
 
-    @JvmStatic
     fun getFrontPage(canvasContext: CanvasContext, forceNetwork: Boolean, callback: StatusCallback<Page>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext, isForceReadFromNetwork = forceNetwork)
@@ -87,7 +82,6 @@ object PageManager {
         PageAPI.getFrontPage(adapter, params, canvasContext, callback)
     }
 
-    @JvmStatic
     fun editPage(
         canvasContext: CanvasContext,
         pageUrl: String,
@@ -102,7 +96,6 @@ object PageManager {
         PageAPI.editPage(adapter, params, canvasContext, pageUrl, pageWrapper, callback)
     }
 
-    @JvmStatic
     fun createPage(canvasContext: CanvasContext, page: Page, callback: StatusCallback<Page>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext)
@@ -110,7 +103,6 @@ object PageManager {
         PageAPI.createPage(adapter, params, canvasContext, page, callback)
     }
 
-    @JvmStatic
     fun deletePage(canvasContext: CanvasContext, pageUrl: String, callback: StatusCallback<Page>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(canvasContext = canvasContext)

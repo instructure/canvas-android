@@ -22,18 +22,19 @@ import android.view.View
 import com.instructure.canvasapi2.models.Page
 import com.instructure.teacher.holders.PageViewHolder
 import com.instructure.teacher.presenters.PageListPresenter
+import com.instructure.teacher.viewinterface.PageListView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-class PageListAdapter(context: Context,
-                      presenter: PageListPresenter,
-                      private val mCourseColor: Int,
-                      private val mCallback: (Page) -> Unit) :
-SyncRecyclerAdapter<Page, PageViewHolder>(context,presenter) {
+class PageListAdapter(
+    context: Context,
+    presenter: PageListPresenter,
+    private val mCourseColor: Int,
+    private val mCallback: (Page) -> Unit
+) : SyncRecyclerAdapter<Page, PageViewHolder, PageListView>(context, presenter) {
 
     override fun createViewHolder(v: View, viewType: Int) = PageViewHolder(v)
 
     override fun itemLayoutResId(viewType: Int) = PageViewHolder.HOLDER_RES_ID
-
 
     override fun bindHolder(model: Page, holder: PageViewHolder, position: Int) {
         context?.let { holder.bind(it, model, mCourseColor, mCallback) }

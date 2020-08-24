@@ -97,7 +97,7 @@ class PeopleListRecyclerAdapter(
         mApiCalls?.next()
     }
 
-    override fun isPaginated() = true
+    override val isPaginated get() = true
 
     override fun resetData() {
         mApiCalls?.cancel()
@@ -112,7 +112,7 @@ class PeopleListRecyclerAdapter(
         val (enrolled, unEnrolled) = result.partition { it.enrollments.isNotEmpty() }
         enrolled.asSequence().onEach { it.enrollments.sortedByDescending { enrollment-> mEnrollmentPriority[enrollment.type] } }
                 .groupBy { it.enrollments[0].type }
-                .forEach { (type, users) -> addOrUpdateAllItems(type, users) }
+                .forEach { (type, users) -> addOrUpdateAllItems(type!!, users) }
         if (CanvasContext.Type.isGroup(mCanvasContext)) addOrUpdateAllItems(EnrollmentType.NoEnrollment, unEnrolled)
         notifyDataSetChanged()
         mAdapterToFragmentCallback.onRefreshFinished()
@@ -132,23 +132,23 @@ class PeopleListRecyclerAdapter(
         (holder as PeopleViewHolder).bind(user, mAdapterToFragmentCallback, mCourseColor, itemPosition == 0, itemPosition == groupItemCount - 1)
     }
 
-    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, enrollmentType: EnrollmentType?, isExpanded: Boolean) {
+    override fun onBindHeaderHolder(holder: RecyclerView.ViewHolder, enrollmentType: EnrollmentType, isExpanded: Boolean) {
         (holder as PeopleHeaderViewHolder).bind(enrollmentType, getHeaderTitle(enrollmentType), isExpanded, viewHolderHeaderClicked)
     }
 
     override fun createGroupCallback(): GroupSortedList.GroupComparatorCallback<EnrollmentType> {
         return object : GroupSortedList.GroupComparatorCallback<EnrollmentType> {
-            override fun compare(o1: EnrollmentType?, o2: EnrollmentType?) = getHeaderTitle(o2).compareTo(getHeaderTitle(o1))
-            override fun areContentsTheSame(oldGroup: EnrollmentType?, newGroup: EnrollmentType?) = getHeaderTitle(oldGroup) == getHeaderTitle(newGroup)
-            override fun areItemsTheSame(group1: EnrollmentType?, group2: EnrollmentType?) = getHeaderTitle(group1) == getHeaderTitle(group2)
-            override fun getUniqueGroupId(group: EnrollmentType?) = getHeaderTitle(group).hashCode().toLong()
-            override fun getGroupType(group: EnrollmentType?) = Types.TYPE_HEADER
+            override fun compare(o1: EnrollmentType, o2: EnrollmentType) = getHeaderTitle(o2).compareTo(getHeaderTitle(o1))
+            override fun areContentsTheSame(oldGroup: EnrollmentType, newGroup: EnrollmentType) = getHeaderTitle(oldGroup) == getHeaderTitle(newGroup)
+            override fun areItemsTheSame(group1: EnrollmentType, group2: EnrollmentType) = getHeaderTitle(group1) == getHeaderTitle(group2)
+            override fun getUniqueGroupId(group: EnrollmentType) = getHeaderTitle(group).hashCode().toLong()
+            override fun getGroupType(group: EnrollmentType) = Types.TYPE_HEADER
         }
     }
 
     override fun createItemCallback(): GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
         return object : GroupSortedList.ItemComparatorCallback<EnrollmentType, User> {
-            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.getInstance().compare(o1.sortableName?.toLowerCase().orEmpty(), o2.sortableName?.toLowerCase().orEmpty())
+            override fun compare(group: EnrollmentType, o1: User, o2: User) = NaturalOrderComparator.compare(o1.sortableName?.toLowerCase().orEmpty(), o2.sortableName?.toLowerCase().orEmpty())
             override fun areContentsTheSame(oldItem: User, newItem: User) = oldItem.sortableName == newItem.sortableName
             override fun areItemsTheSame(item1: User, item2: User) = item1.id == item2.id
             override fun getUniqueItemId(item: User) = item.id

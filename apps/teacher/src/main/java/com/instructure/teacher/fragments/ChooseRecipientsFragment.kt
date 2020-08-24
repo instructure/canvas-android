@@ -39,7 +39,6 @@ import com.instructure.teacher.presenters.ChooseRecipientsPresenter
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButton
 import com.instructure.teacher.viewinterface.ChooseRecipientsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.recycler_swipe_refresh_layout.*
 import kotlinx.android.synthetic.main.toolbar_layout.view.*
 import org.greenrobot.eventbus.EventBus
@@ -136,28 +135,27 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     }
 
     override fun onReadySetGo(presenter: ChooseRecipientsPresenter) {
-        getPresenter().loadData(false)
+        presenter.loadData(false)
         arguments?.getParcelableArrayList<Recipient>(RECIPIENT_LIST)?.let {
-            getPresenter().addAlreadySelectedRecipients(it)
+            presenter.addAlreadySelectedRecipients(it)
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<ChooseRecipientsPresenter> =
-            ChooseRecipientsPresenterFactory(nonNullArgs.getString(CONTEXT_ID))
+    override fun getPresenterFactory() = ChooseRecipientsPresenterFactory(nonNullArgs.getString(CONTEXT_ID))
 
     override fun onPresenterPrepared(presenter: ChooseRecipientsPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView,
                 requireContext(), adapter, presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
     }
 
-    override fun getAdapter(): ChooseMessageRecipientRecyclerAdapter {
+    override fun createAdapter(): ChooseMessageRecipientRecyclerAdapter {
         if (mRecyclerAdapter == null) {
             mRecyclerAdapter = ChooseMessageRecipientRecyclerAdapter(requireContext(), presenter, mAdapterToFragmentCallback)
         }
         return mRecyclerAdapter!!
     }
 
-    override fun getRecyclerView(): RecyclerView? = mRecyclerView
+    override val recyclerView: RecyclerView? = mRecyclerView
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
@@ -184,8 +182,6 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     }
 
     override fun onHandleBackPressed(): Boolean = presenter.popBackStack()
-
-    override fun unBundle(extras: Bundle) {}
 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
 

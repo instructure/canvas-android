@@ -60,7 +60,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
 
     override fun getPresenterFactory() = ProfileSettingsFragmentPresenterFactory()
 
-    override fun onReadySetGo(presenter: ProfileSettingsFragmentPresenter?) {
+    override fun onReadySetGo(presenter: ProfileSettingsFragmentPresenter) {
         setupToolbar()
     }
 
@@ -75,10 +75,9 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
 
     override fun onRefreshFinished() {}
 
-    override fun onPresenterPrepared(presenter: ProfileSettingsFragmentPresenter?) {}
+    override fun onPresenterPrepared(presenter: ProfileSettingsFragmentPresenter) {}
 
     companion object {
-        @JvmStatic
         fun newInstance(args: Bundle) = SettingsFragment().apply { arguments = args }
     }
 }

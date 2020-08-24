@@ -21,12 +21,13 @@ import android.view.View
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.teacher.holders.AttachmentViewHolder
 import com.instructure.teacher.presenters.SpeedGraderFilesPresenter
+import com.instructure.teacher.viewinterface.SpeedGraderFilesView
 import instructure.androidblueprint.SyncRecyclerAdapter
 
 class AttachmentAdapter(
         private val mContext: Context,
         presenter: SpeedGraderFilesPresenter,
-        private val mCallback: (Attachment) -> Unit) : SyncRecyclerAdapter<Attachment, AttachmentViewHolder>(mContext, presenter){
+        private val mCallback: (Attachment) -> Unit) : SyncRecyclerAdapter<Attachment, AttachmentViewHolder, SpeedGraderFilesView>(mContext, presenter){
 
     private var mSelectedAttachmentPosition = 0 //default of 0
     private val mSelectionCallback: (Int) -> Unit = {

@@ -39,7 +39,6 @@ class ColorPickerDialog: AppCompatDialogFragment() {
     private var course by ParcelableArg<Course>(key = Const.COURSE)
 
     companion object {
-        @JvmStatic
         fun newInstance(manager: FragmentManager, course: Course, callback: (Int) -> Unit): ColorPickerDialog {
             manager.dismissExisting<ColorPickerDialog>()
             val dialog = ColorPickerDialog()

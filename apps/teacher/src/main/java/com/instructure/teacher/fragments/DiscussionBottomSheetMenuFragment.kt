@@ -56,7 +56,6 @@ class DiscussionBottomSheetMenuFragment : BottomSheetDialogFragment() {
 
         fun newInstance(): DiscussionBottomSheetMenuFragment = DiscussionBottomSheetMenuFragment()
 
-        @JvmStatic
         fun show(manager: FragmentManager, id: Long) {
             entryId = id
             manager.dismissExisting<DiscussionBottomSheetMenuFragment>()

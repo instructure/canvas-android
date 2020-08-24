@@ -23,12 +23,17 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.teacher.holders.RecipientViewHolder
 import com.instructure.teacher.interfaces.RecipientAdapterCallback
+import com.instructure.teacher.presenters.ChooseRecipientsPresenter
+import com.instructure.teacher.viewinterface.ChooseRecipientsView
 
 import instructure.androidblueprint.SyncPresenter
 import instructure.androidblueprint.SyncRecyclerAdapter
 
-
-class ChooseMessageRecipientRecyclerAdapter(context: Context, presenter: SyncPresenter<*, *>, private val mAdapterCallback: RecipientAdapterCallback) : SyncRecyclerAdapter<Recipient, RecipientViewHolder>(context, presenter) {
+class ChooseMessageRecipientRecyclerAdapter(
+    context: Context,
+    presenter: ChooseRecipientsPresenter,
+    private val mAdapterCallback: RecipientAdapterCallback
+) : SyncRecyclerAdapter<Recipient, RecipientViewHolder, ChooseRecipientsView>(context, presenter) {
 
     override fun bindHolder(recipient: Recipient, holder: RecipientViewHolder, position: Int) {
         holder.bind(context!!, holder, recipient, mAdapterCallback, ThemePrefs.brandColor, mAdapterCallback.isRecipientSelected(recipient))

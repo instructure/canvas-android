@@ -24,13 +24,14 @@ import com.instructure.pandarecycler.util.Types
 import com.instructure.teacher.holders.QuizExpandableViewHolder
 import com.instructure.teacher.holders.QuizViewHolder
 import com.instructure.teacher.presenters.QuizListPresenter
+import com.instructure.teacher.viewinterface.QuizListView
 import instructure.androidblueprint.SyncExpandableRecyclerAdapter
 
 class QuizListAdapter(context: Context,
                       expandablePresenter: QuizListPresenter,
                       private val mCourseColor: Int,
                       private val mCallback: (Quiz) -> Unit) :
-        SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder>(context, expandablePresenter) {
+        SyncExpandableRecyclerAdapter<String, Quiz, RecyclerView.ViewHolder, QuizListView>(context, expandablePresenter) {
 
     override fun createViewHolder(v: View, viewType: Int): RecyclerView.ViewHolder {
         when (viewType) {

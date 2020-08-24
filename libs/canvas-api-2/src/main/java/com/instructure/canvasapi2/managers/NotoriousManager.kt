@@ -32,27 +32,23 @@ import java.io.File
 
 object NotoriousManager {
 
-    @JvmStatic
     fun getConfiguration(callback: StatusCallback<NotoriousConfig>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         NotoriousAPI.getConfiguration(adapter, params, callback)
     }
 
-    @JvmStatic
     fun startSession(callback: StatusCallback<NotoriousSession>) {
         val adapter = RestBuilder(callback)
         val params = RestParams()
         NotoriousAPI.startSession(adapter, params, callback)
     }
 
-    @JvmStatic
     fun getUploadToken(callback: StatusCallback<NotoriousResultWrapper>) {
         val adapter = RestBuilder(callback)
         NotoriousAPI.getUploadToken(adapter, callback)
     }
 
-    @JvmStatic
     fun uploadFileSynchronous(
         uploadToken: String,
         file: File,
@@ -65,7 +61,6 @@ object NotoriousManager {
         return NotoriousAPI.uploadFileSynchronous(ApiPrefs.notoriousToken, uploadToken, filePart, adapter)
     }
 
-    @JvmStatic
     fun getMediaIdSynchronous(uploadToken: String, fileName: String, mimeType: String): NotoriousResultWrapper? {
         val adapter = RestBuilder()
         return NotoriousAPI.getMediaIdSynchronous(ApiPrefs.notoriousToken, uploadToken, fileName, mimeType, adapter)

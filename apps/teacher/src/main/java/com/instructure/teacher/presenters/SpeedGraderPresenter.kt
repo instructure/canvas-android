@@ -124,7 +124,7 @@ class SpeedGraderPresenter(
         }
     }
 
-    override fun onViewAttached(view: SpeedGraderView): Presenter<*> {
+    override fun onViewAttached(view: SpeedGraderView): SpeedGraderPresenter {
         mView = view
         EventBus.getDefault().register(this)
         return this

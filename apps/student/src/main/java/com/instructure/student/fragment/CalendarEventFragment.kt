@@ -273,7 +273,7 @@ class CalendarEventFragment : ParentFragment() {
             return ""
         }
 
-        val dayOfWeek = DateHelper.getFullDayFormat().format(date)
+        val dayOfWeek = DateHelper.fullDayFormat.format(date)
         val dateString = DateHelper.getFormattedDate(requireContext(), date)
 
         return "$dayOfWeek $dateString"

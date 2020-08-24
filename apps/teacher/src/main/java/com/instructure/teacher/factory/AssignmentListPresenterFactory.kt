@@ -18,8 +18,9 @@ package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.teacher.presenters.AssignmentListPresenter
+import com.instructure.teacher.viewinterface.AssignmentListView
 import instructure.androidblueprint.PresenterFactory
 
-class AssignmentListPresenterFactory(private var mCanvasContext: CanvasContext) : PresenterFactory<AssignmentListPresenter> {
+class AssignmentListPresenterFactory(private var mCanvasContext: CanvasContext) : PresenterFactory<AssignmentListView, AssignmentListPresenter> {
     override fun create(): AssignmentListPresenter = AssignmentListPresenter(mCanvasContext)
 }

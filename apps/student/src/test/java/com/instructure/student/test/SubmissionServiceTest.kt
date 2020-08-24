@@ -56,7 +56,7 @@ class SubmissionServiceTest : Assert() {
         context = spyk(ApplicationProvider.getApplicationContext() as Context)
         canvasContext = Course()
 
-        mockkStatic(ApiPrefs::class)
+        mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns User(id = 22)
         if (!Db.ready) {
             Db.dbSetup(AndroidSqliteDriver(Schema, context, callback = object : AndroidSqliteDriver.Callback(Schema) {
@@ -134,7 +134,7 @@ class SubmissionServiceTest : Assert() {
 
         every { context.startService(capture(intent)) } returns null
 
-        mockkStatic(FileUtils::class)
+        mockkObject(FileUtils)
         every { FileUtils.getMimeType(any()) } returns "video"
         SubmissionService.startMediaSubmission(context, canvasContext, assignmentId, assignmentName, assignmentGroupCategoryId, mediaFilePath)
 

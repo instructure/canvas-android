@@ -34,7 +34,6 @@ import java.io.IOException
 object MasqueradeHelper {
     var masqueradeLogoutTask: Runnable? = null
 
-    @JvmStatic
     @JvmOverloads
     fun <ACTIVITY : Activity> stopMasquerading(startingClass: Class<ACTIVITY>? = null) {
 
@@ -55,7 +54,6 @@ object MasqueradeHelper {
         if (startingClass != null) restartApplication(startingClass)
     }
 
-    @JvmStatic
     fun <ACTIVITY : Activity> startMasquerading(
         masqueradingUserId: Long,
         masqueradingDomain: String?,
@@ -136,7 +134,6 @@ object MasqueradeHelper {
     }
 
     /** Appends the masquerade ID to the provided URL (if currently masquerading) */
-    @JvmStatic
     fun addMasqueradeId(url: String): String {
         if (!ApiPrefs.isMasquerading) return url
         val queryChar = if ('?' in url) '&' else '?'

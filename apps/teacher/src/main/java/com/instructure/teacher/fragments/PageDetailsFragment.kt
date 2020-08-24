@@ -47,7 +47,6 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.PageDetailsView
-import instructure.androidblueprint.PresenterFactory
 import kotlinx.android.synthetic.main.fragment_page_details.*
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
@@ -92,7 +91,7 @@ class PageDetailsFragment : BasePresenterFragment<
         loading.setVisible()
     }
 
-    override fun onReadySetGo(presenter: PageDetailsPresenter?) {
+    override fun onReadySetGo(presenter: PageDetailsPresenter) {
 
         if (mPage.frontPage) {
             presenter?.getFrontPage(mCanvasContext, true)
@@ -137,16 +136,19 @@ class PageDetailsFragment : BasePresenterFragment<
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = !RouteMatcher.canRouteInternally(activity, url, ApiPrefs.domain, false)
         }
 
-        canvasWebView.setMediaDownloadCallback { _, url, filename ->
-            downloadUrl = url
-            downloadFileName = filename
+        canvasWebView.setMediaDownloadCallback (object : CanvasWebView.MediaDownloadCallback{
+            override fun downloadMedia(mime: String?, url: String?, filename: String?) {
+                downloadUrl = url
+                downloadFileName = filename
 
-            if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
-                downloadFile()
-            } else {
-                requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                if (PermissionUtils.hasPermissions(activity!!, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+                    downloadFile()
+                } else {
+                    requestPermissions(PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PermissionUtils.WRITE_FILE_PERMISSION_REQUEST_CODE)
+                }
             }
-        }
+
+        })
 
         EventBus.getDefault().getStickyEvent(PageDeletedEvent::class.java)?.once(javaClass.simpleName + ".onResume()") {
             if (it.id == mPage.id) {
@@ -159,8 +161,8 @@ class PageDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun getPresenterFactory(): PresenterFactory<PageDetailsPresenter> = PageDetailsPresenterFactory(mCanvasContext, mPage)
-    override fun onPresenterPrepared(presenter: PageDetailsPresenter?) = Unit
+    override fun getPresenterFactory() = PageDetailsPresenterFactory(mCanvasContext, mPage)
+    override fun onPresenterPrepared(presenter: PageDetailsPresenter) = Unit
 
     override fun layoutResId() = R.layout.fragment_page_details
 
@@ -234,14 +236,11 @@ class PageDetailsFragment : BasePresenterFragment<
 
         const val PAGE_ID = "pageDetailsId"
 
-        @JvmStatic
         fun makeBundle(page: Page): Bundle = Bundle().apply { putParcelable(PageDetailsFragment.PAGE, page) }
 
-        @JvmStatic
         fun makeBundle(pageId: String): Bundle = Bundle().apply { putString(PageDetailsFragment.PAGE_ID, pageId) }
 
 
-        @JvmStatic
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = PageDetailsFragment().withArgs(args).apply {
             mCanvasContext = canvasContext
         }

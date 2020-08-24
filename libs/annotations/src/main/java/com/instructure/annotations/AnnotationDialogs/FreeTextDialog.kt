@@ -46,7 +46,6 @@ class FreeTextDialog : AppCompatDialogFragment() {
     private fun FreeTextDialog() { }
 
     companion object {
-        @JvmStatic
         fun getInstance(manager: FragmentManager, isEditing: Boolean, currentText: String = "", callback: (Boolean, Boolean, String) -> Unit) : FreeTextDialog {
             manager.dismissExisting<FreeTextDialog>()
             val dialog = FreeTextDialog()

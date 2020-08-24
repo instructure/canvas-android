@@ -26,10 +26,10 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellViewState
 import io.mockk.every
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import io.mockk.unmockkAll
+import org.junit.*
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -42,13 +42,10 @@ class GradeCellStateTest : Assert() {
     private lateinit var baseSubmission: Submission
     private lateinit var baseGradedState: GradeCellViewState.GradeData
 
-    init {
-        mockkStatic(ColorKeeper::class)
-        every { ColorKeeper.getOrGenerateColor("course_123") } returns courseColor
-    }
-
     @Before
     fun setup() {
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.getOrGenerateColor("course_123") } returns courseColor
         context = ApplicationProvider.getApplicationContext()
         baseAssignment = Assignment(
             courseId = 123,
@@ -72,6 +69,11 @@ class GradeCellStateTest : Assert() {
             outOfContentDescription = "Out of 100 points",
             gradeCellContentDescription = "85 Out of 100 points"
         )
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test

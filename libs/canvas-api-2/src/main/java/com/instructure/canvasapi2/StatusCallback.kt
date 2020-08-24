@@ -159,13 +159,10 @@ abstract class StatusCallback<DATA> : Callback<DATA> {
 
     companion object {
 
-        @JvmStatic
         fun moreCallsExist(vararg headers: LinkHeaders?): Boolean = headers.getOrNull(0)?.nextUrl != null
 
-        @JvmStatic
         fun isFirstPage(vararg headers: LinkHeaders?): Boolean = headers.isEmpty() || headers[0] == null
 
-        @JvmStatic
         fun cancelAllCalls() = CanvasRestAdapter.cancelAllCalls()
 
     }
