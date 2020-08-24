@@ -19,12 +19,19 @@ package com.instructure.canvasapi2.unit
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.Term
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
+import java.time.OffsetDateTime
+import java.util.*
 
 class CourseTest {
+
+    val baseCourse = Course(accessRestrictedByDate = false, workflowState = "completed")
 
     @Before
     fun setup() {
@@ -467,5 +474,74 @@ class CourseTest {
 
         assertTrue(course.getCourseGrade(false)!!.finalScore == finalScore)
     }
+
+    @Test
+    fun courseIsReadOnly_accessRestrictedByDate() {
+        val course = Course(accessRestrictedByDate = true)
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
+    @Test
+    fun courseIsReadOnly_workFlowStateCompleted() {
+        val course = Course(workflowState = "completed")
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
+    @Test
+    fun courseIsReadOnly_restrictedToCourseDatesWithInValidDates() {
+        val startDate = OffsetDateTime.now().minusDays(30)
+        val endDate = OffsetDateTime.now().minusDays(20)
+        val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
+                startAt = startDate.toString(), endAt = endDate.toString())
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
+    @Test
+    fun courseIsReadOnly_invalidTermDates() {
+        val badStartDate = OffsetDateTime.now().minusDays(30)
+        val badEndDate = OffsetDateTime.now().minusDays(20)
+
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
+
+        val term = Term(startAt = badStartDate.toString(), endAt = badEndDate.toString())
+        val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
+                startAt = startDate.toString(), endAt = endDate.toString(), term = term)
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
+    @Test
+    fun courseIsReadOnly_invalidSectionDates() {
+        val badStartDate = OffsetDateTime.now().minusDays(30)
+        val badEndDate = OffsetDateTime.now().minusDays(20)
+
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
+
+        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
+        val section = Section(startAt = badStartDate.toString(), endAt = badEndDate.toString())
+        val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
+                startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
+    @Test
+    fun courseIsReadOnly_validDatesAllTheWayDown() {
+        val startDate = OffsetDateTime.now().minusDays(50)
+        val endDate = OffsetDateTime.now().plusDays(50)
+
+        val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
+        val section = Section(startAt = startDate.toString(), endAt = endDate.toString())
+        val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
+                startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+
+        assertFalse(course.isReadOnlyForCurrentDate())
+    }
+
 
 }
