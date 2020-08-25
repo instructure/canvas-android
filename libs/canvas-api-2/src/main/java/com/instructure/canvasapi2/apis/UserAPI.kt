@@ -92,9 +92,6 @@ object UserAPI {
         @POST("users/{userId}/observees")
         fun addObserveeWithPairingCode(@Path("userId") userId: Long?, @Query(value = "pairing_code") pairingCode: String): Call<User>
 
-        @GET("accounts/self/authentication_providers/canvas")
-        fun getGeneratePairingCodePermission(): Call<GeneratePairingCodePermission>
-
         @POST("users/self/observer_pairing_codes")
         fun generatePairingCode(): Call<PairingCode>
         //endregion
@@ -225,10 +222,6 @@ object UserAPI {
             callback: StatusCallback<User>) {
 
         callback.addCall(adapter.build(UsersInterface::class.java, params).addObserveeWithPairingCode(userId, pairingCode)).enqueue(callback)
-    }
-
-    fun getGeneratePairingCodePermission(adapter: RestBuilder, params: RestParams, callback: StatusCallback<GeneratePairingCodePermission>) {
-        callback.addCall(adapter.build(UsersInterface::class.java, params).getGeneratePairingCodePermission()).enqueue(callback)
     }
 
     fun generatePairingCode(adapter: RestBuilder, params: RestParams, callback: StatusCallback<PairingCode>) {

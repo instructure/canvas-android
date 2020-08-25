@@ -245,15 +245,6 @@ object UserManager {
         UserAPI.getBecomeUserPermission(adapter, params, accountId, callback)
     }
 
-    fun getGeneratePairingCodePermission(
-        forceNetwork: Boolean,
-        callback: StatusCallback<GeneratePairingCodePermission>
-    ) {
-        val adapter = RestBuilder(callback)
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        UserAPI.getGeneratePairingCodePermission(adapter, params, callback)
-    }
-
     fun generatePairingCode(forceNetwork: Boolean, callback: StatusCallback<PairingCode>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

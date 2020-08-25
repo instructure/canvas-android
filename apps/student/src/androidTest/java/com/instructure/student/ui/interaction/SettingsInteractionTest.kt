@@ -264,7 +264,6 @@ class SettingsInteractionTest : StudentTest() {
         try {
             setUpAndSignIn()
 
-            ApiPrefs.canGeneratePairingCode = true
             dashboardPage.launchSettingsPage()
             settingsPage.launchPairObserverPage()
 
