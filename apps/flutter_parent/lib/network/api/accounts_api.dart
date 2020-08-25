@@ -45,6 +45,11 @@ class AccountsApi {
     return fetch(canvasDio().get('accounts/self/permissions'));
   }
 
+  /**
+   * Currently not used.
+   *
+   * Awaiting api changes to make this call w/o authentication prior to user account creation
+   */
   Future<bool> getPairingAllowed() async {
     var response = await canvasDio().get('accounts/self/authentication_providers/canvas');
     var selfRegistration = response.data['self_registration'];

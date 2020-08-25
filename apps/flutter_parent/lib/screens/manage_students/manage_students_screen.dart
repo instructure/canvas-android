@@ -44,19 +44,12 @@ class ManageStudentsScreen extends StatefulWidget {
 
 class _ManageStudentsState extends State<ManageStudentsScreen> {
   Future<List<User>> _studentsFuture;
-  Future<bool> _allowPairingFuture;
   Future<List<User>> _loadStudents() => locator<ManageStudentsInteractor>().getStudents(forceRefresh: true);
 
   GlobalKey<RefreshIndicatorState> _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   // Used to tell the Dashboard screen if it needs to update its list of students
   bool _addedStudentFlag = false;
-
-  @override
-  void initState() {
-    _allowPairingFuture = locator<ManageStudentsInteractor>().shouldAllowPairing();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,23 +175,17 @@ class _ManageStudentsState extends State<ManageStudentsScreen> {
   }
 
   Widget _createFloatingActionButton(BuildContext context) {
-    return FutureBuilder(
-      future: _allowPairingFuture,
-      builder: (context, AsyncSnapshot<bool> snapshot) {
-        if (snapshot.data != true) return Container();
-        return FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            semanticLabel: L10n(context).addNewStudent,
-          ),
-          onPressed: () {
-            locator<PairingUtil>().pairNewStudent(
-              context,
-              () {
-                _refreshKey.currentState.show();
-                _addedStudentFlag = true;
-              },
-            );
+    return FloatingActionButton(
+      child: Icon(
+        Icons.add,
+        semanticLabel: L10n(context).addNewStudent,
+      ),
+      onPressed: () {
+        locator<PairingUtil>().pairNewStudent(
+          context,
+          () {
+            _refreshKey.currentState.show();
+            _addedStudentFlag = true;
           },
         );
       },

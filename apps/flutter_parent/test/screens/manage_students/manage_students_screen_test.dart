@@ -327,9 +327,8 @@ void main() {
   });
 
   group('Add Student', () {
-    testWidgetsWithAccessibilityChecks('Displays FAB when pairing is allowed', (tester) async {
+    testWidgetsWithAccessibilityChecks('Displays FAB for pairing', (tester) async {
       var interactor = _MockManageStudentsInteractor();
-      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
       _setupLocator(interactor);
 
       await tester.pumpWidget(TestApp(
@@ -341,23 +340,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsOneWidget);
     });
 
-    testWidgetsWithAccessibilityChecks('Hides FAB when pairing is not allowed', (tester) async {
-      var interactor = _MockManageStudentsInteractor();
-      when(interactor.shouldAllowPairing()).thenAnswer((_) async => false);
-      _setupLocator(interactor);
-
-      await tester.pumpWidget(TestApp(
-        ManageStudentsScreen([]),
-      ));
-      await tester.pumpAndSettle();
-
-      // Should not display FAB
-      expect(find.byType(FloatingActionButton), findsNothing);
-    });
-
     testWidgetsWithAccessibilityChecks('Tapping FAB calls PairingUtil', (tester) async {
       var interactor = _MockManageStudentsInteractor();
-      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
       _setupLocator(interactor);
 
       var observedStudents = [CanvasModelTestUtils.mockUser(name: 'Billy')];
@@ -379,7 +363,6 @@ void main() {
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
-      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
       when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
@@ -416,7 +399,6 @@ void main() {
 
       // Mock return value for success when pairing a student
       final interactor = _MockManageStudentsInteractor();
-      when(interactor.shouldAllowPairing()).thenAnswer((_) async => true);
       when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
       // Mock retrieving students, also add an extra student to the list
