@@ -44,7 +44,6 @@ void main() {
       setupTestLocator((locator) {
         locator.registerLazySingleton<AccountsApi>(() => accountsApi);
       });
-      when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
 
       // Setup the widget
       await tester.pumpWidget(TestApp(StudentHorizontalListView(students)));
@@ -123,7 +122,6 @@ void main() {
         locator.registerLazySingleton<Analytics>(() => MockAnalytics());
         locator.registerLazySingleton<AccountsApi>(() => accountsApi);
       });
-      when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
 
       // Setup the widget
       await tester.pumpWidget(TestApp(StudentHorizontalListView([student1])));
@@ -148,7 +146,6 @@ void main() {
     AccountsApi accountsApi = MockAccountsApi();
     final analytics = _MockAnalytics();
 
-    when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
     when(pairingUtil.pairNewStudent(any, any)).thenAnswer((inv) => inv.positionalArguments[1]());
 
     setupTestLocator((locator) {

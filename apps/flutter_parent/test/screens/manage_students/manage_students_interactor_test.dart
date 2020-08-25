@@ -93,14 +93,6 @@ void main() {
 
     expect(result, expectedSortedList);
   });
-
-  test('shouldAllowPairing calls AccountsApi', () async {
-    when(accountsApi.getPairingAllowed()).thenAnswer((_) async => true);
-    var result = await ManageStudentsInteractor().shouldAllowPairing();
-
-    verify(accountsApi.getPairingAllowed());
-    expect(result, isTrue);
-  });
 }
 
 User _mockStudent(String name) => User((b) => b

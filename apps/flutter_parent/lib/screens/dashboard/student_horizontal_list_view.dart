@@ -15,7 +15,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/user.dart';
-import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
@@ -36,14 +35,6 @@ class StudentHorizontalListView extends StatefulWidget {
 }
 
 class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
-  Future<bool> _allowPairingFuture;
-
-  @override
-  void initState() {
-    _allowPairingFuture = locator<AccountsApi>().getPairingAllowed();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -100,50 +91,45 @@ class StudentHorizontalListViewState extends State<StudentHorizontalListView> {
   }
 
   Widget _addWidget() {
-    return FutureBuilder(
-        future: _allowPairingFuture,
-        builder: (context, AsyncSnapshot<bool> snapshot) {
-          if (snapshot.data != true) return Container();
-          return Center(
-            child: Container(
-              width: 120,
-              height: 92,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 12),
-                  Container(
-                    width: 48,
-                    height: 48,
-                    child: RaisedButton(
-                      padding: EdgeInsets.zero,
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: Semantics(
-                        label: L10n(context).tapToPairNewStudent,
-                        child: Icon(
-                          Icons.add,
-                          color: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      shape: CircleBorder(
-                        side: BorderSide(
-                            color: ParentTheme.of(context).isDarkMode ? Theme.of(context).accentColor : Colors.white,
-                            width: 1),
-                      ),
-                      elevation: 8,
-                      onPressed: () {
-                        locator<PairingUtil>().pairNewStudent(context, () => widget.onAddStudent());
-                      },
-                    ),
+    return Center(
+      child: Container(
+        width: 120,
+        height: 92,
+        child: Column(
+          children: <Widget>[
+            SizedBox(height: 12),
+            Container(
+              width: 48,
+              height: 48,
+              child: RaisedButton(
+                padding: EdgeInsets.zero,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Semantics(
+                  label: L10n(context).tapToPairNewStudent,
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).accentColor,
                   ),
-                  SizedBox(height: 8),
-                  Text(
-                    L10n(context).addStudent,
-                    style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
-                  ),
-                ],
+                ),
+                shape: CircleBorder(
+                  side: BorderSide(
+                      color: ParentTheme.of(context).isDarkMode ? Theme.of(context).accentColor : Colors.white,
+                      width: 1),
+                ),
+                elevation: 8,
+                onPressed: () {
+                  locator<PairingUtil>().pairNewStudent(context, () => widget.onAddStudent());
+                },
               ),
             ),
-          );
-        });
+            SizedBox(height: 8),
+            Text(
+              L10n(context).addStudent,
+              style: Theme.of(context).textTheme.subtitle.copyWith(color: ParentTheme.of(context).onSurfaceColor),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
