@@ -23,7 +23,7 @@ class EnrollmentsApi {
     var dio = canvasDio(pageSize: PageSize.canvasMax, forceRefresh: forceRefresh);
     var params = {
       'include': ['observed_users', 'avatar_url'],
-      'state': ['creation_pending', 'invited', 'active', 'completed']
+      'state': ['creation_pending', 'invited', 'active', 'completed', 'current_and_future']
     };
     return fetchList(dio.get('users/self/enrollments', queryParameters: params), depaginateWith: dio);
   }
