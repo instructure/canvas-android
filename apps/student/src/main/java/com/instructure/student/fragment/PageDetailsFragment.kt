@@ -40,7 +40,6 @@ import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.Const.PAGE
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.events.PageUpdatedEvent
@@ -203,9 +202,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
             // Load the html with the helper function to handle iframe cases
             loadHtmlJob = canvasWebView.loadHtmlWithIframes(requireContext(), isTablet, body, ::loadPageHtml, {
-                val args = LTIWebViewFragment.makeLTIBundle(
+                val args = LtiLaunchFragment.makeLTIBundle(
                         URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+                RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
             }, page.title)
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)

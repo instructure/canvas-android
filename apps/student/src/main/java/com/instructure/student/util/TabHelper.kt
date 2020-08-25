@@ -102,7 +102,7 @@ object TabHelper {
             Tab.NOTIFICATIONS_ID -> NotificationListFragment.makeRoute(canvasContext)
             else -> when {
                 // We just care if it's external, some external tabs (Attendance) have an id after "external"
-                tabId.contains(Tab.TYPE_EXTERNAL) -> LTIWebViewFragment.makeRoute(canvasContext, tab)
+                tabId.contains(Tab.TYPE_EXTERNAL) -> LtiLaunchFragment.makeRoute(canvasContext, tab)
                 else -> null
             }
         }

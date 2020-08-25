@@ -137,9 +137,9 @@ class AssignmentBasicFragment : ParentFragment() {
 
         loadHtmlJob = assignmentWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
                 ::loadDescriptionHtml, {
-            val args = LTIWebViewFragment.makeLTIBundle(
+            val args = LtiLaunchFragment.makeLTIBundle(
                     URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
         }, assignment.name)
     }
 

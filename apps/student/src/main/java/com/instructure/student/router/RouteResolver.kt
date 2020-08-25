@@ -21,12 +21,12 @@ import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object RouteResolver {
 
-    
+
     fun getFragment(route: Route): Fragment? {
         return getFragment(route.canvasContext, route)
     }
 
-    
+
     fun getFragment(canvasContext: CanvasContext?, route: Route): Fragment? {
         return if (canvasContext == null && route.canvasContext == null) { // Typically areas like inbox or notifications where a canvasContext may not apply
             if (route.primaryClass != null) {
@@ -72,7 +72,7 @@ object RouteResolver {
             cls.isA<AssignmentListFragment>() -> AssignmentListFragment.newInstance(route)
             cls.isA<AssignmentBasicFragment>() -> AssignmentBasicFragment.newInstance(route)
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
-            cls.isA<LTIWebViewFragment>() -> LTIWebViewFragment.newInstance(route)
+            cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<CreateAnnouncementFragment>() -> CreateAnnouncementFragment.newInstance(route)
             cls.isA<SyllabusFragment>() -> SyllabusFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)

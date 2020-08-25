@@ -27,7 +27,6 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.*
 import android.widget.CompoundButton
 import android.widget.ImageView
@@ -44,7 +43,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.airbnb.lottie.LottieAnimationView
-import com.airbnb.lottie.LottieComposition
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationItemView
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView
@@ -124,8 +122,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
                 R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio -> {
-                    val launchDefinition = v.tag as? LaunchDefinition
-                    if (launchDefinition != null) startActivity(LTIActivity.createIntent(this@NavigationActivity, launchDefinition))
+                    val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
+                    val user = ApiPrefs.user ?: return@weave
+                    val title = getString(if (launchDefinition.isGauge) R.string.gauge else R.string.studio)
+                    val route = LtiLaunchFragment.makeRoute(
+                        canvasContext = CanvasContext.currentUserContext(user),
+                        url = launchDefinition.placements.globalNavigation.url,
+                        title = title,
+                        sessionLessLaunch = true
+                    )
+                    RouteMatcher.route(this@NavigationActivity, route)
                 }
                 R.id.navigationDrawerItem_bookmarks -> {
                     val route = BookmarksFragment.makeRoute(ApiPrefs.user)
@@ -688,7 +694,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }
 
                             route.canvasContext?.let {
-                                val ltiRoute = LTIWebViewFragment.makeRoute(it, route.uri.toString())
+                                val ltiRoute = LtiLaunchFragment.makeRoute(it, route.uri.toString())
                                 RouteMatcher.route(this@NavigationActivity, ltiRoute)
                             }
                         }

@@ -21,13 +21,11 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.instructure.canvasapi2.models.*
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.*
@@ -130,7 +128,13 @@ class SubmissionDetailsEmptyContentView(
 
     fun showLTIView(canvasContext: CanvasContext, title: String, ltiTool: LTITool? = null) {
         logEventWithOrigin(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, ltiTool?.url ?: "", title, isAssignmentLTI = true, ltiTool = ltiTool))
+        RouteMatcher.route(context, LtiLaunchFragment.makeRoute(
+            canvasContext,
+            ltiTool?.url ?: "",
+            title,
+            isAssignmentLTI = true,
+            ltiTool = ltiTool
+        ))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {

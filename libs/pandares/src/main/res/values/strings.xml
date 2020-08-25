@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Attempts Used</string>
     <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
+    <string name="launchingExternalTool">Launching External Tool…</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
     <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
