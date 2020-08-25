@@ -38,7 +38,9 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
     fun assertDisplaysStudentInfo(student: CanvasUserApiModel) {
         waitForView(withParent(R.id.toolbar) + withText(student.shortName)).assertDisplayed()
         studentName.assertHasText(student.shortName)
-        studentEmail.assertHasText(student.loginId)
+        // MBL-14665: Seeding an email address for a user apparently no longer works.
+        // We'll need to fix that before we can un-comment this code.
+        //studentEmail.assertHasText(student.loginId)
     }
 
     fun assertDisplaysCourseInfo(course: CourseApiModel) {
