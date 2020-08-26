@@ -22,7 +22,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
-apply plugin: 'okreplay'
 apply from: '../../gradle/coverage.gradle'
 
 def coverageEnabled = project.hasProperty('coverage')

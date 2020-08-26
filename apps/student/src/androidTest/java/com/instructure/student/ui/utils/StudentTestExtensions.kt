@@ -77,7 +77,7 @@ fun StudentTest.seedData(
             discussions = discussions,
             announcements = announcements
     )
-    return mockableSeed { SeedApi.seedData(request) }
+    return SeedApi.seedData(request)
 }
 
 fun StudentTest.seedAssignments(
@@ -88,10 +88,9 @@ fun StudentTest.seedAssignments(
         unlockAt: String = "",
         dueAt: String = "",
         submissionTypes: List<SubmissionType> = emptyList(),
-        teacherToken: String): AssignmentListApiModel {
+        teacherToken: String): List<AssignmentApiModel> {
 
-    return mockableSeed {
-        AssignmentsApi.seedAssignments( AssignmentsApi.CreateAssignmentRequest(
+    return AssignmentsApi.seedAssignments(AssignmentsApi.CreateAssignmentRequest(
             courseId = courseId,
             withDescription = withDescription,
             lockAt = lockAt,
@@ -99,7 +98,6 @@ fun StudentTest.seedAssignments(
             dueAt = dueAt,
             submissionTypes = submissionTypes,
             teacherToken = teacherToken), assignments)
-    }
 }
 
 fun StudentTest.tokenLogin(user: CanvasUserApiModel) {
@@ -163,7 +161,7 @@ fun StudentTest.seedAssignmentSubmission(
         courseId: Long,
         studentToken: String,
         commentSeeds: List<SubmissionsApi.CommentSeedInfo> = kotlin.collections.emptyList()
-): SubmissionListApiModel {
+): List<SubmissionApiModel> {
 
     // Upload one submission file for each submission seed
     submissionSeeds.forEach {
@@ -205,17 +203,15 @@ fun StudentTest.seedAssignmentSubmission(
             submissionSeedsList = submissionSeeds
     )
 
-    return mockableSeed {
-        SubmissionsApi.seedAssignmentSubmission(submissionRequest)
-    }
+    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
 }
 
 fun StudentTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
 
     // Create the file
     val file = File(
-        Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
-        .apply { createNewFile() }
+            Randomizer.randomTextFileName(Environment.getExternalStorageDirectory().absolutePath))
+            .apply { createNewFile() }
 
     // Add contents to file
     FileWriter(file, true).apply {
@@ -225,13 +221,11 @@ fun StudentTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String
     }
 
     // Start the Canvas file upload process
-    return mockableSeed {
-        FileUploadsApi.uploadFile(
-                courseId,
-                assignmentId,
-                file.readBytes(),
-                file.name,
-                token,
-                fileUploadType)
-    }
+    return FileUploadsApi.uploadFile(
+            courseId,
+            assignmentId,
+            file.readBytes(),
+            file.name,
+            token,
+            fileUploadType)
 }

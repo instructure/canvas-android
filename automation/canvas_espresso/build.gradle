@@ -37,10 +37,6 @@ android {
         targetSdkVersion _targetSdkVersion
         versionCode _versionCode
         versionName _versionName
-
-        def dittoMode = findProperty("dittoMode") ?: "play"
-        buildConfigField "String", "GLOBAL_DITTO_MODE", "\"$dittoMode\""
-        println "dittoMode: $dittoMode"
     }
 
     buildTypes {

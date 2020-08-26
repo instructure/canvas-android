@@ -22,7 +22,7 @@ import org.junit.Test
 
 class NotATeacherPageTest : TeacherTest() {
 
-    // Ditto doesn't support WebViews
+    // Runs live; no MockCanvas
     @Test
     override fun displaysPageObjects() {
         slowLogInAsStudent()

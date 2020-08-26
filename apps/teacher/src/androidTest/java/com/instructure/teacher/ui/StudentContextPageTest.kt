@@ -15,7 +15,7 @@
  */
 package com.instructure.teacher.ui
 
-import com.instructure.dataseeding.model.AssignmentListApiModel
+import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.teacher.ui.utils.TeacherTest
@@ -39,7 +39,7 @@ class StudentContextPageTest : TeacherTest() {
         studentContextPage.assertDisplaysCourseInfo(course)
     }
 
-    private fun getToStudentContextPage(assignmentCount: Int = 1): Triple<CanvasUserApiModel, CourseApiModel, AssignmentListApiModel> {
+    private fun getToStudentContextPage(assignmentCount: Int = 1): Triple<CanvasUserApiModel, CourseApiModel, List<AssignmentApiModel>> {
         val data = seedData(teachers = 1, courses = 1, favoriteCourses = 1, students = 1)
         val course = data.coursesList[0]
         val teacher = data.teachersList[0]

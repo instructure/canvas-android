@@ -35,7 +35,6 @@ buildscript {
         classpath Plugins.GOOGLE_SERVICES
         classpath Plugins.KOTLIN
         classpath Plugins.FABRIC
-        classpath Plugins.OKREPLAY
         classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT

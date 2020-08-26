@@ -43,7 +43,6 @@ abstract class InstructureRunner : AndroidJUnitRunner() {
     }
 
     // Set up an OkHttpClient to use for setting up our OkHttp3IdlingResource.
-    // The caller can also use this opportunity to set up Ditto functionality on the client.
     // A null return is permissible; it just means that no OkHttp3IdlingResource will be registered.
     abstract fun setupHttpClient() : OkHttpClient?
 

@@ -7,7 +7,7 @@ import org.junit.Test
 
 class LoginLandingPageTest: TeacherTest() {
 
-    // Ditto doesn't support WebViews
+    // Runs live; no MockCanvas
     @Test
     @TestRail(ID = "C3108891")
     @P1
@@ -15,7 +15,7 @@ class LoginLandingPageTest: TeacherTest() {
         loginLandingPage.assertPageObjects()
     }
 
-    // Ditto doesn't support WebViews
+    // Runs live; no MockCanvas
     @Test
     @TestRail(ID = "C3108893")
     fun opensCanvasNetworksSignInPage() {

@@ -43,21 +43,18 @@ import java.io.*
 
 
 fun TeacherTest.enterDomain(enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT): CanvasUserApiModel {
-    val user = mockableSeed { UserApi.createCanvasUser() }
-    val course = mockableSeed { CoursesApi.createCourse() }
-    mockableSeed {
-        EnrollmentsApi.enrollUser(course.id, user.id, enrollmentType)
-
-    }
+    val user = UserApi.createCanvasUser()
+    val course = CoursesApi.createCourse()
+    EnrollmentsApi.enrollUser(course.id, user.id, enrollmentType)
     loginFindSchoolPage.enterDomain(user.domain)
     return user
 }
 
 fun TeacherTest.enterStudentDomain(): CanvasUserApiModel {
-    val user = mockableSeed { UserApi.createCanvasUser() }
-    val course = mockableSeed { CoursesApi.createCourse() }
+    val user = UserApi.createCanvasUser()
+    val course = CoursesApi.createCourse()
     // TODO: Enroll user as student
-    val enrollment = mockableSeed { EnrollmentsApi.enrollUserAsStudent( course.id, user.id ) }
+    val enrollment = EnrollmentsApi.enrollUserAsStudent( course.id, user.id )
     loginFindSchoolPage.enterDomain(user.domain)
     return user
 }
@@ -77,16 +74,10 @@ fun TeacherTest.logIn(
     enrollmentType: String = EnrollmentTypes.TEACHER_ENROLLMENT,
     noCourses: Boolean = false
 ): CanvasUserApiModel {
-    val teacher = mockableSeed {
-        UserApi.createCanvasUser()
-    }
+    val teacher = UserApi.createCanvasUser()
     if(!noCourses) {
-        val course = mockableSeed {
-            CoursesApi.createCourse()
-        }
-        mockableSeed {
-            EnrollmentsApi.enrollUser(course.id, teacher.id, enrollmentType)
-        }
+        val course = CoursesApi.createCourse()
+        EnrollmentsApi.enrollUser(course.id, teacher.id, enrollmentType)
     }
 
     activityRule.runOnUiThread {
@@ -128,9 +119,7 @@ fun TeacherTest.seedData(
             pastCourses = pastCourses
     )
 
-    return mockableSeed {
-        SeedApi.seedData(request)
-    }
+    return SeedApi.seedData(request)
 }
 
 fun TeacherTest.seedAssignments(
@@ -141,7 +130,7 @@ fun TeacherTest.seedAssignments(
         unlockAt: String = "",
         dueAt: String = "",
         submissionTypes: List<SubmissionType> = emptyList(),
-        teacherToken: String): AssignmentListApiModel {
+        teacherToken: String): List<AssignmentApiModel> {
 
     val request = AssignmentsApi.CreateAssignmentRequest(
             courseId = courseId,
@@ -153,9 +142,7 @@ fun TeacherTest.seedAssignments(
             teacherToken = teacherToken
     )
 
-    return mockableSeed {
-        AssignmentsApi.seedAssignments(request, assignments)
-    }
+    return AssignmentsApi.seedAssignments(request, assignments)
 }
 
 // Must publish quiz after creating a question for that question to appear.
@@ -164,26 +151,22 @@ fun TeacherTest.seedQuizQuestion(
         quizId: Long,
         teacherToken: String
 ) {
-    mockableSeed {
-        QuizzesApi.createQuizQuestion(
-                courseId = courseId,
-                quizId = quizId,
-                teacherToken = teacherToken
-        )
-    }
+    QuizzesApi.createQuizQuestion(
+            courseId = courseId,
+            quizId = quizId,
+            teacherToken = teacherToken
+    )
 }
 
 fun TeacherTest.publishQuiz(courseId: Long,
                             quizId: Long,
                             teacherToken: String) {
-    mockableSeed {
-        QuizzesApi.publishQuiz(
-                courseId = courseId,
-                quizId = quizId,
-                teacherToken = teacherToken,
-                published = true
-        )
-    }
+    QuizzesApi.publishQuiz(
+            courseId = courseId,
+            quizId = quizId,
+            teacherToken = teacherToken,
+            published = true
+    )
 }
 
 fun TeacherTest.seedQuizzes(
@@ -196,20 +179,18 @@ fun TeacherTest.seedQuizzes(
         published: Boolean = true,
         teacherToken: String): QuizListApiModel {
 
-    return mockableSeed {
-        QuizzesApi.seedQuizzes(
-                request = QuizzesApi.CreateQuizRequest(
-                        courseId = courseId,
-                        withDescription = withDescription,
-                        published = published,
-                        token = teacherToken,
-                        lockAt = lockAt,
-                        unlockAt = unlockAt,
-                        dueAt = dueAt
-                ),
-                numQuizzes = quizzes
-        )
-    }
+    return QuizzesApi.seedQuizzes(
+            request = QuizzesApi.CreateQuizRequest(
+                    courseId = courseId,
+                    withDescription = withDescription,
+                    published = published,
+                    token = teacherToken,
+                    lockAt = lockAt,
+                    unlockAt = unlockAt,
+                    dueAt = dueAt
+            ),
+            numQuizzes = quizzes
+    )
 }
 
 // "you are not allowed to participate in this quiz" = make sure the quiz isn't Locked
@@ -219,16 +200,14 @@ fun TeacherTest.seedQuizSubmission(
         studentToken: String,
         complete: Boolean = true): QuizSubmissionApiModel {
 
-    return mockableSeed {
-        QuizzesApi.seedQuizSubmission(
-                request = QuizzesApi.CreateQuizSubmissionRequest(
-                        courseId = courseId,
-                        quizId = quizId,
-                        studentToken = studentToken
-                ),
-                complete = complete
-        )
-    }
+    return QuizzesApi.seedQuizSubmission(
+            request = QuizzesApi.CreateQuizSubmissionRequest(
+                    courseId = courseId,
+                    quizId = quizId,
+                    studentToken = studentToken
+            ),
+            complete = complete
+    )
 }
 
 fun TeacherTest.seedAssignmentSubmission(
@@ -236,7 +215,7 @@ fun TeacherTest.seedAssignmentSubmission(
         assignmentId: Long,
         courseId: Long,
         studentToken: String,
-        commentSeeds: List<SubmissionsApi.CommentSeedInfo> = emptyList()): SubmissionListApiModel {
+        commentSeeds: List<SubmissionsApi.CommentSeedInfo> = emptyList()): List<SubmissionApiModel> {
 
     // Upload one submission file for each submission seed
     // TODO: Add ability to upload more than one submission
@@ -276,9 +255,7 @@ fun TeacherTest.seedAssignmentSubmission(
             commentSeedsList = commentSeeds
     )
 
-    return mockableSeed {
-        SubmissionsApi.seedAssignmentSubmission(submissionRequest)
-    }
+    return SubmissionsApi.seedAssignmentSubmission(submissionRequest)
 }
 
 fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String, fileUploadType: FileUploadType): AttachmentApiModel {
@@ -295,30 +272,26 @@ fun TeacherTest.uploadTextFile(courseId: Long, assignmentId: Long, token: String
         close()
     }
 
-    return mockableSeed {
-        FileUploadsApi.uploadFile(
-                courseId = courseId,
-                assignmentId = assignmentId,
-                token = token,
-                fileName = file.name,
-                file = file.toByteArray(),
-                fileUploadType = fileUploadType
-        )
-    }
+    return FileUploadsApi.uploadFile(
+            courseId = courseId,
+            assignmentId = assignmentId,
+            token = token,
+            fileName = file.name,
+            file = file.toByteArray(),
+            fileUploadType = fileUploadType
+    )
 }
 
 fun TeacherTest.seedConversation(sender: CanvasUserApiModel, recipients: List<CanvasUserApiModel>): ConversationListApiModel {
 
-    return mockableSeed {
-        val returnedList = ConversationsApi.createConversation(
-                token = sender.token,
-                recipients = recipients.map { r -> r.id.toString() }
-        )
+    val returnedList = ConversationsApi.createConversation(
+            token = sender.token,
+            recipients = recipients.map { r -> r.id.toString() }
+    )
 
-        // We need to convert the returned list of conversations to a ConversationListApiModel because
-        // mockableSeed doesn't process List<> objects correctly.
-        ConversationListApiModel(conversations = returnedList)
-    }
+    // Legacy: We need to convert the returned list of conversations to a ConversationListApiModel because
+    // mockableSeed doesn't process List<> objects correctly.
+    return ConversationListApiModel(conversations = returnedList)
 }
 
 fun TeacherTest.seedCoursePage(course: CourseApiModel, published: Boolean = true, frontPage: Boolean = false, teacher: CanvasUserApiModel): PageApiModel {
@@ -326,14 +299,13 @@ fun TeacherTest.seedCoursePage(course: CourseApiModel, published: Boolean = true
         throw DataSeedingException("Front Page must be Published")
     }
 
-    return mockableSeed {
-        PagesApi.createCoursePage(
-                courseId = course.id,
-                published = published,
-                frontPage = frontPage,
-                token = teacher.token
-        )
-    }
+    return PagesApi.createCoursePage(
+            courseId = course.id,
+            published = published,
+            frontPage = frontPage,
+            token = teacher.token
+    )
+
 }
 
 val SeedApi.SeededDataApiModel.favoriteCourses: List<CourseApiModel>
