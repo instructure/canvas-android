@@ -28,9 +28,9 @@ Android Studio > Import Project > canvas-android/apps/build.gradle
 
 App | Command | Build Status
 --- | --- | ---
-Student | `./gradle/gradlew -p apps :student:assembleDevDebug` | ![Student build Status](https://app.bitrise.io/app/43a4503585e48423/status.svg?token=bc7_jMRgJ9zqs1bsppHW6A&branch=master)
-Teacher | `./gradle/gradlew -p apps :teacher:assembleDevDebug` | ![Teacher build Status](https://app.bitrise.io/app/758ed6bba9746be5/status.svg?token=RviCENyAVhQcrb8kI4C7-w&branch=master)
-Parent  | (in apps/flutter_parent) `flutter pub get; flutter build apk` | 
+Student | `./gradle/gradlew -p apps :student:assembleDevDebug` | [![Student build Status](https://app.bitrise.io/app/9417c28328c02b7c/status.svg?token=D7fHdeUlz19PurcEPIQNzw&branch=master)](https://app.bitrise.io/app/9417c28328c02b7c)
+Teacher | `./gradle/gradlew -p apps :teacher:assembleDevDebug` | [![Teacher build Status](https://app.bitrise.io/app/4f5339d0ec3436ca/status.svg?token=ATqaYNnYyS4eDUxc0d9EZQ&branch=master)](https://app.bitrise.io/app/4f5339d0ec3436ca)
+Parent  | (in apps/flutter_parent) `flutter pub get; flutter build apk` | [![Parent build Status](https://app.bitrise.io/app/39fd3312f33be200/status.svg?token=jiiPeSZlSxrx5lkqccLN1Q&branch=master)](https://app.bitrise.io/app/39fd3312f33be200)
 
 ## Running tests
 
