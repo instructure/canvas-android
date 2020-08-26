@@ -100,7 +100,7 @@ class ShareFileUploadActivity : AppCompatActivity(), ShareFileDestinationDialog.
     }
 
     private fun askForStoragePermissionIfNecessary() {
-        if (sharedURI?.scheme?.equals("file") == true && !PermissionUtils.hasPermissions(this, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
+        if ((sharedURI?.scheme?.equals("file") == true || sharedURI?.scheme?.equals("content") == true) && !PermissionUtils.hasPermissions(this, PermissionUtils.WRITE_EXTERNAL_STORAGE)) {
             ActivityCompat.requestPermissions(this, PermissionUtils.makeArray(PermissionUtils.WRITE_EXTERNAL_STORAGE), PERMISSION_REQUEST_WRITE_STORAGE)
         }
     }
