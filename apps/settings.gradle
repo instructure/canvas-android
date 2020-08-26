@@ -17,6 +17,7 @@ include ':chips'
 include ":croutonlibrary"
 include ':dataseedingapi'
 include ':canvas_espresso'
+include ':espresso'
 include ':interactions'
 include ":jazzyviewpager"
 include ':login-api-2'
@@ -34,6 +35,7 @@ project(':chips').projectDir = new File(rootProject.projectDir, '/../libs/chips'
 project(':croutonlibrary').projectDir = new File(rootProject.projectDir, '/../libs/croutonlibrary')
 project(':dataseedingapi').projectDir = new File(rootProject.projectDir, '/../automation/dataseedingapi')
 project(':canvas_espresso').projectDir = new File(rootProject.projectDir, '/../automation/canvas_espresso')
+project(':espresso').projectDir = new File(rootProject.projectDir, '/../automation/espresso')
 project(':interactions').projectDir = new File(rootProject.projectDir, '/../libs/interactions')
 project(':jazzyviewpager').projectDir = new File(rootProject.projectDir, '/../libs/jazzyviewpager')
 project(':login-api-2').projectDir = new File(rootProject.projectDir, '/../libs/login-api-2')
