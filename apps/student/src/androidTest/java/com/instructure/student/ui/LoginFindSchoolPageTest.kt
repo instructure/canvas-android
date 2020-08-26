@@ -21,7 +21,7 @@ import org.junit.Test
 
 class LoginFindSchoolPageTest: StudentTest() {
 
-    // No Ditto
+    // Runs live; no MockCanvas
     @Test
     override fun displaysPageObjects() {
         loginLandingPage.clickFindMySchoolButton()

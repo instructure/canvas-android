@@ -34,13 +34,6 @@ data class SubmissionApiModel (
         var submissionAttachments: List<AttachmentApiModel>? = null
 )
 
-// OkReplay/Ditto don't like to traffic in Lists of things, so we made this extraneous class to
-// represent a list of SubmissionApiModels.
-data class SubmissionListApiModel (
-        @SerializedName("submission_list")
-        val submissionList : List<SubmissionApiModel>
-)
-
 data class SubmitCourseAssignmentSubmissionWrapper(
         val submission: SubmitCourseAssignmentSubmission,
         var body: String? = null

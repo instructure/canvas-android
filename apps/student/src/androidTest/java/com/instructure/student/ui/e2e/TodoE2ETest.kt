@@ -67,7 +67,7 @@ class TodoE2ETest: StudentTest() {
         //todoPage.waitForRender()
 
         // Verify that your assignment shows up
-        todoPage.assertAssignmentDisplayed(seededAssignments.assignmentList[0])
+        todoPage.assertAssignmentDisplayed(seededAssignments[0])
 
         // Verify that your quiz shows up
         todoPage.assertQuizDisplayed(quiz)

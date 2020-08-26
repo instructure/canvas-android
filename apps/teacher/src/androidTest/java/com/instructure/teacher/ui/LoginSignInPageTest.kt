@@ -24,7 +24,7 @@ import org.junit.Test
 
 class LoginSignInPageTest: TeacherTest() {
 
-    // Ditto doesn't support WebViews
+    // Runs live; no MockCanvas
     @Test
     @TestRail(ID = "C3108896")
     override fun displaysPageObjects() {

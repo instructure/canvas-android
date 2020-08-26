@@ -33,7 +33,7 @@ import org.junit.rules.RuleChain
 import org.junit.rules.TestRule
 import java.io.File
 
-abstract class InstructureTest(overrideDittoModeString: String? = null) : InstructureTestingContract {
+abstract class InstructureTest() : InstructureTestingContract {
 
     abstract val activityRule: InstructureActivityTestRule<out Activity>
 

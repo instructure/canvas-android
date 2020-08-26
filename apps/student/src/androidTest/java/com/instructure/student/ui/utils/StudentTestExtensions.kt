@@ -88,7 +88,7 @@ fun StudentTest.seedAssignments(
         unlockAt: String = "",
         dueAt: String = "",
         submissionTypes: List<SubmissionType> = emptyList(),
-        teacherToken: String): AssignmentListApiModel {
+        teacherToken: String): List<AssignmentApiModel> {
 
     return AssignmentsApi.seedAssignments(AssignmentsApi.CreateAssignmentRequest(
             courseId = courseId,
@@ -161,7 +161,7 @@ fun StudentTest.seedAssignmentSubmission(
         courseId: Long,
         studentToken: String,
         commentSeeds: List<SubmissionsApi.CommentSeedInfo> = kotlin.collections.emptyList()
-): SubmissionListApiModel {
+): List<SubmissionApiModel> {
 
     // Upload one submission file for each submission seed
     submissionSeeds.forEach {

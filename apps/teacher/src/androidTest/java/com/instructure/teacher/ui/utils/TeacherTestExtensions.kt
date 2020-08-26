@@ -130,7 +130,7 @@ fun TeacherTest.seedAssignments(
         unlockAt: String = "",
         dueAt: String = "",
         submissionTypes: List<SubmissionType> = emptyList(),
-        teacherToken: String): AssignmentListApiModel {
+        teacherToken: String): List<AssignmentApiModel> {
 
     val request = AssignmentsApi.CreateAssignmentRequest(
             courseId = courseId,
@@ -215,7 +215,7 @@ fun TeacherTest.seedAssignmentSubmission(
         assignmentId: Long,
         courseId: Long,
         studentToken: String,
-        commentSeeds: List<SubmissionsApi.CommentSeedInfo> = emptyList()): SubmissionListApiModel {
+        commentSeeds: List<SubmissionsApi.CommentSeedInfo> = emptyList()): List<SubmissionApiModel> {
 
     // Upload one submission file for each submission seed
     // TODO: Add ability to upload more than one submission

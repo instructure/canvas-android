@@ -22,7 +22,7 @@ import org.junit.Test
 
 class LoginLandingPageTest: StudentTest() {
 
-    // No Ditto
+    // Runs live; no MockCanvas
     @Test
     @P1
     override fun displaysPageObjects() {

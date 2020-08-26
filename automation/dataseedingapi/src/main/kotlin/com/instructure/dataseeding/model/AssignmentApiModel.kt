@@ -73,13 +73,6 @@ data class AssignmentApiModel (
         val allowedExtensions: List<String>? = null
 )
 
-// OkReplay/Ditto don't like to traffic in Lists of things, so we made this extraneous class to
-// represent a list of AssignmentApiModels.
-data class AssignmentListApiModel (
-        @SerializedName("assignment_list")
-        val assignmentList: List<AssignmentApiModel>
-)
-
 // region AssignmentOverrides
 
 data class CreateAssignmentOverrideForStudentsWrapper(

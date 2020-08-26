@@ -52,7 +52,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 // InstructureTest wrapper for Canvas code
-abstract class CanvasTest : InstructureTest(BuildConfig.GLOBAL_DITTO_MODE) {
+abstract class CanvasTest : InstructureTest() {
     @Before
     override fun preLaunchSetup() {
 

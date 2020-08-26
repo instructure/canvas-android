@@ -143,7 +143,7 @@ object SubmissionsApi {
     /** Seed one or more submissions for an assignment.  Accepts a SubmissionSeedRequest, returns a
      * list of SubmissionApiModel objects.
      */
-    fun seedAssignmentSubmission(request: SubmissionsApi.SubmissionSeedRequest) : SubmissionListApiModel {
+    fun seedAssignmentSubmission(request: SubmissionsApi.SubmissionSeedRequest) : List<SubmissionApiModel> {
         val submissionsList = mutableListOf<SubmissionApiModel>()
         with(request) {
             for (seed in submissionSeedsList) {
@@ -209,7 +209,7 @@ object SubmissionsApi {
             }
         }
 
-        return SubmissionListApiModel( submissionList = submissionsList )
+        return submissionsList
     }
 
 }
