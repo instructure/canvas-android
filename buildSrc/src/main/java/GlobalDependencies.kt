@@ -17,7 +17,6 @@ object Versions {
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.2.1"
     const val ESPRESSO = "3.1.0"
-    const val OKREPLAY = "1.5.0"
     const val JACOCO_ANDROID = "0.1.2"
 
     /* Kotlin */
@@ -110,7 +109,6 @@ object Plugins {
     const val APOLLO = "com.apollographql.apollo:apollo-gradle-plugin:${Versions.APOLLO}"
     const val KOTLIN = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.KOTLIN}"
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
-    const val OKREPLAY = "com.airbnb.okreplay:gradle-plugin:${Versions.OKREPLAY}"
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"

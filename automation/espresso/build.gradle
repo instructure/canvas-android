@@ -69,9 +69,6 @@ android {
     defaultConfig {
         minSdkVersion 17
         targetSdkVersion 28
-
-        def dittoMode = findProperty("dittoMode") ?: "play"
-        buildConfigField "String", "GLOBAL_DITTO_MODE", "\"$dittoMode\""
     }
 
     buildTypes {
@@ -116,7 +113,6 @@ dependencies {
     def rulesVersion = "1.1.1"
     def espressoVersion = "3.1.1"
     def junitVersion = "4.12"
-    def okReplayVersion = "1.4.0"
 
     // Update exclusions based on ./gradlew :app:androidDependencies
     implementation("androidx.test:runner:$runnerVersion") {
@@ -139,16 +135,6 @@ dependencies {
     /* OkHttp Idling Resource */
     implementation('com.jakewharton.espresso:okhttp3-idling-resource:1.0.0') {
         exclude module: 'espresso-idling-resource'
-    }
-
-    /* OkReplay VCR */
-    api("com.airbnb.okreplay:okreplay:$okReplayVersion") {
-        exclude module: 'snakeyaml'
-        exclude module: 'jsr305'
-    }
-    api("com.airbnb.okreplay:espresso:$okReplayVersion") {
-        exclude module: 'snakeyaml'
-        exclude module: 'jsr305'
     }
 
     api("androidx.test:rules:$rulesVersion") {
@@ -183,33 +169,4 @@ dependencies {
     }
 }
 
-// For publishing pom file, which we need to do for this module on jitpack
-publishing {
-    publications {
-        mavenAar(MavenPublication) {
-            from components.android
-        }
-    }
-}
 
-// https://github.com/bintray/gradle-bintray-plugin#readme
-bintray {
-    user = System.getenv("MVN_USER")
-    key = System.getenv("MVN_KEY")
-    publish = true
-    publications = ['mavenAar']
-
-    pkg {
-        repo = "maven"
-        name = "espresso"
-        userOrg = "instructure"
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/instructure/mobile-shared.git'
-
-        version {
-            name = System.getenv("MVN_VERSION")
-            vcsTag = System.getenv("MVN_REVISION")
-            released = new Date().toString()
-        }
-    }
-}

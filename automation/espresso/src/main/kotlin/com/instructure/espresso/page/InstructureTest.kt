@@ -26,12 +26,6 @@ import com.instructure.espresso.BuildConfig
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.UiControllerSingleton
-import com.instructure.espresso.ditto.DittoConfig
-import com.instructure.espresso.ditto.DittoMode
-import com.instructure.espresso.ditto.DittoRule
-import okreplay.AndroidTapeRoot
-import okreplay.DittoResponseMod
-import okreplay.MatchRules
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Rule
@@ -45,33 +39,11 @@ abstract class InstructureTest(overrideDittoModeString: String? = null) : Instru
 
     abstract val isTesting: Boolean
 
-    private val overrideDittoMode: DittoMode? =
-            if(overrideDittoModeString == null) null
-            else when(overrideDittoModeString.toLowerCase()) {
-                "play" -> DittoMode.PLAY
-                "record" -> DittoMode.RECORD
-                "live" -> DittoMode.LIVE
-                else -> throw IllegalArgumentException("Invalid override ditto mode $overrideDittoModeString")
-            }
-
-    private val dittoMode: DittoMode = when (BuildConfig.GLOBAL_DITTO_MODE.toLowerCase()) {
-        "play" -> DittoMode.PLAY
-        "record" -> DittoMode.RECORD
-        "live" -> DittoMode.LIVE
-        else -> throw IllegalArgumentException("Invalid ditto mode specified. Valid options are 'play', 'record', or 'live'.")
-    }
-
-    private val dittoConfig = DittoConfig(
-        globalMode = overrideDittoMode ?: dittoMode,
-        matchRules = arrayOf(MatchRules.uri, MatchRules.method),
-        tapeRoot = AndroidTapeRoot(InstrumentationRegistry.getInstrumentation().context, javaClass)
-    )
 
     @Rule
     override fun chain(): TestRule {
         return RuleChain
             .outerRule(ScreenshotTestRule())
-            .around(DittoRule(dittoConfig))
             .around(activityRule)
     }
 
@@ -96,25 +68,6 @@ abstract class InstructureTest(overrideDittoModeString: String? = null) : Instru
 
     private fun checkBuildConfig() {
         if (!isTesting) throw RuntimeException("Build config must be IS_TESTING! (qaDebug)")
-    }
-
-
-    @Suppress("unused")
-    fun InstructureTest.addDittoMod(mod: DittoResponseMod) = DittoConfig.interceptor.addResponseMod(mod)
-
-    inline fun <reified T : Any> mockableSeed(onRecord: () -> T): T {
-        return DittoConfig.interceptor.playSeededJson()?.let {
-            Gson().fromJson(it, T::class.java)
-        } ?: onRecord().also { DittoConfig.interceptor.recordSeededJson(Gson().toJson(it)) }
-    }
-
-    inline fun mockableString(label: String, onRecord: () -> String): String {
-        return DittoConfig.interceptor.playTestData(label) ?: onRecord().also { DittoConfig.interceptor.recordTestData(label, it) }
-    }
-
-    inline fun mockableDouble(label: String, onRecord: () -> Double): Double {
-        return DittoConfig.interceptor.playTestData(label)?.toDoubleOrNull()
-                ?: onRecord().also { DittoConfig.interceptor.recordTestData(label, it.toString()) }
     }
 
     companion object {
