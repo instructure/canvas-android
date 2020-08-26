@@ -132,10 +132,6 @@ class ShareFileDestinationDialog : DialogFragment(), OnOptionCheckedListener {
         assignmentContainer.setVisible()
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        (activity as? DialogCloseListener)?.onCancel(dialog)
-    }
-
     override fun onCancel(dialog: DialogInterface) {
         (activity as? DialogCloseListener)?.onCancel(dialog)
     }
