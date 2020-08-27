@@ -41,7 +41,6 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.RecordingMediaType
 import com.instructure.student.R
-import com.instructure.student.fragment.LtiLaunchFragment
 import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.fragment.ViewImageFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
@@ -263,10 +262,7 @@ class SubmissionDetailsView(
             is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
             is SubmissionDetailsContentType.DiscussionContent -> DiscussionSubmissionViewFragment.newInstance(type.previewUrl ?: "")
             is SubmissionDetailsContentType.PdfContent -> PdfSubmissionViewFragment.newInstance(type.url)
-            is SubmissionDetailsContentType.ExternalToolContent -> LtiLaunchFragment.newInstance(LtiLaunchFragment.makeRoute(
-                type.canvasContext,
-                type.url
-            ))!!
+            is SubmissionDetailsContentType.ExternalToolContent -> LtiSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.MediaContent -> MediaSubmissionViewFragment.newInstance(type)
             is SubmissionDetailsContentType.OtherAttachmentContent -> ViewUnsupportedFileFragment.newInstance(
                 uri = Uri.parse(type.attachment.url),
