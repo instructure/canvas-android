@@ -228,8 +228,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
                 val ltiUrl = assignment.url.validOrNull() ?: assignment.htmlUrl
                 if(!ltiUrl.isNullOrBlank()) {
-                    val args = LTIWebViewFragment.makeLTIBundle(ltiUrl!!, assignment.name!!, true)
-                    RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
+                    val args = LtiLaunchFragment.makeBundle(mCourse, ltiUrl!!, assignment.name!!, true)
+                    RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
                 }
             }
         }
@@ -284,11 +284,12 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         // Load description
         loadHtmlJob = descriptionWebView.loadHtmlWithIframes(requireContext(), isTablet, description.orEmpty(),
                 ::loadAssignmentHTML, {
-            val args = LTIWebViewFragment.makeLTIBundle(
+            val args = LtiLaunchFragment.makeBundle(
+                    mCourse,
                     URLDecoder.decode(it, "utf-8"),
                     requireContext().getString(R.string.utils_externalToolTitle),
                     true)
-            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, mCourse, args))
+            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, mCourse, args))
         }, name)
     }
 

@@ -256,8 +256,8 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
             discussionRepliesWebView.setInvisible()
 
             repliesLoadHtmlJob = discussionRepliesWebView.loadHtmlWithIframes(this@DiscussionsDetailsFragment.requireContext(), isTablet, html, ::loadHTMLReplies, {
-                val args = LTIWebViewFragment.makeLTIBundle(URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+                val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(it, "utf-8"), this@DiscussionsDetailsFragment.getString(R.string.utils_externalToolTitle), true)
+                RouteMatcher.route(this@DiscussionsDetailsFragment.requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
             })
 
             delay(300)
@@ -406,11 +406,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
         headerLoadHtmlJob = discussionTopicHeaderWebView.loadHtmlWithIframes(requireContext(), isTablet,
                 discussionTopicHeader.message.orEmpty(), this::loadHTMLTopic, {
-            val args = LTIWebViewFragment.makeLTIBundle(
-                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            val args = LtiLaunchFragment.makeBundle(
+                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
             RouteMatcher.route(
                     this@DiscussionsDetailsFragment.requireContext(),
-                    Route(LTIWebViewFragment::class.java, canvasContext, args))
+                    Route(LtiLaunchFragment::class.java, canvasContext, args))
         }, discussionTopicHeader.title)
 
         discussionRepliesWebView.loadHtml("", "")

@@ -125,12 +125,13 @@ class ModuleListView(
                 Route(null, InternalWebViewFragment::class.java, canvasContext, args)
             }
             ModuleItem.Type.ExternalTool -> {
-                val args = LTIWebViewFragment.makeLTIBundle(
-                    ltiUrl = item.url.orEmpty(),
+                val args = LtiLaunchFragment.makeBundle(
+                    canvasContext = canvasContext,
+                    url = item.url.orEmpty(),
                     title = item.title.orEmpty(),
                     sessionLessLaunch = true
                 )
-                Route(null, LTIWebViewFragment::class.java, canvasContext, args)
+                Route(null, LtiLaunchFragment::class.java, canvasContext, args)
             }
             else -> null
         }

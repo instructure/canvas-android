@@ -115,7 +115,7 @@ object RouteMatcher : BaseRouteMatcher() {
         fullscreenFragments.add(ProfileFragment::class.java)
         fullscreenFragments.add(ViewImageFragment::class.java)
         fullscreenFragments.add(FullscreenInternalWebViewFragment::class.java)
-        fullscreenFragments.add(LTIWebViewFragment::class.java)
+        fullscreenFragments.add(LtiLaunchFragment::class.java)
         fullscreenFragments.add(SpeedGraderQuizWebViewFragment::class.java)
 
         // Bottom Sheet Fragments
@@ -356,7 +356,7 @@ object RouteMatcher : BaseRouteMatcher() {
             CreateOrEditAnnouncementFragment::class.java.isAssignableFrom(cls) -> fragment = CreateOrEditAnnouncementFragment.newInstance(route.arguments)
             SettingsFragment::class.java.isAssignableFrom(cls) -> fragment = SettingsFragment.newInstance(route.arguments)
             ProfileEditFragment::class.java.isAssignableFrom(cls) -> fragment = ProfileEditFragment.newInstance(route.arguments)
-            LTIWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = LTIWebViewFragment.newInstance(route.arguments)
+            LtiLaunchFragment::class.java.isAssignableFrom(cls) -> fragment = LtiLaunchFragment.newInstance(route.arguments)
             PeopleListFragment::class.java.isAssignableFrom(cls) -> fragment = PeopleListFragment.newInstance(canvasContext!!)
             StudentContextFragment::class.java.isAssignableFrom(cls) -> fragment = StudentContextFragment.newInstance(route.arguments)
             AttendanceListFragment::class.java.isAssignableFrom(cls) -> fragment = AttendanceListFragment.newInstance(canvasContext!!, route.arguments)

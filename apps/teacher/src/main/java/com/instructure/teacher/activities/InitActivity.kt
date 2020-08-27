@@ -233,8 +233,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     RouteMatcher.route(this@InitActivity, Route(FileListFragment::class.java, ApiPrefs.user))
                 }
                 R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc -> {
-                    val launchDefinition = v.tag as? LaunchDefinition
-                    if (launchDefinition != null) startActivity(LTIActivity.createIntent(this@InitActivity, launchDefinition))
+                    val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
+                    val user = ApiPrefs.user ?: return@weave
+                    val canvasContext = CanvasContext.currentUserContext(user)
+                    val title = getString(if (launchDefinition.isGauge) R.string.gauge else R.string.studio)
+                    val route = LtiLaunchFragment.makeBundle(
+                        canvasContext = canvasContext,
+                        url = launchDefinition.placements.globalNavigation.url,
+                        title = title,
+                        sessionLessLaunch = true
+                    )
+                    RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
                 }
                 R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
                 R.id.navigationDrawerItem_logout -> {

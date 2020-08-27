@@ -367,9 +367,9 @@ class QuizDetailsFragment : BasePresenterFragment<
         // Load instructions
         loadHtmlJob = instructionsWebView.loadHtmlWithIframes(requireContext(), isTablet,
                 quiz.description.orEmpty(), ::loadQuizHTML, {
-            val args = LTIWebViewFragment.makeLTIBundle(
-                    URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
-            RouteMatcher.route(requireContext(), Route(LTIWebViewFragment::class.java, canvasContext, args))
+            val args = LtiLaunchFragment.makeBundle(
+                    canvasContext, URLDecoder.decode(it, "utf-8"), getString(R.string.utils_externalToolTitle), true)
+            RouteMatcher.route(requireContext(), Route(LtiLaunchFragment::class.java, canvasContext, args))
         }, quiz.title)
     }
 
