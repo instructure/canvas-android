@@ -189,9 +189,9 @@ class AssignmentDetailsView(
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
             loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{
-                val args = LTIWebViewFragment.makeLTIBundle(
+                val args = LtiLaunchFragment.makeLTIBundle(
                         URLDecoder.decode(it, "utf-8"), context.getString(R.string.utils_externalToolTitle), true)
-                RouteMatcher.route(context, Route(LTIWebViewFragment::class.java, canvasContext, args))
+                RouteMatcher.route(context, Route(LtiLaunchFragment::class.java, canvasContext, args))
             }, state.assignmentName)
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
@@ -289,7 +289,13 @@ class AssignmentDetailsView(
 
     fun showLTIView(canvasContext: CanvasContext, title: String, ltiTool: LTITool? = null) {
         logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-        RouteMatcher.route(context, LTIWebViewFragment.makeRoute(canvasContext, ltiTool?.url ?: "", title, isAssignmentLTI = true, ltiTool = ltiTool))
+        RouteMatcher.route(context, LtiLaunchFragment.makeRoute(
+            canvasContext,
+            ltiTool?.url ?: "",
+            title,
+            isAssignmentLTI = true,
+            ltiTool = ltiTool
+        ))
     }
 
     fun showQuizStartView(canvasContext: CanvasContext, quiz: Quiz) {

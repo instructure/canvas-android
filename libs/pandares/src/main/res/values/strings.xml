@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Attempts Used</string>
     <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
+    <string name="launchingExternalTool">Launching External Tool…</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
     <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
@@ -97,6 +98,8 @@
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
     <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
     <string name="noOnlineSubmissions">No Online Submissions</string>
+    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
+    <string name="openTool">Open Tool</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
