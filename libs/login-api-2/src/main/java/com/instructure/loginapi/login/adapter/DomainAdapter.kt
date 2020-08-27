@@ -77,7 +77,7 @@ class DomainAdapter(private val callback: DomainEvents) : RecyclerView.Adapter<R
 
         @Suppress("UNCHECKED_CAST")
         override fun publishResults(constraint: CharSequence, results: FilterResults) {
-            displayAccounts = results.values as MutableList<AccountDomain>
+            displayAccounts = results.values as? MutableList<AccountDomain> ?: mutableListOf()
             if (constraint.length >= 3) displayAccounts.add(AccountDomain()) // Help Footer
             notifyDataSetChanged()
         }
