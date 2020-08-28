@@ -101,6 +101,14 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         waitForDiscussionTopicToDisplay(name)
     }
 
+    fun createAnnouncement(name: String, description: String) {
+        createNewDiscussion.click()
+        onView(withId(R.id.announcementNameEditText)).perform(DirectlyPopulateEditText(name))
+        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
+        onView(withId(R.id.menuSaveAnnouncement)).perform(explicitClick())
+        waitForDiscussionTopicToDisplay(name)
+    }
+
     fun pullToUpdate() {
         // I don't think that we need to worry about scrolling to the top first,
         // but we may at some point.

@@ -18,13 +18,15 @@ package com.instructure.student.ui.interaction
 
 import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
 import com.instructure.canvas.espresso.mockCanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
@@ -576,6 +578,80 @@ class DiscussionsInteractionTest : StudentTest() {
                 WebViewTextCheck(Locator.ID, "p1", "The only thing we have to fear"))
 
     }
+
+    // Tests that we can create an announcement (as teacher).
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testAnnouncement_create() {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+
+        val announcementsTab = Tab(position = 2, label = "Announcements", visibility = "public", tabId = Tab.ANNOUNCEMENTS_ID)
+        data.courseTabs[course.id]!! += announcementsTab
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission(canCreateAnnouncement = true)
+        )
+
+        val announcement = data.addDiscussionTopicToCourse(
+                course = course,
+                user = teacher,
+                isAnnouncement = true
+        )
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAnnouncements()
+        discussionListPage.assertTopicDisplayed(announcement.title!!)
+        discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic")
+    }
+
+    // Tests a discussion with a linked assignment.
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION, false)
+    fun testDiscussion_linkedAssignment() {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val teacher = data.teachers[0]
+        val assignmentName = "Assignment up for discussion"
+
+        // Make sure we have a discussions tab
+        val discussionsTab = Tab(position = 2, label = "Discussions", visibility = "public", tabId = Tab.DISCUSSIONS_ID)
+        data.courseTabs[course.id]!! += discussionsTab
+
+        // Add an assignment
+        val assignment = data.addAssignment(
+                courseId = course.id,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                name = assignmentName,
+                pointsPossible = 12
+        )
+
+        // Now create a discussion associated with the assignment
+        val discussion = data.addDiscussionTopicToCourse(
+                course = course,
+                user = teacher,
+                assignment = assignment
+        )
+
+        // Sign in
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        // Navigate to discussions
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.selectTopic(discussion.title!!)
+        discussionDetailsPage.assertPointsPossibleDisplayed(assignment.pointsPossible.toInt().toString())
+    }
+
 
     //
     // Utilities
