@@ -79,10 +79,6 @@
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".activities.LTIActivity"
-            android:configChanges="orientation|screenSize"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
         <activity
             android:name=".activities.RouteValidatorActivity"
             android:launchMode="singleTop"

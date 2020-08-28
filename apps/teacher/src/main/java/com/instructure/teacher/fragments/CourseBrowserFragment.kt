@@ -253,10 +253,10 @@ class CourseBrowserFragment : BaseSyncFragment<
                                 Route(AttendanceListFragment::class.java, presenter.canvasContext, args)
                             )
                         } else {
-                            val args = LTIWebViewFragment.makeLTIBundle(tab)
+                            val args = LtiLaunchFragment.makeTabBundle(presenter.canvasContext, tab)
                             RouteMatcher.route(
                                 requireContext(),
-                                Route(LTIWebViewFragment::class.java, presenter.canvasContext, args)
+                                Route(LtiLaunchFragment::class.java, presenter.canvasContext, args)
                             )
                         }
                     }

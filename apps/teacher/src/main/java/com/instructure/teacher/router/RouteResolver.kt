@@ -144,8 +144,8 @@ object RouteResolver {
             fragment = FeatureFlagsFragment()
         } else if (RemoteConfigParamsFragment::class.java.isAssignableFrom(cls)) {
             fragment = RemoteConfigParamsFragment()
-        } else if (LTIWebViewFragment::class.java.isAssignableFrom(cls)) {
-            fragment = LTIWebViewFragment.newInstance(route.arguments)
+        } else if (LtiLaunchFragment::class.java.isAssignableFrom(cls)) {
+            fragment = LtiLaunchFragment.newInstance(route.arguments)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {
             fragment = PeopleListFragment.newInstance(canvasContext!!)
         } else if (StudentContextFragment::class.java.isAssignableFrom(cls)) {

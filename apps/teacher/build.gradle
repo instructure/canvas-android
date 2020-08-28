@@ -250,6 +250,7 @@ dependencies {
 
     /* Support libs */
     implementation Libs.ANDROIDX_APPCOMPAT
+    implementation Libs.ANDROIDX_BROWSER
     implementation Libs.ANDROIDX_CARDVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.ANDROIDX_DESIGN
