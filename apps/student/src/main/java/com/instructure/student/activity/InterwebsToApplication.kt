@@ -68,7 +68,7 @@ class InterwebsToApplication : AppCompatActivity() {
             return
         }
 
-        loadRoute(data, url)
+        loadRoute(data, url!!)
     }
 
     private fun loadRoute(data: Uri, url: String) {

@@ -117,8 +117,8 @@ class RCEFragment : Fragment() {
     private fun setupViews() {
         rcEditor.setPadding(10, 10, 10, 10)
         rcEditor.applyHtml(
-                arguments!!.getString(HTML_CONTENT),
-                arguments!!.getString(HTML_ACCESSIBILITY_TITLE))
+                arguments!!.getString(HTML_CONTENT) ?: "",
+                arguments!!.getString(HTML_ACCESSIBILITY_TITLE) ?: "")
 
         with(rceToolbar) {
             title = arguments!!.getString(HTML_TITLE)

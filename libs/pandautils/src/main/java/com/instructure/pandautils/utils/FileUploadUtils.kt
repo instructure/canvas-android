@@ -189,8 +189,10 @@ object FileUploadUtils {
             output = FileOutputStream(tempFilePath)
             var read: Int
             val bytes = ByteArray(4096)
-            while (input.read(bytes).also { read = it } != -1) {
-                output.write(bytes, 0, read)
+            if (input != null) {
+                while (input.read(bytes).also { read = it } != -1) {
+                    output.write(bytes, 0, read)
+                }
             }
             // return the filepath of our copied file.
             file = File(tempFilePath)

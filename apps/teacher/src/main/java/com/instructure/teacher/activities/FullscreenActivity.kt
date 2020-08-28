@@ -60,7 +60,7 @@ class FullscreenActivity : BaseAppCompatActivity(), RCEFragment.RCEFragmentCallb
         setContentView(R.layout.activity_fullscreen)
 
         if (savedInstanceState == null) {
-            mRoute = intent.extras.getParcelable(Route.ROUTE)
+            mRoute = intent.extras!!.getParcelable(Route.ROUTE)
             mRoute?.let { handleRoute(it) }
 
             if (mRoute == null) {

@@ -141,7 +141,7 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
         }
     }
 
-    override fun getPresenterFactory() = ChooseRecipientsPresenterFactory(nonNullArgs.getString(CONTEXT_ID))
+    override fun getPresenterFactory() = ChooseRecipientsPresenterFactory(nonNullArgs.getString(CONTEXT_ID)!!)
 
     override fun onPresenterPrepared(presenter: ChooseRecipientsPresenter) {
         mRecyclerView = RecyclerViewUtils.buildRecyclerView(requireActivity().window.decorView.rootView,

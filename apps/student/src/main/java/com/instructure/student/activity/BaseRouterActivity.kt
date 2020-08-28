@@ -114,7 +114,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                             } else if (loadedMedia.intent != null) {
                                 if (loadedMedia.intent!!.type!!.contains("pdf")) {
                                     val uri = loadedMedia.intent!!.data
-                                    FileUtils.showPdfDocument(uri, loadedMedia, context)
+                                    FileUtils.showPdfDocument(uri!!, loadedMedia, context)
                                 } else {
                                     context.startActivity(loadedMedia.intent)
                                 }
@@ -147,7 +147,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         Logger.logBundle(extras)
 
         if (extras.containsKey(Route.ROUTE)) {
-            handleRoute(extras.getParcelable(Route.ROUTE) as Route)
+            handleRoute(extras.getParcelable(Route.ROUTE)!!)
             return
         }
 

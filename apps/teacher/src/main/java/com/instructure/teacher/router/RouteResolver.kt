@@ -189,7 +189,7 @@ object RouteResolver {
             AssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, route.arguments)
         } else {
             //parse the route to get the assignment id
-            val assignmentId = java.lang.Long.parseLong(route.paramsHash[RouterParams.ASSIGNMENT_ID])
+            val assignmentId = java.lang.Long.parseLong(route.paramsHash[RouterParams.ASSIGNMENT_ID]!!)
             val args = AssignmentDetailsFragment.makeBundle(assignmentId)
             AssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, args)
         }

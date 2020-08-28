@@ -61,7 +61,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_master_detail)
 
-        mRoute = intent.extras.getParcelable<Route>(Route.ROUTE)
+        mRoute = intent.extras!!.getParcelable<Route>(Route.ROUTE)
 
         if (mRoute == null) {
             finish()

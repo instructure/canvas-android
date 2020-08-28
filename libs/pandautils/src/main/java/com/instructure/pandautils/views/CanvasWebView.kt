@@ -235,7 +235,7 @@ class CanvasWebView @JvmOverloads constructor(
             if (item.itemId == COPY_LINK_ID) {
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText(context.getString(R.string.link), result.extra)
-                clipboard.primaryClip = clip
+                clipboard.setPrimaryClip(clip)
 
                 // Let the user know
                 Toast.makeText(context, context.getString(R.string.linkCopied), Toast.LENGTH_SHORT).show()
@@ -452,12 +452,12 @@ class CanvasWebView @JvmOverloads constructor(
         }
     }
 
-    override fun loadData(data: String, mimeType: String, encoding: String) {
+    override fun loadData(data: String?, mimeType: String?, encoding: String?) {
         addJavascriptInterface()
         super.loadData(data, mimeType, encoding)
     }
 
-    override fun loadDataWithBaseURL(url: String, data: String, mimeType: String, encoding: String, history: String?) {
+    override fun loadDataWithBaseURL(history: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
         addJavascriptInterface()
         super.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
@@ -632,8 +632,8 @@ class CanvasWebView @JvmOverloads constructor(
 
     fun handleOnActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (requestCode == VIDEO_PICKER_RESULT_CODE && filePathCallback != null) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                val results = arrayOf(data.data)
+            if (resultCode == Activity.RESULT_OK && data?.data != null) {
+                val results = arrayOf(data.data!!)
                 filePathCallback?.onReceiveValue(results)
             } else {
                 filePathCallback?.onReceiveValue(null)

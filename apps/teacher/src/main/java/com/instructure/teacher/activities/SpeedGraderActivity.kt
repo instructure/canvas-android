@@ -66,19 +66,18 @@ import java.util.*
 class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGraderView>(), SpeedGraderView {
 
     /* These should be passed to the presenter factory and should not be directly referenced otherwise */
-    private val courseId: Long by lazy { intent.extras.getLong(Const.COURSE_ID) }
-    private val assignmentId: Long by lazy { intent.extras.getLong(Const.ASSIGNMENT_ID) }
-    private val submissionId: Long by lazy { intent.extras.getLong(RouterParams.SUBMISSION_ID) }
-    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
-    private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
+    private val courseId: Long by lazy { intent.extras!!.getLong(Const.COURSE_ID) }
+    private val assignmentId: Long by lazy { intent.extras!!.getLong(Const.ASSIGNMENT_ID) }
+    private val submissionId: Long by lazy { intent.extras!!.getLong(RouterParams.SUBMISSION_ID) }
+    private val submissions: ArrayList<GradeableStudentSubmission> by lazy { intent.extras!!.getParcelableArrayList<GradeableStudentSubmission>(Const.SUBMISSION) ?: arrayListOf() }
+    private val discussionTopicHeader: DiscussionTopicHeader? by lazy { intent.extras!!.getParcelable<DiscussionTopicHeader>(Const.DISCUSSION_HEADER) }
 
-    private val initialSelection: Int by lazy { intent.extras.getInt(Const.SELECTED_ITEM, 0) }
+    private val initialSelection: Int by lazy { intent.extras!!.getInt(Const.SELECTED_ITEM, 0) }
     private var currentSelection = 0
     private var previousSelection = 0
 
     // Used for keeping track of the page that is asking for media permissions from SubmissionContentView
     private var assigneeId: Long = -1L
-    private var needToForceNetwork: Boolean = false
 
     // Used in the SubmissionViewFragments in the ViewPager to handle issues with sliding panel
     var isCurrentlyAnnotating = false
@@ -313,7 +312,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
         }
 
         fun createIntent(context: Context, route: Route): Intent {
-            val intent = Intent(context, SpeedGraderActivity::class.java).apply {
+            return Intent(context, SpeedGraderActivity::class.java).apply {
                 if(!route.arguments.isEmpty) {
                     putExtras(route.arguments)
                 } else {
@@ -326,9 +325,6 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                     })
                 }
             }
-
-
-            return intent
         }
 
         fun createIntent(context: Context, courseId: Long, assignmentId: Long, submissionId: Long) = Intent(context, SpeedGraderActivity::class.java).apply {
