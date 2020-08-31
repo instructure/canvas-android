@@ -58,14 +58,19 @@
                 android:id="@+id/announcementNameTextInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:labelFor="@+id/announcementNameEditText"
-                android:contentDescription="@string/title"
                 android:layout_marginEnd="6dp"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
                 android:textColorHint="@color/defaultTextGray"
                 app:hintTextAppearance="@style/TextInputLabel">
+
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/title"
+                    android:labelFor="@id/announcementNameEditText"
+                    android:visibility="gone"/>
 
                 <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/announcementNameEditText"

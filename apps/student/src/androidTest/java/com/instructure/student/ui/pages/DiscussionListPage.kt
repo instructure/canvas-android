@@ -17,11 +17,16 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withParent
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.DirectlyPopulateEditText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
@@ -101,12 +106,28 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
         waitForDiscussionTopicToDisplay(name)
     }
 
-    fun createAnnouncement(name: String, description: String) {
+    fun createAnnouncement(name: String, description: String, verify: Boolean = true) {
         createNewDiscussion.click()
         onView(withId(R.id.announcementNameEditText)).perform(DirectlyPopulateEditText(name))
         onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(description))
         onView(withId(R.id.menuSaveAnnouncement)).perform(explicitClick())
-        waitForDiscussionTopicToDisplay(name)
+
+        if(verify) {
+            var expectedTitle = name
+            if (name.isNullOrEmpty()) {
+                expectedTitle = InstrumentationRegistry.getInstrumentation().targetContext.resources.getString(R.string.utils_noTitle)
+            }
+            waitForDiscussionTopicToDisplay(expectedTitle)
+        }
+    }
+
+    fun launchCreateAnnouncementThenClose() {
+        createNewDiscussion.click()
+        onView(withContentDescription("Close")).click()
+    }
+
+    fun verifyExitWithoutSavingDialog() {
+        onView(withText(R.string.exitWithoutSavingMessage)).check(matches(isDisplayed()))
     }
 
     fun pullToUpdate() {
@@ -117,6 +138,10 @@ class DiscussionListPage : BasePage(R.id.discussionListPage) {
 
     fun assertDiscussionCreationDisabled() {
         onView(withId(R.id.createNewDiscussion)).assertNotDisplayed()
+    }
+
+    fun assertOnNewAnnouncementPage() {
+        onView(withText(R.string.newAnnouncement)).assertDisplayed()
     }
 
 }
