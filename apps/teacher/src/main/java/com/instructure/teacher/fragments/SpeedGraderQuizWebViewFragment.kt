@@ -22,17 +22,20 @@ import android.os.Bundle
 import android.webkit.WebView
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.interactions.router.RouteContext.FILE
+import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
-import com.instructure.pandautils.utils.LongArg
-import com.instructure.pandautils.utils.toast
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import kotlinx.android.synthetic.main.fragment_internal_webview.*
@@ -53,6 +56,7 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
         // Lock to portrait orientation due to the WebView not saving state
         (requireContext() as Activity).requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
+        setShouldAuthenticateUponLoad(true)
         setShouldRouteInternally(false)
         setShouldLoadUrl(false)
         canvasWebView.setInitialScale(100)
@@ -60,6 +64,13 @@ class SpeedGraderQuizWebViewFragment : InternalWebViewFragment() {
 
         val originalCallback = canvasWebView.canvasWebViewClientCallback!!
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback by originalCallback {
+            override fun canRouteInternallyDelegate(url: String): Boolean {
+                // Allow internal routing for canvas file links, otherwise openMediaFromWebView will be called
+                // with the redirect URL and we won't have the metadata needed to properly view the file
+                val isFileRoute = RouteMatcher.getInternalRoute(url, ApiPrefs.domain)?.routeContext == FILE
+                return isFileRoute || originalCallback.canRouteInternallyDelegate(url)
+            }
+
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 originalCallback.onPageFinishedCallback(webView, url)
                 if ("score_updated=1" in url) {
