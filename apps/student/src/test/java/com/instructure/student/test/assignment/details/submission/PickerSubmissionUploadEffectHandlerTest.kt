@@ -16,6 +16,7 @@
 package com.instructure.student.test.assignment.details.submission
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
@@ -23,6 +24,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.getVideoIntent
+import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadView
 import com.instructure.student.mobius.common.ui.SubmissionService
@@ -107,7 +110,9 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
-        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Context>().isIntentAvailable(any()) } returns true
 
         mockkObject(PermissionUtils)
         every { PermissionUtils.hasPermissions(context, *anyVararg()) } returns true
@@ -125,7 +130,7 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
 
         connection.accept(PickerSubmissionUploadEffect.LaunchCamera)
 
-        verify(timeout = 100) {
+         verify(timeout = 100) {
             context.startActivityForResult(intent, PickerSubmissionUploadEffectHandler.REQUEST_CAMERA_PIC)
         }
 
