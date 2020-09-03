@@ -63,6 +63,13 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
   Widget build(BuildContext context) {
     return StudentTheme(
       builder: (context, themeData) => MaterialApp(
+        builder: (context, widget) {
+          // Workaround for scroll physics bug, see [_ParentlessScrollBehavior]
+          return ScrollConfiguration(
+            behavior: _ParentlessScrollBehavior(),
+            child: widget,
+          );
+        },
         debugShowCheckedModeBanner: false,
         navigatorKey: _navKey,
         title: '',
@@ -101,4 +108,52 @@ class _StudentFlutterAppState extends State<StudentFlutterApp> {
 
         return resolvedLocale;
       };
+}
+
+/// A modified version of [_MaterialScrollBehavior] that works around a very odd bug where the contents of scrollable
+/// containers (most notably PageViews) will stop rendering once there are more than two or three concurrent instances
+/// of our calendar fragment. This bug is likely specific to our particular method of embedding Flutter.
+///
+/// For future reference, the behavior causing this bug was tracked to the following pull request:
+///     https://github.com/flutter/flutter/pull/56521 (Flutter commit 98bc176)
+///
+/// The behavior appears to be related to the use of [RangeMaintainingScrollPhysics] as the parent of the default
+/// default scroll physics, which in the case of Material apps is [ClampingScrollPhysics]. As such, the workaround
+/// for this bug is to globally change that default to a parent-less instance of [ClampingScrollPhysics] by wrapping
+/// the app contents in a [ScrollConfiguration] whose scroll behavior (this class) provides said default.
+///
+/// This class was copied verbatim from flutter/packages/flutter/lib/src/material/app.dart at Flutter version 1.20.2,
+/// with the only modification being the addition of the overridden `getScrollPhysics` method.
+class _ParentlessScrollBehavior extends ScrollBehavior {
+  @override
+  TargetPlatform getPlatform(BuildContext context) {
+    return Theme.of(context).platform;
+  }
+
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    // Return ClampingScrollPhysics without the RangeMaintainingScrollPhysics parent
+    return const ClampingScrollPhysics();
+  }
+
+  @override
+  Widget buildViewportChrome(BuildContext context, Widget child, AxisDirection axisDirection) {
+    // When modifying this function, consider modifying the implementation in
+    // the base class as well.
+    switch (getPlatform(context)) {
+      case TargetPlatform.iOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+      case TargetPlatform.windows:
+        return child;
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+        return GlowingOverscrollIndicator(
+          child: child,
+          axisDirection: axisDirection,
+          color: Theme.of(context).accentColor,
+        );
+    }
+    return null;
+  }
 }
