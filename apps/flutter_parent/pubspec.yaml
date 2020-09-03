@@ -32,7 +32,7 @@ module:
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
-  flutter: 1.20.2
+  flutter: 1.20.3
 
 dependencies:
   flutter:
