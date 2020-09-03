@@ -22,6 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../utils/accessibility_utils.dart';
+import '../../utils/platform_config.dart';
 import '../../utils/test_app.dart';
 import '../../utils/test_helpers/mock_helpers.dart';
 
@@ -34,7 +35,9 @@ void main() {
     locator.registerLazySingleton<QuickNav>(() => nav);
   });
 
-  setUp(() {
+  setUp(() async {
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'qr_pair_observer_enabled': 'true'});
+    await setupPlatformChannels(config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
     reset(nav);
   });
 
