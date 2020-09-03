@@ -139,9 +139,9 @@ sealed class GradeCellViewState {
 
             val stats = assignment.scoreStatistics
             if (stats != null) {
-                val minStr = "Min: ${NumberHelper.formatDecimal(stats.min, 1, true)}"
-                val maxStr = "Max: ${NumberHelper.formatDecimal(stats.max, 1, true)}"
-                val meanStr = "Avg: ${NumberHelper.formatDecimal(stats.mean, 1, true)}"
+                val minStr = "Low: ${NumberHelper.formatDecimal(stats.min, 1, true)}"
+                val maxStr = "High: ${NumberHelper.formatDecimal(stats.max, 1, true)}"
+                val meanStr = "Mean: ${NumberHelper.formatDecimal(stats.mean, 1, true)}"
 
                 return GradeData(
                         graphPercent = graphPercent,
