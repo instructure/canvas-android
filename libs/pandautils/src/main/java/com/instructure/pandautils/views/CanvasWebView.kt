@@ -40,7 +40,6 @@ import android.os.*
 import android.provider.MediaStore
 import android.text.Html
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Patterns
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -480,7 +479,7 @@ class CanvasWebView @JvmOverloads constructor(
      */
     fun loadHtml(html: String, contentDescription: String?): String {
         val result = formatHtml(html)
-        loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
+        loadDataWithBaseURL(getReferrer(false), result, "text/html", encoding, getHtmlAsUrl(result))
         setupAccessibilityContentDescription(result, contentDescription)
         return result
     }
