@@ -460,6 +460,15 @@ fun MockCanvas.addGradingPeriod(courseId : Long, gradingPeriod: GradingPeriod) {
 /** Adds the provided permissions to the course */
 fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPermission) {
     coursePermissions[courseId] = permissions
+
+    // Let's go ahead and attach these permissions to the course in question
+    val course = courses[courseId]
+    course?.permissions = permissions
+}
+
+fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdateAvatar: Boolean) {
+    val user = users[userId]
+    user?.permissions = CanvasContextPermission(canUpdateAvatar = canUpdateAvatar, canUpdateName = canUpdateName)
 }
 
 /**
@@ -1158,7 +1167,8 @@ fun MockCanvas.addDiscussionTopicToCourse(
         attachment: RemoteFile? = null,
         isAnnouncement: Boolean = false,
         sections: List<Section> = listOf(),
-        groupId: Long? = null
+        groupId: Long? = null,
+        assignment: Assignment? = null
 ) : DiscussionTopicHeader {
 
     var topicHeader = prePopulatedTopicHeader
@@ -1182,6 +1192,8 @@ fun MockCanvas.addDiscussionTopicToCourse(
     }
     topicHeader.announcement = isAnnouncement
     topicHeader.sections = sections
+    topicHeader.assignment = assignment
+    topicHeader.assignmentId = assignment?.id ?: 0L
 
     var topicHeaderList = if(groupId != null) groupDiscussionTopicHeaders[groupId] else courseDiscussionTopicHeaders[course.id]
     if(topicHeaderList == null) {

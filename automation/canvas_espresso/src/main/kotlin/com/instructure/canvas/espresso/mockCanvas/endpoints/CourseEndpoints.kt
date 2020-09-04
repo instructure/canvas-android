@@ -385,7 +385,8 @@ object CourseDiscussionTopicListEndpoint : Endpoint(
                         topicDescription = newHeader.message!!, // or else it will be defaulted to something random
                         allowRating = data.discussionRatingsEnabled,
                         allowReplies = data.discussionRepliesEnabled,
-                        allowAttachments = data.discussionAttachmentsEnabled
+                        allowAttachments = data.discussionAttachmentsEnabled,
+                        isAnnouncement = newHeader.announcement
                 )
                 Log.d("<--", "new discussion topic request body: $jsonObject")
                 Log.d("<--", "new header: $newHeader")

@@ -181,6 +181,12 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         Espresso.pressBack()
     }
 
+    fun assertUserLoggedIn(userName: String) {
+        onView(hamburgerButtonMatcher).click()
+        onViewWithText(userName).assertDisplayed()
+        Espresso.pressBack()
+    }
+
     fun assertUnreadEmails(count: Int) {
         onView(allOf(withParent(R.id.bottomNavigationInbox), withId(R.id.badge), withText(count.toString()))).assertDisplayed()
     }

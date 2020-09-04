@@ -140,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Enter your Canvas URL:</string>
+    <string name="enterValue">Enter a value</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
     <string name="mobileVerifyGeneral">This app is not authorized for use</string>
