@@ -21,7 +21,6 @@ import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
@@ -55,6 +54,7 @@ class GradeCellView @JvmOverloads constructor(
             GradeCellViewState.Submitted -> {
                 submittedState.setVisible()
                 gradeState.setGone()
+                statsContainer.setGone()
             }
             is GradeCellViewState.GradeData -> {
                 submittedState.setGone()
@@ -83,12 +83,17 @@ class GradeCellView @JvmOverloads constructor(
                 chart.setPercentage(state.graphPercent, true)
 
                 // Statistics
-                statisticsView.setVisible(state.showStatistics)
-                statisticsTextContainer.setVisible(state.showStatistics)
-                minLabel.setTextForVisibility(state.statisticsMinText)
-                maxLabel.setTextForVisibility(state.statisticsMaxText)
-                meanLabel.setTextForVisibility(state.statisticsMeanText)
-                statisticsView.setState(state)
+                if (state.stats == null) {
+                    statsContainer.setGone()
+                } else {
+                    statsContainer.setVisible()
+                    minLabel.setTextForVisibility(state.stats.minText)
+                    maxLabel.setTextForVisibility(state.stats.maxText)
+                    meanLabel.setTextForVisibility(state.stats.meanText)
+                    statisticsView.setAccentColor(state.accentColor)
+                    statisticsView.setStats(state.stats)
+                }
+
             }
         }
     }

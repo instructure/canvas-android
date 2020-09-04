@@ -21,7 +21,6 @@ import android.graphics.Color
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.AssignmentScoreStatistics
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorKeeper
@@ -35,26 +34,29 @@ sealed class GradeCellViewState {
         val showCompleteIcon: Boolean = false,
         val showIncompleteIcon: Boolean = false,
         val showPointsLabel: Boolean = false,
-        val showStatistics: Boolean = false,
         @ColorInt val accentColor: Int = Color.GRAY,
         val graphPercent: Float = 0f,
         val score: String = "",
         val grade: String = "",
-        val scoreDouble: Double = 0.0,
         val gradeContentDescription: String = "",
         val gradeCellContentDescription: String = "",
         val outOf: String = "",
-        val outOfDouble: Double = 0.0,
         val outOfContentDescription: String = "",
         val latePenalty: String = "",
         val finalGrade: String = "",
-        val statisticsMin: Double? = null,
-        val statisticsMax: Double? = null,
-        val statisticsMean: Double? = null,
-        val statisticsMinText: String = "",
-        val statisticsMaxText: String = "",
-        val statisticsMeanText: String = ""
+        val stats: GradeStats? = null
     ) : GradeCellViewState()
+
+    data class GradeStats(
+        val score: Double = 0.0,
+        val outOf: Double = 0.0,
+        val min: Double? = null,
+        val max: Double? = null,
+        val mean: Double? = null,
+        val minText: String = "",
+        val maxText: String = "",
+        val meanText: String = ""
+    )
 
     companion object {
         /**
@@ -137,33 +139,26 @@ sealed class GradeCellViewState {
                 finalGrade = context.getString(R.string.finalGradeFormatted, submission.grade)
             }
 
-            val stats = assignment.scoreStatistics
-            if (stats != null) {
-                val minStr = context.getString(R.string.scoreStatisticsLow, NumberHelper.formatDecimal(stats.min, 1, true))
-                val maxStr = context.getString(R.string.scoreStatisticsHigh, NumberHelper.formatDecimal(stats.max, 1, true))
-                val meanStr = context.getString(R.string.scoreStatisticsMean, NumberHelper.formatDecimal(stats.mean, 1, true))
-
-                return GradeData(
-                        graphPercent = graphPercent,
-                        accentColor = accentColor,
-                        score = score,
-                        scoreDouble = submission.enteredScore,
-                        showPointsLabel = true,
-                        outOf = outOfText,
-                        outOfDouble = assignment.pointsPossible,
-                        outOfContentDescription = outOfContentDescriptionText,
-                        grade = grade,
-                        gradeContentDescription = accessibleGradeString,
-                        gradeCellContentDescription = gradeCellContentDescription,
-                        latePenalty = latePenalty,
-                        finalGrade = finalGrade,
-                        statisticsMin = stats.min,
-                        statisticsMax = stats.max,
-                        statisticsMean = stats.mean,
-                        statisticsMinText = minStr,
-                        statisticsMaxText = maxStr,
-                        statisticsMeanText = meanStr,
-                        showStatistics = true
+            // Grade statistics
+            val stats = assignment.scoreStatistics?.let { stats ->
+                GradeStats(
+                    score = submission.enteredScore,
+                    outOf = assignment.pointsPossible,
+                    min = stats.min,
+                    max = stats.max,
+                    mean = stats.mean,
+                    minText = context.getString(
+                        R.string.scoreStatisticsLow,
+                        NumberHelper.formatDecimal(stats.min, 1, true)
+                    ),
+                    maxText = context.getString(
+                        R.string.scoreStatisticsHigh,
+                        NumberHelper.formatDecimal(stats.max, 1, true)
+                    ),
+                    meanText = context.getString(
+                        R.string.scoreStatisticsMean,
+                        NumberHelper.formatDecimal(stats.mean, 1, true)
+                    )
                 )
             }
 
@@ -171,16 +166,15 @@ sealed class GradeCellViewState {
                 graphPercent = graphPercent,
                 accentColor = accentColor,
                 score = score,
-                scoreDouble = submission.enteredScore,
                 showPointsLabel = true,
                 outOf = outOfText,
-                outOfDouble = assignment.pointsPossible,
                 outOfContentDescription = outOfContentDescriptionText,
                 grade = grade,
                 gradeContentDescription = accessibleGradeString,
                 gradeCellContentDescription = gradeCellContentDescription,
                 latePenalty = latePenalty,
-                finalGrade = finalGrade
+                finalGrade = finalGrade,
+                stats = stats
             )
         }
     }

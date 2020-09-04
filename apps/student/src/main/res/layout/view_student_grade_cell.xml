@@ -172,57 +172,61 @@
         </LinearLayout>
 
     </LinearLayout>
-    <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
-        android:id="@+id/statisticsView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="100dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:visibility="gone">
-
-    </com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView>
 
     <LinearLayout
+        android:id="@+id/statsContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="50px"
-        android:id="@+id/statisticsTextContainer">
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/minLabel"
-            android:layout_width="wrap_content"
+        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
+            android:id="@+id/statisticsView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/defaultTextDark"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Mean: 7.2"
-            android:layout_weight="1"/>
+            android:padding="16dp" />
 
-        <TextView
-            android:id="@+id/meanLabel"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/statisticsTextContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/defaultTextDark"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Min: 1.0"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/maxLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/defaultTextDark"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            tools:text="Max: 9.5"
-            android:layout_weight="1"/>
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/minLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="start"
+                tools:text="Low: 1.0" />
+
+            <TextView
+                android:id="@+id/meanLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="center"
+                tools:text="Mean: 7.2" />
+
+            <TextView
+                android:id="@+id/maxLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="end"
+                tools:text="High: 9.5" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

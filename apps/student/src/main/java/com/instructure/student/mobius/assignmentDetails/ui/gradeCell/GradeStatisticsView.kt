@@ -4,114 +4,128 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.shapes.OvalShape
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.instructure.pandautils.utils.DP
 import com.instructure.student.R
 
 class GradeStatisticsView(context: Context, attrs: AttributeSet) : View(context, attrs) {
-    private var gradeData: GradeCellViewState.GradeData? = null;
+    private var stats: GradeCellViewState.GradeStats? = null
 
-    private val linePaint: Paint = Paint().apply {
+    private val sidePadding: Float = context.DP(16)
+    private val endMarkerHeight: Float = context.DP(16)
+    private val minMaxHeight: Float = context.DP(16)
+    private val scoreCircleRadius: Float = context.DP(7)
+    private val viewHeight: Int = context.DP(36).toInt()
+
+    private val linePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeCap = Paint.Cap.ROUND
+        isAntiAlias = true
+        strokeWidth = context.DP(2)
+        color = ContextCompat.getColor(context, R.color.defaultTrackColor)
+    }
+
+    private val darkLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(
-                context,
-                R.color.canvasTextMedium
-        )
+        color = ContextCompat.getColor(context, R.color.gray)
     }
 
-    private val darkLinePaint: Paint = Paint().apply {
+    private val meanLinePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.ROUND
         isAntiAlias = true
         strokeWidth = context.DP(3)
-        color = ContextCompat.getColor(
-                context,
-                R.color.canvasTextDark
-        )
+        color = ContextCompat.getColor(context, R.color.darkerGray)
     }
 
-    private val meanLinePaint: Paint = Paint().apply {
-        style = Paint.Style.STROKE
-        strokeCap = Paint.Cap.ROUND
-        isAntiAlias = true
-        strokeWidth = context.DP(3)
-        color = Color.BLACK
-    }
-
-    private val circlePaint: Paint = Paint().apply {
-        color = ContextCompat.getColor(
-                context,
-                R.color.canvasDefaultAccent
-        )
+    private val circlePaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = ContextCompat.getColor(context, R.color.canvasDefaultAccent)
         style = Paint.Style.FILL
     }
 
-    fun setState(state: GradeCellViewState.GradeData) {
-        gradeData = state
+    init {
+        if (isInEditMode) {
+            stats = GradeCellViewState.GradeStats(
+                score = 81.0,
+                outOf = 100.0,
+                min = 38.0,
+                max = 97.0,
+                mean = 76.0,
+                minText = "Low: 38",
+                maxText = "High: 97",
+                meanText = "Mean: 76"
+            )
+        }
+    }
 
+    fun setAccentColor(@ColorInt color: Int) {
+        circlePaint.color = color
         invalidate()
     }
 
-
-    private val SIDE_PAD = 20.0f
-    private val ENDMARKER_HEIGHT = 20.0f
-    private val MINMAX_HEIGHT = 15.0f
-
-    private val MAX_HEIGHT = 200
-
+    fun setStats(stats: GradeCellViewState.GradeStats) {
+        this.stats = stats
+        invalidate()
+    }
 
     override fun onDraw(canvas: Canvas) {
-        val maxPossible = gradeData?.outOfDouble ?: return
+        val maxPossible = stats?.outOf ?: return
 
-        val range = 0.0 .. maxPossible
+        val range = 0.0..maxPossible
 
-        val minScore = gradeData?.statisticsMin?.coerceIn(range)
-        val maxScore = gradeData?.statisticsMax?.coerceIn(range)
-        val meanScore= gradeData?.statisticsMean?.coerceIn(range)
-        val youScore= gradeData?.scoreDouble?.coerceIn(range)
+        val minScore = stats?.min?.coerceIn(range) ?: return
+        val maxScore = stats?.max?.coerceIn(range) ?: return
+        val meanScore = stats?.mean?.coerceIn(range) ?: return
+        val youScore = stats?.score?.coerceIn(range) ?: return
 
-
-        if (minScore == null || maxScore == null || meanScore == null || youScore == null || maxPossible == null) {
-            return;
-        }
-
-        val centerY = canvas.height / 2.0f
+        val centerY = height / 2.0f
 
         // Draw centerline
-        canvas.drawLine(SIDE_PAD, centerY, canvas.width - SIDE_PAD, centerY, linePaint)
+        canvas.drawLine(sidePadding, centerY, width - sidePadding, centerY, linePaint)
 
         // Draw left and right bound
-        canvas.drawLine(SIDE_PAD, centerY + ENDMARKER_HEIGHT/2.0f, SIDE_PAD, centerY - ENDMARKER_HEIGHT/2.0f, linePaint)
-        canvas.drawLine(canvas.width - SIDE_PAD, centerY + ENDMARKER_HEIGHT/2.0f, canvas.width - SIDE_PAD, centerY - ENDMARKER_HEIGHT/2.0f, linePaint)
+        canvas.drawLine(
+            sidePadding,
+            centerY + endMarkerHeight / 2.0f,
+            sidePadding,
+            centerY - endMarkerHeight / 2.0f,
+            linePaint
+        )
+        canvas.drawLine(
+            width - sidePadding,
+            centerY + endMarkerHeight / 2.0f,
+            width - sidePadding,
+            centerY - endMarkerHeight / 2.0f,
+            linePaint
+        )
+
 
         // Draw Min/Max/Mean
-        val usableWidth = canvas.width - 2 * SIDE_PAD
-        val minX = ((minScore / maxPossible) * usableWidth + SIDE_PAD).toFloat()
-        val maxX = ((maxScore / maxPossible) * usableWidth + SIDE_PAD).toFloat()
-        val meanX = ((meanScore / maxPossible) * usableWidth + SIDE_PAD).toFloat()
-        val youX = ((youScore / maxPossible) * usableWidth + SIDE_PAD).toFloat()
-
-
-        canvas.drawLine( minX, centerY + MINMAX_HEIGHT/2.0f, minX,centerY - MINMAX_HEIGHT/2.0f, darkLinePaint)
-        canvas.drawLine( maxX, centerY + MINMAX_HEIGHT/2.0f, maxX,centerY - MINMAX_HEIGHT/2.0f, darkLinePaint)
-        canvas.drawLine( meanX, centerY + ENDMARKER_HEIGHT/2.0f, meanX,centerY - ENDMARKER_HEIGHT/2.0f, meanLinePaint)
+        val usableWidth = width - 2 * sidePadding
+        val minX = ((minScore / maxPossible) * usableWidth + sidePadding).toFloat()
+        val maxX = ((maxScore / maxPossible) * usableWidth + sidePadding).toFloat()
+        val meanX = ((meanScore / maxPossible) * usableWidth + sidePadding).toFloat()
+        val youX = ((youScore / maxPossible) * usableWidth + sidePadding).toFloat()
 
         // Draw darker line between min and max
         canvas.drawLine(minX, centerY, maxX, centerY, darkLinePaint)
 
-        // Draw your score
-        canvas.drawCircle(youX, centerY, 20.0f, circlePaint)
+        canvas.drawLine(minX, centerY + minMaxHeight / 2.0f, minX, centerY - minMaxHeight / 2.0f, darkLinePaint)
+        canvas.drawLine(maxX, centerY + minMaxHeight / 2.0f, maxX, centerY - minMaxHeight / 2.0f, darkLinePaint)
+        canvas.drawLine(meanX, centerY + endMarkerHeight / 2.0f, meanX, centerY - endMarkerHeight / 2.0f, meanLinePaint)
 
+        // Draw your score
+        canvas.drawCircle(youX, centerY, scoreCircleRadius, circlePaint)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        setMeasuredDimension(widthMeasureSpec, if (heightMeasureSpec < MAX_HEIGHT) heightMeasureSpec else MAX_HEIGHT)
+        val heightSpec = MeasureSpec.makeMeasureSpec(viewHeight, MeasureSpec.EXACTLY)
+        setMeasuredDimension(widthMeasureSpec, heightSpec)
     }
 }
