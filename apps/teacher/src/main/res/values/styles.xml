@@ -16,7 +16,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/teacher_colorPrimary</item>
         <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
@@ -82,77 +82,6 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
-    <style name="ChipAutocompleteWrapperStyle">
-        <item name="android:paddingLeft">@dimen/chip_wrapper_start_padding</item>
-        <item name="android:paddingTop">@dimen/chip_wrapper_top_padding</item>
-        <item name="android:paddingRight">@dimen/chip_wrapper_end_padding</item>
-        <item name="android:paddingBottom">@dimen/chip_wrapper_bottom_padding</item>
-    </style>
-
-    <style name="ChipAutocompleteDividerStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/chip_custom_divider_height</item>
-        <item name="android:background">@color/autocomplete_divider_color</item>
-        <item name="android:layout_marginLeft">@dimen/chip_wrapper_start_padding</item>
-    </style>
-
-    <style name="ChipTextViewLayoutStyle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
-    </style>
-
-    <style name="ChipTitleStyle">
-        <item name="android:id">@android:id/title</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:ellipsize">middle</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/chips_dropdown_title_text</item>
-        <item name="android:textSize">16sp</item>
-    </style>
-
-    <style name="ChipSubtitleStyle">
-        <item name="android:id">@android:id/text1</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:ellipsize">middle</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/chips_dropdown_subtitle_text</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="ChipIconBaseStyle">
-        <item name="android:id">@android:id/icon</item>
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:contentDescription">@null</item>
-    </style>
-
-    <style name="ChipStartIconStyle" parent="@style/ChipIconBaseStyle">
-        <item name="android:layout_marginRight">@dimen/chip_icon_margin_end</item>
-    </style>
-
-    <style name="ChipEndIconStyle" parent="@style/ChipIconBaseStyle">
-        <item name="android:layout_marginLeft">@dimen/chip_icon_margin_end</item>
-    </style>
-
-    <style name="ChipDeleteIconBaseStyle">
-        <item name="android:id">@android:id/icon1</item>
-        <item name="android:layout_width">36dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:paddingTop">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-    </style>
-
-    <style name="ChipDeleteIconStyle" parent="@style/ChipDeleteIconBaseStyle">
-        <item name="android:paddingLeft">8dp</item>
     </style>
 
     <style name="RoundedContextDialog" parent="Theme.AppCompat.Light.Dialog.Alert">

@@ -13,7 +13,6 @@ project(':flutter_student_embed').projectDir = new File(rootProject.projectDir, 
 include ':annotations'
 include ':blueprint'
 include ':canvas-api-2'
-include ':chips'
 include ":croutonlibrary"
 include ':dataseedingapi'
 include ':canvas_espresso'
@@ -31,7 +30,6 @@ include ':panda_processor'
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
 project(':blueprint').projectDir = new File(rootProject.projectDir, '/../libs/blueprint')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs/canvas-api-2')
-project(':chips').projectDir = new File(rootProject.projectDir, '/../libs/chips')
 project(':croutonlibrary').projectDir = new File(rootProject.projectDir, '/../libs/croutonlibrary')
 project(':dataseedingapi').projectDir = new File(rootProject.projectDir, '/../automation/dataseedingapi')
 project(':canvas_espresso').projectDir = new File(rootProject.projectDir, '/../automation/canvas_espresso')

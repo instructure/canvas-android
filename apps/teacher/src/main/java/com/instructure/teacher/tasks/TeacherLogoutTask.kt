@@ -20,17 +20,14 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.utils.TeacherPrefs
-import com.instructure.teacher.view.CanvasRecipientManager
 
 class TeacherLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
 
     override fun onCleanup() {
         TeacherPrefs.safeClearPrefs()
-        CanvasRecipientManager.getInstance().clearCache()
     }
 
     override fun createLoginIntent(context: Context): Intent {

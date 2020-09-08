@@ -16,7 +16,6 @@
 
 package com.instructure.teacher.presenters
 
-import com.android.ex.chips.RecipientEntry
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -41,10 +40,14 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
 
     private var mAPICalls: Job? = null
 
+    private var fetchedCourses: Boolean = false
+
     override fun loadData(forceNetwork: Boolean) {}
     override fun refresh(forceNetwork: Boolean) {}
 
     fun getAllCoursesAndGroups(forceNetwork: Boolean) {
+        // Skip if we have already fetched, to avoid resetting the course spinner
+        if (fetchedCourses && !forceNetwork) return
 
         mAPICalls = weave {
             viewCallback?.onRefreshStarted()
@@ -64,6 +67,7 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
                     }
 
                 }
+                fetchedCourses = true
                 viewCallback?.addCoursesAndGroups(courses!!, groups!!)
             } catch (ignore: Throwable) {
             }
@@ -84,32 +88,26 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
         }
     }
 
-    fun sendNewMessage(selectedRecipients: List<RecipientEntry>, message: String, subject: String, contextId: String, isBulk: Boolean) {
+    fun sendNewMessage(selectedRecipients: List<Recipient>, message: String, subject: String, contextId: String, isBulk: Boolean) {
 
         val attachmentIDs = LongArray(mAttachments.size)
         for (i in attachmentIDs.indices) {
             attachmentIDs[i] = mAttachments[i].id
         }
         // Assemble list of recipient IDs
-        val recipientIds = ArrayList<String>(selectedRecipients.size)
-        for (entry in selectedRecipients) {
-            recipientIds.add(entry.destination)
-        }
+        val recipientIds = selectedRecipients.mapNotNull { it.stringId }
 
         val encodedMessage = URLEncoder.encode(message, "UTF-8")
         val encodedSubject = URLEncoder.encode(subject, "UTF-8")
         InboxManager.createConversation(recipientIds, encodedMessage, encodedSubject, contextId, attachmentIDs, isBulk, mCreateConversationCallback)
     }
 
-    fun sendMessage(selectedRecipients: List<RecipientEntry>, message: String) {
+    fun sendMessage(selectedRecipients: List<Recipient>, message: String) {
 
         if (mAddConversationCallback.isCallInProgress) return
 
         // Assemble list of recipient IDs
-        val recipientIds = ArrayList<String>()
-        for (entry in selectedRecipients) {
-            recipientIds.add(entry.destination)
-        }
+        val recipientIds = selectedRecipients.mapNotNull { it.stringId }
 
         // Assemble list of attachment IDs
         val attachmentIDs = LongArray(mAttachments.size)
