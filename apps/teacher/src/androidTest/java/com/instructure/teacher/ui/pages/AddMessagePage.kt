@@ -16,23 +16,23 @@
  */
 package com.instructure.teacher.ui.pages
 
+import android.util.Log
+import androidx.test.espresso.matcher.ViewMatchers
+import com.google.android.material.chip.Chip
+import com.instructure.canvas.espresso.typedViewCondition
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.randomString
-import com.instructure.espresso.replaceText
 import com.instructure.teacher.R
 
 class AddMessagePage: BasePage() {
 
     private val subjectTextView by WaitForViewWithId(R.id.subjectView)
-    private val recipientsEditTextView by WaitForViewWithId(R.id.recipient)
+    private val chipsInput by WaitForViewWithId(R.id.chips)
+    private val chipGroup by WaitForViewWithId(R.id.chipGroup)
     private val messageEditText by WaitForViewWithId(R.id.message)
     private val sendButton by WaitForViewWithId(R.id.menu_send)
     private val coursesSpinner by WaitForViewWithId(R.id.courseSpinner)
@@ -41,7 +41,7 @@ class AddMessagePage: BasePage() {
 
     override fun assertPageObjects() {
         subjectTextView.assertDisplayed()
-        recipientsEditTextView.assertDisplayed()
+        chipsInput.assertDisplayed()
     }
 
     fun addReply(message: String) {
@@ -67,10 +67,10 @@ class AddMessagePage: BasePage() {
     }
 
     fun assertHasStudentRecipient(student: CanvasUserApiModel) {
-        recipientsEditTextView.assertContainsText(student.shortName)
+        chipGroup.assertHasChild(typedViewCondition<Chip> { it.text.toString() == student.shortName })
     }
     fun assertHasStudentRecipient(student: User) {
-        recipientsEditTextView.assertContainsText(student.shortName!!)
+        chipGroup.assertHasChild(typedViewCondition<Chip> { it.text.toString() == student.shortName })
     }
 
     fun addNewMessage() {

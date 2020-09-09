@@ -23,6 +23,7 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -42,7 +43,7 @@ import org.hamcrest.Matchers.*
 class NewMessagePage : BasePage() {
 
     private val subjectTextView by OnViewWithId(R.id.subjectView)
-    private val recipientsEditTextView by OnViewWithId(R.id.recipientsView, autoAssert = false)
+    private val chipGroup by OnViewWithId(R.id.chipGroup, autoAssert = false)
     private val sendButton by OnViewWithId(R.id.menu_send)
     private val coursesSpinner by OnViewWithId(R.id.courseSpinner)
     private val editSubjectEditText by OnViewWithId(R.id.editSubject)
@@ -68,7 +69,7 @@ class NewMessagePage : BasePage() {
     }
 
     fun assertRecipientsNotEmpty() {
-        onView(withId(R.id.recipientsView)).check(AssertTextEmpty())
+        chipGroup.check(matches(hasChildCount(0)))
     }
 
     fun setRecipient(user: CanvasUserApiModel, isGroupRecipient: Boolean = false) {
@@ -155,10 +156,10 @@ class NewMessagePage : BasePage() {
     fun populateMessage(course: CourseApiModel, toUser: CanvasUserApiModel, subject: String, message: String, recipientPopulated: Boolean = false) {
         selectCourse(course)
         if(recipientPopulated) {
-            recipientsEditTextView.check(AssertTextPopulated())
+            chipGroup.check(matches(hasChildCount(1)))
         }
         else {
-            recipientsEditTextView.check(AssertTextEmpty())
+            chipGroup.check(matches(hasChildCount(0)))
             setRecipient(toUser)
         }
         setSubject(subject)
