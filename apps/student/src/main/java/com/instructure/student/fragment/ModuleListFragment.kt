@@ -152,9 +152,13 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                         moduleHelper.newChildPosition))
             }
 
-            override fun onRefreshFinished() {
+            override fun onRefreshFinished(isError: Boolean) {
                 setRefreshing(false)
-                if (recyclerAdapter.size() == 0) {
+                if(isError) {
+                    // We need to force the empty view to be visible to use it for errors on refresh
+                    emptyView?.setVisible()
+                    setEmptyView(emptyView, R.drawable.vd_panda_nomodules, R.string.modulesLocked, R.string.modulesLockedSubtext)
+                } else if (recyclerAdapter.size() == 0) {
                     setEmptyView(emptyView, R.drawable.vd_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
                     val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())

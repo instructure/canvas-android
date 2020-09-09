@@ -26,17 +26,19 @@ import android.os.CountDownTimer
 import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.ModuleManager
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.managers.TabManager
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.interfaces.ViewHolderHeaderClicked
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
@@ -49,6 +51,7 @@ import com.instructure.student.holders.ModuleSubHeaderViewHolder
 import com.instructure.student.holders.ModuleViewHolder
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.util.ModuleUtility
+import kotlinx.coroutines.Job
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -62,6 +65,7 @@ open class ModuleListRecyclerAdapter(
 
     private val mModuleItemCallbacks = HashMap<Long, ModuleItemCallback>()
     private var mModuleObjectCallback: StatusCallback<List<ModuleObject>>? = null
+    private var checkCourseTabsJob: Job? = null
 
     /* For testing purposes only */
     protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), 0, context, null) // Callback not needed for testing, cast to null
@@ -133,6 +137,7 @@ open class ModuleListRecyclerAdapter(
 
     override fun refresh() {
         mModuleItemCallbacks.clear()
+        checkCourseTabsJob?.cancel()
         collapseAll()
         super.refresh()
     }
@@ -140,6 +145,7 @@ open class ModuleListRecyclerAdapter(
     override fun cancel() {
         mModuleItemCallbacks.values.forEach { it.cancel() }
         mModuleObjectCallback?.cancel()
+        checkCourseTabsJob?.cancel()
     }
 
     override fun contextReady() {
@@ -355,7 +361,18 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun loadFirstPage() {
-        ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+        checkCourseTabsJob = tryWeave {
+            val tabs = awaitApi<List<Tab>> { TabManager.getTabs(courseContext, it, isRefresh) }
+                    .filter { !(it.isExternal && it.isHidden) }
+
+            if (tabs.find { it.tabId == "modules" } != null) {
+                ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+            } else {
+                adapterToFragmentCallback?.onRefreshFinished(true)
+            }
+        } catch {
+            adapterToFragmentCallback?.onRefreshFinished(true)
+        }
     }
 
     override fun loadNextPage(nextURL: String) {
