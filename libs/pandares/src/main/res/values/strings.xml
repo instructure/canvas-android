@@ -790,7 +790,7 @@
     <string name="notification_desc_appointment_cancelations">Get notified when there’s an appointment cancellation.</string>
     <string name="notification_desc_appointment_availability">Get notified when an appointment slot becomes available.</string>
     <string name="notification_desc_calendar">Get notified about new and updated calendar items.</string>
-    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrolllment is accepted or rejected.</string>
+    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected.</string>
     <string name="notification_desc_admin">Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups.</string>
     <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
 
