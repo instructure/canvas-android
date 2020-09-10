@@ -21,5 +21,5 @@ import com.instructure.canvasapi2.models.ModuleObject
 
 interface ModuleAdapterToFragmentCallback {
     fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean)
-    fun onRefreshFinished()
+    fun onRefreshFinished(isError: Boolean = false)
 }

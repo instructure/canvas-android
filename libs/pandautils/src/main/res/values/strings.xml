@@ -185,6 +185,8 @@
     <string name="noModulesSubtext">It looks like there aren\'t any modules created yet.</string>
     <string name="noPages">No Pages</string>
     <string name="noPagesSubtext">It looks like no pages have been created yet.</string>
+    <string name="modulesLockedSubtext">Modules have been disabled for this course.</string>
+    <string name="modulesLocked">Something Went Wrong</string>
 
     <!--General-->
     <string name="yes">Yes</string>
