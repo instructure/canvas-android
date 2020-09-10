@@ -32,6 +32,7 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.remove
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
+import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.MediaSubmission
@@ -218,7 +219,7 @@ class PickerSubmissionUploadEffectHandler constructor(
         // Create new Intent and launch
         val intent = view?.getCameraIntent(uri)
 
-        if (intent != null && isIntentAvailable(intent.action)) {
+        if (intent != null && context.isIntentAvailable(intent.action)) {
             (context as Activity).startActivityForResult(intent, REQUEST_CAMERA_PIC)
         }
     }
@@ -242,13 +243,6 @@ class PickerSubmissionUploadEffectHandler constructor(
             }
         }
         return true
-    }
-
-    private fun isIntentAvailable(action: String?): Boolean {
-        return context.packageManager.queryIntentActivities(
-            Intent(action),
-            PackageManager.MATCH_DEFAULT_ONLY
-        ).size > 0
     }
 
     private fun isExtensionAllowed(

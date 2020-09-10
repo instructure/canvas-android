@@ -85,7 +85,7 @@ class CustomRubricRatingDialog : AppCompatDialogFragment() {
                 .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
                 .create()
                 .apply {
-                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                    window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
                     setOnShowListener {
                         getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)
                         getButton(AppCompatDialog.BUTTON_NEGATIVE).setTextColor(ThemePrefs.buttonColor)

@@ -255,8 +255,8 @@ open class InternalWebviewFragment : ParentFragment() {
     fun onBackStackChangedEvent(event: OnBackStackChangedEvent) {
         event.get { clazz ->
             // We want to check for Modules as well, since the fragments within the viewpager won't show up as top level
-            if (InternalWebviewFragment::class.java.isAssignableFrom(clazz)
-                    || CourseModuleProgressionFragment::class.java.isAssignableFrom(clazz)) {
+            if (clazz != null && (InternalWebviewFragment::class.java.isAssignableFrom(clazz)
+                    || CourseModuleProgressionFragment::class.java.isAssignableFrom(clazz))) {
                 canvasWebView.onResume()
             } else {
                 canvasWebView.onPause()

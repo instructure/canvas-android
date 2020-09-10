@@ -74,7 +74,7 @@ class BottomSheetActivity : BaseAppCompatActivity(), BottomSheetInteractions, RC
             }
         } else {
 
-            mRoute = intent.extras.getParcelable(Route.ROUTE)
+            mRoute = intent.extras!!.getParcelable(Route.ROUTE)
 
             if (mRoute == null) {
                 finish()

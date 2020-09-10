@@ -479,11 +479,11 @@ class SubmissionContentView(
             val popup = ListPopupWindow(context)
             popup.anchorView = it
             popup.setAdapter(object : ArrayAdapter<User>(context, 0, assignee.students) {
-                override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+                override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                     val user = getItem(position)
                     val view = convertView
                             ?: LayoutInflater.from(context).inflate(R.layout.adapter_speed_grader_group_member, parent, false)
-                    ProfileUtils.loadAvatarForUser(view.memberAvatarView, user.name, user.avatarUrl)
+                    ProfileUtils.loadAvatarForUser(view.memberAvatarView, user?.name, user?.avatarUrl)
                     view.memberNameView.text = Pronouns.span(user?.name, user?.pronouns)
                     return view
                 }

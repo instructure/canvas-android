@@ -74,7 +74,7 @@ object Utils {
 
     fun copyToClipboard(context: Context, stringToCopy: String?) {
         val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboard.primaryClip = ClipData.newPlainText(context.getString(R.string.link), stringToCopy)
+        clipboard.setPrimaryClip(ClipData.newPlainText(context.getString(R.string.link), stringToCopy))
 
         // Let the user know
         Toast.makeText(context, context.getString(R.string.linkCopied), Toast.LENGTH_SHORT).show()

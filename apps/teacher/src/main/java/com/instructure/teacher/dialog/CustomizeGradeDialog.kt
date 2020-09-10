@@ -101,13 +101,13 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok).toUpperCase(), { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
                     updateGrade(gradeEditText.text.toString(), mGradingType, excusedCheckBox.isChecked)
-                })
+                }
                 .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
                 .create()
 
-        gradeDialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        gradeDialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         gradeDialog.setOnShowListener {
             gradeDialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)

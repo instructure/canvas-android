@@ -86,8 +86,8 @@ class CalendarEventFragment : ParentFragment() {
 
         if (isTablet) return // No styling for tablet
         dialog?.let {
-            it.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            it.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+            it.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            it.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         }
     }
 

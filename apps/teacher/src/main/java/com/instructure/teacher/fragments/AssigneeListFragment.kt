@@ -153,11 +153,11 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
 
         @Suppress("UNCHECKED_CAST")
         fun newInstance(args: Bundle) = AssigneeListFragment().apply {
-            this.mDateGroups = args.getParcelableArrayList(DATE_GROUPS)
+            this.mDateGroups = args.getParcelableArrayList(DATE_GROUPS)!!
             this.mTargetIdx = args.getInt(TARGET_INDEX)
-            this.sections = args.getParcelableArrayList(SECTIONS)
-            this.groups = args.getParcelableArrayList(GROUPS)
-            this.students = args.getParcelableArrayList(STUDENTS)
+            this.sections = args.getParcelableArrayList(SECTIONS)!!
+            this.groups = args.getParcelableArrayList(GROUPS)!!
+            this.students = args.getParcelableArrayList(STUDENTS)!!
         }
 
         fun makeBundle(dateGroups: EditDateGroups, targetIdx: Int, sections: List<Section>, groups: List<Group>, students: List<User>): Bundle {
