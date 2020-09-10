@@ -40,7 +40,6 @@ import android.os.*
 import android.provider.MediaStore
 import android.text.Html
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Patterns
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -457,7 +456,7 @@ class CanvasWebView @JvmOverloads constructor(
         super.loadData(data, mimeType, encoding)
     }
 
-    override fun loadDataWithBaseURL(history: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
+    override fun loadDataWithBaseURL(url: String?, data: String?, mimeType: String?, encoding: String?, history: String?) {
         addJavascriptInterface()
         super.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
