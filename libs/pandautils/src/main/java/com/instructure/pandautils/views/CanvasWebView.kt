@@ -456,7 +456,7 @@ class CanvasWebView @JvmOverloads constructor(
         super.loadData(data, mimeType, encoding)
     }
 
-    override fun loadDataWithBaseURL(history: String?, data: String?, mimeType: String?, encoding: String?, historyUrl: String?) {
+    override fun loadDataWithBaseURL(url: String?, data: String?, mimeType: String?, encoding: String?, history: String?) {
         addJavascriptInterface()
         super.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
@@ -479,7 +479,7 @@ class CanvasWebView @JvmOverloads constructor(
      */
     fun loadHtml(html: String, contentDescription: String?): String {
         val result = formatHtml(html)
-        loadDataWithBaseURL(getReferrer(false), result, "text/html", encoding, getHtmlAsUrl(result))
+        loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
         setupAccessibilityContentDescription(result, contentDescription)
         return result
     }
