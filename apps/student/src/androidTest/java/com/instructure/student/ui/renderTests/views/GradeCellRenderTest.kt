@@ -17,10 +17,7 @@ package com.instructure.student.ui.renderTests.views
 
 import android.view.ViewGroup
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertNotDisplayed
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
@@ -43,6 +40,11 @@ class GradeCellRenderTest : StudentRenderTest() {
         val grade by OnViewWithId(R.id.grade)
         val outOf by OnViewWithId(R.id.outOf)
         val gradedStateContainer by OnViewWithId(R.id.gradeState)
+        val statsContainer by OnViewWithId(R.id.statsContainer)
+        val statsGraph by OnViewWithId(R.id.statisticsView)
+        val statsLow by OnViewWithId(R.id.minLabel)
+        val statsMean by OnViewWithId(R.id.meanLabel)
+        val statsHigh by OnViewWithId(R.id.maxLabel)
     }
 
     @Test
@@ -138,6 +140,47 @@ class GradeCellRenderTest : StudentRenderTest() {
             outOf.assertHasText(state.outOf)
             latePenalty.assertHasText(state.latePenalty)
             finalGrade.assertHasText(state.finalGrade)
+        }
+    }
+
+    @Test
+    fun displaysGradeStatsIfPresent() {
+        val state = GradeCellViewState.GradeData(
+            stats = GradeCellViewState.GradeStats(
+                score = 81.0,
+                outOf = 100.0,
+                min = 38.0,
+                max = 97.0,
+                mean = 76.0,
+                minText = "Low: 38",
+                maxText = "High: 97",
+                meanText = "Mean: 76"
+            )
+        )
+        setupViewWithState(state)
+
+        // Should show the stats container, graph, and min/mean/max text values
+        with(gradeCell) {
+            statsContainer.assertDisplayed()
+            statsGraph.assertDisplayed()
+            statsLow.assertHasText(state.stats!!.minText)
+            statsMean.assertHasText(state.stats!!.meanText)
+            statsHigh.assertHasText(state.stats!!.maxText)
+        }
+    }
+
+    @Test
+    fun hidesGradeStatsIfNotPresent() {
+        val state = GradeCellViewState.GradeData(stats = null)
+        setupViewWithState(state)
+
+        // Should show the stats container and min/mean/max text values
+        with(gradeCell) {
+            statsContainer.assertGone()
+            statsGraph.assertGone()
+            statsLow.assertGone()
+            statsMean.assertGone()
+            statsHigh.assertGone()
         }
     }
 

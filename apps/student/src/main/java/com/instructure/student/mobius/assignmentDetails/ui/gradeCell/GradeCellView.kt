@@ -54,6 +54,7 @@ class GradeCellView @JvmOverloads constructor(
             GradeCellViewState.Submitted -> {
                 submittedState.setVisible()
                 gradeState.setGone()
+                statsContainer.setGone()
             }
             is GradeCellViewState.GradeData -> {
                 submittedState.setGone()
@@ -80,6 +81,19 @@ class GradeCellView @JvmOverloads constructor(
 
                 // Percentage
                 chart.setPercentage(state.graphPercent, true)
+
+                // Statistics
+                if (state.stats == null) {
+                    statsContainer.setGone()
+                } else {
+                    statsContainer.setVisible()
+                    minLabel.setTextForVisibility(state.stats.minText)
+                    maxLabel.setTextForVisibility(state.stats.maxText)
+                    meanLabel.setTextForVisibility(state.stats.meanText)
+                    statisticsView.setAccentColor(state.accentColor)
+                    statisticsView.setStats(state.stats)
+                }
+
             }
         }
     }

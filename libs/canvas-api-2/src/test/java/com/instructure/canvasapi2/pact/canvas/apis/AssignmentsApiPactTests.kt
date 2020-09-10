@@ -40,7 +40,7 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     // region request an assignment as a student
     //
 
-    val getStudentAssignmentQuery = "include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides"
+    val getStudentAssignmentQuery = "include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics"
     val getStudentAssignmentPath = "/api/v1/courses/3/assignments/1" // Has default submission type of online_text_entry
     // We won't get override info when we request the assignment as a student.
     val getStudentAssignmentFieldInfo =
@@ -91,7 +91,7 @@ class AssignmentsApiPactTests : ApiPactTestBase() {
     // region request an assignment as a teacher
     //
 
-    val getTeacherAssignmentQuery = "include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides"
+    val getTeacherAssignmentQuery = "include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics"
     val getTeacherAssignmentPath = "/api/v1/courses/3/assignments/2"
     // We won't get a submission object in an assignment requested by a teacher.
     val getTeacherAssignmentFieldInfo =
