@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.copyTo
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.services.NotoriousUploadService
@@ -140,7 +141,7 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
             if (requestCode == RequestCodes.SELECT_MEDIA && data != null) {
                 val tempMediaUri = data.data
 
-                if (tempMediaUri?.path?.isEmpty() == true) {
+                if (!tempMediaUri?.path.isValid()) {
                     setResult(Activity.RESULT_CANCELED)
                     finish()
                 } else {
