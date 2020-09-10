@@ -32,7 +32,7 @@ module:
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
-  flutter: 1.17.1
+  flutter: 1.20.3
 
 dependencies:
   flutter:
@@ -64,7 +64,7 @@ dependencies:
   file_picker: 1.4.2
 
   # Media handling
-  flutter_svg: 0.17.4
+  flutter_svg: 0.18.1
   image_picker: 0.6.1+4
   transparent_image: 1.0.0
   cached_network_image: 2.0.0-rc
