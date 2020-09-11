@@ -17,10 +17,7 @@ package com.instructure.student.fragment
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
-import android.text.util.Rfc822Tokenizer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +25,6 @@ import android.view.ViewTreeObserver
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.StringRes
-import com.android.ex.chips.RecipientEntry
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.InboxManager
@@ -44,7 +40,6 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.CanvasContextSpinnerAdapter
 import com.instructure.student.adapter.NothingSelectedSpinnerAdapter
-import com.instructure.student.adapter.RecipientAdapter
 import com.instructure.student.dialog.UnsavedChangesExitDialog
 import com.instructure.student.events.ChooseRecipientsEvent
 import com.instructure.student.events.ConversationUpdatedEvent
@@ -69,7 +64,6 @@ class InboxComposeMessageFragment : ParentFragment() {
     private var selectedContext by NullableParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private val isNewMessage by lazy { conversation == null }
     private val attachments = mutableListOf<Attachment>()
-    private val chipsAdapter: RecipientAdapter by lazy { RecipientAdapter(requireContext()) }
 
     private var sendIndividually = false
     private var shouldAllowExit = false
@@ -107,7 +101,7 @@ class InboxComposeMessageFragment : ParentFragment() {
             toast(R.string.noCourseSelected)
             false
         }
-        recipientsView.selectedRecipients.size == 0 -> {
+        chips.recipients.isEmpty() -> {
             toast(R.string.noRecipients)
             false
         }
@@ -116,17 +110,6 @@ class InboxComposeMessageFragment : ParentFragment() {
             false
         }
         else -> true
-    }
-
-    private fun getRecipientsFromEntries() = recipientsView.selectedRecipients.map {
-        Recipient(
-            stringId = it.destination,
-            name = it.name,
-            pronouns = it.pronouns,
-            userCount = it.userCount,
-            itemCount = it.itemCount,
-            avatarURL = it.avatarUrl
-        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -162,7 +145,7 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     private fun globalAddRecipients() {
-        recipientsView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        chips.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 if (isReply) {
                     if(currentMessage == null && conversation?.participants != null && conversation!!.participants.size == 1) {
@@ -177,7 +160,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                         it.id
                     })
                 }
-                recipientsView.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                chips.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
     }
@@ -187,32 +170,25 @@ class InboxComposeMessageFragment : ParentFragment() {
         conversation?.let { subjectView.text = it.subject }
 
         // Set up recipients view
-        recipientsView.setTokenizer(Rfc822Tokenizer())
-        recipientsView.setAdapter<RecipientAdapter>(chipsAdapter)
-        if (selectedContext != null) {
-            courseWasSelected()
-            chipsAdapter.canvasRecipientManager.canvasContext = selectedContext
-        }
-        recipientsView.addTextChangedListener(object : TextWatcher {
-            private var previousCheckState = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-            override fun afterTextChanged(s: Editable?) {
-                val entryCount = recipientsView.selectedRecipients.sumBy { it.userCount.coerceAtLeast(1) }
-                if (entryCount >= 100) {
-                    if (sendIndividualSwitch.isEnabled) {
-                        sendIndividualMessageWrapper.alpha = 0.3f
-                        previousCheckState = sendIndividualSwitch.isChecked
-                        sendIndividualSwitch.isEnabled = false
-                        sendIndividualSwitch.isChecked = true
-                    }
-                } else if (!sendIndividualSwitch.isEnabled) {
-                    sendIndividualMessageWrapper.alpha = 1f
-                    sendIndividualSwitch.isEnabled = true
-                    sendIndividualSwitch.isChecked = previousCheckState
+        if (selectedContext != null) courseWasSelected()
+
+        var previousCheckState = false
+        chips.onRecipientsChanged = { recipients: List<Recipient> ->
+            val entryCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            if (entryCount >= 100) {
+                if (sendIndividualSwitch.isEnabled) {
+                    sendIndividualMessageWrapper.alpha = 0.3f
+                    previousCheckState = sendIndividualSwitch.isChecked
+                    sendIndividualSwitch.isEnabled = false
+                    sendIndividualSwitch.isChecked = true
                 }
+            } else if (!sendIndividualSwitch.isEnabled) {
+                sendIndividualMessageWrapper.alpha = 1f
+                sendIndividualSwitch.isEnabled = true
+                sendIndividualSwitch.isChecked = previousCheckState
             }
-        })
+        }
+
 
         // Don't show the contacts button if there is no selected course
         contactsImageButton.setVisible(selectedContext != null || conversation?.contextCode.isValid())
@@ -221,7 +197,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 toast(R.string.noCourseSelected)
             } else {
                 val canvasContext = selectedContext ?: CanvasContext.fromContextCode(conversation?.contextCode) ?: return@onClick
-                RouteMatcher.route(requireContext(), InboxRecipientsFragment.makeRoute(canvasContext, getRecipientsFromEntries()))
+                RouteMatcher.route(requireContext(), InboxRecipientsFragment.makeRoute(canvasContext, chips.recipients))
             }
         }
 
@@ -258,7 +234,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                 if (position != 0) { // Position zero is nothingSelected prompt
                     val canvasContext = adapter.getItem(position - 1) // -1 to account for nothingSelected item
                     if (selectedContext == null || selectedContext!!.id != canvasContext!!.id) {
-                        recipientsView.removeAllRecipientEntry()
+                        chips.clearRecipients()
                         selectedContext = canvasContext
                         courseWasSelected()
                     }
@@ -273,7 +249,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         recipientWrapper.visibility = View.VISIBLE
         contactsImageButton.visibility = View.VISIBLE
         requireActivity().invalidateOptionsMenu()
-        chipsAdapter.canvasRecipientManager.canvasContext = selectedContext
+        chips.canvasContext = selectedContext
     }
 
     private fun setupToolbar() {
@@ -367,7 +343,7 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         // Send message
         if (isNewMessage) {
-            val recipients = recipientsView.selectedRecipients
+            val recipients = chips.recipients
             val recipientCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
             val isBulk = recipientCount >= 100 || (recipientCount > 1 && sendIndividually)
             val contextId = selectedContext!!.contextId
@@ -375,17 +351,17 @@ class InboxComposeMessageFragment : ParentFragment() {
             // isBulk controls the group vs individual messages, so group message flag is hardcoded to true at the api call
             createConversation(recipients, message.text.toString(), subject, contextId, isBulk)
         } else {
-            sendMessage(recipientsView.selectedRecipients, message.text.toString())
+            sendMessage(chips.recipients, message.text.toString())
         }
     }
 
-    private fun sendMessage(selectedRecipients: List<RecipientEntry>, message: String) {
+    private fun sendMessage(selectedRecipients: List<Recipient>, message: String) {
 
         // Encode the message here, tell the api not to encode it
         val formattedMessage = URLEncoder.encode(message, "UTF-8")
         sendCall = tryWeave {
             val attachmentIds = attachments.map { it.id }.toLongArray()
-            val recipientIds = selectedRecipients.map { it.destination }
+            val recipientIds = selectedRecipients.mapNotNull { it.stringId }
             val conversation = awaitApi<Conversation> {
                 InboxManager.addMessage(conversation?.id ?: 0, formattedMessage, recipientIds, includedMessageIds, attachmentIds, conversation?.contextCode, it)
             }
@@ -396,13 +372,13 @@ class InboxComposeMessageFragment : ParentFragment() {
         }
     }
 
-    private fun createConversation(selectedRecipients: List<RecipientEntry>, message: String, subject: String, contextId: String, isBulk: Boolean) {
+    private fun createConversation(selectedRecipients: List<Recipient>, message: String, subject: String, contextId: String, isBulk: Boolean) {
         sendCall?.cancel()
         val formattedMessage = URLEncoder.encode(message, "UTF-8")
         val formattedSubject = URLEncoder.encode(subject, "UTF-8")
         sendCall = tryWeave {
             val attachmentIds = attachments.map { it.id }.toLongArray()
-            val recipientIds = selectedRecipients.map { it.destination }
+            val recipientIds = selectedRecipients.mapNotNull { it.stringId }
             val conversation = awaitApi<List<Conversation>> {
                 InboxManager.createConversation(recipientIds, formattedMessage, formattedSubject, contextId, attachmentIds, isBulk, it)
             }.first()
@@ -419,63 +395,43 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val selectedRecipients = recipientsView.selectedRecipients
-        val myId = ApiPrefs.user!!.id
-        initialRecipientIds
-                // Map IDs to participants (only excluding the current user if not monologue)
-                .mapNotNull { id ->
-                    participants.find {
-                        if (initialRecipientIds.size == 1) it.id == id else it.id == id && it.id != myId
-                    }
-                }
-                // Filter out already-added participants
-                .filter { participant -> selectedRecipients.none { it.destination == participant.id.toString() } }
-                // Add new recipients
-                .forEach {
-                    val recipientEntry = RecipientEntry(it.id, it.name, it.pronouns, it.id.toString(), "", it.avatarUrl, 0, 0, true, null, null)
-                    this.recipientsView.appendRecipientEntry(recipientEntry)
-                }
+        val existing = chips.recipients
+        val myId = ApiPrefs.user?.id ?: 0
+        val isMonologue = initialRecipientIds.size == 1
+        val recipients = initialRecipientIds.mapNotNull { id ->
+            val stringId = id.toString()
+            val participant = participants.find {
+                // Map IDs to participants (excluding the current user if not monologue)
+                it.id == id && (isMonologue || it.id != myId) && existing.none { user -> user.stringId == stringId }
+            } ?: return@mapNotNull null
+            Recipient(
+                stringId = participant.id.toString(),
+                name = participant.name,
+                pronouns = participant.pronouns,
+                avatarURL = participant.avatarUrl
+            )
+        }
+        chips.addRecipients(recipients)
     }
 
     private fun addRecipients(newRecipients: List<Recipient>) {
-        val selectedRecipients = recipientsView.selectedRecipients
-        recipientsView.setTokenizer(Rfc822Tokenizer())
-        if (recipientsView.adapter == null) {
-            recipientsView.setAdapter<RecipientAdapter>(chipsAdapter)
+        val selectedRecipients = chips.recipients
+        val myId = ApiPrefs.user?.id?.toString().orEmpty()
+        val recipients = newRecipients.filter { recipient ->
+            // Skip existing recipients and self
+            recipient.stringId != myId && selectedRecipients.none { it.stringId == recipient.stringId }
         }
-        newRecipients
-            // Skip recipients that have already been added
-            .filter { recipient -> selectedRecipients.none { it.destination == recipient.stringId } }
-            // Add new recipients
-            .forEach {
-                val recipientEntry = RecipientEntry(
-                    it.idAsLong,
-                    it.name,
-                    it.pronouns,
-                    it.stringId,
-                    "",
-                    it.avatarURL,
-                    it.userCount,
-                    it.itemCount,
-                    true,
-                    it.commonCourses?.keys,
-                    it.commonGroups?.keys
-                )
-                recipientsView.appendRecipientEntry(recipientEntry)
-            }
+        chips.addRecipients(recipients)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRecipientsChosen(event: ChooseRecipientsEvent) {
         event.once(javaClass.simpleName) { recipients ->
-            // Need to have the TextView laid out first so that the chips view will have a width
-            recipientsView.post {
-                // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
-                // so clear the view so we only add the users selected
-                recipientsView.text.clear()
-                addRecipients(recipients)
-            }
+            // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
+            // so clear the view so we only add the users selected
+            chips.clearRecipients()
+            addRecipients(recipients)
         }
     }
 

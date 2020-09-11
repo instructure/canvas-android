@@ -19,7 +19,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CanvasMaterialTheme_Default" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>

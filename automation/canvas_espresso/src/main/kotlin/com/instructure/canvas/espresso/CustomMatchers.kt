@@ -25,6 +25,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.TypeSafeMatcher
 
 //
 // This is a repo for useful custom matchers
@@ -60,6 +61,15 @@ fun isElementDisplayed(resourceId: Int) : Boolean {
     }
     catch(t: Throwable) {
         return false
+    }
+}
+
+inline fun <reified T : View> typedViewCondition(crossinline onCheckCondition: (T) -> Boolean): Matcher<View> {
+    return object : BaseMatcher<View>() {
+        override fun matches(item: Any?): Boolean = (item as? T)?.let(onCheckCondition) ?: false
+        override fun describeTo(description: Description?) {
+            description?.appendText("matches view type '${T::class.java.simpleName}' and fulfills the given condition")
+        }
     }
 }
 

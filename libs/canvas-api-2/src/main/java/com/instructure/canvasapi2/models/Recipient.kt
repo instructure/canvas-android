@@ -38,6 +38,10 @@ data class Recipient(
         @SerializedName("common_groups")
         val commonGroups: HashMap<String, Array<String>>? = null
 ) : CanvasComparable<Recipient>() {
+
+    override val id: Long
+        get() = throw IllegalAccessException("Recipient.id is not populated. Use Recipient.stringId instead.")
+
     val idAsLong: Long
         get() {
             try {

@@ -80,33 +80,34 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
-                    android:layout_alignTop="@+id/recipient"
+                    android:layout_alignParentTop="true"
                     android:background="@color/dividerColor" />
 
-                <com.android.ex.chips.RecipientEditTextView
-                    android:id="@+id/recipient"
+                <TextView
+                    android:id="@+id/toLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/label_to"
+                    android:textColor="@color/defaultTextDark"
+                    android:textSize="16sp" />
+
+                <com.instructure.pandautils.views.RecipientChipsInput
+                    android:id="@+id/chips"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="8dp"
                     android:layout_toStartOf="@+id/contactsImageButton"
-                    android:background="@color/transparent"
-                    android:gravity="center_vertical"
-                    android:hint="@string/label_to"
-                    android:imeOptions="flagNoExtractUi"
-                    android:minHeight="?android:attr/listPreferredItemHeight"
-                    android:padding="8dp"
-                    android:textColor="@color/defaultTextDark"
-                    android:textColorHint="@color/defaultTextGray"
-                    android:textSize="16sp" />
+                    android:layout_toEndOf="@id/toLabel" />
 
                 <ImageView
                     android:id="@+id/contactsImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/recipient"
-                    android:layout_marginTop="4dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/select_recipients"
                     android:minHeight="48dp"

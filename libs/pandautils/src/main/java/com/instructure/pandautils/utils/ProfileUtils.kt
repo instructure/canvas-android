@@ -22,7 +22,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.view.View
+import com.bumptech.glide.Glide
 import com.instructure.canvasapi2.models.Author
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -131,6 +134,19 @@ object ProfileUtils {
             }
             else -> avatar.setImageResource(R.drawable.vd_group)
         }
+    }
+
+    fun getInitialsAvatarDrawable(
+        context: Context,
+        username: String,
+        backgroundColor: Int = Color.WHITE,
+        textColor: Int = Color.GRAY,
+        borderColor: Int = Color.GRAY
+    ): Drawable {
+        return BitmapDrawable(
+            context.resources,
+            getInitialsAvatarBitMap(context, username, backgroundColor, textColor, borderColor)
+        )
     }
 
     @JvmOverloads
