@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Meldingen voor uploaden</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-meldingen voor actieve uploads.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Kies bestandsformulier&#8230;</string>
     <string name="addFile">Een bestand toevoegen</string>
-    <string name="choose_a_file">Een bestand kiezen</string>
-
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Galerij</string>
     <string name="fromDevice">Apparaat</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Het geselecteerde bestandstype is niet toegestaan.</string>
     <string name="allowedExtensions">Toegestane extensies:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Fout in toets</string>
-    <string name="quizNetworkErrorMessage">Er is geen internetverbinding.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Controleer je dataverbinding en probeer het nogmaals. </string>
     <string name="noApps">Er zijn op je apparaat geen applicaties geïnstalleerd die dit bestand kunnen verwerken.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Geen bestanden</string>
     <string name="noFilesForAssignment">Er zijn geen bestanden voor deze inlevering</string>
     <string name="noFilesSubtext">Er zijn geen bestanden gekoppeld aan dit account.</string>
+    <string name="emptyFolder">Deze map is leeg</string>
     <string name="notSupported">Niet ondersteund</string>
     <string name="noEvents">Vandaag geen gebeurtenissen!</string>
     <string name="noEventsSubtext">Dat lijkt een prima dag om lekker te niksen.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Geen internetverbinding</string>
     <string name="noInternetConnectionMessage">Voor deze actie is een internetverbinding vereist.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Gebruikersdetails weergeven voor %s</string>
 
     <!-- App Names -->

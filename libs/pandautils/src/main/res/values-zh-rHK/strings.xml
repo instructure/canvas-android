@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">上傳通知</string>
     <string name="notificationChannelNameFileUploadsDescription">持續上傳的 Canvas 通知。</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">從&#8230;選擇您的檔案</string>
     <string name="addFile">添加檔案</string>
-    <string name="choose_a_file">選擇檔案</string>
-
     <string name="fromCamera">攝像頭</string>
     <string name="fromGallery">圖片庫</string>
     <string name="fromDevice">設備</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">選中的檔案類型不被允許。</string>
     <string name="allowedExtensions">允許的擴展名：&#160;</string>
 
-    <string name="quizNetworkErrorTitle">測驗錯誤</string>
-    <string name="quizNetworkErrorMessage">網絡連線可能已離線。</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection">請檢查您的數據連接並重試。</string>
     <string name="noApps">您的設備沒有安裝可處理此檔案的應用程式。</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">無檔案</string>
     <string name="noFilesForAssignment">沒有針對此提交項目的檔案</string>
     <string name="noFilesSubtext">沒有與您帳戶關聯的檔案。</string>
+    <string name="emptyFolder">此資料夾為空</string>
     <string name="notSupported">不支援</string>
     <string name="noEvents">今天並無活動！</string>
     <string name="noEventsSubtext">看來是適合休息放鬆的一天。</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">沒有網絡連線</string>
     <string name="noInternetConnectionMessage">此操作需要網絡連線。</string>
     <string name="content_description_avatar">頭像</string>
+    <string name="a11y_avatarNameFormatted">%s 頭像</string>
     <string name="formattedAvatarAction">檢視 %s 的使用者詳情。</string>
 
     <!-- App Names -->

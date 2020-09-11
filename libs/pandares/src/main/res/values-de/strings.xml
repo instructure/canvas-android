@@ -169,8 +169,6 @@
     <string name="noDate">Kein Datum</string>
     <string name="future">Zukünftig</string>
     <string name="next7Days">Die nächsten 7 Tage</string>
-    <string name="days">Tage</string>
-
     <string name="submissionDetailsDueTodayAt">Heute fällig um %s</string>
     <string name="submissionDetailsDueTomorrowAt">Morgen fällig um %s</string>
     <string name="submissionDetailsDueYesterdayAt">Gestern fällig um %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Gelöscht</string>
-    <string name="contentDescriptionFiles">Dateisymbol</string>
-
     <string name="loadingCanvas">Canvas-Content laden&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Weiter</string>
-    <string name="turnedIn">Abgegeben: &#160;</string>
     <string name="addComment">Einen Kommentar hinzufügen&#8230;</string>
     <string name="home">Start</string>
     <string name="Notifications">Benachrichtigungen</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Übungsquizze</string>
     <string name="gradedSurveys">Benotete Umfragen</string>
     <string name="surveys">Befragungen</string>
-    <string name="quizMatchingDefaultDisplay">[Auswählen]</string>
-    <string name="choose_answer_below">Wählen Sie Ihre Antwort unten</string>
-    <string name="choose_answers_below">Wählen Sie Ihre Antworten unten</string>
-
-
-    <string name="flag_the_question">Diese Frage markieren</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Zu erledigen</string>
     <string name="gradesWidgetTitle">Noten</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Tag</string>
     <string name="createNewCalendarEvent">Neues Ereignis erstellen</string>
     <string name="enableFunMode">Panda ausstellen</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten über Kursanmeldungen, generierte Berichte, exportierte Inhalte, Migrationsberichte, neue Kontobenutzer und neue studentische Gruppen.</string>
     <string name="notification_desc_recording_ready">Benachrichtigung erhalten, wenn eine Konferenzaufzeichnung fertig ist.</string>
 
-    <string name="enterAnswer">Antwort eingeben</string>
-    <string name="resumeQuiz">Quiz fortsetzen</string>
-    <string name="allowed_attempts">Zulässige Versuche</string>
-    <string name="viewQuestions">Fragen ansehen</string>
     <string name="unlimited">Unbegrenzt</string>
-    <string name="viewResults">Ergebnisse anzeigen</string>
-
-    <string name="toggleTimer">Auf Timer umschalten</string>
-    <string name="thirtySecondWarning">30 Sekunden übrig</string>
-    <string name="timeSpentFormat" formatted="false">Benötigte Zeit: %d Minuten</string>
-    <string name="lockedIPAddress">Das Quiz ist gesperrt. Es ist nur an bestimmten Orten verfügbar.</string>
-    <string name="lockedInvalidAccessCode">Ungültiger Zugangscode</string>
-
-    <string name="showFlaggedQuestions">Markierte/unbeantwortete Fragen zeigen</string>
     <string name="question">Frage</string>
-    <string name="questions">Fragen</string>
     <plurals name="question_count">
         <item quantity="one">%d Frage</item>
         <item quantity="other">%d Fragen</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s Punkt</item>
         <item quantity="other">%s Punkte</item>
     </plurals>
-    <string name="flagged">Markiert</string>
-
-    <string name="areYouSure">Möchten Sie dieses Quiz wirklich abschicken?</string>
-    <string name="submitQuiz">Quiz abschicken?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Sie haben %d unbeantwortete Frage.\nMöchten Sie dieses Quiz wirklich abgeben?</item>
-        <item quantity="other">Sie haben %d unbeantwortete Fragen.\nMöchten Sie dieses Quiz wirklich abgeben?</item>
-    </plurals>
-    <string name="takeQuizAgain">Quiz nochmal machen</string>
-    <string name="autoSubmitting">Automatische Quizübermittlung&#8230;</string>
-    <string name="submitReasonTimedQuiz">Quiz wurde abgeschickt, da die Zeit abgelaufen war.</string>
-    <string name="submitReasonLockAt">Quiz wurde abgeschickt, da die Sperre am Datum erreicht war.</string>
-    <string name="quizSubmittedSuccessfully">Quiz erfolgreich abgeschickt.</string>
-    <string name="quizSubmittedFailure">Das Quiz konnte zu diesem Zeitpunkt nicht abgegeben werden.</string>
-    <string name="almostDue">Fast fällig!</string>
-    <string name="almostDueMsg">Das Fälligkeitsdatum ist fast erreicht. Jetzt absenden, um zu verhindern, dass das Quiz nicht als verspätet gewertet wird?</string>
     <string name="timeLimit">Zeitbeschränkung</string>
-    <string name="cantStartQuiz">Kann Quiz nicht beginnen.</string>
-    <string name="start">Starten</string>
     <string name="newPushNotifications">%1$s neue Benachrichtigungen</string>
     <string name="like">Like</string>
     <string name="likeEntryLabel">Like-Eintrag</string>

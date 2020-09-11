@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Upload Notifications</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas notifications for ongoing uploads.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Choose file from&#8230;</string>
     <string name="addFile">Add file</string>
-    <string name="choose_a_file">Choose a file</string>
-
     <string name="fromCamera">Camera</string>
     <string name="fromGallery">Gallery</string>
     <string name="fromDevice">Device</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">The selected file type is not allowed.</string>
     <string name="allowedExtensions">Allowed extensions:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Quiz error</string>
-    <string name="quizNetworkErrorMessage">The internet connection appears to be offline.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Please check your data connection and try again. </string>
     <string name="noApps">Your device doesn\'t have any applications installed that can handle this file.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">No files</string>
     <string name="noFilesForAssignment">There are no files for this submission</string>
     <string name="noFilesSubtext">There are no files associated with this account.</string>
+    <string name="emptyFolder">This folder is empty</string>
     <string name="notSupported">Not supported</string>
     <string name="noEvents">No events today!</string>
     <string name="noEventsSubtext">It looks like a great day to rest and relax.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">No internet connection</string>
     <string name="noInternetConnectionMessage">This action requires an internet connection.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">View user details for %s.</string>
 
     <!-- App Names -->

@@ -172,7 +172,6 @@
     <string name="noDate">Ei päivämäärää</string>
     <string name="future">Tulevaisuus</string>
     <string name="next7Days">Seuraavat seitsemän päivää</string>
-    <string name="days">Päivää</string>
     <string name="submissionDetailsDueTodayAt">Määräaika tänään %s</string>
     <string name="submissionDetailsDueTomorrowAt">Määräaika huomenna %s</string>
     <string name="submissionDetailsDueYesterdayAt">Määräaika eilen %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Poistettu</string>
 
-    <string name="contentDescriptionFiles">Tiedostokuvake</string>
-
     <string name="loadingCanvas">Ladataan Canvas-sisältöä&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Seuraava</string>
-    <string name="turnedIn">Luovutettu:&#160;</string>
     <string name="addComment">Lisää kommentti&#8230;</string>
 
     <string name="home">Aloitussivu</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Harjoittelutietovisat</string>
     <string name="gradedSurveys">Arvostellut kyselyt</string>
     <string name="surveys">Kyselyt</string>
-    <string name="quizMatchingDefaultDisplay">[Valitse]</string>
-    <string name="choose_answer_below">Valitse vastauksesi alla</string>
-    <string name="choose_answers_below">Valitse vastauksesi alla</string>
-    <string name="flag_the_question">Merkitse kysymys</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tehtävä</string>
     <string name="gradesWidgetTitle">Arvosanat</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mittari</string>
 
-    <string name="calendarDay">Päivä</string>
     <string name="createNewCalendarEvent">Luo uusi tapahtuma</string>
     <string name="enableFunMode">Kytke pandat pois päältä</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Vain ohjaaja &amp; pääkäyttäjä. Saa ilmoitus kurssin ilmoittautumisista, luoduista raporteista, viedystä sisällöstä, siirtoraporteista, uusista tilin käyttäjistä ja uusista opiskelijaryhmistä.</string>
     <string name="notification_desc_recording_ready">Saa ilmoitus, kun konferessin äänitys on valmis.</string>
 
-    <string name="enterAnswer">Syötä vastaus</string>
-    <string name="resumeQuiz">Jatka tietovisaa</string>
-    <string name="allowed_attempts">Sallitut yritykset</string>
-    <string name="viewQuestions">Tarkastele kysymyksiä</string>
     <string name="unlimited">Rajoittamaton</string>
-    <string name="viewResults">Tarkastele tuloksia</string>
-
-    <string name="toggleTimer">Vaihda ajastinta</string>
-    <string name="thirtySecondWarning">30 sekuntia jäljellä</string>
-    <string name="timeSpentFormat" formatted="false">Käytetty aika: %d minuuttia</string>
-    <string name="lockedIPAddress">Tämä tietovisa on lukittu. Se on saatavissa vain määrätyissä sijaintipaikoissa.</string>
-    <string name="lockedInvalidAccessCode">Virheellinen pääsykoodi</string>
-
-    <string name="showFlaggedQuestions">Näytä merkityt/vastaamattomat kysymykset</string>
     <string name="question">Kysymys</string>
-    <string name="questions">Kysymykset</string>
     <plurals name="question_count">
         <item quantity="one">%d kysymys</item>
         <item quantity="other">%d kysymykset</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s piste</item>
         <item quantity="other">%s pistettä</item>
     </plurals>
-    <string name="flagged">Merkitty</string>
-
-    <string name="areYouSure">Haluatko varmasti lähettää tämän tietovisan?</string>
-    <string name="submitQuiz">Lähetetäänkö tietovisa?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Sinulla on %d vastaamaton kysymys.\nHaluatko varmasti lähettää tämän tietovisan?</item>
-        <item quantity="other">Sinulla on %d vastaamatonta kysymystä.\nHaluatko varmasti lähettää tämän tietovisan?</item>
-    </plurals>
-    <string name="takeQuizAgain">Suorita tietovisa uudelleen</string>
-    <string name="autoSubmitting">Tietovisa &#8230; lähetetään automaattisesti</string>
-    <string name="submitReasonTimedQuiz">Tietovisa lähetettiin, koska aika oli umpeutunut.</string>
-    <string name="submitReasonLockAt">Tietovisa lähetettiin, koska lukko päivämääränä saavutettiin.</string>
-    <string name="quizSubmittedSuccessfully">Tietovisan lähettäminen onnistui.</string>
-    <string name="quizSubmittedFailure">Tietovisan lähettäminen ei onnistunut tällä kertaa.</string>
-    <string name="almostDue">Melkein erääntynyt!</string>
-    <string name="almostDueMsg">On melkein palautuspäivä. Lähetä nyt ja vältä kyselysi merkitseminen myöhässä toimitetuksi.</string>
     <string name="timeLimit">Aikaraja</string>
-    <string name="cantStartQuiz">Tietovisan aloittaminen ei onnistunut.</string>
-    <string name="start">Käynnistä</string>
     <string name="newPushNotifications">%1$s Uudet ilmoitukset</string>
     <string name="like">tykkäys</string>
     <string name="likeEntryLabel">TYkkäysmerkintä</string>

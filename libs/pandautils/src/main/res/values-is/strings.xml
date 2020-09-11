@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Veldu skrá frá&#8230;</string>
     <string name="addFile">Bæta við skrá</string>
-    <string name="choose_a_file">Velja skrá</string>
-
     <string name="fromCamera">Myndavél</string>
     <string name="fromGallery">Gallerí</string>
     <string name="fromDevice">Tæki</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Ein eða fleiri af skránum er með nafnauka skrár sem er ekki leyfð</string>
     <string name="extensionNotAllowed">Valin skráargerð er ekki leyfileg.</string>
     <string name="allowedExtensions">Leyfðir nafnaukar:&#160;</string>
-    <string name="quizNetworkErrorTitle">Prófavilla</string>
-    <string name="quizNetworkErrorMessage">Nettenging virðist ekki vera fyrir hendi.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Athugaðu gagnatengingu þína og reyndu aftur. </string>
     <string name="noApps">Tækið er ekki með uppsett app sem getur opnað þessa skrá.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">Engar skrár</string>
     <string name="noFilesForAssignment">Það eru engar skrár fyrir þessi skil</string>
     <string name="noFilesSubtext">Það eru engar skrár tengdar við þennan reikning.</string>
+    <string name="emptyFolder">Þessi mappa er tóm</string>
     <string name="notSupported">Ekki stutt</string>
     <string name="noEvents">Engir viðburðir í dag!</string>
     <string name="noEventsSubtext">Þetta virðist vera góður dagur til að hvíla sig og slaka á.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">Engin nettenging</string>
     <string name="noInternetConnectionMessage">Þessi aðgerð krefst nettengingar.</string>
     <string name="content_description_avatar">Gengill</string>
+    <string name="a11y_avatarNameFormatted">%s notandamynd</string>
     <string name="formattedAvatarAction">Skoða notandaupplýsingar fyrir %s.</string>
 
     <!-- App Names -->

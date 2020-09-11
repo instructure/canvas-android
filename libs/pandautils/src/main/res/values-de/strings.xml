@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Benachrichtigungen hochladen</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-Benachrichtigungen für laufende Uploads</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Wählen Sie Datei aus&#8230;</string>
     <string name="addFile">Datei hinzufügen</string>
-    <string name="choose_a_file">Eine Datei auswählen</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galerie</string>
     <string name="fromDevice">Gerät</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Der ausgewählte Dateityp ist nicht zulässig.</string>
     <string name="allowedExtensions">Zulässige Erweiterungen:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Quiz-Fehler</string>
-    <string name="quizNetworkErrorMessage">Die Internetverbindung scheint offline zu sein.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Bitte überprüfen Sie Ihre Datenverbindung, und versuchen Sie es erneut. </string>
     <string name="noApps">Auf Ihrem Gerät gibt es keine Anwendung für diese Datei.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Keine Dateien</string>
     <string name="noFilesForAssignment">Für diese Abgabe gibt es keine Dateien.</string>
     <string name="noFilesSubtext">Mit diesem Konto sind keine Dateien verknüpft.</string>
+    <string name="emptyFolder">Dieser Ordner ist leer.</string>
     <string name="notSupported">Nicht unterstützt</string>
     <string name="noEvents">Heute keine Ereignisse!</string>
     <string name="noEventsSubtext">Scheinbar ein großartiger Tag für Ruhe und Entspannung.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Keine Internetverbindung</string>
     <string name="noInternetConnectionMessage">Diese Aktion erfordert eine Internetverbindung.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Zeigen Sie Benutzerdetails für %s an.</string>
 
     <!-- App Names -->

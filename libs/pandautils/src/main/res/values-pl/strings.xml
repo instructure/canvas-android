@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Powiadomienia dotyczące przesyłek</string>
     <string name="notificationChannelNameFileUploadsDescription">Powiadomienia Canvas dotyczące przesyłanych obecnie plików.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Wybierz plik z&#8230;</string>
     <string name="addFile">Dodaj plik</string>
-    <string name="choose_a_file">Wybierz plik</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Urządzenie</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Wybrany rodzaj pliku jest niedozwolony.</string>
     <string name="allowedExtensions">Dozwolone rozszerzenia:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Błąd testu</string>
-    <string name="quizNetworkErrorMessage">Połączenie internetowe wydaje się niedostępne.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Sprawdź połączenie transmisji danych i spróbuj ponownie. </string>
     <string name="noApps">Urządzenie nie ma zainstalowanych aplikacji, które obsługują ten typ pliku.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Brak plików</string>
     <string name="noFilesForAssignment">Nie ma plików do tej przesyłki</string>
     <string name="noFilesSubtext">Brak plików powiązanych z tym kontem.</string>
+    <string name="emptyFolder">Folder jest pusty</string>
     <string name="notSupported">Nieobsługiwane</string>
     <string name="noEvents">Brak wydarzeń na dziś!</string>
     <string name="noEventsSubtext">Wygląda to na świetny dzień do odpoczynku i relaksu.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Brak połączenia internetowego</string>
     <string name="noInternetConnectionMessage">To działanie wymaga połączenia internetowego.</string>
     <string name="content_description_avatar">Awatar</string>
+    <string name="a11y_avatarNameFormatted">Awatar %s</string>
     <string name="formattedAvatarAction">Wyświetl szczegóły użytkownika dla %s</string>
 
     <!-- App Names -->

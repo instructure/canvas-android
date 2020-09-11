@@ -19,7 +19,7 @@
 <resources>
 
     <string name="hello_world">Olá a todos!</string>
-    <string name="action_settings">Definições</string>
+    <string name="action_settings">Configurações</string>
     <string name="mobileVerifyGeneral">Esta app não está autorizada para utilização</string>
     <string name="mobileVerifyDomainUnauthorized">O servidor que você digitou não está autorizado para esta app.</string>
     <string name="mobileVerifyUserAgentUnauthorized">O agente de utilizador para esta app não está autorizado.</string>

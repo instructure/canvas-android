@@ -213,9 +213,6 @@
     </plurals>
 
     <string name="delete_assignment_message">この課題を削除してもよろしいですか?</string>
-    <string name="question">質問</string>
-    <string name="quizMatchingDefaultDisplay">[選択する]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">受講生にメッセージ</string>
 
@@ -227,9 +224,6 @@
     <string name="submission_status_excused">免除</string>
     <string name="last_login_format">最終ログイン：%s</string>
 
-    <string name="muteGrades">成績をミュートする</string>
-    <string name="unmuteGrades">成績をミュート解除する</string>
-    <string name="gradesMutedLabel">成績がミュートされています</string>
     <string name="turnOnAnonymousGrading">匿名での採点をオンにする</string>
     <string name="turnOffAnonymousGrading">匿名での採点をオフにする</string>
     <string name="anonymousGradingLabel">匿名での採点</string>
@@ -387,6 +381,7 @@
     <string name="graded">採点済み</string>
     <string name="needsGrading">採点が必要です</string>
     <string name="not_submitted">未提出</string>
+    <string name="a11y_viewSubmissionAction">提出の詳細を表示する</string>
     <string name="content_description_submission_donut_graded" formatted="false">成績評価 、%s 中 %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">採点が必要、%s 中 %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">未提出、%s 中 %s</string>

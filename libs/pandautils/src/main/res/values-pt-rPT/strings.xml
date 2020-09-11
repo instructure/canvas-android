@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Notificações de transferência</string>
     <string name="notificationChannelNameFileUploadsDescription">Notificações de exrã para transferências em andamento.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Escolher ficheiro de&#8230;</string>
     <string name="addFile">Adicionar ficheiro</string>
-    <string name="choose_a_file">Escolher um ficheiro</string>
-
     <string name="fromCamera">Câmara</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Dispositivo</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">O tipo de ficheiro selecionado não é permitido.</string>
     <string name="allowedExtensions">Extensões permitidas:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Erro do Questionário</string>
-    <string name="quizNetworkErrorMessage">A conexão com a internet parece estar off-line.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Por favor verifique a sua ligação e tente novamente. </string>
     <string name="noApps">O seu dispositivo não tem aplicações instaladas que possam abrir este ficheiro.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Nenhum ficheiro</string>
     <string name="noFilesForAssignment">Não existem ficheiros para este envio</string>
     <string name="noFilesSubtext">Não há ficheiros associados a essa conta.</string>
+    <string name="emptyFolder">Esta pasta está vazia</string>
     <string name="notSupported">Não suportado</string>
     <string name="noEvents">Nenhum evento hoje!</string>
     <string name="noEventsSubtext">Parece um ótimo dia para descansar e relaxar.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Sem ligação à Internet</string>
     <string name="noInternetConnectionMessage">Esta ação requer uma conexão com a internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Ver detalhes do utilizador para %s.</string>
 
     <!-- App Names -->

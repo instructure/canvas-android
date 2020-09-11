@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Vill du radera den här uppgiften?</string>
-    <string name="question">Fråga</string>
-    <string name="quizMatchingDefaultDisplay">[Välj]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Skicka meddelande till studenten</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Ursäktad</string>
     <string name="last_login_format">Senaste inloggning: %s</string>
 
-    <string name="muteGrades">Tysta omdömen</string>
-    <string name="unmuteGrades">Av-tysta omdömen</string>
-    <string name="gradesMutedLabel">Omdömen tystade</string>
     <string name="turnOnAnonymousGrading">Sätt på anonym bedömning</string>
     <string name="turnOffAnonymousGrading">Stäng av anonym bedömning</string>
     <string name="anonymousGradingLabel">Anonym bedömning</string>
@@ -391,6 +385,7 @@
     <string name="graded">Har bedömts</string>
     <string name="needsGrading">Måste bedömas</string>
     <string name="not_submitted">Inte inskickade</string>
+    <string name="a11y_viewSubmissionAction">visa inlämningsinformation</string>
     <string name="content_description_submission_donut_graded" formatted="false">Har bedömts, %s av %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Måste bedömas, %s av %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Inte inskickade, %s av %s</string>

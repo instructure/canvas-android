@@ -169,8 +169,6 @@
     <string name="noDate">Kāore he rā</string>
     <string name="future">E heke mai nei</string>
     <string name="next7Days">Panuku 7 ra</string>
-    <string name="days">Ngā rā</string>
-
     <string name="submissionDetailsDueTodayAt">E tika ana i tēnei rā i %s</string>
     <string name="submissionDetailsDueTomorrowAt">E tika ana apopo i %s</string>
     <string name="submissionDetailsDueYesterdayAt">E tika ana inānahi i %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">mukua</string>
-    <string name="contentDescriptionFiles">Icon kōnae</string>
-
     <string name="loadingCanvas">E uta ana Canvas Ihirangi&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">E haere ake nei</string>
-    <string name="turnedIn">I tahuri ki roto:&#160;</string>
     <string name="addComment">Tāpiri i te kōrero&#8230;</string>
     <string name="home">Kāinga</string>
     <string name="Notifications">whakamōhiotanga</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">mahi quizzes</string>
     <string name="gradedSurveys">Ngā rangahau kua kōeketia</string>
     <string name="surveys">rangahau</string>
-    <string name="quizMatchingDefaultDisplay">[Kōwhiri]</string>
-    <string name="choose_answer_below">Whiriwhiri tō whakautu i raro</string>
-    <string name="choose_answers_below">Whiriwhiri ō whakautu i raro</string>
-
-
-    <string name="flag_the_question">Kara te Pātai</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Hei mahi</string>
     <string name="gradesWidgetTitle">Ngā Kōeke</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Rahi</string>
 
-    <string name="calendarDay">rā</string>
     <string name="createNewCalendarEvent">Waihanga Tauwhāinga Hōu</string>
     <string name="enableFunMode">Whakaweto ngā Pandas</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Kaitohutohu &amp; Kaiwhakahaere anake. Me whakamōhiotia mō te whakaurutanga o ngā akoranga, ngā ripoata i hangaia, ngā mea kua puta mai, ngā rīpoata heke, ngā kaiwhakamahi pūkete hou, me ngā roopu ākonga hou.</string>
     <string name="notification_desc_recording_ready">Me whakamōhiotia i te wā e reri ana te tuhinga o te hui.</string>
 
-    <string name="enterAnswer">Tomo Whakautu</string>
-    <string name="resumeQuiz">Haere anō Quiz</string>
-    <string name="allowed_attempts">Ngā ngana e whakātia ana</string>
-    <string name="viewQuestions">Tirohia pātai</string>
     <string name="unlimited">Kaore he mutunga</string>
-    <string name="viewResults">Tirohia Ngā Hua</string>
-
-    <string name="toggleTimer">Takahuri Matawā</string>
-    <string name="thirtySecondWarning">30 hēkona i mahue</string>
-    <string name="timeSpentFormat" formatted="false">Wā kua pau: %d meneti</string>
-    <string name="lockedIPAddress">Kei te maukati tēnei quiz. Kei te wātea anake i ētahi tauwāhi.</string>
-    <string name="lockedInvalidAccessCode">waehere uru muhu</string>
-
-    <string name="showFlaggedQuestions">Whakātu karaina / pātai kaore e whakautua</string>
     <string name="question">Pātai</string>
-    <string name="questions">Ngā pātai</string>
     <plurals name="question_count">
         <item quantity="one">%d pātai</item>
         <item quantity="other">%d pātai</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s koinga</item>
         <item quantity="other">%s ngā koinga</item>
     </plurals>
-    <string name="flagged">karaina</string>
-
-    <string name="areYouSure">E tino pono koe e hiahia ana koe ki te tuku i tēnei quiz?</string>
-    <string name="submitQuiz">Tuku Quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Kei ia koe %d pātai kaore i whakautua.\nE tino pono ana koe e hiahia ana koe ki te tuku i tēnei quiz?</item>
-        <item quantity="other">Kei ia koe %d ngā pātai kaore i whakautua.\nE tino pono ana koe e hiahia ana koe ki te tuku i tēnei quiz?</item>
-    </plurals>
-    <string name="takeQuizAgain">Tango Quiz anō</string>
-    <string name="autoSubmitting">Tukuna aunoa quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Tukuna te quiz no te mea kua pau te wā.</string>
-    <string name="submitReasonLockAt">Tukuna te quiz no te mea i tae i te raka i te rā.</string>
-    <string name="quizSubmittedSuccessfully">I tukuna pai te quiz.</string>
-    <string name="quizSubmittedFailure">Kaore e tukuna a Quiz i tēnei wā.</string>
-    <string name="almostDue">Tata te rā e tika ana!</string>
-    <string name="almostDueMsg">Kua tata te tae mai o te rā tika. Tuku ināianei ki te aukati i tō quiz ki a mākahia tūreiti?</string>
     <string name="timeLimit">Wā Whāiti</string>
-    <string name="cantStartQuiz">Kāore e taea te tīmata quiz.</string>
-    <string name="start">Tīmata</string>
     <string name="newPushNotifications">%1$s Whakamōhiotanga Whakahou</string>
     <string name="like">rite</string>
     <string name="likeEntryLabel">Pirangi Whakauru</string>

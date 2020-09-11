@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Haluatko varmasti poistaa tämän tehtävän?</string>
-    <string name="question">Kysymys</string>
-    <string name="quizMatchingDefaultDisplay">[Valitse]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Lähetä viesti opiskelijalle</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Annettu anteeksi</string>
     <string name="last_login_format">Viimeinen sisäänkirjautuminen: %s</string>
 
-    <string name="muteGrades">Mykistä arvosanat</string>
-    <string name="unmuteGrades">Poista mykistys arvosanoista</string>
-    <string name="gradesMutedLabel">Arvosanat mykistetty</string>
     <string name="turnOnAnonymousGrading">Kytke päälle nimetön arvosanojen anto</string>
     <string name="turnOffAnonymousGrading">Kytke nimetön arvosanojen anto pois päältä</string>
     <string name="anonymousGradingLabel">Nimetön arvosanojen anto</string>
@@ -391,6 +385,7 @@
     <string name="graded">Arvosteltu</string>
     <string name="needsGrading">Täytyy arvostella</string>
     <string name="not_submitted">Ei esitetty</string>
+    <string name="a11y_viewSubmissionAction">tarkastele lähetystietoja</string>
     <string name="content_description_submission_donut_graded" formatted="false">Arvosteltu, %s/%s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Täytyy arvostella, %s/%s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Ei lähetetty, %s/%s</string>

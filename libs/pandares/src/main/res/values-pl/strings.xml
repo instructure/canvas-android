@@ -174,7 +174,6 @@
     <string name="noDate">Brak daty</string>
     <string name="future">Przyszłość</string>
     <string name="next7Days">Następne 7 dni</string>
-    <string name="days">Dni</string>
     <string name="submissionDetailsDueTodayAt">Termin o %s dziś</string>
     <string name="submissionDetailsDueTomorrowAt">Termin o %s jutro</string>
     <string name="submissionDetailsDueYesterdayAt">Termin o %s wczoraj</string>
@@ -421,8 +420,6 @@
     <!-- Notifications -->
     <string name="deleted">Usunięto</string>
 
-    <string name="contentDescriptionFiles">Ikona pliku</string>
-
     <string name="loadingCanvas">Ładowanie zawartości Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -536,7 +533,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Następny</string>
-    <string name="turnedIn">Oddano:&#160;</string>
     <string name="addComment">Dodaj komentarz&#8230;</string>
 
     <string name="home">Strona główna</string>
@@ -596,12 +592,6 @@
     <string name="practiceQuizzes">Testy próbne</string>
     <string name="gradedSurveys">Ocenione ankiety</string>
     <string name="surveys">Ankiety</string>
-    <string name="quizMatchingDefaultDisplay">[Wybierz]</string>
-    <string name="choose_answer_below">Wybierz odpowiedź poniżej</string>
-    <string name="choose_answers_below">Wybierz odpowiedzi poniżej</string>
-    <string name="flag_the_question">Oflaguj pytanie</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Lista zadań</string>
     <string name="gradesWidgetTitle">Oceny</string>
@@ -724,7 +714,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">dzień</string>
     <string name="createNewCalendarEvent">Utwórz nowe wydarzenie</string>
     <string name="enableFunMode">Wyłącz pandy</string>
 
@@ -810,22 +799,8 @@
     <string name="notification_desc_admin">Tylko instruktor i admin. Powiadamiaj mnie o rejestracji w kursie, utworzeniu raportu, eksportowaniu zawartości, raportach migracji, nowych kontach i nowych grupach uczestników.</string>
     <string name="notification_desc_recording_ready">Powiadamiaj mnie o gotowości do nagrywania konferencji.</string>
 
-    <string name="enterAnswer">Wpisz odpowiedź</string>
-    <string name="resumeQuiz">Wznów test</string>
-    <string name="allowed_attempts">Dozwolone próby</string>
-    <string name="viewQuestions">Wyświetl pytania</string>
     <string name="unlimited">Nieograniczony</string>
-    <string name="viewResults">Wyświetl wyniki</string>
-
-    <string name="toggleTimer">Przełącznik czasowy</string>
-    <string name="thirtySecondWarning">pozostało 30 sekund</string>
-    <string name="timeSpentFormat" formatted="false">Spędzony czas: %d min</string>
-    <string name="lockedIPAddress">Dany test jest zablokowany. Dostępne jest tylko w niektórych lokalizacjach.</string>
-    <string name="lockedInvalidAccessCode">Nieprawidłowy kod dostępu</string>
-
-    <string name="showFlaggedQuestions">Pokaż oznaczone pytania/pytania bez odpowiedzi</string>
     <string name="question">Pytanie</string>
-    <string name="questions">Pytania</string>
     <plurals name="question_count">
         <item quantity="one">%d pytanie</item>
         <item quantity="few">%d pytania</item>
@@ -839,27 +814,7 @@
         <item quantity="many">%s punkty</item>
         <item quantity="other">%s punkty</item>
     </plurals>
-    <string name="flagged">Oflagowane</string>
-
-    <string name="areYouSure">Czy na pewno chcesz zgłosić ten test?</string>
-    <string name="submitQuiz">Zgłosić test?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Masz %d pytanie bez odpowiedzi.\nCzy na pewno chcesz przesłać ten test?</item>
-        <item quantity="few">Masz %d pytania bez odpowiedzi.\nCzy na pewno chcesz przesłać ten test?</item>
-        <item quantity="many">Masz %d pytania bez odpowiedzi.\nCzy na pewno chcesz przesłać ten test?</item>
-        <item quantity="other">Masz %d pytania bez odpowiedzi.\nCzy na pewno chcesz przesłać ten test?</item>
-    </plurals>
-    <string name="takeQuizAgain">Zrób test ponownie</string>
-    <string name="autoSubmitting">Automatyczne wysyłanie testu&#8230;</string>
-    <string name="submitReasonTimedQuiz">Test został przesłany, ponieważ skończył się czas.</string>
-    <string name="submitReasonLockAt">Test został przesłany, ponieważ dobiegł końca terminu i został zablokowany.</string>
-    <string name="quizSubmittedSuccessfully">Test pomyślnie przesłany.</string>
-    <string name="quizSubmittedFailure">Nie można wczytać testu.</string>
-    <string name="almostDue">Bliski termin!</string>
-    <string name="almostDueMsg">Termin jest już blisko. Przesłać teraz, aby test nie został oznaczony jako spóźniony?</string>
     <string name="timeLimit">Limit czasu</string>
-    <string name="cantStartQuiz">Nie można rozpocząć testu.</string>
-    <string name="start">Rozpocznij</string>
     <string name="newPushNotifications">Nowe powiadomienia: %1$s</string>
     <string name="like">lubię to</string>
     <string name="likeEntryLabel">Polub wpis</string>

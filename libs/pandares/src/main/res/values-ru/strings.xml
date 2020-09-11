@@ -174,7 +174,6 @@
     <string name="noDate">Дата отсутствует</string>
     <string name="future">Будущее</string>
     <string name="next7Days">Следующие 7 дней</string>
-    <string name="days">Дней</string>
     <string name="submissionDetailsDueTodayAt">Срок – сегодня в %s</string>
     <string name="submissionDetailsDueTomorrowAt">Срок – завтра в %s</string>
     <string name="submissionDetailsDueYesterdayAt">Срок – вчера в %s</string>
@@ -421,8 +420,6 @@
     <!-- Notifications -->
     <string name="deleted">Удалено</string>
 
-    <string name="contentDescriptionFiles">Иконка файла</string>
-
     <string name="loadingCanvas">Загрузка контента Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -536,7 +533,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Далее</string>
-    <string name="turnedIn">Включено:&#160;</string>
     <string name="addComment">Добавить комментарий&#8230;</string>
 
     <string name="home">Начальная страница</string>
@@ -596,12 +592,6 @@
     <string name="practiceQuizzes">Практические тесты</string>
     <string name="gradedSurveys">Оцениваемые опросы</string>
     <string name="surveys">Опросы</string>
-    <string name="quizMatchingDefaultDisplay">[Выбрать]</string>
-    <string name="choose_answer_below">Выберите один из представленных ниже вариантов ответов</string>
-    <string name="choose_answers_below">Выберите несколько из представленных ниже вариантов ответов</string>
-    <string name="flag_the_question">Пометить вопрос</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
     <string name="gradesWidgetTitle">Оценки</string>
@@ -724,7 +714,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">День</string>
     <string name="createNewCalendarEvent">Создать новое событие</string>
     <string name="enableFunMode">Выключить панд</string>
 
@@ -810,22 +799,8 @@
     <string name="notification_desc_admin">Только инструктор и администратор. Получайте уведомления о зачислениях на курс, сгенерированных отчетах, экспорте содержимого, миграционных отчетах, пользователях с новой учетной записью и новых студенческих группах.</string>
     <string name="notification_desc_recording_ready">Получайте уведомления о готовности к записи конференции.</string>
 
-    <string name="enterAnswer">Ввести ответ</string>
-    <string name="resumeQuiz">Возобновить тест</string>
-    <string name="allowed_attempts">Разрешенные попытки</string>
-    <string name="viewQuestions">Посмотреть Вопросы</string>
     <string name="unlimited">Неограниченно</string>
-    <string name="viewResults">Посмотреть результаты</string>
-
-    <string name="toggleTimer">Переключить Таймер</string>
-    <string name="thirtySecondWarning">30 секунд до конца</string>
-    <string name="timeSpentFormat" formatted="false">Затраченное время: %d минут/минуты</string>
-    <string name="lockedIPAddress">Этот тест заблокирован. Он доступен только в некоторых местоположениях.</string>
-    <string name="lockedInvalidAccessCode">Неверный код доступа</string>
-
-    <string name="showFlaggedQuestions">Показать отмеченные/неотвеченные вопросы</string>
     <string name="question">Вопрос</string>
-    <string name="questions">Вопросы</string>
     <plurals name="question_count">
         <item quantity="one">Вопрос %d</item>
         <item quantity="few">Вопросы %d</item>
@@ -839,27 +814,7 @@
         <item quantity="many">%s баллов</item>
         <item quantity="other">%s баллов</item>
     </plurals>
-    <string name="flagged">Помеченный</string>
-
-    <string name="areYouSure">Вы уверены, что хотите отправить этот тест?</string>
-    <string name="submitQuiz">Отправить тест?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Вы не ответили на вопрос %d.\nОтправить этот тест?</item>
-        <item quantity="few">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
-        <item quantity="many">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
-        <item quantity="other">Вы не ответили на вопросы %d.\nОтправить этот тест?</item>
-    </plurals>
-    <string name="takeQuizAgain">Снова пройти тест</string>
-    <string name="autoSubmitting">Автоматическая отправка теста&#8230;</string>
-    <string name="submitReasonTimedQuiz">Тест отправлен, потому что закончилось время.</string>
-    <string name="submitReasonLockAt">Тест отправлен, потому что была достигнута блокировка по дате.</string>
-    <string name="quizSubmittedSuccessfully">Тест успешно отправлен.</string>
-    <string name="quizSubmittedFailure">Тест невозможно отправить сейчас.</string>
-    <string name="almostDue">Срок почти подошел!</string>
-    <string name="almostDueMsg">Крайний срок почти наступил. Отправить сейчас, чтобы ваш тест не был помечен как несвоевременный?</string>
     <string name="timeLimit">Ограничение по времени</string>
-    <string name="cantStartQuiz">Невозможно запустить тест.</string>
-    <string name="start">Начать</string>
     <string name="newPushNotifications">Новые уведомления %1$s</string>
     <string name="like">нравятся</string>
     <string name="likeEntryLabel">Добавление лайка</string>

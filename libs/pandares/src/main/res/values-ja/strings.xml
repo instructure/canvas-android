@@ -168,8 +168,6 @@
     <string name="noDate">日付なし</string>
     <string name="future">未来</string>
     <string name="next7Days">次の7日間</string>
-    <string name="days">日にち</string>
-
     <string name="submissionDetailsDueTodayAt">%s で今日が期限</string>
     <string name="submissionDetailsDueTomorrowAt">%s で明日が期限</string>
     <string name="submissionDetailsDueYesterdayAt">%s で昨日が期限</string>
@@ -398,8 +396,6 @@
 
     <!-- Notifications -->
     <string name="deleted">削除されました</string>
-    <string name="contentDescriptionFiles">ファイルアイコン</string>
-
     <string name="loadingCanvas">Canvas コンテンツ&#8230;を読み込み中</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -512,7 +508,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">次</string>
-    <string name="turnedIn">&#160;に提出</string>
     <string name="addComment">コメント&#8230;を追加</string>
 
     <string name="home">ホーム</string>
@@ -572,12 +567,6 @@
     <string name="practiceQuizzes">練習クイズ</string>
     <string name="gradedSurveys">採点されたアンケート</string>
     <string name="surveys">サーベイ</string>
-    <string name="quizMatchingDefaultDisplay">[選択する]</string>
-    <string name="choose_answer_below">下の回答を選択してください</string>
-    <string name="choose_answers_below">下の回答を選択してください</string>
-    <string name="flag_the_question">質問にフラグを立てる</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
     <string name="gradesWidgetTitle">成績</string>
@@ -700,7 +689,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">日</string>
     <string name="createNewCalendarEvent">新しいイベントを作成</string>
     <string name="enableFunMode">パンダをオフにする</string>
 
@@ -786,22 +774,8 @@
     <string name="notification_desc_admin">インストラクターと管理者のみ。コースの登録、生成されたレポート、エクスポートされたコンテンツ、移行レポート、新しいアカウントユーザー、新しい受講生グループについて通知を受け取ります。</string>
     <string name="notification_desc_recording_ready">会議録画の準備ができたときに通知を受け取ります。</string>
 
-    <string name="enterAnswer">答えを入力</string>
-    <string name="resumeQuiz">クイズを再開する</string>
-    <string name="allowed_attempts">試行許可数</string>
-    <string name="viewQuestions">質問を表示</string>
     <string name="unlimited">無制限</string>
-    <string name="viewResults">結果を表示</string>
-
-    <string name="toggleTimer">トグルタイマー</string>
-    <string name="thirtySecondWarning">残り30秒</string>
-    <string name="timeSpentFormat" formatted="false">使った時間：%d分</string>
-    <string name="lockedIPAddress">このクイズはロックされています。特定の場所でのみ利用可能です。</string>
-    <string name="lockedInvalidAccessCode">無効のアクセスコード</string>
-
-    <string name="showFlaggedQuestions">フラグが立っている/回答されていない質問を表示</string>
     <string name="question">質問</string>
-    <string name="questions">質問</string>
     <plurals name="question_count">
         <item quantity="other">%dの質問</item>
     </plurals>
@@ -809,24 +783,7 @@
     <plurals name="pointCount">
         <item quantity="other">%s 点</item>
     </plurals>
-    <string name="flagged">フラグ付き</string>
-
-    <string name="areYouSure">このクイズを送信しますか？</string>
-    <string name="submitQuiz">クイズを送信しますか？</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="other">%d の未回答の質問があります。\nこのクイズを送信してもよろしいですか？</item>
-    </plurals>
-    <string name="takeQuizAgain">再度、クイズに答える</string>
-    <string name="autoSubmitting">クイズ&#8230;を自動的に提出</string>
-    <string name="submitReasonTimedQuiz">制限時間になったので、クイズを送信しました。</string>
-    <string name="submitReasonLockAt">日付けにおけるロック状態となったので、クイズを送信しました。</string>
-    <string name="quizSubmittedSuccessfully">クイズが送信されました。</string>
-    <string name="quizSubmittedFailure">今回クイズを送信できませんでした。</string>
-    <string name="almostDue">もうすぐ期限です！</string>
-    <string name="almostDueMsg">もうすぐ期限です。クイズが「提出遅れ」と表示されないように、今すぐ送信してください。</string>
     <string name="timeLimit">時間制限</string>
-    <string name="cantStartQuiz">クイズを開始できません。</string>
-    <string name="start">開始</string>
     <string name="newPushNotifications">%1$s 新規通知</string>
     <string name="like">いいね</string>
     <string name="likeEntryLabel">いいねのエントリー</string>

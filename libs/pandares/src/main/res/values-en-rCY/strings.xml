@@ -172,7 +172,6 @@
     <string name="noDate">No date</string>
     <string name="future">Future</string>
     <string name="next7Days">Next 7 days</string>
-    <string name="days">Days</string>
     <string name="submissionDetailsDueTodayAt">Due today at %s</string>
     <string name="submissionDetailsDueTomorrowAt">Due tomorrow at %s</string>
     <string name="submissionDetailsDueYesterdayAt">Due yesterday at %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Deleted</string>
 
-    <string name="contentDescriptionFiles">File icon</string>
-
     <string name="loadingCanvas">Loading Canvas Content&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Next</string>
-    <string name="turnedIn">Handed In:&#160;</string>
     <string name="addComment">Add a comment&#8230;</string>
 
     <string name="home">Home</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Practice quizzes</string>
     <string name="gradedSurveys">Marked surveys</string>
     <string name="surveys">Surveys</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-    <string name="choose_answer_below">Choose your answer below</string>
-    <string name="choose_answers_below">Choose your answers below</string>
-    <string name="flag_the_question">Flag the question</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do</string>
     <string name="gradesWidgetTitle">Grades</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Day</string>
     <string name="createNewCalendarEvent">Create new event</string>
     <string name="enableFunMode">Turn off pandas</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Instructor &amp; Admin only. Receive notifications about module enrolments, reports generated, content exported, migration reports, new account users and new student groups.</string>
     <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
 
-    <string name="enterAnswer">Enter answer</string>
-    <string name="resumeQuiz">Resume quiz</string>
-    <string name="allowed_attempts">Allowed attempts</string>
-    <string name="viewQuestions">View questions</string>
     <string name="unlimited">Unlimited</string>
-    <string name="viewResults">View results</string>
-
-    <string name="toggleTimer">Toggle timer</string>
-    <string name="thirtySecondWarning">30 seconds left</string>
-    <string name="timeSpentFormat" formatted="false">Time spent: %d minutes</string>
-    <string name="lockedIPAddress">This quiz is locked. It is only available in certain locations.</string>
-    <string name="lockedInvalidAccessCode">Invalid access code</string>
-
-    <string name="showFlaggedQuestions">Show flagged/unanswered questions</string>
     <string name="question">Question</string>
-    <string name="questions">Questions</string>
     <plurals name="question_count">
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
     </plurals>
-    <string name="flagged">Flagged</string>
-
-    <string name="areYouSure">Are you sure you want to submit this quiz?</string>
-    <string name="submitQuiz">Submit quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">You have %d unanswered question.\nAre you sure you want to submit this quiz?</item>
-        <item quantity="other">You have %d unanswered questions.\nAre you sure you want to submit this quiz?</item>
-    </plurals>
-    <string name="takeQuizAgain">Take quiz again</string>
-    <string name="autoSubmitting">Auto submitting quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Submitted quiz because time limit was up.</string>
-    <string name="submitReasonLockAt">Submitted quiz because lock at date was reached.</string>
-    <string name="quizSubmittedSuccessfully">Quiz submitted successfully.</string>
-    <string name="quizSubmittedFailure">Quiz could not be submitted at this time.</string>
-    <string name="almostDue">Almost due!</string>
-    <string name="almostDueMsg">The due date is almost here. Submit now to prevent your quiz from being marked late?</string>
     <string name="timeLimit">Time limit</string>
-    <string name="cantStartQuiz">Unable to start quiz.</string>
-    <string name="start">Start</string>
     <string name="newPushNotifications">%1$s New notifications</string>
     <string name="like">like</string>
     <string name="likeEntryLabel">Like Entry</string>

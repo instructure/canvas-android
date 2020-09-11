@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Varslinger for opplastinger</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-varslinger for pågående opplastinger.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Velg fil fra&#8230;</string>
     <string name="addFile">Legg til fil</string>
-    <string name="choose_a_file">Velg en fil</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
@@ -122,8 +119,6 @@
     <string name="extensionNotAllowed">Den valgte filtypen er ikke tillatt.</string>
     <string name="allowedExtensions">Tillatte filtyper:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Testfeil</string>
-    <string name="quizNetworkErrorMessage">Det ser ut som internettforbindelsen er frakoblet.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontroller dataforbindelsen din og prøv igjen. </string>
     <string name="noApps">Din enhet har ikke installert programmer som kan håndtere denne filen.</string>
@@ -164,6 +159,7 @@
     <string name="noFiles">Ingen filer</string>
     <string name="noFilesForAssignment">Det er ingen filer for denne innleveringen</string>
     <string name="noFilesSubtext">Det er ingen filer tilsluttet denne kontoen.</string>
+    <string name="emptyFolder">Mappen er tom</string>
     <string name="notSupported">Ikke støttet</string>
     <string name="noEvents">Ingen arrangementer i dag!</string>
     <string name="noEventsSubtext">Det ser ut som dette er en flott dag til å slappe av.</string>
@@ -221,6 +217,7 @@
     <string name="noInternetConnectionTitle">Ingen Internett-tilkobling</string>
     <string name="noInternetConnectionMessage">Denne handlingen krever Internett-tilkobling.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Se brukerdetaljer for %s.</string>
 
     <!-- App Names -->

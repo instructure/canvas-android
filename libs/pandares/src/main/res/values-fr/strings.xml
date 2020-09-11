@@ -56,7 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
 
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
 
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">L’envoi d\'un ou plusieurs fichiers a échoué. Vérifiez l’état de votre connexion internet, puis réessayez.</string>
@@ -72,7 +72,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URLs utilisant « http:// »</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Entrez une URL ici pour votre soumission</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer de l’audio</string>
 
     <string name="recordVideo">Enregistrer la vidéo</string>
@@ -169,8 +169,6 @@
     <string name="noDate">Pas de date</string>
     <string name="future">Futur</string>
     <string name="next7Days">Les 7 prochains jours</string>
-    <string name="days">Jours</string>
-
     <string name="submissionDetailsDueTodayAt">À rendre aujourd\'hui à %s</string>
     <string name="submissionDetailsDueTomorrowAt">À rendre demain à %s</string>
     <string name="submissionDetailsDueYesterdayAt">À rendre hier à %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Supprimé</string>
-    <string name="contentDescriptionFiles">Icône de fichier</string>
-
     <string name="loadingCanvas">Chargement du contenu Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Suivant</string>
-    <string name="turnedIn">Rendu le :&#160;</string>
     <string name="addComment">Ajouter un commentaire&#8230;</string>
     <string name="home">Accueil</string>
     <string name="Notifications">Notifications</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Quiz d’entraînement</string>
     <string name="gradedSurveys">Enquêtes notées</string>
     <string name="surveys">Sondages</string>
-    <string name="quizMatchingDefaultDisplay">[Choisir]</string>
-    <string name="choose_answer_below">Choisissez votre réponse ci-dessous</string>
-    <string name="choose_answers_below">Choisissez vos réponses ci-dessous</string>
-
-
-    <string name="flag_the_question">Marquer la question</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">À faire</string>
     <string name="gradesWidgetTitle">Notes</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Jour</string>
     <string name="createNewCalendarEvent">Créer un nouvel événement</string>
     <string name="enableFunMode">Désactiver les pandas</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Instructeur &amp; Admin uniquement. Être notifié des inscriptions aux cours, des rapports générés, des contenus exportés, des rapports de migration, des nouveaux comptes utilisateur et des nouveaux groupes d’élèves.</string>
     <string name="notification_desc_recording_ready">Être notifié lorsqu’un nouvel enregistrement de conférence est prêt.</string>
 
-    <string name="enterAnswer">Saisir la réponse</string>
-    <string name="resumeQuiz">Reprendre le questionnaire</string>
-    <string name="allowed_attempts">Tentatives autorisées</string>
-    <string name="viewQuestions">Voir les questions</string>
     <string name="unlimited">Illimité</string>
-    <string name="viewResults">Voir les résultats</string>
-
-    <string name="toggleTimer">Activer/Stopper la minuterie</string>
-    <string name="thirtySecondWarning">Il reste 30 secondes</string>
-    <string name="timeSpentFormat" formatted="false">Temps passé : %d minutes</string>
-    <string name="lockedIPAddress">Ce questionnaire est verrouillé. Il n’est disponible que dans certains lieux.</string>
-    <string name="lockedInvalidAccessCode">Code d\'accès invalide</string>
-
-    <string name="showFlaggedQuestions">Afficher les questions marquées/non-répondues</string>
     <string name="question">Question</string>
-    <string name="questions">Questions</string>
     <plurals name="question_count">
         <item quantity="one">%d question</item>
         <item quantity="other">%d questions</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
     </plurals>
-    <string name="flagged">Marqué</string>
-
-    <string name="areYouSure">Êtes-vous certain de vouloir soumettre ce questionnaire ?</string>
-    <string name="submitQuiz">Soumettre le questionnaire ?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Vous n’avez pas répondu à %d question.\nÊtes-vous sûr de vouloir soumettre ce questionnaire ?</item>
-        <item quantity="other">Vous n’avez pas répondu à %d questions.\nÊtes-vous sûr de vouloir soumettre ce questionnaire ?</item>
-    </plurals>
-    <string name="takeQuizAgain">Répondre à nouveau au questionnaire</string>
-    <string name="autoSubmitting">Submission auto du questionnaire&#8230;</string>
-    <string name="submitReasonTimedQuiz">Le questionnaire a été soumis car la limite de temps a été atteinte.</string>
-    <string name="submitReasonLockAt">Le questionnaire a été soumis car la date butoir a été atteinte.</string>
-    <string name="quizSubmittedSuccessfully">Le questionnaire a bien été soumis.</string>
-    <string name="quizSubmittedFailure">Impossible de soumettre le questionnaire pour le moment</string>
-    <string name="almostDue">Dû très bientôt !</string>
-    <string name="almostDueMsg">On approche de la date limite. Soumettre maintenant pour éviter que votre quiz ne soit marqué comme en retard ?</string>
     <string name="timeLimit">Limite de temps</string>
-    <string name="cantStartQuiz">Impossible de commencer le questionnaire.</string>
-    <string name="start">Commencer</string>
     <string name="newPushNotifications">%1$s nouvelles notifications</string>
     <string name="like">mention "J\'aime"</string>
     <string name="likeEntryLabel">Aimer l’entrée</string>
@@ -931,7 +887,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Ce travail n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Ce travail n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>O</item>
@@ -1092,7 +1048,7 @@
     <string name="closeRecordingView">Fermer la vue enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d\'afficher le replay.</string>
+    <string name="errorShowingVideoReplay">Une erreur est survenue lors de la tentative d&apos;afficher le replay.</string>
     <string name="errorSubmittingMediaComment">Une erreur est survenue lors de la tentative de soumettre votre commentaire au format média.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>

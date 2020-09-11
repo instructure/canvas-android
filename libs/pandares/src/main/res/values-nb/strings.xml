@@ -169,8 +169,6 @@
     <string name="noDate">Ingen dato</string>
     <string name="future">Fremtidige</string>
     <string name="next7Days">Neste 7 dager</string>
-    <string name="days">Dager</string>
-
     <string name="submissionDetailsDueTodayAt">Frist i dag klokken %s</string>
     <string name="submissionDetailsDueTomorrowAt">Frist i morgen klokken %s</string>
     <string name="submissionDetailsDueYesterdayAt">Frist i går klokken %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Slettet</string>
-    <string name="contentDescriptionFiles">Fil-ikon</string>
-
     <string name="loadingCanvas">Laster Canvas-innhold&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Neste</string>
-    <string name="turnedIn">Innlevert:&#160;</string>
     <string name="addComment">Legg til en kommentar&#8230;</string>
     <string name="home">Hjem</string>
     <string name="Notifications">Varslinger</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Øvelsestester</string>
     <string name="gradedSurveys">Karaktergivende spørreundersøkelser</string>
     <string name="surveys">Spørreundersøkelser</string>
-    <string name="quizMatchingDefaultDisplay">[Velg]</string>
-    <string name="choose_answer_below">Velg svaret ditt nedenfor</string>
-    <string name="choose_answers_below">Velg svarene dine nedenfor</string>
-
-
-    <string name="flag_the_question">Merk spørsmålet</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Å gjøre</string>
     <string name="gradesWidgetTitle">Karakterer</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Dag</string>
     <string name="createNewCalendarEvent">Opprett ny hendelse</string>
     <string name="enableFunMode">Skru av pandaene</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Instruktør &amp; kun Admin. Få beskjed om emnepåmeldinger, rapporter generert, innhold eksportert, flyttingsrapporter, nye kontobrukere og nye studentgrupper.</string>
     <string name="notification_desc_recording_ready">Bli varslet når et konferanseopptak er klart.</string>
 
-    <string name="enterAnswer">Skriv inn svar</string>
-    <string name="resumeQuiz">Fortsett test</string>
-    <string name="allowed_attempts">Tillatte forsøk</string>
-    <string name="viewQuestions">Se spørsmål</string>
     <string name="unlimited">Ubegrenset</string>
-    <string name="viewResults">Se resultater</string>
-
-    <string name="toggleTimer">Veksle timer</string>
-    <string name="thirtySecondWarning">30 sekunder igjen</string>
-    <string name="timeSpentFormat" formatted="false">Tid brukt: %d minutter</string>
-    <string name="lockedIPAddress">Denne testen er låst. Den er kun tilgjengelig enkelte steder.</string>
-    <string name="lockedInvalidAccessCode">Ugyldig tilgangskode</string>
-
-    <string name="showFlaggedQuestions">Vis flagget/ubesvarte spørsmål</string>
     <string name="question">Spørsmål</string>
-    <string name="questions">Spørsmål</string>
     <plurals name="question_count">
         <item quantity="one">%d spørsmål</item>
         <item quantity="other">%d spørsmål</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s poeng</item>
         <item quantity="other">%s poeng</item>
     </plurals>
-    <string name="flagged">Flagget</string>
-
-    <string name="areYouSure">Er du sikker på at du sende inn denne quizen?</string>
-    <string name="submitQuiz">Sende inn quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Du har %d ubesvart spørsmål.\nEr du sikker på at du vil sende inn denne quizen?</item>
-        <item quantity="other">Du har %d ubesvart spørsmål.\nEr du sikker på at du vil sende inn denne quizen?</item>
-    </plurals>
-    <string name="takeQuizAgain">Ta quizen på nytt</string>
-    <string name="autoSubmitting">Automatisk innsending av quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Quizen ble sendt inn ettersom tiden utløp.</string>
-    <string name="submitReasonLockAt">Quizen ble innlevert fordi datolåsen ble nådd.</string>
-    <string name="quizSubmittedSuccessfully">Quizen vellykket innlevert.</string>
-    <string name="quizSubmittedFailure">Quiz kunne ikke sendes inn akkurat nå.</string>
-    <string name="almostDue">Nesten ferdig!</string>
-    <string name="almostDueMsg">Forfallsdatoen er rett rundt hjørnet. Send inn nå for å forhindre at quizen din blir merket med sen innlevering?</string>
     <string name="timeLimit">Tidsbegrensning</string>
-    <string name="cantStartQuiz">Kan ikke starte quiz</string>
-    <string name="start">Start</string>
     <string name="newPushNotifications">%1$s Nye varsler</string>
     <string name="like">liker</string>
     <string name="likeEntryLabel">Angi likerklikk</string>

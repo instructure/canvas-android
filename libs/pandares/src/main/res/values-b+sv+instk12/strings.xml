@@ -172,7 +172,6 @@
     <string name="noDate">Inget datum</string>
     <string name="future">Framtida</string>
     <string name="next7Days">De kommande 7 dagarna</string>
-    <string name="days">Dagar</string>
     <string name="submissionDetailsDueTodayAt">Ska lämnas in idag kl. %s</string>
     <string name="submissionDetailsDueTomorrowAt">Förfaller imorgon kl. %s</string>
     <string name="submissionDetailsDueYesterdayAt">Förföll igår kl. %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Borttagen</string>
 
-    <string name="contentDescriptionFiles">Filikon</string>
-
     <string name="loadingCanvas">Läser in Canvas-innehåll&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Nästa</string>
-    <string name="turnedIn">Inlämnad:&#160;</string>
     <string name="addComment">Lägg till en kommentar&#8230;</string>
 
     <string name="home">Startsida</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Övningsquiz</string>
     <string name="gradedSurveys">Bedömda enkäter</string>
     <string name="surveys">Enkäter</string>
-    <string name="quizMatchingDefaultDisplay">[Välj]</string>
-    <string name="choose_answer_below">Välj ditt svar nedan</string>
-    <string name="choose_answers_below">Välj dina svar nedan</string>
-    <string name="flag_the_question">Flagga frågan</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Att göra</string>
     <string name="gradesWidgetTitle">Omdömen</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mätare</string>
 
-    <string name="calendarDay">Dag</string>
     <string name="createNewCalendarEvent">Skapa ny händelse</string>
     <string name="enableFunMode">Stäng av pandorna</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Endast lärare och admin. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya elevgrupper.</string>
     <string name="notification_desc_recording_ready">Få aviseringar när en konferensinspelning är klar.</string>
 
-    <string name="enterAnswer">Ange svar</string>
-    <string name="resumeQuiz">Fortsätt quiz</string>
-    <string name="allowed_attempts">Tillåtna försök</string>
-    <string name="viewQuestions">Visa frågor</string>
     <string name="unlimited">Obegränsade</string>
-    <string name="viewResults">Visa resultat</string>
-
-    <string name="toggleTimer">Timer av/på</string>
-    <string name="thirtySecondWarning">30 sekunder kvar</string>
-    <string name="timeSpentFormat" formatted="false">Tidsåtgång: %d minuter</string>
-    <string name="lockedIPAddress">Detta quiz är låst. Den är endast tillgänglig på vissa platser.</string>
-    <string name="lockedInvalidAccessCode">Ogiltig åtkomstkod</string>
-
-    <string name="showFlaggedQuestions">Visa flaggade/obesvarade frågor</string>
     <string name="question">Fråga</string>
-    <string name="questions">Frågor</string>
     <plurals name="question_count">
         <item quantity="one">%d fråga</item>
         <item quantity="other">%d frågor</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s poäng</item>
         <item quantity="other">%s poäng</item>
     </plurals>
-    <string name="flagged">Flaggade</string>
-
-    <string name="areYouSure">Vill du skicka in detta quiz?</string>
-    <string name="submitQuiz">Skicka in quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Du har %d obesvarad fråga.\nVill du skicka in detta quiz?</item>
-        <item quantity="other">Du har %d obesvarade frågor.\nVill du skicka in detta quiz?</item>
-    </plurals>
-    <string name="takeQuizAgain">Gör quiz igen</string>
-    <string name="autoSubmitting">Automatisk inskickning av quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Quizzet skickades in på grund av att tiden var slut.</string>
-    <string name="submitReasonLockAt">Quizzet skickades in på grund av att sista datumet nåddes.</string>
-    <string name="quizSubmittedSuccessfully">Quizzet har skickats in.</string>
-    <string name="quizSubmittedFailure">Quizzet kunde inte skickas in just nu.</string>
-    <string name="almostDue">Ska snart vara klar!</string>
-    <string name="almostDueMsg">Inlämningsdatumet är nästan här. Skicka in nu för att förhindra att ditt quiz märks som sent inlämnad?</string>
     <string name="timeLimit">Tidsgräns</string>
-    <string name="cantStartQuiz">Kunde inte starta quiz.</string>
-    <string name="start">Starta</string>
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
     <string name="likeEntryLabel">Gilla post</string>

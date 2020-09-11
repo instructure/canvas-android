@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Escolher Arquivo a Partir de &#8230;</string>
     <string name="addFile">Adicionar arquivo</string>
-    <string name="choose_a_file">Escolher um arquivo</string>
-
     <string name="fromCamera">Câmera</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Dispositivo</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Um ou mais arquivos tem uma extensão de arquivo que não é permitida</string>
     <string name="extensionNotAllowed">O tipo de arquivo selecionado não é permitido.</string>
     <string name="allowedExtensions">Extensões permitidas:&#160;</string>
-    <string name="quizNetworkErrorTitle">Erro de Teste</string>
-    <string name="quizNetworkErrorMessage">A conexão à Internet parece estar off-line.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Por favor, verifique sua conexão de dados e tente novamente. </string>
     <string name="noApps">O seu dispositivo não tem nenhum aplicativo instalado que pode lidar com esse arquivo.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">Nenhum arquivo</string>
     <string name="noFilesForAssignment">Não há arquivos para este envio</string>
     <string name="noFilesSubtext">Não há nenhum arquivo associado à sua conta.</string>
+    <string name="emptyFolder">Esta pasta está vazia</string>
     <string name="notSupported">Não suportado</string>
     <string name="noEvents">Nenhum evento hoje!</string>
     <string name="noEventsSubtext">Parece um bom dia para descansar e relaxar.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">Sem conexão à internet</string>
     <string name="noInternetConnectionMessage">Esta ação exige conexão à internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Visualizar detalhes do usuário para %s.</string>
 
     <!-- App Names -->

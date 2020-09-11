@@ -233,9 +233,6 @@
     </plurals>
 
     <string name="delete_assignment_message">هل ترغب بالتأكيد في حذف هذه المهمة؟</string>
-    <string name="question">السؤال</string>
-    <string name="quizMatchingDefaultDisplay">[اختيار]</string>
-
     <string name="max_count">أكثر من 99</string>
     <string name="message_student">إرسال رسالة إلى طالب</string>
 
@@ -247,9 +244,6 @@
     <string name="submission_status_excused">غير إجباري</string>
     <string name="last_login_format">آخر تسجيل دخول: %s</string>
 
-    <string name="muteGrades">إخفاء الدرجات</string>
-    <string name="unmuteGrades">إلغاء إخفاء الدرجات</string>
-    <string name="gradesMutedLabel">تم إخفاء الدرجات</string>
     <string name="turnOnAnonymousGrading">تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="turnOffAnonymousGrading">إيقاف تشغيل تقييم الدرجات دون الكشف عن الهوية</string>
     <string name="anonymousGradingLabel">تقييم الدرجات دون الكشف عن الهوية</string>
@@ -407,6 +401,7 @@
     <string name="graded">تم تقييم الدرجة</string>
     <string name="needsGrading">بحاجة إلى تقييم</string>
     <string name="not_submitted">لم يتم إرسالها</string>
+    <string name="a11y_viewSubmissionAction">عرض تفاصيل الإرسال</string>
     <string name="content_description_submission_donut_graded" formatted="false">تم التقييم، %s من %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">بحاجة إلى تقييم، %s من %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">لم يتم الإرسال، %s من %s</string>

@@ -169,8 +169,6 @@
     <string name="noDate">Geen datum</string>
     <string name="future">Toekomst</string>
     <string name="next7Days">Volgende 7 dagen</string>
-    <string name="days">Dagen</string>
-
     <string name="submissionDetailsDueTodayAt">Vandaag in te leveren om %s</string>
     <string name="submissionDetailsDueTomorrowAt">Inleverdatum morgen om %s</string>
     <string name="submissionDetailsDueYesterdayAt">Inleverdatum gisteren om %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Verwijderd</string>
-    <string name="contentDescriptionFiles">Bestand icoon</string>
-
     <string name="loadingCanvas">Canvas Content aan het uploaden&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Volgende</string>
-    <string name="turnedIn">Ingeleverd:&#160;</string>
     <string name="addComment">Een opmerking toevoegen&#8230;</string>
     <string name="home">Startpagina</string>
     <string name="Notifications">Meldingen</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Practicumtoetsen</string>
     <string name="gradedSurveys">Beoordeelde onderzoeken</string>
     <string name="surveys">Enquêtes</string>
-    <string name="quizMatchingDefaultDisplay">[Kiezen]</string>
-    <string name="choose_answer_below">Kies je antwoord hieronder</string>
-    <string name="choose_answers_below">Kies je antwoorden hieronder</string>
-
-
-    <string name="flag_the_question">Markeer de vraag</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do lijst</string>
     <string name="gradesWidgetTitle">Cijfers</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Dag</string>
     <string name="createNewCalendarEvent">Een nieuwe gebeurtenis maken</string>
     <string name="enableFunMode">Panda\'s uitzetten</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Alleen cursusleider en beheerder. Ontvang een melding over cursusinschrijvingen, gegenereerde rapporten, geëxporteerde inhoud, migratierapporten, nieuwe accountgebruikers en nieuwe cursistengroepen.</string>
     <string name="notification_desc_recording_ready">Ontvang een melding wanneer er een opname van een vergadering klaar is.</string>
 
-    <string name="enterAnswer">Antwoord invoeren</string>
-    <string name="resumeQuiz">Toets hervatten</string>
-    <string name="allowed_attempts">Toegestaan aantal pogingen</string>
-    <string name="viewQuestions">Vragen bekijken</string>
     <string name="unlimited">Onbeperkt</string>
-    <string name="viewResults">Resultaten weergeven</string>
-
-    <string name="toggleTimer">Timer aan-/uitzetten</string>
-    <string name="thirtySecondWarning">Nog 30 seconden</string>
-    <string name="timeSpentFormat" formatted="false">Bestede tijd: %d minuten</string>
-    <string name="lockedIPAddress">Deze toets is vergrendeld. De toets is alleen op bepaalde locaties beschikbaar.</string>
-    <string name="lockedInvalidAccessCode">Ongeldige toegangscode</string>
-
-    <string name="showFlaggedQuestions">Toon gevlagde/onbeantwoorde vragen</string>
     <string name="question">Vraag</string>
-    <string name="questions">Vragen</string>
     <plurals name="question_count">
         <item quantity="one">%d vraag</item>
         <item quantity="other">%d vragen</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s punt</item>
         <item quantity="other">%s punten</item>
     </plurals>
-    <string name="flagged">Gevlagd</string>
-
-    <string name="areYouSure">Weet je zeker dat je deze toets wilt inleveren?</string>
-    <string name="submitQuiz">Toets inleveren?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Je hebt %d onbeantwoorde vraag.\nWeet je zeker dat je deze toets wilt indienen?</item>
-        <item quantity="other">Je hebt %d onbeantwoorde vragen.\nWeet je zeker dat je deze toets wilt indienen?</item>
-    </plurals>
-    <string name="takeQuizAgain">Toets nogmaals doen</string>
-    <string name="autoSubmitting">Auto-inleverentoets&#8230;</string>
-    <string name="submitReasonTimedQuiz">Toets ingediend omdat tijdslimiet verstreken was.</string>
-    <string name="submitReasonLockAt">Toets ingediend omdat het datumslot bereikt was.</string>
-    <string name="quizSubmittedSuccessfully">Toets succesvol ingediend.</string>
-    <string name="quizSubmittedFailure">De toets kan op dit moment niet worden ingediend.</string>
-    <string name="almostDue">Bijna in te leveren!</string>
-    <string name="almostDueMsg">De inleverdatum komt eraan. Wil je de toets nu al indienen om te voorkomen dat deze als te laat wordt gemarkeerd?</string>
     <string name="timeLimit">Tijdslimiet</string>
-    <string name="cantStartQuiz">Kon toets niet beginnen.</string>
-    <string name="start">Starten</string>
     <string name="newPushNotifications">%1$s Nieuwe meldingen</string>
     <string name="like">like</string>
     <string name="likeEntryLabel">Invoeren van likes</string>

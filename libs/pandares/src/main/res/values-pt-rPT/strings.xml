@@ -30,7 +30,7 @@
     <string name="requestLoginHelp">Solicitar Ajuda de Login</string>
     <string name="loginHelpSubject">Estou a ter problemas para fazer login</string>
     <string name="errorReportInvalidEmail">Por favor insira um endereço de e-mail válido</string>
-    <string name="announcementSections">Seções: %s</string>
+    <string name="announcementSections">Secções: %s</string>
     <string name="selectedListItem">Selecionado: %s</string>
 
     <!-- Student Strings -->
@@ -169,8 +169,6 @@
     <string name="noDate">Sem data</string>
     <string name="future">Futuro</string>
     <string name="next7Days">Próximos 7 Dias</string>
-    <string name="days">Dias</string>
-
     <string name="submissionDetailsDueTodayAt">Devido hoje a %s</string>
     <string name="submissionDetailsDueTomorrowAt">Amanhã a partir de %s</string>
     <string name="submissionDetailsDueYesterdayAt">Devido ontem a %s</string>
@@ -256,7 +254,7 @@
         <item quantity="other">Tem a certeza de que deseja eliminar esta pasta \'%1$s\', incluso o %2$d item que ele contém? Essa ação não pode ser desfeita.</item>
     </plurals>
 
-    <string name="settings">Definições</string>
+    <string name="settings">Configurações</string>
     <string name="name">Nome</string>
     <string name="email">E-mail</string>
     <string name="username">Nome de utilizador</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
-    <string name="contentDescriptionFiles">Ícone de Ficheiro</string>
-
     <string name="loadingCanvas">A carregar o conteúdo da tela&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Próximo</string>
-    <string name="turnedIn">Ligado:&#160;</string>
     <string name="addComment">Adicionar um comentário&#8230;</string>
     <string name="home">Início</string>
     <string name="Notifications">Notificações</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Testes práticos</string>
     <string name="gradedSurveys">Inquéritos Classificados</string>
     <string name="surveys">Inquéritos</string>
-    <string name="quizMatchingDefaultDisplay">[Escolher]</string>
-    <string name="choose_answer_below">Escolha sua resposta abaixo</string>
-    <string name="choose_answers_below">Escolha suas respostas abaixo</string>
-
-
-    <string name="flag_the_question">Marcar a pergunta</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">A Fazer</string>
     <string name="gradesWidgetTitle">Classificações</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Dia</string>
     <string name="createNewCalendarEvent">Criar Novo Evento</string>
     <string name="enableFunMode">Desligar os pandas</string>
 
@@ -759,7 +747,7 @@
     <string name="notification_pref_type_sms">SMS</string>
 
     <string name="notification_pref_dialog_title">Notificações do Dispositivo</string>
-    <string name="notification_pref_dialog_message">Gostaria de ativar notificações de dispositivos? Essas definições podem ser alteradas posteriormente em Definições &gt; Notificações &gt; Para todos os dispositivos</string>
+    <string name="notification_pref_dialog_message">Gostaria de ativar notificações de dispositivos? Essas configurações podem ser alteradas posteriormente em Configurações &gt; Notificações &gt; Para todos os dispositivos</string>
     <string name="notification_pref_toast_success">As notificações foram ligadas.</string>
 
     <string name="notification_desc_due_date">Receba notificações quando uma data de vencimento da atribuição for alterada.</string>
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Instrutor &amp; somente Admin. Receba notificações sobre inscrições de cursos, relatórios gerados, conteúdo exportado, relatórios de migração, novos utilizadores de conta e novos grupos de alunos.</string>
     <string name="notification_desc_recording_ready">Receba notificações quando uma gravação de conferência estiver pronta.</string>
 
-    <string name="enterAnswer">Insira Resposta</string>
-    <string name="resumeQuiz">Retomar teste</string>
-    <string name="allowed_attempts">Tentativas permitidas</string>
-    <string name="viewQuestions">Ver Questões</string>
     <string name="unlimited">Ilimitado</string>
-    <string name="viewResults">Ver Resultados</string>
-
-    <string name="toggleTimer">Procurar Temporizador</string>
-    <string name="thirtySecondWarning">30 segundos restantes</string>
-    <string name="timeSpentFormat" formatted="false">Tempo gasto: %d minutos</string>
-    <string name="lockedIPAddress">Este ficheiro está bloqueado. Só está disponível em determinados locais.</string>
-    <string name="lockedInvalidAccessCode">Código de acesso inválido</string>
-
-    <string name="showFlaggedQuestions">Mostrar questões sinalizadas/não respondidas</string>
     <string name="question">Pergunta</string>
-    <string name="questions">Perguntas</string>
     <plurals name="question_count">
         <item quantity="one">%d pergunta</item>
         <item quantity="other">%d perguntas</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s ponto</item>
         <item quantity="other">%s pontos</item>
     </plurals>
-    <string name="flagged">Sinalizado</string>
-
-    <string name="areYouSure">Tem a certeza que deseja entregar o questionário?</string>
-    <string name="submitQuiz">Submeter questionário?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Você tem %d pergunta não respondida.\nTem a certeza que deseja entregar o questionário?</item>
-        <item quantity="other">Você tem %d perguntas não respondidas.\nTem a certeza que deseja entregar o questionário?</item>
-    </plurals>
-    <string name="takeQuizAgain">Fazer o questionário novamente</string>
-    <string name="autoSubmitting">Submeter automaticamente o questionário&#8230;</string>
-    <string name="submitReasonTimedQuiz">O questionário foi submetido porque o tempo tinha terminado.</string>
-    <string name="submitReasonLockAt">O questionário foi submetido porque a data de bloqueio foi atingida.</string>
-    <string name="quizSubmittedSuccessfully">Questionário submetido com sucesso.</string>
-    <string name="quizSubmittedFailure">O questionário não pode ser enviado no momento.</string>
-    <string name="almostDue">Quase Terminado!</string>
-    <string name="almostDueMsg">A data de vencimento está quase aqui. Envie agora para evitar que seu questionário seja marcado tarde?</string>
     <string name="timeLimit">Limite de tempo</string>
-    <string name="cantStartQuiz">Impossível iniciar questionário.</string>
-    <string name="start">Comece</string>
     <string name="newPushNotifications">%1$s Novas Notificações</string>
     <string name="like">gostar</string>
     <string name="likeEntryLabel">Entrada gostos</string>
@@ -1011,7 +967,7 @@
     <string name="gradeComplete">Completo</string>
     <string name="gradeIncomplete">Incompleto</string>
     <!--Teacher Strings-->
-    <string name="postPolicyTitle">Publicar definições</string>
+    <string name="postPolicyTitle">Publicar configurações</string>
     <string name="postGradesTab">Publicar Classificações</string>
     <string name="hideGradesTab">Esconder Classificações</string>
     <plurals name="gradesPostedCount">
@@ -1023,7 +979,7 @@
         <item quantity="other">%d classificações escondidas atualmente</item>
     </plurals>
     <string name="postPolicyPostTo">Publicar para...</string>
-    <string name="postPolicySections">Seções Específicas</string>
+    <string name="postPolicySections">Secções Específicas</string>
     <string name="postToEveryoneTitle">Todos</string>
     <string name="postToEveryoneMessage">As classificações serão tornadas visíveis a todos os alunos</string>
     <string name="postToGradedTitle">Classificado</string>

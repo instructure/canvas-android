@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Obvestila o nalaganju</string>
     <string name="notificationChannelNameFileUploadsDescription">Obvestila sistema Canvas za nalaganja v teku.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Izberi datoteko iz&#8230;</string>
     <string name="addFile">Dodaj datoteko</string>
-    <string name="choose_a_file">Izberi datoteko</string>
-
     <string name="fromCamera">Fotoaparat</string>
     <string name="fromGallery">Galerija</string>
     <string name="fromDevice">Naprava</string>
@@ -122,9 +119,6 @@
     <string name="extensionNotAllowed">Izbrana vrsta datotek ni dovoljena.</string>
     <string name="allowedExtensions">Dovoljene pripone:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Napaka pri kvizu</string>
-    <string name="quizNetworkErrorMessage">Videti je, da je internetna povezava prekinjena.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Preverite svojo podatkovno povezavo in poskusite znova. </string>
     <string name="noApps">Na vaši napravi ni nameščene nobene aplikacije, ki bi lahko obravnavala to datoteko.</string>
@@ -165,6 +159,7 @@
     <string name="noFiles">Ni datotek.</string>
     <string name="noFilesForAssignment">Za to oddajo ni datotek</string>
     <string name="noFilesSubtext">S tem računom ni povezana nobena datoteka.</string>
+    <string name="emptyFolder">Ta mapa je prazna.</string>
     <string name="notSupported">Ni podprto.</string>
     <string name="noEvents">Danes ni dogodkov.</string>
     <string name="noEventsSubtext">Videti je, da je to krasen dan za počitek in sprostitev.</string>
@@ -222,6 +217,7 @@
     <string name="noInternetConnectionTitle">Brez internetne povezave.</string>
     <string name="noInternetConnectionMessage">Pri tem dejanju je potrebna internetna povezava.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Ogled podrobnosti o uporabniku za %s.</string>
 
     <!-- App Names -->

@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Voulez-vous vraiment supprimer cette tâche?</string>
-    <string name="question">Question</string>
-    <string name="quizMatchingDefaultDisplay">[Choisir]</string>
-
     <string name="max_count">Plus de 99</string>
     <string name="message_student">Contacter un étudiant</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Exempté</string>
     <string name="last_login_format">Dernière connexion : %s</string>
 
-    <string name="muteGrades">Mettre les notes en sourdine</string>
-    <string name="unmuteGrades">Désactiver la sourdine des notes</string>
-    <string name="gradesMutedLabel">Notes en sourdine</string>
     <string name="turnOnAnonymousGrading">Activer la notation anonyme</string>
     <string name="turnOffAnonymousGrading">Désactiver la notation anonyme</string>
     <string name="anonymousGradingLabel">Notation anonyme</string>
@@ -391,6 +385,7 @@
     <string name="graded">Noté</string>
     <string name="needsGrading">Requiert une notation</string>
     <string name="not_submitted">Non soumis</string>
+    <string name="a11y_viewSubmissionAction">voir les détails de l’envoi</string>
     <string name="content_description_submission_donut_graded" formatted="false">Noté, %s de %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Doit être noté, %s de %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Non envoyé, %s de %s</string>

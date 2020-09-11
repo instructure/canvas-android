@@ -172,7 +172,6 @@
     <string name="noDate">Sense data</string>
     <string name="future">Futur</string>
     <string name="next7Days">Els propers 7 dies</string>
-    <string name="days">Dies</string>
     <string name="submissionDetailsDueTodayAt">Venç avui a les %s</string>
     <string name="submissionDetailsDueTomorrowAt">Venç demà a les %s</string>
     <string name="submissionDetailsDueYesterdayAt">Va vèncer ahir a les %s</string>
@@ -410,8 +409,6 @@
     <!-- Notifications -->
     <string name="deleted">Suprimit</string>
 
-    <string name="contentDescriptionFiles">Icona de fitxer</string>
-
     <string name="loadingCanvas">S\'està carregant el contingut de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -525,7 +522,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Següent</string>
-    <string name="turnedIn">Entregat:&#160;</string>
     <string name="addComment">Afegeix un comentari&#8230;</string>
 
     <string name="home">Inici</string>
@@ -585,12 +581,6 @@
     <string name="practiceQuizzes">Practica els qüestionaris</string>
     <string name="gradedSurveys">Estudis qualificats</string>
     <string name="surveys">Estudis</string>
-    <string name="quizMatchingDefaultDisplay">[Tria]</string>
-    <string name="choose_answer_below">Trieu la resposta a sota</string>
-    <string name="choose_answers_below">Trieu les respostes a sota</string>
-    <string name="flag_the_question">Marqueu la pregunta</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasques pendents</string>
     <string name="gradesWidgetTitle">Qualificacions</string>
@@ -713,7 +703,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mesura</string>
 
-    <string name="calendarDay">Dia</string>
     <string name="createNewCalendarEvent">Crea un esdeveniment nou</string>
     <string name="enableFunMode">Desactiva els pandes</string>
 
@@ -799,22 +788,8 @@
     <string name="notification_desc_admin">Només per a instructors i administradors. Podeu rebre notificacions sobre inscripcions al curs, informes generats, contingut exportat, informes de migració, nous usuaris del compte i nous grups d\'estudiants.</string>
     <string name="notification_desc_recording_ready">Podeu rebre una notificació quan estigui a punt l\'enregistrament d\'una conferència.</string>
 
-    <string name="enterAnswer">Introdueix una resposta</string>
-    <string name="resumeQuiz">Reprèn el qüestionari</string>
-    <string name="allowed_attempts">Intents permesos</string>
-    <string name="viewQuestions">Mostra les preguntes</string>
     <string name="unlimited">Il·limitat</string>
-    <string name="viewResults">Mostra els resultats</string>
-
-    <string name="toggleTimer">Commuta el temporitzador</string>
-    <string name="thirtySecondWarning">Queden 30 segons</string>
-    <string name="timeSpentFormat" formatted="false">Temps invertit: %d minuts</string>
-    <string name="lockedIPAddress">Aquest qüestionari està bloquejat. Només està disponible a determinades ubicacions.</string>
-    <string name="lockedInvalidAccessCode">Codi d\'accés no vàlid</string>
-
-    <string name="showFlaggedQuestions">Mostra les preguntes marcades o sense contestar</string>
     <string name="question">Pregunta</string>
-    <string name="questions">Preguntes</string>
     <plurals name="question_count">
         <item quantity="one">%d pregunta</item>
         <item quantity="other">%d preguntes</item>
@@ -824,25 +799,7 @@
         <item quantity="one">%s punt</item>
         <item quantity="other">%s punts</item>
     </plurals>
-    <string name="flagged">Marcat</string>
-
-    <string name="areYouSure">Segur que voleu enviar aquest qüestionari?</string>
-    <string name="submitQuiz">Voleu enviar el qüestionari?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">No heu contestat a %d pregunta.\nSegur que voleu enviar aquest qüestionari?</item>
-        <item quantity="other">No heu contestat a %d preguntes.\nSegur que voleu enviar aquest qüestionari?</item>
-    </plurals>
-    <string name="takeQuizAgain">Torneu a realitzar el qüestionari</string>
-    <string name="autoSubmitting">S\'està enviant automàticament el qüestionari&#8230;</string>
-    <string name="submitReasonTimedQuiz">S\'ha enviat el qüestionari perquè s\'ha arribat al límit de temps.</string>
-    <string name="submitReasonLockAt">S\'ha enviat el qüestionari perquè s\'ha arribat a la data de bloqueig.</string>
-    <string name="quizSubmittedSuccessfully">S\'ha enviat el qüestionari correctament.</string>
-    <string name="quizSubmittedFailure">No s\'ha pogut enviar el qüestionari en aquest moment.</string>
-    <string name="almostDue">Gairebé ha vençut.</string>
-    <string name="almostDueMsg">Ja és gairebé la data de venciment. Voleu enviar ara el qüestionari per evitar que es marqui com a tardà?</string>
     <string name="timeLimit">Límit de temps</string>
-    <string name="cantStartQuiz">No es pot començar el qüestionari.</string>
-    <string name="start">Comença</string>
     <string name="newPushNotifications">%1$s Notificacions noves</string>
     <string name="like">m\'agrada</string>
     <string name="likeEntryLabel">Entrada de M\'agrada</string>

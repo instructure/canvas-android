@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Загрузить уведомления</string>
     <string name="notificationChannelNameFileUploadsDescription">Уведомления Canvas для текущих загрузок.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Выбрать файлы из&#8230;</string>
     <string name="addFile">Добавить файл</string>
-    <string name="choose_a_file">Выбрать файл</string>
-
     <string name="fromCamera">Камера</string>
     <string name="fromGallery">Галерея</string>
     <string name="fromDevice">Устройство</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Выбранный тип файла не допускается.</string>
     <string name="allowedExtensions">Допустимые расширения:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Ошибка теста</string>
-    <string name="quizNetworkErrorMessage">Вероятно отсутствует подключение к Интернету.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Проверьте подключение и повторите попытку. </string>
     <string name="noApps">На вашем устройстве не установлено приложение, способное работать с этим файлом.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Нет файлов</string>
     <string name="noFilesForAssignment">Нет файлов для данной отправки</string>
     <string name="noFilesSubtext">Отсутствуют файлы, связанные с этой учетной записью.</string>
+    <string name="emptyFolder">Эта папка пуста</string>
     <string name="notSupported">Не поддерживается</string>
     <string name="noEvents">На сегодня события отсутствуют!</string>
     <string name="noEventsSubtext">Похоже, что сегодня можно отдохнуть и расслабиться.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Нет интернет-соединения</string>
     <string name="noInternetConnectionMessage">Для выполнения этого действия необходимо интернет-соединение.</string>
     <string name="content_description_avatar">Аватар</string>
+    <string name="a11y_avatarNameFormatted">%s Аватар</string>
     <string name="formattedAvatarAction">Просмотр данных пользователя для %s.</string>
 
     <!-- App Names -->
