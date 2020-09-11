@@ -68,10 +68,6 @@ class NewMessagePage : BasePage() {
         onView(ViewMatchers.withText(group.name)).click()
     }
 
-    fun assertRecipientsNotEmpty() {
-        chipGroup.check(matches(hasChildCount(0)))
-    }
-
     fun setRecipient(user: CanvasUserApiModel, isGroupRecipient: Boolean = false) {
         addContactsButton.click()
         if(!isGroupRecipient) onView(withText("Students")).click()
