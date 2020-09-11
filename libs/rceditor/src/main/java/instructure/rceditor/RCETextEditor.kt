@@ -30,7 +30,7 @@ import jp.wasabeef.richeditor.RichEditor
 
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 class RCETextEditor @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.webViewStyle
 ) : RichEditor(context, attrs, defStyleAttr) {
 
     fun applyHtml(contents: String, title: String = "") {
