@@ -20,9 +20,9 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.2"
 
     /* Kotlin */
-    const val KOTLIN = "1.3.31"
+    const val KOTLIN = "1.4.10"
     const val KOTLIN_ANKO = "0.10.4"
-    const val KOTLIN_COROUTINES = "1.2.1"
+    const val KOTLIN_COROUTINES = "1.3.9"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.0.1"
@@ -39,7 +39,7 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.1.3"
-    const val NEW_RELIC = "5.24.2"
+    const val NEW_RELIC = "5.27.0"
 }
 
 object Libs {
