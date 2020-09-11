@@ -213,9 +213,6 @@
     </plurals>
 
     <string name="delete_assignment_message">是否确定要删除此作业?</string>
-    <string name="question">问题</string>
-    <string name="quizMatchingDefaultDisplay">[选择]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">发消息给学生</string>
 
@@ -227,9 +224,6 @@
     <string name="submission_status_excused">已请假</string>
     <string name="last_login_format">最后一次登录：%s</string>
 
-    <string name="muteGrades">屏蔽评分</string>
-    <string name="unmuteGrades">取消屏蔽评分</string>
-    <string name="gradesMutedLabel">已屏蔽评分</string>
     <string name="turnOnAnonymousGrading">打开匿名评分</string>
     <string name="turnOffAnonymousGrading">关闭匿名评分</string>
     <string name="anonymousGradingLabel">匿名评分</string>
@@ -387,6 +381,7 @@
     <string name="graded">已评分</string>
     <string name="needsGrading">需要评分</string>
     <string name="not_submitted">未提交</string>
+    <string name="a11y_viewSubmissionAction">查看提交项详情</string>
     <string name="content_description_submission_donut_graded" formatted="false">已评分，%s 个，共 %s 个</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">需要评分，%s 个，共 %s 个</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">未评分，%s 个，共 %s 个</string>

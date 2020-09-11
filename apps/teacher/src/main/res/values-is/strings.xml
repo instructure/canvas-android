@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Viltu örugglega eyða þessu verkefni?</string>
-    <string name="question">Spurning</string>
-    <string name="quizMatchingDefaultDisplay">[Veldu]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Skilaboð til nemanda</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Undanþegið</string>
     <string name="last_login_format">Síðasta innskráning: %s</string>
 
-    <string name="muteGrades">Dempa einkunnir</string>
-    <string name="unmuteGrades">Afdempa einkunnir</string>
-    <string name="gradesMutedLabel">Einkunnir dempaðar</string>
     <string name="turnOnAnonymousGrading">Kveiktu á nafnlausri einkunnagjöf</string>
     <string name="turnOffAnonymousGrading">Slökktu á nafnlausri einkunnagjöf</string>
     <string name="anonymousGradingLabel">Nafnlaus einkunnagjöf</string>
@@ -391,6 +385,7 @@
     <string name="graded">Metið</string>
     <string name="needsGrading">Þarfnast einkunnargjafar</string>
     <string name="not_submitted">Ekki lagt fram</string>
+    <string name="a11y_viewSubmissionAction">skoða upplýsingar um skil</string>
     <string name="content_description_submission_donut_graded" formatted="false">Metið, %s af %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Þarf að meta, %s af %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Ekki lagt fram, %s af %s</string>

@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Notifications de téléchargement</string>
     <string name="notificationChannelNameFileUploadsDescription">Notifications Canvas pour les téléchargements en cours.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Choisir un fichier de&#8230;</string>
     <string name="addFile">Ajouter un fichier</string>
-    <string name="choose_a_file">Choisir un fichier</string>
-
     <string name="fromCamera">Caméra</string>
     <string name="fromGallery">Gallerie</string>
     <string name="fromDevice">Appareil</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Le type de fichier sélectionné n\'est pas autorisé.</string>
     <string name="allowedExtensions">Prolongations autorisées :&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Erreur du questionnaire</string>
-    <string name="quizNetworkErrorMessage">Il semble que la connexion Internet est interrompue.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Veuillez vérifier votre connexion de données et réessayer. </string>
     <string name="noApps">Aucune application installée sur votre appareil n’est capable de prendre en charge de fichier.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Aucun fichier</string>
     <string name="noFilesForAssignment">Aucun fichier pour cette soumission</string>
     <string name="noFilesSubtext">Il n\'y a aucun fichier associé à ce compte.</string>
+    <string name="emptyFolder">Ce dossier est vide.</string>
     <string name="notSupported">Non pris en charge</string>
     <string name="noEvents">Aucun événement aujourd\'hui !</string>
     <string name="noEventsSubtext">C\'est une belle journée pour se reposer et se détendre.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Aucune connexion internet</string>
     <string name="noInternetConnectionMessage">Cette action nécessite une connexion Internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">Avatar de %s</string>
     <string name="formattedAvatarAction">Afficher les détails utilisateur de. %s</string>
 
     <!-- App Names -->

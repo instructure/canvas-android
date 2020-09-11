@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">إخطارات التحميل</string>
     <string name="notificationChannelNameFileUploadsDescription">إخطارات Canvas لعمليات التحميل الجارية.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">اختيار ملف من&#8230;</string>
     <string name="addFile">إضافة ملف</string>
-    <string name="choose_a_file">اختيار ملف</string>
-
     <string name="fromCamera">الكاميرا</string>
     <string name="fromGallery">المعرض</string>
     <string name="fromDevice">الجهاز</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">نوع الملف المحدد غير مسموح به.</string>
     <string name="allowedExtensions">الامتدادات المسموح بها:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">خطأ في الاختبار الموجز</string>
-    <string name="quizNetworkErrorMessage">يبدو أن اتصال الإنترنت غير متصل.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> يرجى التأكد من الاتصال بالإنترنت والمحاولة من جديد. </string>
     <string name="noApps">لا توجد أي تطبيقات مثبتة على جهازك قادرة على معالجة هذا الملف.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">لا توجد ملفات</string>
     <string name="noFilesForAssignment">لا توجد أي ملفات لهذا الإرسال</string>
     <string name="noFilesSubtext">لا توجد ملفات مقترنة بهذا الحساب.</string>
+    <string name="emptyFolder">هذا المجلد فارغ</string>
     <string name="notSupported">غير مدعوم</string>
     <string name="noEvents">لا توجد أحداث اليوم!</string>
     <string name="noEventsSubtext">يبدو أنه يوم رائع للراحة والاسترخاء.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">لا يوجد اتصال بالإنترنت</string>
     <string name="noInternetConnectionMessage">يتطلب هذا الإجراء اتصالاً بالإنترنت.</string>
     <string name="content_description_avatar">صورة مجسمة</string>
+    <string name="a11y_avatarNameFormatted">%s أفاتار</string>
     <string name="formattedAvatarAction">عرض تفاصيل المستخدم لـ %s.</string>
 
     <!-- App Names -->

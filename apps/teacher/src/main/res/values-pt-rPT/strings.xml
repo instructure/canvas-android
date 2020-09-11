@@ -16,7 +16,7 @@
 
 <resources>
 
-    <string name="settings_name">Definições</string>
+    <string name="settings_name">Configurações</string>
     <string name="tab_week">Semana</string>
     <string name="tab_inbox">Caixa de entrada</string>
     <string name="tab_details">Detalhes</string>
@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Tem a certeza de que deseja eliminar esta atribuição?</string>
-    <string name="question">Pergunta</string>
-    <string name="quizMatchingDefaultDisplay">[Escolher]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Mensagem Aluno</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Desculpado</string>
     <string name="last_login_format">Último login: %s</string>
 
-    <string name="muteGrades">Silenciar classificação</string>
-    <string name="unmuteGrades">Ativar som das notas</string>
-    <string name="gradesMutedLabel">Notas sem som</string>
     <string name="turnOnAnonymousGrading">Ativar classificação anónima</string>
     <string name="turnOffAnonymousGrading">Desativar classificação anónima</string>
     <string name="anonymousGradingLabel">Classificação Anónima</string>
@@ -302,13 +296,13 @@
     <string name="teacher_cancel">Cancelar</string>
     <string name="teacher_okay">Ok</string>
     <string name="teacher_upload">Carregar</string>
-    <string name="settings">Definições</string>
+    <string name="settings">Configurações</string>
     <string name="edit_courses">Editar disciplinas</string>
     <string name="start_annotating">Comece a anotar</string>
     <string name="empty_speedgrader_content">Vista do Speedgrader vazia, necessita estrutura</string>
 
     <!--Course Settings-->
-    <string name="course_settings">Definições da disciplina</string>
+    <string name="course_settings">Configurações da disciplina</string>
     <string name="course_name">Nome da disciplina</string>
     <string name="set_home_to">Defina \'Home\' para&#8230;</string>
     <string name="course_activity_stream">Fluxo de atividade da disciplina</string>
@@ -374,7 +368,7 @@
     <string name="assignment_points_must_be_set">Os pontos de atribuição devem ser definidos.</string>
     <string name="assignment_points_must_be_a_number">O valor de pontos possíveis tem de ser um número</string>
     <string name="quiz_points_must_be_set">Os pontos do teste devem ser definidos.</string>
-    <string name="assignee_type_course_sections">Seções da disciplina</string>
+    <string name="assignee_type_course_sections">Secções da disciplina</string>
     <string name="assignee_type_groups">Grupos</string>
     <string name="assignee_type_students">Alunos</string>
     <string name="page_title_add_assignees">Adicionar cessionários</string>
@@ -391,6 +385,7 @@
     <string name="graded">Classificado</string>
     <string name="needsGrading">Precisa de classificação</string>
     <string name="not_submitted">Não Entregue</string>
+    <string name="a11y_viewSubmissionAction">ver detalhes da submissão</string>
     <string name="content_description_submission_donut_graded" formatted="false">Classificado, %s de %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Precisa de classificação, %s de %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Não submetido, %s de %s</string>
@@ -788,7 +783,7 @@
     <string name="markRemainingAsPresent">Marcar restante como presente</string>
     <string name="markAllAsPresent">Marcar tudo como presente</string>
     <string name="calendar">Calendário</string>
-    <string name="filterSections">Filtrar Seções</string>
+    <string name="filterSections">Filtrar Secções</string>
     <string name="addVideoComment">Adicionar comentário de vídeo</string>
     <string name="addAudioComment">Adicionar comentário de vídeo</string>
     <string name="recordingTimerDefault">00:00:00</string>
@@ -862,7 +857,7 @@
     <string name="errorToDoRouteFailed">Ocorreu um erro ao tentar exibir este item para fazer.</string>
     <string name="errorIsDesigner">Inscrição do Designer não pode ver isto.</string>
 
-    <string name="sections">Seções</string>
+    <string name="sections">Secções</string>
     <string name="filterBy">Filtrar por&#8230;</string>
     <string name="contentDescriptionFilterSection" formatted="false">para %s</string>
     <string name="filterBySection">Filtrar por secção</string>
@@ -886,7 +881,7 @@
     <string name="errorDownloadingFile">Ocorreu um erro ao fazer o download do seu ficheiro. É favor tentar novamente.</string>
 
     <string name="postTo">Publicar para</string>
-    <string name="allSections">Todas as seções</string>
+    <string name="allSections">Todas as secções</string>
 
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Esta ferramenta LTI não pôde ser carregada neste momento.</string>

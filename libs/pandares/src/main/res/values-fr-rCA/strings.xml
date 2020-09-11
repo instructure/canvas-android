@@ -169,8 +169,6 @@
     <string name="noDate">Pas de date</string>
     <string name="future">Futur</string>
     <string name="next7Days">Les 7 prochains jours</string>
-    <string name="days">Jours</string>
-
     <string name="submissionDetailsDueTodayAt">Dû aujourd\'hui à %s</string>
     <string name="submissionDetailsDueTomorrowAt">Dû demain à %s</string>
     <string name="submissionDetailsDueYesterdayAt">Dû hier à %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Supprimé</string>
-    <string name="contentDescriptionFiles">Icône de fichier</string>
-
     <string name="loadingCanvas">Chargement du contenu de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Suivant</string>
-    <string name="turnedIn">Rendu :&#160;</string>
     <string name="addComment">Ajouter un commentaire&#8230;</string>
     <string name="home">Accueil</string>
     <string name="Notifications">Notifications</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Questionnaires d\'entraînement</string>
     <string name="gradedSurveys">Enquêtes notées</string>
     <string name="surveys">Enquêtes</string>
-    <string name="quizMatchingDefaultDisplay">[Choisir]</string>
-    <string name="choose_answer_below">Choisissez votre réponse ci-dessous</string>
-    <string name="choose_answers_below">Choisissez vos réponses ci-dessous</string>
-
-
-    <string name="flag_the_question">Marquer la question</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">À faire</string>
     <string name="gradesWidgetTitle">Notes</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Jour</string>
     <string name="createNewCalendarEvent">Créer un nouvel événement</string>
     <string name="enableFunMode">Désactiver les pandas</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Instructeur et administrateur uniquement. Soyez informé sur les inscriptions de cours, les rapports générés, le contenu exporté, les rapports de migration, les nouveaux comptes utilisateurs et les nouveaux groupes d\'étudiants.</string>
     <string name="notification_desc_recording_ready">Soyez informé lorsqu\'un enregistrement de conférence est prêt.</string>
 
-    <string name="enterAnswer">Saisir la réponse</string>
-    <string name="resumeQuiz">Continuer le questionnaire</string>
-    <string name="allowed_attempts">Tentatives autorisées</string>
-    <string name="viewQuestions">Voir les questions</string>
     <string name="unlimited">Illimité</string>
-    <string name="viewResults">Afficher les résultats</string>
-
-    <string name="toggleTimer">Activer/Stopper la minuterie</string>
-    <string name="thirtySecondWarning">Il reste 30 secondes</string>
-    <string name="timeSpentFormat" formatted="false">Temps passé : %d minutes</string>
-    <string name="lockedIPAddress">Ce questionnaire est verrouillé. Seulement disponible dans certains lieux.</string>
-    <string name="lockedInvalidAccessCode">Code d\'accès non valide</string>
-
-    <string name="showFlaggedQuestions">Afficher les questions marquées/non-répondues</string>
     <string name="question">Question</string>
-    <string name="questions">Questions</string>
     <plurals name="question_count">
         <item quantity="one">%d questions</item>
         <item quantity="other">%d questions</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s point</item>
         <item quantity="other">%s points</item>
     </plurals>
-    <string name="flagged">Marqué</string>
-
-    <string name="areYouSure">Êtes-vous certain de vouloir soumettre ce questionnaire?</string>
-    <string name="submitQuiz">Soumettre le questionnaire?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Il vous reste %d question non répondue.\nÊtes-vous certain de vouloir soumettre ce questionnaire?</item>
-        <item quantity="other">Il vous reste %d questions non répondues.\nÊtes-vous certain de vouloir soumettre ce questionnaire?</item>
-    </plurals>
-    <string name="takeQuizAgain">Répondre au questionnaire de nouveau</string>
-    <string name="autoSubmitting">Envoi automatique du questionnaire&#8230;</string>
-    <string name="submitReasonTimedQuiz">Le questionnaire a été soumis, car la limite de temps a été atteinte.</string>
-    <string name="submitReasonLockAt">Le questionnaire a été soumis, car la date butoir a été atteinte.</string>
-    <string name="quizSubmittedSuccessfully">Le questionnaire a bien été soumis.</string>
-    <string name="quizSubmittedFailure">Le questionnaire ne peut être soumis à ce moment.</string>
-    <string name="almostDue">Dû très bientôt!</string>
-    <string name="almostDueMsg">La date d’échéance est presque atteinte. Soumettre maintenant afin que le questionnaire ne soit pas marqué « En retard »?</string>
     <string name="timeLimit">Limite de temps</string>
-    <string name="cantStartQuiz">Impossible de commencer le questionnaire.</string>
-    <string name="start">Début</string>
     <string name="newPushNotifications">%1$s Nouvelles notifications</string>
     <string name="like">mention « J\'aime »</string>
     <string name="likeEntryLabel">Laisser une rétroaction de type « J’aime » à cette entrée</string>

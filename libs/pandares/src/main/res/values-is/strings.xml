@@ -172,7 +172,6 @@
     <string name="noDate">Engin dagsetning</string>
     <string name="future">Framtíðar</string>
     <string name="next7Days">Næstu 7 dagar</string>
-    <string name="days">Dagar</string>
     <string name="submissionDetailsDueTodayAt">Skil í dag klukkan %s</string>
     <string name="submissionDetailsDueTomorrowAt">Skil á morgun klukkan %s</string>
     <string name="submissionDetailsDueYesterdayAt">Skil í gær klukkan %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Eytt</string>
 
-    <string name="contentDescriptionFiles">Skráartákn</string>
-
     <string name="loadingCanvas">Sæki Canvas efni&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Næsti</string>
-    <string name="turnedIn">Skilað:&#160;</string>
     <string name="addComment">Bæta við athugasemd&#8230;</string>
 
     <string name="home">Heim</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Æfingapróf</string>
     <string name="gradedSurveys">Kannanir með einkunn</string>
     <string name="surveys">Kannanir</string>
-    <string name="quizMatchingDefaultDisplay">[Veldu]</string>
-    <string name="choose_answer_below">Veldu svar þitt hér að neðan</string>
-    <string name="choose_answers_below">Veldu svör þín hér að neðan</string>
-    <string name="flag_the_question">Merkja spurninguna</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Verkefni</string>
     <string name="gradesWidgetTitle">Einkunnir</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mælir</string>
 
-    <string name="calendarDay">Dagur</string>
     <string name="createNewCalendarEvent">Stofna nýjan viðburð</string>
     <string name="enableFunMode">Slökkva á pöndunum</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Aðeins fyrir leiðbeinanda og stjórnanda. Fá tilkynningar um skráningu í námskeið, skýrslugerð, útflutt efni, afritunarskýrslur, nýja notendur reiknings og nýja nemendahópa.</string>
     <string name="notification_desc_recording_ready">Fá tilkynningu þegar ráðstefnuupptaka er tilbúin.</string>
 
-    <string name="enterAnswer">Settu inn svar</string>
-    <string name="resumeQuiz">Halda áfram með próf</string>
-    <string name="allowed_attempts">Heimilaðar tilraunir</string>
-    <string name="viewQuestions">Skoða spurningar</string>
     <string name="unlimited">Ótakmarkað</string>
-    <string name="viewResults">Skoða niðurstöður</string>
-
-    <string name="toggleTimer">Víxla tímamæli</string>
-    <string name="thirtySecondWarning">30 sekúndur eftir</string>
-    <string name="timeSpentFormat" formatted="false">Notaður tími: %d mínútur</string>
-    <string name="lockedIPAddress">Þetta próf er læst. Það er aðeins tiltækt á vissum stöðum.</string>
-    <string name="lockedInvalidAccessCode">Ógildur aðgangskóði</string>
-
-    <string name="showFlaggedQuestions">Sýna merktar/ósvaraðar spurningar</string>
     <string name="question">Spurning</string>
-    <string name="questions">Spurningar</string>
     <plurals name="question_count">
         <item quantity="one">%d spurning</item>
         <item quantity="other">%d spurningar</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s punktur</item>
         <item quantity="other">%s punktar</item>
     </plurals>
-    <string name="flagged">Merkt</string>
-
-    <string name="areYouSure">Viltu örugglega senda þetta próf?</string>
-    <string name="submitQuiz">Senda inn próf?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Þú ert með %d ósvaraða spurningu.\nViltu örugglega senda þetta próf?</item>
-        <item quantity="other">Þú ert með %d ósvaraðar spurningar.\nViltu örugglega senda þetta próf?</item>
-    </plurals>
-    <string name="takeQuizAgain">Taka próf aftur</string>
-    <string name="autoSubmitting">Sjálfvirk innsending prófs&#8230;</string>
-    <string name="submitReasonTimedQuiz">Prófið var sent inn því próftími var búinn.</string>
-    <string name="submitReasonLockAt">Prófið var sent inn þar sem læsingardagur var runninn upp.</string>
-    <string name="quizSubmittedSuccessfully">Próf var sent inn.</string>
-    <string name="quizSubmittedFailure">Ekki var hægt að senda prófið inn núna.</string>
-    <string name="almostDue">Skilafrestur næstum liðinn!</string>
-    <string name="almostDueMsg">Skiladagur er næstum kominn. Senda inn núna til að koma í veg fyrir að prófið verði merkt seint?</string>
     <string name="timeLimit">Tímamörk</string>
-    <string name="cantStartQuiz">Ekki var hægt að byrja prófið.</string>
-    <string name="start">Byrja</string>
     <string name="newPushNotifications">%1$s nýjar tilkynningar</string>
     <string name="like">líka við</string>
     <string name="likeEntryLabel">Líka við færslu</string>

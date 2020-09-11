@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Notifikasyon Transfè</string>
     <string name="notificationChannelNameFileUploadsDescription">Notifikasyon Canvas pou transfè k ap fèt.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Chwazi Fichye Apati de&#8230;</string>
     <string name="addFile">Ajoute Fichye</string>
-    <string name="choose_a_file">Chwazi yon Fichye</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galeri</string>
     <string name="fromDevice">Aparèy</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Tip fichye ou seleksyone a pa otorize.</string>
     <string name="allowedExtensions">Ekstansyon otorize:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Erè Quiz</string>
-    <string name="quizNetworkErrorMessage">Koneksyon entènèt parèt ke ou pa konekte.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Tanpri verifye koneksyon entènèt ou a epi eseye ankò. </string>
     <string name="noApps">Aparèy ou a pa gen okenn aplikasyon ki enstale ki ka jere fichye sa a.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Okenn Fichye</string>
     <string name="noFilesForAssignment">Pa gen fichye pou soumisyon sa a.</string>
     <string name="noFilesSubtext">Pa gen fichye ki asosye a kont sa a.</string>
+    <string name="emptyFolder">Dosye sa a vid</string>
     <string name="notSupported">Pa Sipòte</string>
     <string name="noEvents">Pa gen Aktivite Jodi a!</string>
     <string name="noEventsSubtext">Sanble se yon bèl jounen pou repoze epi pran detant.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Pa gen Koneksyon Internet</string>
     <string name="noInternetConnectionMessage">Pou aksyon sa a ou bezwen konekte sou entènèt.</string>
     <string name="content_description_avatar">Avata</string>
+    <string name="a11y_avatarNameFormatted">%s Avata</string>
     <string name="formattedAvatarAction">Afiche detay itilizatè pou %s.</string>
 
     <!-- App Names -->

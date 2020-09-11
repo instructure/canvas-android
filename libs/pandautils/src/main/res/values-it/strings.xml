@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Scegli file da&#8230;</string>
     <string name="addFile">Aggiungi file</string>
-    <string name="choose_a_file">Scegli un file</string>
-
     <string name="fromCamera">Videocamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Dispositivo</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Uno o più file hanno un’estensione file non consentita</string>
     <string name="extensionNotAllowed">Il tipo di file selezionato non è consentito.</string>
     <string name="allowedExtensions">Estensioni consentite:&#160;</string>
-    <string name="quizNetworkErrorTitle">Errore quiz</string>
-    <string name="quizNetworkErrorMessage">La connessione Internet sembra offline.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Verificare la connessione dati e riprovare. </string>
     <string name="noApps">Il tuo dispositivo non ha alcuna applicazione installata in grado di gestire questo file.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">Nessun file</string>
     <string name="noFilesForAssignment">Non ci sono file per questa consegna</string>
     <string name="noFilesSubtext">Non ci sono file associati a questo account.</string>
+    <string name="emptyFolder">Questa cartella è vuota</string>
     <string name="notSupported">Non supportato</string>
     <string name="noEvents">Nessun evento oggi!</string>
     <string name="noEventsSubtext">Sembra un ottimo giorno per riposarsi e rilassarsi.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">Nessuna connessione a Internet</string>
     <string name="noInternetConnectionMessage">Questa azione richiede una connessione a Internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">Avatar %s</string>
     <string name="formattedAvatarAction">Visualizza dettagli utente per %s.</string>
 
     <!-- App Names -->

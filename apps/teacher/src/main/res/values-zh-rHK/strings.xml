@@ -213,9 +213,6 @@
     </plurals>
 
     <string name="delete_assignment_message">是否確定要刪除此作業？</string>
-    <string name="question">問題</string>
-    <string name="quizMatchingDefaultDisplay">[選擇]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">發訊息給學生</string>
 
@@ -227,9 +224,6 @@
     <string name="submission_status_excused">已免除</string>
     <string name="last_login_format">上一次登入：%s</string>
 
-    <string name="muteGrades">隱藏評分</string>
-    <string name="unmuteGrades">取消隱藏評分</string>
-    <string name="gradesMutedLabel">已隱藏評分</string>
     <string name="turnOnAnonymousGrading">開啟匿名評分功能</string>
     <string name="turnOffAnonymousGrading">關閉匿名評分功能</string>
     <string name="anonymousGradingLabel">匿名評分</string>
@@ -387,6 +381,7 @@
     <string name="graded">已評分</string>
     <string name="needsGrading">需要評分</string>
     <string name="not_submitted">未提交</string>
+    <string name="a11y_viewSubmissionAction">檢視提交項目詳情</string>
     <string name="content_description_submission_donut_graded" formatted="false">已評分，%s / %s 份</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">需要評分，%s / %s 份</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">未提交，%s / %s 份</string>

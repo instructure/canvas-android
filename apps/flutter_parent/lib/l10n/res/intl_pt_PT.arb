@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-06-08T18:06:15.639282",
+  "@@last_modified": "2020-08-07T11:03:26.707583",
   "alertsLabel": "Alertas",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1003,7 +1003,7 @@
       "threshold": {}
     }
   },
-  "Settings": "Definições",
+  "Settings": "Configurações",
   "@Settings": {
     "description": "Title for the settings screen",
     "type": "text",
@@ -1109,7 +1109,7 @@
       "grade": {}
     }
   },
-  "Alert Settings": "Definições de Alerta",
+  "Alert Settings": "Configurações de Alerta",
   "@Alert Settings": {
     "type": "text",
     "placeholders": {}
@@ -1198,6 +1198,61 @@
       "percentage": {
         "example": 5
       }
+    }
+  },
+  "Select Student Color": "Seleccionar a cor do aluno",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Electric, blue": "Elétrico, azul",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Plum, Purple": "Ameixa, Púrpura",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Barney, Fuschia",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Framboesa, Vermelho",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Fire, Orange": "Fogo, Laranja",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Shamrock, Verde",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "Ocorreu um erro ao salvar a sua selecção. É favor tentar novamente.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Alterar cor para {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
     }
   },
   "Teacher": "Professor",
@@ -1301,6 +1356,155 @@
   "Add new student": "Adicionar novo aluno",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select": "Selecionar",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Eu tenho uma conta Canvas",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "Não tenho uma conta Canvas",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Create Account": "Criar Conta",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name": "Nome completo",
+  "@Full Name": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "Endereço de e-mail",
+  "@Email Address": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password": "Palavra-passe",
+  "@Password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name…": "Nome completo...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email…": "E-mail...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password…": "Palavra-passe...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter full name": "Por favor, insira nome completo",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter an email address": "Por favor, insira um endereço de e-mail",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Por favor insira um endereço de e-mail válido",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password is required": "Palavra passe é necessária",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "A palavra-passe deve conter pelo menos 8 caracteres",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "Ao tocar em “Criar conta”, concorda com o {termsOfService} e reconhece o {privacyPolicy}",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Termos de serviço",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Política de Privacidade",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Ver a Política de Privacidade",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Already have an account? ": "Já tens uma conta? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Sign In": "Iniciar sessão",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Hide Password": "Ocultar Palavra-passe",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Show Password": "Mostrar Palavra-passe",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Ligação dos Termos de serviço",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Ligação à Política de Privacidade",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
     "type": "text",
     "placeholders": {}
   },
@@ -1409,12 +1613,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "Política de Privacidade",
-  "@Privacy Policy": {
-    "description": "Label for the privacy policy",
-    "type": "text",
-    "placeholders": {}
-  },
   "Terms of Use": "Termos de uso",
   "@Terms of Use": {
     "description": "Label for the terms of use",
@@ -1465,12 +1663,6 @@
   "A subject is required.": "É necessário um sujeito.",
   "@A subject is required.": {
     "description": "Error shown when the subject field is empty",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Email Address": "Endereço de e-mail",
-  "@Email Address": {
-    "description": "Label used for Email Address text field",
     "type": "text",
     "placeholders": {}
   },
@@ -1683,7 +1875,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Terá de abrir a aplicação Canvas Student do seu aluno para poder continuar. Vá ao Menu Principal > Definições > Parelhar com Observador e digitalize o código QR que aí vê.",
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Terá de abrir a aplicação Canvas Student do seu aluno para poder continuar. Vá ao Menu Principal > Configurações > Parelhar com Observador e digitalize o código QR que aí vê.",
   "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
     "description": "Message explaining how QR code pairing works",
     "type": "text",

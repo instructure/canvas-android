@@ -172,7 +172,6 @@
     <string name="noDate">Sin fecha</string>
     <string name="future">Futuro</string>
     <string name="next7Days">Próximos 7 días</string>
-    <string name="days">Días</string>
     <string name="submissionDetailsDueTodayAt">Vence hoy a las %s</string>
     <string name="submissionDetailsDueTomorrowAt">Vence mañana a las %s</string>
     <string name="submissionDetailsDueYesterdayAt">Venció ayer a las %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Eliminado</string>
 
-    <string name="contentDescriptionFiles">Icono de archivo</string>
-
     <string name="loadingCanvas">Cargando el contenido de Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Siguiente</string>
-    <string name="turnedIn">Entregado:&#160;</string>
     <string name="addComment">Agregar un comentario&#8230;</string>
 
     <string name="home">Página de inicio</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Exámenes de práctica</string>
     <string name="gradedSurveys">Encuestas calificadas</string>
     <string name="surveys">Encuestas</string>
-    <string name="quizMatchingDefaultDisplay">[Escoger]</string>
-    <string name="choose_answer_below">Elija su respuesta a continuación</string>
-    <string name="choose_answers_below">Elija sus respuestas a continuación</string>
-    <string name="flag_the_question">Marcar la pregunta</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Por hacer</string>
     <string name="gradesWidgetTitle">Calificaciones</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Indicador</string>
 
-    <string name="calendarDay">Día</string>
     <string name="createNewCalendarEvent">Crear nuevo evento</string>
     <string name="enableFunMode">Apagar los pandas</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Profesor y administrador solamente. Reciba notificaciones sobre inscripciones del curso, informes generados, contenido exportado, informes de migración, nuevos usuarios de cuenta y nuevos grupos de estudiantes.</string>
     <string name="notification_desc_recording_ready">Reciba notificaciones cuando esté lista la grabación de una conferencia.</string>
 
-    <string name="enterAnswer">Ingresar respuesta</string>
-    <string name="resumeQuiz">Continuar el examen</string>
-    <string name="allowed_attempts">Intentos permitidos</string>
-    <string name="viewQuestions">Ver preguntas</string>
     <string name="unlimited">Ilimitados</string>
-    <string name="viewResults">Ver resultados</string>
-
-    <string name="toggleTimer">Alternar temporizador</string>
-    <string name="thirtySecondWarning">quedan 30 segundos</string>
-    <string name="timeSpentFormat" formatted="false">Tiempo transcurrido: %d minutos</string>
-    <string name="lockedIPAddress">Este examen está bloqueado. Solo está disponible en ciertos lugares.</string>
-    <string name="lockedInvalidAccessCode">Código de acceso inválido</string>
-
-    <string name="showFlaggedQuestions">Mostrar preguntas marcadas/sin respuesta</string>
     <string name="question">Pregunta</string>
-    <string name="questions">Preguntas</string>
     <plurals name="question_count">
         <item quantity="one">%d pregunta</item>
         <item quantity="other">%d preguntas</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s punto</item>
         <item quantity="other">%s puntos</item>
     </plurals>
-    <string name="flagged">Marcada</string>
-
-    <string name="areYouSure">¿Está seguro de que desea entregar este examen?</string>
-    <string name="submitQuiz">¿Entregar examen?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Tiene %d pregunta sin responder.\n¿Está seguro de que desea entregar este examen?</item>
-        <item quantity="other">Tiene %d preguntas sin responder.\n¿Está seguro de que desea entregar este examen?</item>
-    </plurals>
-    <string name="takeQuizAgain">Tomar el examen nuevamente</string>
-    <string name="autoSubmitting">Entrega automática de examen&#8230;</string>
-    <string name="submitReasonTimedQuiz">Presentada el examen debido a que el límite de tiempo se había terminado.</string>
-    <string name="submitReasonLockAt">Presentada el examen porque se ha alcanzado la fecha de bloqueo.</string>
-    <string name="quizSubmittedSuccessfully">Examen entregado exitosamente</string>
-    <string name="quizSubmittedFailure">No se pudo entregar el examen en este momento.</string>
-    <string name="almostDue">¡Se aproxima la fecha de entrega!</string>
-    <string name="almostDueMsg">La fecha de entrega ya casi ha llegado. ¿Entregar ahora para que su examen no se marque como con atraso?</string>
     <string name="timeLimit">Límite de tiempo</string>
-    <string name="cantStartQuiz">No se puede comenzar el examen</string>
-    <string name="start">Comenzar</string>
     <string name="newPushNotifications">%1$s Nuevas notificaciones</string>
     <string name="like">me gusta</string>
     <string name="likeEntryLabel">Me gusta la entrada</string>

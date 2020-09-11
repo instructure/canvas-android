@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Weet je zeker dat je deze opdracht wilt verwijderen?</string>
-    <string name="question">Vraag</string>
-    <string name="quizMatchingDefaultDisplay">[Kiezen]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Bericht naar cursist</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Vrijgesteld</string>
     <string name="last_login_format">Laatste aanmelding: %s</string>
 
-    <string name="muteGrades">Cijfers verbergen</string>
-    <string name="unmuteGrades">Verbergen van cijfers opheffen</string>
-    <string name="gradesMutedLabel">Cijfers verborgen</string>
     <string name="turnOnAnonymousGrading">Anonieme beoordeling inschakelen</string>
     <string name="turnOffAnonymousGrading">Anonieme beoordeling uitschakelen</string>
     <string name="anonymousGradingLabel">Anoniem beoordelen</string>
@@ -391,6 +385,7 @@
     <string name="graded">Beoordeeld</string>
     <string name="needsGrading">Moet worden beoordeeld</string>
     <string name="not_submitted">Niet ingediend</string>
+    <string name="a11y_viewSubmissionAction">inleverdetails bekijken</string>
     <string name="content_description_submission_donut_graded" formatted="false">Beoordeeld, %s van %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Moet worden beoordeeld, %s van %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Niet ingeleverd, %s van %s</string>

@@ -168,8 +168,6 @@
     <string name="noDate">无日期</string>
     <string name="future">未来</string>
     <string name="next7Days">未来 7 天</string>
-    <string name="days">天</string>
-
     <string name="submissionDetailsDueTodayAt">今天 %s 到期</string>
     <string name="submissionDetailsDueTomorrowAt">明天 %s 到期</string>
     <string name="submissionDetailsDueYesterdayAt">昨天 %s 到期</string>
@@ -398,8 +396,6 @@
 
     <!-- Notifications -->
     <string name="deleted">已删除</string>
-    <string name="contentDescriptionFiles">文件图标</string>
-
     <string name="loadingCanvas">正在加载Canvas内容&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -512,7 +508,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">下一步</string>
-    <string name="turnedIn">已上交：&#160;</string>
     <string name="addComment">添加评论&#8230;</string>
     <string name="home">首页</string>
     <string name="Notifications">通知</string>
@@ -567,12 +562,6 @@
     <string name="practiceQuizzes">练习测验</string>
     <string name="gradedSurveys">评分调查</string>
     <string name="surveys">调查</string>
-    <string name="quizMatchingDefaultDisplay">[选择]</string>
-    <string name="choose_answer_below">在下方选择您的答案</string>
-    <string name="choose_answers_below">在下方选择您的答案</string>
-
-
-    <string name="flag_the_question">标记此问题</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">待办事项</string>
     <string name="gradesWidgetTitle">评分</string>
@@ -695,7 +684,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">日</string>
     <string name="createNewCalendarEvent">创建新事件</string>
     <string name="enableFunMode">关闭熊猫</string>
 
@@ -781,22 +769,8 @@
     <string name="notification_desc_admin">仅限讲师和管理员。接收与课程注册、生成的报告、导出课程、迁移报告、新帐户用户和新学生组有关的通知。</string>
     <string name="notification_desc_recording_ready">当会议录制准备就绪时收到通知。</string>
 
-    <string name="enterAnswer">输入答案</string>
-    <string name="resumeQuiz">恢复测验</string>
-    <string name="allowed_attempts">允许的尝试次数</string>
-    <string name="viewQuestions">查看问题</string>
     <string name="unlimited">无限制</string>
-    <string name="viewResults">查看结果</string>
-
-    <string name="toggleTimer">切换定时器</string>
-    <string name="thirtySecondWarning">还剩30秒</string>
-    <string name="timeSpentFormat" formatted="false">经过的时间：%d 分钟</string>
-    <string name="lockedIPAddress">此测验被锁定。仅在特定地点可用。</string>
-    <string name="lockedInvalidAccessCode">访问代码无效</string>
-
-    <string name="showFlaggedQuestions">显示标记/悬而未决的问题</string>
     <string name="question">问题</string>
-    <string name="questions">问题</string>
     <plurals name="question_count">
         <item quantity="other">%d 个问题</item>
     </plurals>
@@ -804,24 +778,7 @@
     <plurals name="pointCount">
         <item quantity="other">%s 分</item>
     </plurals>
-    <string name="flagged">标记</string>
-
-    <string name="areYouSure">您确定要提交此测验吗？</string>
-    <string name="submitQuiz">提交测验？</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="other">您有 %d 个问题未作答。\n您确定要提交此测验吗？</item>
-    </plurals>
-    <string name="takeQuizAgain">再次进行测验</string>
-    <string name="autoSubmitting">自动提交测验&#8230;</string>
-    <string name="submitReasonTimedQuiz">提交测验，因为时间限制已到。</string>
-    <string name="submitReasonLockAt">提交测验，因为锁定日期已到。</string>
-    <string name="quizSubmittedSuccessfully">测验成功提交。</string>
-    <string name="quizSubmittedFailure">此时无法提交测验。</string>
-    <string name="almostDue">已近截止！</string>
-    <string name="almostDueMsg">截止日期即将到来。现在提交，以防您的测验被标记为迟交？</string>
     <string name="timeLimit">时间限制</string>
-    <string name="cantStartQuiz">无法开始测验。</string>
-    <string name="start">开始</string>
     <string name="newPushNotifications">%1$s 条新通知</string>
     <string name="like">喜欢</string>
     <string name="likeEntryLabel">点赞</string>

@@ -225,9 +225,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Вы действительно хотите удалить это задание?</string>
-    <string name="question">Вопрос</string>
-    <string name="quizMatchingDefaultDisplay">[Выбрать]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Отправить сообщение учащемуся</string>
 
@@ -239,9 +236,6 @@
     <string name="submission_status_excused">По уважительной причине</string>
     <string name="last_login_format">Последний вход: %s</string>
 
-    <string name="muteGrades">Скрыть оценки</string>
-    <string name="unmuteGrades">Разблокировать оценки</string>
-    <string name="gradesMutedLabel">Оценки скрыты</string>
     <string name="turnOnAnonymousGrading">Включить анонимное оценивание</string>
     <string name="turnOffAnonymousGrading">Отключить анонимное оценивание</string>
     <string name="anonymousGradingLabel">Анонимное Оценивание</string>
@@ -399,6 +393,7 @@
     <string name="graded">С оценкой</string>
     <string name="needsGrading">Требует оценки</string>
     <string name="not_submitted">Не отправлено</string>
+    <string name="a11y_viewSubmissionAction">просмотр информация об отправке</string>
     <string name="content_description_submission_donut_graded" formatted="false">С оценкой, %s из %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Требуется оценка, %s из %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Не отправлено, %s из %s</string>

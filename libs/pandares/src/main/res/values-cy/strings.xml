@@ -169,8 +169,6 @@
     <string name="noDate">Dim Dyddiad</string>
     <string name="future">Yn y Dyfodol</string>
     <string name="next7Days">Yn y 7 Diwrnod Nesaf</string>
-    <string name="days">Diwrnod</string>
-
     <string name="submissionDetailsDueTodayAt">Erbyn heddiw am %s</string>
     <string name="submissionDetailsDueTomorrowAt">Erbyn yfory am %s</string>
     <string name="submissionDetailsDueYesterdayAt">Erbyn ddoe am %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Wedi dileu</string>
-    <string name="contentDescriptionFiles">Eicon ffeil</string>
-
     <string name="loadingCanvas">Llwytho Cynnwys Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Nesaf</string>
-    <string name="turnedIn">Wedi’i gyflwyno:&#160;</string>
     <string name="addComment">Ychwanegu sylw&#8230;</string>
     <string name="home">Hafan</string>
     <string name="Notifications">Hysbysiadau</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Cwisiau Ymarfer</string>
     <string name="gradedSurveys">Arolygon wedi’u Graddio</string>
     <string name="surveys">Arolygon</string>
-    <string name="quizMatchingDefaultDisplay">[Dewis]</string>
-    <string name="choose_answer_below">Dewiswch eich ateb isod</string>
-    <string name="choose_answers_below">Dewiswch eich atebion isod</string>
-
-
-    <string name="flag_the_question">Fflagio’r cwestiwn</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitle">Graddau</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Medrydd</string>
 
-    <string name="calendarDay">Diwrnod</string>
     <string name="createNewCalendarEvent">Creu Digwyddiad Newydd</string>
     <string name="enableFunMode">Diffodd pandas</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Addysgwr a Gweinyddwr yn unig. Cael gwybod am ymrestriadau cwrs, adroddiadau wedi’u creu, cynnwys wedi’i allgludo, adroddiadau mudo, defnyddwyr cyfrif newydd, a grwpiau myfyrwyr newydd.</string>
     <string name="notification_desc_recording_ready">Cael gwybod pan fydd recordiad cynhadledd yn barod.</string>
 
-    <string name="enterAnswer">Rhoi Ateb</string>
-    <string name="resumeQuiz">Parhau â\'r Cwis</string>
-    <string name="allowed_attempts">Ymgeisiau a ganiateir</string>
-    <string name="viewQuestions">Gweld Cwestiynau</string>
     <string name="unlimited">Diderfyn</string>
-    <string name="viewResults">Gweld Canlyniadau</string>
-
-    <string name="toggleTimer">Toglo Amserydd</string>
-    <string name="thirtySecondWarning">30 eiliad ar ôl</string>
-    <string name="timeSpentFormat" formatted="false">Amser a Dreuliwyd: %d munud</string>
-    <string name="lockedIPAddress">Mae\'r cwis hwn wedi’i gloi. Dim ond ar gael mewn mannau penodol.</string>
-    <string name="lockedInvalidAccessCode">Cod mynediad annilys</string>
-
-    <string name="showFlaggedQuestions">Dangos cwestiynau wedi’u fflagio/heb eu hateb</string>
     <string name="question">Cwestiwn</string>
-    <string name="questions">Cwestiwn</string>
     <plurals name="question_count">
         <item quantity="one">%d cwestiwn</item>
         <item quantity="other">%d cwestiwn</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s pwynt</item>
         <item quantity="other">%s pwynt</item>
     </plurals>
-    <string name="flagged">Wedi’i fflagio</string>
-
-    <string name="areYouSure">Ydych chi’n siŵr eich bod am gyflwyno’r cwis hwn?</string>
-    <string name="submitQuiz">Cyflwyno Cwis?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Mae gennych chi %d cwestiwn heb ei ateb.\nYdych chi’n siŵr eich bod am gyflwyno’r cwis hwn?</item>
-        <item quantity="other">Mae gennych chi %d cwestiwn heb ei ateb.\nYdych chi’n siŵr eich bod am gyflwyno’r cwis hwn?</item>
-    </plurals>
-    <string name="takeQuizAgain">Gwneud y Cwis Eto</string>
-    <string name="autoSubmitting">Cyflwyno cwis yn awtomatig&#8230;</string>
-    <string name="submitReasonTimedQuiz">Wedi cyflwyno’r cwis am fod yr amser wedi dod i ben.</string>
-    <string name="submitReasonLockAt">Wedi cyflwyno’r cwis am fod y dyddiad cloi wedi’i gyrraedd.</string>
-    <string name="quizSubmittedSuccessfully">Wedi llwyddo i gyflwyno’r cwis.</string>
-    <string name="quizSubmittedFailure">Doedd dim modd cyflwyno’r cwis y tro hwn.</string>
-    <string name="almostDue">Dyddiad cyflwyno bron yma!</string>
-    <string name="almostDueMsg">Mae’r dyddiad cyflwyno bron â chyrraedd. Cyflwynwch nawr fel nad yw eich cwis yn cael ei farcio’n hwyr?</string>
     <string name="timeLimit">Terfyn Amser</string>
-    <string name="cantStartQuiz">Does dim modd dechrau’r cwis.</string>
-    <string name="start">Dechrau</string>
     <string name="newPushNotifications">%1$s Hysbysiadau Newydd</string>
     <string name="like">yn hoffi</string>
     <string name="likeEntryLabel">Dechrau Cofnod</string>

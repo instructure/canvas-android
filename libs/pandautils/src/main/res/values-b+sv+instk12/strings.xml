@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Väj fil från&#8230;</string>
     <string name="addFile">Lägg till fil</string>
-    <string name="choose_a_file">Välj en fil</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhet</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">En eller flera filer har ett filtillägg som inte är tillåtet</string>
     <string name="extensionNotAllowed">Den valda filtypen är inte tillåten.</string>
     <string name="allowedExtensions">Tillåtna tillägg:&#160;</string>
-    <string name="quizNetworkErrorTitle">Fel på quiz</string>
-    <string name="quizNetworkErrorMessage">Det verkar som om internanslutningen är frånkopplad.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollera din dataanslutning och försök igen. </string>
     <string name="noApps">Din enhet har inte några program installerade som kan hantera den här filen.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">Inga filer</string>
     <string name="noFilesForAssignment">Det finns inga filer för den här inlämningen</string>
     <string name="noFilesSubtext">Det finns inga filer kopplade till det här kontot.</string>
+    <string name="emptyFolder">Den här mappen är tom</string>
     <string name="notSupported">Stöds inte</string>
     <string name="noEvents">Inga händelser idag!</string>
     <string name="noEventsSubtext">Det ser ut att bli en dag för vila och avkoppling.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">Ingen internetanslutning</string>
     <string name="noInternetConnectionMessage">Den här åtgärden kräver internetanslutning.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s-avatar</string>
     <string name="formattedAvatarAction">Visa användaruppgifter för %s.</string>
 
     <!-- App Names -->

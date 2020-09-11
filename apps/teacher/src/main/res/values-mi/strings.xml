@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">E tino hiahia ana koe ki te muku i tēnei whakataunga?</string>
-    <string name="question">Pātai</string>
-    <string name="quizMatchingDefaultDisplay">[Kōwhiri]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Ākonga karere</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Whakawātea</string>
     <string name="last_login_format">Mātāmuri takiuru %s</string>
 
-    <string name="muteGrades">Ngā kōeke whakangū</string>
-    <string name="unmuteGrades">Ngā kōeke kaore i whakangū</string>
-    <string name="gradesMutedLabel">Ngā kōeke kua whakangūtia</string>
     <string name="turnOnAnonymousGrading">Whakakā i te kōeke ingoamuna</string>
     <string name="turnOffAnonymousGrading">Whakaweto i te kōeke ingoamuna</string>
     <string name="anonymousGradingLabel">Kōeke ingoa kore</string>
@@ -391,6 +385,7 @@
     <string name="graded">kōekehia</string>
     <string name="needsGrading">E hiahiatia ana mo te kōeke</string>
     <string name="not_submitted">E Kore E Tukua</string>
+    <string name="a11y_viewSubmissionAction">tirohia ngā taipitopito tāpaetanga</string>
     <string name="content_description_submission_donut_graded" formatted="false">Kōeketia %s ō %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">E hiahiatia ana te kōeketia%s ō%s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Kaore i tukuna, %s ō%s</string>

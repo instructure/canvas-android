@@ -169,8 +169,6 @@
     <string name="noDate">San Dat</string>
     <string name="future">Fiti</string>
     <string name="next7Days">7 Pwochen Jou</string>
-    <string name="days">Jou</string>
-
     <string name="submissionDetailsDueTodayAt">Delè jodi a a %s</string>
     <string name="submissionDetailsDueTomorrowAt">Delè demen a %s</string>
     <string name="submissionDetailsDueYesterdayAt">Delè yè a %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Efase</string>
-    <string name="contentDescriptionFiles">Ikòn fichye</string>
-
     <string name="loadingCanvas">Chajman Kontni Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Pwochen</string>
-    <string name="turnedIn">Aktive:&#160;</string>
     <string name="addComment">Ajoute yon kòmantè&#8230;</string>
     <string name="home">Akèy</string>
     <string name="Notifications">Notifikasyon</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Quiz Pratik</string>
     <string name="gradedSurveys">Ankèt Klase</string>
     <string name="surveys">Ankèt</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-    <string name="choose_answer_below">Chwazi repons ou an pi ba a</string>
-    <string name="choose_answers_below">Chwazi repons ou yo pi ba a</string>
-
-
-    <string name="flag_the_question">Siyale yon kesyon</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Pou Fè</string>
     <string name="gradesWidgetTitle">Nòt</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Jou</string>
     <string name="createNewCalendarEvent">Kreye Nouvo Aktivite</string>
     <string name="enableFunMode">Fèmen Panda a</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Pwofesèr &amp; Admin sèlman. Resevwa avètisman sou enskipsyon, rapò ki jenere kontni ki ekspòte, rapò migrasyon, nouvo itilizatè kont ak nouvo gwoup elèv.</string>
     <string name="notification_desc_recording_ready">Resevwa avètisman lè anrejistreman yon konferans pare.</string>
 
-    <string name="enterAnswer">Entre Repons</string>
-    <string name="resumeQuiz">Reprann Quiz</string>
-    <string name="allowed_attempts">Tantativ Otorize</string>
-    <string name="viewQuestions">Afiche Kesyon</string>
     <string name="unlimited">Ilimite</string>
-    <string name="viewResults">Afiche Rezilta</string>
-
-    <string name="toggleTimer">Aktive/Dezaktive Minitri</string>
-    <string name="thirtySecondWarning">30 segond ki rete</string>
-    <string name="timeSpentFormat" formatted="false">Tan ki Pase: %d minit</string>
-    <string name="lockedIPAddress">Quiz sa a bloke. Li disponib nan kèk zòn sèlman.</string>
-    <string name="lockedInvalidAccessCode">Kòd aksè envalid</string>
-
-    <string name="showFlaggedQuestions">Montre kesyon siyale/san repons</string>
     <string name="question">Kesyon</string>
-    <string name="questions">Kesyon</string>
     <plurals name="question_count">
         <item quantity="one">%d kesyon</item>
         <item quantity="other">%d kesyon</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s pwen</item>
         <item quantity="other">%s pwen</item>
     </plurals>
-    <string name="flagged">Siyale</string>
-
-    <string name="areYouSure">Ou kwè vrèman ou vle soumèt quiz sa a?</string>
-    <string name="submitQuiz">Soumèt Quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Ou gen %d kesyon san repons.\nÈske s vle soumèt quiz sa a tout bon?</item>
-        <item quantity="other">Ou gen %d kesyon san repons.\nÈske s vle soumèt quiz sa a tout bon?</item>
-    </plurals>
-    <string name="takeQuizAgain">Pran Quiz Ankò</string>
-    <string name="autoSubmitting">Soumisyon otomatik quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Quiz la soumèt paske delè a te rive.</string>
-    <string name="submitReasonLockAt">Quiz la soumèt paske dat blokaj la te rive.</string>
-    <string name="quizSubmittedSuccessfully">Quiz soumèt kòrèkteman.</string>
-    <string name="quizSubmittedFailure">Quiz la paka soumèt kounye a.</string>
-    <string name="almostDue">Delè Prèske Rive!</string>
-    <string name="almostDueMsg">Delè a prèske rive. Soumèt kounye a pou evite yo make quiz ou a an reta?</string>
     <string name="timeLimit">Limit Tan</string>
-    <string name="cantStartQuiz">Enposib pou kòmanse quiz la.</string>
-    <string name="start">Kòmanse</string>
     <string name="newPushNotifications">%1$s Nouvo Avètisman</string>
     <string name="like">jèm</string>
     <string name="likeEntryLabel">Like Antre</string>

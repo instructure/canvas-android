@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Ou kwè vrèman ou vle efase Sesyon sa a?</string>
-    <string name="question">Kesyon</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Voye Mesaj bay Elèv</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Egzante</string>
     <string name="last_login_format">Dènye koneksyon: %s</string>
 
-    <string name="muteGrades">Nòt sou Silans</string>
-    <string name="unmuteGrades">Retire npot sou silans</string>
-    <string name="gradesMutedLabel">Nòt sou silans</string>
     <string name="turnOnAnonymousGrading">Aktive Klasman Anonim</string>
     <string name="turnOffAnonymousGrading">Dezaktive Klasman Anonim</string>
     <string name="anonymousGradingLabel">Klasman Anomin</string>
@@ -391,6 +385,7 @@
     <string name="graded">Klase</string>
     <string name="needsGrading">Bezwen Klasman</string>
     <string name="not_submitted">Pa Soumèt</string>
+    <string name="a11y_viewSubmissionAction">afiche detay soumisyon</string>
     <string name="content_description_submission_donut_graded" formatted="false">Klase, %s sou %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Bezwen Klasman, %s sou %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Pa soumèt, %s sou %s</string>

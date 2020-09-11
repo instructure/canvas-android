@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Er du sikker på, du vil slette denne opgave?</string>
-    <string name="question">Spørgsmål</string>
-    <string name="quizMatchingDefaultDisplay">[Vælg]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Send besked til eleverne</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Undskyldt</string>
     <string name="last_login_format">Seneste login: %s</string>
 
-    <string name="muteGrades">Giv ikke besked til eleverne om vurderinger</string>
-    <string name="unmuteGrades">Send besked til eleverne om vurderinger</string>
-    <string name="gradesMutedLabel">Der sendes ikke besked til eleverne om vurderinger</string>
     <string name="turnOnAnonymousGrading">Slå Anonym bedømmelse til</string>
     <string name="turnOffAnonymousGrading">Slå Anonym bedømmelse fra</string>
     <string name="anonymousGradingLabel">Anonym vurdering</string>
@@ -391,6 +385,7 @@
     <string name="graded">Vurderet</string>
     <string name="needsGrading">Mangler bedømmelse</string>
     <string name="not_submitted">Ikke indsendt</string>
+    <string name="a11y_viewSubmissionAction">vis afleveringsoplysninger</string>
     <string name="content_description_submission_donut_graded" formatted="false">Vurderet, %s af %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Mangler vurdering, %s af %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Ikke indsendt, %s af %s</string>

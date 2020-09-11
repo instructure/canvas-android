@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Latausilmoitukset</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-ilmoitukset meneillään olevien latausten tilasta.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Valitse tiedosto kohteesta&#8230;</string>
     <string name="addFile">Tiedoston lisäysikkuna</string>
-    <string name="choose_a_file">Valitse tiedosto</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleria</string>
     <string name="fromDevice">Laite</string>
@@ -121,9 +118,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Yhden tai useamman tiedoston tiedostotunniste ei ole sallittua muotoa</string>
     <string name="extensionNotAllowed">Valittu tiedoston tyyppi ei kelpaa.</string>
     <string name="allowedExtensions">Sallitut tiedostotunnisteet:&#160;</string>
-    <string name="quizNetworkErrorTitle">Tietovisan virhe</string>
-    <string name="quizNetworkErrorMessage">Internet näyttäisi olevan pois verkosta.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Tarkasta datayhteytesi ja yritä uudelleen. </string>
     <string name="noApps">Laitteessasi ei ole asennettuna sovelluksia, jotka voisivat käsitellä tämän tiedoston.</string>
@@ -164,6 +158,7 @@
     <string name="noFiles">Ei tiedostoja</string>
     <string name="noFilesForAssignment">Tälle tehtävälle ei ole tiedostoja</string>
     <string name="noFilesSubtext">Tähän tiliin ei ole liitetty tiedostoja</string>
+    <string name="emptyFolder">Tämä kansio on tyhjä</string>
     <string name="notSupported">Ei tuettu</string>
     <string name="noEvents">Ei tapahtumia tänään!</string>
     <string name="noEventsSubtext">Näyttää olevan hyvä päivä levätä ja rentoutua.</string>
@@ -221,6 +216,7 @@
     <string name="noInternetConnectionTitle">Ei Internet-yhteyttä</string>
     <string name="noInternetConnectionMessage">Tähän toimintoon vaaditaan Internet-yhteys.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Näytä kohteen %s käyttäjätiedot.</string>
 
     <!-- App Names -->

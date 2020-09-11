@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Tria el fitxer de&#8230;</string>
     <string name="addFile">Afegeix un fitxer</string>
-    <string name="choose_a_file">Tria un fitxer</string>
-
     <string name="fromCamera">Càmera</string>
     <string name="fromGallery">Galeria</string>
     <string name="fromDevice">Dispositiu</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Un o més fitxers tenen una extensió de fitxer que no està permesa</string>
     <string name="extensionNotAllowed">El tipus de fitxer seleccionat no està permès.</string>
     <string name="allowedExtensions">Extensions permeses:&#160;</string>
-    <string name="quizNetworkErrorTitle">Error al qüestionari</string>
-    <string name="quizNetworkErrorMessage">Sembla que la connexió a Internet està fora de línia.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Reviseu la connexió de dades i torneu a provar-ho. </string>
     <string name="noApps">El dispositiu no té cap aplicació instal·lada per obrir aquest fitxer.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">No hi ha cap fitxer</string>
     <string name="noFilesForAssignment">No hi ha cap fitxer per a aquesta entrega</string>
     <string name="noFilesSubtext">No hi ha cap fitxer associat a aquest compte.</string>
+    <string name="emptyFolder">Aquesta carpeta està buida</string>
     <string name="notSupported">No s\'admet</string>
     <string name="noEvents">Avui no hi ha cap esdeveniment.</string>
     <string name="noEventsSubtext">Sembla un dia fabulós per descansar i relaxar-se.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">No hi ha cap connexió a Internet</string>
     <string name="noInternetConnectionMessage">Per dur a terme aquesta acció cal tenir una connexió a Internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">Avatar de %s</string>
     <string name="formattedAvatarAction">Mostra la informació d\'usuari per a %s.</string>
 
     <!-- App Names -->

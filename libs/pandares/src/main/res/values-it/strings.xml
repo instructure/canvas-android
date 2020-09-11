@@ -172,7 +172,6 @@
     <string name="noDate">Nessuna data</string>
     <string name="future">Futuro</string>
     <string name="next7Days">Prossimi 7 giorni</string>
-    <string name="days">Giorni</string>
     <string name="submissionDetailsDueTodayAt">In scadenza oggi alle %s</string>
     <string name="submissionDetailsDueTomorrowAt">In scadenza domani alle %s</string>
     <string name="submissionDetailsDueYesterdayAt">In scadenza ieri alle %s</string>
@@ -409,8 +408,6 @@
     <!-- Notifications -->
     <string name="deleted">Eliminato</string>
 
-    <string name="contentDescriptionFiles">Icona File</string>
-
     <string name="loadingCanvas">Caricamento dei contenuti Contenuto&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -524,7 +521,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Successivo</string>
-    <string name="turnedIn">Consegnato:&#160;</string>
     <string name="addComment">Aggiungi un commento&#8230;</string>
 
     <string name="home">Home</string>
@@ -584,12 +580,6 @@
     <string name="practiceQuizzes">Quiz di esercitazione</string>
     <string name="gradedSurveys">Sondaggi con valutazione</string>
     <string name="surveys">Sondaggi</string>
-    <string name="quizMatchingDefaultDisplay">[Scegli]</string>
-    <string name="choose_answer_below">Scegli la tua risposta sotto</string>
-    <string name="choose_answers_below">Scegli le tue risposte sotto</string>
-    <string name="flag_the_question">Segnala la domanda</string>
-
-
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Elenco attività</string>
     <string name="gradesWidgetTitle">Voti</string>
@@ -712,7 +702,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
-    <string name="calendarDay">Giorno</string>
     <string name="createNewCalendarEvent">Crea nuovo evento</string>
     <string name="enableFunMode">Disattiva i panda</string>
 
@@ -798,22 +787,8 @@
     <string name="notification_desc_admin">Solo istruttore e amministratore. Ricevi notifiche su iscrizioni al corso, report generati, contenuto esportato, report di migrazione, nuovi utenti account e nuovi gruppi di studenti.</string>
     <string name="notification_desc_recording_ready">Ricevi notifiche quando è pronta una registrazione della conferenza.</string>
 
-    <string name="enterAnswer">Inserisci risposta</string>
-    <string name="resumeQuiz">Riprendi quiz</string>
-    <string name="allowed_attempts">Tentativi consentiti</string>
-    <string name="viewQuestions">Visualizza domande</string>
     <string name="unlimited">Senza limiti</string>
-    <string name="viewResults">Visualizza risultati</string>
-
-    <string name="toggleTimer">Attiva/Disattiva timer</string>
-    <string name="thirtySecondWarning">Mancano 30 secondi</string>
-    <string name="timeSpentFormat" formatted="false">Tempo trascorso: %d minuti</string>
-    <string name="lockedIPAddress">Questo quiz è bloccato. È disponibile solo in alcune posizioni.</string>
-    <string name="lockedInvalidAccessCode">Codice di accesso non valido</string>
-
-    <string name="showFlaggedQuestions">Mostra domande segnalate/senza risposta</string>
     <string name="question">Domanda</string>
-    <string name="questions">Domande</string>
     <plurals name="question_count">
         <item quantity="one">%d domanda</item>
         <item quantity="other">%d domande</item>
@@ -823,25 +798,7 @@
         <item quantity="one">%s punto</item>
         <item quantity="other">%s punti</item>
     </plurals>
-    <string name="flagged">Segnalato</string>
-
-    <string name="areYouSure">Vuoi inviare questo quiz?</string>
-    <string name="submitQuiz">Inviare quiz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Hai %d domanda senza risposta.\nInviare questo quiz?</item>
-        <item quantity="other">Hai %d domande senza risposta.\nInviare questo quiz?</item>
-    </plurals>
-    <string name="takeQuizAgain">Esegui di nuovo il quiz</string>
-    <string name="autoSubmitting">Invio automatico del quiz&#8230;</string>
-    <string name="submitReasonTimedQuiz">Il quiz è stato inviato perché il limite di tempo era scaduto.</string>
-    <string name="submitReasonLockAt">Il quiz è stato inviato perché era stato raggiunto il blocco alla data.</string>
-    <string name="quizSubmittedSuccessfully">Quiz inviato correttamente.</string>
-    <string name="quizSubmittedFailure">Impossibile inviare il quiz in questo momento.</string>
-    <string name="almostDue">Sta per scadere!</string>
-    <string name="almostDueMsg">Stai per arrivare alla data di scadenza. Inviare adesso per evitare che il quiz venga contrassegnato come in ritardo?</string>
     <string name="timeLimit">Limite di tempo</string>
-    <string name="cantStartQuiz">Impossibile avviare quiz.</string>
-    <string name="start">Avvia</string>
     <string name="newPushNotifications">%1$s nuove notifiche</string>
     <string name="like">mi piace</string>
     <string name="likeEntryLabel">Voce Mi piace</string>

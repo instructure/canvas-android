@@ -225,9 +225,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Czy na pewno chcesz usunąć to zadanie?</string>
-    <string name="question">Pytanie</string>
-    <string name="quizMatchingDefaultDisplay">[Wybierz]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Wyślij wiadomość do uczestnika</string>
 
@@ -239,9 +236,6 @@
     <string name="submission_status_excused">Usprawiedliwiony</string>
     <string name="last_login_format">Ostatnie logowanie: %s</string>
 
-    <string name="muteGrades">Wyłącz oceny</string>
-    <string name="unmuteGrades">Włącz oceny</string>
-    <string name="gradesMutedLabel">Wyłączone oceny</string>
     <string name="turnOnAnonymousGrading">Włącz anonimową klasyfikację</string>
     <string name="turnOffAnonymousGrading">Wyłącz anonimową klasyfikację</string>
     <string name="anonymousGradingLabel">Anonimowa klasyfikacja</string>
@@ -399,6 +393,7 @@
     <string name="graded">Oceniono</string>
     <string name="needsGrading">Wymaga oceny</string>
     <string name="not_submitted">Nie wysłano</string>
+    <string name="a11y_viewSubmissionAction">wyświetl szczegóły przesyłki</string>
     <string name="content_description_submission_donut_graded" formatted="false">Ocenione %s z %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Wymaga oceny %s z %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Nie przesłano %s z %s</string>

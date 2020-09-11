@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Kaweake ngā whakamōhiotanga</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas whakamōhitanga mo ngā kaweake e haere tonu ana</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Tīpako kōnae mai&#8230;</string>
     <string name="addFile">Tāpiri Kōnae</string>
-    <string name="choose_a_file">Kōwhiria he Kōnae</string>
-
     <string name="fromCamera">kāmera</string>
     <string name="fromGallery">Taiwhanga</string>
     <string name="fromDevice">pūrere</string>
@@ -122,8 +119,6 @@
     <string name="extensionNotAllowed">Kaore e whakāetia te momo kōnae i tīpakohia.</string>
     <string name="allowedExtensions">toronga Whakāetia:&#160;</string>
 
-    <string name="quizNetworkErrorTitle">Quiz Hapa </string>
-    <string name="quizNetworkErrorMessage">Kei te tuimotu te hononga ipurangi.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Tēnā koa tirohia tō hononga raraunga, me te tarai anō. </string>
     <string name="noApps">Tō pūrere kāore e whai tētahi tono tāutatia e taea te hāpai i tēnei kōnae.</string>
@@ -164,6 +159,7 @@
     <string name="noFiles">Kāore ngā kōnae</string>
     <string name="noFilesForAssignment">Kaore ngā kōnae mo tēnei whakataunga</string>
     <string name="noFilesSubtext">Kaore ngā kōnae e whakapā ana ki tēnei pūkete.</string>
+    <string name="emptyFolder">Kei te kore tēnei kōpaki</string>
     <string name="notSupported">Kaore i te tautokotia</string>
     <string name="noEvents">Kaore he tauwhāinga i tēnei rā!</string>
     <string name="noEventsSubtext">Ko te āhua nei he rā pai ki te whakatā me te whakātea.</string>
@@ -221,6 +217,7 @@
     <string name="noInternetConnectionTitle">Kaore he hononga ipurangi</string>
     <string name="noInternetConnectionMessage">Tēnei mahi ka mahi he hononga ipurangi</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s Avatar</string>
     <string name="formattedAvatarAction">Tirohia ngā taipitopito kaiwhakamahi mo %s.</string>
 
     <!-- App Names -->

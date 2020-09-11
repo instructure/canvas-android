@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-06-08T18:06:15.639282",
+  "@@last_modified": "2020-08-07T11:03:26.707583",
   "alertsLabel": "Avisos",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1200,6 +1200,61 @@
       }
     }
   },
+  "Select Student Color": "Selecciona el color de l’estudiant",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Electric, blue": "Elèctric, blau",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Plum, Purple": "Pruna, porpra",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Barney, fúcsia",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Gerd, vermell",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Fire, Orange": "Foc, taronja",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Trèvol, verd",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "S'ha produït un error en desar la vostra selecció. Torneu-ho a provar.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Canvia el color de {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
   "Teacher": "Professor",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
@@ -1301,6 +1356,155 @@
   "Add new student": "Afegeix un estudiant nou",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select": "Selecciona",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Tinc un compte del Canvas",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "No tinc un compte del Canvas",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Create Account": "Crea un compte",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name": "Nom complet",
+  "@Full Name": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "Adreça electrònica",
+  "@Email Address": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password": "Contrasenya",
+  "@Password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name…": "Nom complet...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email…": "Adreça electrònica...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password…": "Contrasenya...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter full name": "Introduïu un nom complet",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter an email address": "Introduïu una adreça electrònica",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Introduïu una adreça electrònica vàlida",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password is required": "La contrasenya és obligatòria",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "La contrasenya ha de tenir com a mínim 8 caràcters",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "En tocar \"Crea un compte\", accepteu les {termsOfService} i reconeixeu la {privacyPolicy}.",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Condicions de servei",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Política de privacitat",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Visualitza la política de privacitat",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Already have an account? ": "Ja teniu un compte? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Sign In": "Inicia la sessió",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Hide Password": "Amaga la contrasenya",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Show Password": "Mostra la contrasenya",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Enllaç a les Condicions de servei",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Enllaç a la Política de privacitat",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
     "type": "text",
     "placeholders": {}
   },
@@ -1409,12 +1613,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "Política de privacitat",
-  "@Privacy Policy": {
-    "description": "Label for the privacy policy",
-    "type": "text",
-    "placeholders": {}
-  },
   "Terms of Use": "Condicions d'ús",
   "@Terms of Use": {
     "description": "Label for the terms of use",
@@ -1465,12 +1663,6 @@
   "A subject is required.": "Cal un assumpte.",
   "@A subject is required.": {
     "description": "Error shown when the subject field is empty",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Email Address": "Adreça electrònica",
-  "@Email Address": {
-    "description": "Label used for Email Address text field",
     "type": "text",
     "placeholders": {}
   },

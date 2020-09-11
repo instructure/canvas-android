@@ -172,8 +172,6 @@
     <string name="noDate">بلا تاريخ</string>
     <string name="future">المستقبل</string>
     <string name="next7Days">الأيام السبعة القادمة</string>
-    <string name="days">أيام</string>
-
     <string name="submissionDetailsDueTodayAt">مستحق اليوم الساعة %s</string>
     <string name="submissionDetailsDueTomorrowAt">مستحق غدًا الساعة %s</string>
     <string name="submissionDetailsDueYesterdayAt">مستحق أمس الساعة %s</string>
@@ -427,8 +425,6 @@
 
     <!-- Notifications -->
     <string name="deleted">تم الحذف</string>
-    <string name="contentDescriptionFiles">أيقونة الملف</string>
-
     <string name="loadingCanvas">جارٍ تحميل محتوى Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -541,7 +537,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">التالي</string>
-    <string name="turnedIn">تم التسليم:&#160;</string>
     <string name="addComment">إضافة تعليق&#8230;</string>
     <string name="home">الصفحة الرئيسية</string>
     <string name="Notifications">الإعلامات</string>
@@ -596,12 +591,6 @@
     <string name="practiceQuizzes">التدريب على اختبارات موجزة</string>
     <string name="gradedSurveys">استطلاعات تم تقييمها</string>
     <string name="surveys">الاستطلاعات</string>
-    <string name="quizMatchingDefaultDisplay">[اختيار]</string>
-    <string name="choose_answer_below">اختر إجابتك أدناه</string>
-    <string name="choose_answers_below">اختر إجاباتك أدناه</string>
-
-
-    <string name="flag_the_question">وضع علامة على السؤال</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">قائمة مهام</string>
     <string name="gradesWidgetTitle">الدرجات</string>
@@ -724,7 +713,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">مقياس</string>
 
-    <string name="calendarDay">اليوم</string>
     <string name="createNewCalendarEvent">إنشاء حدث جديد</string>
     <string name="enableFunMode">إيقاف تشغيل الباندا</string>
 
@@ -810,22 +798,8 @@
     <string name="notification_desc_admin">المعلم والمسؤول فقط. الحصول على إعلامات حول تسجيلات المساق، وإنشاء التقارير، وتصدير المحتوى، وتقارير الترحيل، ومستخدمي الحسابات الجدد، ومجموعات الطلاب الجديدة.</string>
     <string name="notification_desc_recording_ready">الحصول على إعلامات عند وجود تسجيل مؤتمر جاهز.</string>
 
-    <string name="enterAnswer">أدخل إجابة</string>
-    <string name="resumeQuiz">استئناف الاختبار</string>
-    <string name="allowed_attempts">المحاولات المسموح بها</string>
-    <string name="viewQuestions">عرض الأسئلة</string>
     <string name="unlimited">غير محدود</string>
-    <string name="viewResults">عرض النتائج</string>
-
-    <string name="toggleTimer">تشغيل/إيقاف الموقت</string>
-    <string name="thirtySecondWarning">بقيت 30 ثانية</string>
-    <string name="timeSpentFormat" formatted="false">الوقت المستغرق: %d دقيقة</string>
-    <string name="lockedIPAddress">هذا الاختبار مؤمّن. متاح فقط في مواقع محددة.</string>
-    <string name="lockedInvalidAccessCode">رمز الوصول غير صالح</string>
-
-    <string name="showFlaggedQuestions">عرض الأسئلة التي لم توضع عليها علامة أو لم تتم الإجابة عليها</string>
     <string name="question">السؤال</string>
-    <string name="questions">الأسئلة</string>
     <plurals name="question_count">
         <item quantity="zero">%d أسئلة</item>
         <item quantity="one">%d سؤال</item>
@@ -843,29 +817,7 @@
         <item quantity="many">%s نقاط</item>
         <item quantity="other">%s نقاط</item>
     </plurals>
-    <string name="flagged">تم التمييز</string>
-
-    <string name="areYouSure">هل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</string>
-    <string name="submitQuiz">إرسال الاختبار؟</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="zero">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-        <item quantity="one">لديك %d سؤال بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-        <item quantity="two">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-        <item quantity="few">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-        <item quantity="many">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-        <item quantity="other">لديك %d أسئلة بدون إجابة.\nهل أنت متأكد من أنك تريد إرسال هذا الاختبار الموجز؟</item>
-    </plurals>
-    <string name="takeQuizAgain">إجراء الاختبار الموجز من جديد</string>
-    <string name="autoSubmitting">جارٍ الإرسال التلقائي للاختبار الموجز&#8230;</string>
-    <string name="submitReasonTimedQuiz">تم إرسال الاختبار الموجز لأن المهلة الزمنية انتهت.</string>
-    <string name="submitReasonLockAt">تم إرسال الاختبار الموجز لأنه تم الوصول إلى تاريخ الإغلاق.</string>
-    <string name="quizSubmittedSuccessfully">تم إرسال الاختبار الموجز بنجاح.</string>
-    <string name="quizSubmittedFailure">تعذر إرسال الاختبار الموجز في هذا الوقت.</string>
-    <string name="almostDue">موعد الاستحقاق على وشك الانتهاء!</string>
-    <string name="almostDueMsg">موعد الاستحقاق اقترب. هل تريد الإرسال الآن لمنع وضع علامة على اختبارك كمتأخر؟</string>
     <string name="timeLimit">الحد الزمني</string>
-    <string name="cantStartQuiz">لا يمكن بدء الاختبار الموجز.</string>
-    <string name="start">البدء</string>
     <string name="newPushNotifications">%1$s من الإعلامات الجديدة</string>
     <string name="like">إعجاب</string>
     <string name="likeEntryLabel">إعجاب بالمشاركة</string>

@@ -45,10 +45,7 @@
 
 
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Escoger archivo desde&#8230;</string>
     <string name="addFile">Agregar archivo</string>
-    <string name="choose_a_file">Elegir un archivo</string>
-
     <string name="fromCamera">Cámara</string>
     <string name="fromGallery">Galería</string>
     <string name="fromDevice">Dispositivo</string>
@@ -124,9 +121,6 @@
     <string name="oneOrMoreExtensionNotAllowed">Uno o más archivos tienen una extensión de archivo que no se permite</string>
     <string name="extensionNotAllowed">No se permite el tipo de archivo seleccionado.</string>
     <string name="allowedExtensions">Extensiones permitidas:&#160;</string>
-    <string name="quizNetworkErrorTitle">Error del examen</string>
-    <string name="quizNetworkErrorMessage">La conexión a Internet parece no estar activada.</string>
-
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Compruebe su conexión de datos y vuelva a intentarlo. </string>
     <string name="noApps">Su dispositivo no tiene aplicaciones instaladas que puedan manejar este archivo.</string>
@@ -167,6 +161,7 @@
     <string name="noFiles">No hay archivos</string>
     <string name="noFilesForAssignment">No hay archivos para esta entrega</string>
     <string name="noFilesSubtext">No hay archivos asociados con esta cuenta.</string>
+    <string name="emptyFolder">Esta carpeta está vacía</string>
     <string name="notSupported">No compatible</string>
     <string name="noEvents">¡No hay ningún evento hoy!</string>
     <string name="noEventsSubtext">Parece un día perfecto para descansar y relajarse.</string>
@@ -224,6 +219,7 @@
     <string name="noInternetConnectionTitle">Sin conexión a Internet</string>
     <string name="noInternetConnectionMessage">Esta acción requiere conexión a Internet.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">Avatar de %s</string>
     <string name="formattedAvatarAction">Ver detalles de usuario de %s.</string>
 
     <!-- App Names -->

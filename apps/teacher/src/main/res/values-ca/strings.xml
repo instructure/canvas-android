@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Segur que voleu suprimir aquesta tasca?</string>
-    <string name="question">Pregunta</string>
-    <string name="quizMatchingDefaultDisplay">[Tria]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Envia un missatge a l\'estudiant</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Excusat</string>
     <string name="last_login_format">Darrer inici de sessió: %s</string>
 
-    <string name="muteGrades">Oculta les qualificacions</string>
-    <string name="unmuteGrades">Deixa d\'ocultar les qualificacions</string>
-    <string name="gradesMutedLabel">Qualificacions ocultes</string>
     <string name="turnOnAnonymousGrading">Activeu l\'opció Qualificacions anònimes</string>
     <string name="turnOffAnonymousGrading">Desactiveu l\'opció Qualificacions anònimes</string>
     <string name="anonymousGradingLabel">Qualificacions anònimes</string>
@@ -391,6 +385,7 @@
     <string name="graded">Qualificat</string>
     <string name="needsGrading">S\'ha de qualificar</string>
     <string name="not_submitted">No s\'ha enviat</string>
+    <string name="a11y_viewSubmissionAction">Visualitza els detalls de l\'entrega</string>
     <string name="content_description_submission_donut_graded" formatted="false">Qualificat, %s de %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Requereix qualificació, %s de %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">No s\'ha entregat, %s de %s</string>

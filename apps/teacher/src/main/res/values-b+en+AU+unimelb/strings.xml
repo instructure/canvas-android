@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Are you sure you want to delete this assignment?</string>
-    <string name="question">Question</string>
-    <string name="quizMatchingDefaultDisplay">[Choose]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Message Student</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Excused</string>
     <string name="last_login_format">Last login: %s</string>
 
-    <string name="muteGrades">Mute Grades</string>
-    <string name="unmuteGrades">Unmute Grades</string>
-    <string name="gradesMutedLabel">Grades Muted</string>
     <string name="turnOnAnonymousGrading">Turn on Anonymous Grading</string>
     <string name="turnOffAnonymousGrading">Turn off Anonymous Grading</string>
     <string name="anonymousGradingLabel">Anonymous Grading</string>
@@ -391,6 +385,7 @@
     <string name="graded">Graded</string>
     <string name="needsGrading">Needs Grading</string>
     <string name="not_submitted">Not Submitted</string>
+    <string name="a11y_viewSubmissionAction">view submission details</string>
     <string name="content_description_submission_donut_graded" formatted="false">Graded, %s of %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Needs Grading, %s of %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Not submitted, %s of %s</string>

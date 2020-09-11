@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-06-08T18:06:15.639282",
+  "@@last_modified": "2020-08-07T11:03:26.707583",
   "alertsLabel": "Benachrichtigungen",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1200,6 +1200,61 @@
       }
     }
   },
+  "Select Student Color": "Studentenfarbe auswählen",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Electric, blue": "Elektrisch, blau",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Plum, Purple": "Pflaume, violett",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Fuchsienrot",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Himbeerrot",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Fire, Orange": "Feuerrot, orange",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Kleeblatt, grün",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "Fehler beim Speichern Ihrer Auswahl. Bitte versuchen Sie es noch einmal.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Farbe ändern für {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
   "Teacher": "Lehrer",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
@@ -1301,6 +1356,155 @@
   "Add new student": "Neuen Studenten hinzufügen",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select": "Auswählen",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Ich besitze ein Canvas-Konto",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "Ich besitze kein Canvas-Konto",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Create Account": "Konto erstellen",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name": "Vollständiger Name",
+  "@Full Name": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "E-Mail-Adresse",
+  "@Email Address": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password": "Kennwort",
+  "@Password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name…": "Vollständiger Name ...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email…": "E-Mail ...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password…": "Kennwort ...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter full name": "Bitte geben Sie Ihren vollständigen Namen ein.",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter an email address": "Bitte geben Sie eine E-Mail-Adresse an.",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Geben Sie bitte eine gültige E-Mail-Adresse sein.",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password is required": "Passwort ist erforderlich",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "Das Kennwort muss mindestens 8 Zeichen lang sein.",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "Durch Tippen auf „Konto erstellen“ erklären Sie sich mit den {termsOfService} und den {privacyPolicy} einverstanden.",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Servicebedingungen",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "Datenschutzrichtlinien",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Datenschutzrichtlinien anzeigen",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Already have an account? ": "Sie haben bereits ein Konto? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Sign In": "Anmelden",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Hide Password": "Kennwort ausblenden",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Show Password": "Kennwort anzeigen",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Servicebedingungen (Link)",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Datenschutzrichtlinien (Link)",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
     "type": "text",
     "placeholders": {}
   },
@@ -1409,12 +1613,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "Datenschutzrichtlinien",
-  "@Privacy Policy": {
-    "description": "Label for the privacy policy",
-    "type": "text",
-    "placeholders": {}
-  },
   "Terms of Use": "Nutzungsbedingungen",
   "@Terms of Use": {
     "description": "Label for the terms of use",
@@ -1465,12 +1663,6 @@
   "A subject is required.": "Ein Betreff ist erforderlich.",
   "@A subject is required.": {
     "description": "Error shown when the subject field is empty",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Email Address": "E-Mail-Adresse",
-  "@Email Address": {
-    "description": "Label used for Email Address text field",
     "type": "text",
     "placeholders": {}
   },

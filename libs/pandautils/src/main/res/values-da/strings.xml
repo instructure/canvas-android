@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">Upload meddelelser</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas-meddelelser til løbende uploads.</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">Vælg fil fra &#8230;</string>
     <string name="addFile">Tilføj fil</string>
-    <string name="choose_a_file">Vælg en fil</string>
-
     <string name="fromCamera">Kamera</string>
     <string name="fromGallery">Galleri</string>
     <string name="fromDevice">Enhed</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">Den valgte filtype er ikke tilladt.</string>
     <string name="allowedExtensions">Tilladte udvidelser: &#160;</string>
 
-    <string name="quizNetworkErrorTitle">Quiz fejl</string>
-    <string name="quizNetworkErrorMessage">Internettet ser ud til at være offline.</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection"> Kontrollér din dataforbindelse, og prøv igen. </string>
     <string name="noApps">Der er ingen app på enheden, der kan åbne denne fil.</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">Inge filer</string>
     <string name="noFilesForAssignment">Der er ingen filer til denne aflevering.</string>
     <string name="noFilesSubtext">Der er ingen filer associeret med denne konto.</string>
+    <string name="emptyFolder">Denne mappe er tom</string>
     <string name="notSupported">Ikke understøttet</string>
     <string name="noEvents">Ingen begivenheder i dag!</string>
     <string name="noEventsSubtext">Det ser ud til, at det er en god dag til at hvile sig og slappe af.</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">Ingen internetforbindelse</string>
     <string name="noInternetConnectionMessage">Denne handling kræver en internetforbindelse.</string>
     <string name="content_description_avatar">Avatar</string>
+    <string name="a11y_avatarNameFormatted">%s avatar</string>
     <string name="formattedAvatarAction">Se brugeroplysninger for %s.</string>
 
     <!-- App Names -->

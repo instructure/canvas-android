@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-06-08T18:06:15.639282",
+  "@@last_modified": "2020-08-07T11:03:26.707583",
   "alertsLabel": "Varsler",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1200,6 +1200,61 @@
       }
     }
   },
+  "Select Student Color": "Velg studentfarge",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Electric, blue": "Elektrisk, blå",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Plum, Purple": "Plomme, blå",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Barney, fuchsia",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Bringebær, rød",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Fire, Orange": "Ild, oransje",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Kløver, grønn",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "Det oppsto en feil ved lagring av valget ditt. Prøv på nytt.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Endre farge for {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders": {
+      "studentName": {}
+    }
+  },
   "Teacher": "Lærer",
   "@Teacher": {
     "description": "Label for the Teacher enrollment type",
@@ -1301,6 +1356,155 @@
   "Add new student": "Legg til ny student",
   "@Add new student": {
     "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Select": "Velg",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Jeg har en Canvas-konto",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "Jeg har ikke en Canvas-konto",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Create Account": "Opprett konto",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name": "Fullt navn",
+  "@Full Name": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email Address": "E-postadresse",
+  "@Email Address": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password": "Passord",
+  "@Password": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Full Name…": "Fullt navn…",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Email…": "E-post…",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password…": "Passord…",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter full name": "Angi fullt navn",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter an email address": "Angi en e-postadresse",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Oppgi en gyldig e-postadresse",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password is required": "Passord kreves",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "Passord må inneholde minst åtte tegn",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "Ved å trykke på Opprett konto, samtykker du til {termsOfService} og godtar {privacyPolicy}",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "tjenestevilkår",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy": "retningslinjer for personvern",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Se retningslinjer for personvern",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Already have an account? ": "Har du allerede en konto? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Sign In": "Logg inn",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Hide Password": "Skjul passord",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Show Password": "Vis passord",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Lenke til tjenestevilkår",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Lenke til retningslinjer for personvern",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
     "type": "text",
     "placeholders": {}
   },
@@ -1409,12 +1613,6 @@
     "type": "text",
     "placeholders": {}
   },
-  "Privacy Policy": "retningslinjer for personvern",
-  "@Privacy Policy": {
-    "description": "Label for the privacy policy",
-    "type": "text",
-    "placeholders": {}
-  },
   "Terms of Use": "bruksvilkår",
   "@Terms of Use": {
     "description": "Label for the terms of use",
@@ -1465,12 +1663,6 @@
   "A subject is required.": "Du må ha en tittel.",
   "@A subject is required.": {
     "description": "Error shown when the subject field is empty",
-    "type": "text",
-    "placeholders": {}
-  },
-  "Email Address": "E-postadresse",
-  "@Email Address": {
-    "description": "Label used for Email Address text field",
     "type": "text",
     "placeholders": {}
   },

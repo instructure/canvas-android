@@ -43,10 +43,7 @@
     <string name="notificationChannelNameFileUploadsName">上传通知</string>
     <string name="notificationChannelNameFileUploadsDescription">Canvas关于正在上传项的通知。</string>
     <!-- Turn in Files -->
-    <string name="chooseFileSource">从&#8230;中选择文件</string>
     <string name="addFile">添加文件</string>
-    <string name="choose_a_file">选择文件</string>
-
     <string name="fromCamera">摄像机、照相机</string>
     <string name="fromGallery">画廊</string>
     <string name="fromDevice">设备</string>
@@ -123,8 +120,6 @@
     <string name="extensionNotAllowed">不允许选择文件的类型</string>
     <string name="allowedExtensions">允许的扩展名：&#160;</string>
 
-    <string name="quizNetworkErrorTitle">测验错误</string>
-    <string name="quizNetworkErrorMessage">互联网连接似乎已断开。</string>
     <!-- Media Task Loader -->
     <string name="noDataConnection">请检查您的数据连接，然后再试一次。</string>
     <string name="noApps">您的设备未安装可以处理此文件的任何应用程序。</string>
@@ -165,6 +160,7 @@
     <string name="noFiles">无文件</string>
     <string name="noFilesForAssignment">此提交项没有文件</string>
     <string name="noFilesSubtext">没有与此帐户关联的文件。</string>
+    <string name="emptyFolder">此文件夹为空</string>
     <string name="notSupported">不支持</string>
     <string name="noEvents">今天没有事件！</string>
     <string name="noEventsSubtext">今天似乎是休息放松的一天。</string>
@@ -222,6 +218,7 @@
     <string name="noInternetConnectionTitle">无互联网连接</string>
     <string name="noInternetConnectionMessage">此操作需要互联网连接。</string>
     <string name="content_description_avatar">头像</string>
+    <string name="a11y_avatarNameFormatted">%s 头像</string>
     <string name="formattedAvatarAction">查看 %s 的用户详细信息。</string>
 
     <!-- App Names -->

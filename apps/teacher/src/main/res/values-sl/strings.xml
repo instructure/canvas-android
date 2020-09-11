@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Ali ste prepričani, da želite odstraniti to nalogo?</string>
-    <string name="question">Vprašanje</string>
-    <string name="quizMatchingDefaultDisplay">[Izberi]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Sporoči študentu</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Opravičeno</string>
     <string name="last_login_format">Zadnja prijava: %s</string>
 
-    <string name="muteGrades">Ocene brez sprotnega obveščanja</string>
-    <string name="unmuteGrades">Ocene s sprotnim obveščanjem</string>
-    <string name="gradesMutedLabel">Ocene so brez sprotnega obveščanja.</string>
     <string name="turnOnAnonymousGrading">Vklopi anonimizirano ocenjevanje</string>
     <string name="turnOffAnonymousGrading">Izklopi anonimizirano ocenjevanje</string>
     <string name="anonymousGradingLabel">Anonimno ocenjevanje</string>
@@ -391,6 +385,7 @@
     <string name="graded">Ocenjeno</string>
     <string name="needsGrading">Je treba oceniti.</string>
     <string name="not_submitted">Ni oddano.</string>
+    <string name="a11y_viewSubmissionAction">ogled podrobnosti o oddaji</string>
     <string name="content_description_submission_donut_graded" formatted="false">Ocenjeno, %s od %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Je treba oceniti, %s od %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Ni oddano, %s od %s</string>

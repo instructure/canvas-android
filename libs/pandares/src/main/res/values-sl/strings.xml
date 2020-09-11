@@ -169,8 +169,6 @@
     <string name="noDate">Brez datuma</string>
     <string name="future">Prihodnje</string>
     <string name="next7Days">V naslednjih 7 dneh</string>
-    <string name="days">Dnevi</string>
-
     <string name="submissionDetailsDueTodayAt">Rok danes ob %s</string>
     <string name="submissionDetailsDueTomorrowAt">Rok jutri ob %s</string>
     <string name="submissionDetailsDueYesterdayAt">Rok včeraj ob %s</string>
@@ -404,8 +402,6 @@
 
     <!-- Notifications -->
     <string name="deleted">Odstranjeno</string>
-    <string name="contentDescriptionFiles">Ikona datoteke</string>
-
     <string name="loadingCanvas">Nalaganje vsebine sistema Canvas&#8230;</string>
 
     <string name="unknownDevice">UnknownDevice</string>
@@ -518,7 +514,6 @@
 
     <!-- Submission Details Strings -->
     <string name="next">Naprej</string>
-    <string name="turnedIn">Oddano:&#160;</string>
     <string name="addComment">Dodaj komentar&#8230;</string>
     <string name="home">Glavna stran</string>
     <string name="Notifications">Obvestila</string>
@@ -573,12 +568,6 @@
     <string name="practiceQuizzes">Kvizi za vajo</string>
     <string name="gradedSurveys">Ocenjene ankete</string>
     <string name="surveys">Ankete</string>
-    <string name="quizMatchingDefaultDisplay">[Izberi]</string>
-    <string name="choose_answer_below">Spodaj izberite svoj odgovor.</string>
-    <string name="choose_answers_below">Spodaj izberite svoje odgovore.</string>
-
-
-    <string name="flag_the_question">Označi vprašanje</string>
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Čakajoča opravila</string>
     <string name="gradesWidgetTitle">Ocene</string>
@@ -701,7 +690,6 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Merilo</string>
 
-    <string name="calendarDay">Dan</string>
     <string name="createNewCalendarEvent">Ustvari nov dogodek</string>
     <string name="enableFunMode">Izklopi pande</string>
 
@@ -787,22 +775,8 @@
     <string name="notification_desc_admin">Samo učitelj in skrbnik. Bodite obveščeni o vpisih v predmete, generirana poročila, izvoženo vsebino, poročila o migracijah, uporabnikih novih računov in novih skupinah študentov.</string>
     <string name="notification_desc_recording_ready">Bodite obveščeni, ko bo posnetek konference pripravljen.</string>
 
-    <string name="enterAnswer">Vnos odgovora</string>
-    <string name="resumeQuiz">Nadaljevanje kviza</string>
-    <string name="allowed_attempts">Dovoljeni poskusi</string>
-    <string name="viewQuestions">Ogled vprašanj</string>
     <string name="unlimited">Neomejeno</string>
-    <string name="viewResults">Ogled rezultatov</string>
-
-    <string name="toggleTimer">Preklop časovnika</string>
-    <string name="thirtySecondWarning">Preostalih je še 30 sekund.</string>
-    <string name="timeSpentFormat" formatted="false">Porabljen čas: %d minut</string>
-    <string name="lockedIPAddress">Ta kviz je zaklenjen. Na voljo je le na določenih mestih.</string>
-    <string name="lockedInvalidAccessCode">Neveljavna koda za dostop</string>
-
-    <string name="showFlaggedQuestions">Prikaži označena/neodgovorjena vprašanja</string>
     <string name="question">Vprašanje</string>
-    <string name="questions">Vprašanja</string>
     <plurals name="question_count">
         <item quantity="one">%d vprašanje</item>
         <item quantity="other">%d vprašanj</item>
@@ -812,25 +786,7 @@
         <item quantity="one">%s točka</item>
         <item quantity="other">%s točk</item>
     </plurals>
-    <string name="flagged">Označeno</string>
-
-    <string name="areYouSure">Ali ste prepričani, da želite poslati ta kviz?</string>
-    <string name="submitQuiz">Ali želite poslati ta kviz?</string>
-    <plurals name="unanswered_quiz_questions">
-        <item quantity="one">Imate %d neodgovorjeno vprašanje.\nAli ste prepričani, da želite poslati ta kviz?</item>
-        <item quantity="other">Imate %d neodgovorjenih vprašanj.\nAli ste prepričani, da želite poslati ta kviz?</item>
-    </plurals>
-    <string name="takeQuizAgain">Ponovno opravi kviz</string>
-    <string name="autoSubmitting">Samodejno pošiljanje kviza&#8230;</string>
-    <string name="submitReasonTimedQuiz">Kviz je bil poslan, ker je časovna omejitev potekla.</string>
-    <string name="submitReasonLockAt">Kviz je bil poslan, ker je bil dosežen datum zapore objave.</string>
-    <string name="quizSubmittedSuccessfully">Kviz je bil uspešno poslan.</string>
-    <string name="quizSubmittedFailure">Trenutno kviza ni bilo mogoče poslati.</string>
-    <string name="almostDue">Skoraj dokončano.</string>
-    <string name="almostDueMsg">Rok je že zelo blizu. Ali želite kviz poslati zdaj, da ne bo označen zaradi zamujenega roka?</string>
     <string name="timeLimit">Časovna omejitev</string>
-    <string name="cantStartQuiz">Kviza ni mogoče začeti.</string>
-    <string name="start">Začni</string>
     <string name="newPushNotifications">%1$s novih obvestil</string>
     <string name="like">všeček</string>
     <string name="likeEntryLabel">Všečkaj vnos</string>

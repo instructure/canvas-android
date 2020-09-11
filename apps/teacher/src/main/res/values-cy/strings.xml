@@ -217,9 +217,6 @@
     </plurals>
 
     <string name="delete_assignment_message">Ydych chi’n siŵr eich bod am ddileu’r aseiniad hwn?</string>
-    <string name="question">Cwestiwn</string>
-    <string name="quizMatchingDefaultDisplay">[Dewis]</string>
-
     <string name="max_count">99+</string>
     <string name="message_student">Anfon Neges at Fyfyriwr</string>
 
@@ -231,9 +228,6 @@
     <string name="submission_status_excused">Wedi esgusodi</string>
     <string name="last_login_format">Manylion mewngofnodi diwethaf: %s</string>
 
-    <string name="muteGrades">Tewi Graddau</string>
-    <string name="unmuteGrades">Dad-dewi Graddau</string>
-    <string name="gradesMutedLabel">Graddau wedi’u tewi</string>
     <string name="turnOnAnonymousGrading">Dechrau Graddio’n Ddienw</string>
     <string name="turnOffAnonymousGrading">Diffodd Graddio’n Ddienw</string>
     <string name="anonymousGradingLabel">Graddio’n Ddienw</string>
@@ -391,6 +385,7 @@
     <string name="graded">Wedi graddio</string>
     <string name="needsGrading">Angen ei raddio</string>
     <string name="not_submitted">Heb Gyflwyno</string>
+    <string name="a11y_viewSubmissionAction">gweld manylion cyflwyno</string>
     <string name="content_description_submission_donut_graded" formatted="false">Wedi Graddio, %s o %s</string>
     <string name="content_description_submission_donut_needs_grading" formatted="false">Angen Graddio, %s o %s</string>
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Heb gyflwyno, %s o %s</string>
