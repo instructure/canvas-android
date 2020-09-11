@@ -274,7 +274,7 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RequestCodes.CROP_IMAGE && resultCode == Activity.RESULT_OK) {
-            val croppedPath = data!!.data!!.path
+            val croppedPath = data!!.data!!.path!!
             val croppedFile = File(croppedPath)
             loaderBundle = createLoaderBundle("profilePic.jpg", "image/jpeg", croppedPath, croppedFile.length(), true)
             LoaderUtils.restartLoaderWithBundle(loaderManager, loaderBundle, this, R.id.avatarLoaderID)

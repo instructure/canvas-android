@@ -91,7 +91,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
             return
         }
         val uri = Uri.parse(baseURL)
-        val host = uri.host
+        val host = uri.host ?: ""
         getCanvasWebView()?.settings?.javaScriptCanOpenWindowsAutomatically = true
         getCanvasWebView()?.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean = handleOverrideURlLoading(view, request?.url?.toString())

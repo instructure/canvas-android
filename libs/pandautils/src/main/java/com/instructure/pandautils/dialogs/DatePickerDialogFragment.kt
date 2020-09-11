@@ -43,7 +43,7 @@ class DatePickerDialogFragment : AppCompatDialogFragment(), DatePickerDialog.OnD
         val day = c.get(Calendar.DAY_OF_MONTH)
 
 
-        val dialog = DatePickerDialog(activity, this, year, month, day)
+        val dialog = DatePickerDialog(requireContext(), this, year, month, day)
 
         dialog.setOnShowListener {
             dialog.getButton(AppCompatDialog.BUTTON_POSITIVE).setTextColor(ThemePrefs.buttonColor)

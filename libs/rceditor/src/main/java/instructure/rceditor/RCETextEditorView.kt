@@ -302,7 +302,7 @@ class RCETextEditorView @JvmOverloads constructor(
 
     public override fun onSaveInstanceState(): Parcelable? {
         val superState = super.onSaveInstanceState()
-        val ss = SavedState(superState)
+        val ss = SavedState(superState!!)
 
         ss.htmlState = html
         ss.contentDescription = editor.accessibilityContentDescription
@@ -333,7 +333,7 @@ class RCETextEditorView @JvmOverloads constructor(
 
         private constructor(`in`: Parcel) : super(`in`) {
             this.htmlState = `in`.readString()
-            this.contentDescription = `in`.readString()
+            this.contentDescription = `in`.readString() ?: ""
             this.themeColor = `in`.readInt()
             this.buttonColor = `in`.readInt()
         }

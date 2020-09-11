@@ -16,6 +16,7 @@
 package com.instructure.student.test.assignment.details
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
@@ -1242,7 +1243,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         val uri = mockk<Uri>()
         val intent = mockk<Intent>()
         every { intent.action } returns ""
-        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+        every { any<Context>().isIntentAvailable(any()) } returns true
 
         mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
@@ -1253,8 +1256,6 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         mockkObject(FilePrefs)
         every { FilePrefs.tempCaptureUri = any() }
 
-        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
-        every { any<Uri>().getVideoIntent() } returns intent
 
 
         excludeRecords {
@@ -1275,10 +1276,9 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
     private fun testMediaPicker() {
         val intent = mockk<Intent>()
         every { intent.action } returns ""
-        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
-
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { chooseMediaIntent } returns intent
+        every { any<Context>().isIntentAvailable(any()) } returns true
 
         excludeRecords {
             context.packageName

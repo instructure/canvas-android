@@ -117,7 +117,7 @@ abstract class ParentFragment : DialogFragment(), FragmentInteractions {
                                 // Show pdf with PSPDFkit
                                 if (loadedMedia.intent!!.type!!.contains("pdf") && !loadedMedia.isUseOutsideApps) {
                                     val uri = loadedMedia.intent!!.data
-                                    FileUtils.showPdfDocument(uri, loadedMedia, requireContext())
+                                    FileUtils.showPdfDocument(uri!!, loadedMedia, requireContext())
                                 } else if (loadedMedia.intent?.type == "video/mp4") {
                                     activity?.startActivity(VideoViewActivity.createIntent(requireContext(), loadedMedia.intent!!.dataString))
                                 } else {

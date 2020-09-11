@@ -96,8 +96,8 @@ class MasqueradingDialog : DialogFragment() {
             setCancelable(false)
             setCanceledOnTouchOutside(false)
             if (isFullscreen) setOnShowListener {
-                window.setBackgroundDrawable(null)
-                window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
+                window?.setBackgroundDrawable(null)
+                window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT)
             }
         }
     }

@@ -25,14 +25,14 @@ description: Canvas Parent
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.2.2+33
+version: 3.2.3+34
 
 module:
   androidX: true
 
 environment:
   sdk: ">=2.8.0 <3.0.0"
-  flutter: 1.17.1
+  flutter: 1.20.3
 
 dependencies:
   flutter:
@@ -64,7 +64,7 @@ dependencies:
   file_picker: 1.4.2
 
   # Media handling
-  flutter_svg: 0.17.4
+  flutter_svg: 0.18.1
   image_picker: 0.6.1+4
   transparent_image: 1.0.0
   cached_network_image: 2.0.0-rc

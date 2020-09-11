@@ -2,9 +2,9 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 28
+    const val COMPILE_SDK = 29
     const val MIN_SDK = 23
-    const val TARGET_SDK = 28
+    const val TARGET_SDK = 29
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "3.5.1"
@@ -15,7 +15,7 @@ object Versions {
     const val ATSL_ORCHESTRATOR = "1.1.0-beta01"
     const val JACOCO = "0.8.3"
     const val JUNIT = "4.12"
-    const val ROBOLECTRIC = "4.2.1"
+    const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
     const val JACOCO_ANDROID = "0.1.2"
 
@@ -88,7 +88,7 @@ object Libs {
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.0"
-    const val MOCKK = "io.mockk:mockk:1.9.3"
+    const val MOCKK = "io.mockk:mockk:1.10.0"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"

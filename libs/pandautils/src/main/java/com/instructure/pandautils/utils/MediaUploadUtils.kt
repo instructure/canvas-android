@@ -46,7 +46,7 @@ import java.util.*
 
 object MediaUploadUtils {
 
-    fun takeNewPhotoBecausePermissionsAlreadyGranted(fragment: Fragment?, activity: Activity): Uri {
+    fun takeNewPhotoBecausePermissionsAlreadyGranted(fragment: Fragment?, activity: Activity): Uri? {
         // Get the location of the saved picture
         val fileName = "rce_${System.currentTimeMillis()}.jpg"
         val values = ContentValues()

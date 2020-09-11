@@ -48,18 +48,18 @@ class CreateFolderDialog : AppCompatDialogFragment() {
                 .setCancelable(true)
                 .setTitle(getString(R.string.createFolder))
                 .setView(view)
-                .setPositiveButton(getString(android.R.string.ok), { _, _ ->
+                .setPositiveButton(getString(android.R.string.ok)) { _, _ ->
                     mCreateFolderCallback(folderNameEditText.text.toString())
-                })
+                }
                 .setNegativeButton(getString(R.string.cancel), null)
                 .create()
 
         // Adjust the dialog to the top so keyboard does not cover it up, issue happens on tablets in landscape
-        val params = nameDialog.window.attributes
-        params.gravity = Gravity.CENTER or Gravity.TOP
-        params.y = 120
-        nameDialog.window.attributes = params
-        nameDialog.window.setSoftInputMode(
+        val params = nameDialog.window?.attributes
+        params?.gravity = Gravity.CENTER or Gravity.TOP
+        params?.y = 120
+        nameDialog.window?.attributes = params
+        nameDialog.window?.setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

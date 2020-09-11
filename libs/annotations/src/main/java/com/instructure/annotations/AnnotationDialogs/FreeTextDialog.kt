@@ -77,11 +77,11 @@ class FreeTextDialog : AppCompatDialogFragment() {
             .create()
 
         //Adjust the dialog to the top so keyboard does not cover it up, issue happens on tablets in landscape
-        val params = dialog.window.attributes
-        params.gravity = Gravity.CENTER or Gravity.TOP
-        params.y = requireContext().resources.getDimensionPixelSize(R.dimen.utils_landscapeTabletDialogAdjustment)
-        dialog.window.attributes = params
-        dialog.window.setSoftInputMode(
+        val params = dialog.window?.attributes
+        params?.gravity = Gravity.CENTER or Gravity.TOP
+        params?.y = requireContext().resources.getDimensionPixelSize(R.dimen.utils_landscapeTabletDialogAdjustment)
+        dialog.window?.attributes = params
+        dialog.window?.setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN or
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
                         WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)

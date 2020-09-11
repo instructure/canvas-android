@@ -67,8 +67,8 @@ class SubmissionService : IntentService(SubmissionService::class.java.simpleName
         setIntentRedelivery(true)
     }
 
-    override fun onHandleIntent(intent: Intent) {
-        val action = intent.action!!
+    override fun onHandleIntent(intent: Intent?) {
+        val action = intent!!.action!!
 
         lateinit var submission: com.instructure.student.Submission
         val db = Db.getInstance(this)

@@ -173,4 +173,60 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/statsContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical">
+
+        <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeStatisticsView
+            android:id="@+id/statisticsView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp" />
+
+        <LinearLayout
+            android:id="@+id/statisticsTextContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:id="@+id/minLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="start"
+                tools:text="Low: 1.0" />
+
+            <TextView
+                android:id="@+id/meanLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="center"
+                tools:text="Mean: 7.2" />
+
+            <TextView
+                android:id="@+id/maxLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/defaultTextGray"
+                android:gravity="end"
+                tools:text="High: 9.5" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
 </LinearLayout>

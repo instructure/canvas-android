@@ -44,13 +44,11 @@ class LoginActivity : BaseLoginInitActivity() {
     override fun launchApplicationMainActivityIntent(): Intent {
         PushNotificationRegistrationService.scheduleJob(this, ApiPrefs.isMasquerading)
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().flush()
-        }
+        CookieManager.getInstance().flush()
 
         val intent = Intent(this, NavigationActivity.startActivityClass)
         if (getIntent() != null && getIntent().extras != null) {
-            intent.putExtras(getIntent().extras)
+            intent.putExtras(getIntent().extras!!)
         }
         return intent
     }
