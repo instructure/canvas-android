@@ -21,6 +21,7 @@ import android.graphics.Color
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentScoreStatistics
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.ColorKeeper
@@ -359,6 +360,31 @@ class GradeCellStateTest : Assert() {
         )
         val actual = GradeCellViewState.fromSubmission(context, assignment, submission)
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `Includes grade statistics if provided by the assignment`() {
+        val assignment = baseAssignment.copy(
+            scoreStatistics = AssignmentScoreStatistics(mean = 76.85, min = 56.0, max = 97.0)
+        )
+        val submission = baseSubmission.copy(
+            grade = "B",
+            enteredGrade = "88",
+            enteredScore = 88.0,
+            score = 88.0
+        )
+        val expected = GradeCellViewState.GradeStats(
+            score = 88.0,
+            outOf = 100.0,
+            min = 56.0,
+            max = 97.0,
+            mean = 76.85,
+            minText = "Low: 56",
+            maxText = "High: 97",
+            meanText = "Mean: 76.8"
+        )
+        val actual = GradeCellViewState.fromSubmission(context, assignment, submission) as GradeCellViewState.GradeData
+        assertEquals(expected, actual.stats)
     }
 
 }

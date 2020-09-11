@@ -54,12 +54,12 @@ object QRLogin {
         // Mobile verify can change the hostname we need to use
         var updatedDomain = domainVerificationResult.baseUrl.validOrNull() ?: domain
 
-        if (updatedDomain.endsWith("/")) {
+        if (updatedDomain?.endsWith("/") == true) {
             updatedDomain = updatedDomain.substring(0, updatedDomain.length - 1)
         }
 
         // Set the updated domain
-        ApiPrefs.domain = updatedDomain
+        ApiPrefs.domain = updatedDomain!!
 
         // Set client id and secret
         ApiPrefs.clientId = domainVerificationResult.clientId
@@ -70,7 +70,7 @@ object QRLogin {
 
         // Let's fetch the token!
         val tokenResponse = awaitApi<OAuthTokenResponse> {
-            OAuthManager.getToken(ApiPrefs.clientId, ApiPrefs.clientSecret, code, it)
+            OAuthManager.getToken(ApiPrefs.clientId, ApiPrefs.clientSecret, code!!, it)
         }
 
         // Configure the token in prefs

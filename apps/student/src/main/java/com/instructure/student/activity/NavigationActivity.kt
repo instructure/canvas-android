@@ -274,10 +274,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if (intent.extras?.containsKey(AppShortcutManager.APP_SHORTCUT_PLACEMENT) == true) {
             // Launch to the app shortcut placement
-            val placement = intent.extras.getString(AppShortcutManager.APP_SHORTCUT_PLACEMENT)
+            val placement = intent.extras!!.getString(AppShortcutManager.APP_SHORTCUT_PLACEMENT)
 
             // Remove the extra so we don't accidentally launch into the shortcut again.
-            intent.extras.remove(AppShortcutManager.APP_SHORTCUT_PLACEMENT)
+            intent.extras!!.remove(AppShortcutManager.APP_SHORTCUT_PLACEMENT)
 
             when (placement) {
                 AppShortcutManager.APP_SHORTCUT_BOOKMARKS -> {

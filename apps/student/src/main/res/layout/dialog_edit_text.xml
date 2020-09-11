@@ -19,10 +19,18 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:labelFor="@id/textInput"
+        android:text="@string/enterValue"
+        android:visibility="gone"/>
+
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/textInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="48dp"
         android:inputType="textCapSentences"
         android:layout_marginStart="?dialogPreferredPadding"
         android:layout_marginEnd="?dialogPreferredPadding"/>

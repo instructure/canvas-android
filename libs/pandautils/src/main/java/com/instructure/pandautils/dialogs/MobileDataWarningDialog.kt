@@ -39,7 +39,7 @@ class MobileDataWarningDialog : AppCompatDialogFragment() {
             textSize = 12f
         }
 
-        val checkBoxContainer = FrameLayout(context).apply {
+        val checkBoxContainer = FrameLayout(requireContext()).apply {
             val pad = context.DP(16).toInt()
             setPadding(pad, pad, pad, 0)
             addView(checkBox)

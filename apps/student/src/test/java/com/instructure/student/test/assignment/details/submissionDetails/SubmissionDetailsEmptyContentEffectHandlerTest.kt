@@ -16,6 +16,7 @@
 package com.instructure.student.test.assignment.details.submissionDetails
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
@@ -33,6 +34,7 @@ import com.instructure.student.db.StudentDb
 import com.instructure.student.db.getInstance
 import com.instructure.student.mobius.assignmentDetails.chooseMediaIntent
 import com.instructure.student.mobius.assignmentDetails.getVideoIntent
+import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffect
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
@@ -543,7 +545,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         every { intent.action } returns ""
 
-        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
+        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
+        every { any<Uri>().getVideoIntent() } returns intent
+        every { any<Context>().isIntentAvailable(any()) } returns true
 
         mockkObject(FileUploadUtils)
         every { FileUploadUtils.getExternalCacheDir(context) } returns File("")
@@ -553,9 +557,6 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
 
         mockkObject(FilePrefs)
         every { FilePrefs.tempCaptureUri = any() }
-
-        mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
-        every { any<Uri>().getVideoIntent() } returns intent
 
         excludeRecords {
             context.packageName
@@ -591,10 +592,9 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
         every { intent.addFlags(any()) } returns intent
         every { intent.putExtra(MediaStore.EXTRA_OUTPUT, uri) } returns intent
 
-        every { context.packageManager.queryIntentActivities(any(), any()).size } returns 1
-
         mockkStatic("com.instructure.student.mobius.assignmentDetails.SubmissionUtilsKt")
         every { chooseMediaIntent } returns intent
+        every { any<Context>().isIntentAvailable(any()) } returns true
 
         excludeRecords {
             context.packageName

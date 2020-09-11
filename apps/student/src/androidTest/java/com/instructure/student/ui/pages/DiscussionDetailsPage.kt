@@ -17,21 +17,20 @@
 package com.instructure.student.ui.pages
 
 import android.os.SystemClock.sleep
-import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.isElementDisplayed
-import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvas.espresso.withElementRepeat
@@ -293,6 +292,10 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         }
 
         assertTrue("Timed out waiting for unread indicator to disappear", false)
+    }
+
+    fun assertPointsPossibleDisplayed(points: String) {
+        onView(withId(R.id.pointsTextView)).check(matches(containsTextCaseInsensitive(points)))
     }
 
     private fun isUnreadIndicatorVisible(reply: DiscussionEntry) : Boolean {

@@ -47,7 +47,7 @@ object ShortcutUtils {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val shortcutManager = context.getSystemService(ShortcutManager::class.java)
-            if(shortcutManager.isRequestPinShortcutSupported) {
+            if(shortcutManager?.isRequestPinShortcutSupported == true) {
                 val launchIntent = Intent(context, LoginActivity::class.java)
                 launchIntent.action = "com.android.launcher.action.INSTALL_SHORTCUT"
                 launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -57,7 +57,7 @@ object ShortcutUtils {
                 val color = ColorKeeper.getOrGenerateColor(RouteMatcher.getContextIdFromURL(bookmark.url) ?: "")
 
                 val pinShortcutInfo = ShortcutInfo.Builder(context, bookmark.url)
-                        .setShortLabel(bookmark.name)
+                        .setShortLabel(bookmark.name!!)
                         .setIntent(launchIntent)
                         .setIcon(Icon.createWithBitmap(generateLayeredBitmap(context, color)))
                         .build()

@@ -54,4 +54,8 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     fun launchPairObserverPage() {
         pairObserverLabel.scrollTo().click()
     }
+
+    fun launchProfileSettings() {
+        profileSettingLabel.scrollTo().click()
+    }
 }

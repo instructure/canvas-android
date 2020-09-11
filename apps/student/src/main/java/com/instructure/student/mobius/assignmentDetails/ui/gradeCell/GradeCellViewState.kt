@@ -43,8 +43,20 @@ sealed class GradeCellViewState {
         val outOf: String = "",
         val outOfContentDescription: String = "",
         val latePenalty: String = "",
-        val finalGrade: String = ""
+        val finalGrade: String = "",
+        val stats: GradeStats? = null
     ) : GradeCellViewState()
+
+    data class GradeStats(
+        val score: Double = 0.0,
+        val outOf: Double = 0.0,
+        val min: Double? = null,
+        val max: Double? = null,
+        val mean: Double? = null,
+        val minText: String = "",
+        val maxText: String = "",
+        val meanText: String = ""
+    )
 
     companion object {
         /**
@@ -127,6 +139,29 @@ sealed class GradeCellViewState {
                 finalGrade = context.getString(R.string.finalGradeFormatted, submission.grade)
             }
 
+            // Grade statistics
+            val stats = assignment.scoreStatistics?.let { stats ->
+                GradeStats(
+                    score = submission.enteredScore,
+                    outOf = assignment.pointsPossible,
+                    min = stats.min,
+                    max = stats.max,
+                    mean = stats.mean,
+                    minText = context.getString(
+                        R.string.scoreStatisticsLow,
+                        NumberHelper.formatDecimal(stats.min, 1, true)
+                    ),
+                    maxText = context.getString(
+                        R.string.scoreStatisticsHigh,
+                        NumberHelper.formatDecimal(stats.max, 1, true)
+                    ),
+                    meanText = context.getString(
+                        R.string.scoreStatisticsMean,
+                        NumberHelper.formatDecimal(stats.mean, 1, true)
+                    )
+                )
+            }
+
             return GradeData(
                 graphPercent = graphPercent,
                 accentColor = accentColor,
@@ -138,7 +173,8 @@ sealed class GradeCellViewState {
                 gradeContentDescription = accessibleGradeString,
                 gradeCellContentDescription = gradeCellContentDescription,
                 latePenalty = latePenalty,
-                finalGrade = finalGrade
+                finalGrade = finalGrade,
+                stats = stats
             )
         }
     }

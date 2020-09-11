@@ -271,7 +271,10 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         if (cookie.isValid()) requestBuilder.addHeader("Cookie", cookie)
         val request = requestBuilder.build()
         val response = client.newCall(request).execute()
-        if (!response.isSuccessful) throw IOException("Unable to download. Error code \${response.code()}")
+        if (!response.isSuccessful) {
+            response.body()?.close()
+            throw IOException("Unable to download. Error code ${response.code()}")
+        }
         toWriteTo.parentFile.mkdirs()
         val sink = Okio.buffer(Okio.sink(toWriteTo))
         val source: Source = response.body()!!.source()

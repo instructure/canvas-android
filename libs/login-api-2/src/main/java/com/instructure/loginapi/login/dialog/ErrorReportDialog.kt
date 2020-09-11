@@ -149,7 +149,7 @@ class ErrorReportDialog : DialogFragment() {
 
         private fun getViewForText(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: inflater.inflate(R.layout.error_report_sverity_item, parent, false)
-            view.text.text = getItem(position).second
+            view.text.text = getItem(position)?.second
             return view
         }
     }

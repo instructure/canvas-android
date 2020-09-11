@@ -89,6 +89,7 @@ abstract class StudentTest : CanvasTest() {
     val annotationCommentListPage = AnnotationCommentListPage()
     val pickerSubmissionUploadPage = PickerSubmissionUploadPage()
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
+    val profileSettingsPage = ProfileSettingsPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

@@ -370,6 +370,7 @@ class DashboardState extends State<DashboardScreen> {
           dark: 'assets/svg/bottom-nav/courses-dark.svg',
         ),
         activeIcon: _navBarIcon(
+          active: true,
           light: 'assets/svg/bottom-nav/courses-light-selected.svg',
           dark: 'assets/svg/bottom-nav/courses-dark-selected.svg',
         ),
@@ -384,6 +385,7 @@ class DashboardState extends State<DashboardScreen> {
           dark: 'assets/svg/bottom-nav/calendar-dark.svg',
         ),
         activeIcon: _navBarIcon(
+          active: true,
           light: 'assets/svg/bottom-nav/calendar-light-selected.svg',
           dark: 'assets/svg/bottom-nav/calendar-dark-selected.svg',
         ),
@@ -404,6 +406,7 @@ class DashboardState extends State<DashboardScreen> {
         ),
         activeIcon: WidgetBadge(
           _navBarIcon(
+            active: true,
             light: 'assets/svg/bottom-nav/alerts-light-selected.svg',
             dark: 'assets/svg/bottom-nav/alerts-dark-selected.svg',
           ),
@@ -419,10 +422,11 @@ class DashboardState extends State<DashboardScreen> {
     ];
   }
 
-  Widget _navBarIcon({@required String light, @required String dark}) {
+  Widget _navBarIcon({@required String light, @required String dark, bool active: false}) {
     bool darkMode = ParentTheme.of(context).isDarkMode;
     return SvgPicture.asset(
       darkMode ? dark : light,
+      color: active? ParentTheme.of(context).studentColor : null,
       width: 24,
       height: 24,
     );

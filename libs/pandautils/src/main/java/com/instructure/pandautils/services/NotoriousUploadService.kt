@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave

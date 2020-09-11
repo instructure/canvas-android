@@ -63,7 +63,36 @@ object UserEndpoint : Endpoint(
     Segment("folders") to UserFoldersEndpoint,
     Segment("files") to UserFilesEndpoint,
     Segment("todo") to UserTodoEndpoint,
-    Segment("observer_pairing_codes") to UserPairingCodeEndpoint
+    Segment("observer_pairing_codes") to UserPairingCodeEndpoint,
+    response = {
+        GET {
+            val userId = pathVars.userId
+            val user = data.users[userId]
+            if(user != null) {
+                request.successResponse(user)
+            }
+            else {
+                request.unauthorizedResponse()
+            }
+        }
+
+        PUT {
+            val userId = pathVars.userId
+            val user = data.users[userId]
+            val newShortName = request.url().queryParameter("user[short_name]")
+            if(user != null && newShortName != null) {
+                // Replace the user object with a clone that has the new short name
+                val newUser = user.copy(shortName = newShortName)
+                data.users[userId] = newUser
+
+                // And return the altered user
+                request.successResponse(newUser)
+            }
+            else {
+                request.unauthorizedResponse()
+            }
+        }
+    }
 )
 
 /**

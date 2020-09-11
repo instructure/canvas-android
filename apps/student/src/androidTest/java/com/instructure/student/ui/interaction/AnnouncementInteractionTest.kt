@@ -19,6 +19,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -145,6 +146,49 @@ class AnnouncementInteractionTest : StudentTest() {
         discussionDetailsPage.assertReplyDisplayed(reply)
     }
 
+    // Tests that we can create an announcement (as teacher).
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testAnnouncementCreate_base() {
+        val data = getToAnnouncementList()
+
+        val course = data.courses.values.first()
+        val announcement = data.courseDiscussionTopicHeaders[course.id]!!.first()
+        discussionListPage.assertTopicDisplayed(announcement.title!!)
+        discussionListPage.createAnnouncement("Announcement Topic", "Awesome announcement topic")
+    }
+
+    // Tests code around closing / aborting announcement creation
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testAnnouncementCreate_abort() {
+        val data = getToAnnouncementList()
+
+        discussionListPage.launchCreateAnnouncementThenClose()
+        discussionListPage.verifyExitWithoutSavingDialog()
+    }
+
+    // Tests code around creating an announcement with no description
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testAnnouncementCreate_missingDescription() {
+        val data = getToAnnouncementList()
+
+        discussionListPage.createAnnouncement("title", "", verify = false)
+        // easier than looking for the "A description is required" toast message
+        discussionListPage.assertOnNewAnnouncementPage()
+    }
+
+    // Tests code around creating an announcement with no title
+    @Test
+    @TestMetaData(Priority.P2, FeatureCategory.ANNOUNCEMENTS, TestCategory.INTERACTION, false)
+    fun testAnnouncementCreate_missingTitle() {
+        val data = getToAnnouncementList()
+
+        discussionListPage.createAnnouncement("", "description")
+    }
+
+
     // Mock a specified number of students and courses, and navigate to the first course
     private fun getToCourse(
             studentCount: Int = 1,
@@ -168,6 +212,36 @@ class AnnouncementInteractionTest : StudentTest() {
         dashboardPage.waitForRender()
 
         dashboardPage.selectCourse(course)
+
+        return data
+    }
+
+    // Mock a student/teacher/course/announcement, than navigate to the announcements list
+    private fun getToAnnouncementList() : MockCanvas {
+        val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
+
+        val teacher = data.teachers[0]
+        val course = data.courses.values.first()
+
+        val announcementsTab = Tab(position = 2, label = "Announcements", visibility = "public", tabId = Tab.ANNOUNCEMENTS_ID)
+        data.courseTabs[course.id]!! += announcementsTab
+
+        data.addCoursePermissions(
+                course.id,
+                CanvasContextPermission(canCreateAnnouncement = true)
+        )
+
+        data.addDiscussionTopicToCourse(
+                course = course,
+                user = teacher,
+                isAnnouncement = true
+        )
+
+        val token = data.tokenFor(teacher)!!
+        tokenLogin(data.domain, token, teacher)
+
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAnnouncements()
 
         return data
     }

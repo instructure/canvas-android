@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.copyTo
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
 import com.instructure.pandautils.services.NotoriousUploadService
@@ -140,11 +141,11 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
             if (requestCode == RequestCodes.SELECT_MEDIA && data != null) {
                 val tempMediaUri = data.data
 
-                if (tempMediaUri == null || tempMediaUri.path == null || tempMediaUri.path.isEmpty()) {
+                if (!tempMediaUri?.path.isValid()) {
                     setResult(Activity.RESULT_CANCELED)
                     finish()
                 } else {
-                    val filePath = FileUploadUtils.getPath(this@NotoriousMediaUploadPicker, tempMediaUri)
+                    val filePath = FileUploadUtils.getPath(this@NotoriousMediaUploadPicker, tempMediaUri!!)
                     if (filePath != null && !filePath.isEmpty() && File(filePath).exists()) {
                         // This is a local file
                         mediaUri = Uri.parse(filePath)
@@ -159,8 +160,8 @@ class NotoriousMediaUploadPicker : AppCompatActivity() {
                         progressDialog.show()
                         mediaUri = inBackground {
                             val fileName = FileUploadUtils.getFileNameFromUri(contentResolver, tempMediaUri)
-                            val file = File(mediaStorageDir, fileName)
-                            contentResolver.openInputStream(tempMediaUri).copyTo(file)
+                            val file = File(mediaStorageDir, fileName!!)
+                            contentResolver.openInputStream(tempMediaUri)?.copyTo(file)
                             Uri.parse(file.absolutePath)
                         }
                         progressDialog.hide()
