@@ -75,7 +75,7 @@ class RecipientChipsInput @JvmOverloads constructor(
             }
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val user = getItem(position)!!
             val view = convertView
                 ?: LayoutInflater.from(context).inflate(R.layout.adapter_recipient_search_result, parent, false)
