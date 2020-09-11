@@ -32,7 +32,7 @@ data class BasicUser constructor(
         fun userToBasicUser(user: User): BasicUser {
             val basicUser = BasicUser()
             basicUser.id = user.id
-            basicUser.name = user.name
+            basicUser.name = user.shortName
             basicUser.pronouns = user.pronouns
             basicUser.avatarUrl = user.avatarUrl
             return basicUser

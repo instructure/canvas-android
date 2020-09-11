@@ -18,16 +18,12 @@ package com.instructure.teacher.fragments
 
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
 import android.text.TextUtils
-import android.text.TextWatcher
-import android.text.util.Rfc822Tokenizer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.AdapterView
-import com.android.ex.chips.RecipientEntry
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -40,7 +36,6 @@ import com.instructure.pandautils.views.AttachmentView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CanvasContextSpinnerAdapter
 import com.instructure.teacher.adapters.NothingSelectedSpinnerAdapter
-import com.instructure.teacher.adapters.RecipientAdapter
 import com.instructure.teacher.events.ChooseMessageEvent
 import com.instructure.teacher.events.MessageAddedEvent
 import com.instructure.teacher.factory.AddMessagePresenterFactory
@@ -57,7 +52,6 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     private var currentMessage: Message? by NullableParcelableArg(null, Const.MESSAGE_TO_USER)
     private var selectedCourse: CanvasContext? = null
-    private var chipsAdapter: RecipientAdapter? = null
     private var isNewMessage by BooleanArg(false, Const.COMPOSE_FRAGMENT)
     private var sendIndividually = false
     private var isMessageStudentsWho by BooleanArg(false, MESSAGE_STUDENTS_WHO)
@@ -74,7 +68,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 }
             }
 
-            if (recipient.selectedRecipients.size == 0) {
+            if (chips.recipients.isEmpty()) {
                 showToast(R.string.message_has_no_recipients)
                 return false
             } else if (TextUtils.getTrimmedLength(message.text) == 0) {
@@ -86,20 +80,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
 
     private val recipientsFromRecipientEntries: ArrayList<Recipient>
-        get() {
-            val selectedRecipients = recipient.selectedRecipients
-
-            return selectedRecipients.mapTo(ArrayList()) {
-                Recipient(
-                    stringId = it.destination,
-                    name = it.name,
-                    pronouns = it.pronouns,
-                    userCount = it.userCount,
-                    itemCount = it.itemCount,
-                    avatarURL = it.avatarUrl
-                )
-            }
-        }
+        get() = ArrayList(chips.recipients)
 
     override fun layoutResId(): Int = R.layout.fragment_add_message
 
@@ -128,7 +109,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
             }
         } else {
 
-            val vto = recipient.viewTreeObserver
+            val vto = chips.viewTreeObserver
             vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
 
                 override fun onGlobalLayout() {
@@ -144,7 +125,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                         addInitialRecipients(participants.map { it.id })
                     }
 
-                    val obs = recipient.viewTreeObserver
+                    val obs = chips.viewTreeObserver
                     obs.removeOnGlobalLayoutListener(this)
                 }
             })
@@ -195,41 +176,27 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         }
 
         // Set up recipients view
-        recipient.setTokenizer(Rfc822Tokenizer())
-        if (chipsAdapter == null) {
-            chipsAdapter = RecipientAdapter(requireContext())
-        }
-
-        if (recipient.adapter == null) {
-            recipient.setAdapter<RecipientAdapter>(chipsAdapter)
-        }
-
-        recipient.addTextChangedListener(object : TextWatcher {
-            private var previousCheckState = false
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
-            override fun afterTextChanged(s: Editable?) {
-                val entryCount = recipient.selectedRecipients.sumBy { it.userCount.coerceAtLeast(1) }
-                if (entryCount >= 100) {
-                    if (sendIndividualSwitch.isEnabled) {
-                        sendIndividualMessageWrapper.alpha = 0.3f
-                        previousCheckState = sendIndividualSwitch.isChecked
-                        sendIndividualSwitch.isEnabled = false
-                        sendIndividualSwitch.isChecked = true
-                    }
-                } else if (!sendIndividualSwitch.isEnabled) {
-                    sendIndividualMessageWrapper.alpha = 1f
-                    sendIndividualSwitch.isEnabled = true
-                    sendIndividualSwitch.isChecked = previousCheckState
+        var previousCheckState = false
+        chips.onRecipientsChanged = { recipients: List<Recipient> ->
+            val entryCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
+            if (entryCount >= 100) {
+                if (sendIndividualSwitch.isEnabled) {
+                    sendIndividualMessageWrapper.alpha = 0.3f
+                    previousCheckState = sendIndividualSwitch.isChecked
+                    sendIndividualSwitch.isEnabled = false
+                    sendIndividualSwitch.isChecked = true
                 }
+            } else if (!sendIndividualSwitch.isEnabled) {
+                sendIndividualMessageWrapper.alpha = 1f
+                sendIndividualSwitch.isEnabled = true
+                sendIndividualSwitch.isChecked = previousCheckState
             }
-        })
+        }
 
         if (presenter.course!!.id != 0L) {
-            chipsAdapter!!.canvasRecipientManager.canvasContext = presenter.course
+            chips.canvasContext = presenter.course
         } else if (selectedCourse != null) {
             courseWasSelected()
-            chipsAdapter!!.canvasRecipientManager.canvasContext = selectedCourse
         }
 
         ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
@@ -256,7 +223,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
         // Get courses and groups if this is a new compose message
         if (isNewMessage) {
-            presenter.getAllCoursesAndGroups(true)
+            presenter.getAllCoursesAndGroups(false)
         }
     }
 
@@ -278,7 +245,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 if (position != 0) { // Position zero is nothingSelected prompt
                     val canvasContext = adapter.getItem(position - 1) // -1 to account for nothingSelected item
                     if (selectedCourse == null || selectedCourse!!.id != canvasContext!!.id) {
-                        recipient.removeAllRecipientEntry()
+                        chips.clearRecipients()
                         selectedCourse = canvasContext
                         courseWasSelected()
                     }
@@ -293,7 +260,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         recipientWrapper.setVisible()
         contactsImageButton.setVisible()
         requireActivity().invalidateOptionsMenu()
-        chipsAdapter!!.canvasRecipientManager.canvasContext = selectedCourse
+        chips.canvasContext = selectedCourse
     }
 
     private fun setupToolbar() {
@@ -404,7 +371,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         // Send message
         if (isNewMessage || isMessageStudentsWho) {
             // Send bulk if recipient count exceeds 99, OR if count exceeds one AND 'send individually' is checked
-            val recipients = recipient.selectedRecipients
+            val recipients = chips.recipients
             val recipientCount = recipients.sumBy { it.userCount.coerceAtLeast(1) }
             var isBulk = recipientCount >= 100 || (recipientCount > 1 && sendIndividually)
 
@@ -421,76 +388,43 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 subject = editSubject.text.toString()
             }
             // isBulk controls the group vs individual messages, so group message flag is hardcoded to true at the api call
-            presenter.sendNewMessage(recipient.selectedRecipients, message.text.toString(), subject, contextId, isBulk)
+            presenter.sendNewMessage(chips.recipients, message.text.toString(), subject, contextId, isBulk)
         } else {
-            presenter.sendMessage(recipient.selectedRecipients, message.text.toString())
+            presenter.sendMessage(chips.recipients, message.text.toString())
         }
     }
 
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val selectedRecipients = recipient.selectedRecipients
-
-        addRecipient@ for (recipientId in initialRecipientIds) {
-
-            val recipientUser = presenter.getParticipantById(recipientId) ?: continue
-
-            // Skip if the user is the current logged in user
-            if (initialRecipientIds.size > 1 && ApiPrefs.user != null && recipientId == ApiPrefs.user!!.id) continue
-
-            // Skip if this recipient is already added
-            @Suppress("LoopToCallChain") // Suppress converting to use std methods; Compiler thinks the code is jumping outside the method
-            for (entry in selectedRecipients) {
-                if (entry.destination == recipientUser.id.toString()) {
-                    continue@addRecipient
-                }
+        val selectedRecipients = chips.recipients
+        val myId = ApiPrefs.user?.id?.toString().orEmpty()
+        val recipients = initialRecipientIds
+            .filter { id ->
+                // Skip existing recipients and self
+                val stringId = id.toString()
+                stringId != myId && selectedRecipients.none { it.stringId == stringId }
             }
-
-            // Create RecipientEntry from Recipient and add to list
-            val recipientEntry = RecipientEntry(
-                recipientUser.id,
-                recipientUser.name,
-                recipientUser.pronouns,
-                recipientUser.id.toString(),
-                "", recipientUser.avatarUrl, 0, 0, true, null, null
-            )
-            recipient.appendRecipientEntry(recipientEntry)
-
-        }
+            .mapNotNull {
+                val user = presenter.getParticipantById(it) ?: return@mapNotNull null
+                Recipient(
+                    stringId = user.id.toString(),
+                    name = user.name,
+                    pronouns = user.pronouns,
+                    avatarURL = user.avatarUrl
+                )
+            }
+        chips.addRecipients(recipients)
     }
 
     private fun addRecipients(newRecipients: ArrayList<Recipient>) {
-        val selectedRecipients = recipient.selectedRecipients
-        recipient.setTokenizer(Rfc822Tokenizer())
-
-        if (chipsAdapter == null) {
-            chipsAdapter = RecipientAdapter(requireContext())
+        val selectedRecipients = chips.recipients
+        val myId = ApiPrefs.user?.id?.toString().orEmpty()
+        val recipients = newRecipients.filter { recipient ->
+            // Skip existing recipients and self
+            val stringId = recipient.stringId
+            stringId != myId && selectedRecipients.none { it.stringId == stringId }
         }
-
-        if (recipient.adapter == null) {
-            recipient.setAdapter<RecipientAdapter>(chipsAdapter)
-        }
-
-        newRecipients
-            // Skip recipients that have already been added
-            .filter { recipient -> selectedRecipients.none { it.destination == recipient.stringId } }
-            // Add new recipients
-            .forEach {
-                val recipientEntry = RecipientEntry(
-                    it.idAsLong,
-                    it.name,
-                    it.pronouns,
-                    it.stringId,
-                    "",
-                    it.avatarURL,
-                    it.userCount,
-                    it.itemCount,
-                    true,
-                    it.commonCourses?.keys,
-                    it.commonGroups?.keys
-                )
-                recipient.appendRecipientEntry(recipientEntry)
-            }
+        chips.addRecipients(recipients)
     }
 
     override fun onRefreshFinished() {}
@@ -501,13 +435,10 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onRecipientsUpdated(event: ChooseMessageEvent) {
         event.once(javaClass.simpleName) { recipients ->
-            // Need to have the TextView laid out first so that the chips view will have a width
-            recipient.post {
-                // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
-                // so clear the view so we only add the users selected
-                recipient.text.clear()
-                addRecipients(recipients)
-            }
+            // We're going to add all the recipients that the user has selected. They may have removed a user previously selected,
+            // so clear the view so we only add the users selected
+            chips.clearRecipients()
+            addRecipients(recipients)
         }
     }
 
