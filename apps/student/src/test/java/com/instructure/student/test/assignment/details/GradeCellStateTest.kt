@@ -369,12 +369,12 @@ class GradeCellStateTest : Assert() {
         )
         val submission = baseSubmission.copy(
             grade = "B",
-            enteredGrade = "88",
-            enteredScore = 88.0,
+            enteredGrade = "A",
+            enteredScore = 95.0,
             score = 88.0
         )
         val expected = GradeCellViewState.GradeStats(
-            score = 88.0,
+            score = 88.0, // Should use score, not enteredScore
             outOf = 100.0,
             min = 56.0,
             max = 97.0,

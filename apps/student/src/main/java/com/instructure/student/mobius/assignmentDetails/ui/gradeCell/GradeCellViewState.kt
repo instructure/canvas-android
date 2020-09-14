@@ -142,7 +142,7 @@ sealed class GradeCellViewState {
             // Grade statistics
             val stats = assignment.scoreStatistics?.let { stats ->
                 GradeStats(
-                    score = submission.enteredScore,
+                    score = submission.score,
                     outOf = assignment.pointsPossible,
                     min = stats.min,
                     max = stats.max,
