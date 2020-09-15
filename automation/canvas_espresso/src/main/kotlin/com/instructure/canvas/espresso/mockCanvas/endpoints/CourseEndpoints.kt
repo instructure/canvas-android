@@ -40,6 +40,7 @@ import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
 import com.instructure.canvas.espresso.mockCanvas.utils.user
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -102,6 +103,15 @@ object CourseEndpoint : Endpoint(
         Segment("enrollments") to CourseEnrollmentsEndpoint,
         Segment("features") to Endpoint(
                 Segment("enabled") to CourseEnabledFeaturesEndpoint
+        ),
+        Segment("settings") to Endpoint(
+                response = {
+                    GET {
+                        val courseId = pathVars.courseId
+                        val settings = data.courseSettings[courseId] ?: CourseSettings()
+                        request.successResponse(settings)
+                    }
+                }
         ),
 
         response = {

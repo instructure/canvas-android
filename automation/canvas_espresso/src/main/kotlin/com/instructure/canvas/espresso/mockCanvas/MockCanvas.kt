@@ -21,6 +21,7 @@ package com.instructure.canvas.espresso.mockCanvas
 import android.util.Log
 import com.github.javafaker.Faker
 import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocCoordinate
@@ -87,6 +88,9 @@ class MockCanvas {
     /** Map of course permissions to course ids **/
     val coursePermissions = mutableMapOf<Long, CanvasContextPermission>()
 
+    /** Map of course ids to course calendar events */
+    val courseCalendarEvents = mutableMapOf<Long, MutableList<ScheduleItem>>()
+
     /** Map of enrollment id to enrollment object */
     val enrollments = mutableMapOf<Long, Enrollment>()
 
@@ -105,6 +109,9 @@ class MockCanvas {
 
     /** Map of course ID to tabs for the course */
     val courseTabs = mutableMapOf<Long, MutableList<Tab>>()
+
+    /** Map of course ID to course settings */
+    val courseSettings = mutableMapOf<Long, CourseSettings>()
 
     /** Map of group ID to tabs for the group */
     val groupTabs = mutableMapOf<Long, MutableList<Tab>>()
@@ -466,9 +473,36 @@ fun MockCanvas.addCoursePermissions(courseId: Long, permissions: CanvasContextPe
     course?.permissions = permissions
 }
 
+/** Adds the provided settings to the course specified course */
+fun MockCanvas.addCourseSettings(courseId: Long, settings: CourseSettings) {
+    courseSettings[courseId] = settings
+}
+
 fun MockCanvas.addUserPermissions(userId: Long, canUpdateName: Boolean, canUpdateAvatar: Boolean) {
     val user = users[userId]
     user?.permissions = CanvasContextPermission(canUpdateAvatar = canUpdateAvatar, canUpdateName = canUpdateName)
+}
+
+fun MockCanvas.addCourseCalendarEvent(courseId: Long, date: String, title: String, description: String) : ScheduleItem {
+    val newScheduleItem = ScheduleItem(
+            itemId = newItemId().toString(),
+            title = title,
+            description = description,
+            itemType = ScheduleItem.Type.TYPE_CALENDAR,
+            isAllDay = true,
+            allDayAt = date,
+            startAt = date,
+            contextCode = "course_$courseId"
+    )
+
+    var calendarEventList = courseCalendarEvents[courseId]
+    if(calendarEventList == null) {
+        calendarEventList = mutableListOf<ScheduleItem>()
+        courseCalendarEvents[courseId] = calendarEventList
+    }
+    calendarEventList.add(newScheduleItem)
+
+    return newScheduleItem
 }
 
 /**
@@ -593,6 +627,59 @@ fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long, messag
         conversations[starredConversation.id] = starredConversation
         conversations[unreadConversation.id] = unreadConversation
     }
+}
+
+fun MockCanvas.addConversation(
+        senderId: Long,
+        receiverIds: List<Long>,
+        messageBody : String = Randomizer.randomConversationBody(),
+        messageSubject : String = Randomizer.randomConversationSubject()) : Conversation {
+
+    val sender = this.users[senderId]!!
+    val senderBasic = BasicUser(
+            id = sender.id,
+            name = sender.shortName,
+            pronouns = sender.pronouns,
+            avatarUrl = sender.avatarUrl
+    )
+
+    val participants = mutableListOf(senderBasic)
+    receiverIds.forEach {id ->
+        val receiver = this.users[id]!!
+        participants.add(
+                BasicUser(
+                        id = receiver.id,
+                        name = receiver.shortName,
+                        pronouns = receiver.pronouns,
+                        avatarUrl = receiver.avatarUrl
+                )
+        )
+    }
+
+    val basicMessage = Message(
+            id = newItemId(),
+            createdAt = APIHelper.dateToString(GregorianCalendar()),
+            body = messageBody,
+            authorId = sender.id,
+            participatingUserIds = receiverIds.toMutableList().plus(senderId)
+    )
+
+    val result = Conversation(
+            id = newItemId(),
+            subject = messageSubject,
+            workflowState = Conversation.WorkflowState.UNREAD,
+            lastMessage = messageBody,
+            lastAuthoredMessageAt = APIHelper.dateToString(GregorianCalendar()),
+            messageCount = 1,
+            messages = listOf(basicMessage),
+            avatarUrl = Randomizer.randomAvatarUrl(),
+            participants = participants,
+            audience = null // Prevents "Monologue"
+    )
+
+    this.conversations[result.id] = result
+
+    return result
 }
 
 /**

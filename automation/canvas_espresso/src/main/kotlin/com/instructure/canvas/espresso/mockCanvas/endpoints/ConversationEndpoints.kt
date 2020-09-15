@@ -46,33 +46,41 @@ object ConversationListEndpoint : Endpoint(
                     request.successResponse(conversationList)
                 }
             } else {
-                when(request.url().queryParameter("scope")) {
+                var response = when(request.url().queryParameter("scope")) {
                     "unread" -> {
-                        request.successResponse(data.conversations.values.toList().filter {
+                        data.conversations.values.toList().filter {
                             it.workflowState == Conversation.WorkflowState.UNREAD
-                        })
+                        }
                     }
                     "starred" -> {
-                        request.successResponse(data.conversations.values.toList().filter {
+                        data.conversations.values.toList().filter {
                             it.isStarred
-                        })
+                        }
                     }
                     "archived" -> {
-                        request.successResponse(data.conversations.values.toList().filter {
+                        data.conversations.values.toList().filter {
                             it.workflowState == Conversation.WorkflowState.ARCHIVED
-                        })
+                        }
                     }
                     "sent" -> {
-                        request.successResponse(data.conversations.values.toList().filter {
+                        data.conversations.values.toList().filter {
                             it.messages.first().authorId == request.user!!.id
-                        })
+                        }
                     }
                     else -> { // We need to filter out "sent" messages for "ALL"
-                        request.successResponse(data.conversations.values.toList().filter {
+                        data.conversations.values.toList().filter {
+                            // Filter out "sent" messages for "ALL"
                             it.messages.first().authorId != request.user!!.id
-                        })
+                        }
                     }
                 }
+
+                response = response.map {c ->
+                    // Make sure audience does not include caller
+                    // TODO: Monologues?  Should we assume that we don't do them?
+                    c.copy(audience = c.messages[0].participatingUserIds.filter {id -> id != request.user!!.id})
+                }
+                request.successResponse(response)
             }
         }
         POST {
@@ -118,7 +126,10 @@ object ConversationEndpoint : Endpoint(
                         body = messageBody,
                         participatingUserIds = conversation.messages.first().participatingUserIds
                     )
-                    data.conversations[pathVars.conversationId] = conversation.copy(messages = conversation.messages.plus(message))
+                    data.conversations[pathVars.conversationId] = conversation.copy(
+                            messages = conversation.messages.plus(message),
+                            lastMessage = messageBody
+                    )
                     request.successResponse(data.conversations[pathVars.conversationId]!!)
                 } else {
                     request.unauthorizedResponse()
@@ -128,9 +139,14 @@ object ConversationEndpoint : Endpoint(
     ),
     response = {
         GET {
+            val conversationId = pathVars.conversationId
+            val userId = request.user?.id
+            println("okhttp: user = ${request.user}")
             when {
-                data.conversations.containsKey(pathVars.conversationId) -> {
-                    request.successResponse(data.conversations[pathVars.conversationId]!!)
+                data.conversations.containsKey(conversationId) -> {
+                    val conversation = data.conversations[conversationId]
+                    val result = conversation!!.copy(audience = conversation.audience?.toMutableList()?.filter {id -> id != userId})
+                    request.successResponse(result)
                 }
                 else -> {
                     request.unauthorizedResponse()

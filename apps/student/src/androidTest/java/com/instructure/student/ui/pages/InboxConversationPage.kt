@@ -17,10 +17,14 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withHint
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -38,6 +42,7 @@ import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
@@ -47,6 +52,15 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         onViewWithContentDescription("Send").perform(explicitClick())
         // Wait for reply to propagate, and for us to return to the email thread page
         waitForView(withId(R.id.starred)).assertDisplayed()
+    }
+
+    fun replyAllToMessage(replyMessage: String, expectedChipCount: Int) {
+        onView(withId(R.id.messageOptions)).click()
+        onView(withText("Reply All")).click()
+        onView(withId(R.id.chipGroup)).check(matches(hasChildCount(expectedChipCount)))
+        onView(withHint(R.string.message)).replaceText(replyMessage)
+        onView(withContentDescription("Send")).perform(explicitClick())
+        onView(allOf(withId(R.id.messageBody), withText(replyMessage))).assertDisplayed()
     }
 
     fun assertMessageDisplayed(message: String) {
