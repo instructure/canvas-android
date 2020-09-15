@@ -91,7 +91,6 @@ class RatingDialog : DialogFragment() {
                 // App names aren't localized so they don't need translated
                 val appTitle = when (appType) {
                     AppType.STUDENT -> getString(R.string.utils_canvas)
-                    AppType.POLLING -> getString(R.string.utils_polls)
                     AppType.PARENT -> getString(R.string.utils_canvasParent)
                     AppType.TEACHER -> getString(R.string.utils_canvasTeacher)
                 }
