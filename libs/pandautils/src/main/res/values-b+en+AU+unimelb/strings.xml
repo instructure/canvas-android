@@ -225,7 +225,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Instructor</string>
     <string name="utils_canvasParent">Canvas Parent</string>
-    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

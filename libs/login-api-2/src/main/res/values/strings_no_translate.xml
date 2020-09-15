@@ -19,7 +19,6 @@
 <resources>
     <string name="canvas_parent" translatable="false">Canvas Parent</string>
     <string name="speedgrader" translatable="false">SpeedGrader</string>
-    <string name="polls" translatable="false">Polls</string>
     <string name="canvas_teacher" translatable="false">Canvas Teacher</string>
     <string name="canvas" translatable="false">Canvas</string>
     <string name="mobileVerifyDialogTitle" translatable="false">Skipping Mobile Verify&#8230;</string>

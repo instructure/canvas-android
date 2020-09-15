@@ -224,7 +224,6 @@
     <string name="utils_canvas">Sistem Canvas</string>
     <string name="utils_canvasTeacher">Izvajalec v sistemu Canvas</string>
     <string name="utils_canvasParent">Aplikacija Canvas Parent</string>
-    <string name="utils_polls">Ankete sistema Canvas</string>
     <string name="utils_speedgrader">Aplikacija SpeedGrader</string>
 
     <!-- Rating Dialog -->

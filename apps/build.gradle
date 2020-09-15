@@ -63,6 +63,4 @@ allprojects {
 task assembleAllApps() {
     dependsOn ':student:assembleDevDebug'
     dependsOn ':teacher:assembleDevDebug'
-    dependsOn ':parent:assembleDevDebug'
-    dependsOn ':polling:assembleDevDebug'
 }
