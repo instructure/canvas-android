@@ -160,7 +160,10 @@ class MessageThreadPresenter(
         }
     }
 
-    fun getMessageChainForMessage(message: Message?) = (data.indexOf(message) downTo 0).map { data[it] }
+    fun getMessageChainForMessage(message: Message?): List<Message> {
+        if (message == null) return emptyList()
+        return (data.indexOf(message) downTo 0).map { data[it] }
+    }
 
     val participants: ArrayList<BasicUser>
         get() = ArrayList(participantMap.values)
