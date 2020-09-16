@@ -80,6 +80,7 @@ object ConversationListEndpoint : Endpoint(
                     // TODO: Monologues?  Should we assume that we don't do them?
                     c.copy(audience = c.messages[0].participatingUserIds.filter {id -> id != request.user!!.id})
                 }
+
                 request.successResponse(response)
             }
         }
@@ -91,6 +92,24 @@ object ConversationListEndpoint : Endpoint(
                 data.conversations[sentConversation!!.id] = sentConversation
                 data.sentConversation = null
                 request.successResponse(listOf(sentConversation))
+            }
+        }
+
+        PUT {
+            // Assumes a single conversationId
+            val conversationId = request.url().queryParameter("conversation_ids[]")?.toLongOrNull()
+            val event = request.url().queryParameter("event")
+            if(event == "mark_as_unread" && conversationId != null && data.conversations.containsKey(conversationId)) {
+                val conversation = data.conversations[conversationId]!!
+                val updatedConversation = conversation.copy(workflowState = Conversation.WorkflowState.UNREAD)
+                data.conversations[conversationId] = updatedConversation
+                println("okhttp: PUT conversations: updatedConversation = $updatedConversation")
+                request.successResponse(updatedConversation)
+            }
+            else {
+                // We only know how to handle a single conversation id and event = "mark as unread".
+                // Everything else gets bounced.
+                request.unauthorizedResponse()
             }
         }
     }
@@ -144,13 +163,49 @@ object ConversationEndpoint : Endpoint(
             println("okhttp: user = ${request.user}")
             when {
                 data.conversations.containsKey(conversationId) -> {
-                    val conversation = data.conversations[conversationId]
-                    val result = conversation!!.copy(audience = conversation.audience?.toMutableList()?.filter {id -> id != userId})
+                    var conversation = data.conversations[conversationId]!!
+
+                    // Mark as read if conversation is currently unread
+                    if(conversation.workflowState == Conversation.WorkflowState.UNREAD) {
+                        conversation.workflowState = Conversation.WorkflowState.READ
+                    }
+
+                    // Remove caller from audience
+                    val result = conversation.copy(
+                            audience = conversation.audience?.toMutableList()?.filter { id -> id != userId },
+                    )
+
                     request.successResponse(result)
                 }
                 else -> {
                     request.unauthorizedResponse()
                 }
+            }
+        }
+
+        PUT {
+            // Alter the conversation -- starring, archiving, etc...
+            val conversationId = pathVars.conversationId
+            val newStarred = request.url().queryParameter("conversation[starred]")?.equals("true")
+            val newStateRaw = request.url().queryParameter("conversation[workflow_state]")
+            val newState = when(newStateRaw) {
+                "read" -> Conversation.WorkflowState.UNREAD
+                "unread" -> Conversation.WorkflowState.UNREAD
+                "archived" -> Conversation.WorkflowState.ARCHIVED
+                else -> null
+            }
+
+            val conversation = data.conversations[conversationId]
+            if(conversation != null) {
+                val updatedConversation = conversation.copy(
+                        isStarred = if(newStarred != null) newStarred else conversation.isStarred,
+                        workflowState = if(newState != null) newState else conversation.workflowState
+                )
+                data.conversations[conversationId] = updatedConversation
+                request.successResponse(updatedConversation)
+            }
+            else {
+                request.unauthorizedResponse()
             }
         }
     }

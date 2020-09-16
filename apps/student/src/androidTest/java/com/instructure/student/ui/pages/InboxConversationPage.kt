@@ -16,6 +16,12 @@
  */
 package com.instructure.student.ui.pages
 
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.widget.ImageButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -39,10 +45,14 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
+import org.hamcrest.Description
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
+import org.hamcrest.TypeSafeMatcher
 
 class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
@@ -63,6 +73,16 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         onView(allOf(withId(R.id.messageBody), withText(replyMessage))).assertDisplayed()
     }
 
+    fun markUnread() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Mark as Unread")).click()
+    }
+
+    fun archive() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Archive")).click()
+    }
+
     fun assertMessageDisplayed(message: String) {
         val itemMatcher = CoreMatchers.allOf(
                 ViewMatchers.hasSibling(withId(R.id.attachmentContainer)),
@@ -74,7 +94,7 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertAttachmentDisplayed(displayName: String) {
-        scrollRecyclerView(R.id.listView,withText(displayName))
+        scrollRecyclerView(R.id.listView, withText(displayName))
         onViewWithText(displayName).check(matches(isDisplayingAtLeast(5)))
     }
 
@@ -83,4 +103,68 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
                 .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(10)))
     }
 
+    fun toggleStarred() {
+        onView(withId(R.id.starred)).click()
+    }
+
+    fun assertStarred() {
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star_filled, ThemePrefs.brandColor)))
+    }
+
+    fun assertNotStarred() {
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star, ThemePrefs.brandColor)))
+    }
+
+}
+
+// Arrgghh... I tried to put this in the canvas_espresso CustomMatchers module, but that required
+// pulling in pandautils (for ColorUtils) into canvas_espresso, and that caused some weird build issues,
+// so I'm just going to stash this matcher here for now.
+
+// Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
+/**
+ * Matches ImageButton with the drawable associated with [resourceId].  If [resourceId] < 0, will
+ * match against "no drawable" / "drawable is null".
+ *
+ * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
+ * prior to matching.
+ */
+class ImageButtonDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(ImageButton::class.java) {
+    override fun describeTo(description: Description) {
+        description.appendText("with drawable from resource id: ")
+        description.appendValue(resourceId)
+        // TODO: Support resource name in description
+//        if (resourceName != null) {
+//            description.appendText("[");
+//            description.appendText(resourceName);
+//            description.appendText("]");
+//        }
+    }
+
+    override fun matchesSafely(target: View?): Boolean {
+        if (target !is ImageButton) {
+            return false
+        }
+        val imageButton = target as ImageButton
+        if (resourceId < 0) {
+            return imageButton.drawable == null
+        }
+        val resources: Resources = target.getContext().getResources()
+        val expectedDrawable: Drawable = resources.getDrawable(resourceId) ?: return false
+        if(color != null) {
+            ColorUtils.colorIt(color, expectedDrawable)
+        }
+        val bitmap: Bitmap = getBitmap(imageButton.getDrawable())
+        val otherBitmap: Bitmap = getBitmap(expectedDrawable)
+        return bitmap.sameAs(otherBitmap)
+    }
+
+    private fun getBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+        return bitmap
+    }
 }
