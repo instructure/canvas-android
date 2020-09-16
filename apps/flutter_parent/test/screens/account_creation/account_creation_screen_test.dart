@@ -404,4 +404,36 @@ void main() {
       ));
     }, a11yExclusions: {A11yExclusion.minTapSize});
   });
+
+  testWidgetsWithAccessibilityChecks('account creation with error shows generic error message', (tester) async {
+    when(interactor.getToSForAccount('123', 'hodor.com')).thenAnswer((_) async => tos);
+    when(interactor.createNewAccount('123', '123', 'hodor', 'hodor@hodor.com', '12345678', 'hodor.com'))
+        .thenThrow(DioError(response: Response()));
+
+    await tester.pumpWidget(TestApp(AccountCreationScreen(pairingInfo)));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Full Name…'), 'hodor');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Email…'), 'hodor@hodor.com');
+    await tester.enterText(find.widgetWithText(TextFormField, 'Password…'), '12345678');
+
+    await tester.drag(find.byType(Scaffold), Offset(0, -500));
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(RaisedButton));
+
+    await tester.pump();
+    await tester.pump();
+    await tester.pump();
+
+    expect(
+        find.text(
+            'Something went wrong trying to create your account, please reach out to your school for assistance.'),
+        findsOneWidget);
+    verify(analytics.logEvent(
+      AnalyticsEventConstants.QR_ACCOUNT_FAILURE,
+      extras: {AnalyticsParamConstants.DOMAIN_PARAM: 'hodor.com'},
+    ));
+  }, a11yExclusions: {A11yExclusion.minTapSize});
 }
