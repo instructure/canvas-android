@@ -47,7 +47,7 @@ class SettingsFragment : BasePresenterFragment<ProfileSettingsFragmentPresenter,
         versionTextView.text = getString(R.string.fullVersion, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE)
         profileButton.onClick { RouteMatcher.route(requireContext(), Route(ProfileFragment::class.java, null)) }
         rateButton.onClick { RatingDialog.showRateDialog(requireActivity(), com.instructure.pandautils.utils.AppType.TEACHER) }
-        legalButton.onClick { LegalDialog().show(fragmentManager, LegalDialog.TAG) }
+        legalButton.onClick { LegalDialog().show(fragmentManager!!, LegalDialog.TAG) }
         helpButton.onClick { HelpDialogStyled.show(requireActivity()) }
         if (BuildConfig.DEBUG) {
             featureFlagButton.setVisible()

@@ -55,7 +55,7 @@ class AnnotationCommentListFragment : BaseListFragment<
                     annotation.contents = text
                     presenter.editComment(annotation, position)
                 }
-            }.show(fragmentManager, AnnotationCommentDialog::class.java.simpleName)
+            }.show(fragmentManager!!, AnnotationCommentDialog::class.java.simpleName)
         }, { annotation, position ->
             val builder = AlertDialog.Builder(requireContext())
             //we want to show a different title for the head annotation
