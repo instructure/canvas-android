@@ -60,6 +60,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
         onView(matcher).assertDisplayed()
     }
 
+    fun assertConversationNotDisplayed(subject: String) {
+        val matcher = withText(subject)
+        onView(matcher).check(doesNotExist())
+    }
+
     fun assertMessageBodyDisplayed(messageBody: String) {
         val matcher = allOf(withId(R.id.message), withText(messageBody))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the new message body shows up

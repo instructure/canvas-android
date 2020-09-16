@@ -132,6 +132,31 @@ object ConversationUnreadCountEndpoint : Endpoint(response = {
  * - `add_message`
  * */
 object ConversationEndpoint : Endpoint(
+        Segment("remove_messages") to endpoint(
+                configure = {
+                    POST {
+                        val conversationId = pathVars.conversationId
+                        val conversation = data.conversations[conversationId]
+                        val messageId = request.url().queryParameter("remove[]")?.toLongOrNull()
+                        if(conversation != null && messageId != null) {
+                            val newMessages = conversation.messages.filter {m -> m.id != messageId}
+                            val updatedConversation = conversation.copy(
+                                    messages = newMessages,
+                                    messageCount = newMessages.count(),
+                                    lastMessage = newMessages.last().body
+                            )
+
+                            data.conversations[conversationId] = updatedConversation
+                            request.successResponse(updatedConversation)
+                        }
+                        else {
+                            // We'll fail on anything other than a valid conversationId and
+                            // a single specified messageId
+                            request.unauthorizedResponse()
+                        }
+                    }
+                }
+        ),
     Segment("add_message") to endpoint(
         configure = {
             POST {
@@ -207,6 +232,24 @@ object ConversationEndpoint : Endpoint(
             else {
                 request.unauthorizedResponse()
             }
+        }
+
+        DELETE {
+            // Delete a conversation
+            val conversationId = pathVars.conversationId
+            val conversation = data.conversations[conversationId]
+            if(conversation != null) {
+                // This is a bit of a cheat, since we're deleting the conversation for EVERYBODY
+                // instead of just the caller.  So we're assuming that we won't be interested
+                // in accessing this data as another user.  We make general assumptions like that in
+                // MockCanvas that may need to be tweaked if our requirements become more nuanced.
+                data.conversations.remove(conversationId)
+                request.successResponse(conversation)
+            }
+            else {
+                request.unauthorizedResponse()
+            }
+
         }
     }
 )

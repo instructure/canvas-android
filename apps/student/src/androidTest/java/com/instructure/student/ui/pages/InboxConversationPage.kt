@@ -22,15 +22,20 @@ import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -83,6 +88,30 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         onView(withText("Archive")).click()
     }
 
+    fun deleteConversation() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Delete")).click()
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
+                .click() // Confirmation click
+    }
+
+    fun deleteMessage(messageBody: String) {
+        val targetMatcher = allOf(
+                withId(R.id.messageOptions),
+                hasSibling(
+                        allOf(
+                                withId(R.id.messageBody),
+                                withText(messageBody)
+                        )
+                )
+        )
+
+        onView(targetMatcher).click()
+        onView(withText("Delete")).click()
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
+                .click() // Confirmation click
+    }
+
     fun assertMessageDisplayed(message: String) {
         val itemMatcher = CoreMatchers.allOf(
                 ViewMatchers.hasSibling(withId(R.id.attachmentContainer)),
@@ -91,6 +120,10 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
                 withText(message)
         )
         waitForView(itemMatcher).assertDisplayed()
+    }
+
+    fun assertMessageNotDisplayed(message: String) {
+        onView(withText(message)).check(doesNotExist())
     }
 
     fun assertAttachmentDisplayed(displayName: String) {
