@@ -386,17 +386,17 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
 
         submissionsLayout.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment!!, SubmissionListFilter.ALL)
+            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.ALL)
         }
         viewAllSubmissions.onClick { submissionsLayout.performClick() } // Separate click listener for a11y
         gradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment!!, SubmissionListFilter.GRADED)
+            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.GRADED)
         }
         ungradedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment!!, SubmissionListFilter.NOT_GRADED)
+            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.NOT_GRADED)
         }
         notSubmittedWrapper.setOnClickListener {
-            navigateToSubmissions(mCourse, quiz._assignment!!, SubmissionListFilter.MISSING)
+            navigateToSubmissions(mCourse, quiz._assignment, SubmissionListFilter.MISSING)
         }
         noInstructionsTextView.setOnClickListener {
             openEditPage(quiz)
@@ -415,7 +415,8 @@ class QuizDetailsFragment : BasePresenterFragment<
         }
     }
 
-    private fun navigateToSubmissions(course: Course, assignment: Assignment, filter: SubmissionListFilter) {
+    private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
+        assignment ?: return // We can't navigate to the submission list if there isn't an associated assignment
         val args = AssignmentSubmissionListFragment.makeBundle(assignment, filter)
         RouteMatcher.route(requireContext(), Route(null, AssignmentSubmissionListFragment::class.java, course, args))
     }
