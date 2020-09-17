@@ -629,6 +629,10 @@ fun MockCanvas.addConversations(conversationCount: Int = 1, userId: Long, messag
     }
 }
 
+/**
+ * Adds a single conversation, with sender [senderId] and receivers [receiverIds].  It will not
+ * be associated with any course.
+ */
 fun MockCanvas.addConversation(
         senderId: Long,
         receiverIds: List<Long>,
