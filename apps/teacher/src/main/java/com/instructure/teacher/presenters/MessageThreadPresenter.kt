@@ -72,11 +72,10 @@ class MessageThreadPresenter(
 
                 // Add/update messages
                 data.addOrUpdate(conversation.messages.flatMap { it.forwardedMessages + it })
-            } catch (e: Throwable) {
-                viewCallback?.onConversationLoadFailed()
-            } finally {
                 viewCallback?.onRefreshFinished()
                 viewCallback?.checkIfEmpty()
+            } catch (e: Throwable) {
+                viewCallback?.onConversationLoadFailed()
             }
         }
     }
