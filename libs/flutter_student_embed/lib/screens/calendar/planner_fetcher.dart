@@ -84,13 +84,7 @@ class PlannerFetcher extends ChangeNotifier {
       notifyListeners();
       try {
         final contexts = await getContexts();
-        List<PlannerItem> items = await locator<PlannerApi>().getUserPlannerItems(
-          userId,
-          date.withStartOfDay(),
-          date.withEndOfDay(),
-          contexts: contexts.toList(),
-          forceRefresh: true,
-        );
+        var items = await fetchItems(date.withStartOfDay(), date.withEndOfDay(), contexts.toList(), true);
         daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, items);
       } catch (e) {
         daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withError(ConnectionState.done, e);
@@ -112,17 +106,19 @@ class PlannerFetcher extends ChangeNotifier {
   _fetchMonth(DateTime date, bool refresh) async {
     try {
       final contexts = await getContexts();
-      var items = await locator<PlannerApi>().getUserPlannerItems(
-        userId,
-        date.withStartOfMonth(),
-        date.withEndOfMonth(),
-        contexts: contexts.toList(),
-        forceRefresh: refresh,
-      );
+      var items = await fetchItems(date.withStartOfMonth(), date.withEndOfMonth(), contexts.toList(), refresh);
       _completeMonth(items, date);
     } catch (e) {
       _failMonth(e, date);
     }
+  }
+
+  @visibleForTesting
+  Future<List<PlannerItem>> fetchItems(DateTime start, DateTime end, List<String> contexts, bool refresh) {
+    // The calendar on web does not include announcements, so we filter them out here to match that behavior
+    return locator<PlannerApi>()
+        .getUserPlannerItems(userId, start, end, contexts: contexts, forceRefresh: refresh)
+        .then((items) => items.where((it) => it.plannableType != 'announcement').toList());
   }
 
   _completeMonth(List<PlannerItem> items, DateTime date) {

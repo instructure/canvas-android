@@ -202,19 +202,6 @@ void main() {
       expect(icon.icon, CanvasIcons.quiz);
     });
 
-    testWidgetsWithAccessibilityChecks('shows announcement icon for announcements', (tester) async {
-      var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'announcement');
-
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, itemClickCallHandler),
-      ));
-      await tester.pump();
-
-      var icon = tester.widget<Icon>(find.byType(Icon));
-
-      expect(icon.icon, CanvasIcons.announcement);
-    });
-
     testWidgetsWithAccessibilityChecks('shows calendar event icon for calendar events', (tester) async {
       var plannerItem = _createPlannerItem(contextName: 'blank', plannableType: 'calendar_event');
 
@@ -232,25 +219,6 @@ void main() {
   group('Interaction', () {
     testWidgetsWithAccessibilityChecks('tapping assignment plannable emits correct channel call', (tester) async {
       var plannerItem = _createPlannerItem(plannableType: 'assignment', contextName: 'Tap me');
-
-      setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
-
-      await tester.pumpWidget(TestApp(
-        CalendarDayListTile(plannerItem, itemClickCallHandler),
-        platformConfig: PlatformConfig(),
-      ));
-      await tester.pump();
-
-      await tester.tap(find.text('Tap me'));
-      await tester.pump();
-      await tester.pump();
-
-      expect(itemClickCallHandler.callCount, 1, reason: "Expected item-click callback to be called once");
-      expect(itemClickCallHandler.plannerItem, plannerItem, reason: "planner items don't match");
-    });
-
-    testWidgetsWithAccessibilityChecks('tapping announcement plannable emits correct channel call', (tester) async {
-      var plannerItem = _createPlannerItem(plannableType: 'announcement', contextName: 'Tap me');
 
       setupTestLocator((locator) => locator..registerFactory<QuickNav>(() => QuickNav()));
 
