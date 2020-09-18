@@ -238,7 +238,7 @@ dependencies {
     implementation project(path: ':flutter-student-embed')
 
     /* Android Test Dependencies */
-    androidTestImplementation project(path: ':canvas_espresso')
+    androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
 
     /* OkHttp Idling Resource */
