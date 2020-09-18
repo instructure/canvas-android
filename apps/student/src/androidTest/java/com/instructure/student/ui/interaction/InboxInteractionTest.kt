@@ -553,8 +553,7 @@ class InboxInteractionTest : StudentTest() {
         teacherCount: Int = 1,
         courseCount: Int = 1,
         sendMessages: Boolean = true,
-        sendMessagesAll: Boolean = true,
-        seedMessagesFromOtherStudents: Boolean = false
+        sendMessagesAll: Boolean = true
     ): MockCanvas {
         val data = MockCanvas.init(
             studentCount = studentCount,
