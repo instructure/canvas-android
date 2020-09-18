@@ -72,11 +72,10 @@ class MessageThreadPresenter(
 
                 // Add/update messages
                 data.addOrUpdate(conversation.messages.flatMap { it.forwardedMessages + it })
-            } catch (e: Throwable) {
-                viewCallback?.onConversationLoadFailed()
-            } finally {
                 viewCallback?.onRefreshFinished()
                 viewCallback?.checkIfEmpty()
+            } catch (e: Throwable) {
+                viewCallback?.onConversationLoadFailed()
             }
         }
     }
@@ -160,7 +159,10 @@ class MessageThreadPresenter(
         }
     }
 
-    fun getMessageChainForMessage(message: Message?) = (data.indexOf(message) downTo 0).map { data[it] }
+    fun getMessageChainForMessage(message: Message?): List<Message> {
+        if (message == null) return emptyList()
+        return (data.indexOf(message) downTo 0).map { data[it] }
+    }
 
     val participants: ArrayList<BasicUser>
         get() = ArrayList(participantMap.values)

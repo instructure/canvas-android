@@ -111,7 +111,8 @@ internal object RCEUtils {
      * @param html A valid HTML string
      * @return A String or null value that has been sanitized.
      */
-    fun sanitizeHTML(html: String): String? {
+    fun sanitizeHTML(html: String?): String? {
+        html ?: return null
         var validated: String = workaroundRbg2Hex(html) ?: return null
         validated = workaroundInvalidSpan(validated) ?: return null
         validated = workaroundInvalidHex(validated) ?: return null
