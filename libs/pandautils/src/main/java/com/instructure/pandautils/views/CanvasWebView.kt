@@ -74,7 +74,7 @@ import java.net.URLDecoder
 import java.util.*
 
 class CanvasWebView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.webViewStyle
 ) : WebView(context, attrs, defStyleAttr), NestedScrollingChild {
 
     private val encoding = "UTF-8"
