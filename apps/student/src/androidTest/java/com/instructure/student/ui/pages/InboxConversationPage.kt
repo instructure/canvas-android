@@ -16,11 +16,26 @@
  */
 package com.instructure.student.ui.pages
 
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
+import androidx.test.espresso.matcher.ViewMatchers.withHint
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -35,9 +50,14 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
+import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
+import org.hamcrest.Description
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.TypeSafeMatcher
 
 class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
@@ -47,6 +67,49 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         onViewWithContentDescription("Send").perform(explicitClick())
         // Wait for reply to propagate, and for us to return to the email thread page
         waitForView(withId(R.id.starred)).assertDisplayed()
+    }
+
+    fun replyAllToMessage(replyMessage: String, expectedChipCount: Int) {
+        onView(withId(R.id.messageOptions)).click()
+        onView(withText("Reply All")).click()
+        onView(withId(R.id.chipGroup)).check(matches(hasChildCount(expectedChipCount)))
+        onView(withHint(R.string.message)).replaceText(replyMessage)
+        onView(withContentDescription("Send")).perform(explicitClick())
+        onView(allOf(withId(R.id.messageBody), withText(replyMessage))).assertDisplayed()
+    }
+
+    fun markUnread() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Mark as Unread")).click()
+    }
+
+    fun archive() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Archive")).click()
+    }
+
+    fun deleteConversation() {
+        onView(withContentDescription("More options")).click()
+        onView(withText("Delete")).click()
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
+                .click() // Confirmation click
+    }
+
+    fun deleteMessage(messageBody: String) {
+        val targetMatcher = allOf(
+                withId(R.id.messageOptions),
+                hasSibling(
+                        allOf(
+                                withId(R.id.messageBody),
+                                withText(messageBody)
+                        )
+                )
+        )
+
+        onView(targetMatcher).click()
+        onView(withText("Delete")).click()
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
+                .click() // Confirmation click
     }
 
     fun assertMessageDisplayed(message: String) {
@@ -59,8 +122,12 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         waitForView(itemMatcher).assertDisplayed()
     }
 
+    fun assertMessageNotDisplayed(message: String) {
+        onView(withText(message)).check(doesNotExist())
+    }
+
     fun assertAttachmentDisplayed(displayName: String) {
-        scrollRecyclerView(R.id.listView,withText(displayName))
+        scrollRecyclerView(R.id.listView, withText(displayName))
         onViewWithText(displayName).check(matches(isDisplayingAtLeast(5)))
     }
 
@@ -69,4 +136,68 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
                 .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(10)))
     }
 
+    fun toggleStarred() {
+        onView(withId(R.id.starred)).click()
+    }
+
+    fun assertStarred() {
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star_filled, ThemePrefs.brandColor)))
+    }
+
+    fun assertNotStarred() {
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star, ThemePrefs.brandColor)))
+    }
+
+}
+
+// Arrgghh... I tried to put this in the canvas_espresso CustomMatchers module, but that required
+// pulling in pandautils (for ColorUtils) into canvas_espresso, and that caused some weird build issues,
+// so I'm just going to stash this matcher here for now.
+
+// Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
+/**
+ * Matches ImageButton with the drawable associated with [resourceId].  If [resourceId] < 0, will
+ * match against "no drawable" / "drawable is null".
+ *
+ * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
+ * prior to matching.
+ */
+class ImageButtonDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(ImageButton::class.java) {
+    override fun describeTo(description: Description) {
+        description.appendText("with drawable from resource id: ")
+        description.appendValue(resourceId)
+        // TODO: Support resource name in description
+//        if (resourceName != null) {
+//            description.appendText("[");
+//            description.appendText(resourceName);
+//            description.appendText("]");
+//        }
+    }
+
+    override fun matchesSafely(target: View?): Boolean {
+        if (target !is ImageButton) {
+            return false
+        }
+        val imageButton = target as ImageButton
+        if (resourceId < 0) {
+            return imageButton.drawable == null
+        }
+        val resources: Resources = target.getContext().getResources()
+        val expectedDrawable: Drawable = resources.getDrawable(resourceId) ?: return false
+        if(color != null) {
+            ColorUtils.colorIt(color, expectedDrawable)
+        }
+        val bitmap: Bitmap = getBitmap(imageButton.getDrawable())
+        val otherBitmap: Bitmap = getBitmap(expectedDrawable)
+        return bitmap.sameAs(otherBitmap)
+    }
+
+    private fun getBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+        return bitmap
+    }
 }
