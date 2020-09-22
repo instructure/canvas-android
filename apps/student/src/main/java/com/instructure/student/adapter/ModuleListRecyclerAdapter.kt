@@ -365,7 +365,8 @@ open class ModuleListRecyclerAdapter(
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(courseContext, it, isRefresh) }
                     .filter { !(it.isExternal && it.isHidden) }
 
-            if (tabs.find { it.tabId == "modules" } != null) {
+            // We only want to show modules if its a course nav option OR set to as the homepage
+            if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
                 ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)

@@ -71,7 +71,7 @@
         <item name="android:src">@drawable/vd_overflow</item>
     </style>
 
-    <style name="Theme.BottomSheet" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.BottomSheet" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/teacher_colorPrimary</item>
         <item name="colorPrimaryDark">@color/teacher_colorPrimaryDark</item>
         <item name="colorAccent">@color/teacher_colorAccent</item>

@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.mockCanvas.endpoint
 import com.instructure.canvas.espresso.mockCanvas.utils.*
 import com.instructure.canvasapi2.models.QuizSubmissionQuestion
 import com.instructure.canvasapi2.models.QuizSubmissionQuestionResponse
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.models.Tab
 import okio.Buffer
 
@@ -78,7 +79,35 @@ object ApiEndpoint : Endpoint(
                     )
             )
     ),
-    Segment("groups") to GroupsEndpoint
+    Segment("groups") to GroupsEndpoint,
+    Segment("calendar_events") to Endpoint(
+            Segment("") to Endpoint( // Our call has an extra "/" at the end, thus the blank segment
+                response = {
+                    GET {
+                        val contextCodes = request.url().queryParameter("context_codes[]")
+                        // TODO: Assumes that the context prefix is "course".  We may need to support other possibilities.
+                        val courseId = contextCodes?.substringAfter("_")?.toLong()
+                        val eventType = request.url().queryParameter("type") ?: "event"
+                        if(courseId != null) {
+                            val events = when(eventType) {
+                                "assignment" -> data
+                                        .assignments
+                                        .values
+                                        .filter {a -> a.courseId == courseId}
+                                        .map {a -> ScheduleItem(title = a.name, description = a.description, startAt = a.dueAt)} ?: mutableListOf<ScheduleItem>()
+
+                                // default handler assumes "event" event type
+                                else -> data.courseCalendarEvents[courseId] ?: mutableListOf<ScheduleItem>()
+                            }
+                            request.successResponse(events)
+                        }
+                        else {
+                            request.unauthorizedResponse()
+                        }
+                    }
+                }
+            )
+    )
 )
 
 object FileUrlEndpoint : Endpoint(
