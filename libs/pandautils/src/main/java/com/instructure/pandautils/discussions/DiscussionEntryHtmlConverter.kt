@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.localized
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
+import org.owasp.html.HtmlPolicyBuilder
 
 /**
  * Used to convert DiscussionEntries into HTML. Typically this class only takes data and does little calculation.
@@ -213,7 +214,7 @@ class DiscussionEntryHtmlConverter {
 
                 .replace("__AVATAR_URL__", avatarImage)
                 .replace("__AVATAR_ALT__", context.getString(R.string.userAvatar))
-                .replace("__TITLE__", authorName)
+                .replace("__TITLE__", sanitizePolicy.sanitize(authorName))
                 .replace("__DATE__", date)
                 .replace("__CONTENT_HTML__", content)
                 .replace("__HEADER_ID__", discussionEntry.id.toString())
@@ -295,5 +296,8 @@ class DiscussionEntryHtmlConverter {
                 discussionEntry.ratingSum.localized
             )
         }
+
+        // Use a default policy which should disallow all tags, attributes, atc.
+        private val sanitizePolicy = HtmlPolicyBuilder().toFactory()
     }
 }
