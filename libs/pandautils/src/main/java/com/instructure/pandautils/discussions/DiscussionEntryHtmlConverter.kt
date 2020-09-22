@@ -297,7 +297,7 @@ class DiscussionEntryHtmlConverter {
             )
         }
 
-        // Use a default policy which should disallow all tags, attributes, atc.
+        // Use a default policy which should disallow all tags, attributes, etc.
         private val sanitizePolicy = HtmlPolicyBuilder().toFactory()
     }
 }
