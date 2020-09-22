@@ -19,32 +19,36 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="CanvasMaterialTheme_Default" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
-
-        <item name="android:windowBackground">@drawable/triangle_bg</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
-
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionModeBackground">@color/tabletSidebarSelected</item>
+        <item name="android:windowBackground">@drawable/triangle_bg</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="android:windowActionModeOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <!-- On Lollipop devices we want to display no transparency on LoginActivty and OAuthWebLogin, so we
-     created a theme to take care of it. Pre lollipop devices need the same theme, but it will be the same as
-     the normal theme-->
-    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="CanvasMaterialTheme_Default"/>
-
-    <style name="CanvasMaterialTheme_Default.Fullscreen">
-        <item name="android:windowNoTitle">true</item>
+    <style name="CanvasMaterialTheme_DefaultNoTransparency" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/defaultPrimary</item>
+        <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
+        <item name="colorAccent">@color/defaultAccent</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">

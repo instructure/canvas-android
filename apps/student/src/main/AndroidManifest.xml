@@ -61,7 +61,7 @@
         android:theme="@style/CanvasMaterialTheme_Default"
         android:name=".util.AppManager"
         android:hardwareAccelerated="true"
-        android:supportsRtl="@bool/supportRTL"
+        android:supportsRtl="true"
         android:largeHeap="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:supportsRtl"

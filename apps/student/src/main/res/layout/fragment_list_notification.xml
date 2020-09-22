@@ -54,8 +54,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         android:minHeight="42dp"
-        android:elevation="6dp"
-        tools:targetApi="lollipop">
+        android:elevation="6dp">
 
         <Button
             android:id="@+id/confirmButton"

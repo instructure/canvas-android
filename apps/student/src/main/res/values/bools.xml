@@ -19,5 +19,4 @@
 <resources>
     <bool name="isLandscape">false</bool>
     <bool name="is_device_tablet">false</bool>
-    <bool name="supportRTL">false</bool>
 </resources>
