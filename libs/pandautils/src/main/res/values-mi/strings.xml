@@ -224,7 +224,6 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Kaiako</string>
     <string name="utils_canvasParent">Canvas Matua</string>
-    <string name="utils_polls">Ngā Canvas Pōti</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

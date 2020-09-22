@@ -17,8 +17,19 @@
 package com.instructure.student.ui.pages
 
 import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.withChild
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -29,6 +40,8 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.espresso.scrollTo
 import com.instructure.student.R
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.not
 
 class InboxPage : BasePage(R.id.inboxPage) {
 
@@ -43,6 +56,18 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun assertConversationDisplayed(subject: String) {
         val matcher = withText(subject)
+        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).assertDisplayed()
+    }
+
+    fun assertConversationNotDisplayed(subject: String) {
+        val matcher = withText(subject)
+        onView(matcher).check(doesNotExist())
+    }
+
+    fun assertMessageBodyDisplayed(messageBody: String) {
+        val matcher = allOf(withId(R.id.message), withText(messageBody))
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the new message body shows up
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
         onView(matcher).assertDisplayed()
     }
@@ -83,6 +108,38 @@ class InboxPage : BasePage(R.id.inboxPage) {
 
     fun goToDashboard() {
         onView(withId(R.id.bottomNavigationCourses)).click()
+    }
+
+    fun assertConversationStarred(conversation: Conversation) {
+        val matcher = allOf(
+                withId(R.id.star),
+                withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE),
+                ViewMatchers.withParent(ViewMatchers.withParent(withChild(
+                        allOf(withId(R.id.message), withText(conversation.lastMessage))
+                ))))
+        waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
+        scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+        onView(matcher).assertDisplayed()
+
+    }
+
+    fun assertUnreadMarkerVisibility(conversation: Conversation, visibility: ViewMatchers.Visibility) {
+        val matcher = allOf(
+                withId(R.id.unreadMark),
+                withEffectiveVisibility(visibility),
+                ViewMatchers.withParent(ViewMatchers.hasSibling(withChild(
+                        allOf(withId(R.id.message), withText(conversation.lastMessage))
+                ))))
+
+        if(visibility == ViewMatchers.Visibility.VISIBLE) {
+            waitForMatcherWithRefreshes(matcher) // May need to refresh before the unread mark shows up
+            scrollRecyclerView(R.id.inboxRecyclerView, matcher)
+            onView(matcher).assertDisplayed()
+        }
+        else if(visibility == ViewMatchers.Visibility.GONE) {
+            onView(matcher).check(matches(not(isDisplayed())))
+        }
+
     }
 
 }

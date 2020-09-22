@@ -1113,6 +1113,9 @@ class AppLocalizations {
 
   String get errorPairingFailed => Intl.message('Your code is incorrect or expired.');
 
+  String get errorGenericPairingFailed => Intl.message(
+      'Something went wrong trying to create your account, please reach out to your school for assistance.');
+
   String get qrCode => Intl.message('QR Code');
 
   String get qrCodeDescription =>

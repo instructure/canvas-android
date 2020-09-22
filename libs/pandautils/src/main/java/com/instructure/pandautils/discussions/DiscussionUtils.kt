@@ -392,7 +392,7 @@ object DiscussionUtils {
     }
 
     private fun allowLiking(canvasContext: CanvasContext?, header: DiscussionTopicHeader): Boolean {
-        val isGrader = ((canvasContext as Course).isTeacher || canvasContext.isTA)
+        val isGrader = canvasContext is Course && (canvasContext.isTeacher || canvasContext.isTA)
         return header.allowRating && (
             !header.onlyGradersCanRate || isGrader
         )

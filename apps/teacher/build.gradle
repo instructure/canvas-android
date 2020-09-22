@@ -41,8 +41,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 28
-        versionName = '1.11.0'
+        versionCode = 32
+        versionName = '1.11.2'
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
         testInstrumentationRunner 'com.instructure.canvas.espresso.CanvasRunner'
@@ -228,7 +228,7 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
 
     /* AndroidTest Dependencies */
-    androidTestImplementation project(':canvas_espresso')
+    androidTestImplementation project(':espresso')
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
 

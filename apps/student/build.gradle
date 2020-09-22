@@ -58,8 +58,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 216
-        versionName = '6.8.3'
+        versionCode = 219
+        versionName = '6.9.1'
 
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
@@ -238,7 +238,7 @@ dependencies {
     implementation project(path: ':flutter-student-embed')
 
     /* Android Test Dependencies */
-    androidTestImplementation project(path: ':canvas_espresso')
+    androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
 
     /* OkHttp Idling Resource */

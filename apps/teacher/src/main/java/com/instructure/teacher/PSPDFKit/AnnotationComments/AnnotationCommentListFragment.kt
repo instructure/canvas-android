@@ -74,7 +74,7 @@ class AnnotationCommentListFragment : BaseListFragment<
         })
     }
 
-    override val recyclerView: RecyclerView = annotationCommentsRecyclerView
+    override val recyclerView: RecyclerView get() = annotationCommentsRecyclerView
     override fun layoutResId() = R.layout.fragment_annotation_comment_list
     override fun onCreateView(view: View) {}
     override fun checkIfEmpty() {} // we don't display this view if its empty, so no need to check

@@ -18,7 +18,6 @@ package com.instructure.pandautils.utils
 
 enum class AppType(val packageName: String) {
     STUDENT("com.instructure.candroid"),
-    POLLING("com.instructure.androidpolling"),
     PARENT("com.instructure.parentapp"),
     TEACHER("com.instructure.teacher")
 }

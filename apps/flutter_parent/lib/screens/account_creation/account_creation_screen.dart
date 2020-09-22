@@ -443,9 +443,11 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
   }
 
   _handleDioError(DioError e) {
+    String emailError = '';
+    String pairingError = '';
     try {
-      String emailError = e.response.data['errors']['user']['pseudonyms'][0]['message'];
-      if (emailError != null && emailError.isNotEmpty) {
+      emailError = e.response.data['errors']['user']['pseudonyms'][0]['message'];
+      if (emailError.isNotEmpty) {
         setState(() {
           _emailErrorText = _validateEmail('', apiError: true);
         });
@@ -455,14 +457,21 @@ class _AccountCreationScreenState extends State<AccountCreationScreen> {
     }
 
     try {
-      String pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
-      if (pairingError != null && pairingError.isNotEmpty) {
+      pairingError = e.response.data['errors']['pairing_code']['code'][0]['message'];
+      if (pairingError.isNotEmpty) {
         _scaffoldKey.currentState.showSnackBar(
           SnackBar(content: Text(L10n(context).errorPairingFailed)),
         );
       }
     } catch (e) {
       // If we catch it means the error isn't present
+    }
+
+    if (pairingError.isEmpty && emailError.isEmpty) {
+      // Show generic error case
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(content: Text(L10n(context).errorGenericPairingFailed)),
+      );
     }
   }
 }

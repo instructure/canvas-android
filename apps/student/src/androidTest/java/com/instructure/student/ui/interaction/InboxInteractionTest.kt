@@ -15,6 +15,8 @@
  */
 package com.instructure.student.ui.interaction
 
+import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.*
@@ -345,6 +347,139 @@ class InboxInteractionTest : StudentTest() {
         inboxPage.pressNewMessageButton()
         newMessagePage.selectCourse(course1)
         newMessagePage.assertRecipientGroupContains("Students", 1)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_replyAll() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Reply All Message Subject"
+        val conversationMessageBody = "Reply All Message Body"
+        val replyAllReply = "Reply All Reply"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.assertMessageDisplayed(conversationMessageBody)
+        inboxConversationPage.replyAllToMessage(replyAllReply, 2)
+        Espresso.pressBack() // To main inbox page
+        inboxPage.assertMessageBodyDisplayed(replyAllReply)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_toggleStarred() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Toggle Starred Message Subject"
+        val conversationMessageBody = "Toggle Starred Message Body"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.assertNotStarred()
+        inboxConversationPage.toggleStarred()
+        inboxConversationPage.assertStarred()
+        Espresso.pressBack() // To main inbox page
+        inboxPage.assertConversationStarred(conversation)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_markUnread() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Mark Unread Message Subject"
+        val conversationMessageBody = "Mark Unread Message Body"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.VISIBLE)
+        inboxPage.selectConversation(conversation)
+        Espresso.pressBack()
+        inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.GONE)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.markUnread() // Should kick us back to the main inbox page
+        inboxPage.assertUnreadMarkerVisibility(conversation, ViewMatchers.Visibility.VISIBLE)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_archive() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Archive Message Subject"
+        val conversationMessageBody = "Archive Message Body"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.archive() // Should kick you back to the main inbox page
+        inboxPage.selectInboxScope(InboxApi.Scope.ARCHIVED)
+        inboxPage.assertConversationDisplayed(conversationSubject)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_deleteConversation() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Delete Conversation Message Subject"
+        val conversationMessageBody = "Delete Conversation Message Body"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.deleteConversation() // Should kick you back to the main inbox page
+        inboxPage.assertConversationNotDisplayed(conversationSubject)
+    }
+
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.INTERACTION)
+    fun testInbox_deleteMessage() {
+        val data = goToInbox(studentCount = 3, teacherCount = 1)
+        val conversationSubject = "Delete Message Message Subject"
+        val conversationMessageBody = "Delete Message Message Body"
+        val replyMessage = "A reply to be deleted"
+        val conversation = data.addConversation(
+                senderId = data.students[2].id,
+                receiverIds = data.students.take(2).map {user -> user.id},
+                messageBody = conversationMessageBody,
+                messageSubject = conversationSubject
+        )
+
+        dashboardPage.clickInboxTab()
+        inboxPage.assertConversationDisplayed(conversationSubject)
+        inboxPage.selectConversation(conversation)
+        inboxConversationPage.replyToMessage(replyMessage)
+        inboxConversationPage.deleteMessage(replyMessage)
+        inboxConversationPage.assertMessageNotDisplayed(replyMessage)
     }
 
     /*
