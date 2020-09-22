@@ -228,7 +228,7 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
 
     /* AndroidTest Dependencies */
-    androidTestImplementation project(':canvas_espresso')
+    androidTestImplementation project(':espresso')
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
 
