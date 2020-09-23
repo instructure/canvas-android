@@ -14,7 +14,6 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     QR_LOGIN_ENABLED("qr_login_enabled", "true"),
     QR_LOGIN_ENABLED_TEACHER("qr_login_enabled_teacher", "false"),
     QR_PAIR_OBSERVER_ENABLED("qr_pair_observer_enabled", "false"),
-    STUDENT_VIEW_ENABLED_TEACHER("student_view_enabled_teacher", "false"),
     TEST_BOOL("test_bool", "false"),
     TEST_FLOAT("test_float", "0f"),
     TEST_LONG("test_long", "42"),
