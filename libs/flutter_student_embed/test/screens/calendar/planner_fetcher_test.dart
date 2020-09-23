@@ -13,9 +13,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:built_collection/built_collection.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:built_value/json_object.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/models/calendar_filter.dart';
+import 'package:flutter_student_embed/models/plannable.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
+import 'package:flutter_student_embed/models/planner_submission.dart';
+import 'package:flutter_student_embed/models/serializers.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
 import 'package:flutter_student_embed/screens/calendar/planner_fetcher.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
@@ -32,7 +36,6 @@ void main() {
 
   final String userDomain = 'user_domain';
   final String userId = 'user_123';
-  //final String observeeId = 'observee_123';
   final Set<String> contexts = {'course_123'};
 
   setupTestLocator((locator) {
@@ -72,6 +75,24 @@ void main() {
         forceRefresh: false,
       ),
     );
+  });
+
+  test('fetchItems excludes announcements', () async {
+    final fetcher = PlannerFetcher(userId: userId, userDomain: userDomain);
+
+    var inputItems = [
+      _createPlannerItem(plannableType: 'announcement', contextName: ''),
+      _createPlannerItem(plannableType: 'assignment', contextName: ''),
+      _createPlannerItem(plannableType: 'plannable_note', contextName: ''),
+    ];
+
+    when(api.getUserPlannerItems(any, any, any, contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((realInvocation) async => inputItems);
+
+    var expected = inputItems.sublist(1);
+    var actual = await fetcher.fetchItems(DateTime.now(), DateTime.now(), [], false);
+
+    expect(actual, expected);
   });
 
   test('fetches specified fetchFirst date', () async {
@@ -255,3 +276,28 @@ void main() {
     verify(filterDb.insertOrUpdate(expectedFilterData));
   });
 }
+
+Plannable _createPlannable({String title, DateTime dueAt, double pointsPossible, String assignmentId}) =>
+    Plannable((b) => b
+      ..id = ''
+      ..title = title ?? ''
+      ..pointsPossible = pointsPossible
+      ..dueAt = dueAt
+      ..toDoDate = dueAt
+      ..assignmentId = assignmentId);
+
+PlannerItem _createPlannerItem(
+    {String contextName,
+      Plannable plannable,
+      String plannableType,
+      PlannerSubmission submission,
+      String htmlUrl}) =>
+    PlannerItem((b) => b
+      ..courseId = ''
+      ..plannable = plannable != null ? plannable.toBuilder() : _createPlannable().toBuilder()
+      ..contextType = ''
+      ..contextName = contextName
+      ..plannableType = plannableType ?? 'assignment'
+      ..plannableDate = DateTime.now().toUtc()
+      ..htmlUrl = htmlUrl ?? ''
+      ..submissionStatusRaw = submission != null ? JsonObject(serialize(submission)) : null);

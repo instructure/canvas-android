@@ -41,23 +41,20 @@ class CourseBrowserPresenter(val canvasContext: CanvasContext, val filter: (Tab,
         onRefreshStarted()
 
         mApiCalls = tryWeave {
-            val studentViewEnabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.STUDENT_VIEW_ENABLED_TEACHER) == true
-
             // Check to see if we should show the student view tab - skip if Student View isn't enabled
-            val canUseStudentView = if (studentViewEnabled)
-                awaitApiResponse<CanvasContextPermission> {
+            val canUseStudentView = awaitApiResponse<CanvasContextPermission> {
                 CourseManager.getCoursePermissions(
                     canvasContext.id,
                     emptyList(),
                     it,
                     true
                 )
-            } else null
+            }
 
             val tabs = awaitApi<List<Tab>> { TabManager.getTabs(canvasContext, it, forceNetwork) }
                 .filter { !(it.isExternal && it.isHidden) } // We don't want to list external tools that are hidden
                 .toMutableList().apply {
-                    if (studentViewEnabled && canUseStudentView?.isSuccessful == true && canUseStudentView.body()?.canUseStudentView == true)
+                    if (canUseStudentView.isSuccessful && canUseStudentView.body()?.canUseStudentView == true)
                         // Add extra tab for the student view and make sure it's at the very end of the list
                         add(Tab(tabId = Tab.STUDENT_VIEW, position = 1000))
                 }.toList() // Turn back into a non-mutable list

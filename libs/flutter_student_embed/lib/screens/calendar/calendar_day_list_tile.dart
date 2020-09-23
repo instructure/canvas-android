@@ -82,9 +82,6 @@ class CalendarDayListTile extends StatelessWidget {
       case 'quiz':
         icon = CanvasIcons.quiz;
         break;
-      case 'announcement':
-        icon = CanvasIcons.announcement;
-        break;
       case 'calendar_event':
         icon = CanvasIcons.calendar_day;
         break;

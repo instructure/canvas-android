@@ -84,7 +84,7 @@ class CalendarFragment : ParentFragment() {
             "assignment" -> {
                 AssignmentDetailsFragment.makeRoute(item.canvasContext, item.plannable.id)
             }
-            "announcement", "discussion_topic" -> {
+            "discussion_topic" -> {
                 DiscussionDetailsFragment.makeRoute(item.canvasContext, item.plannable.id, title = item.plannable.title)
             }
             "quiz" -> {

@@ -25,6 +25,7 @@ import android.text.Spanned
 import android.text.SpannedString
 import android.text.style.StyleSpan
 import androidx.annotation.StringRes
+import androidx.core.text.TextUtilsCompat
 
 object Pronouns {
     /**
@@ -87,9 +88,12 @@ object Pronouns {
      * and HTML italics tags. If [pronouns] is not a valid string then [name] will be returned unmodified.
      * Whenever possible, prefer calling [span] over this function in order to add visual emphasis to the
      * user's chosen pronouns.
+     *
+     * The [name] and [pronouns] will be HTML encoded to avoid potential XSS issues.
      */
     fun html(name: String?, pronouns: String?) : String {
-        pronouns.validOrNull() ?: return name.orEmpty()
-        return """${name.orEmpty()} <i>($pronouns)</i>"""
+        val encodedName = name?.let { TextUtilsCompat.htmlEncode(it) }.orEmpty()
+        val encodedPronouns = pronouns?.let { TextUtilsCompat.htmlEncode(it) }?.validOrNull() ?: return encodedName
+        return """$encodedName <i>($encodedPronouns)</i>"""
     }
 }
