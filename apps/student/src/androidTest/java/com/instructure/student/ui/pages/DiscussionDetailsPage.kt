@@ -130,11 +130,12 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         }
 
         // If we have not yet seen the desired reply, try one more time, allowing up to
-        // 30 seconds for the page to render and the reply to appear.
+        // 3 retries for the page to render and the reply to appear.  (Each attempt
+        // waits ~10 secs before failing.)
         // (It can take a *long* time for the reply to get rendered to the webview on
         // tablets (in FTL, anyway).)
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 30)
+                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 3)
                 .check(webMatches(getText(),containsString(reply.message)))
     }
 
