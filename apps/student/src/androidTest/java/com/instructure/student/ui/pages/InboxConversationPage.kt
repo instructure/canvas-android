@@ -36,6 +36,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -79,17 +80,17 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun markUnread() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Mark as Unread")).click()
     }
 
     fun archive() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Archive")).click()
     }
 
     fun deleteConversation() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Delete")).click()
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
                 .click() // Confirmation click

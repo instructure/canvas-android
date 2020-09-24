@@ -134,7 +134,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
         // (It can take a *long* time for the reply to get rendered to the webview on
         // tablets (in FTL, anyway).)
         onWebView(withId(R.id.discussionRepliesWebView))
-                .withElementRepeat(findElement(Locator.ID, "message_content_${reply.id}"), 30)
+                .withElement(findElement(Locator.ID, "message_content_${reply.id}"))
                 .check(webMatches(getText(),containsString(reply.message)))
     }
 
