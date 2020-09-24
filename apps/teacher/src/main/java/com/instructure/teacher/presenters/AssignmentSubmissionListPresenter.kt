@@ -214,8 +214,13 @@ class AssignmentSubmissionListPresenter(val mAssignment: Assignment, private var
 
     fun getFilterPoints() : Double = mFilterValue
 
-    fun getStudents() : ArrayList<BasicUser> {
-        return mFilteredSubmissions.map { BasicUser.userToBasicUser((it.assignee as StudentAssignee).student) } as ArrayList<BasicUser>
+    fun getRecipients() : List<Recipient> {
+        return mFilteredSubmissions.map { submission ->
+            when(val assignee = submission.assignee) {
+                is StudentAssignee -> Recipient.from(assignee.student)
+                is GroupAssignee -> Recipient.from(assignee.group)
+            }
+        }
     }
 
     override fun compare(item1: GradeableStudentSubmission, item2: GradeableStudentSubmission): Int {

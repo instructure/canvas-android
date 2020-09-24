@@ -18,6 +18,7 @@ package com.instructure.teacher.factory
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.teacher.presenters.AddMessagePresenter
 import com.instructure.teacher.viewinterface.AddMessageView
 import instructure.androidblueprint.PresenterFactory
@@ -25,7 +26,7 @@ import java.util.*
 
 class AddMessagePresenterFactory(
     private val mConversation: Conversation?,
-    private val mParticipants: ArrayList<BasicUser>?,
+    private val mParticipants: ArrayList<Recipient>?,
     private val mMessages: ArrayList<Message>?,
     private val mIsReply: Boolean
 ) : PresenterFactory<AddMessageView, AddMessagePresenter> {

@@ -56,8 +56,9 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
     private var sendIndividually = false
     private var isMessageStudentsWho by BooleanArg(false, MESSAGE_STUDENTS_WHO)
     private var isPersonalMessage by BooleanArg(false, MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL)
+    private var messageStudentsWhoContextId by NullableStringArg(MESSAGE_STUDENTS_WHO_CONTEXT_ID)
     private var shouldAllowExit = false
-    private var participants: ArrayList<BasicUser> by ParcelableArrayListArg(key = KEY_PARTICIPANTS)
+    private var participants: ArrayList<Recipient> by ParcelableArrayListArg(key = KEY_PARTICIPANTS)
 
     private val isValidNewMessage: Boolean
         get() {
@@ -108,6 +109,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                 selectedCourse = savedInstanceState.getParcelable(SELECTED_COURSE)
             }
         } else {
+            if (isMessageStudentsWho) {
+                // Set up selected course for 'message students who' to allow searching and editing recipients
+                selectedCourse = CanvasContext.fromContextCode(messageStudentsWhoContextId)
+                chips.canvasContext = selectedCourse
+            }
 
             val vto = chips.viewTreeObserver
             vto.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
@@ -122,7 +128,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                                     ?: presenter.conversation?.audience ?: emptyList())
                         }
                     } else if (isMessageStudentsWho) {
-                        addInitialRecipients(participants.map { it.id })
+                        addRecipients(participants)
                     }
 
                     val obs = chips.viewTreeObserver
@@ -153,7 +159,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
     override fun getPresenterFactory(): AddMessagePresenterFactory {
         val conversation = arguments?.getParcelable<Conversation>(Const.CONVERSATION)
-        val participants = arguments?.getParcelableArrayList<BasicUser>(KEY_PARTICIPANTS)
+        val participants = arguments?.getParcelableArrayList<Recipient>(KEY_PARTICIPANTS)
         val messages = arguments?.getParcelableArrayList<Message>(Const.MESSAGE)
         val isReply = arguments?.getBoolean(KEY_IS_REPLY, false) ?: false
         return AddMessagePresenterFactory(conversation, participants, messages, isReply)
@@ -201,7 +207,7 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
 
         ColorUtils.colorIt(ThemePrefs.buttonColor, contactsImageButton)
 
-        // Don't show the contacts button if there is no selected course and there is no requireContext()_code from the conversation (shouldn't happen, but it does)
+        // Don't show the contacts button if there is no selected course and there is no context_code from the conversation (shouldn't happen, but it does)
         if (selectedCourse == null && presenter.course != null && presenter.course!!.id == 0L) {
             contactsImageButton.visibility = View.INVISIBLE
         }
@@ -399,24 +405,16 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         val selectedRecipients = chips.recipients
         val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = initialRecipientIds
+            .map { it.toString() }
             .filter { id ->
                 // Skip existing recipients and self
-                val stringId = id.toString()
-                stringId != myId && selectedRecipients.none { it.stringId == stringId }
+                id != myId && selectedRecipients.none { it.stringId == id }
             }
-            .mapNotNull {
-                val user = presenter.getParticipantById(it) ?: return@mapNotNull null
-                Recipient(
-                    stringId = user.id.toString(),
-                    name = user.name,
-                    pronouns = user.pronouns,
-                    avatarURL = user.avatarUrl
-                )
-            }
+            .mapNotNull { presenter.getParticipantById(it) }
         chips.addRecipients(recipients)
     }
 
-    private fun addRecipients(newRecipients: ArrayList<Recipient>) {
+    private fun addRecipients(newRecipients: List<Recipient>) {
         val selectedRecipients = chips.recipients
         val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val recipients = newRecipients.filter { recipient ->
@@ -466,11 +464,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_ID = "message_students_context_id"
         private const val MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL = "message_students_is_personal"
 
-        fun createBundle(isReply: Boolean, conversation: Conversation, participants: ArrayList<BasicUser>, messages: List<Message>, currentMessage: Message?): Bundle =
+        fun createBundle(isReply: Boolean, conversation: Conversation, participants: List<Recipient>, messages: List<Message>, currentMessage: Message?): Bundle =
                 Bundle().apply {
                     putBoolean(KEY_IS_REPLY, isReply)
                     putParcelable(Const.CONVERSATION, conversation)
-                    putParcelableArrayList(KEY_PARTICIPANTS, participants)
+                    putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(participants))
                     putParcelableArrayList(Const.MESSAGE, ArrayList(messages))
                     putParcelable(Const.MESSAGE_TO_USER, currentMessage)
                 }
@@ -480,11 +478,11 @@ class AddMessageFragment : BasePresenterFragment<AddMessagePresenter, AddMessage
                     putBoolean(Const.COMPOSE_FRAGMENT, true)
                 }
 
-        fun createBundle(users: ArrayList<BasicUser>, subject: String, contextId: String, isPersonal: Boolean): Bundle =
+        fun createBundle(users: List<Recipient>, subject: String, contextId: String, isPersonal: Boolean): Bundle =
                 Bundle().apply {
                     putBoolean(MESSAGE_STUDENTS_WHO_CONTEXT_IS_PERSONAL, isPersonal)
                     putBoolean(MESSAGE_STUDENTS_WHO, true)
-                    putParcelableArrayList(KEY_PARTICIPANTS, users)
+                    putParcelableArrayList(KEY_PARTICIPANTS, ArrayList(users))
                     putString(MESSAGE_STUDENTS_WHO_SUBJECT, subject)
                     putString(MESSAGE_STUDENTS_WHO_CONTEXT_ID, contextId)
                 }

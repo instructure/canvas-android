@@ -110,5 +110,25 @@ data class Recipient(
             2 -> Type.Person
             else -> null
         }
+
+        fun from(user: User) = Recipient(
+            stringId = user.id.toString(),
+            name = user.shortName,
+            pronouns = user.pronouns,
+            avatarURL = user.avatarUrl,
+        )
+
+        fun from(user: BasicUser) = Recipient(
+            stringId = user.id.toString(),
+            name = user.name,
+            pronouns = user.pronouns,
+            avatarURL = user.avatarUrl,
+        )
+
+        fun from(group: Group) = Recipient(
+            stringId = group.contextId,
+            name = group.name,
+            userCount = group.membersCount,
+        )
     }
 }
