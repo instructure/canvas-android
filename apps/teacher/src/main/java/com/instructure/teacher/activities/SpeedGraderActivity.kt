@@ -95,7 +95,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     // This is here to prevent transaction too large exceptions, possibly caused by pdfFragment's saving.
     @SuppressLint("MissingSuperCall")
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {}
+    override fun onSaveInstanceState(outState: Bundle) {}
 
     override fun getPresenterFactory() = SpeedGraderPresenterFactory(
         courseId,
