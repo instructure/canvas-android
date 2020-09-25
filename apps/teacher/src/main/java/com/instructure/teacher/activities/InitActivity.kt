@@ -23,6 +23,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.CompoundButton
@@ -197,9 +198,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         presenter.loadData(true)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(SELECTED_TAB, selectedTab)
+        outState.putInt(SELECTED_TAB, selectedTab)
     }
 
     override fun getPresenterFactory() = InitActivityPresenterFactory()
