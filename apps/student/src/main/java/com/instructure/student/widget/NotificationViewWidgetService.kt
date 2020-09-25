@@ -120,20 +120,20 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
 
         private fun getDrawableId(streamItem: StreamItem): Int {
             when (streamItem.getStreamItemType()) {
-                StreamItem.Type.DISCUSSION_TOPIC -> return R.drawable.vd_discussion
-                StreamItem.Type.ANNOUNCEMENT -> return R.drawable.vd_announcement
-                StreamItem.Type.SUBMISSION -> return R.drawable.vd_assignment
-                StreamItem.Type.CONVERSATION -> return R.drawable.vd_inbox
+                StreamItem.Type.DISCUSSION_TOPIC -> return R.drawable.ic_discussion
+                StreamItem.Type.ANNOUNCEMENT -> return R.drawable.ic_announcement
+                StreamItem.Type.SUBMISSION -> return R.drawable.ic_assignment
+                StreamItem.Type.CONVERSATION -> return R.drawable.ic_inbox
                 StreamItem.Type.MESSAGE ->
                     //a message could be related to an assignment, check the category
                     return when {
-                        streamItem.contextType == CanvasContext.Type.COURSE -> R.drawable.vd_assignment
-                        streamItem.notificationCategory.toLowerCase().contains("assignment graded") -> R.drawable.vd_grades
-                        else -> R.drawable.vd_user
+                        streamItem.contextType == CanvasContext.Type.COURSE -> R.drawable.ic_assignment
+                        streamItem.notificationCategory.toLowerCase().contains("assignment graded") -> R.drawable.ic_grades
+                        else -> R.drawable.ic_user
                     }
-                StreamItem.Type.CONFERENCE -> return R.drawable.vd_conferences
-                StreamItem.Type.COLLABORATION -> return R.drawable.vd_collaborations
-                else -> return R.drawable.vd_announcement
+                StreamItem.Type.CONFERENCE -> return R.drawable.ic_conferences
+                StreamItem.Type.COLLABORATION -> return R.drawable.ic_collaborations
+                else -> return R.drawable.ic_announcement
             }
         }
 

@@ -27,7 +27,7 @@
         style="@style/AdapterItemIcon"
         android:layout_marginTop="16dp"
         android:importantForAccessibility="no"
-        tools:srcCompat="@drawable/vd_assignment"/>
+        tools:srcCompat="@drawable/ic_assignment"/>
 
     <LinearLayout
         android:id="@+id/textContainer"
@@ -69,7 +69,7 @@
         android:layout_marginEnd="8dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/options"
-        android:src="@drawable/vd_overflow_white_18dp"
+        android:src="@drawable/ic_overflow_white_18dp"
         android:tint="@color/defaultTextGray"/>
 
 </LinearLayout>

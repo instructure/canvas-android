@@ -330,7 +330,7 @@
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultActionColor"
-                    app:srcCompat="@drawable/vd_add" />
+                    app:srcCompat="@drawable/ic_add" />
 
                 <TextView
                     android:id="@+id/addOverrideText"
@@ -361,7 +361,7 @@
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/destructive"
-                    app:srcCompat="@drawable/vd_trash" />
+                    app:srcCompat="@drawable/ic_trash" />
 
                 <TextView
                     android:id="@+id/deleteText"

@@ -165,12 +165,12 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         // Publish status
         if (published) {
-            publishStatusIconView.setImageResource(R.drawable.vd_published)
+            publishStatusIconView.setImageResource(R.drawable.ic_published)
             publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
             publishStatusTextView.setText(R.string.published)
             publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
         } else {
-            publishStatusIconView.setImageResource(R.drawable.vd_unpublished)
+            publishStatusIconView.setImageResource(R.drawable.ic_unpublished)
             publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
             publishStatusTextView.setText(R.string.not_published)
             publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))

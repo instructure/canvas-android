@@ -38,7 +38,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_alignParentEnd="true"
                 android:contentDescription="@string/closeRecordingView"
-                android:src="@drawable/vd_utils_close"
+                android:src="@drawable/ic_utils_close"
                 tools:ignore="ContentDescription"/>
 
             <ImageView
@@ -50,7 +50,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_alignParentStart="true"
                 android:contentDescription="@string/deleteRecording"
-                android:src="@drawable/vd_trash"
+                android:src="@drawable/ic_trash"
                 tools:ignore="ContentDescription"/>
 
             <TextView
@@ -71,7 +71,7 @@
                 android:paddingEnd="4dp"
                 android:paddingStart="4dp"
                 android:importantForAccessibility="no"
-                android:src="@drawable/vd_drag"
+                android:src="@drawable/ic_drag"
                 tools:ignore="ContentDescription"/>
 
         </RelativeLayout>
@@ -91,7 +91,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/error"
-                android:src="@drawable/vd_error"
+                android:src="@drawable/ic_error"
                 android:tint="@color/error" />
 
             <TextView

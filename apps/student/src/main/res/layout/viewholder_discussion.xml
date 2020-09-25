@@ -43,7 +43,7 @@
             android:id="@+id/discussionIcon"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            tools:src="@drawable/vd_discussion"
+            tools:src="@drawable/ic_discussion"
             tools:ignore="ContentDescription"
             android:layout_toEndOf="@id/statusIndicator"
             android:layout_alignParentTop="true"/>
@@ -85,7 +85,7 @@
             android:padding="12dp"
             android:layout_marginEnd="8dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/vd_overflow_white_18dp"
+            app:srcCompat="@drawable/ic_overflow_white_18dp"
             android:tint="@color/defaultTextGray"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"/>

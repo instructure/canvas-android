@@ -93,7 +93,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
             val bitmap: Bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 100, 100)
             pairObserverQrCode.setImageBitmap(bitmap)
         } catch (e: Exception) {
-            pairObserverQrCode.setImageResource(R.drawable.vd_error)
+            pairObserverQrCode.setImageResource(R.drawable.ic_error)
         }
     }
 }

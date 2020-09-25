@@ -192,7 +192,7 @@ class AssignmentDetailsPresenterTest : Assert() {
         val assignment = baseAssignment.copy(submission = baseSubmission)
         val model = baseModel.copy(assignmentResult = DataResult.Success(assignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals(R.drawable.vd_submitted, state.submittedStateIcon)
+        assertEquals(R.drawable.ic_submitted, state.submittedStateIcon)
     }
 
     @Test
@@ -302,7 +302,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `uses correct icon for not-submitted status`() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals(R.drawable.vd_unsubmitted, state.submittedStateIcon)
+        assertEquals(R.drawable.ic_unsubmitted, state.submittedStateIcon)
     }
 
     @Test

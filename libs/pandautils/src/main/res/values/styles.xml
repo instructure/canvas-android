@@ -95,7 +95,7 @@
     </style>
 
     <style name="ExoMediaButton.Fullscreen">
-        <item name="android:src">@drawable/vd_fullscreen_white</item>
+        <item name="android:src">@drawable/ic_fullscreen_white</item>
         <item name="android:contentDescription">@string/utils_fullscreen</item>
     </style>
 

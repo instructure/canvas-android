@@ -82,7 +82,7 @@
                             android:layout_height="18dp"
                             android:layout_marginStart="12dp"
                             android:importantForAccessibility="no"
-                            tools:src="@drawable/vd_published"/>
+                            tools:src="@drawable/ic_published"/>
 
                         <TextView
                             android:id="@+id/publishStatusTextView"
@@ -118,7 +118,7 @@
                         android:layout_marginEnd="16dp"
                         android:contentDescription="@string/full_due_date_details"
                         android:tint="@color/defaultTextGray"
-                        app:srcCompat="@drawable/vd_arrow_forward"/>
+                        app:srcCompat="@drawable/ic_arrow_forward"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
                                 android:tint="@color/defaultTextGray"
-                                app:srcCompat="@drawable/vd_calendarclock"/>
+                                app:srcCompat="@drawable/ic_calendarclock"/>
 
                             <TextView
                                 style="@style/TextFont.Medium"
@@ -347,7 +347,7 @@
                         android:contentDescription="@string/full_due_date_details"
                         android:tint="@color/defaultTextGray"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/vd_arrow_forward"
+                        app:srcCompat="@drawable/ic_arrow_forward"
                         tools:visibility="visible"/>
 
                 </RelativeLayout>

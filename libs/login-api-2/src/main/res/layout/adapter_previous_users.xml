@@ -68,7 +68,7 @@
             android:ellipsize="end"/>
 
     </LinearLayout>
-    
+
     <ImageView
         android:id="@+id/removePreviousUser"
         android:layout_width="48dp"
@@ -76,7 +76,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:padding="8dp"
-        app:srcCompat="@drawable/vd_close_gray"
+        app:srcCompat="@drawable/ic_close_gray"
         android:contentDescription="@string/contentDescription_removePreviousUser"
         android:background="?android:selectableItemBackground"/>
 

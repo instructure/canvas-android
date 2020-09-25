@@ -77,7 +77,7 @@
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/vd_checkmark_large"
+                app:srcCompat="@drawable/ic_checkmark_large"
                 tools:tint="@color/canvasDefaultAccent"
                 tools:visibility="gone"/>
 
@@ -88,7 +88,7 @@
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 android:tint="@color/defaultTextGray"
-                app:srcCompat="@drawable/vd_x_large"
+                app:srcCompat="@drawable/ic_x_large"
                 tools:visibility="gone"/>
 
             <LinearLayout

@@ -41,7 +41,7 @@
                 android:contentDescription="@string/utils_contentDescriptionFiles"
                 android:padding="4dp"
                 android:tint="@color/defaultTextDark"
-                app:srcCompat="@drawable/vd_utils_attachment" />
+                app:srcCompat="@drawable/ic_utils_attachment" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -90,7 +90,7 @@
             android:layout_centerVertical="true"
             android:contentDescription="@string/utils_removeAttachment"
             android:padding="10dp"
-            app:srcCompat="@drawable/vd_utils_close"
+            app:srcCompat="@drawable/ic_utils_close"
             android:tint="@color/defaultTextDark" />
 
     </RelativeLayout>

@@ -29,7 +29,7 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_error"
+        android:src="@drawable/ic_error"
         android:tint="@color/error"/>
 
     <TextView

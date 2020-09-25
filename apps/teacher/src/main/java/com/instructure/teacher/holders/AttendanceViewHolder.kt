@@ -45,10 +45,10 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         studentAvatar.onClick { callback.onAvatarClicked(attendance, position) }
 
         when(attendance.attendanceStatus()) {
-            Attendance.Attendance.ABSENT -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_missing)
-            Attendance.Attendance.LATE -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_late)
-            Attendance.Attendance.PRESENT -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_present)
-            else -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_unmarked)
+            Attendance.Attendance.ABSENT -> attendanceIndicator.setImageResource(R.drawable.ic_attendance_missing)
+            Attendance.Attendance.LATE -> attendanceIndicator.setImageResource(R.drawable.ic_attendance_late)
+            Attendance.Attendance.PRESENT -> attendanceIndicator.setImageResource(R.drawable.ic_attendance_present)
+            else -> attendanceIndicator.setImageResource(R.drawable.ic_attendance_unmarked)
         }
     }
 

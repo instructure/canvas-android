@@ -121,7 +121,7 @@ class InboxFragment : ParentFragment() {
         setupListeners()
         setupFilter()
         setupFilterText()
-        emptyInboxView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_inboxzero))
+        emptyInboxView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_inboxzero))
         emptyInboxView.setMessageText(R.string.nothingUnreadSubtext)
         emptyInboxView.getMessage().importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
         emptyInboxView.setTitleText(R.string.nothingUnread)
@@ -204,19 +204,19 @@ class InboxFragment : ParentFragment() {
         return when (scope) {
             Scope.ALL -> ScopeParams(R.string.nothingUnread,
                     R.string.nothingUnreadSubtext,
-                    R.drawable.vd_panda_inboxzero)
+                    R.drawable.ic_panda_inboxzero)
             Scope.UNREAD -> ScopeParams(R.string.nothingUnread,
                     R.string.nothingUnreadSubtext,
-                    R.drawable.vd_panda_inboxzero)
+                    R.drawable.ic_panda_inboxzero)
             Scope.STARRED -> ScopeParams(R.string.nothingStarred,
                     R.string.nothingStarredSubtext,
-                    R.drawable.vd_panda_inboxstarred)
+                    R.drawable.ic_panda_inboxstarred)
             Scope.SENT -> ScopeParams(R.string.nothingSent,
                    R.string.nothingSentSubtext,
-                    R.drawable.vd_panda_inboxsent)
+                    R.drawable.ic_panda_inboxsent)
             Scope.ARCHIVED -> ScopeParams(R.string.nothingArchived,
                     R.string.nothingArchivedSubtext,
-                    R.drawable.vd_panda_inboxarchived)
+                    R.drawable.ic_panda_inboxarchived)
         }
     }
 

@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_conferences" />
+        android:src="@drawable/ic_conferences" />
 
     <LinearLayout
         android:layout_width="match_parent"

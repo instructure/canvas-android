@@ -15,6 +15,6 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/vd_bottom_nav_inbox_selected" android:state_checked="true"/>
-    <item android:drawable="@drawable/vd_bottom_nav_inbox_unselected" android:state_checked="false"/>
+    <item android:drawable="@drawable/ic_bottom_nav_inbox_selected" android:state_checked="true"/>
+    <item android:drawable="@drawable/ic_bottom_nav_inbox_unselected" android:state_checked="false"/>
 </selector>

@@ -148,6 +148,6 @@
         android:layout_centerVertical="true"
         android:contentDescription="@string/full_submission_details"
         android:tint="@color/defaultTextGray"
-        app:srcCompat="@drawable/vd_arrow_forward" />
+        app:srcCompat="@drawable/ic_arrow_forward" />
 
 </RelativeLayout>

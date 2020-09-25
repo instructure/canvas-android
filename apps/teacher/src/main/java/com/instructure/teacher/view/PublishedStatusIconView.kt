@@ -36,7 +36,7 @@ class PublishedStatusIconView @JvmOverloads constructor(
 
     private lateinit var mAssignmentIcon: ImageView
     private lateinit var mPublishedStatusIcon: ImageView
-    private var mIconPlaceholder = R.drawable.vd_assignment
+    private var mIconPlaceholder = R.drawable.ic_assignment
     private var mPublished = false
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -57,7 +57,7 @@ class PublishedStatusIconView @JvmOverloads constructor(
 
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
                 when (it) {
-                    R.styleable.PublishedStatusIconView_icon -> mIconPlaceholder = a.getResourceId(it, R.drawable.vd_assignment)
+                    R.styleable.PublishedStatusIconView_icon -> mIconPlaceholder = a.getResourceId(it, R.drawable.ic_assignment)
                     R.styleable.PublishedStatusIconView_published -> mPublished = a.getBoolean(it, false)
                 }
             }
@@ -114,12 +114,12 @@ class PublishedStatusIconView @JvmOverloads constructor(
         //set published drawable
         when(isPublished) {
             true ->  {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_published))
+                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_published))
                 mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.publishedGreen))
                 mPublishedStatusIcon.contentDescription = context.getString(R.string.published)
             }
             else -> {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_unpublished))
+                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_unpublished))
                 mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
                 mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
             }

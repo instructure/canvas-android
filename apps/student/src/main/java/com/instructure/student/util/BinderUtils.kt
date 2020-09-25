@@ -152,10 +152,10 @@ object BinderUtils {
         if (assignment == null) return 0
 
         return when {
-            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> R.drawable.vd_quiz
+            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> R.drawable.ic_quiz
             assignment.getSubmissionTypes()
-                .contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> R.drawable.vd_discussion
-            else -> R.drawable.vd_assignment
+                .contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> R.drawable.ic_discussion
+            else -> R.drawable.ic_assignment
         }
     }
 

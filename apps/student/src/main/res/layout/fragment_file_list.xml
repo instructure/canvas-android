@@ -81,7 +81,7 @@
         android:visibility="invisible"
         android:layout_marginEnd="16dp"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_files" />
+        app:srcCompat="@drawable/ic_files" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addFileFab"
@@ -96,7 +96,7 @@
         android:visibility="invisible"
         android:layout_marginEnd="16dp"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_file_upload" />
+        app:srcCompat="@drawable/ic_file_upload" />
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -111,6 +111,6 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/createFileFolderFabContentDesc"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_add" />
+        app:srcCompat="@drawable/ic_add" />
 
 </RelativeLayout>

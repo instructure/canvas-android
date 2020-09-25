@@ -90,7 +90,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
 
             override fun onRefreshFinished() {
                 setRefreshing(false)
-                setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
+                setEmptyView(emptyView, R.drawable.ic_panda_nofiles, R.string.noPages, R.string.noPagesSubtext)
             }
         }, defaultSelectedPageTitle)
 

@@ -72,7 +72,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
         compose.colorNormal = color
         compose.colorPressed = color
 
-        compose.setIconDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.vd_send, Color.WHITE))
+        compose.setIconDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, Color.WHITE))
         compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {

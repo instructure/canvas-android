@@ -36,7 +36,7 @@ class ReplyMessageBinder {
             holder.itemView.attachmentContainer.setGone()
 
             // Set up remove button
-            holder.itemView.messageOptions.setImageResource(R.drawable.vd_utils_close)
+            holder.itemView.messageOptions.setImageResource(R.drawable.ic_utils_close)
             holder.itemView.messageOptions.onClick { callback.onMessageAction(MessageAdapterCallback.MessageClickAction.DELETE, message) }
         }
     }

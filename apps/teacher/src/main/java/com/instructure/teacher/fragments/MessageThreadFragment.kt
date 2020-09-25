@@ -281,7 +281,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             subjectView.text = conversation!!.subject
         }
 
-        starred.setImageResource(if (conversation!!.isStarred) R.drawable.vd_star_filled else R.drawable.vd_star)
+        starred.setImageResource(if (conversation!!.isStarred) R.drawable.ic_star_filled else R.drawable.ic_star)
         ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
 
         val menu = toolbar.menu
@@ -304,7 +304,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
             subjectView.text = conversation!!.subject
         }
 
-        starred.setImageResource(if (conversation!!.isStarred) R.drawable.vd_star_filled else R.drawable.vd_star)
+        starred.setImageResource(if (conversation!!.isStarred) R.drawable.ic_star_filled else R.drawable.ic_star)
         ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
 
         val menu = toolbar.menu

@@ -79,7 +79,7 @@ class ModuleListPresenterTest : Assert() {
             id = 1000L,
             title = "Module Item 1",
             subtitle = "Due February 12, 2050 at 3:07 PM",
-            iconResId = R.drawable.vd_assignment,
+            iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
             tintColor = course.color,
@@ -190,7 +190,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_assignment
+            iconResId = R.drawable.ic_assignment
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -210,7 +210,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_discussion
+            iconResId = R.drawable.ic_discussion
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -230,7 +230,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_attachment
+            iconResId = R.drawable.ic_attachment
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -250,7 +250,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_pages
+            iconResId = R.drawable.ic_pages
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -270,7 +270,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_quiz
+            iconResId = R.drawable.ic_quiz
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -290,7 +290,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_link
+            iconResId = R.drawable.ic_link
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()
@@ -310,7 +310,7 @@ class ModuleListPresenterTest : Assert() {
         )
         val expectedState = moduleItemDataTemplate.copy(
             title = item.title,
-            iconResId = R.drawable.vd_lti
+            iconResId = R.drawable.ic_lti
         )
         val viewState = ModuleListPresenter.present(model, context)
         val itemState = (viewState.items[0] as ModuleListItemData.ModuleData).moduleItems.first()

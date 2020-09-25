@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_utils_pdf"
+            android:src="@drawable/ic_utils_pdf"
             android:tint="@color/canvasDefaultPrimary"/>
 
         <ImageView
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/selected"
-        android:src="@drawable/vd_check_white_24dp"
+        android:src="@drawable/ic_check_white_24dp"
         tools:tint="@color/canvasDefaultAccent"/>
 
 </LinearLayout>

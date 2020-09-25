@@ -41,7 +41,7 @@
             android:layout_marginTop="16dp"
             android:importantForAccessibility="no"
             android:tint="@color/white"
-            app:srcCompat="@drawable/vd_info_solid" />
+            app:srcCompat="@drawable/ic_info_solid" />
 
     </FrameLayout>
 
@@ -94,6 +94,6 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:tint="@color/gray"
-        app:srcCompat="@drawable/vd_close_gray" />
+        app:srcCompat="@drawable/ic_close_gray" />
 
 </LinearLayout>

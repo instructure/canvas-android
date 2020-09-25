@@ -63,7 +63,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val submission = assignment.submission
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
-                icon.setNestedIcon(R.drawable.vd_published, courseColor)
+                icon.setNestedIcon(R.drawable.ic_published, courseColor)
             } else {
                 points.setVisible()
                 val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context)
@@ -76,7 +76,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Configures whatIf editing boxes and listener for dialog
         edit.setVisible(isEdit)
         if (isEdit) {
-            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_edit, ContextCompat.getColor(context, R.color.defaultTextDark)))
+            edit.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_edit, ContextCompat.getColor(context, R.color.defaultTextDark)))
             edit.setOnClickListener { whatIfDialogCallback.onClick(assignment, adapterPosition) }
         }
 

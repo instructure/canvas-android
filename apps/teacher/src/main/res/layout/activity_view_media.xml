@@ -33,7 +33,7 @@
             android:layout_height="64dp"
             android:layout_gravity="center"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_audio"
+            android:src="@drawable/ic_audio"
             android:tint="@color/defaultTextGray"
             android:visibility="gone"/>
 
@@ -103,7 +103,7 @@
             android:background="@drawable/bg_play_arrow"
             android:contentDescription="@string/playMedia"
             android:importantForAccessibility="yes"
-            android:src="@drawable/vd_play_arrow_36dp"/>
+            android:src="@drawable/ic_play_arrow_36dp"/>
 
     </FrameLayout>
 

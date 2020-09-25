@@ -47,7 +47,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_warning_filled"
+            android:src="@drawable/ic_warning_filled"
             android:tint="@color/alertRed" />
 
         <TextView

@@ -35,7 +35,7 @@
             android:elevation="6dp"
             app:title="@string/submission"
             tools:background="#00bcd5"
-            tools:navigationIcon="@drawable/vd_back_arrow"
+            tools:navigationIcon="@drawable/ic_back_arrow"
             tools:titleTextColor="@color/white"/>
 
         <FrameLayout
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/vd_panda_notsupported"/>
+                    android:src="@drawable/ic_panda_notsupported"/>
 
                 <TextView
                     android:layout_width="wrap_content"

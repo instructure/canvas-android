@@ -47,7 +47,7 @@ class QuizViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         description.setVisible(!desc.isNullOrBlank())
 
         // Icon
-        val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_quiz, courseColor)
+        val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_quiz, courseColor)
         icon.setImageDrawable(drawable)
 
         // Status and Date

@@ -37,8 +37,8 @@ class NestedIconView @JvmOverloads constructor(
 
     private lateinit var primaryIcon: ImageView
     private lateinit var nestedIcon: ImageView
-    private var iconPlaceholder = R.drawable.vd_utils_document
-    private var nestedIconPlaceHolder = R.drawable.vd_add
+    private var iconPlaceholder = R.drawable.ic_utils_document
+    private var nestedIconPlaceHolder = R.drawable.ic_add
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -58,8 +58,8 @@ class NestedIconView @JvmOverloads constructor(
 
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
                 when (it) {
-                    R.styleable.NestedIconView_icon -> iconPlaceholder = a.getResourceId(it, R.drawable.vd_utils_document)
-                    R.styleable.NestedIconView_nestedIcon -> nestedIconPlaceHolder = a.getResourceId(it, R.drawable.vd_add)
+                    R.styleable.NestedIconView_icon -> iconPlaceholder = a.getResourceId(it, R.drawable.ic_utils_document)
+                    R.styleable.NestedIconView_nestedIcon -> nestedIconPlaceHolder = a.getResourceId(it, R.drawable.ic_add)
                 }
             }
 
@@ -134,12 +134,12 @@ class NestedIconView @JvmOverloads constructor(
         //set published drawable
         when(isPublished) {
             true ->  {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_published))
+                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_published))
                 mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.publishedGreen))
                 mPublishedStatusIcon.contentDescription = context.getString(R.string.published)
             }
             else -> {
-                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_unpublished))
+                mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_unpublished))
                 mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
                 mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
             }

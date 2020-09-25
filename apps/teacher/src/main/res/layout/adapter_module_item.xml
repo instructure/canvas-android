@@ -39,7 +39,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="32dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_quiz"
+        android:src="@drawable/ic_quiz"
         android:tint="@color/canvasDefaultAccent"/>
 
     <ProgressBar
@@ -81,7 +81,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/published"
-        android:src="@drawable/vd_published"
+        android:src="@drawable/ic_published"
         android:tint="@color/publishedGreen"/>
 
     <ImageView
@@ -90,7 +90,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/not_published"
-        android:src="@drawable/vd_universal_no"
+        android:src="@drawable/ic_universal_no"
         android:tint="@color/defaultTextGray"/>
 
 </LinearLayout>
