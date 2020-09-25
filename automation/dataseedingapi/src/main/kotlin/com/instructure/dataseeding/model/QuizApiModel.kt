@@ -71,7 +71,8 @@ data class QuizQuestion(
         val questionType: String? = null,
         @SerializedName("points_possible")
         val pointsPossible: Int,
-        val answers: List<QuizAnswer>
+        val answers: List<QuizAnswer>,
+        var id: Long? = null
 )
 
 data class CreateQuizQuestion(
