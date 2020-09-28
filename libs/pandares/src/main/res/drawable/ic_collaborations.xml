@@ -22,10 +22,6 @@
     android:viewportHeight="24">
 
     <path
-        android:fillType="evenOdd"
-        android:strokeWidth="1"
-        android:pathData="M0,0 L24,0 L24,24 L0,24 L0,0 Z" />
-    <path
         android:fillColor="#000000"
         android:fillType="evenOdd"
         android:strokeWidth="1"

@@ -28,10 +28,6 @@
             android:translateX="320.000000"
             android:translateY="40.000000">
             <path
-                android:fillType="evenOdd"
-                android:strokeWidth="1"
-                android:pathData="M 0 0 L 24 0 L 24 24 L 0 24 Z" />
-            <path
                 android:fillColor="#2D3B45"
                 android:strokeWidth="1"
                 android:pathData="M18,16.08 C19.61,16.08 20.92,17.39 20.92,19 C20.92,20.61 19.61,21.92 18,21.92

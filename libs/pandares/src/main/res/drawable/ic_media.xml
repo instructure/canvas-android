@@ -24,10 +24,6 @@
     <group
         android:translateY="-1.000000">
         <path
-            android:fillType="evenOdd"
-            android:strokeWidth="1"
-            android:pathData="M 0 0 H 12 V 12 H 0 V 0 Z" />
-        <path
             android:fillColor="#2D3B45"
             android:strokeWidth="1"
             android:pathData="M11.7441384,9.99087223 C9.9551965,10.4183553 8.04991654,10.6666667 6,10.6666667

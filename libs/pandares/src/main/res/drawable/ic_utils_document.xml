@@ -8,10 +8,6 @@
     <group
         android:translateX="-1.000000">
         <path
-            android:fillType="evenOdd"
-            android:strokeWidth="1"
-            android:pathData="M 0 0 H 12 V 12 H 0 V 0 Z" />
-        <path
             android:fillColor="#2D3B45"
             android:strokeWidth="1"
             android:pathData="M10.18,2.70666667 C10.4936354,3.01899785 10.6689379,3.44404633

@@ -19,15 +19,6 @@
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-
-    <path
-        android:fillType="evenOdd"
-        android:strokeWidth="1"
-        android:pathData="M 0 0 H 24 V 24 H 0 V 0 Z" />
-    <path
-        android:fillType="evenOdd"
-        android:strokeWidth="1"
-        android:pathData="M 0 0 H 24 V 24 H 0 V 0 Z" />
     <group
             android:translateX="1.000000"
             android:translateY="3.000000">
