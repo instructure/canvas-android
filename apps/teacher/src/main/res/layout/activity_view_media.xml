@@ -103,7 +103,7 @@
             android:background="@drawable/bg_play_arrow"
             android:contentDescription="@string/playMedia"
             android:importantForAccessibility="yes"
-            android:src="@drawable/ic_play_arrow_36dp"/>
+            android:src="@drawable/ic_play_arrow"/>
 
     </FrameLayout>
 

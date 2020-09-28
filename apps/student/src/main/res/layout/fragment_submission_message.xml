@@ -32,7 +32,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/ic_unsupported_content"
+        app:srcCompat="@drawable/ic_panda_unsupported_content"
         tools:visibility="visible" />
 
     <TextView

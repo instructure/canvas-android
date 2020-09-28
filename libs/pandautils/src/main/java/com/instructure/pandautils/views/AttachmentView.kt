@@ -77,7 +77,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         setColorAndIcon(context, attachment.contentType, attachment.filename, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
         onClick { callback(AttachmentAction.PREVIEW, attachment) }
-        actionButton.setImageResource(R.drawable.ic_utils_download)
+        actionButton.setImageResource(R.drawable.ic_download)
         actionButton.setOnClickListener { callback(AttachmentAction.DOWNLOAD, attachment) }
     }
 
@@ -86,7 +86,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         setColorAndIcon(context, attachment.contentType, attachment.fileName, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
         onClick { callback(AttachmentAction.PREVIEW, attachment) }
-        actionButton.setImageResource(R.drawable.ic_utils_download)
+        actionButton.setImageResource(R.drawable.ic_download)
         actionButton.setOnClickListener { callback(AttachmentAction.DOWNLOAD, attachment) }
     }
 
@@ -124,16 +124,16 @@ class AttachmentView(context: Context) : FrameLayout(context) {
             val type = contentType.orEmpty()
             val name = filename.orEmpty()
             val (colorRes, iconRes) = when {
-                type.startsWith("image") -> R.color.attachmentColorImage to R.drawable.ic_utils_image
-                type.startsWith("video") -> R.color.attachmentColorVideo to R.drawable.ic_utils_media
-                type.startsWith("audio") -> R.color.attachmentColorAudio to R.drawable.ic_utils_audio
+                type.startsWith("image") -> R.color.attachmentColorImage to R.drawable.ic_image
+                type.startsWith("video") -> R.color.attachmentColorVideo to R.drawable.ic_media
+                type.startsWith("audio") -> R.color.attachmentColorAudio to R.drawable.ic_audio
                 else -> when (name.substringAfterLast(".")) {
-                    "doc", "docx" -> R.color.attachmentColorDoc to R.drawable.ic_utils_document
-                    "txt", "rtf" -> R.color.attachmentColorTxt to R.drawable.ic_utils_document
-                    "pdf" -> R.color.attachmentColorPdf to R.drawable.ic_utils_document
-                    "xls" -> R.color.attachmentColorXls to R.drawable.ic_utils_document
-                    "zip", "tar", "7z", "apk", "jar", "rar" -> R.color.attachmentColorZip to R.drawable.ic_utils_attachment
-                    else -> R.color.attachmentColorMisc to R.drawable.ic_utils_attachment
+                    "doc", "docx" -> R.color.attachmentColorDoc to R.drawable.ic_document
+                    "txt", "rtf" -> R.color.attachmentColorTxt to R.drawable.ic_document
+                    "pdf" -> R.color.attachmentColorPdf to R.drawable.ic_document
+                    "xls" -> R.color.attachmentColorXls to R.drawable.ic_document
+                    "zip", "tar", "7z", "apk", "jar", "rar" -> R.color.attachmentColorZip to R.drawable.ic_attachment
+                    else -> R.color.attachmentColorMisc to R.drawable.ic_attachment
                 }
             }
             preview?.setBackgroundColor(ContextCompat.getColor(context, colorRes))

@@ -19,7 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_attachment"
-        android:icon="@drawable/ic_utils_attachment"
+        android:icon="@drawable/ic_attachment"
         android:title="@string/attachment"
         android:visible="false"
         android:tint="#8B969E"

@@ -63,7 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
-                android:src="@drawable/ic_no_pairing_code" />
+                android:src="@drawable/ic_panda_no_pairing_code" />
 
             <TextView
                 android:layout_width="wrap_content"

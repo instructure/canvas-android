@@ -79,7 +79,7 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
             SubmissionType.ONLINE_URL -> {
                 Triple(R.drawable.ic_link, context.getString(R.string.speedGraderUrlSubmission), submission.url)
             }
-            else -> Triple(R.drawable.ic_utils_attachment, type.prettyPrint(context), "")
+            else -> Triple(R.drawable.ic_attachment, type.prettyPrint(context), "")
         }
 
         view.iconImageView.setImageResource(icon)

@@ -37,7 +37,7 @@ class NestedIconView @JvmOverloads constructor(
 
     private lateinit var primaryIcon: ImageView
     private lateinit var nestedIcon: ImageView
-    private var iconPlaceholder = R.drawable.ic_utils_document
+    private var iconPlaceholder = R.drawable.ic_document
     private var nestedIconPlaceHolder = R.drawable.ic_add
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -58,7 +58,7 @@ class NestedIconView @JvmOverloads constructor(
 
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
                 when (it) {
-                    R.styleable.NestedIconView_icon -> iconPlaceholder = a.getResourceId(it, R.drawable.ic_utils_document)
+                    R.styleable.NestedIconView_icon -> iconPlaceholder = a.getResourceId(it, R.drawable.ic_document)
                     R.styleable.NestedIconView_nestedIcon -> nestedIconPlaceHolder = a.getResourceId(it, R.drawable.ic_add)
                 }
             }

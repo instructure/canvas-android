@@ -170,7 +170,7 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     }
 
     override fun checkIfEmpty() {
-        emptyCoursesView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_super_panda))
+        emptyCoursesView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_super))
         RecyclerViewUtils.checkIfEmpty(emptyCoursesView, courseRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 

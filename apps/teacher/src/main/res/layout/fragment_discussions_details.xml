@@ -397,7 +397,7 @@
                         android:contentDescription="@string/attachment"
                         android:padding="8dp"
                         android:visibility="gone"
-                        app:srcCompat="@drawable/ic_utils_attachment"/>
+                        app:srcCompat="@drawable/ic_attachment"/>
 
                 </LinearLayout>
 

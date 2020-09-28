@@ -111,7 +111,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_utils_camera" />
+                    app:srcCompat="@drawable/ic_camera" />
 
                 <TextView
                     style="@style/TextFont.Regular"
@@ -138,7 +138,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_utils_image" />
+                    app:srcCompat="@drawable/ic_image" />
 
                 <TextView
                     style="@style/TextFont.Regular"
@@ -165,7 +165,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_utils_document" />
+                    app:srcCompat="@drawable/ic_document" />
 
                 <TextView
                     style="@style/TextFont.Regular"
