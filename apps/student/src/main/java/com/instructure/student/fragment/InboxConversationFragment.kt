@@ -26,10 +26,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.managers.InboxManager
-import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.BasicUser
-import com.instructure.canvasapi2.models.Conversation
-import com.instructure.canvasapi2.models.Message
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.weave.WeaveJob
@@ -336,7 +333,7 @@ class InboxConversationFragment : ParentFragment() {
         val route = InboxComposeMessageFragment.makeRoute(
                 true,
                 conversation,
-                adapter.participants.values.toList(),
+                adapter.participants.values.map { Recipient.from(it) },
                 longArrayOf(),
                 null)
         RouteMatcher.route(requireContext(), route)
@@ -347,7 +344,7 @@ class InboxConversationFragment : ParentFragment() {
         val route = InboxComposeMessageFragment.makeRoute(
                 true,
                 conversation,
-                getMessageRecipientsForReplyAll(message),
+                getMessageRecipientsForReplyAll(message).map { Recipient.from(it) },
                 longArrayOf(),
                 message)
         RouteMatcher.route(requireContext(), route)
@@ -357,7 +354,7 @@ class InboxConversationFragment : ParentFragment() {
         val route = InboxComposeMessageFragment.makeRoute(
                 isReply,
                 conversation,
-                getMessageRecipientsForReply(message),
+                getMessageRecipientsForReply(message).map { Recipient.from(it) },
                 adapter.getMessageChainIdsForMessage(message),
                 message)
         RouteMatcher.route(requireContext(), route)

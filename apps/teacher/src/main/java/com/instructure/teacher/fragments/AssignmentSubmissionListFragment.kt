@@ -185,7 +185,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         }
 
         addMessage.setOnClickListener {
-            val args = AddMessageFragment.createBundle(presenter.getStudents(), filterTitle.text.toString() + " " + getString(R.string.on) + " " + mAssignment.name, mCourse.contextId, false)
+            val args = AddMessageFragment.createBundle(presenter.getRecipients(), filterTitle.text.toString() + " " + getString(R.string.on) + " " + mAssignment.name, mCourse.contextId, false)
             RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
         }
     }

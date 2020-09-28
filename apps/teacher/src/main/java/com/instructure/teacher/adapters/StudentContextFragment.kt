@@ -22,6 +22,7 @@ import android.widget.TextView
 import com.instructure.canvasapi2.StudentContextCardQuery.*
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DateHelper
@@ -135,13 +136,13 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         messageButton.setVisible()
         ViewStyler.themeFAB(messageButton, ThemePrefs.buttonColor)
         messageButton.setOnClickListener {
-            val basicUser = BasicUser().apply {
-                id = student.id.toLong()
-                name = student.name
-                pronouns = student.pronouns
-                avatarUrl = student.avatarUrl
-            }
-            val args = AddMessageFragment.createBundle(arrayListOf(basicUser), "", "course_${course.id}", true)
+            val recipient = Recipient(
+                stringId = student.id,
+                name = student.name,
+                pronouns = student.pronouns,
+                avatarURL = student.avatarUrl,
+            )
+            val args = AddMessageFragment.createBundle(listOf(recipient), "", "course_${course.id}", true)
             RouteMatcher.route(requireContext(), Route(AddMessageFragment::class.java, null, args))
         }
 
