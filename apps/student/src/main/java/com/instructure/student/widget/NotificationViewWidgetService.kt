@@ -129,7 +129,7 @@ class NotificationViewWidgetService : BaseRemoteViewsService(), Serializable {
                     return when {
                         streamItem.contextType == CanvasContext.Type.COURSE -> R.drawable.ic_assignment
                         streamItem.notificationCategory.toLowerCase().contains("assignment graded") -> R.drawable.ic_grades
-                        else -> R.drawable.ic_user
+                        else -> R.drawable.ic_user_avatar
                     }
                 StreamItem.Type.CONFERENCE -> return R.drawable.ic_conferences
                 StreamItem.Type.COLLABORATION -> return R.drawable.ic_collaborations

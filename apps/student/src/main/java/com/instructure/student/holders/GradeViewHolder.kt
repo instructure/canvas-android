@@ -63,7 +63,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val submission = assignment.submission
             if (submission != null && Const.PENDING_REVIEW == submission.workflowState) {
                 points.setGone()
-                icon.setNestedIcon(R.drawable.ic_published, courseColor)
+                icon.setNestedIcon(R.drawable.ic_complete_solid, courseColor)
             } else {
                 points.setVisible()
                 val (grade, contentDescription) = BinderUtils.getGrade(assignment, submission, context)

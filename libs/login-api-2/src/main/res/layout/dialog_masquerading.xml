@@ -28,7 +28,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_close_gray"
+        app:navigationIcon="@drawable/ic_close"
         app:title="@string/actAsUser"/>
 
     <View

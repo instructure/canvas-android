@@ -34,7 +34,7 @@ class AttendanceListRecyclerAdapter(
 ) : SyncRecyclerAdapter<Attendance, AttendanceViewHolder, AttendanceListView>(mContext, presenter) {
 
     override fun bindHolder(attendance: Attendance, holder: AttendanceViewHolder, position: Int) {
-        holder.bind(attendance, mCallback, position)
+        holder.bind(attendance, mCallback, position, context!!)
     }
 
     override fun createViewHolder(v: View, viewType: Int): AttendanceViewHolder {

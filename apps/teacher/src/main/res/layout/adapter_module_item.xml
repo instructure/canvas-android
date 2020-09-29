@@ -81,7 +81,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/published"
-        android:src="@drawable/ic_published"
+        android:src="@drawable/ic_complete_solid"
         android:tint="@color/publishedGreen"/>
 
     <ImageView
@@ -90,7 +90,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/not_published"
-        android:src="@drawable/ic_universal_no"
+        android:src="@drawable/ic_no"
         android:tint="@color/defaultTextGray"/>
 
 </LinearLayout>

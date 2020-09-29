@@ -48,7 +48,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.fileName, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
-        actionButton.setImageResource(R.drawable.ic_close_white)
+        actionButton.setImageResource(R.drawable.ic_close)
         actionButton.contentDescription = context.getString(R.string.removeAttachment)
         actionButton.onClick {
             if (removeViewOnAction) (parent as? ViewGroup)?.removeView(this@AttachmentView)
@@ -64,7 +64,7 @@ class AttachmentView(context: Context) : FrameLayout(context) {
         attachmentName.text = attachment.displayName
         setColorAndIcon(context, attachment.contentType, attachment.filename, previewImage, attachmentIcon)
         setThumbnail(attachment.thumbnailUrl)
-        actionButton.setImageResource(R.drawable.ic_close_white)
+        actionButton.setImageResource(R.drawable.ic_close)
         actionButton.contentDescription = context.getString(R.string.removeAttachment)
         actionButton.onClick {
             if (removeViewOnAction) (parent as? ViewGroup)?.removeView(this@AttachmentView)

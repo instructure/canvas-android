@@ -82,7 +82,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@string/settings"
                     android:padding="11dp"
-                    app:srcCompat="@drawable/ic_navigation_settings"/>
+                    app:srcCompat="@drawable/ic_settings"/>
 
             </RelativeLayout>
 
@@ -122,7 +122,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_files"/>
+                    app:srcCompat="@drawable/ic_files"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -199,7 +199,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_show_grades"/>
+                    app:srcCompat="@drawable/ic_grades"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -262,7 +262,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_change_user"/>
+                    app:srcCompat="@drawable/ic_user"/>
 
                 <TextView
                     style="@style/TextFont.Medium"

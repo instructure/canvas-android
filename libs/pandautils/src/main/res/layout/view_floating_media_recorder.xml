@@ -91,7 +91,7 @@
                 android:layout_height="56dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/error"
-                android:src="@drawable/ic_error"
+                android:src="@drawable/ic_warning"
                 android:tint="@color/error" />
 
             <TextView

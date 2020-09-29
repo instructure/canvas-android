@@ -42,7 +42,7 @@ import com.instructure.teacher.router.RouteMatcher
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user)
+fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
 
 /**
  * Loads the given resource as this Toolbar's icon, assigns it the given content description, and

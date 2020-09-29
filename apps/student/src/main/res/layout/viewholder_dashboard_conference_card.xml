@@ -94,6 +94,6 @@
         android:minWidth="48dp"
         android:minHeight="48dp"
         android:tint="@color/gray"
-        app:srcCompat="@drawable/ic_close_gray" />
+        app:srcCompat="@drawable/ic_close" />
 
 </LinearLayout>

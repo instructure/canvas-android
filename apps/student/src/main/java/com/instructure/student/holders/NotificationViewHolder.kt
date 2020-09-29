@@ -128,7 +128,7 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                     icon.contentDescription = context.getString(R.string.gradesIcon)
                 }
                 else -> {
-                    drawableResId = R.drawable.ic_navigation_change_user
+                    drawableResId = R.drawable.ic_user
                     icon.contentDescription = context.getString(R.string.defaultIcon)
                 }
             }

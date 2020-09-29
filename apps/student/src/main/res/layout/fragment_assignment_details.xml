@@ -126,7 +126,7 @@
                                 android:layout_height="18dp"
                                 android:layout_marginStart="12dp"
                                 android:importantForAccessibility="no"
-                                tools:src="@drawable/ic_published"
+                                tools:src="@drawable/ic_complete_solid"
                                 tools:tint="@color/alertGreen"/>
 
                             <TextView

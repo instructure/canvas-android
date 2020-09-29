@@ -52,7 +52,7 @@
             android:layout_gravity="end|center_vertical"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clearFilter"
-            android:src="@drawable/ic_close_white"
+            android:src="@drawable/ic_close"
             android:tint="@color/black"
             android:visibility="gone"
             tools:visibility="visible"/>

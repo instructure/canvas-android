@@ -100,7 +100,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
                 ),
                 UploadListItemViewState(
                     1,
-                    R.drawable.ic_error,
+                    R.drawable.ic_warning,
                     ContextCompat.getColor(context, R.color.destructive),
                     "File",
                     "1 B",
