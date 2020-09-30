@@ -205,6 +205,7 @@
         <item name="android:scaleType">fitCenter</item>
         <item name="android:importantForAccessibility">no</item>
         <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:tint">@color/navigationDrawerTextDark</item>
         <item name="android:textColor">@color/defaultTextDark</item>
     </style>
 

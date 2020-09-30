@@ -111,6 +111,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/createFileFolderFabContentDesc"
         app:elevation="4dp"
+        android:tint="@color/white"
         app:srcCompat="@drawable/ic_add" />
 
 </RelativeLayout>

@@ -180,7 +180,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_courses"/>
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/ic_courses" />
 
                 <TextView
                     style="@style/TextFont.Medium"

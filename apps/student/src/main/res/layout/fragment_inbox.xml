@@ -179,6 +179,7 @@
             android:layout_margin="16dp"
             android:contentDescription="@string/addMessage"
             app:elevation="4dp"
+            android:tint="@color/white"
             app:srcCompat="@drawable/ic_add"/>
 
     </FrameLayout>
