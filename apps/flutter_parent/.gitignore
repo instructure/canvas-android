@@ -1,6 +1,5 @@
 # Private data
 key.properties
-fabric.properties
 google-services.json
 lib/network/utils/private_consts.dart
 

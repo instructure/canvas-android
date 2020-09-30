@@ -28,7 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.cardview.widget.CardView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.DP
@@ -92,7 +92,7 @@ class FloatingRecordingView @JvmOverloads constructor(
             recordingView.dragView.addView(videoView)
         } catch (e: InflateException) {
             hasVideoError = true
-            if (BuildConfig.DEBUG) e.printStackTrace() else Crashlytics.logException(e)
+            if (BuildConfig.DEBUG) e.printStackTrace() else FirebaseCrashlytics.getInstance().recordException(e)
         }
 
         setupFloatingAction()

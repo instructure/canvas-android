@@ -18,7 +18,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.Logger
@@ -97,7 +97,7 @@ fun WebView.loadHtmlWithIframes(context: Context, isTablet: Boolean, html: Strin
 
             loadHtml(CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML), contentDescription)
         } catch {
-            Crashlytics.logException(it)
+            FirebaseCrashlytics.getInstance().recordException(it)
             Logger.e("loadHtmlWithIframe caught an exception: " + it.message)
         }
     } else {

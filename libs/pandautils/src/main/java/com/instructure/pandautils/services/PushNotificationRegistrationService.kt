@@ -17,9 +17,9 @@
 package com.instructure.pandautils.services
 
 import android.content.Context
-import com.crashlytics.android.Crashlytics
 import com.firebase.jobdispatcher.*
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.iid.FirebaseInstanceId
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
@@ -81,7 +81,7 @@ class PushNotificationRegistrationService : JobService() {
     }
 
     private fun handleError(e: Throwable, job: JobParameters, firebaseInstance: FirebaseInstanceId?, responseBody: Response<ResponseBody>?, token: String?) {
-        Crashlytics.logException(YUNoWorkPushNotifsException("PushNotificationRegistrationService : onStartJob() - Error registering push notifications.\n" +
+        FirebaseCrashlytics.getInstance().recordException(YUNoWorkPushNotifsException("PushNotificationRegistrationService : onStartJob() - Error registering push notifications.\n" +
             "Error message: ${e.message}\n" +
             "InstanceId: $firebaseInstance\n\t" +
                 "Id: ${firebaseInstance?.id}\n\t" +

@@ -14,6 +14,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/student_flutter_app.dart';
 import 'package:flutter_student_embed/utils/crash_utils.dart';
@@ -24,7 +25,7 @@ import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'network/utils/api_prefs.dart';
 
 void main() async {
-  runZoned<Future<void>>(() async {
+  runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     NativeComm.init();
 
@@ -36,5 +37,5 @@ void main() async {
     setupLocator();
 
     runApp(StudentFlutterApp());
-  }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
+  }, FirebaseCrashlytics.instance.recordError);
 }

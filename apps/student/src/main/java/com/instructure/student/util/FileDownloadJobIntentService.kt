@@ -29,7 +29,7 @@ import android.os.Environment
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.FileFolder
@@ -85,7 +85,7 @@ class FileDownloadJobIntentService : JobIntentService() {
         when (resultStatus) {
             is DownloadFailed -> {
                 // We'll want to know if download streams are failing to open
-                Crashlytics.logException(Throwable("The file stream failed to open when downloading a file"))
+                FirebaseCrashlytics.getInstance().recordException(Throwable("The file stream failed to open when downloading a file"))
                 notification.setContentText(getString(R.string.downloadFailed))
             }
             is BadFileUrl, is BadFileName -> notification.setContentText(getString(R.string.downloadFailed))

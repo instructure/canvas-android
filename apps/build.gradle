@@ -23,7 +23,6 @@ buildscript {
         google()
         mavenCentral()
         maven { url "https://www.jitpack.io" }
-        maven { url 'https://maven.fabric.io/public' }
         jcenter()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://dl.bintray.com/instructure/maven" }
@@ -34,7 +33,7 @@ buildscript {
         classpath Plugins.APOLLO
         classpath Plugins.GOOGLE_SERVICES
         classpath Plugins.KOTLIN
-        classpath Plugins.FABRIC
+        classpath Plugins.FIREBASE_CRASHLYTICS
         classpath Plugins.BUILD_SCAN
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.SQLDELIGHT

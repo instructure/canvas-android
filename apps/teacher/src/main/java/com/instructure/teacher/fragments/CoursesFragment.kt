@@ -91,6 +91,10 @@ class CoursesFragment : BaseSyncFragment<Course, CoursesPresenter, CoursesView, 
     override fun onPresenterPrepared(presenter: CoursesPresenter) {}
 
     override fun onReadySetGo(presenter: CoursesPresenter) {
+        crashButton.setOnClickListener {
+            throw RuntimeException("Test Crash") // Force a crash
+        }
+
         swipeRefreshLayout.setOnRefreshListener {
             if (!Utils.isNetworkAvailable(requireContext())) {
                 swipeRefreshLayout.isRefreshing = false
