@@ -23,6 +23,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.espresso.page.BasePage
@@ -63,6 +64,7 @@ open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     fun pressButton(locatorType : Locator, locatorValue: String) {
         onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
                 .withElement(findElement(locatorType, locatorValue))
+                .perform(webScrollIntoView())
                 .perform(webClick())
     }
 
