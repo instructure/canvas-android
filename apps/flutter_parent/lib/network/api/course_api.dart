@@ -38,7 +38,7 @@ class CourseApi {
         'sections',
         'observed_users',
       ],
-      'state': ['completed', 'available']
+      'enrollment_state': 'active',
     };
     return fetchList(dio.get('courses', queryParameters: params), depaginateWith: dio);
   }
