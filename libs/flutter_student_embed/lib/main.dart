@@ -14,6 +14,7 @@
 
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/student_flutter_app.dart';
@@ -25,8 +26,10 @@ import 'package:flutter_student_embed/utils/service_locator.dart';
 import 'network/utils/api_prefs.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
     NativeComm.init();
 
     await Future.wait([

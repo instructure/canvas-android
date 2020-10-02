@@ -16,6 +16,7 @@ import 'dart:convert';
 
 import 'package:built_value/built_value.dart';
 import 'package:collection/collection.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -85,6 +86,11 @@ class CalendarScreenState extends State<CalendarScreen> {
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           ),
           actions: <Widget>[
+            RaisedButton(
+                onPressed: () {
+                  FirebaseCrashlytics.instance.crash();
+                },
+                child: Text('CRASH ME BABY')),
             if (_showTodayButton)
               Tooltip(
                 message: L10n(context).gotoTodayButtonLabel,

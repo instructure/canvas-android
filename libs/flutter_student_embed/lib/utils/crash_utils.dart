@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -21,11 +20,12 @@ import 'package:flutter_student_embed/screens/crash_screen.dart';
 
 class CrashUtils {
   static Future<void> init() async {
-    await Firebase.initializeApp();
     // Set up error handling
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-    await FirebaseCrashlytics.instance
-        .setUserIdentifier('domain: ${ApiPrefs.getDomain() ?? 'null'} user_id: ${ApiPrefs.getUser()?.id ?? 'null'}');
+    FlutterError.onError = (error) async {
+      await FirebaseCrashlytics.instance
+          .setUserIdentifier('domain: ${ApiPrefs.getDomain() ?? 'null'} user_id: ${ApiPrefs.getUser()?.id ?? 'null'}');
+      FirebaseCrashlytics.instance.recordFlutterError(error);
+    };
 
     if (kReleaseMode) {
       await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
@@ -37,6 +37,7 @@ class CrashUtils {
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
       if (kReleaseMode) {
+        FirebaseCrashlytics.instance.recordFlutterError(error);
         FirebaseCrashlytics.instance.log('Widget Crash');
       } else {
         FlutterError.dumpErrorToConsole(error);
