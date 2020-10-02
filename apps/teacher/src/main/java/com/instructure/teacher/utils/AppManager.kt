@@ -55,8 +55,11 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
         RemoteConfigUtils.initialize()
 
         if (!ApiPrefs.domain.endsWith(com.instructure.loginapi.login.BuildConfig.ANONYMOUS_SCHOOL_DOMAIN)) {
-            // TODO - MIGHT need to disable/initialize crashlytics manually here
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            if (BuildConfig.DEBUG) {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            } else {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            }
         }
 
         ColorKeeper.defaultColor = getColorCompat(R.color.defaultPrimary)

@@ -70,9 +70,6 @@ android {
         /* Add private data */
         PrivateData.merge(project, "student")
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
-        addManifestPlaceholders([
-                crashlyticsApiKey: "$crashlyticsApiKey"
-        ])
         buildConfigField "String", "NEWRELIC_APP_TOKEN", "\"$newRelicAppToken\""
 
         testBuildType = "debug"
@@ -119,7 +116,6 @@ android {
             shrinkResources false
             buildConfigField 'boolean', 'IS_DEBUG', 'true'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            ext.enableCrashlytics = false
             pseudoLocalesEnabled true
 
             firebaseCrashlytics {

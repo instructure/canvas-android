@@ -72,7 +72,6 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
 
         initPSPDFKit()
 
-        // TODO - might need some manual crashlytics stuff here still...
         if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         } else {

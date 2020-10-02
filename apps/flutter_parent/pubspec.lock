@@ -322,21 +322,35 @@ packages:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.5"
+    version: "0.5.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.0"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.1+2"
+    version: "0.2.0"
+  firebase_crashlytics:
+    dependency: "direct main"
+    description:
+      name: firebase_crashlytics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
+  firebase_crashlytics_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_crashlytics_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   firebase_remote_config:
     dependency: "direct main"
     description:
@@ -370,13 +384,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.1"
-  flutter_crashlytics:
-    dependency: "direct main"
-    description:
-      name: flutter_crashlytics
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0"
   flutter_downloader:
     dependency: "direct main"
     description:
