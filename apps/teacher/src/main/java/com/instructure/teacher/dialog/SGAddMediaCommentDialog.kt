@@ -71,7 +71,7 @@ class SGAddMediaCommentDialog : AppCompatDialogFragment() {
         return dialog
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         EventBus.getDefault().post(MediaCommentDialogClosedEvent())
     }

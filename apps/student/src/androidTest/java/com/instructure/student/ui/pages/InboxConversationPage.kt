@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.MenuPopupWindow
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -36,6 +37,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
@@ -50,6 +52,7 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
+import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
@@ -79,17 +82,17 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun markUnread() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Mark as Unread")).click()
     }
 
     fun archive() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Archive")).click()
     }
 
     fun deleteConversation() {
-        onView(withContentDescription("More options")).click()
+        onView(withContentDescription(stringContainsTextCaseInsensitive("More options"))).click()
         onView(withText("Delete")).click()
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
                 .click() // Confirmation click
@@ -107,6 +110,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         )
 
         onView(targetMatcher).click()
+        // "Delete" might be off the page, esp. in landscape mode on small screens
+        onView(isAssignableFrom(MenuPopupWindow.MenuDropDownListView::class.java)).swipeUp()
         onView(withText("Delete")).click()
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
                 .click() // Confirmation click

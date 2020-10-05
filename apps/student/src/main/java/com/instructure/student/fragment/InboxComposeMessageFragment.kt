@@ -56,7 +56,7 @@ import java.util.ArrayList
 class InboxComposeMessageFragment : ParentFragment() {
 
     private val conversation by NullableParcelableArg<Conversation>(key = Const.CONVERSATION)
-    private val participants by ParcelableArrayListArg<BasicUser>(key = PARTICIPANTS)
+    private val participants by ParcelableArrayListArg<Recipient>(key = PARTICIPANTS)
     private val includedMessageIds by LongArrayArg(key = Const.MESSAGE)
     private val isReply by BooleanArg(key = IS_REPLY)
     private val currentMessage by NullableParcelableArg<Message>(key = Const.MESSAGE_TO_USER)
@@ -156,9 +156,7 @@ class InboxComposeMessageFragment : ParentFragment() {
                                 ?: conversation?.audience ?: emptyList())
                     }
                 } else if (participants.isNotEmpty()) {
-                    addInitialRecipients(participants.map {
-                        it.id
-                    })
+                    addRecipients(participants)
                 }
                 chips.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
@@ -395,22 +393,17 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     private fun addInitialRecipients(initialRecipientIds: List<Long>) {
-        val existing = chips.recipients
-        val myId = ApiPrefs.user?.id ?: 0
+        val myId = ApiPrefs.user?.id?.toString().orEmpty()
         val isMonologue = initialRecipientIds.size == 1
-        val recipients = initialRecipientIds.mapNotNull { id ->
-            val stringId = id.toString()
-            val participant = participants.find {
-                // Map IDs to participants (excluding the current user if not monologue)
-                it.id == id && (isMonologue || it.id != myId) && existing.none { user -> user.stringId == stringId }
-            } ?: return@mapNotNull null
-            Recipient(
-                stringId = participant.id.toString(),
-                name = participant.name,
-                pronouns = participant.pronouns,
-                avatarURL = participant.avatarUrl
-            )
-        }
+        val recipients = initialRecipientIds
+            .mapNotNull { longId ->
+                val id = longId.toString()
+                participants.find {
+                    // Map IDs to participants (excluding the current user if not monologue)
+                    it.stringId == id && (isMonologue || it.stringId != myId)
+                }
+            }
+            .minus(chips.recipients)
         chips.addRecipients(recipients)
     }
 
@@ -457,7 +450,7 @@ class InboxComposeMessageFragment : ParentFragment() {
         fun makeRoute(
             isReply: Boolean,
             conversation: Conversation,
-            participants: List<BasicUser>,
+            participants: List<Recipient>,
             includedMessageIds: LongArray,
             currentMessage: Message?
         ): Route {
@@ -475,7 +468,7 @@ class InboxComposeMessageFragment : ParentFragment() {
 
         fun makeRoute(
             canvasContext: CanvasContext,
-            participants: ArrayList<BasicUser>
+            participants: ArrayList<Recipient>
         ): Route {
             val bundle = Bundle().apply {
                 putParcelableArrayList(PARTICIPANTS, participants)

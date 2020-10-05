@@ -119,6 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
             app:itemIconTint="@color/canvasDefaultTabUnselected"
             app:itemTextColor="@color/canvasDefaultTabUnselected"
             app:menu="@menu/bottom_navigation_items"/>

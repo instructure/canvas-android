@@ -11,6 +11,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'package:device_info/device_info.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -50,6 +51,8 @@ class AnalyticsEventConstants {
   static const TOKEN_REFRESH_FAILURE = 'token_refresh_failure';
   static const TOKEN_REFRESH_FAILURE_NO_SECRET = 'token_refresh_failure_no_secret';
   static const TOKEN_REFRESH_FAILURE_TOKEN_NOT_VALID = 'token_refresh_failure_token_not_valid';
+  static const USER_PROPERTY_BUILD_TYPE = 'build_type';
+  static const USER_PROPERTY_OS_VERSION = 'os_version';
   static const VIEWED_OLD_REMINDER_MESSAGE = 'viewed_old_reminder_message';
 }
 
@@ -115,5 +118,18 @@ class Analytics {
     if (DebugFlags.isDebug) {
       print(message);
     }
+  }
+
+  /// Sets environment properties such as the build type and SDK int. This only needs to be called once per session.
+  void setEnvironmentProperties() async {
+    var androidInfo = await DeviceInfoPlugin().androidInfo;
+    await _analytics.setUserProperty(
+      name: AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE,
+      value: kReleaseMode ? 'release' : 'debug',
+    );
+    await _analytics.setUserProperty(
+      name: AnalyticsEventConstants.USER_PROPERTY_OS_VERSION,
+      value: androidInfo.version.sdkInt.toString(),
+    );
   }
 }

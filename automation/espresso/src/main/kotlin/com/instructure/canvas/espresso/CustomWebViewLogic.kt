@@ -35,7 +35,7 @@ fun<E> Web.WebInteraction<E>.withElementRepeat(element: Atom<ElementReference>, 
         try {
             return this.withElement(element)
         }
-        catch(re: RuntimeException) {
+        catch(t: Throwable) {
             SystemClock.sleep(1000)
         }
     }

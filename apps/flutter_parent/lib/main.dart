@@ -18,6 +18,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -50,6 +51,9 @@ void main() async {
     NotificationUtil.init(_appCompleter);
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+
+    // Set environment properties for analytics. No need to await this.
+    locator<Analytics>().setEnvironmentProperties();
 
     runApp(ParentApp(_appCompleter));
   }, FirebaseCrashlytics.instance.recordError);

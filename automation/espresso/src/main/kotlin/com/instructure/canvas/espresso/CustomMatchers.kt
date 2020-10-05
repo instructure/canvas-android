@@ -46,7 +46,26 @@ fun containsTextCaseInsensitive(textToMatch: String) : Matcher<View> {
         }
 
         override fun describeTo(description: Description?) {
-            description?.appendText("check to see if TextView contains $textToMatch, case insensitive")
+            description?.appendText("check to see if TextView contains \"$textToMatch\", case insensitive")
+        }
+    }
+}
+
+// Similar to containsTextCaseInsensitive(), but operates on a String rather than a TextView.
+// Originally created to combat situations where a content description contains garbage characters.
+fun stringContainsTextCaseInsensitive(textToMatch: String) : Matcher<String> {
+    return object: BaseMatcher<String>() {
+        override fun matches(item: Any?): Boolean {
+            when(item) {
+                is String -> {
+                    return item.contains(textToMatch, ignoreCase = true)
+                }
+            }
+            return false
+        }
+
+        override fun describeTo(description: Description?) {
+            description?.appendText("check to see if String contains \"$textToMatch\", case insensitive")
         }
     }
 }

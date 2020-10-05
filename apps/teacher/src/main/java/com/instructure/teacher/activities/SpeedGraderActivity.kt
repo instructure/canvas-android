@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.TypedValue
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -94,7 +95,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
 
     // This is here to prevent transaction too large exceptions, possibly caused by pdfFragment's saving.
     @SuppressLint("MissingSuperCall")
-    override fun onSaveInstanceState(outState: Bundle?) {}
+    override fun onSaveInstanceState(outState: Bundle) {}
 
     override fun getPresenterFactory() = SpeedGraderPresenterFactory(
         courseId,

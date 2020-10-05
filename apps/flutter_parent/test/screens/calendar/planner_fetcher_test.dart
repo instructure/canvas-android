@@ -405,4 +405,39 @@ void main() {
     expect(fetcher.courseNameMap[observeeId], isNotNull);
     expect(fetcher.courseNameMap[observeeId][course.id], course.name);
   });
+
+  test('fetchPlannerItems excludes hidden items', () async {
+    var observeeId = "observee_123";
+    var courseId = "456";
+    var courseName = "Course 456";
+    var now = DateTime.now();
+
+    var fetcher = PlannerFetcher(userId: "", userDomain: "", observeeId: observeeId);
+    fetcher.courseNameMap[observeeId] = {};
+    fetcher.courseNameMap[observeeId][courseId] = courseName;
+
+    var item = ScheduleItem((b) => b
+      ..title = "Item"
+      ..contextCode = "course_$courseId"
+      ..startAt = now);
+
+    var hiddenItem = item.rebuild((b) => b
+      ..title = 'Hidden Item'
+      ..isHidden = true);
+
+    when(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeAssignment,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    ).thenAnswer((realInvocation) async => []);
+
+    when(
+      api.getUserCalendarItems(any, any, any, ScheduleItem.apiTypeCalendar,
+          contexts: anyNamed('contexts'), forceRefresh: anyNamed('forceRefresh')),
+    ).thenAnswer((realInvocation) async => [item, hiddenItem]);
+
+    var expected = [item.toPlannerItem(courseName)];
+    var actual = await fetcher.fetchPlannerItems(now, now, {}, false);
+
+    expect(actual, expected);
+  });
 }
