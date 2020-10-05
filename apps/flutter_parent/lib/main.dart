@@ -16,6 +16,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_parent/network/utils/analytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/parent_app.dart';
 import 'package:flutter_parent/router/panda_router.dart';
@@ -47,6 +48,9 @@ void main() {
     NotificationUtil.init(_appCompleter);
 
     await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+
+    // Set environment properties for analytics. No need to await this.
+    locator<Analytics>().setEnvironmentProperties();
 
     runApp(ParentApp(_appCompleter));
   }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
