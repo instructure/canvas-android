@@ -92,10 +92,6 @@ class DashboardFragment : ParentFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        crashButton.setOnClickListener {
-            throw RuntimeException("Test Crash") // Force a crash
-        }
-
         recyclerAdapter = DashboardRecyclerAdapter(requireActivity(), object : CourseAdapterToFragmentCallback {
             override fun onHandleCourseInvitation(course: Course, accepted: Boolean) {
                 swipeRefreshLayout?.isRefreshing = true

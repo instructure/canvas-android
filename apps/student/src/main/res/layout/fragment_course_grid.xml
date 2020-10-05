@@ -34,17 +34,10 @@
         app:theme="@style/ToolBarStyle"
         tools:targetApi="lollipop" />
 
-    <Button
-        android:id="@+id/crashButton"
-        android:text="CRASH ME BABY 1 MORE TIME"
-        android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/crashButton">
+        android:layout_below="@+id/toolbar">
 
         <include layout="@layout/panda_recycler_refresh_layout" />
 
