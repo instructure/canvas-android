@@ -243,6 +243,20 @@ class FileListFragment : BaseSyncFragment<
                 }
             }
         }
+
+        mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0 && addFab.isShown) {
+                        if (fabOpen) {
+                            animateFabs()
+                        }
+                        addFab.hide()
+                    } else if (dy < 0 && !addFab.isShown) {
+                        addFab.show()
+                    }
+            }
+        })
     }
 
     private fun setupToolbar() {
