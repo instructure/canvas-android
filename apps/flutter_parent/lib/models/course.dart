@@ -168,49 +168,9 @@ abstract class Course implements Built<Course, CourseBuilder> {
 
   String contextFilterId() => 'course_${this.id}';
 
-  /// Verifies that the course should be displayed within the parent app
-  bool isValidForDate() {
-    if (accessRestrictedByDate) return false;
-
-    if (workflowState == 'completed') return false;
-
-    final now = DateTime.now();
-    final isWithinCourseDates = _isWithinDates(startAt, endAt, now);
-
-    if (restrictEnrollmentsToCourseDates) {
-      return isWithinCourseDates;
-    } else {
-      final isWithinTermDates = _isWithinDates(term?.startAt, term?.endAt, now);
-      var isWithinAnySection;
-      if (sections == null || sections.isEmpty)
-        isWithinAnySection = true;
-      else
-        isWithinAnySection = sections.any((section) => _isWithinDates(section.startAt, section.endAt, now));
-
-      return isWithinCourseDates && isWithinTermDates && isWithinAnySection;
-    }
-  }
-
-  /// Filters enrollments by those associated with the currently selected user and isValidForParent
+  /// Filters enrollments by those associated with the currently selected user
   bool isValidForCurrentStudent(String currentStudentId) {
-    final hasValidEnrollments = enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
-    return hasValidEnrollments && isValidForDate();
-  }
-
-  bool _isWithinDates(DateTime startAt, DateTime endAt, DateTime now) {
-    bool isValidEndAt, isValidStartAt;
-    // If the dates are null, we have to show it
-    if (startAt == null)
-      isValidStartAt = true;
-    else
-      isValidStartAt = now.isAfter(startAt);
-
-    if (endAt == null)
-      isValidEndAt = true;
-    else
-      isValidEndAt = now.isBefore(endAt);
-
-    return isValidEndAt && isValidStartAt;
+    return enrollments?.any((enrollment) => enrollment.userId == currentStudentId) ?? false;
   }
 }
 

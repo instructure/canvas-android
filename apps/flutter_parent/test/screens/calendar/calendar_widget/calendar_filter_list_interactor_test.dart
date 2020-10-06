@@ -70,31 +70,4 @@ void main() {
 
     expect(actualCourses, expectedCourses);
   });
-
-  test('getCourses filters by valid course dates', () async {
-    final apiCourses = [
-      Course((c) => c
-        ..accessRestrictedByDate = true
-        ..enrollments = ListBuilder([
-          Enrollment((e) => e
-            ..userId = _user.id
-            ..enrollmentState = '')
-        ])),
-      Course((c) => c
-        ..accessRestrictedByDate = false
-        ..endAt = DateTime.now().add(Duration(days: 10))
-        ..enrollments = ListBuilder([
-          Enrollment((e) => e
-            ..userId = _user.id
-            ..enrollmentState = '')
-        ]))
-    ];
-    final expectedCourses = [apiCourses[1]];
-
-    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => apiCourses);
-
-    final actualCourses = await CalendarFilterListInteractor().getCoursesForSelectedStudent(isRefresh: true);
-
-    expect(actualCourses, expectedCourses);
-  });
 }
