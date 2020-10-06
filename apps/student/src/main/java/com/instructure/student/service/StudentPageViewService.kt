@@ -16,7 +16,7 @@
  */
 package com.instructure.student.service
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.student.BuildConfig
 import com.instructure.canvasapi2.utils.pageview.PageViewUploadService
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
@@ -31,7 +31,8 @@ class StudentPageViewService : PageViewUploadService() {
 
     override val appKey = pandataAppKey
 
-    override fun onException(e: Throwable) = Crashlytics.logException(e)
+    override fun onException(e: Throwable) = FirebaseCrashlytics.getInstance().recordException(e)
+
 
     companion object {
         val pandataAppKey = PandataInfo.AppKey(

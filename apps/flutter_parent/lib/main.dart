@@ -14,6 +14,8 @@
 
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
@@ -28,19 +30,20 @@ import 'package:flutter_parent/utils/old_app_migration.dart';
 import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
-void main() {
-  runZoned<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
+  setupLocator();
+  runZonedGuarded<Future<void>>(() async {
     await Future.wait([
       ApiPrefs.init(),
       ThemePrefs.init(),
+      RemoteConfigUtils.initialize(),
       CrashUtils.init(),
       FlutterDownloader.initialize(),
-      DbUtil.init(),
-      RemoteConfigUtils.initialize()
+      DbUtil.init()
     ]);
-    setupLocator();
     PandaRouter.init();
 
     // This completer waits for the app to be built before allowing the notificationUtil to handle notifications
@@ -53,5 +56,5 @@ void main() {
     locator<Analytics>().setEnvironmentProperties();
 
     runApp(ParentApp(_appCompleter));
-  }, onError: (error, stacktrace) => CrashUtils.reportCrash(error, stacktrace));
+  }, FirebaseCrashlytics.instance.recordError);
 }

@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 
 def coverageEnabled = project.hasProperty('coverage')
@@ -64,9 +64,6 @@ android {
 
         /* Add private data */
         PrivateData.merge(project, "teacher")
-        addManifestPlaceholders([
-                fabricApiKey:"$fabricApiKey"
-        ])
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
     }
 
@@ -102,9 +99,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             minifyEnabled false
             shrinkResources false
-            // Disable fabric build ID generation for debug builds
-            ext.enableCrashlytics = false
             pseudoLocalesEnabled true
+
+            firebaseCrashlytics {
+                // If you don't need crash reporting for your debug build,
+                // you can speed up your build by disabling mapping file uploading.
+                mappingFileUploadEnabled false
+            }
         }
         release {
             minifyEnabled true
@@ -181,7 +182,6 @@ android {
 
 repositories {
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
 }
 
@@ -207,11 +207,11 @@ dependencies {
     implementation Libs.MOBIUS_ANDROID
     implementation Libs.MOBIUS_EXTRAS
 
-    /* Crashlytics */
-    implementation(Libs.CRASHLYTICS) {
+    implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true
     }
-    implementation('com.crashlytics.sdk.android:answers:1.3.12@aar') {
+
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 

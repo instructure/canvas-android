@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
@@ -148,6 +149,7 @@ void setupLocator() {
   locator.registerLazySingleton<BarcodeScanVeneer>(() => BarcodeScanVeneer());
   locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
+  locator.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
   locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   locator.registerLazySingleton<UrlLauncher>(() => UrlLauncher());

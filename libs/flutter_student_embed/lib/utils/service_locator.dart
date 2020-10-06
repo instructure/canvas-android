@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_student_embed/network/api/course_api.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
 import 'package:flutter_student_embed/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_interactor.dart';
@@ -40,4 +41,5 @@ void setupLocator() {
 
   // Other
   locator.registerLazySingleton<QuickNav>(() => QuickNav());
+  locator.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
 }

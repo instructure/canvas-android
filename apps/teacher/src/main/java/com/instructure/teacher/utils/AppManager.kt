@@ -19,9 +19,8 @@ package com.instructure.teacher.utils
 import android.content.IntentFilter
 import android.os.Build
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -36,7 +35,6 @@ import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
-import io.fabric.sdk.android.Fabric
 
 class AppManager : com.instructure.canvasapi2.AppManager() {
 
@@ -57,10 +55,11 @@ class AppManager : com.instructure.canvasapi2.AppManager() {
         RemoteConfigUtils.initialize()
 
         if (!ApiPrefs.domain.endsWith(com.instructure.loginapi.login.BuildConfig.ANONYMOUS_SCHOOL_DOMAIN)) {
-            val crashlytics = Crashlytics.Builder()
-                    .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                    .build()
-            Fabric.with(this, crashlytics)
+            if (BuildConfig.DEBUG) {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            } else {
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+            }
         }
 
         ColorKeeper.defaultColor = getColorCompat(R.color.defaultPrimary)

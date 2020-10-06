@@ -22,7 +22,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ThemeManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -186,14 +186,13 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 // Set logged user details
+                val crashlytics = FirebaseCrashlytics.getInstance();
                 if (Logger.canLogUserDetails()) {
                     Logger.d("User detail logging allowed. Setting values.")
-                    Crashlytics.setUserIdentifier(ApiPrefs.user?.id.toString())
-                    Crashlytics.setString("domain", ApiPrefs.domain)
+                    crashlytics.setUserId("UserID: ${ApiPrefs.user?.id.toString()} User Domain: ${ApiPrefs.domain}")
                 } else {
                     Logger.d("User detail logging disallowed. Clearing values.")
-                    Crashlytics.setUserIdentifier(null)
-                    Crashlytics.setString("domain", null)
+                    crashlytics.setUserId("")
                 }
 
                 startActivity(InitActivity.createIntent(this@SplashActivity, intent?.extras))

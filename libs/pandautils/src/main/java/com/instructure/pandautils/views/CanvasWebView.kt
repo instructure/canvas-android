@@ -53,7 +53,7 @@ import androidx.core.content.FileProvider
 import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.APIHelper.simplifyHTML
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
@@ -408,7 +408,7 @@ class CanvasWebView @JvmOverloads constructor(
                     try {
                         contentTypeGuess = URLConnection.guessContentTypeFromName(url)
                     } catch (e: StringIndexOutOfBoundsException) {
-                        Crashlytics.logException(MalformedURLException("Unable to parse content type of url: $url"))
+                        FirebaseCrashlytics.getInstance().recordException(MalformedURLException("Unable to parse content type of url: $url"))
                     }
                     // null when type can't be determined, launchInternalWebView anyway
                     // When contentType has 'application', it typically means it's a pdf or some type of document that needs to be downloaded,

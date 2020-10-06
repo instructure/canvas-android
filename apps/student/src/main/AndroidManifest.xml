@@ -363,10 +363,6 @@
 
         <!-- End of Widget Items -->
 
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="${crashlyticsApiKey}"/>
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"

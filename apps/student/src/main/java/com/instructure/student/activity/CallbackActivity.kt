@@ -18,7 +18,7 @@
 package com.instructure.student.activity
 
 import android.os.Bundle
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.LaunchDefinitionsManager
 import com.instructure.canvasapi2.managers.ThemeManager
@@ -60,6 +60,8 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
 
     private fun loadInitialData() {
         loadInitialDataJob = tryWeave {
+            val crashlytics = FirebaseCrashlytics.getInstance();
+
             // Determine if user can masquerade
             if (ApiPrefs.canBecomeUser == null) {
                 if (ApiPrefs.domain.startsWith("siteadmin", true)) {
@@ -114,12 +116,10 @@ abstract class CallbackActivity : ParentActivity(), InboxFragment.OnUnreadCountI
                 // Set logged user details
                 if (Logger.canLogUserDetails()) {
                     Logger.d("User detail logging allowed. Setting values.")
-                    Crashlytics.setUserIdentifier(ApiPrefs.user?.id.toString())
-                    Crashlytics.setUserName(ApiPrefs.domain)
+                    crashlytics.setUserId("UserID: ${ApiPrefs.user?.id.toString()} User Domain: ${ApiPrefs.domain}")
                 } else {
                     Logger.d("User detail logging disallowed. Clearing values.")
-                    Crashlytics.setUserIdentifier("")
-                    Crashlytics.setUserName("----")
+                    crashlytics.setUserId("")
                 }
             }
 

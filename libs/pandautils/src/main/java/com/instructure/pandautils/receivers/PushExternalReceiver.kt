@@ -36,15 +36,13 @@ abstract class PushExternalReceiver : FirebaseMessagingService() {
     abstract fun getAppName(context: Context): String
     abstract fun getStartingActivityClass(): Class<out Activity>
 
-    override fun onNewToken(token: String?) {
-        if (token == null) return
-
+    override fun onNewToken(token: String) {
         PushNotificationRegistrationService.scheduleJob(applicationContext, ApiPrefs.isMasquerading)
     }
 
-    override fun onMessageReceived(message: RemoteMessage?) {
+    override fun onMessageReceived(message: RemoteMessage) {
         Logger.d("PushExternalReceiver onReceive()")
-        val data = message?.data ?: return
+        val data = message.data
 
         val from = message.from ?: ""
 

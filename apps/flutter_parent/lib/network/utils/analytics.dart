@@ -13,8 +13,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import 'package:device_info/device_info.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
 
 /// Event names
@@ -112,7 +112,7 @@ class Analytics {
   /// If isDebug, it will also print to the console
   void logMessage(String message) {
     if (kReleaseMode) {
-      FlutterCrashlytics().log(message);
+      FirebaseCrashlytics.instance.log(message);
     }
 
     if (DebugFlags.isDebug) {

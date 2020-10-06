@@ -20,6 +20,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -124,6 +125,8 @@ class MockErrorReportApi extends Mock implements ErrorReportApi {}
 class MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
 
 class MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
+
+class MockFirebase extends Mock implements FirebaseCrashlytics {}
 
 class MockHttpClient extends Mock implements HttpClient {}
 

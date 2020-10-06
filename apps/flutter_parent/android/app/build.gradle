@@ -23,16 +23,8 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
-// Without the following setup, a native crash like SIGSEGV will appear as a blank stacktrace in Crashlytics
-crashlytics {
-    enableNdk true
-    androidNdkOut "../../debugSymbols"
-    androidNdkLibsOut "../../build/app/intermediates/transforms/stripDebugSymbol/release/0/lib"
-}
 
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
@@ -63,9 +55,6 @@ android {
         //noinspection GroovyAccessibility
         PrivateData.merge(project, "parent")
         PrivateData.merge(project, "dataseeding-flutter")
-        addManifestPlaceholders([
-                fabricApiKey:"$fabricApiKey"
-        ])
     }
 
     signingConfigs {
@@ -105,9 +94,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.squareup.okhttp3:okhttp:3.13.1"
     implementation 'org.jsoup:jsoup:1.11.3'
+    implementation 'com.google.gms:google-services:4.3.3'
 }
+
+apply plugin: 'com.google.firebase.crashlytics'
 
 // Comment out this line if the reporting logic starts going wonky.
 gradle.addListener new TimingsListener(project)
-
-apply plugin: 'com.google.gms.google-services'

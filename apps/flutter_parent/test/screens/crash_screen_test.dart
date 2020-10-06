@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
@@ -23,14 +24,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
+import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  CrashUtils.init();
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<FirebaseCrashlytics>(() => MockFirebase());
+  });
+
+  setUp(() {
+    CrashUtils.init();
+  });
 
   final l10n = AppLocalizations();
-
-  // Setup locator with defaults
-  setupTestLocator((locator) {});
 
   testWidgetsWithAccessibilityChecks('Displays and closes crash screen when widget crashes', (tester) async {
     await tester.pumpWidget(TestApp(_CrashTestWidget()));

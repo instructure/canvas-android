@@ -118,8 +118,11 @@ dependencies {
         exclude group: "androidx.exifinterface"
     }
 
-    /* Crashlytics */
-    implementation(Libs.CRASHLYTICS) {
+    implementation (Libs.FIREBASE_ANALYTICS) {
+        transitive = true
+    }
+
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 

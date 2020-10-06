@@ -16,7 +16,7 @@
  */
 package com.instructure.student.mobius.common
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.student.BuildConfig
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -52,7 +52,7 @@ class MobiusExceptionLogger<MODEL, EVENT, EFFECT> : AndroidLogger<MODEL, EVENT, 
             // Must throw as a separate message, otherwise Mobius might consume the exception
             GlobalScope.launch(Dispatchers.Main) { throw exception }
         } else {
-            Crashlytics.logException(exception)
+            FirebaseCrashlytics.getInstance().recordException(exception)
         }
     }
 
@@ -62,7 +62,7 @@ class MobiusExceptionLogger<MODEL, EVENT, EFFECT> : AndroidLogger<MODEL, EVENT, 
             // Must throw as a separate message, otherwise Mobius might consume the exception
             GlobalScope.launch(Dispatchers.Main) { throw exception }
         } else {
-            Crashlytics.logException(exception)
+            FirebaseCrashlytics.getInstance().recordException(exception)
         }
     }
 }
