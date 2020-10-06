@@ -34,6 +34,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  setupLocator();
   runZonedGuarded<Future<void>>(() async {
     await Future.wait([
       ApiPrefs.init(),
@@ -43,7 +44,6 @@ void main() async {
       FlutterDownloader.initialize(),
       DbUtil.init()
     ]);
-    setupLocator();
     PandaRouter.init();
 
     // This completer waits for the app to be built before allowing the notificationUtil to handle notifications
