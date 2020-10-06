@@ -19,15 +19,10 @@
 <resources>
     <!-- MANUALLY MANAGED (Changes value on orientation change) -->
 
-    <dimen name="calendar_vertical_grid_spacing">32dp</dimen>
-    <dimen name="calendar_text_size">16sp</dimen>
-
     <dimen name="floatingCardPandaVerticalPadding">64dp</dimen>
-    <dimen name="floatingCardVerticalPadding">64dp</dimen>
-    <dimen name="floatingCardHorizontalPadding">64dp</dimen>
+
     <!-- END MANUALLY MANAGED -->
 
     <dimen name="card_header_margins">32dp</dimen>
-    <dimen name="card_header_checkbox_margins">42dp</dimen>
 
 </resources>

@@ -19,7 +19,5 @@
 <resources>
     <!-- MANUALLY MANAGED (Changes value on orientation change) -->
     <dimen name="floatingCardPandaVerticalPadding">32dp</dimen>
-    <dimen name="floatingCardVerticalPadding">32dp</dimen>
-    <dimen name="floatingCardHorizontalPadding">32dp</dimen>
     <!-- END MANUALLY MANAGED -->
 </resources>

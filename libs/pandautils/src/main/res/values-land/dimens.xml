@@ -17,11 +17,6 @@
 
 <resources>
 
-    <dimen name="floatingCardVerticalPadding">16dp</dimen>
-    <dimen name="floatingCardHorizontalPadding">0dp</dimen>
-
-    <dimen name="cal_title_text_size">12sp</dimen>
-    <dimen name="cal_message_text_size">8sp</dimen>
     <dimen name="title_text_size">16sp</dimen>
     <dimen name="message_text_size">12sp</dimen>
     <item name="image_top" type="dimen">.25</item>
