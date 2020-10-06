@@ -16,24 +16,28 @@
  */
 package com.instructure.canvas.espresso
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
+import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
+import androidx.test.rule.GrantPermissionRule
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
 import com.instructure.espresso.AccessibilityChecker
-import com.instructure.espresso.BuildConfig
+import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
-import com.instructure.espresso.page.InstructureTest
+import com.instructure.espresso.UiControllerSingleton
+import com.instructure.espresso.page.InstructureTestingContract
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
 import org.hamcrest.Matchers
@@ -42,6 +46,10 @@ import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.json.JSONObject
 import org.junit.Before
+import org.junit.ClassRule
+import org.junit.Rule
+import org.junit.rules.RuleChain
+import org.junit.rules.TestRule
 import java.io.BufferedOutputStream
 import java.io.BufferedReader
 import java.io.File
@@ -52,13 +60,31 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 // InstructureTest wrapper for Canvas code
-abstract class CanvasTest : InstructureTest() {
+abstract class CanvasTest : InstructureTestingContract {
+
+    abstract val activityRule: InstructureActivityTestRule<out Activity>
+
+    abstract val isTesting: Boolean
+
+    @Rule
+    override fun chain(): TestRule {
+        return RuleChain
+                .outerRule(ScreenshotTestRule())
+                .around(activityRule)
+    }
+
     @Before
     override fun preLaunchSetup() {
 
         // Enable accessibility testing for all apps
         enableAndConfigureAccessibilityChecks()
-        super.preLaunchSetup()
+
+        if (!configChecked) {
+            checkBuildConfig()
+            configChecked = true
+        }
+        setupCoverageFolder()
+        UiControllerSingleton.get()
 
         // Let's set ourselves up to log information about our retries and failures.
         ScreenshotTestRule.registerFailureHandler( handler = { error, testMethod, testClass, disposition ->
@@ -145,6 +171,19 @@ abstract class CanvasTest : InstructureTest() {
             }
         })
 
+    }
+
+    // Creates an /sdcard/coverage folder if it does not already exist.
+    // This is necessary for us to generate/process code coverage data.
+    private fun setupCoverageFolder() {
+        val dir = File(Environment.getExternalStorageDirectory(), "coverage")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+    }
+
+    private fun checkBuildConfig() {
+        if (!isTesting) throw RuntimeException("Build config must be IS_TESTING! (qaDebug)")
     }
 
     // Enable and configure accessibility checks
@@ -396,6 +435,23 @@ abstract class CanvasTest : InstructureTest() {
                 outputStream.close()
             }
         }
+    }
+
+    companion object {
+
+        /* Both read & write permission are required for saving screenshots
+         * otherwise the code will error with permission denied.
+         * Read also required due to a bug specifically with full read/write external storage not being granted
+         * https://issuetracker.google.com/issues/64389280 */
+        @ClassRule
+        @JvmField
+        val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
+        private var configChecked = false
+
     }
 
 }
