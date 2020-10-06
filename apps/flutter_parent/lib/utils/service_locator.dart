@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_parent/network/api/accounts_api.dart';
 import 'package:flutter_parent/network/api/alert_api.dart';
 import 'package:flutter_parent/network/api/announcement_api.dart';
@@ -73,7 +74,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
-import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_downloader_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:flutter_parent/utils/veneers/path_provider_veneer.dart';
@@ -149,7 +149,7 @@ void setupLocator() {
   locator.registerLazySingleton<BarcodeScanVeneer>(() => BarcodeScanVeneer());
   locator.registerLazySingleton<FlutterDownloaderVeneer>(() => FlutterDownloaderVeneer());
   locator.registerLazySingleton<FlutterSnackbarVeneer>(() => FlutterSnackbarVeneer());
-  locator.registerLazySingleton<FirebaseVeneer>(() => FirebaseVeneer());
+  locator.registerLazySingleton<FirebaseCrashlytics>(() => FirebaseCrashlytics.instance);
   locator.registerLazySingleton<PathProviderVeneer>(() => PathProviderVeneer());
   locator.registerLazySingleton<PermissionHandler>(() => PermissionHandler());
   locator.registerLazySingleton<UrlLauncher>(() => UrlLauncher());

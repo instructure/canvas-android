@@ -17,12 +17,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
-import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class CrashUtils {
   static Future<void> init() async {
     // Set up error handling
-    FirebaseCrashlytics firebase = FirebaseVeneer().getInstance();
+    FirebaseCrashlytics firebase = locator<FirebaseCrashlytics>();
 
     FlutterError.onError = (error) async {
       await firebase

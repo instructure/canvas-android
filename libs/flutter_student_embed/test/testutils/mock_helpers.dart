@@ -17,6 +17,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_student_embed/network/api/course_api.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
@@ -31,6 +32,8 @@ class MockCourseApi extends Mock implements CourseApi {}
 class MockDatabase extends Mock implements Database {}
 
 class MockDio extends Mock implements Dio {}
+
+class MockFirebase extends Mock implements FirebaseCrashlytics {}
 
 class MockHttpClient extends Mock implements HttpClient {}
 

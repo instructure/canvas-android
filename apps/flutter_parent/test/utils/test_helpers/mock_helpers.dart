@@ -20,6 +20,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -58,7 +59,6 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
-import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
@@ -126,7 +126,7 @@ class MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
 
 class MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
 
-class MockFirebaseVeneer extends Mock implements FirebaseVeneer {}
+class MockFirebase extends Mock implements FirebaseCrashlytics {}
 
 class MockHttpClient extends Mock implements HttpClient {}
 

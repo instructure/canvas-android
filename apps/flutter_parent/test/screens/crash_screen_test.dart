@@ -19,24 +19,19 @@ import 'package:flutter_parent/screens/crash_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/error_report/error_report_dialog.dart';
 import 'package:flutter_parent/utils/crash_utils.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 import '../utils/accessibility_utils.dart';
 import '../utils/test_app.dart';
 import '../utils/test_helpers/mock_helpers.dart';
 
 void main() {
-  MockFirebase firebase = MockFirebase();
-  MockFirebaseVeneer firebaseVeneer = MockFirebaseVeneer();
+  setupTestLocator((locator) {
+    locator.registerLazySingleton<FirebaseCrashlytics>(() => MockFirebase());
+  });
 
   setUp(() {
-    setupTestLocator((locator) {
-      locator.registerLazySingleton<FirebaseVeneer>(() => firebaseVeneer);
-    });
-    when(firebaseVeneer.getInstance()).thenReturn(firebase);
     CrashUtils.init();
   });
 
@@ -227,5 +222,3 @@ class _CrashingWidget extends StatelessWidget {
     throw 'Error message';
   }
 }
-
-class MockFirebase extends Mock implements FirebaseCrashlytics {}
