@@ -58,6 +58,7 @@ import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/url_launcher.dart';
 import 'package:flutter_parent/utils/veneers/AndroidIntentVeneer.dart';
 import 'package:flutter_parent/utils/veneers/barcode_scan_veneer.dart';
+import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
 import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sqflite/sqflite.dart';
@@ -124,6 +125,8 @@ class MockErrorReportApi extends Mock implements ErrorReportApi {}
 class MockErrorReportInteractor extends Mock implements ErrorReportInteractor {}
 
 class MockEventDetailsInteractor extends Mock implements EventDetailsInteractor {}
+
+class MockFirebaseVeneer extends Mock implements FirebaseVeneer {}
 
 class MockHttpClient extends Mock implements HttpClient {}
 

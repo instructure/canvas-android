@@ -17,28 +17,31 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
+import 'package:flutter_parent/utils/veneers/firebase_veneer.dart';
 
 class CrashUtils {
   static Future<void> init() async {
     // Set up error handling
+    FirebaseCrashlytics firebase = FirebaseVeneer().getInstance();
+
     FlutterError.onError = (error) async {
-      await FirebaseCrashlytics.instance
+      await firebase
           .setUserIdentifier('domain: ${ApiPrefs.getDomain() ?? 'null'} user_id: ${ApiPrefs.getUser()?.id ?? 'null'}');
-      FirebaseCrashlytics.instance.recordFlutterError(error);
+      firebase.recordFlutterError(error);
     };
 
     if (kReleaseMode) {
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+      await firebase.setCrashlyticsCollectionEnabled(true);
     } else {
-      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+      await firebase.setCrashlyticsCollectionEnabled(false);
     }
 
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
       if (kReleaseMode) {
-        FirebaseCrashlytics.instance.recordFlutterError(error);
-        FirebaseCrashlytics.instance.log('Widget Crash');
+        firebase.recordFlutterError(error);
+        firebase.log('Widget Crash');
       } else {
         FlutterError.dumpErrorToConsole(error);
       }
