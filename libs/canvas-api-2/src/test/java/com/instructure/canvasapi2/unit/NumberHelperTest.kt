@@ -25,8 +25,9 @@ import org.junit.Test
 
 import org.junit.Assert.assertEquals
 
-
 class NumberHelperTest {
+
+    private val fileUnits = arrayOf("B", "KB", "MB", "GB", "TB")
 
     @Test
     fun doubleToPercentage_TestHundred() {
@@ -106,6 +107,49 @@ class NumberHelperTest {
         val input = 12345.67789
         val output = NumberHelper.formatDecimal(input, 3, true)
         assertEquals(expected, output)
+    }
+
+    @Test
+    fun `readableFileSize formats negative size as zero bytes`() {
+        assertEquals("0 B", NumberHelper.readableFileSize(fileUnits, -1L))
+        assertEquals("0 B", NumberHelper.readableFileSize(fileUnits, -1099511627776L))
+    }
+
+    @Test
+    fun `readableFileSize correctly formats bytes`() {
+        assertEquals("0 B", NumberHelper.readableFileSize(fileUnits, 0L))
+        assertEquals("1,023 B", NumberHelper.readableFileSize(fileUnits, 1023L))
+    }
+
+    @Test
+    fun `readableFileSize correctly formats kilobytes`() {
+        assertEquals("1 KB", NumberHelper.readableFileSize(fileUnits, 1024L))
+        assertEquals("1,023.9 KB", NumberHelper.readableFileSize(fileUnits, 1048575L))
+    }
+
+    @Test
+    fun `readableFileSize correctly formats megabytes`() {
+        assertEquals("1 MB", NumberHelper.readableFileSize(fileUnits, 1048576L))
+        assertEquals("1,023.9 MB", NumberHelper.readableFileSize(fileUnits, 1073741823L))
+    }
+
+    @Test
+    fun `readableFileSize correctly formats gigabytes`() {
+        assertEquals("1 GB", NumberHelper.readableFileSize(fileUnits, 1073741824L))
+        assertEquals("1,023.9 GB", NumberHelper.readableFileSize(fileUnits, 1099511627775L))
+    }
+
+    @Test
+    fun `readableFileSize correctly formats terabytes`() {
+        // Terabytes
+        assertEquals("1 TB", NumberHelper.readableFileSize(fileUnits, 1099511627776L))
+        assertEquals("1,023.9 TB", NumberHelper.readableFileSize(fileUnits, 1125899906842623L))
+    }
+
+    @Test
+    fun `readableFileSize formats petabytes and above as terabytes`() {
+        assertEquals("1,024 TB", NumberHelper.readableFileSize(fileUnits, 1125899906842624L))
+        assertEquals("2,000,000 TB", NumberHelper.readableFileSize(fileUnits, 2199023255552000000L))
     }
 
 }
