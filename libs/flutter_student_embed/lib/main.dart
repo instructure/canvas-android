@@ -31,13 +31,13 @@ void main() async {
 
   runZonedGuarded<Future<void>>(() async {
     NativeComm.init();
+    setupLocator();
 
     await Future.wait([
       ApiPrefs.init(),
       CrashUtils.init(),
       DbUtil.init(),
     ]);
-    setupLocator();
 
     runApp(StudentFlutterApp());
   }, FirebaseCrashlytics.instance.recordError);
