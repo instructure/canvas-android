@@ -24,9 +24,9 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.*
-import com.instructure.espresso.matchers.has
-import com.instructure.espresso.matchers.hasTextInputLayoutErrorText
-import com.instructure.espresso.matchers.withIndex
+import com.instructure.canvas.espresso.has
+import com.instructure.canvas.espresso.hasTextInputLayoutErrorText
+import com.instructure.canvas.espresso.withIndex
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.view.AssignmentOverrideView

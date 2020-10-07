@@ -26,7 +26,7 @@ import androidx.test.espresso.action.EspressoKey
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.espresso.actions.SetViewPagerCurrentItemAction
+import com.instructure.canvas.espresso.SetViewPagerCurrentItemAction
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import java.util.concurrent.TimeUnit
