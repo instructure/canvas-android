@@ -19,7 +19,7 @@ repositories {
     jcenter()
 }
 
-val agpVersion= "3.5.1"
+val agpVersion= "4.0.2"
 
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")

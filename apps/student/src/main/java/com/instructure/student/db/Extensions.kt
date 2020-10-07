@@ -26,9 +26,9 @@ fun Db.getInstance(context: Context): StudentDb {
     if (!ready)
         // Note: To use an in-memory database (for testing purposes), pass in 'null' for the name argument or don't pass anything at all (null by default)
         dbSetup(AndroidSqliteDriver(Schema, context, DB_NAME, callback = object : AndroidSqliteDriver.Callback(Schema) {
-            override fun onOpen(db: SupportSQLiteDatabase?) {
+            override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
-                db?.execSQL("PRAGMA foreign_keys=ON;")
+                db.execSQL("PRAGMA foreign_keys=ON;")
             }
         }))
 

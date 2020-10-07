@@ -37,6 +37,8 @@ import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_I
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.Okio
+import okio.buffer
+import okio.sink
 import java.io.File
 
 
@@ -123,7 +125,7 @@ class FileDownloadJobIntentService : JobIntentService() {
             val okHttp = OkHttpClient.Builder().build()
             val request = Request.Builder().url(fileUrl).build()
             val source = okHttp.newCall(request).execute().body()?.source() ?: return DownloadFailed()
-            val sink = Okio.buffer(Okio.sink(downloadedFile))
+            val sink = downloadedFile.sink().buffer()
 
             var startTime = System.currentTimeMillis()
             var downloaded = 0L

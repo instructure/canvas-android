@@ -13,11 +13,11 @@ object Versions {
 
     /* Testing */
     const val ATSL_ORCHESTRATOR = "1.1.0-beta01"
-    const val JACOCO = "0.8.3"
+    const val JACOCO = "0.8.6"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
-    const val JACOCO_ANDROID = "0.1.2"
+    const val JACOCO_ANDROID = "0.1.4"
 
     /* Kotlin */
     const val KOTLIN = "1.4.10"
@@ -31,7 +31,7 @@ object Versions {
     const val FIREBASE_CONFIG = "18.0.0"
 
     /* Others */
-    const val APOLLO = "1.0.0-alpha5"
+    const val APOLLO = "2.4.1"
     const val CRASHLYTICS = "17.2.1"
     const val ANALYTICS = "17.4.1"
     const val FIREBASE_ANALYTICS = "17.4.1"
@@ -40,7 +40,7 @@ object Versions {
     const val PHOTO_VIEW = "2.3.0"
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
-    const val SQLDELIGHT = "1.1.3"
+    const val SQLDELIGHT = "1.4.3"
     const val NEW_RELIC = "5.27.0"
 }
 

@@ -58,7 +58,7 @@ class UploadStatusSubmissionPresenterTest : Assert() {
     }
 
     private fun submission(id: Long, error: String? = null, errorFlag: Boolean = false) =
-        FileSubmission.Impl(id, submissionId, 20L, "File", 1L, "Content", "Path", error, errorFlag)
+        FileSubmission(id, submissionId, 20L, "File", 1L, "Content", "Path", error, errorFlag)
 
     @Test
     fun `returns Loading state when loading`() {

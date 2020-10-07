@@ -119,7 +119,7 @@ class AssignmentDetailsEffectHandlerTest : Assert() {
         failed: Boolean = false,
         submissionType: String = "online_text_entry"
     ): Submission {
-        return Submission.Impl(
+        return Submission(
             id = submissionId,
             submissionEntry = "Entry text",
             lastActivityDate = OffsetDateTime.now().minusDays(daysAgo),

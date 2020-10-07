@@ -16,7 +16,7 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.apollographql.android'
+apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'au.com.dius.pact'
