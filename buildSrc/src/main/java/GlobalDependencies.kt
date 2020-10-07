@@ -13,7 +13,7 @@ object Versions {
 
     /* Testing */
     const val ATSL_ORCHESTRATOR = "1.1.0-beta01"
-    const val JACOCO = "0.8.6"
+    const val JACOCO = "0.8.3"
     const val JUNIT = "4.12"
     const val ROBOLECTRIC = "4.3.1"
     const val ESPRESSO = "3.1.0"
