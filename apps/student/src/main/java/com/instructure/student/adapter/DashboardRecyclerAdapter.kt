@@ -153,7 +153,7 @@ class DashboardRecyclerAdapter(
                     { GroupManager.getAllGroups(it, isRefresh) },
                     { AccountNotificationManager.getAllAccountNotifications(it, true)}
             )
-            val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
+            val allDashboardCourses = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
 
             mCourseMap = rawCourses.associateBy { it.id }
             val groupMap = groups.associateBy { it.id }
@@ -164,11 +164,15 @@ class DashboardRecyclerAdapter(
             }
 
             // Map not null is needed because the dashboard api can return unpublished courses
-            val favoriteCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
+            val publishedDashboardCourses = allDashboardCourses.mapNotNull { mCourseMap[it.id] }
 
             // Filter groups
-            val rawGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
-            val favoriteGroups = rawGroups.filter { it.isFavorite }.takeUnless { it.isEmpty() } ?: rawGroups
+            val allActiveGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
+
+            val isAnyFavoritePresent = publishedDashboardCourses.any { it.isFavorite } || allActiveGroups.any { it.isFavorite }
+
+            val visibleCourses = if (isAnyFavoritePresent) publishedDashboardCourses.filter { it.isFavorite } else publishedDashboardCourses
+            val visibleGroups = if (isAnyFavoritePresent) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
             // Get live conferences
             val blackList = StudentPrefs.conferenceDashboardBlacklist
@@ -193,10 +197,10 @@ class DashboardRecyclerAdapter(
             addOrUpdateAllItems(ItemType.CONFERENCE_HEADER, conferences)
 
             // Add courses
-            addOrUpdateAllItems(ItemType.COURSE_HEADER, favoriteCourses)
+            addOrUpdateAllItems(ItemType.COURSE_HEADER, visibleCourses)
 
             // Add groups
-            addOrUpdateAllItems(ItemType.GROUP_HEADER, favoriteGroups)
+            addOrUpdateAllItems(ItemType.GROUP_HEADER, visibleGroups)
 
             // Add announcements
             addOrUpdateAllItems(ItemType.ANNOUNCEMENT_HEADER, announcements)
