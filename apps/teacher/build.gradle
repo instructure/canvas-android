@@ -276,7 +276,7 @@ if (coverageEnabled) {
         def productFlavor = 'qa'
         def buildType = 'debug'
 
-        classDirectories = fileTree(
+        classDirectories.setFrom fileTree(
                 dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
                 excludes: ['**/R.class',
                            '**/R$*.class',
@@ -287,8 +287,8 @@ if (coverageEnabled) {
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
-        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData = fileTree(dir: "results", includes: ['**/*.ec'])
+        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

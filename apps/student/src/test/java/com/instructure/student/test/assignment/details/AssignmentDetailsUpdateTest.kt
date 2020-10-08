@@ -68,7 +68,7 @@ class AssignmentDetailsUpdateTest : Assert() {
     }
 
     private fun mockkSubmission(submissionId: Long = this.submissionId, daysAgo: Long = 0): Submission {
-        return Submission.Impl(
+        return Submission(
             id = submissionId,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now().minusDays(daysAgo),

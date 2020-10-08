@@ -59,9 +59,9 @@ def createReportTask(params) {
             html.enabled = true
             csv.enabled = false
         }
-        classDirectories = params.classDirectories
-        sourceDirectories = params.sourceDirectories
-        executionData = params.executionData
+        classDirectories.setFrom params.classDirectories
+        sourceDirectories.setFrom params.sourceDirectories
+        executionData.setFrom params.executionData
     }
 }
 

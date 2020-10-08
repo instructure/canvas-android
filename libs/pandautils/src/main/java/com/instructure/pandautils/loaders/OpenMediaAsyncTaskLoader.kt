@@ -39,6 +39,8 @@ import com.instructure.pandautils.utils.Utils.getAttachmentsDirectory
 import okhttp3.Request
 import okio.Okio
 import okio.Source
+import okio.buffer
+import okio.sink
 import java.io.File
 import java.io.IOException
 import java.net.HttpURLConnection
@@ -276,7 +278,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
             throw IOException("Unable to download. Error code ${response.code()}")
         }
         toWriteTo.parentFile.mkdirs()
-        val sink = Okio.buffer(Okio.sink(toWriteTo))
+        val sink = toWriteTo.sink().buffer()
         val source: Source = response.body()!!.source()
         sink.writeAll(source)
         sink.flush()

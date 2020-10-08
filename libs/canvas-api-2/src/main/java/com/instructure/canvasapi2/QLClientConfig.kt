@@ -16,13 +16,13 @@
 package com.instructure.canvasapi2
 
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.CustomTypeAdapter
+import com.apollographql.apollo.api.CustomTypeValue
 import com.apollographql.apollo.api.Mutation
 import com.apollographql.apollo.api.Query
 import com.apollographql.apollo.api.cache.http.HttpCachePolicy
 import com.apollographql.apollo.cache.http.ApolloHttpCache
 import com.apollographql.apollo.cache.http.DiskLruHttpCacheStore
-import com.apollographql.apollo.response.CustomTypeAdapter
-import com.apollographql.apollo.response.CustomTypeValue
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.type.CustomType
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -92,13 +92,13 @@ class QLClientConfig {
 
         /** Type adapter for Dates */
         private val timeAdapter: CustomTypeAdapter<Date?> = object : CustomTypeAdapter<Date?> {
-            override fun encode(value: Date): CustomTypeValue<*> = CustomTypeValue.GraphQLString(value.toApiString())
+            override fun encode(value: Date?): CustomTypeValue<*> = value?.let { CustomTypeValue.GraphQLString(it.toApiString().orEmpty()) } ?: CustomTypeValue.GraphQLNull
             override fun decode(value: CustomTypeValue<*>) = value.value.toString().toDate()
         }
 
         /** Type adapter for fields that should be kept as Strings (e.g. Urls and IDs) */
         private val stringAdapter: CustomTypeAdapter<String?> = object : CustomTypeAdapter<String?> {
-            override fun encode(value: String) = CustomTypeValue.GraphQLString(value)
+            override fun encode(value: String?) = value?.let { CustomTypeValue.GraphQLString(it) } ?: CustomTypeValue.GraphQLNull
             override fun decode(value: CustomTypeValue<*>) = value.value.toString()
         }
 

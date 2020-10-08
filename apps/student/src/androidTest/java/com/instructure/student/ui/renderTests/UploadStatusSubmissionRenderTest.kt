@@ -81,7 +81,7 @@ class UploadStatusSubmissionRenderTest : StudentRenderTest() {
     @TestMetaData(Priority.P2, FeatureCategory.ASSIGNMENTS, TestCategory.RENDER, secondaryFeature = FeatureCategory.SUBMISSIONS)
     fun displaysInProgressState() {
         loadPageWithModel(baseModel.copy(files = listOf(
-            FileSubmission.Impl(0, 0, null, null, null, null, null, null, false)
+            FileSubmission(0, 0, null, null, null, null, null, null, false)
         )))
         uploadStatusSubmissionViewRenderPage.assertInProgressVisible()
     }
