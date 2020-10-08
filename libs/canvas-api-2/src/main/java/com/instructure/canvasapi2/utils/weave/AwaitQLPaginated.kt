@@ -84,7 +84,7 @@ class WeaveQLPager<DATA>(
             if (isCanceled) return@responseBlock
             weaveCoroutine.onUI {
                 if (response.hasErrors()) {
-                    val message = response.errors?.firstOrNull()?.message ?: "Unknown error"
+                    val message = response.errors!!.first().message
                     pageCallback.errorCallback(ApolloException(message))
                 } else if (response.data() == null) {
                     pageCallback.errorCallback(ApolloException("Response data is null!"))
