@@ -26,7 +26,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.ModuleManager
@@ -50,6 +49,7 @@ import com.instructure.student.holders.ModuleHeaderViewHolder
 import com.instructure.student.holders.ModuleSubHeaderViewHolder
 import com.instructure.student.holders.ModuleViewHolder
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
+import com.instructure.student.util.CollapsedModulesStore
 import com.instructure.student.util.ModuleUtility
 import kotlinx.coroutines.Job
 import retrofit2.Call
@@ -58,7 +58,6 @@ import java.util.*
 
 open class ModuleListRecyclerAdapter(
         val courseContext: CanvasContext,
-        var defaultExpandedModuleId: Long = -1,
         context: Context,
         val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
@@ -68,7 +67,7 @@ open class ModuleListRecyclerAdapter(
     private var checkCourseTabsJob: Job? = null
 
     /* For testing purposes only */
-    protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), 0, context, null) // Callback not needed for testing, cast to null
+    protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), context, null) // Callback not needed for testing, cast to null
 
     init {
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
@@ -77,13 +76,13 @@ open class ModuleListRecyclerAdapter(
                 if (!moduleItemsCallback.isFromNetwork && !isGroupExpanded(moduleObject)) {
                     ModuleManager.getFirstPageModuleItems(courseContext, moduleObject.id, moduleItemsCallback, true)
                 } else {
+                    CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, true)
                     expandCollapseGroup(moduleObject)
                 }
             }
 
         }
         isExpandedByDefault = false
-        isDisplayEmptyCell = true
         if (adapterToFragmentCallback != null) loadData() // Callback is null when testing
     }
 
@@ -302,6 +301,7 @@ open class ModuleListRecyclerAdapter(
                             expandGroup(this.moduleObject, isNotifyGroupChange)
                         }
                     }
+                    CollapsedModulesStore.markModuleCollapsed(courseContext, moduleObject.id, false)
                 }
 
                 override fun onFail(call: Call<List<ModuleItem>>?, error: Throwable, response: Response<*>?) {
@@ -331,23 +331,12 @@ open class ModuleListRecyclerAdapter(
             override fun onResponse(response: Response<List<ModuleObject>>, linkHeaders: LinkHeaders, type: ApiType) {
                 val moduleObjects = response.body()
                 setNextUrl(linkHeaders.nextUrl)
-
-                addOrUpdateAllGroups(moduleObjects!!.toTypedArray())
-
-                if (defaultExpandedModuleId == -1L && moduleObjects.isNotEmpty()) {
-                    defaultExpandedModuleId = moduleObjects[0].id
-                }
-
-                if (defaultExpandedModuleId != -1L) {
-                    val defaultExpandedModuleObject = getGroup(defaultExpandedModuleId)
-                    if (defaultExpandedModuleObject != null) {
-                        // In order for the arrow to be the correct direction when expanded, set isNotifyGroupChange to true
-                        // It may be a race condition, but if we don't put the ! before the call in progress check then it will show an empty cell that says no network connection
-                        if (!getModuleItemsCallback(defaultExpandedModuleObject, true).isCallInProgress) {
-                            ModuleManager.getFirstPageModuleItems(courseContext, defaultExpandedModuleObject.id, getModuleItemsCallback(defaultExpandedModuleObject, true), true)
-                        } else {
-                            expandGroup(defaultExpandedModuleObject, true)
-                        }
+                val collapsedItems = CollapsedModulesStore.getCollapsedModuleIds(courseContext)
+                moduleObjects?.toTypedArray()?.forEach {
+                    addOrUpdateGroup(it)
+                    if (!collapsedItems.contains(it.id)) {
+                        addOrUpdateAllItems(it, it.items)
+                        expandGroup(it)
                     }
                 }
 
@@ -367,7 +356,7 @@ open class ModuleListRecyclerAdapter(
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
-                ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+                ModuleManager.getFirstPageModulesWithItems(courseContext, mModuleObjectCallback!!, true)
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
             }
