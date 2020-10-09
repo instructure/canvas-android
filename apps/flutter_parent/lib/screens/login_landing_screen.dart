@@ -128,10 +128,14 @@ class LoginLandingScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
-          _qrLogin(context),
+          if (_hasCameras()) _qrLogin(context),
         ],
       ),
     );
+  }
+
+  bool _hasCameras() {
+    return ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0;
   }
 
   Widget _qrLogin(BuildContext context) {
