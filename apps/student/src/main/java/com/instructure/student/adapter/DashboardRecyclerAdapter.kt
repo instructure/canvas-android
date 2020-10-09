@@ -153,7 +153,7 @@ class DashboardRecyclerAdapter(
                     { GroupManager.getAllGroups(it, isRefresh) },
                     { AccountNotificationManager.getAllAccountNotifications(it, true)}
             )
-            val allDashboardCourses = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
+            val dashboardCards = awaitApi<List<DashboardCard>> { CourseManager.getDashboardCourses(isRefresh, it) }
 
             mCourseMap = rawCourses.associateBy { it.id }
             val groupMap = groups.associateBy { it.id }
@@ -164,14 +164,12 @@ class DashboardRecyclerAdapter(
             }
 
             // Map not null is needed because the dashboard api can return unpublished courses
-            val publishedDashboardCourses = allDashboardCourses.mapNotNull { mCourseMap[it.id] }
+            val visibleCourses = dashboardCards.mapNotNull { mCourseMap[it.id] }
 
             // Filter groups
             val allActiveGroups = groups.filter { group -> group.isActive(mCourseMap[group.courseId])}
 
-            val isAnyFavoritePresent = publishedDashboardCourses.any { it.isFavorite } || allActiveGroups.any { it.isFavorite }
-
-            val visibleCourses = if (isAnyFavoritePresent) publishedDashboardCourses.filter { it.isFavorite } else publishedDashboardCourses
+            val isAnyFavoritePresent = visibleCourses.any { it.isFavorite } || allActiveGroups.any { it.isFavorite }
             val visibleGroups = if (isAnyFavoritePresent) allActiveGroups.filter { it.isFavorite } else allActiveGroups
 
             // Get live conferences
