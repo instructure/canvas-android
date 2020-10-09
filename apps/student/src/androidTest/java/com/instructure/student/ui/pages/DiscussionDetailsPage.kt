@@ -82,7 +82,7 @@ class DiscussionDetailsPage : BasePage(R.id.discussionDetailsPage) {
     }
 
     fun scrollToRepliesWebview() {
-        waitForMatcherWithSleeps(withId(R.id.discussionRepliesWebView), waitMs = 10000)
+        waitForMatcherWithSleeps(withId(R.id.discussionRepliesWebView), waitMs = 20000)
         onView(withId(R.id.discussionRepliesWebView)).scrollTo()
     }
 

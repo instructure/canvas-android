@@ -175,7 +175,7 @@ class DiscussionsInteractionTest : StudentTest() {
         discussionListPage.pullToUpdate()
         discussionListPage.assertUnreadCount(topicHeader.title!!, 1)
         discussionListPage.selectTopic(topicHeader.title!!)
-        sleep(1500) // let's allow time for the webview to become populated/visible before we scroll to it
+        sleep(3000) // let's allow time for the webview to become populated/visible before we scroll to it
         discussionDetailsPage.scrollToRepliesWebview() // may be necessary on shorter screens / landscape
         discussionDetailsPage.waitForUnreadIndicatorToDisappear(discussionEntry)
         Espresso.pressBack() // Back to discussionListPage
