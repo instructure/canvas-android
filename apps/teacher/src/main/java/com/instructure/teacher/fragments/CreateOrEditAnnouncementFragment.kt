@@ -109,8 +109,8 @@ class CreateOrEditAnnouncementFragment :
     }
 
     override fun onReadySetGo(presenter: CreateOrEditAnnouncementPresenter) {
-        setupViews()
         setupToolbar()
+        setupViews()
         presenter.loadData(true)
     }
 
