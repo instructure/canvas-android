@@ -128,15 +128,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
         helpButton.setHidden(true) // hiding the help button until we make mobile login better
         helpButton.onClickPopupMenu(getString(R.string.requestLoginHelp) to { requestLoginHelp() })
 
-        val remoteConfigParam = when {
-            packageName.contains("teacher") -> RemoteConfigParam.QR_LOGIN_ENABLED_TEACHER
-            else -> RemoteConfigParam.QR_LOGIN_ENABLED
-        }
-
-        val qrLoginEnabled = RemoteConfigUtils.getString(
-                remoteConfigParam)?.equals("true", ignoreCase = true)
-                ?: false
-        if(loginWithQRCodeEnabled() && qrLoginEnabled) {
+        if(loginWithQRCodeEnabled()) {
             qrLogin.setVisible()
             qrDivider.setVisible()
             qrLogin.onClick {

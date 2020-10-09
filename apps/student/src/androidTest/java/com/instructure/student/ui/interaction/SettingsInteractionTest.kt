@@ -251,35 +251,14 @@ class SettingsInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
     fun testPairObserver_refreshCode() {
+        setUpAndSignIn()
 
-        // Let's simulate the QR_PAIR_OBSERVER_ENABLED remote-config flag being on,
-        // remembering our original value.
-        val originalVal = RemoteConfigPrefs.getString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name);
-        RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, "true")
+        dashboardPage.launchSettingsPage()
+        settingsPage.launchPairObserverPage()
 
-        // In case this is a retry, reset the pairingCodeCount in UserEndpoints to 0
-        pairingCodeCount = 0
-
-
-        try {
-            setUpAndSignIn()
-
-            dashboardPage.launchSettingsPage()
-            settingsPage.launchPairObserverPage()
-
-            pairObserverPage.hasCode("1")
-            pairObserverPage.refresh()
-            pairObserverPage.hasCode("2")
-        }
-        finally {
-            // Restore the original remote-config setting
-            if(originalVal == null) {
-                RemoteConfigPrefs.remove(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name);
-            }
-            else {
-                RemoteConfigPrefs.putString(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED.rc_name, originalVal);
-            }
-        }
+        pairObserverPage.hasCode("1")
+        pairObserverPage.refresh()
+        pairObserverPage.hasCode("2")
     }
 
     // Mock a single student and course, sign in, then navigate to the dashboard.

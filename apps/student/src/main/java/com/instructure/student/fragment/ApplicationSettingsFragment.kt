@@ -92,14 +92,12 @@ class ApplicationSettingsFragment : ParentFragment() {
         help.onClick { HelpDialogStyled.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
-        if (RemoteConfigUtils.getBoolean(RemoteConfigParam.QR_PAIR_OBSERVER_ENABLED) == true) {
-            pairObserver.setVisible()
-            pairObserver.onClick {
-                if (APIHelper.hasNetworkConnection()) {
-                    addFragment(PairObserverFragment.newInstance())
-                } else {
-                    NoInternetConnectionDialog.show(requireFragmentManager())
-                }
+        pairObserver.setVisible()
+        pairObserver.onClick {
+            if (APIHelper.hasNetworkConnection()) {
+                addFragment(PairObserverFragment.newInstance())
+            } else {
+                NoInternetConnectionDialog.show(requireFragmentManager())
             }
         }
 
