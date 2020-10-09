@@ -15,13 +15,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
-import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/router/panda_router.dart';
 import 'package:flutter_parent/screens/pairing/pairing_code_dialog.dart';
 import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -38,7 +36,7 @@ class PairingUtil {
             Text(L10n(context).addStudentWith, style: Theme.of(context).textTheme.caption),
             SizedBox(height: 12),
             _pairingCode(context, onSuccess),
-            if (_isQRPairingEnabled()) _qrCode(context, onSuccess),
+            _qrCode(context, onSuccess),
           ],
         );
       },
@@ -88,9 +86,4 @@ class PairingUtil {
 
 class StudentAddedNotifier extends ChangeNotifier {
   void notify() => notifyListeners();
-}
-
-bool _isQRPairingEnabled() {
-  return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_PAIR_OBSERVER_ENABLED).toLowerCase() == 'true' &&
-      (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
 }

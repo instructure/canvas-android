@@ -20,9 +20,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum RemoteConfigParams {
   TEST_STRING,
   MOBILE_VERIFY_BETA_ENABLED,
-  QR_LOGIN_ENABLED_PARENT,
-  QR_ACCOUNT_CREATION_ENABLED_PARENT,
-  QR_PAIR_OBSERVER_ENABLED,
 }
 
 class RemoteConfigUtils {
@@ -118,14 +115,8 @@ class RemoteConfigUtils {
     switch (rcParam) {
       case RemoteConfigParams.TEST_STRING:
         return 'test_string';
-      case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
-        return 'qr_login_enabled_parent';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
         return 'mobile_verify_beta_enabled';
-      case RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT:
-        return 'qr_account_creation_enabled';
-      case RemoteConfigParams.QR_PAIR_OBSERVER_ENABLED:
-        return 'qr_pair_observer_enabled';
       default:
         return '';
     }
@@ -139,11 +130,7 @@ class RemoteConfigUtils {
     switch (rcParam) {
       case RemoteConfigParams.TEST_STRING:
         return 'hey there';
-      case RemoteConfigParams.QR_LOGIN_ENABLED_PARENT:
-        return 'false';
       case RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED:
-        return 'false';
-      case RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT:
         return 'false';
       default:
         return '';

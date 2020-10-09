@@ -34,7 +34,6 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
-import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:flutter_parent/utils/snickers.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -129,7 +128,7 @@ class LoginLandingScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8),
-          if (_isQRLoginEnabled()) _qrLogin(context),
+          _qrLogin(context),
         ],
       ),
     );
@@ -138,13 +137,8 @@ class LoginLandingScreen extends StatelessWidget {
   Widget _qrLogin(BuildContext context) {
     return InkWell(
         onTap: () {
-          if (_isQRAccountCreationEnabled()) {
-            // Launches the choice between qr login and qr create
-            locator<QRLoginUtil>().launchQRTutorial(context);
-          } else {
-            // Just show the normal qr login tutorial
-            locator<QuickNav>().pushRoute(context, PandaRouter.qrTutorial());
-          }
+          // Launches the choice between qr login and qr create
+          locator<QRLoginUtil>().launchQRTutorial(context);
         },
         child: Container(
           padding: EdgeInsets.all(12.0),
@@ -161,17 +155,6 @@ class LoginLandingScreen extends StatelessWidget {
                 ),
               ]),
         ));
-  }
-
-  bool _isQRAccountCreationEnabled() {
-    return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_ACCOUNT_CREATION_ENABLED_PARENT).toLowerCase() ==
-            'true' &&
-        (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
-  }
-
-  bool _isQRLoginEnabled() {
-    return RemoteConfigUtils.getStringValue(RemoteConfigParams.QR_LOGIN_ENABLED_PARENT).toLowerCase() == 'true' &&
-        (ApiPrefs.getCameraCount() != null && ApiPrefs.getCameraCount() != 0);
   }
 
   Widget _previousLogins(BuildContext context) {
