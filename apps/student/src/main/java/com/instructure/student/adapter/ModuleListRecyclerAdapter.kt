@@ -335,11 +335,9 @@ open class ModuleListRecyclerAdapter(
                 moduleObjects?.toTypedArray()?.forEach {
                     addOrUpdateGroup(it)
                     if (!collapsedItems.contains(it.id)) {
-                        addOrUpdateAllItems(it, it.items)
-                        expandGroup(it)
+                        ModuleManager.getFirstPageModuleItems(courseContext, it.id, getModuleItemsCallback(it, true), true)
                     }
                 }
-
                 adapterToFragmentCallback?.onRefreshFinished()
             }
 
@@ -356,7 +354,7 @@ open class ModuleListRecyclerAdapter(
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
-                ModuleManager.getFirstPageModulesWithItems(courseContext, mModuleObjectCallback!!, true)
+                ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
             }
