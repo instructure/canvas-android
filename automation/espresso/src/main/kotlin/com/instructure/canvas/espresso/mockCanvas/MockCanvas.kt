@@ -1661,9 +1661,10 @@ fun MockCanvas.addGroupToCourse(
         course: Course,
         name: String = Faker.instance().country().capital(),
         description: String = Faker.instance().lordOfTheRings().character(),
-        members: List<User> = listOf()
+        members: List<User> = listOf(),
+        isFavorite: Boolean = false
 ) : Group {
-    var result = Group(
+    val result = Group(
             id = newItemId(),
             name = name,
             description = description,
@@ -1671,7 +1672,8 @@ fun MockCanvas.addGroupToCourse(
             users = members,
             // contextType field removed from Group
             //contextType = Group.GroupContext.Course,
-            courseId = course.id
+            courseId = course.id,
+            isFavorite = isFavorite
     )
 
     groups[result.id] = result
