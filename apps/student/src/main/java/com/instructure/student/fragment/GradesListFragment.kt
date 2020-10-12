@@ -129,7 +129,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     private fun configureViews(rootView: View) {
         val appBarLayout = rootView.findViewById<AppBarLayout>(R.id.appbar)
 
-        val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.vd_lock, ContextCompat.getColor(requireContext(), R.color.canvasTextDark))
+        val lockDrawable = ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_lock, ContextCompat.getColor(requireContext(), R.color.canvasTextDark))
         lockedGradeImage.setImageDrawable(lockDrawable)
 
         setupListeners()

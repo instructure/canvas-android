@@ -57,16 +57,16 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
 
         val (icon: Int, title: String, subtitle: String?) = when (type) {
             SubmissionType.ONLINE_TEXT_ENTRY -> {
-                Triple(R.drawable.vd_document, context.getString(R.string.speedGraderTextSubmission), quotedFromHtml(submission.body))
+                Triple(R.drawable.ic_document, context.getString(R.string.speedGraderTextSubmission), quotedFromHtml(submission.body))
             }
             SubmissionType.EXTERNAL_TOOL -> {
-                Triple(R.drawable.vd_lti, context.getString(R.string.speedGraderExternalToolSubmission), submission.url)
+                Triple(R.drawable.ic_lti, context.getString(R.string.speedGraderExternalToolSubmission), submission.url)
             }
             SubmissionType.DISCUSSION_TOPIC -> {
-                Triple(R.drawable.vd_discussion, context.getString(R.string.speedGraderDiscussionSubmission), quotedFromHtml(submission.discussionEntries.firstOrNull()?.message))
+                Triple(R.drawable.ic_discussion, context.getString(R.string.speedGraderDiscussionSubmission), quotedFromHtml(submission.discussionEntries.firstOrNull()?.message))
             }
             SubmissionType.ONLINE_QUIZ -> {
-                Triple(R.drawable.vd_quiz, context.getString(R.string.speedGraderQuizSubmission), context.getString(R.string.speedgraderCommentQuizAttempt, submission.attempt))
+                Triple(R.drawable.ic_quiz, context.getString(R.string.speedGraderQuizSubmission), context.getString(R.string.speedgraderCommentQuizAttempt, submission.attempt))
             }
             SubmissionType.MEDIA_RECORDING -> {
                 val media = submission.mediaComment ?: throw IllegalStateException("Media comment is null for media submission. WHY!?")
@@ -74,12 +74,12 @@ class CommentSubmissionView(context: Context, val submission: Submission) : Line
                     MediaComment.MediaType.AUDIO -> context.getString(R.string.submissionTypeAudio)
                     MediaComment.MediaType.VIDEO -> context.getString(R.string.submissionTypeVideo)
                 }
-                Triple(R.drawable.vd_media, context.getString(R.string.speedGraderMediaFile), subtitle)
+                Triple(R.drawable.ic_media, context.getString(R.string.speedGraderMediaFile), subtitle)
             }
             SubmissionType.ONLINE_URL -> {
-                Triple(R.drawable.vd_link, context.getString(R.string.speedGraderUrlSubmission), submission.url)
+                Triple(R.drawable.ic_link, context.getString(R.string.speedGraderUrlSubmission), submission.url)
             }
-            else -> Triple(R.drawable.vd_utils_attachment, type.prettyPrint(context), "")
+            else -> Triple(R.drawable.ic_attachment, type.prettyPrint(context), "")
         }
 
         view.iconImageView.setImageResource(icon)

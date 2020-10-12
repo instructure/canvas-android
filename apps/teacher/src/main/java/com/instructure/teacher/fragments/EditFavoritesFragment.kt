@@ -124,7 +124,7 @@ class EditFavoritesFragment : BaseSyncFragment<
 
     override fun checkIfEmpty() {
         emptyPandaView.setMessageText(R.string.noCoursesSubtext)
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nocourses))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nocourses))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 

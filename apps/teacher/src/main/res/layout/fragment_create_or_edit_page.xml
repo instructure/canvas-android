@@ -208,7 +208,7 @@
                     android:layout_marginEnd="11dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/destructive"
-                    app:srcCompat="@drawable/vd_trash"
+                    app:srcCompat="@drawable/ic_trash"
                     android:layout_centerVertical="true"/>
 
                 <TextView

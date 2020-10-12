@@ -261,22 +261,22 @@ class InboxFragment : BaseSyncFragment<Conversation, InboxPresenter, InboxView, 
 
         when (scope) {
             InboxApi.Scope.STARRED -> {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_inboxstarred))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_inboxstarred))
                 emptyPandaView.setMessageText(R.string.nothingStarredSubtext)
                 emptyPandaView.setTitleText(R.string.nothingStarred)
             }
             InboxApi.Scope.SENT -> {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_inboxsent))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_inboxsent))
                 emptyPandaView.setMessageText(R.string.nothingSentSubtext)
                 emptyPandaView.setTitleText(R.string.nothingSent)
             }
             InboxApi.Scope.ARCHIVED -> {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_inboxarchived))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_inboxarchived))
                 emptyPandaView.setMessageText(R.string.nothingArchivedSubtext)
                 emptyPandaView.setTitleText(R.string.nothingArchived)
             }
             else -> {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_inboxzero))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_inboxzero))
                 emptyPandaView.setMessageText(R.string.nothingUnreadSubtext)
                 emptyPandaView.getMessage().importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
                 emptyPandaView.setTitleText(R.string.nothingUnread)

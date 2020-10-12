@@ -81,7 +81,7 @@
         android:id="@+id/image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/vd_super_panda"
+        android:src="@drawable/ic_panda_super"
         app:layout_constraintStart_toStartOf="@id/imageLeft"
         app:layout_constraintEnd_toEndOf="@id/imageRight"
         app:layout_constraintTop_toBottomOf="@id/imageTop"

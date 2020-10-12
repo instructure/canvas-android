@@ -78,7 +78,7 @@ object ShortcutUtils {
     private fun generateLayeredBitmap(context: Context, color: Int): Bitmap? {
         try {
             val background = BitmapUtilities.getBitmapFromDrawable(context, R.mipmap.ic_shortcut_background)
-            val foreground = ColorUtils.colorIt(color, BitmapUtilities.getBitmapFromDrawable(context, R.drawable.vd_navigation_bookmarks))
+            val foreground = ColorUtils.colorIt(color, BitmapUtilities.getBitmapFromDrawable(context, R.drawable.ic_navigation_bookmarks))
 
             val padding = (background.height / 2.8).toInt()
 

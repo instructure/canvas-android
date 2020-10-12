@@ -37,8 +37,8 @@ class ColorPickerIcon @JvmOverloads constructor(
 
     lateinit var circle: ImageView
     lateinit var checkMark: ImageView
-    private var circlePlaceholder = R.drawable.vd_color_picker_circle
-    private var checkMarkPlaceholder = R.drawable.vd_check_white_24dp
+    private var circlePlaceholder = R.drawable.ic_color_picker_circle
+    private var checkMarkPlaceholder = R.drawable.ic_check_white_24dp
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -58,8 +58,8 @@ class ColorPickerIcon @JvmOverloads constructor(
 
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
                 when (it) {
-                    R.styleable.ColorPickerIcon_circle -> circlePlaceholder = a.getResourceId(it, R.drawable.vd_color_picker_circle)
-                    R.styleable.ColorPickerIcon_checkMark -> checkMarkPlaceholder = a.getResourceId(it, R.drawable.vd_check_white_24dp)
+                    R.styleable.ColorPickerIcon_circle -> circlePlaceholder = a.getResourceId(it, R.drawable.ic_color_picker_circle)
+                    R.styleable.ColorPickerIcon_checkMark -> checkMarkPlaceholder = a.getResourceId(it, R.drawable.ic_check_white_24dp)
                 }
             }
 

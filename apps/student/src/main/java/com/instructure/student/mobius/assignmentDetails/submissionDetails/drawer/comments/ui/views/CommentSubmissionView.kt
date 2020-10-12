@@ -66,28 +66,28 @@ class CommentSubmissionView(
         val (icon: Int, title: String, subtitle: String?) = when (type) {
             SubmissionType.ONLINE_TEXT_ENTRY -> {
                 Triple(
-                    R.drawable.vd_document,
+                    R.drawable.ic_document,
                     context.getString(R.string.commentSubmissionTypeText),
                     quotedFromHtml(submission.body)
                 )
             }
             SubmissionType.EXTERNAL_TOOL -> {
                 Triple(
-                    R.drawable.vd_lti,
+                    R.drawable.ic_lti,
                     context.getString(R.string.commentSubmissionTypeExternalTool),
                     submission.url
                 )
             }
             SubmissionType.DISCUSSION_TOPIC -> {
                 Triple(
-                    R.drawable.vd_discussion,
+                    R.drawable.ic_discussion,
                     context.getString(R.string.commentSubmissionTypeDiscussion),
                     quotedFromHtml(submission.discussionEntries.firstOrNull()?.message)
                 )
             }
             SubmissionType.ONLINE_QUIZ -> {
                 Triple(
-                    R.drawable.vd_quiz,
+                    R.drawable.ic_quiz,
                     context.getString(R.string.commentSubmissionTypeQuiz),
                     context.getString(R.string.commentSubmissionTypeQuizAttempt, submission.attempt)
                 )
@@ -98,12 +98,12 @@ class CommentSubmissionView(
                     MediaComment.MediaType.AUDIO -> context.getString(R.string.commentSubmissionTypeAudio)
                     MediaComment.MediaType.VIDEO -> context.getString(R.string.commentSubmissionTypeVideo)
                 }
-                Triple(R.drawable.vd_media, context.getString(R.string.commentSubmissionTypeMediaFile), subtitle)
+                Triple(R.drawable.ic_media, context.getString(R.string.commentSubmissionTypeMediaFile), subtitle)
             }
             SubmissionType.ONLINE_URL -> {
-                Triple(R.drawable.vd_link, context.getString(R.string.onlineURL), submission.url)
+                Triple(R.drawable.ic_link, context.getString(R.string.onlineURL), submission.url)
             }
-            else -> Triple(R.drawable.vd_utils_attachment, type.prettyPrint(context), "")
+            else -> Triple(R.drawable.ic_attachment, type.prettyPrint(context), "")
         }
 
         view.iconImageView.setImageResource(icon)

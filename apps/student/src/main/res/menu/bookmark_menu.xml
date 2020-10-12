@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/bookmark"
-        android:icon="@drawable/vd_navigation_bookmarks"
+        android:icon="@drawable/ic_navigation_bookmarks"
         app:showAsAction="never"
         android:title="@string/addBookmark"/>
 

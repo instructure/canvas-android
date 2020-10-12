@@ -184,12 +184,12 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         // Publish status if discussion
         if(!mIsAnnouncements) {
             if (discussionTopicHeader.published) {
-                publishStatusIconView.setImageResource(R.drawable.vd_published)
+                publishStatusIconView.setImageResource(R.drawable.ic_complete_solid)
                 publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.publishedGreen))
                 publishStatusTextView.setText(R.string.published)
                 publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.publishedGreen))
             } else {
-                publishStatusIconView.setImageResource(R.drawable.vd_unpublished)
+                publishStatusIconView.setImageResource(R.drawable.ic_complete)
                 publishStatusIconView.setColorFilter(requireContext().getColorCompat(R.color.defaultTextGray))
                 publishStatusTextView.setText(R.string.not_published)
                 publishStatusTextView.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))

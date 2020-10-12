@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:elevation="6dp"
         tools:background="#00bcd5"
-        tools:navigationIcon="@drawable/vd_back_arrow"
+        tools:navigationIcon="@drawable/ic_back_arrow"
         tools:subtitle="Biology 101"
         tools:subtitleTextColor="@color/white"
         tools:title="Syllabus"

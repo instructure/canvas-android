@@ -686,17 +686,17 @@ fun Toolbar?.closeSearch() : Boolean {
 
 val Attachment.iconRes: Int
     get() = when {
-        contentType == null -> R.drawable.vd_utils_attachment
-        contentType!!.startsWith("image") -> R.drawable.vd_image
-        contentType!!.startsWith("video") -> R.drawable.vd_utils_media
-        contentType!!.startsWith("audio") -> R.drawable.vd_audio
+        contentType == null -> R.drawable.ic_attachment
+        contentType!!.startsWith("image") -> R.drawable.ic_image
+        contentType!!.startsWith("video") -> R.drawable.ic_media
+        contentType!!.startsWith("audio") -> R.drawable.ic_audio
         else -> when (filename!!.substringAfterLast('.', "").toLowerCase()) {
-            "doc", "docx" -> R.drawable.vd_utils_document
-            "txt" -> R.drawable.vd_utils_document
-            "rtf" -> R.drawable.vd_utils_document
-            "pdf" -> R.drawable.vd_utils_pdf
-            "xls" -> R.drawable.vd_utils_document
-            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
-            else -> R.drawable.vd_utils_attachment
+            "doc", "docx" -> R.drawable.ic_document
+            "txt" -> R.drawable.ic_document
+            "rtf" -> R.drawable.ic_document
+            "pdf" -> R.drawable.ic_pdf
+            "xls" -> R.drawable.ic_document
+            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.ic_attachment
+            else -> R.drawable.ic_attachment
         }
     }

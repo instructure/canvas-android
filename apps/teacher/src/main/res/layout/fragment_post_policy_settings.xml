@@ -29,7 +29,7 @@
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
         app:title="@string/postPolicyTitle"
-        app:navigationIcon="@drawable/vd_back_arrow"
+        app:navigationIcon="@drawable/ic_back_arrow"
         android:elevation="6dp" />
 
     <com.google.android.material.tabs.TabLayout

@@ -32,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:importantForAccessibility="no"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/vd_navigation_bookmarks" />
+        app:srcCompat="@drawable/ic_navigation_bookmarks" />
 
     <TextView
         android:id="@+id/title"
@@ -62,7 +62,7 @@
             android:padding="2dp"
             android:scaleType="fitCenter"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/vd_overflow_white_18dp"
+            app:srcCompat="@drawable/ic_overflow_white_18dp"
             android:tint="@color/gray"
             android:importantForAccessibility="no"/>
 

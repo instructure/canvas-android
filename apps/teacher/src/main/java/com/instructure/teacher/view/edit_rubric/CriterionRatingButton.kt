@@ -69,7 +69,7 @@ class CriterionRatingButton @JvmOverloads constructor(
 
     /** The 'add' icon to draw when [mIsCustom] is true */
     private val mAddDrawable by lazy {
-        context.getDrawableCompat(R.drawable.vd_add).apply {
+        context.getDrawableCompat(R.drawable.ic_add).apply {
             setColorFilter(context.getColorCompat(R.color.defaultTextGray), PorterDuff.Mode.SRC_ATOP)
             val offset = (height - context.DP(20).toInt()) / 2
             setBounds(offset, offset, width - offset, height - offset)

@@ -29,7 +29,7 @@
         android:elevation="6dp"
         app:title="@string/conferenceDetails"
         tools:background="#00bcd5"
-        tools:navigationIcon="@drawable/vd_back_arrow"
+        tools:navigationIcon="@drawable/ic_back_arrow"
         tools:subtitle="Biology 101"
         tools:subtitleTextColor="@color/white"
         tools:titleTextColor="@color/white" />
