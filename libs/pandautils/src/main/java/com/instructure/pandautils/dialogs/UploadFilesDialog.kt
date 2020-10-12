@@ -711,7 +711,10 @@ class UploadFilesDialog : AppCompatDialogFragment() {
 
         override fun onBindViewHolder(holder: FileViewHolder, position: Int) {
             holder.bind(fileList[position]) {
-                onRemovedFileCallback(fileList[position], position)
+                // The position passed to onBindViewHolder could be stale at this point if the user has recently
+                // added/removed items, so we need to use the current adapter position instead.
+                val currentPosition = holder.adapterPosition
+                onRemovedFileCallback(fileList[currentPosition], currentPosition)
             }
         }
 
