@@ -275,6 +275,7 @@ class ShareFileDestinationDialog : DialogFragment(), OnOptionCheckedListener {
                     removeGlobalLayoutListeners(dialogContents, this)
                     val revealAnimator = createRevealAnimator(dialogContents)
                     Handler().postDelayed({
+                        if (!isAdded) return@postDelayed
                         dialogContents.visibility = View.VISIBLE
                         revealAnimator.addListener(
                             object : AnimatorListenerAdapter() {
