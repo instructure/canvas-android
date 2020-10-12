@@ -645,6 +645,7 @@ class SubmissionContentView(
                         mAssignment.anonymousGrading
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
+                .setAttachments(mRootSubmission?.attachments)
                 .set()
 
         mBottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -733,7 +734,7 @@ class SubmissionContentView(
     }
     //endregion
 
-    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>) : FragmentPagerAdapter(fm) {
+    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, val attachments: List<Attachment>?) : FragmentPagerAdapter(fm) {
 
         private var fragments = ArrayList<Fragment>()
 
@@ -748,20 +749,26 @@ class SubmissionContentView(
         override fun getPageTitle(position: Int) = when (position) {
             0 -> ContextKeeper.appContext.getString(R.string.sg_tab_grade).toUpperCase(Locale.getDefault())
             1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).toUpperCase(Locale.getDefault())
-            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files).toUpperCase(Locale.getDefault())
+            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, attachments?.size ?: 0).toUpperCase(Locale.getDefault())
             else -> ""
         }
 
         internal class Holder(private val manager: FragmentManager) {
 
             private val fragments = ArrayList<Fragment>()
+            private var attachments: List<Attachment>? = null
 
             fun add(f: Fragment): Holder {
                 fragments.add(f)
                 return this
             }
 
-            fun set() = BottomSheetPagerAdapter(manager, fragments)
+            fun setAttachments(attachments: List<Attachment>?): Holder {
+                this.attachments = attachments
+                return this
+            }
+
+            fun set() = BottomSheetPagerAdapter(manager, fragments, attachments)
         }
 
         override fun finishUpdate(container: ViewGroup) {
