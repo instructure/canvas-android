@@ -20,12 +20,11 @@ package com.instructure.student.util
 import android.os.Build
 import android.webkit.WebView
 import androidx.core.content.ContextCompat
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.core.CrashlyticsCore
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import com.google.android.play.core.missingsplits.MissingSplitsManagerFactory
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants.USER_PROPERTY_BUILD_TYPE
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants.USER_PROPERTY_OS_VERSION
@@ -43,7 +42,6 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
-import io.fabric.sdk.android.Fabric
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
@@ -74,11 +72,11 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
 
         initPSPDFKit()
 
-        val crashlyticsKit = Crashlytics.Builder()
-            .core(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-            .build()
-
-        Fabric.with(this, crashlyticsKit)
+        if (BuildConfig.DEBUG) {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+        } else {
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)
+        }
 
         MasqueradeHelper.masqueradeLogoutTask = Runnable { StudentLogoutTask(LogoutTask.Type.LOGOUT).execute() }
 
@@ -89,7 +87,7 @@ class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandli
         try {
             WebView.setWebContentsDebuggingEnabled(true)
         } catch (e: Exception) {
-            Crashlytics.log("Exception trying to setWebContentsDebuggingEnabled")
+            FirebaseCrashlytics.getInstance().log("Exception trying to setWebContentsDebuggingEnabled")
         }
 
         PageViewUploadService.schedule(this, StudentPageViewService::class.java)

@@ -91,6 +91,7 @@ abstract class StudentTest : CanvasTest() {
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
     val profileSettingsPage = ProfileSettingsPage()
     val calendarEventPage = CalendarEventPage()
+    val quizTakingPage = QuizTakingPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

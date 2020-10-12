@@ -60,9 +60,9 @@ class SubmissionServiceTest : Assert() {
         every { ApiPrefs.user } returns User(id = 22)
         if (!Db.ready) {
             Db.dbSetup(AndroidSqliteDriver(Schema, context, callback = object : AndroidSqliteDriver.Callback(Schema) {
-                override fun onOpen(db: SupportSQLiteDatabase?) {
+                override fun onOpen(db: SupportSQLiteDatabase) {
                     super.onOpen(db)
-                    db?.execSQL("PRAGMA foreign_keys=ON;")
+                    db.execSQL("PRAGMA foreign_keys=ON;")
                 }
             })) // In-memory database
         }

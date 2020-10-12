@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.interactions.FragmentInteractions
 import com.instructure.interactions.Navigation
@@ -249,7 +249,7 @@ abstract class EffectHandler<VIEW, EVENT, EFFECT> : CoroutineConnection<EFFECT>(
                     // Must throw as a separate message, otherwise Mobius might silently consume the exception
                     GlobalScope.launch(Dispatchers.Main) { throw e }
                 } else {
-                    Crashlytics.logException(e)
+                    FirebaseCrashlytics.getInstance().recordException(e)
                 }
             }
         }

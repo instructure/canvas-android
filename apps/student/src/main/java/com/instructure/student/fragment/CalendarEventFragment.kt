@@ -244,6 +244,7 @@ class CalendarEventFragment : ParentFragment() {
     private fun setUpCallback() {
         scheduleItemCallback = object : StatusCallback<ScheduleItem>() {
             override fun onResponse(response: Response<ScheduleItem>, linkHeaders: LinkHeaders, type: ApiType) {
+                if (!isAdded) return
                 if (response.body() != null) {
                     scheduleItem = response.body() as ScheduleItem
                     initViews()

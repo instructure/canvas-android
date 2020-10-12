@@ -57,7 +57,7 @@ class UploadStatusSubmissionEffectHandlerTest : Assert() {
         val name = "assignment"
         val failed = false
         val list = listOf(
-            FileSubmission.Impl(
+            FileSubmission(
                 0,
                 submissionId,
                 null,

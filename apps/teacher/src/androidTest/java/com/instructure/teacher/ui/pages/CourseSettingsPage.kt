@@ -21,8 +21,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
-import com.instructure.espresso.matchers.checked
-import com.instructure.espresso.matchers.matchToolbarText
+import com.instructure.canvas.espresso.checked
+import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText

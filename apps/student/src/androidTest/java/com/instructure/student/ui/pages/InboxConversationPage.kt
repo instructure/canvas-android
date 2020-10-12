@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.MenuPopupWindow
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -51,6 +52,7 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
+import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
@@ -108,6 +110,8 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
         )
 
         onView(targetMatcher).click()
+        // "Delete" might be off the page, esp. in landscape mode on small screens
+        onView(isAssignableFrom(MenuPopupWindow.MenuDropDownListView::class.java)).swipeUp()
         onView(withText("Delete")).click()
         onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE")))
                 .click() // Confirmation click

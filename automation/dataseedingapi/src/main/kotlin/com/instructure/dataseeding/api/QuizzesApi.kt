@@ -216,12 +216,13 @@ object QuizzesApi {
         ))
 
         for(question in questions) {
-            QuizzesApi.createQuizQuestion(
+            val result = QuizzesApi.createQuizQuestion(
                     courseId = courseId,
                     quizId = result.id,
                     teacherToken = teacherToken,
                     quizQuestion = question
             )
+            question.id = result.id // back-fill the question id
         }
 
         QuizzesApi.publishQuiz(

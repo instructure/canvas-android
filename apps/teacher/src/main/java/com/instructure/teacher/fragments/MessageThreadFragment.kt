@@ -328,7 +328,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         val args = AddMessageFragment.createBundle(
             isReply = true,
             conversation = conversation!!,
-            participants = presenter.participants,
+            participants = presenter.participants.map { Recipient.from(it) },
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = null
         )
@@ -340,7 +340,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         val args = AddMessageFragment.createBundle(
             isReply = true,
             conversation = conversation!!,
-            participants = getMessageRecipientsForReplyAll(message),
+            participants = getMessageRecipientsForReplyAll(message).map { Recipient.from(it) },
             messages = presenter.getMessageChainForMessage(null),
             currentMessage = message
         )
@@ -351,7 +351,7 @@ class MessageThreadFragment : BaseSyncFragment<Message, MessageThreadPresenter, 
         val args = AddMessageFragment.createBundle(
             isReply = isReply,
             conversation = conversation!!,
-            participants = getMessageRecipientsForReply(message),
+            participants = getMessageRecipientsForReply(message).map { Recipient.from(it) },
             messages = presenter.getMessageChainForMessage(message),
             currentMessage = message
         )

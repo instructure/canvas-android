@@ -23,6 +23,7 @@ import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.DriverAtoms.webClick
+import androidx.test.espresso.web.webdriver.DriverAtoms.webScrollIntoView
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.withElementRepeat
 import com.instructure.espresso.page.BasePage
@@ -33,7 +34,7 @@ import org.hamcrest.Matchers.containsString
 /**
  * An abstraction for operations on a full-screen (or mostly-full-screen) webpage.
  */
-class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
+open class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
     fun runTextChecks(vararg checks : WebViewTextCheck) {
         for(check in checks) {
             if(check.repeatSecs != null) {
@@ -58,6 +59,20 @@ class CanvasWebViewPage : BasePage(R.id.canvasWebView) {
         catch(t: Throwable) {
             // Take no action if gdprAccept is not displayed
         }
+    }
+
+    fun pressButton(locatorType : Locator, locatorValue: String) {
+        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                .withElement(findElement(locatorType, locatorValue))
+                .perform(webScrollIntoView())
+                .perform(webClick())
+    }
+
+    fun pressButton(locatorType : Locator, locatorValue: String, subElementType : Locator, subElementValue: String) {
+        onWebView(allOf(withId(R.id.canvasWebView), isDisplayed()))
+                .withElement(findElement(locatorType, locatorValue))
+                .withContextualElement(findElement(subElementType, subElementValue))
+                .perform(webClick())
     }
 }
 

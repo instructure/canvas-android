@@ -33,7 +33,7 @@ import retrofit2.Response
 import java.net.URLEncoder
 import java.util.*
 
-class AddMessagePresenter(val conversation: Conversation?, private val mParticipants: ArrayList<BasicUser>?, private val mMessages: ArrayList<Message>?, val isReply: Boolean) : FragmentPresenter<AddMessageView>() {
+class AddMessagePresenter(val conversation: Conversation?, private val mParticipants: ArrayList<Recipient>?, private val mMessages: ArrayList<Message>?, val isReply: Boolean) : FragmentPresenter<AddMessageView>() {
 
     private val mAttachments = ArrayList<Attachment>()
     private var mCourse: Course? = null
@@ -171,12 +171,5 @@ class AddMessagePresenter(val conversation: Conversation?, private val mParticip
             return mCourse
         }
 
-    fun getParticipantById(recipientId: Long): BasicUser? {
-        for (participant in mParticipants ?: ArrayList()) {
-            if (participant.id == recipientId) {
-                return participant
-            }
-        }
-        return null
-    }
+    fun getParticipantById(recipientId: String): Recipient? = mParticipants?.find { it.stringId == recipientId }
 }

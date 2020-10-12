@@ -29,7 +29,7 @@ import android.os.Environment
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import android.util.Log
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.FileFolder
@@ -37,6 +37,8 @@ import com.instructure.pandautils.services.FileUploadService.Companion.CHANNEL_I
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.Okio
+import okio.buffer
+import okio.sink
 import java.io.File
 
 
@@ -85,7 +87,7 @@ class FileDownloadJobIntentService : JobIntentService() {
         when (resultStatus) {
             is DownloadFailed -> {
                 // We'll want to know if download streams are failing to open
-                Crashlytics.logException(Throwable("The file stream failed to open when downloading a file"))
+                FirebaseCrashlytics.getInstance().recordException(Throwable("The file stream failed to open when downloading a file"))
                 notification.setContentText(getString(R.string.downloadFailed))
             }
             is BadFileUrl, is BadFileName -> notification.setContentText(getString(R.string.downloadFailed))
@@ -123,7 +125,7 @@ class FileDownloadJobIntentService : JobIntentService() {
             val okHttp = OkHttpClient.Builder().build()
             val request = Request.Builder().url(fileUrl).build()
             val source = okHttp.newCall(request).execute().body()?.source() ?: return DownloadFailed()
-            val sink = Okio.buffer(Okio.sink(downloadedFile))
+            val sink = downloadedFile.sink().buffer()
 
             var startTime = System.currentTimeMillis()
             var downloaded = 0L

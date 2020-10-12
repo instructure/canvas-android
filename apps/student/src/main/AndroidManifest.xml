@@ -61,7 +61,7 @@
         android:theme="@style/CanvasMaterialTheme_Default"
         android:name=".util.AppManager"
         android:hardwareAccelerated="true"
-        android:supportsRtl="@bool/supportRTL"
+        android:supportsRtl="true"
         android:largeHeap="true"
         android:usesCleartextTraffic="true"
         tools:replace="android:supportsRtl"
@@ -362,10 +362,6 @@
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <!-- End of Widget Items -->
-
-        <meta-data
-            android:name="com.crashlytics.ApiKey"
-            android:value="${crashlyticsApiKey}"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -44,9 +44,9 @@ suspend fun <DATA> awaitQL(managerCall: ApolloManagerCall<DATA>): DATA {
         val callback = object : QLCallback<DATA>() {
             override fun onResponse(response: Response<DATA>, type: ApiType) {
                 when {
-                    response.hasErrors() -> onFail(ApolloException(response.errors().first().message()))
-                    response.data() == null -> onFail(ApolloException("Response data is null!"))
-                    else -> continuation.resumeSafely(response.data()!!)
+                    response.hasErrors() -> onFail(ApolloException(response.errors!!.first().message))
+                    response.data == null -> onFail(ApolloException("Response data is null!"))
+                    else -> continuation.resumeSafely(response.data!!)
                 }
             }
 

@@ -23,25 +23,13 @@
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
-
-        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
-
-        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <item name="windowActionModeOverlay">true</item>
-
-        <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
-        <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
-    </style>
-
-    <style name="CanvasMaterialTheme_Default.Fullscreen">
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
     </style>
@@ -61,20 +49,10 @@
         <item name="colorPrimary">@color/defaultPrimary</item>
         <item name="colorPrimaryDark">@color/defaultPrimaryDark</item>
         <item name="colorAccent">@color/defaultAccent</item>
+        <item name="android:colorPrimary">@color/defaultPrimary</item>
+        <item name="android:colorPrimaryDark">@color/defaultPrimaryDark</item>
+        <item name="android:colorAccent">@color/defaultAccent</item>
         <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="SplashTheme" parent="CanvasMaterialTheme_Default">
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="android:windowBackground">@drawable/splash_background</item>
-    </style>
-
-    <style name="OssTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/dimLighterGray</item>
-        <item name="colorAccent">@color/canvasDefaultAccent</item>
-        <item name="android:windowBackground">@color/canvasBackgroundWhite</item>
-        <item name="android:buttonStyle">@style/ButtonCanvasTheme</item>
     </style>
 
 </resources>

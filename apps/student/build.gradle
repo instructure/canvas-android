@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
 apply plugin: 'newrelic'
@@ -70,9 +70,6 @@ android {
         /* Add private data */
         PrivateData.merge(project, "student")
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
-        addManifestPlaceholders([
-                crashlyticsApiKey: "$crashlyticsApiKey"
-        ])
         buildConfigField "String", "NEWRELIC_APP_TOKEN", "\"$newRelicAppToken\""
 
         testBuildType = "debug"
@@ -119,8 +116,11 @@ android {
             shrinkResources false
             buildConfigField 'boolean', 'IS_DEBUG', 'true'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            ext.enableCrashlytics = false
             pseudoLocalesEnabled true
+
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
 
             ndk {
                 // Filter for architectures supported by Flutter. Include x86 in debug builds so we don't crash on FTL.
@@ -135,6 +135,10 @@ android {
             shrinkResources true
             buildConfigField 'boolean', 'IS_DEBUG', 'false'
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+            }
 
             ndk {
                 // Filter for architectures supported by Flutter. Exclude x86 in release builds to avoid missing lib crash on x86 devices.
@@ -216,10 +220,6 @@ android {
     }
 }
 
-repositories {
-    maven { url 'https://maven.fabric.io/public' }
-}
-
 dependencies {
     implementation project(path: ':panda_annotations')
     kaptAndroidTestQa project(path: ':panda_processor')
@@ -255,8 +255,11 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.FIREBASE_CORE
 
-    /* Crashlytics */
-    implementation(Libs.CRASHLYTICS) {
+    implementation (Libs.FIREBASE_ANALYTICS) {
+        transitive = true
+    }
+
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
 
@@ -297,17 +300,12 @@ dependencies {
     implementation Libs.FIREBASE_JOB_DISPATCHER
 
     /* Database */
-    implementation "com.squareup.sqldelight:android-driver:1.1.3"
+    implementation "com.squareup.sqldelight:android-driver:1.4.3"
 
     /* Qr Code */
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.ZXING
-}
-
-crashlytics {
-    enableNdk true
-    androidNdkOut "../../debugSymbols"
-    androidNdkLibsOut "../../build/app/intermediates/transforms/stripDebugSymbol/release/0/lib"
+    implementation "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
 }
 
 // Comment out this line if the reporting logic starts going wonky.
@@ -324,7 +322,7 @@ if (coverageEnabled) {
         def productFlavor = 'qa'
         def buildType = 'debug'
 
-        classDirectories = fileTree(
+        classDirectories.setFrom fileTree(
                 dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
                 excludes: ['**/R.class',
                            '**/R$*.class',
@@ -336,8 +334,8 @@ if (coverageEnabled) {
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
-        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData = fileTree(dir: "results", includes: ['**/*.ec'])
+        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData.setFrom fileTree(dir: "results", includes: ['**/*.ec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/
@@ -354,7 +352,7 @@ if (coverageEnabled) {
         def productFlavor = 'qa'
         def buildType = 'debug'
 
-        classDirectories = fileTree(
+        classDirectories.setFrom fileTree(
                 dir: "${project.buildDir}/tmp/kotlin-classes/qaDebug",
                 excludes: ['**/R.class',
                            '**/R$*.class',
@@ -366,8 +364,8 @@ if (coverageEnabled) {
         )
 
         // project.buildDir is /canvas-android/apps/teacher/build
-        sourceDirectories = files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
-        executionData = fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
+        sourceDirectories.setFrom files(['src/main/java'] + android.sourceSets[productFlavor].java.srcDirs)
+        executionData.setFrom fileTree(dir: ".", includes: ['results/**/*.ec', '**/testQaDebugUnitTest.exec'])
 
         reports {
             // default path: /canvas-android/apps/teacher/build/reports/jacoco/firebaseJacoco/html/

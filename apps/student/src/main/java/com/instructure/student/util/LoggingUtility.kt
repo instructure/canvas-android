@@ -18,7 +18,7 @@ package com.instructure.student.util
 
 import android.content.Intent
 import android.os.Bundle
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Logger.canLogUserDetails
 import com.instructure.canvasapi2.utils.tryOrNull
 
@@ -41,12 +41,12 @@ object LoggingUtility {
      *
      * @param priority The priority of the logging. Examples are [android.util.Log.DEBUG] and [android.util.Log.ERROR]
      * @param msg      The message to log to console
-     * @see Crashlytics.log
+     * @see FirebaseCrashlytics.log
      * @see android.util.Log.d
      */
     fun log(priority: Int, msg: String?) {
         // Will write to crashlytics and logcat
-        if (canLogUserDetails()) Crashlytics.log(priority, TAG, msg)
+        if (canLogUserDetails()) FirebaseCrashlytics.getInstance().log("Priority: $priority, Tag: $TAG, Message: $msg")
     }
 
     fun logIntent(intent: Intent?): String {
@@ -56,7 +56,7 @@ object LoggingUtility {
     }
 
     /**
-     * Logs all data of Intent using HelpDesk, Console [android.util.Log.d], and Crashlytics [Crashlytics.log]
+     * Logs all data of Intent using HelpDesk, Console [android.util.Log.d], and FirebaseCrashlytics [FirebaseCrashlytics.log]
      *
      * @param bundle  The bundle that we want to log.
      * @return The string that was actually logged.

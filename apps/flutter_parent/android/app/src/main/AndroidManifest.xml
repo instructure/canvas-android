@@ -24,10 +24,6 @@
             android:name="flutterEmbedding"
             android:value="2" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}" />
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"

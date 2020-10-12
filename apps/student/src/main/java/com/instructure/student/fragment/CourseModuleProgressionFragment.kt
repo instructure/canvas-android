@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -223,7 +224,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             it.adapter = adapter
 
             // Set a custom page transformer for RTL
-            if (resources.getBoolean(R.bool.isRightToLeft)) it.setPageTransformer(true, pageTransformer)
+            if (Locale.getDefault().isRtl) it.setPageTransformer(true, pageTransformer)
 
             // Set the item number in the adapter to be the overall position
             it.currentItem = currentPos

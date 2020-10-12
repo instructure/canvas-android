@@ -124,7 +124,7 @@ class PlannerFetcher extends ChangeNotifier {
       notifyListeners();
       try {
         final contexts = await getContexts();
-        List<PlannerItem> items = await _fetchPlannerItems(date.withStartOfDay(), date.withEndOfDay(), contexts, true);
+        List<PlannerItem> items = await fetchPlannerItems(date.withStartOfDay(), date.withEndOfDay(), contexts, true);
         daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withData(ConnectionState.done, items);
       } catch (e) {
         daySnapshots[dayKey] = AsyncSnapshot<List<PlannerItem>>.withError(ConnectionState.done, e);
@@ -147,14 +147,15 @@ class PlannerFetcher extends ChangeNotifier {
     try {
       final contexts = await getContexts();
       List<PlannerItem> items =
-          await _fetchPlannerItems(date.withStartOfMonth(), date.withEndOfMonth(), contexts, refresh);
+          await fetchPlannerItems(date.withStartOfMonth(), date.withEndOfMonth(), contexts, refresh);
       _completeMonth(items, date);
     } catch (e) {
       _failMonth(e, date);
     }
   }
 
-  Future<List<PlannerItem>> _fetchPlannerItems(
+  @visibleForTesting
+  Future<List<PlannerItem>> fetchPlannerItems(
       DateTime startDate, DateTime endDate, Set<String> contexts, bool refresh) async {
     List<List<ScheduleItem>> tempItems = await Future.wait([
       locator<CalendarEventsApi>().getUserCalendarItems(
@@ -176,6 +177,7 @@ class PlannerFetcher extends ChangeNotifier {
     ]);
 
     List<ScheduleItem> scheduleItems = tempItems[0] + tempItems[1];
+    scheduleItems.retainWhere((it) => it.isHidden != true); // Exclude hidden items
     return scheduleItems.map((item) => item.toPlannerItem(courseNameMap[_observeeId][item.getContextId()])).toList();
   }
 

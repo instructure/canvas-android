@@ -87,7 +87,6 @@ android {
 repositories {
     google()
     jcenter()
-    maven { url 'https://maven.fabric.io/public' }
     maven { url "https://raw.github.com/laenger/maven-releases/master/releases" }
     maven {
         credentials {

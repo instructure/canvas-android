@@ -12,52 +12,40 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_crashlytics/flutter_crashlytics.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/crash_screen.dart';
+import 'package:flutter_parent/utils/service_locator.dart';
 
 class CrashUtils {
   static Future<void> init() async {
-    if (kReleaseMode) await FlutterCrashlytics().initialize();
+    // Set up error handling
+    FirebaseCrashlytics firebase = locator<FirebaseCrashlytics>();
+
+    FlutterError.onError = (error) async {
+      await firebase
+          .setUserIdentifier('domain: ${ApiPrefs.getDomain() ?? 'null'} user_id: ${ApiPrefs.getUser()?.id ?? 'null'}');
+      firebase.recordFlutterError(error);
+    };
+
+    if (kReleaseMode) {
+      await firebase.setCrashlyticsCollectionEnabled(true);
+    } else {
+      await firebase.setCrashlyticsCollectionEnabled(false);
+    }
 
     // Set up custom crash screen
     ErrorWidget.builder = (error) {
       // Only need to dump errors in debug, release builds call onError
       if (kReleaseMode) {
-        FlutterCrashlytics().log('Widget Crash');
+        firebase.recordFlutterError(error);
+        firebase.log('Widget Crash');
       } else {
         FlutterError.dumpErrorToConsole(error);
       }
       return CrashScreen(error);
     };
-
-    // Set up error handling
-    FlutterError.onError = (error) {
-      if (kReleaseMode) {
-        reportCrash(error.exception, error.stack);
-      } else {
-        // Manually handle debug reporting here, as this console formatting is nicer than simple print(stacktrace)
-        FlutterError.dumpErrorToConsole(error);
-      }
-    };
-  }
-
-  /// Report a crash to crashlytics in release mode, otherwise only a stack trace is printed
-  static reportCrash(dynamic exception, StackTrace stacktrace) async {
-    print('Caught exception: $exception');
-    debugPrintStack(stackTrace: stacktrace);
-
-    // Report to Crashlytics, only in release mode
-    if (!kReleaseMode) return;
-
-    // Set any user info that will help to debug the issue
-    await Future.wait([
-      FlutterCrashlytics().setInfo('domain', ApiPrefs.getDomain() ?? 'null'),
-      FlutterCrashlytics().setInfo('user_id', ApiPrefs.getUser()?.id ?? 'null'),
-    ]);
-
-    await FlutterCrashlytics().reportCrash(exception, stacktrace, forceCrash: false);
   }
 }

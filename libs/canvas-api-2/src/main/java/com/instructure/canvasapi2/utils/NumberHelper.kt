@@ -23,8 +23,10 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 object NumberHelper {
 
@@ -67,9 +69,14 @@ object NumberHelper {
 
     fun readableFileSize(context: Context, size: Long): String {
         val units = context.resources.getStringArray(R.array.file_size_units)
+        return readableFileSize(units, size)
+    }
+
+    fun readableFileSize(units: Array<String>, fileSize: Long): String {
+        val size = fileSize.coerceAtLeast(0L)
         var digitGroups = 0
-        if (size > 0) digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
-        val byteSize = size / 1024.0.pow(digitGroups.toDouble())
+        if (size > 0) digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt().coerceIn(0, units.size-1)
+        val byteSize = floor(size / 1024.0.pow(digitGroups.toDouble()) * 10) / 10
         val displaySize = DecimalFormat("#,##0.#").format(byteSize)
 
         return "$displaySize ${units[digitGroups]}"

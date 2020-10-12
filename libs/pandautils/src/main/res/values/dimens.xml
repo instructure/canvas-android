@@ -17,15 +17,8 @@
   -->
 
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
-
-    <dimen name="floatingCardVerticalPadding">0dp</dimen>
-    <dimen name="floatingCardHorizontalPadding">0dp</dimen>
 
     <dimen name="avatar_size">40dp</dimen>
-    <dimen name="avatar_border_width">1dp</dimen>
 
     <dimen name="utils_toolbar_elevation_small">2dp</dimen>
     <dimen name="utils_toolbar_elevation">6dp</dimen>

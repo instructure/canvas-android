@@ -567,7 +567,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Displays grade cell when grade is not empty and there is a failed submission`() {
-        val submission = com.instructure.student.Submission.Impl(
+        val submission = com.instructure.student.Submission(
             id = 123L,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now(),
@@ -598,7 +598,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Does not display submitted cell when grade is null and there is a failed submission`() {
-        val submission = com.instructure.student.Submission.Impl(
+        val submission = com.instructure.student.Submission(
             id = 123L,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now(),
@@ -626,7 +626,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Does not display empty cell when grade is empty and there is a failed submission`() {
-        val submission = com.instructure.student.Submission.Impl(
+        val submission = com.instructure.student.Submission(
             id = 123L,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now(),
@@ -654,7 +654,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Displays upload in progress when database submission is not failed`() {
-        val submission = com.instructure.student.Submission.Impl(
+        val submission = com.instructure.student.Submission(
             id = 123L,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now(),
@@ -679,7 +679,7 @@ class AssignmentDetailsPresenterTest : Assert() {
 
     @Test
     fun `Displays failed submission when database submission is failed`() {
-        val submission = com.instructure.student.Submission.Impl(
+        val submission = com.instructure.student.Submission(
             id = 123L,
             submissionEntry = null,
             lastActivityDate = OffsetDateTime.now(),

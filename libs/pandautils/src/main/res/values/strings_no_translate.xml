@@ -17,8 +17,6 @@
   -->
 
 <resources>
-    <string name="word_space_word" translatable="false">%1$s %2$s</string>
-
     <string name="utils_mobileSupportEmailAddress" translatable="false">mobilesupport@instructure.com</string>
     <string name="utils_supportEmailAddress" translatable="false">support@instructure.com</string>
     <string name="utils_dotWithSpaces" translatable="false">\u0020\u0020\u2022\u0020\u0020</string>

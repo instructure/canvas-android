@@ -1,6 +1,5 @@
 # Private data
 key.properties
-fabric.properties
 google-services.json
 lib/network/utils/private_consts.dart
 
@@ -39,13 +38,19 @@ coverage/
 
 # Android related
 **/android/**/gradle-wrapper.jar
-**/android/**/gradle-wrapper.properties
 **/android/.gradle
 **/android/captures/
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
+
+# We must track gradle-wrapper.properties in order to keep the gradle
+# version synced with the version used by buildSrc, which is found in
+# <repo-root>/gradle/gradle/wrapper/gradle-wrapper.properties.
+# This is necessary because the flutter gradle project depends on buildSrc
+# for access to things like Versions constants and PrivateData.merge().
+#**/android/**/gradle-wrapper.properties
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

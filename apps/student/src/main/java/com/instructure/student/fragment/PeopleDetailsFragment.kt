@@ -76,9 +76,7 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
         compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {
-                val participants = ArrayList<BasicUser>()
-                participants.add(BasicUser.userToBasicUser(user!!))
-                InboxComposeMessageFragment.makeRoute(canvasContext, participants)
+                InboxComposeMessageFragment.makeRoute(canvasContext, arrayListOf(Recipient.from(user!!)))
             }
 
             RouteMatcher.route(requireContext(), route)

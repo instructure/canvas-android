@@ -47,7 +47,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         initModel = UploadStatusSubmissionModel(
             submissionId = submissionId
         )
-        initFile = FileSubmission.Impl(
+        initFile = FileSubmission(
             12L,
             submissionId,
             null,
@@ -134,7 +134,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
             assignmentName = assignmentName + "bad",
             isLoading = true,
             isFailed = false,
-            files = listOf(FileSubmission.Impl(0, 0, null, null, null, null, null, null, false))
+            files = listOf(FileSubmission(0, 0, null, null, null, null, null, null, false))
         )
         val expectedModel = startModel.copy(
             isLoading = false,
@@ -164,7 +164,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
         val startModel = initModel.copy(
             isFailed = false,
             uploadedBytes = 1,
-            files = listOf(FileSubmission.Impl(0, 0, null, null, null, null, null, null, false))
+            files = listOf(FileSubmission(0, 0, null, null, null, null, null, null, false))
         )
         val expectedModel = startModel.copy(uploadedBytes = null, files = listOf(initFile))
 
@@ -308,7 +308,7 @@ class UploadStatusSubmissionUpdateTest : Assert() {
 
     @Test
     fun `OnDeleteFile results in a OnDeleteFileFromSubmission effect with a model change`() {
-        val deleteFile = FileSubmission.Impl(409L, submissionId, null, null, null, null, null, null, false)
+        val deleteFile = FileSubmission(409L, submissionId, null, null, null, null, null, null, false)
         val startModel = initModel.copy(files = listOf(initFile, deleteFile))
         val expectedModel = initModel.copy(files = listOf(initFile))
         updateSpec

@@ -104,16 +104,6 @@ void main() {
     expect(result.first.id, _invalidCourse.id);
   });
 
-  test('getCourses returns no courses for valid studentId but invalid dates', () async {
-    final badDatesCourse = _course.rebuild((b) => b..endAt = _pastDate);
-    when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [badDatesCourse]);
-
-    final result = await CoursesInteractor().getCourses(isRefresh: true, studentId: _studentId);
-
-    verify(_api.getObserveeCourses(forceRefresh: true));
-    expect(result, isEmpty);
-  });
-
   test('getCourses returns no courses for invalid studentId but valid dates', () async {
     when(_api.getObserveeCourses(forceRefresh: true)).thenAnswer((_) async => [_invalidCourse]);
 

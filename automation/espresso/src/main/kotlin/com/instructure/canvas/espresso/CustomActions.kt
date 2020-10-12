@@ -26,6 +26,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
@@ -39,6 +40,8 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.util.HumanReadables
+import androidx.viewpager.widget.ViewPager
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
@@ -296,4 +299,32 @@ fun waitForMatcherWithSleeps(target: Matcher<View>, waitMs: Long = 10000, sleepM
     // If we aren't successful by now, make one more unprotected attempt to throw
     // the correct error.
     return onView(target).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+}
+
+class SetViewPagerCurrentItemAction(private val pageNumber: Int) : ViewAction {
+
+    override fun getDescription() = "set ViewPager current item to $pageNumber"
+
+    override fun getConstraints(): Matcher<View> = ViewMatchers.isAssignableFrom(ViewPager::class.java)
+
+    override fun perform(uiController: UiController, view: View?) {
+        val pager = view as ViewPager
+
+        val adapter = pager.adapter ?: throw PerformException.Builder()
+                .withActionDescription(this.description)
+                .withViewDescription(HumanReadables.describe(view))
+                .withCause(RuntimeException("ViewPager adapter cannot be null"))
+                .build()
+
+        if (pageNumber >= adapter.count) throw PerformException.Builder()
+                .withActionDescription(this.description)
+                .withViewDescription(HumanReadables.describe(view))
+                .withCause(IndexOutOfBoundsException("Requested page $pageNumber in ViewPager of size ${adapter.count}"))
+                .build()
+
+        pager.setCurrentItem(pageNumber, false)
+
+        uiController.loopMainThreadUntilIdle()
+    }
+
 }

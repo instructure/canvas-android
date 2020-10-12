@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.validOrNull
 import okhttp3.Request
 import okio.Okio
+import okio.buffer
+import okio.sink
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -98,7 +100,7 @@ class FetchFileAsyncTask private constructor(
             val total = response.body()?.contentLength()?.toFloat() ?: 0f
 
             // Set up source and sink
-            val sink = Okio.buffer(Okio.sink(tmpFile))
+            val sink = tmpFile.sink().buffer()
             val source = response.body()?.source()
 
             var downloaded = 0L

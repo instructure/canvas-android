@@ -743,7 +743,7 @@ class AssignmentDetailsRenderTest : StudentRenderTest() {
         assignmentDetailsRenderPage.assertAssignmentAttemptsGone()
     }
 
-    private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission.Impl(
+    private fun mockkSubmission(failed: Boolean = false) = com.instructure.student.Submission(
         123L,
         null,
         null,

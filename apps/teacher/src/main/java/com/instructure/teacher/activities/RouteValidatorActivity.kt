@@ -67,10 +67,7 @@ class RouteValidatorActivity : FragmentActivity() {
             val isSignedIn = ApiPrefs.getValidToken().isNotEmpty()
             val domain = ApiPrefs.domain
 
-            val qrLoginEnabled = RemoteConfigUtils.getString(
-                    RemoteConfigParam.QR_LOGIN_ENABLED_TEACHER)?.equals("true", ignoreCase = true)
-                    ?: false
-            if (verifySSOLoginUri(data, true) && qrLoginEnabled) {
+            if (verifySSOLoginUri(data, true)) {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if (isSignedIn) { // If the user is already signed in, use the QR Switch
