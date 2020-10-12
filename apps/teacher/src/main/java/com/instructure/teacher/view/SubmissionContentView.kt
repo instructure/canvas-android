@@ -645,7 +645,7 @@ class SubmissionContentView(
                         mAssignment.anonymousGrading
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
-                .setAttachments(mRootSubmission?.attachments)
+                .setFileCount(mRootSubmission?.attachments?.size ?: 0)
                 .set()
 
         mBottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -734,7 +734,7 @@ class SubmissionContentView(
     }
     //endregion
 
-    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, val attachments: List<Attachment>?) : FragmentPagerAdapter(fm) {
+    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, val fileCount: Int = 0) : FragmentPagerAdapter(fm) {
 
         private var fragments = ArrayList<Fragment>()
 
@@ -749,26 +749,26 @@ class SubmissionContentView(
         override fun getPageTitle(position: Int) = when (position) {
             0 -> ContextKeeper.appContext.getString(R.string.sg_tab_grade).toUpperCase(Locale.getDefault())
             1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).toUpperCase(Locale.getDefault())
-            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, attachments?.size ?: 0).toUpperCase(Locale.getDefault())
+            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, fileCount).toUpperCase(Locale.getDefault())
             else -> ""
         }
 
         internal class Holder(private val manager: FragmentManager) {
 
             private val fragments = ArrayList<Fragment>()
-            private var attachments: List<Attachment>? = null
+            private var fileCount: Int = 0
 
             fun add(f: Fragment): Holder {
                 fragments.add(f)
                 return this
             }
 
-            fun setAttachments(attachments: List<Attachment>?): Holder {
-                this.attachments = attachments
+            fun setFileCount(fileCount: Int): Holder {
+                this.fileCount = fileCount
                 return this
             }
 
-            fun set() = BottomSheetPagerAdapter(manager, fragments, attachments)
+            fun set() = BottomSheetPagerAdapter(manager, fragments, fileCount)
         }
 
         override fun finishUpdate(container: ViewGroup) {
