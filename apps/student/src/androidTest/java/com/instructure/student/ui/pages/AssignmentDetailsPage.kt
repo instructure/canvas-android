@@ -95,7 +95,7 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
     }
 
     fun scrollToAssignmentDescription() {
-        waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 20000).scrollTo()
+        waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
     }
 }
 
