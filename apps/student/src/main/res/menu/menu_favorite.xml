@@ -21,7 +21,7 @@
 
     <item android:id="@+id/selectFavorites"
         android:title="@string/editDashboard"
-        android:icon="@drawable/vd_edit"
+        android:icon="@drawable/ic_edit"
         app:showAsAction="always"/>
 
 </menu>

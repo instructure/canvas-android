@@ -28,7 +28,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        app:navigationIcon="@drawable/vd_close_gray"
+        app:navigationIcon="@drawable/ic_close"
         app:title="@string/actAsUser"/>
 
     <View
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/vd_masquerade_panda_white"/>
+                    android:src="@drawable/ic_masquerade_panda_white"/>
 
                 <ImageView
                     android:id="@+id/redPanda"
@@ -71,7 +71,7 @@
                     android:layout_gravity="center_horizontal"
                     android:importantForAccessibility="no"
                     android:rotation="-24"
-                    android:src="@drawable/vd_masquerade_panda_red"
+                    android:src="@drawable/ic_masquerade_panda_red"
                     android:transformPivotX="0dp"
                     android:transformPivotY="250dp"
                     android:translationY="30dp"/>

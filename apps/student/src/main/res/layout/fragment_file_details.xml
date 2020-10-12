@@ -73,7 +73,7 @@
         android:focusable="true"
         android:minHeight="48dp"
         android:minWidth="48dp"
-        app:srcCompat="@drawable/vd_document"/>
+        app:srcCompat="@drawable/ic_document"/>
 
     <ProgressBar
         android:id="@+id/fileLoadingProgressBar"

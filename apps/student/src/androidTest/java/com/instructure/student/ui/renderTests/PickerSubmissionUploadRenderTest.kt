@@ -82,7 +82,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
     @TestMetaData(Priority.P3, FeatureCategory.SUBMISSIONS, TestCategory.RENDER)
     fun displaysListState() {
         val fileItemStates = listOf(
-            PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
+            PickerListItemViewState(0, R.drawable.ic_media_recordings, "title", "12.3 KB")
         )
         loadPageWithViewState(
             PickerSubmissionUploadViewState.FileList(
@@ -108,7 +108,7 @@ class PickerSubmissionUploadRenderTest : StudentRenderTest() {
         }
 
         val fileItemStates = listOf(
-            PickerListItemViewState(0, R.drawable.vd_media_recordings, "title", "12.3 KB")
+            PickerListItemViewState(0, R.drawable.ic_media_recordings, "title", "12.3 KB")
         )
         loadPageWithViewState(
             PickerSubmissionUploadViewState.FileList(

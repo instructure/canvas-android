@@ -69,7 +69,7 @@ class EditFavoritesFragment : ParentFragment() {
             override fun onRefreshFinished() {
                 setRefreshing(false)
                 if (recyclerAdapter?.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.vd_panda_nocourses, R.string.noCourses, R.string.noCoursesSubtext)
+                    setEmptyView(emptyView, R.drawable.ic_panda_nocourses, R.string.noCourses, R.string.noCoursesSubtext)
                 }
             }
 

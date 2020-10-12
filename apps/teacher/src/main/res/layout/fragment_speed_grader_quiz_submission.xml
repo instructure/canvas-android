@@ -37,7 +37,7 @@
             android:importantForAccessibility="no"
             android:scaleType="fitCenter"
             android:tint="@color/defaultThumbColor"
-            app:srcCompat="@drawable/vd_quiz"/>
+            app:srcCompat="@drawable/ic_quiz"/>
 
         <TextView
             android:id="@+id/quizSubmissionLabelView"

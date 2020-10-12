@@ -52,7 +52,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
         override fun onRefreshFinished() {
             setRefreshing(false)
             if (recyclerAdapter?.size() == 0) {
-                setEmptyView(emptyView, R.drawable.vd_panda_quizzes_rocket, R.string.noQuizzes, R.string.noQuizzesSubtext)
+                setEmptyView(emptyView, R.drawable.ic_panda_quizzes_rocket, R.string.noQuizzes, R.string.noQuizzesSubtext)
             }
         }
     }

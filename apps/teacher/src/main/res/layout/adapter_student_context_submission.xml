@@ -26,7 +26,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="16dp"
-        android:src="@drawable/vd_assignment"
+        android:src="@drawable/ic_assignment"
         android:layout_marginTop="14dp"
         tools:ignore="ContentDescription"/>
 

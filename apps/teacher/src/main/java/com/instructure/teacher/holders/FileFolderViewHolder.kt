@@ -59,20 +59,20 @@ class FileFolderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else {
                 val contentType = item.contentType.orEmpty()
                 when {
-                    contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.vd_pdf, courseColor)
-                    contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.vd_ppt, courseColor)
-                    contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.vd_spreadsheet, courseColor)
-                    contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.vd_word_doc, courseColor)
-                    contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.vd_zip, courseColor)
-                    contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.vd_image, courseColor)
-                    else -> fileIconOrImage.setIcon(R.drawable.vd_document, courseColor)
+                    contentType.contains("pdf") -> fileIconOrImage.setIcon(R.drawable.ic_pdf, courseColor)
+                    contentType.contains("presentation") -> fileIconOrImage.setIcon(R.drawable.ic_ppt, courseColor)
+                    contentType.contains("spreadsheet") -> fileIconOrImage.setIcon(R.drawable.ic_spreadsheet, courseColor)
+                    contentType.contains("wordprocessing") -> fileIconOrImage.setIcon(R.drawable.ic_word_doc, courseColor)
+                    contentType.contains("zip") -> fileIconOrImage.setIcon(R.drawable.ic_zip, courseColor)
+                    contentType.contains("image") -> fileIconOrImage.setIcon(R.drawable.ic_image, courseColor)
+                    else -> fileIconOrImage.setIcon(R.drawable.ic_document, courseColor)
                 }
             }
         } else { // This is a folder
             fileName.text = item.name
             fileName.contentDescription = itemView.resources.getString(R.string.folderTalkBack, item.name)
             fileSize.text = ""
-            fileIconOrImage.setIcon(R.drawable.vd_folder_solid, courseColor)
+            fileIconOrImage.setIcon(R.drawable.ic_folder_solid, courseColor)
         }
     }
 

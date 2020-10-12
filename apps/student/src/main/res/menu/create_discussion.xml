@@ -23,7 +23,7 @@
     <!--
     <item
         android:id="@+id/menuAddAttachment"
-        android:icon="@drawable/vd_attachment"
+        android:icon="@drawable/ic_attachment"
         android:title=""
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
@@ -31,7 +31,7 @@
 
     <item
         android:id="@+id/menuSaveDiscussion"
-        android:icon="@drawable/vd_send"
+        android:icon="@drawable/ic_send"
         android:title="@string/send"
         app:showAsAction="always"/>
 

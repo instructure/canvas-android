@@ -146,11 +146,11 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertStarred() {
-        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star_filled, ThemePrefs.brandColor)))
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.ic_star_filled, ThemePrefs.brandColor)))
     }
 
     fun assertNotStarred() {
-        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.vd_star, ThemePrefs.brandColor)))
+        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.ic_star, ThemePrefs.brandColor)))
     }
 
 }

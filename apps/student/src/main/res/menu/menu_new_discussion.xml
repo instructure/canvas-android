@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/menu_add_discussion"
-        android:icon="@drawable/vd_add"
+        android:icon="@drawable/ic_add"
         app:showAsAction="ifRoom"
         android:title="@string/newDiscussion"/>
 

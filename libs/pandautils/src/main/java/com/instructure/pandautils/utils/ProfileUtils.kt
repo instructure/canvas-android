@@ -132,7 +132,7 @@ object ProfileUtils {
                     avatar.onClick { onClick(firstUser) }
                 }
             }
-            else -> avatar.setImageResource(R.drawable.vd_group)
+            else -> avatar.setImageResource(R.drawable.ic_group)
         }
     }
 

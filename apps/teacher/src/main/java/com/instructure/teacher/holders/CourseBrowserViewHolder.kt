@@ -40,23 +40,23 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
 
     fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
         val res: Int = when (tab.tabId) {
-            Tab.ASSIGNMENTS_ID -> R.drawable.vd_assignment
-            Tab.QUIZZES_ID -> R.drawable.vd_quiz
-            Tab.DISCUSSIONS_ID -> R.drawable.vd_discussion
-            Tab.ANNOUNCEMENTS_ID -> R.drawable.vd_announcement
-            Tab.PEOPLE_ID -> R.drawable.vd_people
-            Tab.FILES_ID -> R.drawable.vd_files
-            Tab.PAGES_ID -> R.drawable.vd_pages
-            Tab.MODULES_ID -> R.drawable.vd_modules
-            Tab.STUDENT_VIEW -> R.drawable.vd_profile
+            Tab.ASSIGNMENTS_ID -> R.drawable.ic_assignment
+            Tab.QUIZZES_ID -> R.drawable.ic_quiz
+            Tab.DISCUSSIONS_ID -> R.drawable.ic_discussion
+            Tab.ANNOUNCEMENTS_ID -> R.drawable.ic_announcement
+            Tab.PEOPLE_ID -> R.drawable.ic_people
+            Tab.FILES_ID -> R.drawable.ic_files
+            Tab.PAGES_ID -> R.drawable.ic_pages
+            Tab.MODULES_ID -> R.drawable.ic_modules
+            Tab.STUDENT_VIEW -> R.drawable.ic_user
             else -> {
                 //Determine if its the attendance tool
                 val attendanceExternalToolId = TeacherPrefs.attendanceExternalToolId
                 if (attendanceExternalToolId.isNotBlank() && attendanceExternalToolId == tab.tabId) {
-                    R.drawable.vd_attendance
+                    R.drawable.ic_attendance
                 } else if (tab.type == Tab.TYPE_EXTERNAL) {
-                    R.drawable.vd_lti
-                } else R.drawable.vd_canvas_logo
+                    R.drawable.ic_lti
+                } else R.drawable.ic_canvas_logo
             }
         }
 
@@ -80,7 +80,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
         // Manually set the text for Student View tab since it doesn't have any other info other than tabId
         if (tab.tabId == Tab.STUDENT_VIEW) {
             itemView.label.text = itemView.context.getText(R.string.tab_student_view)
-            itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.vd_open_externally))
+            itemView.endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_open_externally))
             itemView.description.setVisible()
             itemView.description.text = itemView.context.getText(R.string.opensInCanvasStudent)
         } else {

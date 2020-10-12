@@ -56,7 +56,7 @@
         android:contentDescription="@string/createAFolder"
         android:visibility="invisible"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_files"
+        app:srcCompat="@drawable/ic_files"
         tools:ignore="UnusedAttribute"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -71,7 +71,7 @@
         android:contentDescription="@string/createAFile"
         android:visibility="invisible"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_file_upload"
+        app:srcCompat="@drawable/ic_file_upload"
         tools:ignore="UnusedAttribute"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -84,7 +84,7 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="@string/createFileFolderFabContentDesc"
         app:elevation="4dp"
-        app:srcCompat="@drawable/vd_add" />
+        app:srcCompat="@drawable/ic_add" />
 
     <com.instructure.teacher.view.EmptyPandaView
         android:id="@+id/emptyPandaView"

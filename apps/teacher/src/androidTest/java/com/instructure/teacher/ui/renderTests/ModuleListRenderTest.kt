@@ -54,7 +54,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
             id = 2L,
             title = "Assignment Module Item",
             subtitle = "Due Tomorrow",
-            iconResId = R.drawable.vd_assignment,
+            iconResId = R.drawable.ic_assignment,
             isPublished = true,
             indent = 0,
             tintColor = Color.BLUE,
@@ -212,7 +212,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
-                            iconResId = R.drawable.vd_assignment,
+                            iconResId = R.drawable.ic_assignment,
                             isPublished = false,
                             indent = 0,
                             tintColor = Color.BLUE,
@@ -305,7 +305,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
                             id = idx + 2L,
                             title = "Module Item ${idx + 1}",
                             subtitle = null,
-                            iconResId = R.drawable.vd_assignment,
+                            iconResId = R.drawable.ic_assignment,
                             isPublished = false,
                             indent = 0,
                             tintColor = Color.BLUE,
@@ -324,7 +324,7 @@ class ModuleListRenderTest : TeacherRenderTest() {
     fun scrollsToTargetItem() {
         val itemCount = 50
         val targetItem = ModuleListItemData.ModuleItemData(
-            1234L, "This is the target item", null, R.drawable.vd_attachment, false, 0, Color.BLUE, true
+            1234L, "This is the target item", null, R.drawable.ic_attachment, false, 0, Color.BLUE, true
         )
         val state = ModuleListViewState(
             items = listOf(

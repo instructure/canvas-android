@@ -53,7 +53,7 @@
             android:layout_centerVertical="true"
             android:importantForAccessibility="no"
             android:tint="@color/login_studentAppTheme"
-            app:srcCompat="@drawable/vd_canvas_logo"/>
+            app:srcCompat="@drawable/ic_canvas_logo"/>
 
         <ImageView
             android:id="@+id/canvasWordmarkStudent"
@@ -81,7 +81,7 @@
             android:layout_centerVertical="true"
             android:importantForAccessibility="no"
             android:tint="@color/login_parentAppTheme"
-            app:srcCompat="@drawable/vd_canvas_logo"/>
+            app:srcCompat="@drawable/ic_canvas_logo"/>
 
         <ImageView
             android:id="@+id/canvasWordmarkParent"

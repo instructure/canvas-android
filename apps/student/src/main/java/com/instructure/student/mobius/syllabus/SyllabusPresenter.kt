@@ -83,17 +83,17 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         if (event.assignment?.isLocked == true || event.assignment?.lockExplanation?.takeIf {
                 it.isValid() && event.assignment?.lockDate?.before(Date()) == true
             } != null) {
-            return com.instructure.student.R.drawable.vd_lock_lined
+            return com.instructure.student.R.drawable.ic_lock_lined
         }
 
         return event.assignment?.let {
             getAssignmentIcon(it)
-        } ?: com.instructure.student.R.drawable.vd_calendar
+        } ?: com.instructure.student.R.drawable.ic_calendar
     }
 
     private fun getAssignmentIcon(assignment: Assignment) = when {
-        assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> com.instructure.student.R.drawable.vd_quiz
-        assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> com.instructure.student.R.drawable.vd_discussion
-        else -> com.instructure.student.R.drawable.vd_assignment
+        assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> com.instructure.student.R.drawable.ic_quiz
+        assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> com.instructure.student.R.drawable.ic_discussion
+        else -> com.instructure.student.R.drawable.ic_assignment
     }
 }

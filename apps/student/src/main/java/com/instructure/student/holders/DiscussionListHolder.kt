@@ -64,16 +64,16 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val isAssignmentType = discussionTopicHeader.assignment != null
 
         if(isDiscussion) {
-            discussionIcon.setIcon(if (isAssignmentType) R.drawable.vd_assignment
-                    else R.drawable.vd_discussion, courseColor)
+            discussionIcon.setIcon(if (isAssignmentType) R.drawable.ic_assignment
+                    else R.drawable.ic_discussion, courseColor)
             readUnreadCounts.setVisible()
         } else {
-            discussionIcon.setIcon(R.drawable.vd_announcement, courseColor)
+            discussionIcon.setIcon(R.drawable.ic_announcement, courseColor)
             readUnreadCounts.setGone()
         }
 
         if(discussionTopicHeader.lockedForUser) {
-            discussionIcon.setNestedIcon(R.drawable.vd_lock, ContextCompat.getColor(context, R.color.lockedDiscussionColor))
+            discussionIcon.setNestedIcon(R.drawable.ic_lock, ContextCompat.getColor(context, R.color.lockedDiscussionColor))
             discussionIcon.setNestedIconContentDescription(context.getString(R.string.locked))
         } else {
             discussionIcon.hideNestedIcon()

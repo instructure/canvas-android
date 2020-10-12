@@ -52,10 +52,10 @@ class AnnouncementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
         val icon = when (announcement.icon) {
             AccountNotification.ACCOUNT_NOTIFICATION_ERROR,
-            AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.vd_warning
-            AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.vd_calendar_announcement
-            AccountNotification.ACCOUNT_NOTIFICATION_QUESTION -> R.drawable.vd_question_mark
-            else -> R.drawable.vd_info
+            AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.ic_warning
+            AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.ic_calendar
+            AccountNotification.ACCOUNT_NOTIFICATION_QUESTION -> R.drawable.ic_question_mark
+            else -> R.drawable.ic_info
         }
 
         announcementIcon.setImageResource(icon)

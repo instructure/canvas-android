@@ -269,7 +269,7 @@ class SubmissionDetailsView(
                 displayName = type.attachment.displayName ?: "",
                 contentType = type.attachment.contentType ?: "",
                 previewUri = type.attachment.previewUrl?.let { Uri.parse(it) },
-                fallbackIcon = R.drawable.vd_attachment
+                fallbackIcon = R.drawable.ic_attachment
             )
             is SubmissionDetailsContentType.ImageContent -> ViewImageFragment.newInstance(type.title, Uri.parse(type.url), type.contentType, false)
             SubmissionDetailsContentType.NoneContent -> SubmissionMessageFragment.newInstance(title = R.string.noOnlineSubmissions,  subtitle = R.string.noneContentMessage)

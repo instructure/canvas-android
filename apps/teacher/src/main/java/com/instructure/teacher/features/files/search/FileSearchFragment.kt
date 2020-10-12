@@ -41,8 +41,8 @@ class FileSearchFragment : BaseSyncFragment<
 
     private val searchAdapter by lazy {
         FileSearchAdapter(requireContext(), courseColor, presenter) {
-            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.canvasContext, R.drawable.vd_document)
-            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, courseColor, editableFile)
+            val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.canvasContext, R.drawable.ic_document)
+            viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, courseColor, editableFile)
         }
     }
 
@@ -74,7 +74,7 @@ class FileSearchFragment : BaseSyncFragment<
         ViewStyler.setStatusBarLight(requireActivity())
 
         // Set up empty state
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nofiles))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
         emptyPandaView.setListEmpty()
         checkIfEmpty()
 

@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_grading_periods_filter"
-        android:icon="@drawable/vd_filter"
+        android:icon="@drawable/ic_filter"
         android:title="@string/grading_periods_filter"
         app:showAsAction="always" />
 </menu>

@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    app:srcCompat="@drawable/vd_camera"
+                    app:srcCompat="@drawable/ic_camera"
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"/>
 
