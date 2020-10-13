@@ -210,7 +210,8 @@ class GroupLinksInteractionTest : StudentTest() {
         // Add a group
         group = data.addGroupToCourse(
                 course = course,
-                members = listOf(user)
+                members = listOf(user),
+                isFavorite = true
         )
 
         // Add a discussion
