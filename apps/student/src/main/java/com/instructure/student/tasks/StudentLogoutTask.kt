@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.google.firebase.iid.FirebaseInstanceId
+import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.flutterChannels.FlutterComm
@@ -43,6 +44,12 @@ class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
     }
 
     override fun getFcmToken(listener: (registrationId: String?) -> Unit) {
-        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task -> listener(task.result?.token) }
+        FirebaseInstanceId.getInstance().instanceId.addOnCompleteListener { task ->
+            // Task.getResult() can throw exceptions, such as java.io.IOException: SERVICE_NOT_AVAILABLE. We want
+            // to catch the exception here and pass a null string to the listener to allow the LogoutTask to continue
+            // with the remaining logout and cleanup tasks.
+            val registrationId: String? = tryOrNull { task.result?.token }
+            listener(registrationId)
+        }
     }
 }
