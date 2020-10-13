@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -99,7 +100,15 @@ class SpeedGraderCommentHolder(view: View) : RecyclerView.ViewHolder(view) {
                     )
                 } else {
                     avatarView.setAnonymousAvatar()
-                    Triple(comment.comment, context.getString(R.string.anonymousStudentLabel), null)
+                    val authorName = if (comment.authorId == 0L && comment.authorName.isValid()) {
+                        // When grading anonymously, Canvas may redact the author ID and provide an anonymous author
+                        // name such as "Anonymous User" which we'll want to use to ensure that we're not displaying
+                        // all comments as being authored by "Student."
+                        comment.authorName
+                    } else {
+                        context.getString(R.string.anonymousStudentLabel)
+                    }
+                    Triple(comment.comment, authorName, null)
                 }
             }
 
