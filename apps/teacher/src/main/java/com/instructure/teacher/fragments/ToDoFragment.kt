@@ -127,6 +127,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
 
     override fun onRefreshFinished() {
         swipeRefreshLayout.isRefreshing = false
+        emptyPandaView.visibility = View.GONE
     }
 
     override fun perPageCount(): Int = ApiPrefs.perPageCount
