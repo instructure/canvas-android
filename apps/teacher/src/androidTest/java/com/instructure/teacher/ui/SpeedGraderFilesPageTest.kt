@@ -23,6 +23,9 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.espresso.OnViewWithStringText
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
@@ -98,7 +101,7 @@ class SpeedGraderFilesPageTest : TeacherTest() {
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
 
-        speedGraderPage.selectFilesTab()
+        speedGraderPage.selectFilesTab(assignment.submission?.attachments?.size ?: 0)
         return data
     }
 }
