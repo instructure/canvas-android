@@ -59,10 +59,23 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onResume() {
         super.onResume()
 
+        // Check if we need to update the file name
+        updateFileNameIfNeeded()
+
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
         if (fileFolderDeletedEvent != null)
             requireActivity().finish()
+    }
+
+    private fun updateFileNameIfNeeded() {
+        mEditableFile?.let { editableFile ->
+            val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
+            fileFolderUpdatedEvent?.let { event ->
+                editableFile.file = event.updatedFileFolder
+            }
+            toolbar.title = editableFile.file.displayName
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -70,13 +83,6 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
         toolbar.title = mUrl
 
         mEditableFile?.let {
-            // Check if we need to update the file name
-            val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
-            fileFolderUpdatedEvent?.let { event ->
-                it.file = event.updatedFileFolder
-            }
-
-            toolbar.title = it.file.displayName
             toolbar.setupMenu(R.menu.menu_file_details) { menu ->
                 when (menu.itemId) {
                     R.id.edit -> {
