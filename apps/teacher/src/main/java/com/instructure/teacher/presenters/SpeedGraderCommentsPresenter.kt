@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.CommentWrapper
@@ -171,6 +172,7 @@ class SpeedGraderCommentsPresenter(
                     viewCallback?.checkIfEmpty()
                 }
                 SubmissionUpdatedEvent(submission).post()
+                SubmissionCommentsUpdated().post()
                 viewCallback?.scrollToBottom()
             } catch (e: Throwable) {
                 // Update status in SharedPrefs
