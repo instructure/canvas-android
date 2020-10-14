@@ -63,6 +63,7 @@ class CreateOrEditPageDetailsFragment :
     private val mSaveButtonTextView: TextView? get() = view?.findViewById(R.id.menuSavePage)
 
     private var placeHolderList: ArrayList<Placeholder> = ArrayList()
+    private var forceQuit = false
 
     override val identity = 0L
     override val skipCheck = false
@@ -81,13 +82,7 @@ class CreateOrEditPageDetailsFragment :
 
     fun setupToolbar() {
         toolbar.setupCloseButton {
-            if(shouldAllowExit()) {
-                activity?.onBackPressed()
-            } else {
-                UnsavedChangesExitDialog.show(requireFragmentManager()) {
-                    activity?.onBackPressed()
-                }
-            }
+            activity?.onBackPressed()
         }
         toolbar.title = getString(if (presenter.isEditing) R.string.editPageTitle else R.string.createPageTitle)
         toolbar.setupMenu(R.menu.menu_create_or_edit_page) { menuItem ->
@@ -305,6 +300,18 @@ class CreateOrEditPageDetailsFragment :
 
     override fun pageDeletedSuccessfully() {
         requireActivity().onBackPressed() // Close this fragment
+    }
+
+    override fun onHandleBackPressed(): Boolean {
+        return if(shouldAllowExit() || forceQuit) {
+            false
+        } else {
+            UnsavedChangesExitDialog.show(requireFragmentManager()) {
+                forceQuit = true
+                activity?.onBackPressed()
+            }
+            true
+        }
     }
 
     companion object {
