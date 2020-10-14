@@ -129,7 +129,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName(): String = RouterParams.MODULE_ID
 
     fun setupViews() {
-        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, arguments?.getString(MODULE_ID)?.toLong() ?: -1, requireContext(), object : ModuleAdapterToFragmentCallback {
+        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), object : ModuleAdapterToFragmentCallback {
             override fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean) {
                 if (moduleItem.type != null && moduleItem.type == ModuleObject.State.UnlockRequirements.apiString) return
 
