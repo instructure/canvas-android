@@ -243,7 +243,7 @@ class InboxConversationFragment : ParentFragment() {
         }
 
         starred.setOnClickListener { toggleStarred() }
-        starred.setImageResource(if (conversation.isStarred) R.drawable.ic_star_filled else R.drawable.ic_star)
+        starred.setImageResource(if (conversation.isStarred) R.drawable.vd_star_filled else R.drawable.vd_star)
         ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
         starred.alpha = 1f
         starred.isEnabled = true
@@ -265,7 +265,7 @@ class InboxConversationFragment : ParentFragment() {
         starCall?.cancel()
         val shouldStar = !conversation.isStarred
         tryWeave {
-            starred.setImageResource(if (shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star)
+            starred.setImageResource(if (shouldStar) R.drawable.vd_star_filled else R.drawable.vd_star)
             ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
             starred.alpha = 0.35f
             starred.isEnabled = false
@@ -275,7 +275,7 @@ class InboxConversationFragment : ParentFragment() {
             onConversationUpdated(false)
         } catch {
             toast(R.string.errorConversationGeneric)
-            starred.setImageResource(if (!shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star)
+            starred.setImageResource(if (!shouldStar) R.drawable.vd_star_filled else R.drawable.vd_star)
             ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
             refreshConversationData()
         }

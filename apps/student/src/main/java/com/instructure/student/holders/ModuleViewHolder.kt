@@ -92,28 +92,28 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Indicator
         indicator.setGone()
         if (moduleItem.completionRequirement?.completed == true) {
-            val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_check_white_24dp, courseColor)
+            val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_check_white_24dp, courseColor)
             indicator.setImageDrawable(drawable)
             indicator.setVisible()
         }
         if (isLocked) {
-            val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, courseColor)
+            val drawable = ColorKeeper.getColoredDrawable(context, R.drawable.vd_lock, courseColor)
             indicator.setImageDrawable(drawable)
             indicator.setVisible()
         }
 
         // Icon
         val drawableResource: Int = when {
-            ModuleItem.Type.Assignment.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_assignment
-            ModuleItem.Type.Discussion.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_discussion
-            ModuleItem.Type.File.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_download
-            ModuleItem.Type.Page.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_pages
-            ModuleItem.Type.Quiz.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_quiz
-            ModuleItem.Type.ExternalUrl.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_link
-            ModuleItem.Type.ExternalTool.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_lti
-            ModuleItem.Type.Locked.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_lock
+            ModuleItem.Type.Assignment.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_assignment
+            ModuleItem.Type.Discussion.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_discussion
+            ModuleItem.Type.File.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_download
+            ModuleItem.Type.Page.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_pages
+            ModuleItem.Type.Quiz.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_quiz
+            ModuleItem.Type.ExternalUrl.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_link
+            ModuleItem.Type.ExternalTool.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_lti
+            ModuleItem.Type.Locked.toString().equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_lock
             ModuleItem.Type.ChooseAssignmentGroup.toString()
-                .equals(moduleItem.type, ignoreCase = true) -> R.drawable.ic_pages
+                .equals(moduleItem.type, ignoreCase = true) -> R.drawable.vd_pages
             else -> -1
             // Details
         }

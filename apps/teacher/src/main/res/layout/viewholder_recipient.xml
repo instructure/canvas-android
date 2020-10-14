@@ -44,7 +44,7 @@
         <ImageView
             android:id="@+id/checkMarkImageView"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_checkmark"
+            app:srcCompat="@drawable/vd_checkmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:visibility="gone"/>

@@ -42,7 +42,7 @@ import com.instructure.teacher.router.RouteMatcher
 import de.hdodenhof.circleimageview.CircleImageView
 
 
-fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.ic_user_avatar)
+fun CircleImageView.setAnonymousAvatar() = setImageResource(R.drawable.vd_user)
 
 /**
  * Loads the given resource as this Toolbar's icon, assigns it the given content description, and
@@ -132,9 +132,9 @@ fun Toolbar?.setupBackButtonWithExpandCollapseAndBack(
     if(fragment != null && fragment.isTablet) {
         if(fragment.activity != null && fragment.activity is MasterDetailInteractions) {
             if((fragment.activity as MasterDetailInteractions).isMasterVisible) {
-                setupNavButtonWithCallback(R.drawable.ic_collapse_horizontal, R.string.contentDescriptionCollapsePage, onClick)
+                setupNavButtonWithCallback(R.drawable.vd_collapse_horizontal, R.string.contentDescriptionCollapsePage, onClick)
             } else {
-                setupNavButtonWithCallback(R.drawable.ic_expand_horizontal, R.string.contentDescriptionExpandPage, onClick)
+                setupNavButtonWithCallback(R.drawable.vd_expand_horizontal, R.string.contentDescriptionExpandPage, onClick)
             }
         }
     } else {
@@ -153,10 +153,10 @@ fun Toolbar?.updateToolbarExpandCollapseIcon(fragment: Fragment?) {
     if (this == null) return
     if(fragment != null && fragment.isTablet && fragment.activity != null && fragment.activity is MasterDetailInteractions) {
         if((fragment.activity as MasterDetailInteractions).isMasterVisible) {
-            setNavigationIcon(R.drawable.ic_collapse_horizontal)
+            setNavigationIcon(R.drawable.vd_collapse_horizontal)
             setNavigationContentDescription(R.string.contentDescriptionCollapsePage)
         } else {
-            setNavigationIcon(R.drawable.ic_expand_horizontal)
+            setNavigationIcon(R.drawable.vd_expand_horizontal)
             setNavigationContentDescription(R.string.contentDescriptionExpandPage)
         }
     }

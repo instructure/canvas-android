@@ -90,10 +90,10 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         description.setTextForVisibility(todoDetails)
 
         val drawableResId: Int = when {
-            item.type == ToDo.Type.UpcomingEvent -> R.drawable.ic_calendar
-            item.assignment?.quizId ?: 0 > 0 || item.quiz != null -> R.drawable.ic_quiz
-            item.assignment!!.discussionTopicHeader != null -> R.drawable.ic_discussion
-            else -> R.drawable.ic_assignment
+            item.type == ToDo.Type.UpcomingEvent -> R.drawable.vd_calendar
+            item.assignment?.quizId ?: 0 > 0 || item.quiz != null -> R.drawable.vd_quiz
+            item.assignment!!.discussionTopicHeader != null -> R.drawable.vd_discussion
+            else -> R.drawable.vd_assignment
         }
         val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, courseColor)
         icon.setImageDrawable(drawable)

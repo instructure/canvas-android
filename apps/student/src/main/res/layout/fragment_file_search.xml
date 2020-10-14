@@ -31,7 +31,7 @@
             android:layout_height="?android:attr/actionBarSize"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/contentDescription_back"
-            android:src="@drawable/ic_back_arrow"/>
+            android:src="@drawable/vd_back_arrow"/>
 
         <EditText
             android:id="@+id/queryInput"
@@ -52,7 +52,7 @@
             android:layout_gravity="end|center_vertical"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/clearFilter"
-            android:src="@drawable/ic_close"
+            android:src="@drawable/vd_close_white"
             android:tint="@color/black"
             android:visibility="gone"
             tools:visibility="visible"/>

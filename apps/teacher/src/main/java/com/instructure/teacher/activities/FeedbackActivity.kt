@@ -27,7 +27,7 @@ class FeedbackActivity : AppCompatActivity() {
     private fun setupToolbar() {
         toolbar.setTitle(R.string.feedback_form)
         toolbar.setBackgroundColor(ThemePrefs.primaryColor)
-        toolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+        toolbar.setNavigationIcon(R.drawable.vd_back_arrow)
         toolbar.setupBackButton { finish() }
 
         ViewStyler.setStatusBarDark(this, ThemePrefs.darkPrimaryColor)

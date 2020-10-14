@@ -93,28 +93,28 @@ class SyllabusPresenterTest : Assert() {
                 id = "0",
                 title = "",
                 date = "Apr 2 at 1:59 PM",
-                iconRes = R.drawable.ic_calendar,
+                iconRes = R.drawable.vd_calendar,
                 color = baseCourse.color
             ),
             ScheduleItemViewState(
                 id = "1",
                 title = "assignment",
                 date = "Due Apr 3 at 1:59 pm",
-                iconRes = R.drawable.ic_assignment,
+                iconRes = R.drawable.vd_assignment,
                 color = baseCourse.color
             ),
             ScheduleItemViewState(
                 id = "2",
                 title = "quiz",
                 date = "Due Apr 4 at 2:00 am",
-                iconRes = R.drawable.ic_quiz,
+                iconRes = R.drawable.vd_quiz,
                 color = baseCourse.color
             ),
             ScheduleItemViewState(
                 id = "3",
                 title = "discussion",
                 date = "No Due Date",
-                iconRes = R.drawable.ic_discussion,
+                iconRes = R.drawable.vd_discussion,
                 color = baseCourse.color
             )
         )
@@ -228,9 +228,9 @@ class SyllabusPresenterTest : Assert() {
             )
         )
         val eventsViewState = listOf(
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.color),
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_lock_lined, baseCourse.color),
-            ScheduleItemViewState("", "", "No Due Date", R.drawable.ic_assignment, baseCourse.color)
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.vd_lock_lined, baseCourse.color),
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.vd_lock_lined, baseCourse.color),
+            ScheduleItemViewState("", "", "No Due Date", R.drawable.vd_assignment, baseCourse.color)
         )
 
         val expectedState =

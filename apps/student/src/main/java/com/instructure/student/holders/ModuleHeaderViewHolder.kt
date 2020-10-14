@@ -74,12 +74,12 @@ class ModuleHeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         // Reset the status text and drawable to default state
         val drawable: Int = if (moduleObject.state != null) {
             when {
-                moduleObject.state.equals(ModuleObject.State.Locked.apiString, ignoreCase = true) -> R.drawable.ic_lock
-                moduleObject.state.equals(ModuleObject.State.Completed.apiString, ignoreCase = true) -> R.drawable.ic_check_white_24dp
-                else -> R.drawable.ic_module_circle
+                moduleObject.state.equals(ModuleObject.State.Locked.apiString, ignoreCase = true) -> R.drawable.vd_lock
+                moduleObject.state.equals(ModuleObject.State.Completed.apiString, ignoreCase = true) -> R.drawable.vd_check_white_24dp
+                else -> R.drawable.vd_module_circle
             }
         } else {
-            if (isLocked) R.drawable.ic_lock else R.drawable.ic_module_circle
+            if (isLocked) R.drawable.vd_lock else R.drawable.vd_module_circle
         }
         moduleStatus.setImageDrawable(ColorUtils.colorIt(color, ContextCompat.getDrawable(context, drawable)!!))
     }

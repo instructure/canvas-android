@@ -39,7 +39,7 @@ class EditFavoritesCourseViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         val name = course.name
         val contentDescResId = if (isFavorite) R.string.courseFavorited else R.string.courseNotFavorited
         title.text = name
-        star.setImageResource(if (isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star)
+        star.setImageResource(if (isFavorite) R.drawable.vd_star_filled else R.drawable.vd_star)
         title.contentDescription = context.getString(contentDescResId, name)
         DrawableCompat.setTint(DrawableCompat.wrap(star.drawable), ThemePrefs.brandColor)
         onClick { callback.onRowClicked(course, adapterPosition, !isFavorite) }

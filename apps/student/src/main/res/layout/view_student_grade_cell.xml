@@ -77,18 +77,18 @@
                 android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/ic_checkmark"
+                app:srcCompat="@drawable/vd_checkmark_large"
                 tools:tint="@color/canvasDefaultAccent"
-                tools:visibility="visible"/>
+                tools:visibility="gone"/>
 
             <ImageView
                 android:id="@+id/incompleteIcon"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_gravity="center"
                 android:importantForAccessibility="no"
                 android:tint="@color/defaultTextGray"
-                app:srcCompat="@drawable/ic_close"
+                app:srcCompat="@drawable/vd_x_large"
                 tools:visibility="gone"/>
 
             <LinearLayout

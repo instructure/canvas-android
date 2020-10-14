@@ -69,7 +69,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
                 editOptions.setGone()
                 if (recyclerAdapter.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.ic_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
+                    setEmptyView(emptyView, R.drawable.vd_panda_noalerts, R.string.noNotifications, R.string.noNotificationsSubtext)
                     if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                         emptyView.setGuidelines(.2f, .7f, .74f, .15f, .85f)
                     } else {

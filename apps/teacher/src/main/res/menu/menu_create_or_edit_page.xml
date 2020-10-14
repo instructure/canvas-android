@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/menuSavePage"
-        android:icon="@drawable/ic_checkmark"
+        android:icon="@drawable/vd_checkmark"
         android:title="@string/save"
         app:showAsAction="always" />
 

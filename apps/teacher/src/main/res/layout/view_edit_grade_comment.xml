@@ -63,7 +63,7 @@
         android:contentDescription="@string/save_comment"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        app:srcCompat="@drawable/ic_checkmark"
+        app:srcCompat="@drawable/vd_checkmark"
         tools:tint="@color/defaultActionColor"/>
 
 </RelativeLayout>

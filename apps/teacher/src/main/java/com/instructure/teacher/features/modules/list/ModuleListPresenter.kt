@@ -101,13 +101,13 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         }
 
         val iconRes: Int? = when (tryOrNull { ModuleItem.Type.valueOf(item.type.orEmpty()) }) {
-            ModuleItem.Type.Assignment -> R.drawable.ic_assignment
-            ModuleItem.Type.Discussion -> R.drawable.ic_discussion
-            ModuleItem.Type.File -> R.drawable.ic_attachment
-            ModuleItem.Type.Page -> R.drawable.ic_pages
-            ModuleItem.Type.Quiz -> R.drawable.ic_quiz
-            ModuleItem.Type.ExternalUrl -> R.drawable.ic_link
-            ModuleItem.Type.ExternalTool -> R.drawable.ic_lti
+            ModuleItem.Type.Assignment -> R.drawable.vd_assignment
+            ModuleItem.Type.Discussion -> R.drawable.vd_discussion
+            ModuleItem.Type.File -> R.drawable.vd_attachment
+            ModuleItem.Type.Page -> R.drawable.vd_pages
+            ModuleItem.Type.Quiz -> R.drawable.vd_quiz
+            ModuleItem.Type.ExternalUrl -> R.drawable.vd_link
+            ModuleItem.Type.ExternalTool -> R.drawable.vd_lti
             else -> null
         }
 

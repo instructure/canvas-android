@@ -135,7 +135,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         // We don't want to leave the fab hidden if the list is empty
         if(presenter.isEmpty) {
             createNewPage.show()
-            emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
+            emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nofiles))
             emptyPandaView.setMessageText(R.string.noPagesSubtext)
         }
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)

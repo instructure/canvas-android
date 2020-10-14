@@ -27,7 +27,7 @@
         android:elevation="6dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#fff"
-        tools:navigationIcon="@drawable/ic_back_arrow"
+        tools:navigationIcon="@drawable/vd_back_arrow"
         tools:title="@string/submission"
         tools:titleTextColor="@color/defaultTextDark" />
 

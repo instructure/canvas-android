@@ -42,7 +42,7 @@
             android:layout_height="12dp"
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_warning"
+            android:src="@drawable/vd_warning"
             android:tint="@color/error"/>
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="12dp"
             android:layout_marginEnd="4dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_warning"
+            android:src="@drawable/vd_warning"
             android:tint="@color/error"/>
 
         <TextView

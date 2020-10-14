@@ -39,7 +39,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
         android:contentDescription="@string/hidden"
-        android:src="@drawable/ic_grade_hidden"
+        android:src="@drawable/vd_grade_hidden"
         android:visibility="gone"
         tools:visibility="visible" />
 

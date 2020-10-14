@@ -58,7 +58,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/inbox_starred"
             android:padding="4dp"
-            app:srcCompat="@drawable/ic_star"/>
+            app:srcCompat="@drawable/vd_star"/>
 
     </RelativeLayout>
 

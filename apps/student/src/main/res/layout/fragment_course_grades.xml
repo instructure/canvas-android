@@ -81,7 +81,7 @@
                     android:layout_height="32dp"
                     android:layout_below="@+id/txtOverallGradeLabel"
                     android:layout_centerHorizontal="true"
-                    app:srcCompat="@drawable/ic_lock"
+                    app:srcCompat="@drawable/vd_lock"
                     android:visibility="gone" />
 
                 <LinearLayout

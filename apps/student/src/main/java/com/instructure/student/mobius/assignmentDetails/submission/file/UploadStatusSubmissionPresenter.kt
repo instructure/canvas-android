@@ -56,7 +56,7 @@ object UploadStatusSubmissionPresenter :
         return UploadStatusSubmissionViewState.Failed(
             context.getString(R.string.submissionStatusFailedTitle),
             context.getString(R.string.submissionUploadFailedMessage),
-            presentListItems(model, context, R.drawable.ic_warning, true)
+            presentListItems(model, context, R.drawable.vd_error, true)
         )
     }
 

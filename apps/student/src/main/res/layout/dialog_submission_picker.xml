@@ -30,7 +30,7 @@
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
             android:padding="2dp"
-            android:src="@drawable/ic_text_submission"/>
+            android:src="@drawable/vd_text_submission"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -50,7 +50,7 @@
         <ImageView
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_website_address"/>
+            android:src="@drawable/vd_website_address"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -70,7 +70,7 @@
         <ImageView
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_attachment"/>
+            android:src="@drawable/vd_attachment"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -90,7 +90,7 @@
         <ImageView
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_media_recordings"/>
+            android:src="@drawable/vd_media_recordings"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -110,7 +110,7 @@
         <ImageView
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_navigation_studio"/>
+            android:src="@drawable/vd_navigation_studio"/>
 
         <TextView
             style="@style/TextFont.Regular"

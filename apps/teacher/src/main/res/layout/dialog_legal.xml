@@ -40,7 +40,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_document" />
+            app:srcCompat="@drawable/vd_document" />
 
         <TextView
             android:id="@+id/privacyPolicyLabel"
@@ -68,7 +68,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_document" />
+            app:srcCompat="@drawable/vd_document" />
 
         <TextView
             android:id="@+id/termsOfUseLabel"
@@ -96,7 +96,7 @@
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_document" />
+            app:srcCompat="@drawable/vd_document" />
 
         <TextView
             android:id="@+id/openSourceLabel"

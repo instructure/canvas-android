@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/timeIconDescription"
-                    android:src="@drawable/ic_clock" />
+                    android:src="@drawable/vd_clock" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_marker" />
+                    app:srcCompat="@drawable/vd_marker" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

@@ -43,8 +43,7 @@
             android:layout_height="70dp"
             android:importantForAccessibility="no"
             android:scaleType="fitCenter"
-            android:tint="@color/defaultTrackColor"
-            app:srcCompat="@drawable/ic_courses" />
+            app:srcCompat="@drawable/vd_courses_empty" />
 
         <TextView
             android:id="@+id/textCourseName"

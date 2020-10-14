@@ -100,7 +100,6 @@ repositories {
 dependencies {
     /* Modules */
     api project(path: ':pandautils')
-    api project(path: ':pandares')
 
     api Libs.PSPDFKIT
     implementation 'com.jakewharton:disklrucache:2.0.2'

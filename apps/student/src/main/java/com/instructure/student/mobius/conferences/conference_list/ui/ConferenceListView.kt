@@ -50,7 +50,7 @@ class ConferenceListView(val canvasContext: CanvasContext, inflater: LayoutInfla
 
         // Set up menu
         with(toolbar.menu.add(0, R.id.openExternallyButton, 0, R.string.openInBrowser)){
-            setIcon(R.drawable.ic_open_in_browser)
+            setIcon(R.drawable.vd_open_in_browser)
             setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             setOnMenuItemClickListener {
                 consumer?.accept(ConferenceListEvent.LaunchInBrowser)

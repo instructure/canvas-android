@@ -39,11 +39,11 @@ class CommentMediaAttachmentView(
         val view = View.inflate(context, R.layout.view_comment_attachment, this)
         when (mediaComment.mediaType) {
             MediaComment.MediaType.AUDIO -> {
-                view.iconImageView.setImageResource(R.drawable.ic_audio)
+                view.iconImageView.setImageResource(R.drawable.vd_audio)
                 view.attachmentNameTextView.text = context.getString(R.string.mediaUploadAudio)
             }
             MediaComment.MediaType.VIDEO -> {
-                view.iconImageView.setImageResource(R.drawable.ic_media)
+                view.iconImageView.setImageResource(R.drawable.vd_media)
                 view.attachmentNameTextView.text = context.getString(R.string.mediaUploadVideo)
             }
         }

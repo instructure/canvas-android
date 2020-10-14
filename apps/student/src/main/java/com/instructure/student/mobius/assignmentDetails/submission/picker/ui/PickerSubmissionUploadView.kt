@@ -104,7 +104,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         pickerEmptyView.setVisible(true)
         pickerEmptyView.setListEmpty()
         pickerEmptyView.setImageVisible(true)
-        pickerEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.ic_panda_choosefile))
+        pickerEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.vd_panda_choosefile))
         pickerEmptyView.setTitleText(R.string.chooseFile)
         pickerEmptyView.setMessageText(
             if (mode.isForComment) R.string.chooseFileForCommentSubtext else R.string.chooseFileSubtext

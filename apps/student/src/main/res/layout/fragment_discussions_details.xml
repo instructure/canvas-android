@@ -124,7 +124,7 @@
                                 android:layout_height="18dp"
                                 android:importantForAccessibility="no"
                                 android:tint="@color/defaultTextGray"
-                                app:srcCompat="@drawable/ic_calendar" />
+                                app:srcCompat="@drawable/vd_calendar" />
 
                             <TextView
                                 style="@style/TextFont.Medium"
@@ -298,7 +298,7 @@
                             android:padding="14dp"
                             android:scaleType="centerInside"
                             android:visibility="gone"
-                            app:srcCompat="@drawable/ic_attachment" />
+                            app:srcCompat="@drawable/vd_attachment" />
 
                     </LinearLayout>
 

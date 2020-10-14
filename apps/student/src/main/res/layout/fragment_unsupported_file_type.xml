@@ -49,7 +49,7 @@
                 android:importantForAccessibility="no"
                 android:scaleType="fitCenter"
                 android:tint="@color/defaultThumbColor"
-                app:srcCompat="@drawable/ic_canvas_logo_red"/>
+                app:srcCompat="@drawable/vd_canvas_logo_red"/>
 
             <TextView
                 android:id="@+id/fileNameView"

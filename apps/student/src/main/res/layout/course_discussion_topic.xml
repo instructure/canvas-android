@@ -66,7 +66,7 @@
         android:tint="@color/white"
         app:fabSize="normal"
         app:elevation="4dp"
-        app:srcCompat="@drawable/ic_add"
+        app:srcCompat="@drawable/vd_add"
         android:contentDescription="@string/utils_addNew"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

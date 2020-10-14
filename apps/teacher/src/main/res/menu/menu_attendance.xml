@@ -20,13 +20,13 @@
 
     <item
         android:id="@+id/menuCalendar"
-        android:icon="@drawable/ic_calendar"
+        android:icon="@drawable/vd_calendar"
         android:title="@string/calendar"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/menuFilterSections"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/vd_filter"
         android:title="@string/filterSections"
         app:showAsAction="always">
 

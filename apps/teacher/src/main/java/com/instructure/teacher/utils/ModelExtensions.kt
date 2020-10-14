@@ -113,7 +113,7 @@ fun viewMedia(context: Context, filename: String, contentType: String, url: Stri
 // endregion
 
 @Suppress("unused")
-val GroupAssignee.iconRes: Int get() = R.drawable.ic_group
+val GroupAssignee.iconRes: Int get() = R.drawable.vd_group
 
 val EnrollmentType?.displayText: CharSequence
     get() = ContextKeeper.appContext.getText(

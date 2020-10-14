@@ -63,7 +63,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     override fun onPresenterPrepared(presenter: ToDoPresenter) {
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.toDoRecyclerView, R.id.emptyPandaView, getString(R.string.noTodos))
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_sleeping))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_sleeping))
         emptyPandaView.setMessageText(R.string.noTodosSubtext)
         addSwipeToRefresh(swipeRefreshLayout)
         addPagination()

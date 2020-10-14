@@ -160,7 +160,7 @@ class FileDetailsFragment : ParentFragment() {
             file?.let {
                 if (it.lockInfo != null) {
                     // File is locked
-                    fileIcon.setImageResource(R.drawable.ic_lock)
+                    fileIcon.setImageResource(R.drawable.vd_lock)
                     fileIcon.contentDescription = getString(R.string.locked_icon)
                     openButton.visibility = View.GONE
                     downloadButton.visibility = View.GONE

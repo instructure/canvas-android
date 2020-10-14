@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/menuSaveAnnouncement"
-        android:icon="@drawable/ic_send"
+        android:icon="@drawable/vd_send"
         android:title="@string/send"
         app:showAsAction="always" />
 

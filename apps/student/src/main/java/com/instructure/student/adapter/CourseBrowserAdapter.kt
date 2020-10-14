@@ -94,9 +94,9 @@ class CourseBrowserWebViewHolder(view: View, val color: Int) : RecyclerView.View
     fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
 
         val res: Int = when (tab.tabId) {
-            Tab.OUTCOMES_ID -> R.drawable.ic_outcomes
-            Tab.CONFERENCES_ID -> R.drawable.ic_conferences
-            else /* Tab.COLLABORATIONS_ID */ -> R.drawable.ic_collaborations
+            Tab.OUTCOMES_ID -> R.drawable.vd_outcomes
+            Tab.CONFERENCES_ID -> R.drawable.vd_conferences
+            else /* Tab.COLLABORATIONS_ID */ -> R.drawable.vd_collaborations
         }
 
         var d = VectorDrawableCompat.create(itemView.context.resources, res, null)
@@ -128,26 +128,26 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
 
     fun bind(tab: Tab, clickedCallback: (Tab) -> Unit) {
         val res: Int = when (tab.tabId) {
-            Tab.ASSIGNMENTS_ID -> R.drawable.ic_assignment
-            Tab.QUIZZES_ID -> R.drawable.ic_quiz
-            Tab.DISCUSSIONS_ID -> R.drawable.ic_discussion
-            Tab.ANNOUNCEMENTS_ID -> R.drawable.ic_announcement
-            Tab.PEOPLE_ID -> R.drawable.ic_people
-            Tab.FILES_ID -> R.drawable.ic_files
-            Tab.PAGES_ID -> R.drawable.ic_pages
-            Tab.MODULES_ID -> R.drawable.ic_modules
-            Tab.SYLLABUS_ID -> R.drawable.ic_syllabus
-            Tab.OUTCOMES_ID -> R.drawable.ic_outcomes
-            Tab.GRADES_ID -> R.drawable.ic_grades
-            Tab.HOME_ID -> R.drawable.ic_home
-            Tab.CONFERENCES_ID -> R.drawable.ic_conferences
-            Tab.COLLABORATIONS_ID -> R.drawable.ic_collaborations
-            Tab.SETTINGS_ID -> R.drawable.ic_settings
+            Tab.ASSIGNMENTS_ID -> R.drawable.vd_assignment
+            Tab.QUIZZES_ID -> R.drawable.vd_quiz
+            Tab.DISCUSSIONS_ID -> R.drawable.vd_discussion
+            Tab.ANNOUNCEMENTS_ID -> R.drawable.vd_announcement
+            Tab.PEOPLE_ID -> R.drawable.vd_people
+            Tab.FILES_ID -> R.drawable.vd_files
+            Tab.PAGES_ID -> R.drawable.vd_pages
+            Tab.MODULES_ID -> R.drawable.vd_modules
+            Tab.SYLLABUS_ID -> R.drawable.vd_syllabus
+            Tab.OUTCOMES_ID -> R.drawable.vd_outcomes
+            Tab.GRADES_ID -> R.drawable.vd_grades
+            Tab.HOME_ID -> R.drawable.vd_home
+            Tab.CONFERENCES_ID -> R.drawable.vd_conferences
+            Tab.COLLABORATIONS_ID -> R.drawable.vd_collaborations
+            Tab.SETTINGS_ID -> R.drawable.vd_settings
             else -> {
                 // Determine if it's the attendance tool
                 if (tab.type == Tab.TYPE_EXTERNAL) {
-                    R.drawable.ic_lti
-                } else R.drawable.ic_canvas_logo
+                    R.drawable.vd_lti
+                } else R.drawable.vd_canvas_logo
             }
         }
 

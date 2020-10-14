@@ -38,7 +38,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:contentDescription="@string/contentDescriptionSelectedFile"
-        app:srcCompat="@drawable/ic_checkmark"
+        app:srcCompat="@drawable/vd_checkmark"
         android:visibility="gone"
         tools:visibility="visible"/>
 

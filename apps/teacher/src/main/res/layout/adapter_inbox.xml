@@ -40,7 +40,7 @@
                 android:layout_height="@dimen/avatar_size"
                 android:layout_marginStart="4dp"
                 android:padding="4dp"
-                tools:src="@drawable/ic_group"/>
+                tools:src="@drawable/vd_group"/>
 
             <View
                 android:id="@+id/unreadMark"
@@ -89,7 +89,7 @@
                     android:layout_marginEnd="4dp"
                     android:tint="@color/canvasTextMedium"
                     android:contentDescription="@string/attachment_icon"
-                    app:srcCompat="@drawable/ic_attachment"
+                    app:srcCompat="@drawable/vd_utils_attachment"
                     android:layout_gravity="center_vertical"/>
 
                 <ImageView

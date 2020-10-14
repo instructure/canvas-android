@@ -37,7 +37,7 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
 
     private lateinit var mAssignmentIcon: ImageView
     private lateinit var mPublishedStatusIcon: ImageView
-    private var mIconPlaceholder = R.drawable.ic_assignment
+    private var mIconPlaceholder = R.drawable.vd_assignment
     private var mPublished = false
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -58,7 +58,7 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
 
             (0 until a.indexCount).map { a.getIndex(it) }.forEach {
                 when (it) {
-                    R.styleable.PublishedStatusIconView_icon -> mIconPlaceholder = a.getResourceId(it, R.drawable.ic_assignment)
+                    R.styleable.PublishedStatusIconView_icon -> mIconPlaceholder = a.getResourceId(it, R.drawable.vd_assignment)
                     R.styleable.PublishedStatusIconView_published -> mPublished = a.getBoolean(it, false)
                 }
             }
@@ -115,17 +115,17 @@ class FileFolderPublishedStatusIconView @JvmOverloads constructor(
         //set published drawable
         if (!fileFolder.isLocked && !fileFolder.isHidden && fileFolder.lockDate == null && fileFolder.unlockDate == null) {
             // Published
-            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete_solid))
+            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_published))
             mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.publishedGreen))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.published)
         } else if (fileFolder.isLocked) {
             // Unpublished
-            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_complete))
+            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_unpublished))
             mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.defaultTextGray))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.not_published)
         } else if (fileFolder.isHidden || fileFolder.lockDate != null || fileFolder.unlockDate != null) {
             // Restricted
-            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_restricted))
+            mPublishedStatusIcon.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.vd_restricted))
             mPublishedStatusIcon.setColorFilter(context.getColorCompat(R.color.red))
             mPublishedStatusIcon.contentDescription = context.getString(R.string.restricted)
         }

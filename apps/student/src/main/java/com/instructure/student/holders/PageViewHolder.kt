@@ -40,9 +40,9 @@ class PageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         title.text = page.title
 
         if (page.frontPage) {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_pages, courseColor))
+            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_pages, courseColor))
         } else {
-            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_document, courseColor))
+            icon.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_document, courseColor))
         }
 
         modified.text = String.format(

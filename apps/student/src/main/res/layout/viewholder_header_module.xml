@@ -39,7 +39,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="12dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_module_circle"
+            app:srcCompat="@drawable/vd_module_circle"
             android:importantForAccessibility="no"/>
 
         <FrameLayout
@@ -67,7 +67,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:scaleType="fitCenter"
-            app:srcCompat="@drawable/ic_expand"
+            app:srcCompat="@drawable/vd_expand"
             android:importantForAccessibility="no"/>
 
     </LinearLayout>

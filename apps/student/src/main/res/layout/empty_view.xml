@@ -64,7 +64,7 @@
         android:importantForAccessibility="no"
         android:visibility="gone"
         android:scaleType="fitCenter"
-        tools:src="@drawable/ic_panda_inboxzero"
+        tools:src="@drawable/vd_panda_inboxzero"
         tools:visibility="visible"
         app:layout_constraintStart_toStartOf="@id/textLeft"
         app:layout_constraintEnd_toEndOf="@id/textRight"

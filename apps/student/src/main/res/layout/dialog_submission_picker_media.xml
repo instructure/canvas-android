@@ -30,7 +30,7 @@
             android:paddingStart="2dp"
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_audio"/>
+            android:src="@drawable/vd_audio"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -50,7 +50,7 @@
         <ImageView
             style="@style/SubmissionPickerDialogIcon"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_video"/>
+            android:src="@drawable/vd_video"/>
 
         <TextView
             style="@style/TextFont.Regular"

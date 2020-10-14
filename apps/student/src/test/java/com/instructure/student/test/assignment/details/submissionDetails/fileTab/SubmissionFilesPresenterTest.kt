@@ -77,7 +77,7 @@ class SubmissionFilesPresenterTest : Assert() {
         val attachment = baseAttachment.copy(contentType = "application/pdf")
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_pdf))
+            listOf(baseData.copy(icon = R.drawable.vd_pdf))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -90,7 +90,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_ppt))
+            listOf(baseData.copy(icon = R.drawable.vd_ppt))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -103,7 +103,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_spreadsheet))
+            listOf(baseData.copy(icon = R.drawable.vd_spreadsheet))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -116,7 +116,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_word_doc))
+            listOf(baseData.copy(icon = R.drawable.vd_word_doc))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -129,7 +129,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_zip))
+            listOf(baseData.copy(icon = R.drawable.vd_zip))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -143,7 +143,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_image, thumbnailUrl = "fake"))
+            listOf(baseData.copy(icon = R.drawable.vd_image, thumbnailUrl = "fake"))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -157,7 +157,7 @@ class SubmissionFilesPresenterTest : Assert() {
         )
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_image, thumbnailUrl = "fake"))
+            listOf(baseData.copy(icon = R.drawable.vd_image, thumbnailUrl = "fake"))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -168,7 +168,7 @@ class SubmissionFilesPresenterTest : Assert() {
         val attachment = baseAttachment.copy(contentType = "image/png")
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_image))
+            listOf(baseData.copy(icon = R.drawable.vd_image))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -179,7 +179,7 @@ class SubmissionFilesPresenterTest : Assert() {
         val attachment = baseAttachment.copy(contentType = "abc123")
         val model = baseModel.copy(files = listOf(attachment))
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_document))
+            listOf(baseData.copy(icon = R.drawable.vd_document))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)
@@ -190,7 +190,7 @@ class SubmissionFilesPresenterTest : Assert() {
         val attachment = baseAttachment.copy(contentType = "application/pdf")
         val model = baseModel.copy(files = listOf(attachment), selectedFileId = attachment.id)
         val expectedState = SubmissionFilesViewState.FileList(
-            listOf(baseData.copy(icon = R.drawable.ic_pdf, isSelected = true))
+            listOf(baseData.copy(icon = R.drawable.vd_pdf, isSelected = true))
         )
         val actualState = SubmissionFilesPresenter.present(model, context)
         assertEquals(expectedState, actualState)

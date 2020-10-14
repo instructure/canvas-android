@@ -86,7 +86,7 @@ class CourseViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if(courseGrade.isLocked) {
                 gradeTextView.setGone()
                 lockedGradeImage.setVisible()
-                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.ic_lock, course.color))
+                lockedGradeImage.setImageDrawable(ColorKeeper.getColoredDrawable(context, R.drawable.vd_lock, course.color))
             } else {
                 gradeTextView.setVisible()
                 lockedGradeImage.setGone()

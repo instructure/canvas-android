@@ -63,10 +63,10 @@ class TodoViewWidgetService : BaseRemoteViewsService(), Serializable {
             row.setViewVisibility(R.id.icon, View.VISIBLE)
 
             when {
-                streamItem.type == ToDo.Type.UpcomingEvent -> row.setImageViewResource(R.id.icon, R.drawable.ic_calendar)
-                streamItem.assignment!!.quizId > 0 -> row.setImageViewResource(R.id.icon, R.drawable.ic_quiz)
-                streamItem.assignment!!.discussionTopicHeader != null -> row.setImageViewResource(R.id.icon, R.drawable.ic_discussion)
-                else -> row.setImageViewResource(R.id.icon, R.drawable.ic_assignment)
+                streamItem.type == ToDo.Type.UpcomingEvent -> row.setImageViewResource(R.id.icon, R.drawable.vd_calendar)
+                streamItem.assignment!!.quizId > 0 -> row.setImageViewResource(R.id.icon, R.drawable.vd_quiz)
+                streamItem.assignment!!.discussionTopicHeader != null -> row.setImageViewResource(R.id.icon, R.drawable.vd_discussion)
+                else -> row.setImageViewResource(R.id.icon, R.drawable.vd_assignment)
             }
 
             if (streamItem.canvasContext != null && streamItem.canvasContext!!.type != CanvasContext.Type.USER) {

@@ -59,13 +59,13 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             } else {
                 val contentType = item.contentType.orEmpty()
                 val iconRes = when {
-                    contentType.contains("pdf") -> R.drawable.ic_pdf
-                    contentType.contains("presentation") -> R.drawable.ic_ppt
-                    contentType.contains("spreadsheet") -> R.drawable.ic_spreadsheet
-                    contentType.contains("wordprocessing") -> R.drawable.ic_word_doc
-                    contentType.contains("zip") -> R.drawable.ic_zip
-                    contentType.contains("image") -> R.drawable.ic_image
-                    else -> R.drawable.ic_document
+                    contentType.contains("pdf") -> R.drawable.vd_pdf
+                    contentType.contains("presentation") -> R.drawable.vd_ppt
+                    contentType.contains("spreadsheet") -> R.drawable.vd_spreadsheet
+                    contentType.contains("wordprocessing") -> R.drawable.vd_word_doc
+                    contentType.contains("zip") -> R.drawable.vd_zip
+                    contentType.contains("image") -> R.drawable.vd_image
+                    else -> R.drawable.vd_document
                 }
                 fileIcon.setColoredResource(iconRes, tint)
             }
@@ -75,7 +75,7 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             fileName.contentDescription = itemView.resources.getString(R.string.folderTalkBack, item.name)
             val itemCount = item.filesCount + item.foldersCount;
             fileSize.text = context.resources.getQuantityString(R.plurals.item_count, itemCount, itemCount);
-            fileIcon.setColoredResource(R.drawable.ic_folder_solid, tint)
+            fileIcon.setColoredResource(R.drawable.vd_folder_solid, tint)
         }
     }
 

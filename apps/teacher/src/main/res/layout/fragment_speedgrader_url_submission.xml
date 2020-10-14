@@ -61,7 +61,7 @@
             android:importantForAccessibility="no"
             tools:background="#EEE"
             tools:scaleType="center"
-            tools:src="@drawable/ic_url_submission"
+            tools:src="@drawable/vd_url_submission"
             tools:tint="#BBB"/>
 
     </LinearLayout>

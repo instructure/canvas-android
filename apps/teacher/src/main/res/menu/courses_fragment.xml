@@ -19,6 +19,6 @@
     <item
         android:id="@+id/menu_edit_favorite_courses"
         android:title="@string/edit_favorite_courses"
-        android:icon="@drawable/ic_edit"
+        android:icon="@drawable/vd_edit"
         app:showAsAction="ifRoom" />
 </menu>

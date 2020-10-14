@@ -64,7 +64,7 @@
             android:padding="8dp"
             android:tint="@color/navigationDrawerTextLight"
             android:contentDescription="@string/edit"
-            app:srcCompat="@drawable/ic_edit"/>
+            app:srcCompat="@drawable/vd_edit"/>
 
     </RelativeLayout>
 

@@ -338,7 +338,7 @@
         android:tint="@color/white"
         android:visibility="gone"
         app:elevation="4dp"
-        app:srcCompat="@drawable/ic_mail_solid"
+        app:srcCompat="@drawable/vd_mail_solid"
         tools:visibility="visible" />
 
 </RelativeLayout>

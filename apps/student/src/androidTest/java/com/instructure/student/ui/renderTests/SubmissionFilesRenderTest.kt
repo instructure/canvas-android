@@ -41,7 +41,7 @@ class SubmissionFilesRenderTest : StudentRenderTest() {
     private val dataTemplate = SubmissionFileData(
         id = 123L,
         name = "File name",
-        icon = R.drawable.ic_document,
+        icon = R.drawable.vd_document,
         thumbnailUrl = null,
         isSelected = false,
         iconColor = Color.BLUE,

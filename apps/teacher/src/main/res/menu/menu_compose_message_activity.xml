@@ -19,14 +19,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_attachment"
-        android:icon="@drawable/ic_attachment"
+        android:icon="@drawable/vd_utils_attachment"
         android:title="@string/attachment"
         android:visible="false"
         android:tint="#8B969E"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_send"
-        android:icon="@drawable/ic_send"
+        android:icon="@drawable/vd_send"
         android:title="@string/common_send"
         app:showAsAction="always" />
 </menu>

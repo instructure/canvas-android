@@ -97,19 +97,19 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.ic_attachment,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             ),
             PickerListItemViewState(
                 1,
-                R.drawable.ic_attachment,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             ),
             PickerListItemViewState(
                 2,
-                R.drawable.ic_attachment,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             )
@@ -128,7 +128,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.ic_attachment,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B"
             )
@@ -148,9 +148,9 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val largeFile = FileSubmitObject("name", 1073741824L, "type", "path")
         val model = baseModel.copy(files = listOf(smallFile, mediumFile, largeFile))
         val fileViewStates = listOf(
-            PickerListItemViewState(0, R.drawable.ic_attachment, smallFile.name, "1 KB"),
-            PickerListItemViewState(1, R.drawable.ic_attachment, mediumFile.name, "1 MB"),
-            PickerListItemViewState(2, R.drawable.ic_attachment, largeFile.name, "1 GB")
+            PickerListItemViewState(0, R.drawable.vd_utils_attachment, smallFile.name, "1 KB"),
+            PickerListItemViewState(1, R.drawable.vd_utils_attachment, mediumFile.name, "1 MB"),
+            PickerListItemViewState(2, R.drawable.vd_utils_attachment, largeFile.name, "1 GB")
         )
         val expectedState = PickerSubmissionUploadViewState.FileList(
             baseVisibilities.copy(submit = true),
@@ -166,7 +166,7 @@ class PickerSubmissionUploadPresenterTest : Assert() {
         val fileViewStates = listOf(
             PickerListItemViewState(
                 0,
-                R.drawable.ic_attachment,
+                R.drawable.vd_utils_attachment,
                 baseFile.name,
                 "${baseFile.size} B",
                 false)

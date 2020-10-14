@@ -115,7 +115,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
                 syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
             }
             EventsViewState.Empty -> {
-                setEmptyView(syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
+                setEmptyView(syllabusEmptyView, R.drawable.vd_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
             }
             is EventsViewState.Loaded -> {
                 if (syllabusEventsRecycler?.adapter == null) syllabusEventsRecycler?.adapter = SyllabusEventsAdapter(consumer)
