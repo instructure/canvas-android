@@ -96,6 +96,9 @@ android {
 
     lintOptions {
         abortOnError false
+        // Work around for AGP issue related to release mode, see:
+        // https://github.com/flutter/flutter/issues/58247#issuecomment-636253593
+        checkReleaseBuilds false
     }
 
     signingConfigs {
