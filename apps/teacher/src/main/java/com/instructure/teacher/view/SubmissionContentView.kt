@@ -343,6 +343,7 @@ class SubmissionContentView(
                 else -> UnsupportedContent
             }
         }
+        (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size ?: 0)
         setGradeableContent(content)
     }
 
@@ -734,7 +735,7 @@ class SubmissionContentView(
     }
     //endregion
 
-    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, val fileCount: Int = 0) : FragmentPagerAdapter(fm) {
+    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, var fileCount: Int = 0) : FragmentPagerAdapter(fm) {
 
         private var fragments = ArrayList<Fragment>()
 
@@ -751,6 +752,11 @@ class SubmissionContentView(
             1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).toUpperCase(Locale.getDefault())
             2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, fileCount).toUpperCase(Locale.getDefault())
             else -> ""
+        }
+
+        fun refreshFilesTabCount(fileCount: Int) {
+            this.fileCount = fileCount
+            notifyDataSetChanged()
         }
 
         internal class Holder(private val manager: FragmentManager) {
