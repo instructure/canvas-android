@@ -137,7 +137,7 @@ class AvatarCropActivity : AppCompatActivity() {
         }
 
         // Set up 'close' button and menu listener
-        toolbar.setNavigationIcon(R.drawable.ic_close)
+        toolbar.setNavigationIcon(R.drawable.vd_close_white)
         toolbar.setNavigationOnClickListener { onBackPressed() }
         toolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.save) performCrop()

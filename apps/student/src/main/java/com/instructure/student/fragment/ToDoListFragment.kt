@@ -59,7 +59,7 @@ class ToDoListFragment : ParentFragment() {
             setRefreshing(false)
             editOptions.setGone()
             if (recyclerAdapter.size() == 0) {
-                setEmptyView(emptyView, R.drawable.ic_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
+                setEmptyView(emptyView, R.drawable.vd_panda_sleeping, R.string.noTodos, R.string.noTodosSubtext)
             }
         }
 

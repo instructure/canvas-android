@@ -317,7 +317,7 @@
                     android:layout_height="18dp"
                     android:layout_marginEnd="12dp"
                     android:importantForAccessibility="no"
-                    android:src="@drawable/ic_trash"
+                    android:src="@drawable/vd_trash"
                     android:tint="@color/removeOverrideColor" />
 
                 <TextView

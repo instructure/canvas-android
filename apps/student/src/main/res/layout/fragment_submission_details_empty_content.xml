@@ -51,7 +51,7 @@
         android:clickable="false"
         android:importantForAccessibility="no"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_panda_balloon"
+        android:src="@drawable/vd_panda_balloon"
         app:layout_constraintBottom_toTopOf="@id/textViews"
         app:layout_constraintEnd_toEndOf="@id/textRight"
         app:layout_constraintStart_toStartOf="@id/textLeft"

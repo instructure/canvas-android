@@ -102,9 +102,9 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
                 if(canPost) createNewDiscussion?.show()
                 if (recyclerAdapter.size() == 0) {
                     if (isAnnouncement) {
-                        setEmptyView(emptyView, R.drawable.ic_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
+                        setEmptyView(emptyView, R.drawable.vd_panda_noannouncements, R.string.noAnnouncements, R.string.noAnnouncementsSubtext)
                     } else {
-                        setEmptyView(emptyView, R.drawable.ic_panda_nodiscussions, R.string.noDiscussions, R.string.noDiscussionsSubtext)
+                        setEmptyView(emptyView, R.drawable.vd_panda_nodiscussions, R.string.noDiscussions, R.string.noDiscussionsSubtext)
                     }
                 }
             }

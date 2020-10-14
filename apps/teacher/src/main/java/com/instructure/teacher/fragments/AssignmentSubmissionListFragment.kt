@@ -168,7 +168,7 @@ class AssignmentSubmissionListFragment : BaseSyncFragment<
         if(isTablet) {
             assignmentSubmissionListToolbar.title = mAssignment.name
         } else {
-            assignmentSubmissionListToolbar.setNavigationIcon(R.drawable.ic_back_arrow)
+            assignmentSubmissionListToolbar.setNavigationIcon(R.drawable.vd_back_arrow)
             assignmentSubmissionListToolbar.title = getString(R.string.submissions)
             assignmentSubmissionListToolbar.subtitle = mCourse.name
         }

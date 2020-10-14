@@ -90,15 +90,15 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         val drawableResId: Int
         when (item.getStreamItemType()) {
             StreamItem.Type.DISCUSSION_TOPIC -> {
-                drawableResId = R.drawable.ic_discussion
+                drawableResId = R.drawable.vd_discussion
                 icon.contentDescription = context.getString(R.string.discussionIcon)
             }
             StreamItem.Type.ANNOUNCEMENT -> {
-                drawableResId = R.drawable.ic_announcement
+                drawableResId = R.drawable.vd_announcement
                 icon.contentDescription = context.getString(R.string.announcementIcon)
             }
             StreamItem.Type.SUBMISSION -> {
-                drawableResId = R.drawable.ic_assignment
+                drawableResId = R.drawable.vd_assignment
                 icon.contentDescription = context.getString(R.string.assignmentIcon)
 
                 // Need to prepend "Grade" in the message if there is a valid score
@@ -115,33 +115,33 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 }
             }
             StreamItem.Type.CONVERSATION -> {
-                drawableResId = R.drawable.ic_inbox
+                drawableResId = R.drawable.vd_inbox
                 icon.contentDescription = context.getString(R.string.conversationIcon)
             }
             StreamItem.Type.MESSAGE -> when {
                 item.contextType === CanvasContext.Type.COURSE -> {
-                    drawableResId = R.drawable.ic_assignment
+                    drawableResId = R.drawable.vd_assignment
                     icon.contentDescription = context.getString(R.string.assignmentIcon)
                 }
                 item.notificationCategory.contains("assignment graded", ignoreCase = true) -> {
-                    drawableResId = R.drawable.ic_grades
+                    drawableResId = R.drawable.vd_grades
                     icon.contentDescription = context.getString(R.string.gradesIcon)
                 }
                 else -> {
-                    drawableResId = R.drawable.ic_user
+                    drawableResId = R.drawable.vd_navigation_change_user
                     icon.contentDescription = context.getString(R.string.defaultIcon)
                 }
             }
             StreamItem.Type.CONFERENCE -> {
-                drawableResId = R.drawable.ic_conferences
+                drawableResId = R.drawable.vd_conferences
                 icon.contentDescription = context.getString(R.string.icon)
             }
             StreamItem.Type.COLLABORATION -> {
-                drawableResId = R.drawable.ic_collaborations
+                drawableResId = R.drawable.vd_collaborations
                 icon.contentDescription = context.getString(R.string.icon)
             }
-            StreamItem.Type.COLLECTION_ITEM -> drawableResId = R.drawable.ic_peer_review
-            else -> drawableResId = R.drawable.ic_peer_review
+            StreamItem.Type.COLLECTION_ITEM -> drawableResId = R.drawable.vd_peer_review
+            else -> drawableResId = R.drawable.vd_peer_review
         }
 
         val courseColor: Int = if (item.canvasContext != null) {

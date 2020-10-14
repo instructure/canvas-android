@@ -42,7 +42,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_panda_choosefile"
+            app:srcCompat="@drawable/vd_panda_choosefile"
             android:importantForAccessibility="no"
             android:layout_marginTop="@dimen/file_upload_panda_top"
             android:layout_marginBottom="@dimen/file_upload_panda_bottom"/>
@@ -111,7 +111,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_camera" />
+                    app:srcCompat="@drawable/vd_utils_camera" />
 
                 <TextView
                     style="@style/TextFont.Regular"
@@ -138,7 +138,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_image" />
+                    app:srcCompat="@drawable/vd_utils_image" />
 
                 <TextView
                     style="@style/TextFont.Regular"
@@ -165,7 +165,7 @@
                     android:layout_height="24dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/defaultTextDark"
-                    app:srcCompat="@drawable/ic_document" />
+                    app:srcCompat="@drawable/vd_utils_document" />
 
                 <TextView
                     style="@style/TextFont.Regular"

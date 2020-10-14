@@ -18,7 +18,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/todoListFilter"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/vd_filter"
         android:title="@string/todoFilter"
         app:showAsAction="always" />
 </menu>

@@ -180,14 +180,14 @@ class FileListFragment : BaseSyncFragment<
         return FileListAdapter(requireContext(), courseColor, presenter) {
             if (it.displayName.isValid()) {
                 // This is a file
-                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.ic_document)
+                val editableFile = EditableFile(it, presenter.usageRights, presenter.licenses, courseColor, presenter.mCanvasContext, R.drawable.vd_document)
                 if (it.isHtmlFile) {
                     /* An HTML file can reference other canvas files as resources (e.g. CSS files) and must be
                     accessed as an authenticated preview to work correctly */
                     val bundle = ViewHtmlFragment.makeAuthSessionBundle(mCanvasContext, it, it.displayName.orEmpty(), courseColor, editableFile)
                     RouteMatcher.route(requireActivity(), Route(ViewHtmlFragment::class.java, null, bundle))
                 } else {
-                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.ic_document, courseColor, editableFile)
+                    viewMedia(requireContext(), it.displayName.orEmpty(), it.contentType.orEmpty(), it.url, it.thumbnailUrl, it.displayName, R.drawable.vd_document, courseColor, editableFile)
                 }
             } else {
                 // This is a folder
@@ -216,7 +216,7 @@ class FileListFragment : BaseSyncFragment<
             mCanvasContext.isGroup -> emptyPandaView.setMessageText(R.string.noFilesSubtextGroup)
             else -> emptyPandaView.setMessageText(R.string.noFilesSubtext)
         }
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nofiles))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nofiles))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
     override fun folderCreationError() = toast(R.string.folderCreationError)

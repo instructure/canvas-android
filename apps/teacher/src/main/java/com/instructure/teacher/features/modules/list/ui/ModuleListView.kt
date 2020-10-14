@@ -150,7 +150,7 @@ class ModuleListView(
             licenses = licenses,
             courseColor = canvasContext.color,
             canvasContext = canvasContext,
-            iconRes = R.drawable.ic_document
+            iconRes = R.drawable.vd_document
         )
         viewMedia(
             context = context,
@@ -159,7 +159,7 @@ class ModuleListView(
             url = file.url,
             thumbnailUrl = file.thumbnailUrl,
             displayName = file.displayName,
-            iconRes = R.drawable.ic_document,
+            iconRes = R.drawable.vd_document,
             toolbarColor = canvasContext.color,
             editableFile = editableFile
         )

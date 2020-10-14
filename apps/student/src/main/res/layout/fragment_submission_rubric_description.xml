@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
-        tools:navigationIcon="@drawable/ic_back_arrow"
+        tools:navigationIcon="@drawable/vd_back_arrow"
         tools:title="Rubric Criterion Title"/>
 
     <View

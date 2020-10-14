@@ -30,7 +30,7 @@
         android:importantForAccessibility="no"
         android:maxWidth="120dp"
         android:maxHeight="120dp"
-        android:src="@drawable/ic_panda_inboxsent"/>
+        android:src="@drawable/vd_panda_inboxsent"/>
 
     <TextView
         android:layout_width="wrap_content"

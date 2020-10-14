@@ -151,7 +151,7 @@
                     android:layout_height="12dp"
                     android:importantForAccessibility="no"
                     android:tint="@color/bottomNavBarBg"
-                    app:srcCompat="@drawable/ic_canvas_logo"/>
+                    app:srcCompat="@drawable/vd_canvas_logo"/>
 
                 <TextView
                     android:id="@+id/versionTextView"

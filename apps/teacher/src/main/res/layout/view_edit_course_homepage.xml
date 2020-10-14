@@ -32,7 +32,7 @@
         android:layout_height="24dp"
         android:layout_centerVertical="true"
         android:importantForAccessibility="no"
-        app:srcCompat="@drawable/ic_home"/>
+        app:srcCompat="@drawable/vd_home"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"

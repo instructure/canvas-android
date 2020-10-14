@@ -154,7 +154,7 @@ class AssignmentListFragment : BaseExpandableSyncFragment<
 
     override fun checkIfEmpty() {
         emptyPandaView.setMessageText(R.string.noAssignmentsTeacher)
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_space))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_space))
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }
 

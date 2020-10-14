@@ -32,7 +32,7 @@
             android:layout_width="180dp"
             android:layout_height="150dp"
             android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_panda_online_submissions" />
+            app:srcCompat="@drawable/vd_panda_online_submissions" />
 
         <TextView
             style="@style/TextFont.Medium"

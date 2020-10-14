@@ -20,13 +20,13 @@
 
     <item
         android:id="@+id/menu_attachment"
-        android:icon="@drawable/ic_attachment"
+        android:icon="@drawable/vd_utils_attachment"
         android:title="@string/attachment"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/menu_send"
-        android:icon="@drawable/ic_send"
+        android:icon="@drawable/vd_send"
         android:title="@string/common_send"
         app:showAsAction="always" />
 </menu>

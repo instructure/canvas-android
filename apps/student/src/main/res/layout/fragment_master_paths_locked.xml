@@ -27,7 +27,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="64dp"
         android:contentDescription="@string/locked_icon"
-        android:src="@drawable/ic_lock" />
+        android:src="@drawable/vd_lock" />
 
     <TextView
         android:id="@+id/moduleItemNameTextView"

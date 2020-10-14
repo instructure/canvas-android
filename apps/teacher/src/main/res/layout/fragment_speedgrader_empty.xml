@@ -31,7 +31,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_panda_balloon"
+        app:srcCompat="@drawable/vd_panda_balloon"
         tools:visibility="visible"/>
 
     <TextView

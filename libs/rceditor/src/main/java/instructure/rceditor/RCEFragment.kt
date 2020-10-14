@@ -123,7 +123,7 @@ class RCEFragment : Fragment() {
         with(rceToolbar) {
             title = arguments!!.getString(HTML_TITLE)
             inflateMenu(R.menu.rce_save_menu)
-            setNavigationIcon(R.drawable.ic_rce_cancel)
+            setNavigationIcon(R.drawable.vd_rce_cancel)
             setNavigationContentDescription(R.string.rce_cancel)
             setNavigationOnClickListener(View.OnClickListener {
                 // Check to see if we made any changes. If we haven't, just close the fragment

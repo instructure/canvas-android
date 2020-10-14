@@ -46,7 +46,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/uploadFiles"
-            android:src="@drawable/ic_add"
+            android:src="@drawable/vd_add"
             android:tint="@color/gray"/>
 
         <EditText
@@ -69,7 +69,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="@string/send"
-            android:src="@drawable/ic_send"
+            android:src="@drawable/vd_send"
             android:tint="@color/canvasDefaultButton"/>
 
     </LinearLayout>

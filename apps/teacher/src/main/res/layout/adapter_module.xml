@@ -44,7 +44,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/ic_collapse_group"
+        android:src="@drawable/vd_collapse_group"
         android:tint="@color/defaultTextDark"/>
 
     <ImageView
@@ -53,7 +53,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/published"
-        android:src="@drawable/ic_complete_solid"
+        android:src="@drawable/vd_published"
         android:tint="@color/publishedGreen"/>
 
     <ImageView
@@ -62,7 +62,7 @@
         android:layout_height="14dp"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/not_published"
-        android:src="@drawable/ic_no"
+        android:src="@drawable/vd_universal_no"
         android:tint="@color/defaultTextGray"/>
 
 </LinearLayout>

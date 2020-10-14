@@ -39,7 +39,7 @@
             android:layout_height="18dp"
             android:layout_gravity="center"
             android:tint="@color/white"
-            app:srcCompat="@drawable/ic_checkmark"/>
+            app:srcCompat="@drawable/vd_checkmark"/>
 
     </FrameLayout>
 

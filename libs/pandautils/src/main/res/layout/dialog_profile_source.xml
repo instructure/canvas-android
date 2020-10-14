@@ -33,7 +33,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="6dp"
             android:padding="6dp"
-            app:srcCompat="@drawable/ic_camera"/>
+            app:srcCompat="@drawable/vd_camera"/>
 
         <TextView
             style="@style/TextFont.Regular"
@@ -59,7 +59,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="6dp"
             android:padding="6dp"
-            app:srcCompat="@drawable/ic_image"/>
+            app:srcCompat="@drawable/vd_image"/>
 
         <TextView
             style="@style/TextFont.Regular"

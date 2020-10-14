@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_panda_sleeping" />
+            android:src="@drawable/vd_panda_sleeping" />
 
         <TextView
             android:id="@+id/postEmptyTitle"

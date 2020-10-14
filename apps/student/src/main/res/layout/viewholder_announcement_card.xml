@@ -41,8 +41,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:importantForAccessibility="no"
-            android:tint="@color/white"
-            app:srcCompat="@drawable/ic_announcement"/>
+            app:srcCompat="@drawable/vd_announcement"/>
 
     </FrameLayout>
 
@@ -66,7 +65,7 @@
                 android:background="@color/transparent"
                 android:contentDescription="@string/dismiss"
                 android:tint="@color/gray"
-                app:srcCompat="@drawable/ic_close"
+                app:srcCompat="@drawable/vd_close_gray"
                 tools:visibility="gone"/>
 
         </FrameLayout>

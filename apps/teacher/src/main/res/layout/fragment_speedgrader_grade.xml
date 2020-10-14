@@ -89,7 +89,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="8dp"
                     android:contentDescription="@string/hidden"
-                    android:src="@drawable/ic_grade_hidden"
+                    android:src="@drawable/vd_grade_hidden"
                     android:visibility="gone" />
 
                 <TextView
@@ -115,7 +115,7 @@
                     android:focusable="true"
                     android:tint="@color/defaultActionColor"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_add"/>
+                    app:srcCompat="@drawable/vd_add"/>
 
                 <ProgressBar
                     android:id="@+id/gradeProgressSpinner"

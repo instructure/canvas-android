@@ -103,7 +103,7 @@
             android:paddingEnd="0dp"
             android:paddingStart="16dp"
             android:tint="#73818C"
-            app:srcCompat="@drawable/ic_edit"/>
+            app:srcCompat="@drawable/vd_edit"/>
     </LinearLayout>
 
 </LinearLayout>

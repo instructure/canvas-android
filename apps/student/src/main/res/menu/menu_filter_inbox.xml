@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/inboxFilter"
-        android:icon="@drawable/ic_filter"
+        android:icon="@drawable/vd_filter"
         android:title="@string/filterInbox"
         app:showAsAction="always"/>
 

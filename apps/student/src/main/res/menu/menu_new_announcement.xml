@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/menu_add_announcement"
-        android:icon="@drawable/ic_add"
+        android:icon="@drawable/vd_add"
         app:showAsAction="ifRoom"
         android:title="@string/newAnnouncement"/>
 

@@ -204,7 +204,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                 setRefreshing(false)
 
                 if (recyclerAdapter?.size() == 0) {
-                    setEmptyView(emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
+                    setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
                 }
             }
         }
@@ -394,7 +394,7 @@ class FileListFragment : ParentFragment(), Bookmarkable {
             }
             recyclerAdapter?.remove(deletedItem)
             if (recyclerAdapter?.size() == 0) {
-                setEmptyView(emptyView, R.drawable.ic_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
+                setEmptyView(emptyView, R.drawable.vd_panda_nofiles, R.string.noFiles, getNoFileSubtextId())
             }
             StudentPrefs.staleFolderIds = StudentPrefs.staleFolderIds + folder!!.id
         } catch {

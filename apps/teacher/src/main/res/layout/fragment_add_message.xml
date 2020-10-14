@@ -113,7 +113,7 @@
                     android:minHeight="48dp"
                     android:minWidth="48dp"
                     android:padding="16dp"
-                    app:srcCompat="@drawable/ic_add" />
+                    app:srcCompat="@drawable/vd_add" />
 
             </RelativeLayout>
 

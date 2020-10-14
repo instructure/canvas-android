@@ -87,7 +87,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             Triple(
                 if (assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_GRADED) R.string.gradedSubmissionLabel else R.string.submitted,
                 R.color.alertGreen,
-                R.drawable.ic_complete_solid
+                R.drawable.vd_submitted
             )
         } else {
             // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
@@ -97,9 +97,9 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
 
             if (assignment.submission?.missing == true || isMissingFromDueDate) {
                 // Mark it missing if the teacher marked it missing or if it's past due
-                Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.ic_no)
+                Triple(R.string.missingSubmissionLabel, R.color.submissionStatusColorMissing, R.drawable.vd_unsubmitted)
             } else {
-                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.ic_no)
+                Triple(R.string.notSubmitted, R.color.defaultTextGray, R.drawable.vd_unsubmitted)
             }
         }
 

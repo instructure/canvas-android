@@ -21,7 +21,7 @@
 
     <item
         android:id="@+id/fileUpload"
-        android:icon="@drawable/ic_file_upload"
+        android:icon="@drawable/vd_file_upload"
         app:showAsAction="ifRoom"
         android:title="@string/uploadFiles"/>
 

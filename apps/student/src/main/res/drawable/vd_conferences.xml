@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <path
+        android:fillType="evenOdd"
+        android:strokeWidth="1"
+        android:pathData="M0,0 L24,0 L24,24 L0,24 L0,0 Z" />
+    <path
+        android:fillColor="#000000"
+        android:fillType="evenOdd"
+        android:strokeWidth="1"
+        android:pathData="M18.5,14.5 L20.3385,14.5 L22.4642,19.8143 L21.5358,20.1857 L19.6615,15.5
+L4.33852,15.5 L2.46424,20.1857 L1.53576,19.8143 L3.66148,14.5 L5.25,14.5
+L5.25,14.035 C5.25,12.91,5.979,11.93,7.065,11.597
+C7.846,11.358,8.64,11.181,9.442,11.06 C8.496,10.34,7.875,9.214,7.875,7.936
+L7.875,7 C7.875,4.767,9.642,3,11.813,3 L11.937,3
+C13.931,3,15.611,4.495,15.845,6.477 L15.882,6.789 L15.616,6.958
+C15.221,7.21,14.765,7.5,13.923,7.5 C13.081,7.5,12.628,7.214,12.264,6.984
+C11.945,6.784,11.694,6.625,11.148,6.625 C10.597,6.625,10.344,6.785,10.024,6.986
+C9.741,7.164,9.405,7.377,8.875,7.462 L8.875,7.936
+C8.875,9.557,10.193,10.875,11.813,10.875 L11.937,10.875
+C13.557,10.875,14.875,9.557,14.875,7.936 L15.875,7.936
+C15.875,9.213,15.255,10.338,14.31,11.058
+C15.113,11.18,15.908,11.359,16.689,11.599 C17.772,11.931,18.5,12.91,18.5,14.035
+L18.5,14.5 Z M6.25,14.5 L17.5,14.5 L17.5,14.035
+C17.5,13.352,17.057,12.757,16.396,12.555
+C14.951,12.111,13.456,11.883,11.953,11.875 L11.873,11.875
+C10.344,11.875,8.825,12.103,7.358,12.553 C6.695,12.756,6.25,13.352,6.25,14.035
+L6.25,14.5 Z M11.813,4 C10.367,4,9.161,5.051,8.919,6.429
+C9.137,6.364,9.302,6.26,9.49,6.141 C9.854,5.911,10.308,5.625,11.148,5.625
+C11.983,5.625,12.435,5.91,12.798,6.139 C13.117,6.34,13.37,6.5,13.923,6.5
+C14.326,6.5,14.57,6.413,14.799,6.286 C14.499,4.963,13.319,4,11.937,4 L11.813,4 Z" />
+</vector>
