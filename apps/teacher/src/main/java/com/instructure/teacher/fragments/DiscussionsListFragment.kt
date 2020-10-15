@@ -174,10 +174,10 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         if(presenter.isEmpty) {
             createNewDiscussion.show()
             if (mIsAnnouncements) {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_noannouncements))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_noannouncements))
                 emptyPandaView.setMessageText(R.string.noAnnouncementsSubtext)
             } else {
-                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_nodiscussions))
+                emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_nodiscussions))
                 emptyPandaView.setMessageText(R.string.noDiscussionsTeacher)
             }
         }

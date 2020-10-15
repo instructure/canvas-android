@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_panda_nomodules"/>
+        android:src="@drawable/ic_panda_nomodules"/>
 
     <TextView
         android:id="@+id/emptyTitle"

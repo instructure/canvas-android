@@ -50,10 +50,10 @@ class DiscussionListHolder(view: View) : RecyclerView.ViewHolder(view) {
         val isAssignmentType = discussionTopicHeader.assignment != null
 
         if(isAnnouncement) {
-            discussionIcon.setIcon(R.drawable.vd_announcement, courseColor)
+            discussionIcon.setIcon(R.drawable.ic_announcement, courseColor)
             discussionIcon.setPublishedStatus(true)
         } else {
-            discussionIcon.setIcon(if (isAssignmentType) R.drawable.vd_assignment else R.drawable.vd_discussion, courseColor)
+            discussionIcon.setIcon(if (isAssignmentType) R.drawable.ic_assignment else R.drawable.ic_discussion, courseColor)
             discussionIcon.setPublishedStatus(discussionTopicHeader.published)
         }
         publishedBar.visibility = if (discussionTopicHeader.published) View.VISIBLE else View.INVISIBLE

@@ -73,7 +73,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:importantForAccessibility="no"
-                app:srcCompat="@drawable/vd_forward_arrow"
+                app:srcCompat="@drawable/ic_forward_arrow"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:tint="@color/defaultTextGray"/>

@@ -745,14 +745,14 @@ class FileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 removeFile.setGone()
             }
             item.currentState == FileSubmitObject.STATE.COMPLETE -> {
-                fileIcon.setImageResource(R.drawable.vd_utils_checkmark)
+                fileIcon.setImageResource(R.drawable.ic_checkmark)
                 removeFile.setGone()
                 progressBar.isIndeterminate = false
                 progressBar.visibility = View.GONE
                 fileIcon.setVisible()
             }
             item.currentState == FileSubmitObject.STATE.NORMAL -> {
-                removeFile.setImageResource(R.drawable.vd_utils_close)
+                removeFile.setImageResource(R.drawable.ic_close)
                 removeFile.contentDescription = context.getString(R.string.utils_removeAttachment)
                 removeFile.setOnClickListener {
                     onRemovedFileCallback(item)

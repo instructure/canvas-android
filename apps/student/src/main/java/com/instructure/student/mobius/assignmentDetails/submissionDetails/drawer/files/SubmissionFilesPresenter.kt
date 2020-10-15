@@ -39,13 +39,13 @@ object SubmissionFilesPresenter : Presenter<SubmissionFilesModel, SubmissionFile
     ): SubmissionFileData {
         val contentType = attachment.contentType.orEmpty()
         val icon = when {
-            contentType.contains("pdf") -> R.drawable.vd_pdf
-            contentType.contains("presentation") -> R.drawable.vd_ppt
-            contentType.contains("spreadsheet") -> R.drawable.vd_spreadsheet
-            contentType.contains("wordprocessing") -> R.drawable.vd_word_doc
-            contentType.contains("zip") -> R.drawable.vd_zip
-            contentType.contains("image") -> R.drawable.vd_image
-            else -> R.drawable.vd_document
+            contentType.contains("pdf") -> R.drawable.ic_pdf
+            contentType.contains("presentation") -> R.drawable.ic_ppt
+            contentType.contains("spreadsheet") -> R.drawable.ic_spreadsheet
+            contentType.contains("wordprocessing") -> R.drawable.ic_word_doc
+            contentType.contains("zip") -> R.drawable.ic_zip
+            contentType.contains("image") -> R.drawable.ic_image
+            else -> R.drawable.ic_document
         }
         return SubmissionFileData(
             id = attachment.id,

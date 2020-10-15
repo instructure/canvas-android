@@ -29,7 +29,7 @@
         android:layout_height="24dp"
         android:layout_gravity="top|end"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/vd_star"
+        app:srcCompat="@drawable/ic_star"
         android:importantForAccessibility="no"
         android:layout_centerVertical="true"/>
 

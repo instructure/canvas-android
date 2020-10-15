@@ -20,7 +20,7 @@
 
     <item
         android:id="@+id/launchExternalWeb"
-        android:icon="@drawable/vd_open_in_browser"
+        android:icon="@drawable/ic_open_in_browser"
         android:title="@string/launch_link_in_external_browser"
         app:showAsAction="always" />
 </menu>

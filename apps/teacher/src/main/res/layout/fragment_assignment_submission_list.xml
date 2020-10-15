@@ -122,7 +122,7 @@
         android:layout_margin="16dp"
         app:fabSize="normal"
         app:elevation="4dp"
-        app:srcCompat="@drawable/ic_mail_filled"
+        app:srcCompat="@drawable/ic_mail_solid"
         android:tint="@color/white"
         android:contentDescription="@string/sendMessage"/>
 

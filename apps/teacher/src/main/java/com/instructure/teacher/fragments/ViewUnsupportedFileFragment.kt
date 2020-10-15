@@ -52,7 +52,7 @@ class ViewUnsupportedFileFragment : Fragment() {
     private var mDisplayName by StringArg()
     private var mContentType by StringArg()
     private var mPreviewUri by ParcelableArg(Uri.EMPTY)
-    private var mFallbackIcon by IntArg(R.drawable.vd_utils_attachment)
+    private var mFallbackIcon by IntArg(R.drawable.ic_attachment)
     private var mEditableFile: EditableFile? by NullableParcelableArg()
     private var mToolbarColor by IntArg(0)
 

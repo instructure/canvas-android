@@ -68,7 +68,7 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
         ViewStyler.setStatusBarLight(requireActivity())
 
         // Set up empty state
-        emptyPandaView.getEmptyViewImage()?.setImageResource(R.drawable.vd_panda_nofiles)
+        emptyPandaView.getEmptyViewImage()?.setImageResource(R.drawable.ic_panda_nofiles)
         emptyPandaView.setListEmpty()
         checkIfEmpty()
 

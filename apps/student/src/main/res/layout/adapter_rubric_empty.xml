@@ -28,7 +28,7 @@
         android:layout_height="120dp"
         android:adjustViewBounds="true"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_panda_nosyllabus" />
+        android:src="@drawable/ic_panda_nosyllabus" />
 
     <TextView
         android:layout_width="match_parent"

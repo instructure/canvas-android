@@ -27,7 +27,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:navigationIcon="@drawable/vd_close_white"
+        app:navigationIcon="@drawable/ic_close"
         app:title="Adjust and crop"
         tools:layout_height="56dp"/>
 
