@@ -37,7 +37,6 @@ class SpeedGraderPage : BasePage() {
 
     private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).toUpperCase())
     private val commentsTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).toUpperCase())
-    private val filesTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_files).toUpperCase())
 
     private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsButton)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
@@ -65,7 +64,8 @@ class SpeedGraderPage : BasePage() {
         commentsTab.click()
     }
 
-    fun selectFilesTab() {
+    fun selectFilesTab(fileCount: Int) {
+        val filesTab = waitForViewWithText(getStringFromResource(R.string.sg_tab_files_w_counter, fileCount).toUpperCase())
         filesTab.click()
     }
 

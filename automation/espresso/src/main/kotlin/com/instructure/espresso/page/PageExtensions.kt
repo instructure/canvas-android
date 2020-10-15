@@ -149,6 +149,11 @@ fun BasePage.getStringFromResource(stringResource: Int): String{
     return targetContext.resources.getString(stringResource)
 }
 
+fun BasePage.getStringFromResource(stringResource: Int, vararg params: Any): String {
+    val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
+    return targetContext.resources.getString(stringResource, *params)
+}
+
 fun BasePage.callOnClick(matcher: Matcher<View>) = ViewCallOnClick.callOnClick(matcher)
 
 fun BasePage.scrollTo(viewId: Int) = BaristaScrollInteractions.safelyScrollTo(viewId)

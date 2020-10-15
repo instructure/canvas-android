@@ -420,6 +420,7 @@
     <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
+    <string name="sg_tab_files_w_counter">Files (%d)</string>
     <string name="filter_submissions">Filter Submissions</string>
     <string name="all_submissions">All Submissions</string>
     <string name="submitted_late">Submitted Late</string>
