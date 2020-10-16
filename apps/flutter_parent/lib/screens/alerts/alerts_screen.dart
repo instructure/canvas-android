@@ -267,7 +267,8 @@ class __AlertsListState extends State<_AlertsList> {
   }
 
   void _dismissAlert(Alert alert) async {
-    widget._interactor.markAlertDismissed(widget._student.id, alert.id);
+    _markAlertDismissed(alert);
+
     int itemIndex = _data.alerts.indexOf(alert);
 
     _listKey.currentState.removeItem(
@@ -275,6 +276,10 @@ class __AlertsListState extends State<_AlertsList> {
         duration: const Duration(milliseconds: 200));
 
     setState(() => _data.alerts.remove(alert));
+  }
+
+  void _markAlertDismissed(Alert alert) async {
+    await widget._interactor.markAlertDismissed(widget._student.id, alert.id);
 
     // Update the unread count if the alert was unread
     if (alert.workflowState == AlertWorkflowState.unread) {
