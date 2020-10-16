@@ -20,7 +20,7 @@ import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shel
 import 'package:flutter_parent/utils/common_widgets/error_panda_widget.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/canvas_web_view.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
@@ -78,7 +78,7 @@ class _CourseRoutingShellScreenState extends State<CourseRoutingShellScreen> {
           actions: <Widget>[
             IconButton(
               tooltip: L10n(context).refresh,
-              icon: Icon(CanvasIcons.refresh),
+              icon: Icon(CanvasIconsSolid.refresh, size: 18.0),
               onPressed: () async {
                 _refresh();
               },

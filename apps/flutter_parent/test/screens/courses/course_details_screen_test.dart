@@ -31,7 +31,7 @@ import 'package:flutter_parent/screens/courses/details/course_syllabus_screen.da
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_interactor.dart';
 import 'package:flutter_parent/screens/inbox/create_conversation/create_conversation_screen.dart';
 import 'package:flutter_parent/utils/common_widgets/web_view/web_content_interactor.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
+import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -143,7 +143,7 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsOneWidget);
-    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
+    expect(find.byIcon(CanvasIconsSolid.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
   });
@@ -166,7 +166,7 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
-    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
+    expect(find.byIcon(CanvasIconsSolid.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsNothing);
   });
@@ -183,7 +183,7 @@ void main() {
 
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsOneWidget);
     expect(find.text(AppLocalizations().courseFrontPageLabel.toUpperCase()), findsOneWidget);
-    expect(find.byIcon(CanvasIcons.refresh), findsOneWidget);
+    expect(find.byIcon(CanvasIconsSolid.refresh), findsOneWidget);
 
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
   });
@@ -200,7 +200,7 @@ void main() {
     expect(find.text(AppLocalizations().courseGradesLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSyllabusLabel.toUpperCase()), findsNothing);
     expect(find.text(AppLocalizations().courseSummaryLabel.toUpperCase()), findsNothing);
-    expect(find.byIcon(CanvasIcons.refresh), findsNothing);
+    expect(find.byIcon(CanvasIconsSolid.refresh), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks('Clicking grades tab shows the grades screen', (tester) async {
@@ -457,7 +457,7 @@ void main() {
     await tester.pump(); // Widget creation
     await tester.pump(); // Future resolved
 
-    await tester.tap(find.byIcon(CanvasIcons.refresh));
+    await tester.tap(find.byIcon(CanvasIconsSolid.refresh));
     await tester.pumpAndSettle();
 
     verify(courseInteractor.loadCourse(courseId, forceRefresh: true)).called(1); // Refresh load
