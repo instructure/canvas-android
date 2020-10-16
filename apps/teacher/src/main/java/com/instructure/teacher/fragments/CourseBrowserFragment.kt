@@ -43,6 +43,7 @@ import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -90,6 +91,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.FILES_ID,
             Tab.PAGES_ID,
             Tab.MODULES_ID,
+            Tab.SYLLABUS_ID,
             Tab.STUDENT_VIEW -> true
             else -> {
                 if (attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
@@ -237,6 +239,9 @@ class CourseBrowserFragment : BaseSyncFragment<
                 Tab.STUDENT_VIEW -> {
                     Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
                     presenter.handleStudentViewClick()
+                }
+                Tab.SYLLABUS_ID -> {
+                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, null))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
