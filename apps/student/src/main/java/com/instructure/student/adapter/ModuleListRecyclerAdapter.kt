@@ -83,6 +83,7 @@ open class ModuleListRecyclerAdapter(
 
         }
         isExpandedByDefault = false
+        isDisplayEmptyCell = true
         if (adapterToFragmentCallback != null) loadData() // Callback is null when testing
     }
 
