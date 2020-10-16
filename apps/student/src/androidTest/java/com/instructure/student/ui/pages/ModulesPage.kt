@@ -21,18 +21,23 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.dataseeding.model.ModuleApiModel
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.withAncestor
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
@@ -56,6 +61,25 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     fun assertAnyModuleLocked() {
         val matcher = allOf(withId(R.id.titleText), withText("Locked"))
         scrollRecyclerView(R.id.listView, matcher)
+    }
+
+    // Asserts that an assignment (presumably from a module) is locked
+    fun assertAssignmentLocked(assignment: Assignment, course: Course) {
+        val matcher = allOf(
+                hasSibling(withText(assignment.name)),
+                withId(R.id.indicator)
+        )
+
+        // Scroll to the course
+        scrollRecyclerView(R.id.listView, matcher)
+
+        // Make sure that the lock icon is showing, in the proper course color
+        val courseColor = ColorKeeper.getOrGenerateColor(course)
+        onView(matcher).check(matches(ImageViewDrawableMatcher(R.drawable.ic_lock, courseColor)))
+
+        // Make sure that clicking on the course does nothing
+        onView(allOf(withId(R.id.title), withText(assignment.name))).click()
+        onView(matcher).assertDisplayed()
     }
 
     fun assertModuleItemDisplayed(module: ModuleApiModel, itemTitle: String) {

@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.SystemClock.sleep
 import android.text.Html
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
@@ -45,6 +46,7 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
@@ -339,9 +341,21 @@ class ModuleInteractionTest : StudentTest() {
                 unlockAt = 2.days.fromNow.iso8601
         )
 
+        // And let's create an assignment and add it to the "locked" module.
+        val lockedAssignment = data.addAssignment(
+                courseId = course1.id,
+                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+        )
+        data.addItemToModule(
+                course = course1,
+                moduleId = module2.id,
+                item = lockedAssignment
+        )
+
         // Refresh to get module list update, then assert that module2 is locked
         modulesPage.refresh()
-        modulesPage.assertAnyModuleLocked()
+        // No need to click on the module since they are expanded by default now
+        modulesPage.assertAssignmentLocked(lockedAssignment, course1)
     }
 
     // Mock a specified number of students and courses, add some assorted assignments, discussions, etc...
