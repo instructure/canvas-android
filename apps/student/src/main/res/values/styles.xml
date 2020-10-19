@@ -37,6 +37,7 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <!-- Used for stand alone PSPDFKit activity, pdf fragment uses values in CanvasMaterialTheme_Default-->
     <style name="PSPDFKitTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/annotationToolbarBackground</item>
         <item name="colorAccent">@color/annotationToolbarBackground</item>
@@ -45,18 +46,6 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
-    </style>
-
-    <style name="SubmissionPSPDFKitTheme" parent="CanvasMaterialTheme_Default">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="windowActionModeOverlay">true</item>
-        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
-        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
-        <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
-        <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
-        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
-        <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
     </style>
 
     <style name="ContextualToolbarStyle">
