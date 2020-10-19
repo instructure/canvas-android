@@ -109,13 +109,13 @@ object FileUtils {
     @IntegerRes
     fun getFileIcon(filename: String, contentType: String): Int {
         return when {
-            contentType.startsWith("image") -> R.drawable.vd_utils_image
-            contentType.startsWith("video") -> R.drawable.vd_utils_media
-            contentType.startsWith("audio") -> R.drawable.vd_utils_audio
+            contentType.startsWith("image") -> R.drawable.ic_image
+            contentType.startsWith("video") -> R.drawable.ic_media
+            contentType.startsWith("audio") -> R.drawable.ic_audio
             else -> when (filename.substringAfterLast(".")) {
-                "doc", "docx", "txt", "rtf", "pdf", "xls" -> R.drawable.vd_utils_document
-                "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.vd_utils_attachment
-                else -> R.drawable.vd_utils_attachment
+                "doc", "docx", "txt", "rtf", "pdf", "xls" -> R.drawable.ic_document
+                "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.ic_attachment
+                else -> R.drawable.ic_attachment
             }
         }
     }

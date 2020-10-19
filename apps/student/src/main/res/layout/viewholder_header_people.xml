@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:scaleType="fitCenter"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/vd_expand"
+            app:srcCompat="@drawable/ic_expand"
             android:importantForAccessibility="no"/>
 
     </FrameLayout>

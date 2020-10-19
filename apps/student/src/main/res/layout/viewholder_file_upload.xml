@@ -28,7 +28,7 @@
         style="@style/AdapterItemIcon"
         android:layout_marginTop="16dp"
         android:importantForAccessibility="no"
-        android:src="@drawable/vd_media_recordings"
+        android:src="@drawable/ic_media_recordings"
         android:tint="@color/defaultActionColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +85,7 @@
         android:layout_marginEnd="16dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/delete"
-        android:src="@drawable/vd_close_gray"
+        android:src="@drawable/ic_close"
         android:tint="#2D3B45"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

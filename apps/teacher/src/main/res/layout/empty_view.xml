@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="@id/textRight"
         app:layout_constraintStart_toStartOf="@id/textLeft"
         app:layout_constraintTop_toBottomOf="@id/imageTop"
-        tools:src="@drawable/vd_panda_inboxzero"
+        tools:src="@drawable/ic_panda_inboxzero"
         tools:visibility="visible"/>
 
     <androidx.constraintlayout.widget.Barrier

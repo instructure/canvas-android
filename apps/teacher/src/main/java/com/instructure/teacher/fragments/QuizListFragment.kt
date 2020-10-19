@@ -129,7 +129,7 @@ class QuizListFragment : BaseExpandableSyncFragment<
     }
 
     override fun checkIfEmpty() {
-        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.vd_panda_quizzes_rocket))
+        emptyPandaView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_quizzes_rocket))
         emptyPandaView.setMessageText(R.string.noQuizzesTeacher)
         RecyclerViewUtils.checkIfEmpty(emptyPandaView, mRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
     }

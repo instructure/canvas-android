@@ -330,7 +330,7 @@ object RouteMatcher : BaseRouteMatcher() {
                     try {
                         if (loadedMedia.isError) {
                             if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS) {
-                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent!!.data!!, (loader as OpenMediaAsyncTaskLoader).filename!!, loadedMedia.intent!!.type!!, null, R.drawable.vd_attachment).nonNullArgs
+                                val args = ViewUnsupportedFileFragment.newInstance(loadedMedia.intent!!.data!!, (loader as OpenMediaAsyncTaskLoader).filename!!, loadedMedia.intent!!.type!!, null, R.drawable.ic_attachment).nonNullArgs
                                 RouteMatcher.route(activity, Route(ViewUnsupportedFileFragment::class.java, null, args))
                             } else {
                                 Toast.makeText(activity, activity.resources.getString(loadedMedia.errorMessage), Toast.LENGTH_LONG).show()

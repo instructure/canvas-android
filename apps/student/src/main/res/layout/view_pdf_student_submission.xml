@@ -41,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_warning"/>
+            android:src="@drawable/ic_warning"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -82,7 +82,7 @@
             android:contentDescription="@string/comments"
             android:elevation="2dp"
             android:visibility="gone"
-            app:srcCompat="@drawable/vd_discussion"
+            app:srcCompat="@drawable/ic_discussion"
             tools:visibility="visible"
             android:focusable="true" />
 

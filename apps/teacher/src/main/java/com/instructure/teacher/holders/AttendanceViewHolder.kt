@@ -16,12 +16,15 @@
 
 package com.instructure.teacher.holders
 
+import android.content.Context
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attendance
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.teacher.R
@@ -30,7 +33,12 @@ import kotlinx.android.synthetic.main.adapter_attendance.view.*
 
 class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    fun bind(attendance: Attendance, callback: AttendanceToFragmentCallback<Attendance>, position: Int) = with(itemView){
+    fun bind(
+        attendance: Attendance,
+        callback: AttendanceToFragmentCallback<Attendance>,
+        position: Int,
+        context: Context,
+    ) = with(itemView) {
         // Set student avatar
         val basicUser = BasicUser()
         basicUser.name = attendance.student?.name
@@ -44,12 +52,14 @@ class AttendanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         itemView.onClickWithRequireNetwork { callback.onRowClicked(attendance, position) }
         studentAvatar.onClick { callback.onAvatarClicked(attendance, position) }
 
-        when(attendance.attendanceStatus()) {
-            Attendance.Attendance.ABSENT -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_missing)
-            Attendance.Attendance.LATE -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_late)
-            Attendance.Attendance.PRESENT -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_present)
-            else -> attendanceIndicator.setImageResource(R.drawable.vd_attendance_unmarked)
+        val (drawable: Int, color: Int) = when(attendance.attendanceStatus()) {
+            Attendance.Attendance.ABSENT -> R.drawable.ic_attendance_missing to R.color.alertRed
+            Attendance.Attendance.LATE -> R.drawable.ic_clock to R.color.alertOrange
+            Attendance.Attendance.PRESENT -> R.drawable.ic_complete to R.color.alertGreen
+            else -> R.drawable.ic_no to R.color.defaultTextGray
         }
+        attendanceIndicator.setImageResource(drawable)
+        attendanceIndicator.imageTintList = ContextCompat.getColor(context, color).asStateList()
     }
 
     companion object {

@@ -325,7 +325,6 @@ class ModuleInteractionTest : StudentTest() {
 
     // Module can't be accessed until the availability date has passed
     @Test
-    @Stub
     @TestMetaData(Priority.P1, FeatureCategory.MODULES, TestCategory.INTERACTION, false)
     fun testModules_moduleLockedUntilAvailabilityDate() {
         // Basic mock setup
@@ -342,7 +341,6 @@ class ModuleInteractionTest : StudentTest() {
 
         // Refresh to get module list update, then assert that module2 is locked
         modulesPage.refresh()
-        modulesPage.clickModule(module2)
         modulesPage.assertAnyModuleLocked()
     }
 

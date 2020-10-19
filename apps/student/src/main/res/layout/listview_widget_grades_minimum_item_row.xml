@@ -64,7 +64,7 @@
             android:layout_height="22sp"
             android:padding="2sp"
             android:visibility="gone"
-            android:src="@drawable/vd_lock"
+            android:src="@drawable/ic_lock"
             android:contentDescription="@string/locked" />
 
     </FrameLayout>

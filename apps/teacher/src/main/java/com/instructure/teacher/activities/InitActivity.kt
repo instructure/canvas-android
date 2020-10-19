@@ -286,7 +286,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         // App version
         navigationDrawerVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
 
-        toolbar.setNavigationIcon(R.drawable.vd_hamburger)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
         toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
         toolbar.setNavigationOnClickListener { openNavigationDrawer() }
 

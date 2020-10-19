@@ -30,7 +30,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.onTextChanged
 import com.instructure.pandautils.utils.setupAsBackButton
+import kotlinx.android.synthetic.main.adapter_remote_config_param.view.*
 import kotlinx.android.synthetic.main.fragment_remote_config_params.*
 
 class RemoteConfigParamsFragment : Fragment() {
@@ -50,6 +52,15 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
 
     val params = RemoteConfigParam.values()
 
+    // Remove the TextWatcher from the view's EditText when the ViewHolder is recycled
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        val watcher = holder.itemView.param_value?.tag as? TextWatcher
+        if(watcher != null) {
+            holder.itemView.param_value.removeTextChangedListener(watcher)
+        }
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layout = LayoutInflater.from(parent.context).inflate(R.layout.adapter_remote_config_param, parent, false)
         return object : RecyclerView.ViewHolder(layout) {}
@@ -60,11 +71,11 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val param = params[position]
         with (holder.itemView) {
-            val nameLabel = findViewById<TextView>(R.id.param_name)
-            val valueEditText = findViewById<EditText>(R.id.param_value)
-            nameLabel.text = param.rc_name + ": "
-            valueEditText.setText(RemoteConfigPrefs.getString(param.rc_name, param.safeValueAsString))
-            valueEditText.addTextChangedListener(object : TextWatcher {
+            param_name.text = param.rc_name + ": "
+            param_value.setText(RemoteConfigPrefs.getString(param.rc_name, param.safeValueAsString))
+            // Save the TextWatcher in the "tag" field so that we can reference it later when we remove
+            // the TextWatcher/listener from param_value when this ViewHolder is recycled.
+            param_value.tag = object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     Log.d("RemoteConfigPrefs", "afterTextChanged: ${param.rc_name} = ${s.toString()}")
                     RemoteConfigPrefs.putString(param.rc_name, s.toString())
@@ -76,7 +87,8 @@ private class RemoteConfigParamAdapter : RecyclerView.Adapter<RecyclerView.ViewH
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 }
 
-            })
+            }
+            param_value.addTextChangedListener(param_value.tag as TextWatcher)
         }
     }
 

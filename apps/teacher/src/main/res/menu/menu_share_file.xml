@@ -28,7 +28,7 @@
         android:id="@+id/menu_share"
         android:title="@string/share"
         android:visible="false"
-        android:icon="@drawable/vd_share"
+        android:icon="@drawable/ic_share"
         app:showAsAction="always"/>
 
 </menu>

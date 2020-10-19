@@ -83,7 +83,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginStart="4dp"
                 android:contentDescription="@string/attachmentIcon"
-                app:srcCompat="@drawable/vd_attachment"/>
+                app:srcCompat="@drawable/ic_attachment"/>
 
             <ImageView
                 android:id="@+id/star"
@@ -93,7 +93,7 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginStart="4dp"
                 android:contentDescription="@string/inbox_starred"
-                android:src="@drawable/vd_star_filled"/>
+                android:src="@drawable/ic_star_filled"/>
 
             <TextView
                 android:id="@+id/date"

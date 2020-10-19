@@ -1006,7 +1006,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         if (docSession.annotationMetadata?.canManage() == true && annotation?.flags?.contains(AnnotationFlags.LOCKED) == true) {
             // We need to only return a list with the delete menu item
             delete = ContextualToolbarMenuItem.createSingleItem(context, View.generateViewId(),
-                    context.getDrawable(R.drawable.vd_trash)!!,
+                    context.getDrawable(R.drawable.ic_trash)!!,
                     context.getString(com.pspdfkit.R.string.pspdf__delete), -1, -1,
                     ContextualToolbarMenuItem.Position.END, false)
             list.add(delete)

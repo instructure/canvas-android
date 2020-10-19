@@ -49,7 +49,7 @@
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no"
                 android:tint="@color/defaultTextDark"
-                app:srcCompat="@drawable/vd_media" />
+                app:srcCompat="@drawable/ic_media" />
 
             <TextView
                 android:id="@+id/videoText"
@@ -81,7 +81,7 @@
                 android:layout_marginEnd="16dp"
                 android:importantForAccessibility="no"
                 android:tint="@color/defaultTextDark"
-                app:srcCompat="@drawable/vd_audio" />
+                app:srcCompat="@drawable/ic_audio" />
 
             <TextView
                 android:id="@+id/audioText"

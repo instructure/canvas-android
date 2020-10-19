@@ -343,6 +343,7 @@ class SubmissionContentView(
                 else -> UnsupportedContent
             }
         }
+        (mBottomViewPager.adapter as? BottomSheetPagerAdapter)?.refreshFilesTabCount(submission?.attachments?.size ?: 0)
         setGradeableContent(content)
     }
 
@@ -645,6 +646,7 @@ class SubmissionContentView(
                         mAssignment.anonymousGrading
                 ))
                 .add(SpeedGraderFilesFragment.newInstance(mRootSubmission))
+                .setFileCount(mRootSubmission?.attachments?.size ?: 0)
                 .set()
 
         mBottomViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -733,7 +735,7 @@ class SubmissionContentView(
     }
     //endregion
 
-    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>) : FragmentPagerAdapter(fm) {
+    private class BottomSheetPagerAdapter internal constructor(fm: FragmentManager, fragments: ArrayList<Fragment>, var fileCount: Int = 0) : FragmentPagerAdapter(fm) {
 
         private var fragments = ArrayList<Fragment>()
 
@@ -748,20 +750,31 @@ class SubmissionContentView(
         override fun getPageTitle(position: Int) = when (position) {
             0 -> ContextKeeper.appContext.getString(R.string.sg_tab_grade).toUpperCase(Locale.getDefault())
             1 -> ContextKeeper.appContext.getString(R.string.sg_tab_comments).toUpperCase(Locale.getDefault())
-            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files).toUpperCase(Locale.getDefault())
+            2 -> ContextKeeper.appContext.getString(R.string.sg_tab_files_w_counter, fileCount).toUpperCase(Locale.getDefault())
             else -> ""
+        }
+
+        fun refreshFilesTabCount(fileCount: Int) {
+            this.fileCount = fileCount
+            notifyDataSetChanged()
         }
 
         internal class Holder(private val manager: FragmentManager) {
 
             private val fragments = ArrayList<Fragment>()
+            private var fileCount: Int = 0
 
             fun add(f: Fragment): Holder {
                 fragments.add(f)
                 return this
             }
 
-            fun set() = BottomSheetPagerAdapter(manager, fragments)
+            fun setFileCount(fileCount: Int): Holder {
+                this.fileCount = fileCount
+                return this
+            }
+
+            fun set() = BottomSheetPagerAdapter(manager, fragments, fileCount)
         }
 
         override fun finishUpdate(container: ViewGroup) {

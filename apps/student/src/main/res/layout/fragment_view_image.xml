@@ -56,7 +56,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_warning"
+            android:src="@drawable/ic_warning"
             android:tint="@color/defaultTextGray"/>
 
         <TextView

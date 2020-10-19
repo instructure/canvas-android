@@ -408,7 +408,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             Logger.e("Error getting version: " + e)
         }
 
-        toolbar.setNavigationIcon(R.drawable.vd_hamburger)
+        toolbar.setNavigationIcon(R.drawable.ic_hamburger)
         toolbar.navigationContentDescription = getString(R.string.navigation_drawer_open)
         toolbar.setNavigationOnClickListener {
             openNavigationDrawer()

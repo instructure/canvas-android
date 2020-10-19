@@ -26,7 +26,6 @@ import 'package:flutter_parent/screens/inbox/create_conversation/create_conversa
 import 'package:flutter_parent/utils/base_model.dart';
 import 'package:flutter_parent/utils/common_widgets/full_screen_scroll_container.dart';
 import 'package:flutter_parent/utils/common_widgets/loading_indicator.dart';
-import 'package:flutter_parent/utils/design/canvas_icons.dart';
 import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
@@ -109,7 +108,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> with SingleTi
         if (tabCount > 1)
           IconButton(
             tooltip: L10n(context).refresh,
-            icon: Icon(CanvasIcons.refresh),
+            icon: Icon(CanvasIconsSolid.refresh, size: 18.0),
             onPressed: () async {
               // Clear cache for the front page of this course, as a workaround to force a refresh
               await DioConfig.canvas().clearCache(path: 'courses/${model.courseId}/front_page');

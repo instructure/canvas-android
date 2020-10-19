@@ -36,7 +36,7 @@
             android:layout_gravity="center"
             android:layout_marginEnd="32dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_checkmark"
+            android:src="@drawable/ic_checkmark"
             android:tint="#2D3B45" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -66,7 +66,7 @@
             android:layout_gravity="center"
             android:layout_marginEnd="32dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_edit"
+            android:src="@drawable/ic_edit"
             android:tint="#2D3B45" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -95,7 +95,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="32dp"
             android:importantForAccessibility="no"
-            android:src="@drawable/vd_trash"
+            android:src="@drawable/ic_trash"
             android:tint="#2D3B45" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -39,7 +39,7 @@
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:tint="@color/white"
-        app:srcCompat="@drawable/vd_utils_attachment"
+        app:srcCompat="@drawable/ic_attachment"
         tools:ignore="ContentDescription" />
 
     <TextView
@@ -68,6 +68,6 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:padding="4dp"
         android:tint="#FFF"
-        app:srcCompat="@drawable/vd_utils_download" />
+        app:srcCompat="@drawable/ic_download" />
 
 </com.instructure.pandautils.views.AttachmentDogEarLayout>

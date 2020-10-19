@@ -67,7 +67,7 @@
                     android:background="@drawable/navigation_drawer_institution_background"
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
-                    tools:srcCompat="@drawable/vd_canvas_logo_red"/>
+                    tools:srcCompat="@drawable/ic_canvas_logo_red"/>
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/navigationDrawerSettings"
@@ -80,7 +80,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@string/settings"
                     android:padding="8dp"
-                    app:srcCompat="@drawable/vd_settings"/>
+                    app:srcCompat="@drawable/ic_settings"/>
 
             </RelativeLayout>
 
@@ -121,7 +121,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_files"/>
+                    app:srcCompat="@drawable/ic_files"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -141,7 +141,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_arc"/>
+                    app:srcCompat="@drawable/ic_navigation_arc"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -161,7 +161,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_gauge"/>
+                    app:srcCompat="@drawable/ic_navigation_gauge"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -180,7 +180,8 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_courses"/>
+                    android:padding="1dp"
+                    app:srcCompat="@drawable/ic_courses" />
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -205,7 +206,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_change_user"/>
+                    app:srcCompat="@drawable/ic_user"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -223,7 +224,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_navigation_logout"/>
+                    app:srcCompat="@drawable/ic_navigation_logout"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -248,7 +249,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_masquerade"/>
+                    app:srcCompat="@drawable/ic_masquerade"/>
 
                 <TextView
                     style="@style/TextFont.Medium"
@@ -268,7 +269,7 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/vd_masquerade"/>
+                    app:srcCompat="@drawable/ic_masquerade"/>
 
                 <TextView
                     style="@style/TextFont.Medium"

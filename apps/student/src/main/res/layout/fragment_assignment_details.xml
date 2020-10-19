@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:elevation="6dp"
             tools:background="#00bcd5"
-            tools:navigationIcon="@drawable/vd_back_arrow"
+            tools:navigationIcon="@drawable/ic_back_arrow"
             tools:subtitle="Biology 101"
             tools:subtitleTextColor="@color/white"
             tools:title="Ecosystem Health and Human Well-Being"
@@ -75,7 +75,7 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/vd_warning"
+                            android:src="@drawable/ic_warning"
                             android:tint="@color/defaultTextGray"/>
 
                         <TextView
@@ -126,7 +126,7 @@
                                 android:layout_height="18dp"
                                 android:layout_marginStart="12dp"
                                 android:importantForAccessibility="no"
-                                tools:src="@drawable/vd_published"
+                                tools:src="@drawable/ic_complete_solid"
                                 tools:tint="@color/alertGreen"/>
 
                             <TextView
@@ -467,7 +467,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/vd_forward_arrow"
+                            android:src="@drawable/ic_forward_arrow"
                             android:tint="@color/textLightGray" />
 
                     </LinearLayout>
@@ -489,7 +489,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/vd_panda_locked"/>
+                            android:src="@drawable/ic_panda_locked"/>
 
                     </LinearLayout>
 
@@ -689,7 +689,7 @@
                                 android:padding="14dp"
                                 android:scaleType="centerInside"
                                 android:visibility="gone"
-                                app:srcCompat="@drawable/vd_attachment" />
+                                app:srcCompat="@drawable/ic_attachment" />
 
                         </LinearLayout>
 
