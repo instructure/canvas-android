@@ -144,7 +144,7 @@
             android:layout_height="0.5dp"
             android:background="@color/divider" />
 
-        <com.instructure.teacher.view.ViewPagerNoSwipe
+        <com.instructure.pandautils.views.ViewPagerNonSwipeable
             android:id="@+id/bottomViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
