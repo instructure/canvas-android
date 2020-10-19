@@ -63,7 +63,7 @@ class ModuleListPresenterTest : Assert() {
             id = 1L,
             name = "Module 1",
             isPublished = true,
-            moduleItems = emptyList()
+            moduleItems = listOf(ModuleListItemData.EmptyItem)
         )
         moduleItemTemplate = ModuleItem(
             id = 1000L,
