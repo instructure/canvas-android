@@ -21,7 +21,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.view.View
-import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.MenuPopupWindow
 import androidx.test.espresso.Espresso
@@ -37,9 +37,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withHint
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.explicitClick
 import com.instructure.canvas.espresso.scrollRecyclerView
+import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
@@ -146,11 +146,11 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertStarred() {
-        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.ic_star_filled, ThemePrefs.brandColor)))
+        onView(withId(R.id.starred)).check(matches(ImageViewDrawableMatcher(R.drawable.ic_star_filled, ThemePrefs.brandColor)))
     }
 
     fun assertNotStarred() {
-        onView(withId(R.id.starred)).check(matches(ImageButtonDrawableMatcher(R.drawable.ic_star, ThemePrefs.brandColor)))
+        onView(withId(R.id.starred)).check(matches(ImageViewDrawableMatcher(R.drawable.ic_star, ThemePrefs.brandColor)))
     }
 
 }
@@ -161,13 +161,13 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
 
 // Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
 /**
- * Matches ImageButton with the drawable associated with [resourceId].  If [resourceId] < 0, will
+ * Matches ImageView (or ImageButton) with the drawable associated with [resourceId].  If [resourceId] < 0, will
  * match against "no drawable" / "drawable is null".
  *
  * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
  * prior to matching.
  */
-class ImageButtonDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(ImageButton::class.java) {
+class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(ImageView::class.java) {
     override fun describeTo(description: Description) {
         description.appendText("with drawable from resource id: ")
         description.appendValue(resourceId)
@@ -180,19 +180,19 @@ class ImageButtonDrawableMatcher(val resourceId: Int, val color: Int? = null) : 
     }
 
     override fun matchesSafely(target: View?): Boolean {
-        if (target !is ImageButton) {
+        if (target !is ImageView) {
             return false
         }
-        val imageButton = target as ImageButton
+        val imageView = target as ImageView
         if (resourceId < 0) {
-            return imageButton.drawable == null
+            return imageView.drawable == null
         }
         val resources: Resources = target.getContext().getResources()
         val expectedDrawable: Drawable = resources.getDrawable(resourceId) ?: return false
         if(color != null) {
             ColorUtils.colorIt(color, expectedDrawable)
         }
-        val bitmap: Bitmap = getBitmap(imageButton.getDrawable())
+        val bitmap: Bitmap = getBitmap(imageView.getDrawable())
         val otherBitmap: Bitmap = getBitmap(expectedDrawable)
         return bitmap.sameAs(otherBitmap)
     }
