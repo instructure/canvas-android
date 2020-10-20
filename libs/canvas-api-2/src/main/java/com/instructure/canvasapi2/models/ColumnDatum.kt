@@ -22,9 +22,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class ColumnDatum(
-        val content: String, // TODO: null?
+        val content: String,
         @SerializedName("user_id")
-        val userId: Long // TODO: default
+        val userId: Long
 ) : CanvasModel<ColumnDatum>() {
     override fun compareTo(other: ColumnDatum): Int = 0
 }

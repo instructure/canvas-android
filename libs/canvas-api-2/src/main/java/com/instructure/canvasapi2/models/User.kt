@@ -24,7 +24,7 @@ import java.util.ArrayList
 @Parcelize
 data class User(
         override val id: Long = 0,
-        override val name: String = "", // TODO: null?
+        override val name: String = "",
         @SerializedName("short_name")
         val shortName: String? = null,
         @SerializedName("login_id")

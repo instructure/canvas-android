@@ -23,11 +23,11 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CustomColumn(
         override val id: Long = 0,
-        val title: String, // Header text // TODO: null?
-        val position: Int, //Column order // TODO: default
-        val hidden: Boolean, // Won't be displayed if hidden is true // TODO: default
+        val title: String, // Header text
+        val position: Int, //Column order
+        val hidden: Boolean, // Won't be displayed if hidden is true
         @SerializedName("teacher_notes")
-        val teacherNotes: Boolean  // Is it the teacher's note column? // TODO: default
+        val teacherNotes: Boolean  // Is it the teacher's note column?
 ) : CanvasModel<CustomColumn>() {
     override val comparisonString get() = title
 }

@@ -27,7 +27,7 @@ import java.util.*
 @Parcelize
 data class Course(
         override val id: Long = 0,
-        override var name: String = "", // TODO: null?
+        override var name: String = "",
         @SerializedName("original_name")
         var originalName: String? = null,
         @SerializedName("course_code")

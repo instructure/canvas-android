@@ -306,7 +306,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
                     load(apiValues.pdfUrl) { setupPSPDFKit(it) }
                 } else {
-                    //TODO: better handle case where redirect url is empty, is a canvadoc failure case
                     toast(R.string.errorOccurred)
                 }
             } else {

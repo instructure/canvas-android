@@ -22,13 +22,13 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class UsageRights(
         @SerializedName("legal_copyright")
-        val legalCopyright: String? = "", // TODO: null?
+        val legalCopyright: String? = "",
         @SerializedName("use_justification")
         val useJustification: FileUsageRightsJustification = FileUsageRightsJustification.OWN_COPYRIGHT,
-        val license: String? = "", // TODO: null?
+        val license: String? = "",
         @SerializedName("license_name")
-        val licenseName: String? = "", // TODO: null?
-        val message: String? = "", // TODO: null?
+        val licenseName: String? = "",
+        val message: String? = "",
         @SerializedName("file_ids")
         val fileIds: ArrayList<Long> = ArrayList()
 ) : Parcelable
