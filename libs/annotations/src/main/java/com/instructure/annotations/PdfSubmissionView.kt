@@ -254,8 +254,11 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     if (text.isValid()) {
                         createCommentAnnotation(currentAnnotation.annotationId, currentAnnotation.page, text)
                         // Add contents to the current annotation so we can add an indicator
-                        currentPdfAnnotation.contents = "comment"
-                        pdfFragment?.notifyAnnotationHasChanged(currentPdfAnnotation)
+                        if(currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT) {
+                            currentPdfAnnotation.contents = "comment"
+                            noteHinter?.notifyDrawablesChanged()
+                            pdfFragment?.notifyAnnotationHasChanged(currentPdfAnnotation)
+                        }
                     }
                 }.show(supportFragmentManager, AnnotationCommentDialog::class.java.simpleName)
             } else {
