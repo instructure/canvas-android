@@ -69,6 +69,7 @@ import com.pspdfkit.ui.inspector.annotation.AnnotationEditingInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationCreationInspectorController
 import com.pspdfkit.ui.inspector.annotation.DefaultAnnotationEditingInspectorController
 import com.pspdfkit.ui.inspector.views.BorderStylePreset
+import com.pspdfkit.ui.note.AnnotationNoteHinter
 import com.pspdfkit.ui.special_mode.controller.AnnotationCreationController
 import com.pspdfkit.ui.special_mode.controller.AnnotationEditingController
 import com.pspdfkit.ui.special_mode.controller.AnnotationSelectionController
@@ -80,6 +81,7 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import java.io.File
 import java.util.*
+import kotlin.jvm.Throws
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -88,6 +90,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     protected lateinit var apiValues: ApiValues
     protected val commentRepliesHashMap: HashMap<String, ArrayList<CanvaDocAnnotation>> = HashMap()
     protected var pdfFragment: PdfFragment? = null
+    protected var noteHinter: AnnotationNoteHinter? = null
     protected val supportFragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
 
     private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
@@ -250,6 +253,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     // Create new comment reply for this annotation.
                     if (text.isValid()) {
                         createCommentAnnotation(currentAnnotation.annotationId, currentAnnotation.page, text)
+                        // Add contents to the current annotation so we can add an indicator
+                        if(currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT) {
+                            currentPdfAnnotation.contents = "comment"
+                            noteHinter?.notifyDrawablesChanged()
+                            pdfFragment?.notifyAnnotationHasChanged(currentPdfAnnotation)
+                        }
                     }
                 }.show(supportFragmentManager, AnnotationCommentDialog::class.java.simpleName)
             } else {
@@ -269,6 +278,9 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         pdfFragment = newPdfFragment
         pdfFragment?.addOnAnnotationCreationModeChangeListener(this)
         pdfFragment?.addOnAnnotationEditingModeChangeListener(this)
+
+        noteHinter = AnnotationNoteHinter(context)
+        pdfFragment?.addDrawableProvider(noteHinter!!)
 
         if (docSession.annotationMetadata?.canWrite() == true) {
             // push the pdf viewing screen under the toolbar
@@ -332,8 +344,10 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 // We don't want to trigger the annotation events here, so unregister and re-register after
                 pdfFragment?.document?.annotationProvider?.removeOnAnnotationUpdatedListener(mAnnotationUpdateListener)
 
-                // Grab all the annotations
-                for (item in annotations.data) {
+                // Grab all the annotations and sort them by type (descending).
+                // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
+                val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
+                for (item in sortedAnnotationList) {
                     if (item.annotationType == CanvaDocAnnotation.AnnotationType.COMMENT_REPLY) {
                         // Grab the annotation comments and store them to be displayed later when user selects annotation
                         if (commentRepliesHashMap.containsKey(item.inReplyTo)) {
@@ -355,6 +369,11 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                                     }
                                 }
 
+                                if(commentRepliesHashMap.containsKey(annotation.name)
+                                        && (item.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && item.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT)) {
+                                    annotation.contents = "comment"
+                                }
+
                                 pdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation)
                                 pdfFragment?.notifyAnnotationHasChanged(annotation)
                             }
@@ -362,6 +381,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                     }
 
                 }
+
+                noteHinter?.notifyDrawablesChanged()
                 pdfFragment?.document?.annotationProvider?.addOnAnnotationUpdatedListener(mAnnotationUpdateListener)
                 pdfFragment?.addOnAnnotationSelectedListener(annotationSelectedListener)
                 pdfFragment?.addOnAnnotationDeselectedListener(mAnnotationDeselectedListener)
@@ -583,6 +604,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             // If it is not found, don't hit the server (it will fail)
             if (!annotation.name.isNullOrEmpty())
                 awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.name!!, apiValues.canvaDocsDomain, it) }
+            noteHinter?.notifyDrawablesChanged()
         } catch {
             // Show general error, make more specific in the future?
             toast(R.string.errorOccurred)
@@ -614,7 +636,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     private fun setupAnnotationCreationList(): MutableList<AnnotationTool> {
-        return mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER)
+        return mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
     }
 
     private fun setupAnnotationEditList(): MutableList<AnnotationType> {
@@ -707,7 +729,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                 .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
                 .setDefaultThickness(2f)
-                .setDefaultAlpha(100f)
+                .setDefaultAlpha(1f)
                 .setDefaultFillColor(ContextCompat.getColor(context, R.color.transparent))
                 .setDefaultBorderStylePreset(BorderStylePreset.SOLID)
                 .setZIndexEditingEnabled(false)

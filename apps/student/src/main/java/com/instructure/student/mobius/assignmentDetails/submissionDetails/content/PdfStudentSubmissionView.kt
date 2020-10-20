@@ -190,6 +190,8 @@ class PdfStudentSubmissionView(
             if (event.isHeadAnnotation) {
                 //we need to delete the entire list of comments from the hashmap
                 commentRepliesHashMap.remove(event.annotation.inReplyTo)
+                pdfFragment?.selectedAnnotations?.get(0)?.contents = ""
+                noteHinter?.notifyDrawablesChanged()
             } else {
                 //otherwise just remove the comment
                 commentRepliesHashMap[event.annotation.inReplyTo]?.remove(event.annotation)

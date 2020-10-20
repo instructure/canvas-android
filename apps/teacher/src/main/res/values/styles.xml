@@ -33,6 +33,7 @@
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
         <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
+        <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
     </style>
 
     <style name="ContextualToolbarStyle">
@@ -54,6 +55,12 @@
         <item name="pspdf__iconsColor">@color/white</item>
         <item name="pspdf__deleteIcon">@drawable/ic_trash</item>
         <item name="pspdf__editIcon">@drawable/ic_edit</item>
+    </style>
+
+    <style name="AnnotationNoteHinter">
+        <item name="pspdf__noteHinterColor">@color/blueAnnotation</item>
+        <item name="pspdf__noteHinterAlpha">255</item>
+        <item name="pspdf__noteHinterIcon">@drawable/ic_annotation_comment_indicator</item>
     </style>
 
     <style name="StampPickerStyle">
