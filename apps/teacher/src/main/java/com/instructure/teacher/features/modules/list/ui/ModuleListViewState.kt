@@ -30,6 +30,8 @@ sealed class ModuleListItemData {
 
     object Loading : ModuleListItemData()
 
+    data class EmptyItem(val moduleId: Long) : ModuleListItemData()
+
     data class FullError(val buttonColor: Int): ModuleListItemData()
 
     data class InlineError(val buttonColor: Int): ModuleListItemData()
@@ -38,7 +40,7 @@ sealed class ModuleListItemData {
         val id: Long,
         val name: String,
         val isPublished: Boolean?,
-        val moduleItems: List<ModuleItemData>
+        val moduleItems: List<ModuleListItemData>
     ): ModuleListItemData()
 
     data class ModuleItemData(

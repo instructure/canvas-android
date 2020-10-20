@@ -39,21 +39,25 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
         val courseColor = model.course.color
 
         items += model.modules.map { module ->
-            val moduleItems = module.items.map { item ->
-                if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
-                    ModuleListItemData.ModuleItemData(
-                        id = item.id,
-                        title = null,
-                        subtitle = item.title,
-                        iconResId = null,
-                        isPublished = item.published,
-                        indent = item.indent * indentWidth,
-                        tintColor = 0,
-                        enabled = false
-                    )
-                } else {
-                    createModuleItemData(item, context, indentWidth, courseColor, item.id in model.loadingModuleItemIds)
+            val moduleItems: List<ModuleListItemData> = if (module.items.isNotEmpty()) {
+                module.items.map { item ->
+                    if (item.type.equals(ModuleItem.Type.SubHeader.name, ignoreCase = true)) {
+                        ModuleListItemData.ModuleItemData(
+                                id = item.id,
+                                title = null,
+                                subtitle = item.title,
+                                iconResId = null,
+                                isPublished = item.published,
+                                indent = item.indent * indentWidth,
+                                tintColor = 0,
+                                enabled = false
+                        )
+                    } else {
+                        createModuleItemData(item, context, indentWidth, courseColor, item.id in model.loadingModuleItemIds)
+                    }
                 }
+            } else {
+                listOf(ModuleListItemData.EmptyItem(module.id))
             }
             ModuleListItemData.ModuleData(
                 id = module.id,
