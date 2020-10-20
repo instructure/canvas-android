@@ -57,7 +57,7 @@ object ModuleListPresenter : Presenter<ModuleListModel, ModuleListViewState> {
                     }
                 }
             } else {
-                listOf(ModuleListItemData.EmptyItem)
+                listOf(ModuleListItemData.EmptyItem(module.id))
             }
             ModuleListItemData.ModuleData(
                 id = module.id,

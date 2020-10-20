@@ -30,7 +30,7 @@ sealed class ModuleListItemData {
 
     object Loading : ModuleListItemData()
 
-    object EmptyItem : ModuleListItemData()
+    data class EmptyItem(val moduleId: Long) : ModuleListItemData()
 
     data class FullError(val buttonColor: Int): ModuleListItemData()
 
