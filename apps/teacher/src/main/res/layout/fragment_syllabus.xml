@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
+        app:theme="@style/ToolBarStyle"
         tools:background="#00bcd5"
         tools:navigationIcon="@drawable/ic_back_arrow"
         tools:subtitle="Biology 101"

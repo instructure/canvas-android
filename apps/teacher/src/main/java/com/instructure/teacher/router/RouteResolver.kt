@@ -166,7 +166,7 @@ object RouteResolver {
         } else if (CreateOrEditPageDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = CreateOrEditPageDetailsFragment.newInstance(route.arguments)
         } else if (SyllabusFragment::class.java.isAssignableFrom(cls)) {
-            fragment = SyllabusFragment.newInstance(route.arguments)
+            fragment = SyllabusFragment.newInstance(canvasContext ?: route.canvasContext)
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
         } else if (InternalWebViewFragment::class.java.isAssignableFrom(cls)) {

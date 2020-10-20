@@ -16,26 +16,39 @@
  */
 package com.instructure.teacher.features.syllabus.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.features.syllabus.*
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 
 class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
 
+    val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
+
     override fun makeEffectHandler() = SyllabusEffectHandler()
 
     override fun makeUpdate() = SyllabusUpdate()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SyllabusView(inflater, parent)
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SyllabusView(canvasContext, inflater, parent)
 
     override fun makePresenter() = SyllabusPresenter
 
-    override fun makeInitModel() = SyllabusModel("Asd")
+    override fun makeInitModel() = SyllabusModel(canvasContext.id)
 
     companion object {
-        fun newInstance(args: Bundle) = SyllabusFragment().withArgs(args)
+        fun newInstance(canvasContext: CanvasContext?) = if (isValidRoute(canvasContext)) createFragmentWithCanvasContext(canvasContext) else null
+
+        private fun isValidRoute(canvasContext: CanvasContext?) = canvasContext is Course
+
+        private fun createFragmentWithCanvasContext(canvasContext: CanvasContext?): SyllabusFragment {
+            return SyllabusFragment().withArgs {
+                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
+            }
+        }
     }
 }

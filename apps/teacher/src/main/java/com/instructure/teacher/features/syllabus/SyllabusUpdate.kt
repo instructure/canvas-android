@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.syllabus
 
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -23,10 +24,29 @@ import com.spotify.mobius.Next
 class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>() {
 
     override fun performInit(model: SyllabusModel): First<SyllabusModel, SyllabusEffect> {
-        return First.first<SyllabusModel, SyllabusEffect>(SyllabusModel("Stonks"))
+        return First.first(model.copy(isLoading = true), setOf<SyllabusEffect>(SyllabusEffect.LoadData(model.courseId, false)))
     }
 
     override fun update(model: SyllabusModel, event: SyllabusEvent): Next<SyllabusModel, SyllabusEffect> {
-        return Next.next<SyllabusModel, SyllabusEffect>(SyllabusModel("Stonks"))
+        return when (event) {
+            SyllabusEvent.PullToRefresh -> Next.next(model.copy(isLoading = true), setOf<SyllabusEffect>(SyllabusEffect.LoadData(model.courseId, true)))
+            is SyllabusEvent.DataLoaded -> {
+                Next.next(model.copy(
+                        isLoading = false,
+                        course = event.course,
+                        events = event.events,
+                        syllabus = event.course.dataOrNull?.let { ScheduleItem.createSyllabus(it.name, it.syllabusBody) }
+                ))
+            }
+            is SyllabusEvent.SyllabusItemClicked -> {
+                val item = model.events!!.dataOrThrow.find { it.itemId == event.itemId }!!
+                Next.dispatch(setOf(
+                        when {
+                            item.assignment != null -> SyllabusEffect.ShowAssignmentView(item.assignment!!, model.course!!.dataOrThrow)
+                            else -> SyllabusEffect.ShowScheduleItemView(item, model.course!!.dataOrThrow)
+                        }
+                ))
+            }
+        }
     }
 }

@@ -16,12 +16,67 @@
  */
 package com.instructure.teacher.features.syllabus
 
+import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.managers.CalendarEventManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.teacher.features.syllabus.ui.SyllabusView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
+import kotlinx.coroutines.launch
 
 class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, SyllabusEffect>() {
 
-    override fun accept(value: SyllabusEffect) {
+    override fun accept(effect: SyllabusEffect) {
+        when (effect) {
+            is SyllabusEffect.LoadData -> loadData(effect)
+            is SyllabusEffect.ShowAssignmentView -> {} //view?.showAssignmentView(effect.assignment, effect.course)
+            is SyllabusEffect.ShowScheduleItemView -> {} //view?.showScheduleItemView(effect.scheduleItem, effect.course)
+        }.exhaustive
+    }
 
+    private fun loadData(effect: SyllabusEffect.LoadData) {
+        launch {
+            val summaryAllowed = CourseManager
+                    .getCourseSettingsAsync(effect.courseId, effect.forceNetwork)
+                    .await()
+                    .dataOrNull?.courseSummary == true
+
+            val course = CourseManager.getCourseWithSyllabusAsync(effect.courseId, effect.forceNetwork).await()
+
+            val summaryResult: DataResult<List<ScheduleItem>> = DataResult.Success(emptyList())
+//            if (course.isFail) {
+//                summaryResult = if (summaryAllowed) DataResult.Fail() else DataResult.Success(emptyList())
+//                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
+//                return@launch
+//            }
+//
+//            if (!summaryAllowed) {
+//                summaryResult = DataResult.Success(emptyList())
+//            } else {
+//                val contextCodes = listOf(course.dataOrThrow.contextId)
+//
+//                val assignmentsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
+//                val calendarEventsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
+//
+//                val assignments = assignmentsDeferred.await()
+//                val events = calendarEventsDeferred.await()
+//                val endList = mutableListOf<ScheduleItem>()
+//
+//                assignments.map { endList.addAll(it) }
+//                events.map { endList.addAll(it) }
+//
+//                endList.sort()
+//
+//                summaryResult = if (assignments.isFail && events.isFail) {
+//                    DataResult.Fail((assignments as? DataResult.Fail)?.failure)
+//                } else {
+//                    DataResult.Success(endList)
+//                }
+//            }
+
+            consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
+        }
     }
 }

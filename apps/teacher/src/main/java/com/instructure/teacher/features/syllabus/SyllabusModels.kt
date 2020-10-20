@@ -16,12 +16,27 @@
  */
 package com.instructure.teacher.features.syllabus
 
-sealed class SyllabusEvent {
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.DataResult
 
+sealed class SyllabusEvent {
+    object PullToRefresh : SyllabusEvent()
+    data class DataLoaded(val course: DataResult<Course>, val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
+    data class SyllabusItemClicked(val itemId: String) : SyllabusEvent()
 }
 
 sealed class SyllabusEffect {
-
+    data class LoadData(val courseId: Long, val forceNetwork: Boolean) : SyllabusEffect()
+    data class ShowAssignmentView(val assignment: Assignment, val course: Course) : SyllabusEffect()
+    data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val course: Course) : SyllabusEffect()
 }
 
-data class SyllabusModel(val dummyData: String)
+data class SyllabusModel(
+        val courseId: Long,
+        val isLoading: Boolean = false,
+        val course: DataResult<Course>? = null,
+        val syllabus: ScheduleItem? = null,
+        val events: DataResult<List<ScheduleItem>>? = null
+)

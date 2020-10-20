@@ -241,7 +241,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                     presenter.handleStudentViewClick()
                 }
                 Tab.SYLLABUS_ID -> {
-                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, null))
+                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, presenter.canvasContext))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {

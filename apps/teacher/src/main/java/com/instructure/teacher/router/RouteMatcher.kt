@@ -196,7 +196,7 @@ object RouteMatcher : BaseRouteMatcher() {
     fun canRouteInternally(activity: Activity?, url: String?, domain: String, routeIfPossible: Boolean): Boolean {
         if (url.isNullOrBlank()) return false
 
-        val canRoute = getInternalRoute(url!!, domain) != null
+        val canRoute = getInternalRoute(url, domain) != null
 
         if (canRoute && activity != null && routeIfPossible) {
             routeUrl(activity, url)
