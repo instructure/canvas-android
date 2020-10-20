@@ -8,8 +8,10 @@ import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
 import com.instructure.panda_annotations.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ProfileSettingsInteractionTest : StudentTest() {
@@ -50,5 +52,55 @@ class ProfileSettingsInteractionTest : StudentTest() {
         dashboardPage.launchSettingsPage()
         settingsPage.launchProfileSettings()
         profileSettingsPage.assertSettingsDisabled() // No permissions granted
+    }
+
+
+    // Creates a panda avatar, saves it, and verifies that a new panda avatar was saved.
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.SETTINGS, TestCategory.INTERACTION, false)
+    fun testProfileSettings_createPandaAvatar() {
+        val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
+        val student = data.students[0]
+
+        // Add permission for student to update his/her avatar
+        data.addUserPermissions(userId = student.id, canUpdateName = true, canUpdateAvatar = true)
+
+        // Read the saved panda avatar count
+        val originalSavedPandaAvatarCount = getSavedPandaAvatarCount()
+
+        // Sign in
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+
+        // Navigate to avatar creation page
+        dashboardPage.launchSettingsPage()
+        settingsPage.launchProfileSettings()
+        profileSettingsPage.launchPandaAvatarCreator()
+
+        // Select head
+        pandaAvatarPage.selectChangeHead()
+        pandaAvatarPage.choosePart(R.string.content_description_panda_head_4) // Fancy moustache
+        pandaAvatarPage.clickBackButton()
+
+        // Select body
+        pandaAvatarPage.selectChangeBody()
+        pandaAvatarPage.choosePart(R.string.content_description_panda_body_4) // Blue blazer, red bowtie
+        pandaAvatarPage.clickBackButton()
+
+        // Select legs
+        pandaAvatarPage.selectChangeLegs()
+        pandaAvatarPage.choosePart(R.string.content_description_panda_feet_5) // Red shoes
+        pandaAvatarPage.clickBackButton()
+
+        // Save as avatar
+        pandaAvatarPage.save()
+
+        // Verify that our saved panda avatar count has increased
+        val finalSavedPandaAvatarCount = getSavedPandaAvatarCount()
+        assertTrue(
+                "Expected finalSavedPandaAvatarCount($finalSavedPandaAvatarCount) to be one more than originalSavedPandaAvatarCount($originalSavedPandaAvatarCount)",
+                finalSavedPandaAvatarCount == originalSavedPandaAvatarCount + 1
+        )
+
     }
 }

@@ -17,6 +17,8 @@
 package com.instructure.student.ui.utils
 
 import android.app.Activity
+import android.content.Context
+import android.os.Environment
 import androidx.test.espresso.Espresso
 import android.view.View
 import androidx.test.espresso.UiController
@@ -32,6 +34,7 @@ import com.instructure.student.ui.pages.*
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
+import java.io.File
 
 abstract class StudentTest : CanvasTest() {
 
@@ -92,10 +95,23 @@ abstract class StudentTest : CanvasTest() {
     val profileSettingsPage = ProfileSettingsPage()
     val calendarEventPage = CalendarEventPage()
     val quizTakingPage = QuizTakingPage()
+    val pandaAvatarPage = PandaAvatarPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
         Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight();
+    }
+
+    // Get the number of files/avatars in our panda avatars folder
+    fun getSavedPandaAvatarCount() : Int {
+        val root = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), originalActivity.getString(R.string.pandaAvatarsFolderName))
+
+        if(root.isDirectory) {
+            return root.listFiles()?.size ?: 0
+        }
+        else {
+            return 0
+        }
     }
 }
 

@@ -33,4 +33,8 @@ class ProfileSettingsPage : BasePage(R.id.profile_settings_fragment) {
         editPhoto.check(matches(not(isEnabled())))
         createPandaAvatar.check(matches(not(isEnabled())))
     }
+
+    fun launchPandaAvatarCreator() {
+        createPandaAvatar.click()
+    }
 }
