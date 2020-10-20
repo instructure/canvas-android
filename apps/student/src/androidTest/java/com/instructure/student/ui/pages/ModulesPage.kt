@@ -70,14 +70,14 @@ class ModulesPage : BasePage(R.id.modulesPage) {
                 withId(R.id.indicator)
         )
 
-        // Scroll to the course
+        // Scroll to the assignment
         scrollRecyclerView(R.id.listView, matcher)
 
         // Make sure that the lock icon is showing, in the proper course color
         val courseColor = ColorKeeper.getOrGenerateColor(course)
         onView(matcher).check(matches(ImageViewDrawableMatcher(R.drawable.ic_lock, courseColor)))
 
-        // Make sure that clicking on the course does nothing
+        // Make sure that clicking on the (locked) assignment does nothing
         onView(allOf(withId(R.id.title), withText(assignment.name))).click()
         onView(matcher).assertDisplayed()
     }
