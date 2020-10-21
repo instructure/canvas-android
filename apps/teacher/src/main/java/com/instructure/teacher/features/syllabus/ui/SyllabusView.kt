@@ -21,20 +21,23 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.mobius.common.ui.MobiusView
-import com.instructure.teacher.view.EmptyPandaView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
 import kotlinx.android.synthetic.main.fragment_syllabus_webview.*
 
 private const val SYLLABUS_TAB_POSITION = 0
+private const val SUMMARY_TAB_POSITION = 1
 
 class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, parent: ViewGroup
 ) : MobiusView<SyllabusViewState, SyllabusEvent>(R.layout.fragment_syllabus, inflater, parent) {
+
+    private var consumer: Consumer<SyllabusEvent>? = null
 
     private val tabListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -72,17 +75,19 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     override fun onConnect(output: Consumer<SyllabusEvent>) {
         swipeRefreshLayout.setOnRefreshListener { output.accept(SyllabusEvent.PullToRefresh) }
         syllabusTabLayout.addOnTabSelectedListener(tabListener)
+        consumer = output
     }
 
     override fun onDispose() {
         syllabusTabLayout.removeOnTabSelectedListener(tabListener)
+        consumer = null
     }
 
     override fun render(state: SyllabusViewState) {
         when (state) {
             SyllabusViewState.Loading -> swipeRefreshLayout.isRefreshing = true
             is SyllabusViewState.Loaded -> renderLoadedState(state)
-        }
+        }.exhaustive
     }
 
     private fun renderLoadedState(state: SyllabusViewState.Loaded) {
@@ -92,7 +97,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
 
-        syllabusPager.setCurrentItem(if (state.syllabus == null) 1 else 0, false)
+        syllabusPager.setCurrentItem(if (state.syllabus == null) SUMMARY_TAB_POSITION else SYLLABUS_TAB_POSITION, false)
 
         if (state.syllabus != null) syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
         if (state.eventsState != null) renderEvents(state.eventsState)
@@ -112,17 +117,26 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         }
 
         when (eventsState) {
-            EventsViewState.Error -> {
-//                syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) } TODO Add consumer
-            }
-            EventsViewState.Empty -> {
-                setEmptyView(syllabusEmptyView, R.drawable.ic_panda_space, R.string.noSyllabus, R.string.noSyllabusSubtext)
-            }
-            is EventsViewState.Loaded -> {
-//                if (syllabusEventsRecyclerView?.adapter == null) syllabusEventsRecyclerView?.adapter = SyllabusEventsAdapter(consumer)
-//                (syllabusEventsRecyclerView?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events) TODO Handle loaded events, create adapter
-            }
-        }
+            EventsViewState.Error -> setupErrorView()
+            EventsViewState.Empty -> setupEmptyView()
+            is EventsViewState.Loaded -> setupLoadedEventsView(eventsState)
+        }.exhaustive
+    }
+
+    private fun setupErrorView() {
+        syllabusRetry?.onClick { consumer?.accept(SyllabusEvent.PullToRefresh) }
+    }
+
+    private fun setupEmptyView() {
+        syllabusEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.ic_panda_space))
+        syllabusEmptyView.setTitleText(R.string.noSyllabus)
+        syllabusEmptyView.setMessageText(R.string.noSyllabusSubtext)
+        syllabusEmptyView.setListEmpty()
+    }
+
+    private fun setupLoadedEventsView(eventsState: EventsViewState.Loaded) {
+        if (syllabusEventsRecyclerView?.adapter == null) syllabusEventsRecyclerView?.adapter = SyllabusEventsAdapter(consumer)
+        (syllabusEventsRecyclerView?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
     }
 
 //    fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
@@ -132,11 +146,4 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 //    fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
 //        RouteMatcher.route(context, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
 //    }
-
-    private fun setEmptyView(emptyView: EmptyPandaView?, drawableId: Int, titleId: Int, messageId: Int) {
-        emptyView?.setEmptyViewImage(context.getDrawableCompat(drawableId))
-        emptyView?.setTitleText(titleId)
-        emptyView?.setMessageText(messageId)
-        emptyView?.setListEmpty()
-    }
 }

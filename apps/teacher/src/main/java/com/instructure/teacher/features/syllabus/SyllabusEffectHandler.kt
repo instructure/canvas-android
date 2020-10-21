@@ -45,38 +45,40 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
 
             val course = CourseManager.getCourseWithSyllabusAsync(effect.courseId, effect.forceNetwork).await()
 
-            val summaryResult: DataResult<List<ScheduleItem>> = DataResult.Success(emptyList())
-//            if (course.isFail) {
-//                summaryResult = if (summaryAllowed) DataResult.Fail() else DataResult.Success(emptyList())
-//                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
-//                return@launch
-//            }
-//
-//            if (!summaryAllowed) {
-//                summaryResult = DataResult.Success(emptyList())
-//            } else {
-//                val contextCodes = listOf(course.dataOrThrow.contextId)
-//
-//                val assignmentsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
-//                val calendarEventsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
-//
-//                val assignments = assignmentsDeferred.await()
-//                val events = calendarEventsDeferred.await()
-//                val endList = mutableListOf<ScheduleItem>()
-//
-//                assignments.map { endList.addAll(it) }
-//                events.map { endList.addAll(it) }
-//
-//                endList.sort()
-//
-//                summaryResult = if (assignments.isFail && events.isFail) {
-//                    DataResult.Fail((assignments as? DataResult.Fail)?.failure)
-//                } else {
-//                    DataResult.Success(endList)
-//                }
-//            }
+            val summaryResult: DataResult<List<ScheduleItem>>
+            if (course.isFail) {
+                summaryResult = if (summaryAllowed) DataResult.Fail() else DataResult.Success(emptyList())
+                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
+                return@launch
+            }
+
+            if (!summaryAllowed) {
+                summaryResult = DataResult.Success(emptyList())
+            } else {
+                val contextCodes = listOf(course.dataOrThrow.contextId)
+
+                val assignmentsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
+                val calendarEventsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
+
+                val assignmentsResult = assignmentsDeferred.await()
+                val eventsResult = calendarEventsDeferred.await()
+
+                summaryResult = if (assignmentsResult.isFail && eventsResult.isFail) {
+                    DataResult.Fail((assignmentsResult as? DataResult.Fail)?.failure)
+                } else {
+                    createSuccessResult(assignmentsResult, eventsResult)
+                }
+            }
 
             consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
         }
+    }
+
+    private fun createSuccessResult(assignmentsResult: DataResult<List<ScheduleItem>>, eventsResult: DataResult<List<ScheduleItem>>): DataResult.Success<List<ScheduleItem>> {
+        val assignments = assignmentsResult.dataOrNull ?: emptyList()
+        val events = eventsResult.dataOrNull ?: emptyList()
+        val combinedList = (assignments + events).sorted()
+
+        return DataResult.Success(combinedList)
     }
 }

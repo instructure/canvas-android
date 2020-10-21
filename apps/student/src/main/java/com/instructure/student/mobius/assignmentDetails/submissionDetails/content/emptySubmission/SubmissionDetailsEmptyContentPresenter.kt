@@ -18,11 +18,11 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.conte
 import android.content.Context
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.utils.getShortMonthAndDay
+import com.instructure.pandautils.utils.getTime
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState
 import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.util.getShortMonthAndDay
-import com.instructure.student.util.getTime
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.temporal.ChronoUnit
