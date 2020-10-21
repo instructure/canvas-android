@@ -20,12 +20,16 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.features.syllabus.SyllabusEvent
+import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
+import com.instructure.teacher.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
@@ -139,11 +143,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         (syllabusEventsRecyclerView?.adapter as? SyllabusEventsAdapter)?.updateEvents(eventsState.events)
     }
 
-//    fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-//        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
-//    }
-//
-//    fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
+    fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
+        RouteMatcher.route(context, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+    }
+
+    fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
 //        RouteMatcher.route(context, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
-//    }
+    }
 }
