@@ -91,13 +91,14 @@
                 android:background="@drawable/pandify_body_11"
                 android:contentDescription="@string/content_description_choose_body" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/changeLegs"
                 android:layout_width="@dimen/panda_feet_width_menu"
                 android:layout_height="@dimen/panda_feet_height_menu"
                 android:layout_margin="10dp"
-                android:background="@drawable/pandify_feet_1"
-                android:contentDescription="@string/content_description_choose_feet" />
+                android:src="@drawable/pandify_feet_1"
+                android:contentDescription="@string/content_description_choose_feet"
+                android:scaleType="fitCenter"/>
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -122,7 +123,7 @@
         <Button
             android:id="@+id/backButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_alignParentBottom="true"
             android:text="@string/back"
             android:textColor="@color/white"
