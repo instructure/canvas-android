@@ -64,6 +64,7 @@
         android:supportsRtl="true"
         android:largeHeap="true"
         android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         tools:replace="android:supportsRtl"
         tools:overrideLibrary="com.instructure.canvasapi">
 
