@@ -15,9 +15,8 @@ import com.instructure.teacher.features.syllabus.ui.ScheduleItemViewState
 import com.instructure.teacher.features.syllabus.ui.SyllabusViewState
 import com.instructure.teacher.mobius.common.ui.Presenter
 import org.threeten.bp.OffsetDateTime
-import java.util.*
 
-object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
+class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
 
     override fun present(model: SyllabusModel, context: Context): SyllabusViewState {
         return when {
@@ -69,17 +68,7 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     }
 
     private fun getIcon(event: ScheduleItem): Int {
-        return when {
-            eventIsLocked(event) -> R.drawable.ic_lock_lined
-            event.assignment != null -> getAssignmentIcon(event.assignment!!)
-            else -> R.drawable.ic_calendar
-        }
-    }
-
-    private fun eventIsLocked(event: ScheduleItem): Boolean {
-        return event.assignment?.isLocked == true || event.assignment?.lockExplanation?.takeIf {
-            it.isValid() && event.assignment?.lockDate?.before(Date()) == true
-        } != null
+        return if (event.assignment != null) getAssignmentIcon(event.assignment!!) else R.drawable.ic_calendar
     }
 
     private fun getAssignmentIcon(assignment: Assignment): Int {

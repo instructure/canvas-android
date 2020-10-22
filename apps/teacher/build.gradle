@@ -226,6 +226,7 @@ dependencies {
     testImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.MOCKK
     testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.THREETEN_BP
 
     /* AndroidTest Dependencies */
     androidTestImplementation project(':espresso')

@@ -226,8 +226,6 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testImplementation 'org.threeten:threetenbp:1.3.8'
-
     /* Project Modules */
     implementation project(path: ':login-api-2')
     implementation project(path: ':annotations')
@@ -254,6 +252,7 @@ dependencies {
     androidTestImplementation Libs.ANDROIDX_TEST_JUNIT
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.FIREBASE_CORE
+    testImplementation Libs.THREETEN_BP
 
     implementation (Libs.FIREBASE_ANALYTICS) {
         transitive = true

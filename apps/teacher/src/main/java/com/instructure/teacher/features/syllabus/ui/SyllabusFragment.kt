@@ -36,7 +36,7 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
 
     override fun makeView(inflater: LayoutInflater, parent: ViewGroup) = SyllabusView(canvasContext, inflater, parent)
 
-    override fun makePresenter() = SyllabusPresenter
+    override fun makePresenter() = SyllabusPresenter()
 
     override fun makeInitModel() = SyllabusModel(canvasContext.id)
 

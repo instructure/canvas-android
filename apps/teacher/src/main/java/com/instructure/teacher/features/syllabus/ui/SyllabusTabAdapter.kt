@@ -83,7 +83,6 @@ class SyllabusTabAdapter(private val canvasContext: CanvasContext, private val t
                     }
 
                     override fun launchInternalWebViewFragment(url: String) {
-                        // TODO What is the title? Do we need to pass canvasContext?
                         activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
                     }
                 }
