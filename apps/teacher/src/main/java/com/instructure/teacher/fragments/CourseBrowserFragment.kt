@@ -28,10 +28,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
@@ -81,6 +78,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     override fun withPagination() = false
     override fun getPresenterFactory() = CourseBrowserPresenterFactory(mCanvasContext) { tab, attendanceId ->
         //Filter for white-list supported features
+        val showSyllabus = RemoteConfigUtils.getBoolean(RemoteConfigParam.SHOW_TEACHER_SYLLABUS)
         //TODO: support other things like it.isHidden
         when(tab.tabId) {
             Tab.ASSIGNMENTS_ID,
@@ -91,8 +89,8 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.FILES_ID,
             Tab.PAGES_ID,
             Tab.MODULES_ID,
-            Tab.SYLLABUS_ID,
             Tab.STUDENT_VIEW -> true
+            Tab.SYLLABUS_ID -> showSyllabus
             else -> {
                 if (attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId
