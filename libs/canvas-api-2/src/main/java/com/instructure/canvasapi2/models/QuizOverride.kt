@@ -26,7 +26,7 @@ data class QuizOverride(
         override var id: Long = 0,
         @SerializedName("assignment_id")
         var assignmentId: Long = 0,
-        var title: String = "", // TODO: null?
+        var title: String = "",
         @SerializedName("due_at")
         var dueAt: Date? = null,
         @SerializedName("all_day")

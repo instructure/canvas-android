@@ -18,7 +18,7 @@ package com.instructure.canvasapi2.models
 import com.google.gson.annotations.SerializedName
 
 data class CreateFolder(
-        var name: String = "", // TODO: null?
+        var name: String = "",
         var locked: Boolean = true
 )
 

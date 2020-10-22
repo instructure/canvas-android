@@ -24,19 +24,19 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Tab(
         @SerializedName("id")
-        val tabId: String = "", // TODO: null?
+        val tabId: String = "",
         val label: String? = null,
         val type: String = TYPE_INTERNAL,
         @SerializedName("html_url")
         val htmlUrl: String? = null, // Internal url
         @SerializedName("full_url")
         val externalUrl: String? = null, // External url
-        val visibility: String = "none", // possible values are: public, members, admins, and none // TODO: enum?
+        val visibility: String = "none", // possible values are: public, members, admins, and none
         @SerializedName("hidden")
         val isHidden: Boolean = false, // only included when true
         val position: Int = 0,
         @SerializedName("url")
-        val ltiUrl: String = "" // TODO: null?
+        val ltiUrl: String = ""
 ) : CanvasModel<Tab>() {
     override val id get() = position.toLong()
 

@@ -21,7 +21,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class AccountRole(
     override val id: Long = 0,
-    val role: String = "", // TODO: null?
+    val role: String = "",
     val label: String? = null,
     @SerializedName("base_role_type")
     val baseRoleType: String? = null,

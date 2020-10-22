@@ -26,7 +26,7 @@ import java.util.*
 @Parcelize
 data class ToDo(
         @SerializedName("start_date")
-        val startAt: String? = "", // TODO: null?
+        val startAt: String? = "",
         val type: Type? = null,
         @SerializedName("needs_grading_count")
         val needsGradingCount: Int = 0,

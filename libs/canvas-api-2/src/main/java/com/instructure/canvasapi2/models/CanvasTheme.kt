@@ -23,19 +23,19 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class CanvasTheme(
         @SerializedName("ic-brand-primary")
-        var brand: String, // TODO: null?
+        var brand: String,
         @SerializedName("ic-brand-font-color-dark")
-        var fontColorDark: String, // TODO: null?
+        var fontColorDark: String,
         @SerializedName("ic-brand-button--primary-bgd")
-        var button: String, // TODO: null?
+        var button: String,
         @SerializedName("ic-brand-button--primary-text")
-        var buttonText: String, // TODO: null?
+        var buttonText: String,
         @SerializedName("ic-brand-global-nav-bgd")
-        var primary: String, // TODO: null?
+        var primary: String,
         @SerializedName("ic-brand-global-nav-menu-item__text-color")
-        var primaryText: String, // TODO: null?
+        var primaryText: String,
         @SerializedName("ic-brand-global-nav-menu-item__text-color--active")
-        var accent: String, // TODO: null?
+        var accent: String,
         @SerializedName("ic-brand-header-image")
-        var logoUrl: String // TODO: null?
+        var logoUrl: String
 ) : CanvasComparable<CanvasTheme>()

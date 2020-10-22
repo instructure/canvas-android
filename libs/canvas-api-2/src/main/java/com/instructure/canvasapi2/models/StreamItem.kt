@@ -30,12 +30,12 @@ import java.util.ArrayList
 data class StreamItem(
         override val id: Long = -1,
         @SerializedName("updated_at")
-        val updatedAt: String = "", // TODO: null?
+        val updatedAt: String = "",
         @SerializedName("submitted_at")
         val submittedAt: String? = null,
         var title: String? = null,
         private var message: String? = null,
-        val type: String = "", // TODO: null?
+        val type: String = "",
         private val context_type: String? = null,
         // Helper method to show that the stream item has been read without having to reload all the data.
         // this method does not get the data from the server, so make sure item is actually read.
@@ -43,7 +43,7 @@ data class StreamItem(
         var isReadState: Boolean = false,
         val url: String? = null,
         @SerializedName("html_url")
-        val htmlUrl: String = "", // TODO: null?
+        val htmlUrl: String = "",
         private var course_id: Long = -1,
         private var group_id: Long = -1,
         var assignment_id: Long = -1,
@@ -52,7 +52,7 @@ data class StreamItem(
         @SerializedName("message_id")
         val messageId: Long = -1,
         @SerializedName("notification_category")
-        val notificationCategory: String = "", // TODO: null?
+        val notificationCategory: String = "",
 
         // Conversation
         @SerializedName("conversation_id")
@@ -82,10 +82,10 @@ data class StreamItem(
         @SerializedName("submission_type")
         val submissiTonType: String? = null,
         @SerializedName("workflow_state")
-        val workflowState: String = "", // TODO: null?
+        val workflowState: String = "",
         val late: Boolean = false,
         @SerializedName("preview_url")
-        val previewUrl: String = "", // TODO: null?
+        val previewUrl: String = "",
         @SerializedName("submission_comments")
         val submissionComments: List<SubmissionComment> = ArrayList(),
         var canvasContext: CanvasContext? = null,

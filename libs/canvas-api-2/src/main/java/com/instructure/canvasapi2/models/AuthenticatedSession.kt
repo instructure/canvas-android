@@ -19,5 +19,5 @@ import com.google.gson.annotations.SerializedName
 
 data class AuthenticatedSession(
         @SerializedName("session_url")
-        val sessionUrl: String // TODO: null?
+        val sessionUrl: String
 )

@@ -21,7 +21,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class GradeableStudentSubmission(
-        val assignee: Assignee, // TODO: Assignee()
+        val assignee: Assignee,
         var submission: Submission? = null,
         var isCached: Boolean = false
 ) : CanvasModel<GradeableStudentSubmission>() {

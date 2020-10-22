@@ -27,7 +27,7 @@ sealed class Assignee : Parcelable {
 
 @Parcelize
 data class StudentAssignee(
-        val student: User, // TODO: handle id and name when not given a student?
+        val student: User,
         override val id: Long = student.id,
         override val name: String = student.name,
         override val pronouns: String? = student.pronouns

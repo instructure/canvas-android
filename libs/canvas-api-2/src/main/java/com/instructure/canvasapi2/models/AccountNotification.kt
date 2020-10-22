@@ -24,13 +24,13 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class AccountNotification(
         override val id: Long = 0,
-        val subject: String = "", // TODO: null?
-        val message: String = "", // TODO: null?
+        val subject: String = "",
+        val message: String = "",
         @SerializedName("start_at")
-        val startAt: String = "", // TODO: null?
+        val startAt: String = "",
         @SerializedName("end_at")
-        val endAt: String = "", // TODO: null?
-        val icon: String = "" // TODO: null?
+        val endAt: String = "",
+        val icon: String = ""
 ) : CanvasModel<AccountNotification>() {
     override val comparisonString get() = subject
     override val comparisonDate get() = startDate

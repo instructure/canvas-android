@@ -17,8 +17,8 @@
 package com.instructure.canvasapi2.models
 
 data class CanvasError(
-    val attribute: String, // TODO: null?
-    val message: String // TODO: null?
+    val attribute: String,
+    val message: String
 )
 
 data class CanvasAuthError(val message: String)
