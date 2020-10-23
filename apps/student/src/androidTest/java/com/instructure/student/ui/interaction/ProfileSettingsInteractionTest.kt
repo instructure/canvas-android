@@ -1,6 +1,7 @@
 package com.instructure.student.ui.interaction
 
 import androidx.test.espresso.Espresso
+import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addUserPermissions
 import com.instructure.canvas.espresso.mockCanvas.init
@@ -12,11 +13,20 @@ import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import org.junit.Assert.assertTrue
+import org.junit.Rule
 import org.junit.Test
 
 class ProfileSettingsInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
+
+    // This will give our test(s) permission to access external storage
+    @Rule
+    @JvmField
+    val grantPermissionRule: GrantPermissionRule = GrantPermissionRule.grant(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
 
     @Test
     @TestMetaData(Priority.P1, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
