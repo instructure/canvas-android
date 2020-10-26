@@ -118,38 +118,46 @@ class NumberHelperTest {
     @Test
     fun `readableFileSize correctly formats bytes`() {
         assertEquals("0 B", NumberHelper.readableFileSize(fileUnits, 0L))
-        assertEquals("1,023 B", NumberHelper.readableFileSize(fileUnits, 1023L))
+        assertEquals("999 B", NumberHelper.readableFileSize(fileUnits, 999L))
     }
 
     @Test
     fun `readableFileSize correctly formats kilobytes`() {
-        assertEquals("1 KB", NumberHelper.readableFileSize(fileUnits, 1024L))
-        assertEquals("1,023.9 KB", NumberHelper.readableFileSize(fileUnits, 1048575L))
+        // Kilobytes should not be fractional (i.e. nothing after the decimal place). This matches web's behavior.
+        assertEquals("1 KB", NumberHelper.readableFileSize(fileUnits, 1000L))
+        assertEquals("1 KB", NumberHelper.readableFileSize(fileUnits, 1499L))
+        assertEquals("2 KB", NumberHelper.readableFileSize(fileUnits, 1500L))
+        assertEquals("1,000 KB", NumberHelper.readableFileSize(fileUnits, 999999L))
     }
 
     @Test
     fun `readableFileSize correctly formats megabytes`() {
-        assertEquals("1 MB", NumberHelper.readableFileSize(fileUnits, 1048576L))
-        assertEquals("1,023.9 MB", NumberHelper.readableFileSize(fileUnits, 1073741823L))
+        assertEquals("1 MB", NumberHelper.readableFileSize(fileUnits, 1000000L))
+        assertEquals("1.4 MB", NumberHelper.readableFileSize(fileUnits, 1450000L))
+        assertEquals("1.5 MB", NumberHelper.readableFileSize(fileUnits, 1450001L))
+        assertEquals("1,000 MB", NumberHelper.readableFileSize(fileUnits, 999999999))
     }
 
     @Test
     fun `readableFileSize correctly formats gigabytes`() {
-        assertEquals("1 GB", NumberHelper.readableFileSize(fileUnits, 1073741824L))
-        assertEquals("1,023.9 GB", NumberHelper.readableFileSize(fileUnits, 1099511627775L))
+        assertEquals("1 GB", NumberHelper.readableFileSize(fileUnits, 1000000000L))
+        assertEquals("1.4 GB", NumberHelper.readableFileSize(fileUnits, 1450000000L))
+        assertEquals("1.5 GB", NumberHelper.readableFileSize(fileUnits, 1450000001L))
+        assertEquals("1,000 GB", NumberHelper.readableFileSize(fileUnits, 999999999999))
     }
 
     @Test
     fun `readableFileSize correctly formats terabytes`() {
-        // Terabytes
-        assertEquals("1 TB", NumberHelper.readableFileSize(fileUnits, 1099511627776L))
-        assertEquals("1,023.9 TB", NumberHelper.readableFileSize(fileUnits, 1125899906842623L))
+        assertEquals("1 TB", NumberHelper.readableFileSize(fileUnits, 1000000000000L))
+        assertEquals("1.4 TB", NumberHelper.readableFileSize(fileUnits, 1450000000000L))
+        assertEquals("1.5 TB", NumberHelper.readableFileSize(fileUnits, 1450000000001L))
+        assertEquals("1,000 TB", NumberHelper.readableFileSize(fileUnits, 999999999999999L))
     }
 
     @Test
-    fun `readableFileSize formats petabytes and above as terabytes`() {
-        assertEquals("1,024 TB", NumberHelper.readableFileSize(fileUnits, 1125899906842624L))
-        assertEquals("2,000,000 TB", NumberHelper.readableFileSize(fileUnits, 2199023255552000000L))
+    fun `readableFileSize caps to max unit`() {
+        assertEquals("1,000 TB", NumberHelper.readableFileSize(fileUnits, 1000000000000000L))
+        assertEquals("1,234,567 TB", NumberHelper.readableFileSize(fileUnits, 1234567000000000000L))
     }
 
 }
