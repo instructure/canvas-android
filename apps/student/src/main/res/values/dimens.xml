@@ -46,7 +46,7 @@
     <dimen name="panda_feet_width">130dp</dimen>
     <dimen name="panda_feet_height">39dp</dimen>
     <dimen name="panda_feet_width_menu">65dp</dimen>
-    <dimen name="panda_feet_height_menu">20dp</dimen>
+    <dimen name="panda_feet_height_menu">48dp</dimen>
 
     <dimen name="card_inner_padding">12dp</dimen>
     <dimen name="card_outer_margin">8dp</dimen>
