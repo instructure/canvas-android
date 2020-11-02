@@ -143,9 +143,9 @@ class PickerSubmissionUploadPresenterTest : Assert() {
 
     @Test
     fun `returns correct file size`() {
-        val smallFile = FileSubmitObject("name", 1024L, "type", "path")
-        val mediumFile = FileSubmitObject("name", 1048576L, "type", "path")
-        val largeFile = FileSubmitObject("name", 1073741824L, "type", "path")
+        val smallFile = FileSubmitObject("name", 1000L, "type", "path")
+        val mediumFile = FileSubmitObject("name", 1000000L, "type", "path")
+        val largeFile = FileSubmitObject("name", 1000000000L, "type", "path")
         val model = baseModel.copy(files = listOf(smallFile, mediumFile, largeFile))
         val fileViewStates = listOf(
             PickerListItemViewState(0, R.drawable.ic_attachment, smallFile.name, "1 KB"),

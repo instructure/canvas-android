@@ -24,9 +24,8 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 import kotlin.math.floor
-import kotlin.math.log10
+import kotlin.math.ln
 import kotlin.math.pow
-import kotlin.math.roundToInt
 
 object NumberHelper {
 
@@ -67,19 +66,43 @@ object NumberHelper {
         return format.format(number)
     }
 
+    /**
+     * Returns a user-friendly file size, such as "12.7 MB" or "967 KB", closely matching web's behavior.
+     *
+     * @param context An Android [Context], used to access the string resources for file size units
+     * @param size The file size in bytes
+     */
     fun readableFileSize(context: Context, size: Long): String {
         val units = context.resources.getStringArray(R.array.file_size_units)
         return readableFileSize(units, size)
     }
 
+    /**
+     * Returns a user-friendly file size, closely matching web's behavior.
+     *
+     * @param units An array of human-readable file size units, ordered from smallest to largest. This *must* be
+     *              consecutive and must start with a representation for the 'bytes' unit. For example:
+     *              `["Bytes", "KiloBytes", "Megabytes"]` or `["B", "KB", "MB", "GB", "TB"]`
+     * @param fileSize The file size in bytes
+     */
     fun readableFileSize(units: Array<String>, fileSize: Long): String {
-        val size = fileSize.coerceAtLeast(0L)
-        var digitGroups = 0
-        if (size > 0) digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt().coerceIn(0, units.size-1)
-        val byteSize = floor(size / 1024.0.pow(digitGroups.toDouble()) * 10) / 10
-        val displaySize = DecimalFormat("#,##0.#").format(byteSize)
+        // To match web, we use metric (1000) rather than binary (1024) as the unit step size
+        val unitStepSize = 1000.0
 
-        return "$displaySize ${units[digitGroups]}"
+        // Ensure the file size is at least zero (in rare cases we've seen negative values)
+        val bytes = fileSize.coerceAtLeast(0L).toDouble()
+
+        // Find the index of the unit prefix, capping at the max unit (in rare cases we've seen as high as Long.MAX_VALUE)
+        val unitIndex = floor(ln(bytes) / ln(unitStepSize)).toInt().coerceIn(0, units.lastIndex)
+
+        // Calculate the new value base on the chosen unit
+        val value = (bytes / unitStepSize.pow(unitIndex))
+
+        // To match web, we don't display decimals for units smaller than MB
+        val format = if (unitIndex < 2) "#,###" else "#,##0.#"
+        val displayValue = DecimalFormat(format).format(value)
+
+        return "$displayValue ${units[unitIndex]}"
     }
 }
 
