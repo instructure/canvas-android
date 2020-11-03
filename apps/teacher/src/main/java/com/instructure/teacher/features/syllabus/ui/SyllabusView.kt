@@ -132,10 +132,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     private fun setupEmptyView() {
-        syllabusEmptyView.setEmptyViewImage(context.getDrawableCompat(R.drawable.ic_panda_space))
-        syllabusEmptyView.setTitleText(R.string.noSyllabus)
-        syllabusEmptyView.setMessageText(R.string.noSyllabusSubtext)
-        syllabusEmptyView.setListEmpty()
+        syllabusEmptyView?.setEmptyViewImage(context.getDrawableCompat(R.drawable.ic_panda_space))
+        syllabusEmptyView?.setTitleText(R.string.noSyllabus)
+        syllabusEmptyView?.setMessageText(R.string.noSyllabusSubtext)
+        syllabusEmptyView?.setListEmpty()
     }
 
     private fun setupLoadedEventsView(eventsState: EventsViewState.Loaded) {

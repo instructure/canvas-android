@@ -27,7 +27,7 @@ class SyllabusPresenterTest {
 
     private lateinit var context: Context
 
-    private lateinit var underTest: SyllabusPresenter
+    private lateinit var syllabusPresenter: SyllabusPresenter
 
     private val baseCourse = Course(id = 123L)
     private val baseModel = SyllabusModel(courseId = baseCourse.id, isLoading = false)
@@ -99,7 +99,7 @@ class SyllabusPresenterTest {
     @Before
     fun setUp() {
         context = ApplicationProvider.getApplicationContext()
-        underTest = SyllabusPresenter()
+        syllabusPresenter = SyllabusPresenter()
     }
 
     @Test
@@ -108,7 +108,7 @@ class SyllabusPresenterTest {
         val model = baseModel.copy(isLoading = true)
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         assertEquals(SyllabusViewState.Loading, syllabusViewState)
@@ -120,7 +120,7 @@ class SyllabusPresenterTest {
         val model = baseModel.copy(course = DataResult.Fail(), events = DataResult.Fail())
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Error)
@@ -133,7 +133,7 @@ class SyllabusPresenterTest {
         val model = baseModel.copy(course = DataResult.Success(baseCourse), events = DataResult.Fail())
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Error)
@@ -151,7 +151,7 @@ class SyllabusPresenterTest {
         )
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody)
@@ -167,7 +167,7 @@ class SyllabusPresenterTest {
         )
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Empty)
@@ -185,7 +185,7 @@ class SyllabusPresenterTest {
         )
 
         // When
-        val syllabusViewState = underTest.present(model, context)
+        val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
         val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState))
