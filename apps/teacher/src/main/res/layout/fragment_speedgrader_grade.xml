@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -36,7 +35,7 @@
             android:text="@string/moderatedGradingUnsupported"
             android:textColor="@color/defaultTextGray"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/gradeContainer"
@@ -66,7 +65,7 @@
                     android:text="@string/grade"
                     android:textSize="20sp"
                     tools:ignore="RelativeOverlap"
-                    tools:text="Grade"/>
+                    tools:text="Grade" />
 
                 <TextView
                     android:id="@+id/gradeSubtext"
@@ -79,7 +78,7 @@
                     android:textSize="14sp"
                     android:visibility="gone"
                     tools:text="Calculated by rubric"
-                    tools:visibility="gone"/>
+                    tools:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/hiddenIcon"
@@ -115,14 +114,14 @@
                     android:focusable="true"
                     android:tint="@color/defaultActionColor"
                     android:visibility="visible"
-                    app:srcCompat="@drawable/ic_add"/>
+                    app:srcCompat="@drawable/ic_add" />
 
                 <ProgressBar
                     android:id="@+id/gradeProgressSpinner"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -137,7 +136,7 @@
                     android:id="@+id/latePenalty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/latePenalty"/>
+                    android:text="@string/latePenalty" />
 
                 <TextView
                     android:id="@+id/latePenaltyValue"
@@ -147,7 +146,7 @@
                     android:layout_marginBottom="-4dp"
                     android:visibility="gone"
                     tools:text="-2"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
             </RelativeLayout>
 
@@ -170,7 +169,7 @@
                     android:layout_toStartOf="@id/finalGradeValueText"
                     android:ellipsize="end"
                     android:text="@string/finalGrade"
-                    android:textSize="20sp"/>
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/finalGradeValueText"
@@ -184,7 +183,7 @@
                     android:textSize="20sp"
                     android:visibility="gone"
                     tools:text="8/10"
-                    tools:visibility="visible"/>
+                    tools:visibility="visible" />
 
             </RelativeLayout>
 
@@ -194,12 +193,18 @@
             android:layout_width="match_parent"
             android:layout_height=".5dp"
             android:background="@color/defaultTrackColor"
-            tools:layout_height="1dp"/>
+            tools:layout_height="1dp" />
 
         <com.instructure.teacher.view.edit_rubric.RubricEditView
             android:id="@+id/rubricEditView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
+        <com.instructure.teacher.view.grade_slider.SpeedGraderSlider
+            android:id="@+id/slider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp" />
 
     </LinearLayout>
 
