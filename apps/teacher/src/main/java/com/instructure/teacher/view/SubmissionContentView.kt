@@ -256,9 +256,9 @@ class SubmissionContentView(
 
         if (context.isTablet) return
 
-        // Resize sliding panel and content, don't if keyboard based annotations are active
+        // Resize sliding panel and content, don't if keyboard based annotations are active or selected
         // we only do this if the oldw == w so we won't be resizing on rotation
-        if (oldh > 0 && oldh != h && oldw == w && !activity.isCurrentlyAnnotating) {
+        if (oldh > 0 && oldh != h && oldw == w && !activity.isCurrentlyAnnotating && pdfFragment?.selectedAnnotations?.isEmpty() == true) {
             val newState = if (h < oldh) SlidingUpPanelLayout.PanelState.EXPANDED else SlidingUpPanelLayout.PanelState.ANCHORED
             slidingUpPanelLayout?.panelState = newState
 
@@ -626,10 +626,6 @@ class SubmissionContentView(
         if (offset >= 0.50F) { //Prevents resizing views when not necessary
             mBottomViewPager.layoutParams?.height = adjustedHeight.toInt()
             mBottomViewPager.requestLayout()
-        }
-        if (offset <= 0.50F) {
-            contentWrapper?.layoutParams?.height = Math.abs(maxHeight - adjustedHeight).toInt()
-            contentWrapper?.requestLayout()
         }
     }
 
