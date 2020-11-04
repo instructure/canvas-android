@@ -90,8 +90,8 @@ abstract class TooltipView @JvmOverloads constructor(
         importantForAccessibility = IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
 
         // Obtain view reference for padding constraint
-        val a = context.obtainStyledAttributes(attrs, R.styleable.RubricTooltipView)
-        bubbleConstraintReference = a.getResourceId(R.styleable.RubricTooltipView_rtt_constrainBubbleToPaddingOf, 0)
+        val a = context.obtainStyledAttributes(attrs, R.styleable.TooltipView)
+        bubbleConstraintReference = a.getResourceId(R.styleable.TooltipView_rtt_constrainBubbleToPaddingOf, 0)
         a.recycle()
     }
 
@@ -255,7 +255,7 @@ abstract class TooltipView @JvmOverloads constructor(
             } catch (e: Exception) {
                 @Suppress("DEPRECATION")
                 (StaticLayout(text, 0, text.length, textPaint, maxWidth, Layout.Alignment.ALIGN_NORMAL,
-                1f, 0f, true, TextUtils.TruncateAt.END, Int.MAX_VALUE))
+                        1f, 0f, true, TextUtils.TruncateAt.END, Int.MAX_VALUE))
             }
         } else {
             StaticLayout.Builder
@@ -268,7 +268,8 @@ abstract class TooltipView @JvmOverloads constructor(
     }
 
     /** Returns the length of the longest line in this layout */
-    private fun Layout.maxLineWidth() = (0 until lineCount).map { getLineWidth(it) }.max()?.toInt() ?: 0
+    private fun Layout.maxLineWidth() = (0 until lineCount).map { getLineWidth(it) }.max()?.toInt()
+            ?: 0
 
     /** Returns the length of the visible text */
     private val Layout.visibleTextLength get() = (0 until lineCount).sumBy { getLineVisibleEnd(it) }

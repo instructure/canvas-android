@@ -183,7 +183,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         rubricEditView.setData(presenter.assignment, presenter.submission, presenter.assignee)
         rubricEditView.onAssessmentSaved = { presenter.updateSubmission(it) }
 
-        slider.setData(presenter.assignment, presenter.submission, presenter.assignee)
+        speedGraderSlider.setData(presenter.assignment, presenter.submission, presenter.assignee)
+        speedGraderSlider.onGradeChanged = { grade, isExcused -> presenter.updateGrade(grade, isExcused) }
     }
 
     private fun showCustomizeGradeDialog() {

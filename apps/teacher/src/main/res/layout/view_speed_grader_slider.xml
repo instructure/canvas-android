@@ -20,12 +20,11 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/sliderView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/speedGraderSliderMinGrade"
+            android:id="@+id/minGrade"
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +35,7 @@
             tools:text="0" />
 
         <TextView
-            android:id="@+id/speedGraderSliderMaxGrade"
+            android:id="@+id/maxGrade"
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,12 +46,12 @@
             tools:text="10" />
 
         <SeekBar
-            android:id="@+id/speedGraderSlider"
+            android:id="@+id/slider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/speedGraderSliderMaxGrade"
-            app:layout_constraintStart_toEndOf="@id/speedGraderSliderMinGrade"
+            app:layout_constraintEnd_toStartOf="@id/maxGrade"
+            app:layout_constraintStart_toEndOf="@id/minGrade"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -201,7 +201,7 @@
             android:layout_height="wrap_content" />
 
         <com.instructure.teacher.view.grade_slider.SpeedGraderSlider
-            android:id="@+id/slider"
+            android:id="@+id/speedGraderSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp" />
