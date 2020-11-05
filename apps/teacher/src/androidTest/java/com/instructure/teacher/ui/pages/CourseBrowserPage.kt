@@ -102,4 +102,8 @@ class CourseBrowserPage : BasePage() {
         scrollDownToCourseBrowser()
         waitForViewWithText(R.string.tab_pages).click()
     }
+
+    fun openSyllabus() {
+        waitForViewWithText("Syllabus").click()
+    }
 }
