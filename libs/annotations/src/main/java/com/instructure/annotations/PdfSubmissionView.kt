@@ -180,13 +180,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         })
 
         annotationCreationToolbar.closeButton.setGone()
-
-//        annotationCreationToolbar.setMenuItemGroupingRule(object : MenuItemGroupingRule {
-//            override fun groupMenuItems(items: MutableList<ContextualToolbarMenuItem>, i: Int) = configureCreationMenuItemGrouping(items, i)
-//            override fun areGeneratedGroupItemsSelectable() = true
-//        })
-
-        annotationCreationToolbar.setMenuItemGroupingRule(PandaGroupingRule(context))
+        annotationCreationToolbar.setMenuItemGroupingRule(AnnotationCreationGroupingRule(context))
 
         annotationEditingToolbar.setMenuItemGroupingRule(object : MenuItemGroupingRule {
             override fun groupMenuItems(items: MutableList<ContextualToolbarMenuItem>, i: Int) = configureEditMenuItemGrouping(items)
@@ -890,92 +884,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(yellowStampSubject, yellow)
     }
     //endregion
-
-    open fun configureCreationMenuItemGrouping(toolbarMenuItems: MutableList<ContextualToolbarMenuItem>, capacity: Int): MutableList<ContextualToolbarMenuItem> {
-        //There are 7 items total, and always need to leave room for the color, it has to show.
-        //First we need to get all of the items and store them in variables for readability.... rip
-        var freeText: ContextualToolbarMenuItem? = null
-        var stamp: ContextualToolbarMenuItem? = null
-        var strikeOut: ContextualToolbarMenuItem? = null
-        var highlight: ContextualToolbarMenuItem? = null
-        var ink: ContextualToolbarMenuItem? = null
-        var rectangle: ContextualToolbarMenuItem? = null
-        var color: ContextualToolbarMenuItem? = null
-        var undo: ContextualToolbarMenuItem? = null
-        var redo: ContextualToolbarMenuItem? = null
-        var eraser: ContextualToolbarMenuItem? = null
-
-        for (item in toolbarMenuItems) {
-            when (item.id) {
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext -> {
-                    freeText = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_stamp -> {
-                    stamp = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout -> {
-                    strikeOut = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight -> {
-                    highlight = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen -> {
-                    ink = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square -> {
-                    rectangle = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_picker -> {
-                    color = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_undo -> {
-                    // There are two menu items called undo, we want the first one.
-                    if (undo == null) undo = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_redo -> {
-                    redo = item
-                }
-                com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_eraser -> {
-                    eraser = item
-                }
-            }
-        }
-
-        //check to make sure we have all of our items
-        if (freeText != null && stamp != null && strikeOut != null && highlight != null
-                && ink != null && rectangle != null && color != null && undo != null && redo != null && eraser != null) {
-            when {
-                capacity >= 8 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    return mutableListOf(stamp, highlight, freeText, strikeOut, inkGroup, eraser, color, undo, redo)
-                }
-                capacity == 7 || capacity == 6 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val highlightGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), highlight.position, true, mutableListOf(highlight, strikeOut), highlight)
-                    return mutableListOf(stamp, freeText, highlightGroup, inkGroup, eraser, color, undo, redo)
-                }
-                capacity == 5 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val textGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), freeText.position, true, mutableListOf(freeText, stamp, highlight, strikeOut), freeText)
-                    return mutableListOf(textGroup, inkGroup, eraser, color, undo, redo)
-                }
-                capacity == 4 -> {
-                    val inkGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), ink.position, true, mutableListOf(ink, rectangle), ink)
-                    val textGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), freeText.position, true, mutableListOf(freeText, stamp, highlight, strikeOut), freeText)
-                    val undoGroup = ContextualToolbarMenuItem.createGroupItem(View.generateViewId(), undo.position, true, mutableListOf(undo, redo), undo)
-                    return mutableListOf(textGroup, inkGroup, eraser, color, undoGroup)
-                }
-                //if all else fails, return default grouping unchanged
-                else -> {
-                    return toolbarMenuItems
-                }
-            }
-        } else {
-            //if we dont have all items, just return the default that we have
-            return toolbarMenuItems
-        }
-    }
-
 
     open fun configureEditMenuItemGrouping(toolbarMenuItems: MutableList<ContextualToolbarMenuItem>): MutableList<ContextualToolbarMenuItem> {
         //if current tool == freeText add edit button
