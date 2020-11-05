@@ -148,6 +148,6 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-//        RouteMatcher.route(context, CalendarEventFragment.makeRoute(canvasContext, scheduleItem))
+        // TODO MBL-14885
     }
 }
