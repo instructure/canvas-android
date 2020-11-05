@@ -77,8 +77,8 @@ class CourseBrowserFragment : BaseSyncFragment<
     override val recyclerView: RecyclerView get() = courseBrowserRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = CourseBrowserPresenterFactory(mCanvasContext) { tab, attendanceId ->
-        //Filter for white-list supported features
         val showSyllabus = RemoteConfigUtils.getBoolean(RemoteConfigParam.SHOW_TEACHER_SYLLABUS)
+        //Filter for white-list supported features
         //TODO: support other things like it.isHidden
         when(tab.tabId) {
             Tab.ASSIGNMENTS_ID,
