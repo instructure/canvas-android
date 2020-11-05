@@ -181,10 +181,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
 
         annotationCreationToolbar.closeButton.setGone()
 
-        annotationCreationToolbar.setMenuItemGroupingRule(object : MenuItemGroupingRule {
-            override fun groupMenuItems(items: MutableList<ContextualToolbarMenuItem>, i: Int) = configureCreationMenuItemGrouping(items, i)
-            override fun areGeneratedGroupItemsSelectable() = true
-        })
+//        annotationCreationToolbar.setMenuItemGroupingRule(object : MenuItemGroupingRule {
+//            override fun groupMenuItems(items: MutableList<ContextualToolbarMenuItem>, i: Int) = configureCreationMenuItemGrouping(items, i)
+//            override fun areGeneratedGroupItemsSelectable() = true
+//        })
+
+        annotationCreationToolbar.setMenuItemGroupingRule(PandaGroupingRule(context))
 
         annotationEditingToolbar.setMenuItemGroupingRule(object : MenuItemGroupingRule {
             override fun groupMenuItems(items: MutableList<ContextualToolbarMenuItem>, i: Int) = configureEditMenuItemGrouping(items)
