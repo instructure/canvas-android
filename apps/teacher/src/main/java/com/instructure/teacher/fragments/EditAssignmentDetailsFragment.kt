@@ -368,6 +368,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         // Show progress bar while loading description
         descriptionProgressBar.announceForAccessibility(getString(R.string.loading))
         descriptionProgressBar.setVisible()
+
         // Load description
         // If the html has a Studio LTI url, we want to authenticate so the user doesn't have to login again
         if (CanvasWebView.containsLTI(mAssignment.description.orEmpty(), "UTF-8")) {
@@ -386,6 +387,9 @@ class EditAssignmentDetailsFragment : BaseFragment() {
         }
         // when the RCE editor has focus we want the label to be darker so it matches the title's functionality
         descriptionEditor.setLabel(assignmentDescLabel, R.color.defaultTextDark, R.color.defaultTextGray)
+
+        // Take down progress bar
+        descriptionProgressBar.setGone()
     }
 
     private fun saveAssignment() {

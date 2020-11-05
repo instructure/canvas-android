@@ -52,7 +52,7 @@ class InboxPageTest: TeacherTest() {
 
         // Test expects single conversation; filter down to starred conversation
         val unwanted = data.conversations.filter() {entry -> !entry.value.isStarred}
-        unwanted.forEach() {id, conversation -> data.conversations.remove(id)}
+        unwanted.forEach() { (id, conversation) -> data.conversations.remove(id)}
 
         val token = data.tokenFor(teacher)!!
         tokenLogin(data.domain, token, teacher)
