@@ -1,0 +1,25 @@
+gcloud:
+  project: delta-essence-114723
+  app: ./apps/teacher/build/outputs/apk/qa/debug/teacher-qa-debug.apk
+  test: ./apps/teacher/build/outputs/apk/androidTest/qa/debug/teacher-qa-debug-androidTest.apk
+  results-bucket: android-teacher
+  auto-google-login: true
+  use-orchestrator: true
+  performance-metrics: false
+  record-video: true
+  timeout: 60m
+  test-targets:
+    - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
+  device:
+    - model: Nexus9
+      version: 25
+      locale: en_US
+      orientation: landscape
+    - model: Nexus9
+      version: 25
+      locale: en_US
+      orientation: portrait
+
+flank:
+  testShards: 10
+  testRuns: 1
