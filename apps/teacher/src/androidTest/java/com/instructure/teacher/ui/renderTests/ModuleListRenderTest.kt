@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui.renderTests
 
 import android.graphics.Color
+import android.os.Build
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Course
@@ -123,6 +124,12 @@ class ModuleListRenderTest : TeacherRenderTest() {
 
     @Test
     fun displaysInlineLoadingView() {
+
+        // Don't run this on API-23, as the loading indicator will hang Espresso
+        if(Build.VERSION.SDK_INT < 24) {
+            return
+        }
+
         val state = ModuleListViewState(
             items = listOf(
                 ModuleListItemData.ModuleData(1, "Module 1", true, emptyList()),
@@ -363,6 +370,12 @@ class ModuleListRenderTest : TeacherRenderTest() {
 
     @Test
     fun displaysModuleItemLoadingIndicator() {
+
+        // Don't run this on API-23, as the loading indicator will hang Espresso
+        if(Build.VERSION.SDK_INT < 24) {
+            return
+        }
+
         val item = moduleItemTemplate.copy(
             iconResId = null,
             enabled = false,
