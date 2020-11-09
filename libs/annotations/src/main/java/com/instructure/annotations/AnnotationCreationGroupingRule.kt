@@ -38,7 +38,7 @@ class AnnotationCreationGroupingRule(context: Context) : PresetMenuItemGroupingR
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_freetext),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_highlight),
         MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_strikeout),
-        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_markup,
+        MenuItem(com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_group_drawing,
             intArrayOf(
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_ink_pen,
                 com.pspdfkit.R.id.pspdf__annotation_creation_toolbar_item_square)),
