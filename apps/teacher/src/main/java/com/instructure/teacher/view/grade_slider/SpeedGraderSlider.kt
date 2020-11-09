@@ -80,13 +80,20 @@ class SpeedGraderSlider @JvmOverloads constructor(
         minGrade.text = 0.toString()
         maxGrade.text = NumberHelper.formatDecimal(mAssignment.pointsPossible, 0, true)
 
+        if (mSubmission?.excused == true) {
+            slider.progress = slider.max
+        }
+
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, mAssignee.id, progress.toString()))
-                if (progress == 0 || progress == seekBar?.max) {
-                    startLongPressHandler()
-                } else {
-                    stopLongPressHandler()
+                if (fromUser) {
+                    announceForAccessibility(progress.toString())
+                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, mAssignee.id, progress.toString()))
+                    if (progress == 0 || progress == seekBar?.max) {
+                        startLongPressHandler()
+                    } else {
+                        stopLongPressHandler()
+                    }
                 }
                 notGraded = false
                 isExcused = false

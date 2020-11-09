@@ -222,5 +222,6 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
     override fun onRefreshFinished() {
         gradeProgressSpinner.setGone()
+        speedGraderSlider.setData(presenter.assignment, presenter.submission, presenter.assignee)
     }
 }
