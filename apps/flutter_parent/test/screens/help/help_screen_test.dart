@@ -68,6 +68,20 @@ void main() {
     expect(find.text(l10n.helpLegalDescription), findsOneWidget);
   });
 
+  testWidgetsWithAccessibilityChecks('hides unavailable links', (tester) async {
+    when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh')))
+        .thenAnswer((_) => Future.value([_createHelpLink(availableTo: [])]));
+
+    expect(find.text('text'), findsNothing);
+    expect(find.text('subtext'), findsNothing);
+
+    expect(find.text(l10n.helpShareLoveLabel), findsNothing);
+    expect(find.text(l10n.helpShareLoveDescription), findsNothing);
+
+    expect(find.text(l10n.helpLegalLabel), findsNothing);
+    expect(find.text(l10n.helpLegalDescription), findsNothing);
+  });
+
   testWidgetsWithAccessibilityChecks('tapping search launches url', (tester) async {
     when(interactor.getObserverCustomHelpLinks(forceRefresh: anyNamed('forceRefresh'))).thenAnswer(
         (_) => Future.value([_createHelpLink(id: 'search_the_canvas_guides', text: 'Search the Canvas Guides')]));
@@ -223,10 +237,10 @@ void main() {
   });
 }
 
-HelpLink _createHelpLink({String id, String text, String url}) => HelpLink((b) => b
+HelpLink _createHelpLink({String id, String text, String url, List<AvailableTo> availableTo = const [AvailableTo.observer]}) => HelpLink((b) => b
   ..id = id ?? ''
   ..type = ''
-  ..availableTo = BuiltList.of(<AvailableTo>[]).toBuilder()
+  ..availableTo = BuiltList.of(availableTo).toBuilder()
   ..url = url ?? 'https://www.instructure.com'
   ..text = text ?? 'text'
   ..subtext = 'subtext');
