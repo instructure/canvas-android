@@ -65,13 +65,16 @@ class _HelpScreenState extends State<HelpScreen> {
   Widget _success(List<HelpLink> links) => ListView(children: _generateLinks(links));
 
   List<Widget> _generateLinks(List<HelpLink> links) {
-    List<Widget> helpLinks = List.from(links.map(
-      (l) => ListTile(
-        title: Text(l.text),
-        subtitle: Text(l.subtext),
-        onTap: () => _linkClick(l),
-      ),
-    ));
+    var helpLinks = List<Widget>();
+    links.forEach((element) {
+      if (element.availableTo.contains(AvailableTo.observer)) {
+        helpLinks.add(ListTile(
+          title: Text(element.text),
+          subtitle: Text(element.subtext),
+          onTap: () => _linkClick(element),
+        ));
+      }
+    });
 
     // Add in the legal and share the love tiles
     helpLinks.addAll([
