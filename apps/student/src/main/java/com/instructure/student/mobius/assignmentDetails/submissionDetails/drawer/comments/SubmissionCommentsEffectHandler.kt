@@ -103,7 +103,7 @@ class SubmissionCommentsEffectHandler(val context: Context) : EffectHandler<Subm
     }
 
     private fun launchVideo() {
-        if(needsPermissions(::launchVideo, PermissionUtils.CAMERA)) return
+        if(needsPermissions(::launchVideo, PermissionUtils.CAMERA, PermissionUtils.RECORD_AUDIO)) return
         showVideoCommentDialog()
     }
 
