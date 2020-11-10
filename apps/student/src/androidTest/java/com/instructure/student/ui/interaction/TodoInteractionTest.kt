@@ -15,6 +15,7 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -61,28 +62,54 @@ class TodoInteractionTest : StudentTest() {
         */
     }
 
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.TODOS, TestCategory.INTERACTION, false)
+    fun testFilters() {
+        val data = goToTodos(courseCount = 2, favoriteCourseCount = 1)
+        val favoriteCourse = data.courses.values.first {course -> course.isFavorite}
+        val notFavoriteCourse = data.courses.values.first {course -> !course.isFavorite}
+
+        val favoriteQuiz = data.courseQuizzes[favoriteCourse.id]!!.first()
+        val notFavoriteQuiz = data.courseQuizzes[notFavoriteCourse.id]!!.first()
+
+        todoPage.assertQuizDisplayed(favoriteQuiz)
+        todoPage.assertQuizDisplayed(notFavoriteQuiz)
+
+        todoPage.chooseFavoriteCourseFilter()
+
+        todoPage.assertQuizDisplayed(favoriteQuiz)
+        todoPage.assertQuizNotDisplayed(notFavoriteQuiz)
+
+        todoPage.clearFilter()
+
+        todoPage.assertQuizDisplayed(favoriteQuiz)
+        todoPage.assertQuizDisplayed(notFavoriteQuiz)
+    }
+
+
     // Seeds ToDos (assignment + quiz) for tomorrow and then navigates to the ToDo page
-    fun goToTodos() : MockCanvas {
+    fun goToTodos(courseCount: Int = 1, favoriteCourseCount: Int = 1) : MockCanvas {
         var data = MockCanvas.init(
                 studentCount = 1,
                 teacherCount = 1,
-                courseCount = 1,
-                favoriteCourseCount = 1
+                courseCount = courseCount,
+                favoriteCourseCount = favoriteCourseCount
         )
 
         val student = data.students.first()
-        course = data.courses.values.first()
-        assignment = data.addAssignment(
-                courseId = course.id,
-                submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                dueAt = 1.days.fromNow.iso8601
-        )
+        for(course in data.courses.values) {
+            assignment = data.addAssignment(
+                    courseId = course.id,
+                    submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
+                    dueAt = 1.days.fromNow.iso8601
+            )
 
-        quiz = data.addQuizToCourse(
-                course = course,
-                quizType = Quiz.TYPE_ASSIGNMENT,
-                dueAt = 1.days.fromNow.iso8601
-        )
+            quiz = data.addQuizToCourse(
+                    course = course,
+                    quizType = Quiz.TYPE_ASSIGNMENT,
+                    dueAt = 1.days.fromNow.iso8601
+            )
+        }
 
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
