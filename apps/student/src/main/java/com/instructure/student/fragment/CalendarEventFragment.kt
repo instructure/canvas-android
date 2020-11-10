@@ -196,13 +196,14 @@ class CalendarEventFragment : ParentFragment() {
                 date2.text = getFullDateString(it.endDate)
             } else {
                 // Setup the calendar event start/end times
-                if (it.startDate != null && it.endDate != null && it.startDate?.time != it.endDate?.time) {
+                if (it.startDate != null && it.endDate != null) {
                     // Our date times are different so we display two strings
                     date1.text = getFullDateString(it.endDate)
                     val startTime = DateHelper.getFormattedTime(context, it.startDate)
                     val endTime = DateHelper.getFormattedTime(context, it.endDate)
 
-                    date2.text = "$startTime - $endTime"
+                    val isTimeIntervalEvent = (it.startDate?.time != it.endDate?.time)
+                    date2.text = if (isTimeIntervalEvent) "$startTime - $endTime" else startTime
                 } else {
                     date1.text = getFullDateString(it.startDate)
                     date2.setInvisible()
