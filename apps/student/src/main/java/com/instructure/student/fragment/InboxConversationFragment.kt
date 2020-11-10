@@ -275,7 +275,7 @@ class InboxConversationFragment : ParentFragment() {
             onConversationUpdated(false)
         } catch {
             toast(R.string.errorConversationGeneric)
-            starred.setImageResource(if (!shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star)
+            starred?.setImageResource(if (!shouldStar) R.drawable.ic_star_filled else R.drawable.ic_star)
             ColorUtils.colorIt(ThemePrefs.brandColor, starred.drawable)
             refreshConversationData()
         }
