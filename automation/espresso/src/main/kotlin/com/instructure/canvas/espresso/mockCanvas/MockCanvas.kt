@@ -217,6 +217,9 @@ class MockCanvas {
     /** This is configured by addAnnotation and should not be modified directly */
     lateinit var canvadocRedirectUrl: String
 
+    /** Map of user id to stream items */
+    val streamItems = mutableMapOf<Long, MutableList<StreamItem>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -1852,3 +1855,47 @@ private val canvaDocInk = CanvaDocInkList(
         CanvaDocCoordinate(550f, 100f)
     ))
 )
+
+/**
+ * Adds a stream item for a submission, which should then show up in our notification list.
+ * Consider doing this automatically whenever a submission is processed?
+ */
+fun MockCanvas.addSubmissionStreamItem(
+        user: User,
+        course: Course,
+        assignment: Assignment,
+        submission: Submission,
+        submittedAt: String? = null,
+        message: String = Faker.instance().lorem().sentence(),
+        type : String = "submission"
+) : StreamItem {
+    // Create the StreamItem
+    val item = StreamItem(
+            id = newItemId(),
+            course_id = course.id,
+            assignment_id = assignment.id ?: -1,
+            title = assignment.name,
+            message = message,
+            assignment = assignment,
+            type = type,
+            submittedAt = submittedAt,
+            userId = user.id,
+            user = user,
+            updatedAt = submittedAt ?: "",
+            htmlUrl = "https://$domain/courses/${course.id}/assignments/${assignment.id}/submissions/${submission.id}",
+            context_type = CanvasContext.Type.USER.apiString
+            //canvasContext = user // This seems to break the notifications page so that it does not load
+
+    )
+
+    // Record the StreamItem
+    var list = streamItems[user.id]
+    if(list == null) {
+        list = mutableListOf<StreamItem>()
+        streamItems[user.id] = list
+    }
+    list.add(item)
+
+    // Return the StreamItem
+    return item
+}
