@@ -22,6 +22,7 @@ import android.webkit.WebView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.Identity
@@ -450,14 +451,19 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
         fun makeBundle(assignment: Assignment): Bundle {
             val args = Bundle()
-            args.putParcelable(AssignmentDetailsFragment.ASSIGNMENT, assignment)
+            args.putParcelable(ASSIGNMENT, assignment)
             return args
         }
 
         fun makeBundle(assignmentId: Long): Bundle {
             val args = Bundle()
-            args.putLong(AssignmentDetailsFragment.ASSIGNMENT_ID, assignmentId)
+            args.putLong(ASSIGNMENT_ID, assignmentId)
             return args
+        }
+
+        fun makeRoute(course: CanvasContext, assignmentId: Long): Route {
+            val bundle = course.makeBundle { putLong(ASSIGNMENT_ID, assignmentId) }
+            return Route(null, AssignmentDetailsFragment::class.java, course, bundle)
         }
     }
 }

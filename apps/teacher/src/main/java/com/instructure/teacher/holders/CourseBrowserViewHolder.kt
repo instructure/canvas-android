@@ -48,6 +48,7 @@ class CourseBrowserViewHolder(view: View, val color: Int) : RecyclerView.ViewHol
             Tab.FILES_ID -> R.drawable.ic_files
             Tab.PAGES_ID -> R.drawable.ic_pages
             Tab.MODULES_ID -> R.drawable.ic_modules
+            Tab.SYLLABUS_ID -> R.drawable.ic_syllabus
             Tab.STUDENT_VIEW -> R.drawable.ic_user
             else -> {
                 //Determine if its the attendance tool

@@ -148,4 +148,60 @@
         <item name="android:layout_marginTop">4dp</item>
     </style>
 
+    <!--Adapter Item Styles added 2018-->
+
+    <style name="AdapterItem">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:minHeight">?android:listPreferredItemHeight</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="AdapterItemTextContainer">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">24dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="AdapterItemIcon">
+        <item name="android:layout_height">28dp</item>
+        <item name="android:layout_width">28dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="AdapterItemTitleText" parent="TextFont.Medium">
+        <item name="android:textColor">@color/defaultTextDark</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="AdapterItemDescriptionText" parent="TextFont.Regular">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterItemCourseNameText" parent="TextFont.Regular">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+
+    <style name="AdapterListHeader" parent="TextFont.Medium">
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/defaultTextGray</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
 </resources>

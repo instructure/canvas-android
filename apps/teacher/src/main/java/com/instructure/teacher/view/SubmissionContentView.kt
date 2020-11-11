@@ -58,6 +58,7 @@ import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.ProgressiveCanvasLoadingView
 import com.instructure.pandautils.views.RecordingMediaType
+import com.instructure.pandautils.views.ViewPagerNonSwipeable
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.SpeedGraderActivity
@@ -112,7 +113,7 @@ class SubmissionContentView(
     private var mContainerId: Int = 0
     private val mAssignee: Assignee get() = mStudentSubmission.assignee
     private val mRootSubmission: Submission? get() = mStudentSubmission.submission
-    private val mBottomViewPager: ViewPagerNoSwipe
+    private val mBottomViewPager: ViewPagerNonSwipeable
 
     private var initJob: Job? = null
     private var deleteJob: Job? = null

@@ -15,7 +15,8 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     TEST_FLOAT("test_float", "0f"),
     TEST_LONG("test_long", "42"),
     TEST_STRING("test_string", "hey there"),
-    USE_NEW_RELIC("all_new_relic_enabled", "false")
+    USE_NEW_RELIC("all_new_relic_enabled", "false"),
+    SHOW_TEACHER_SYLLABUS("show_teacher_syllabus", "false")
 }
 
 /**
@@ -84,8 +85,8 @@ object RemoteConfigUtils {
     // these convenience methods are provided to make the conversion.
     //
 
-    fun getBoolean(key: RemoteConfigParam) : Boolean? {
-        return getString(key)?.toBoolean()
+    fun getBoolean(key: RemoteConfigParam) : Boolean {
+        return getString(key).toBoolean()
     }
 
     fun getLong(key: RemoteConfigParam) : Long? {

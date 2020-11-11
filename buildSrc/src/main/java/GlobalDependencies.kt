@@ -93,6 +93,7 @@ object Libs {
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
     const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.1.0"
     const val MOCKK = "io.mockk:mockk:1.10.0"
+    const val THREETEN_BP = "org.threeten:threetenbp:1.3.8"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"

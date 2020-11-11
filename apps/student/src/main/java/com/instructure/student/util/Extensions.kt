@@ -22,10 +22,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import org.threeten.bp.LocalDate
+import com.instructure.pandautils.utils.getShortMonthAndDay
+import com.instructure.pandautils.utils.getTime
 import org.threeten.bp.OffsetDateTime
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.util.*
 
 suspend fun Long.isStudioEnabled(): Boolean {
@@ -52,15 +51,4 @@ fun LTITool.getResourceSelectorUrl(canvasContext: CanvasContext, assignment: Ass
 fun String.toDueAtString(context: Context): String {
     val dueDateTime = OffsetDateTime.parse(this).withOffsetSameInstant(OffsetDateTime.now().offset)
     return context.getString(com.instructure.pandares.R.string.submissionDetailsDueAt, dueDateTime.getShortMonthAndDay(), dueDateTime.getTime())
-}
-
-fun OffsetDateTime.getShortMonthAndDay(): String {
-    // Get year if the year of the due date isn't the current year
-    val pattern = if (LocalDate.now().year != this.year) DateTimeFormatter.ofPattern("MMM d, Y") else DateTimeFormatter.ofPattern("MMM d")
-    return format(pattern)
-}
-
-fun OffsetDateTime.getTime(): String {
-    val pattern = DateTimeFormatterBuilder().appendPattern("h:mm a").toFormatter()
-    return format(pattern).toLowerCase()
 }

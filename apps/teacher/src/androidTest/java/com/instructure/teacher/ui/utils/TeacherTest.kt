@@ -68,5 +68,6 @@ abstract class TeacherTest : CanvasTest() {
     var peopleListPage = PeopleListPage()
     var studentContextPage = StudentContextPage()
     var pageListPage = PageListPage()
+    var syllabusPage = SyllabusPage()
 
 }

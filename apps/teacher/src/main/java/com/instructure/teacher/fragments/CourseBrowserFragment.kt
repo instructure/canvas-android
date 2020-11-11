@@ -28,10 +28,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.isValid
+import com.instructure.canvasapi2.utils.*
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
@@ -43,6 +40,7 @@ import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -79,6 +77,7 @@ class CourseBrowserFragment : BaseSyncFragment<
     override val recyclerView: RecyclerView get() = courseBrowserRecyclerView
     override fun withPagination() = false
     override fun getPresenterFactory() = CourseBrowserPresenterFactory(mCanvasContext) { tab, attendanceId ->
+        val showSyllabus = RemoteConfigUtils.getBoolean(RemoteConfigParam.SHOW_TEACHER_SYLLABUS)
         //Filter for white-list supported features
         //TODO: support other things like it.isHidden
         when(tab.tabId) {
@@ -91,6 +90,7 @@ class CourseBrowserFragment : BaseSyncFragment<
             Tab.PAGES_ID,
             Tab.MODULES_ID,
             Tab.STUDENT_VIEW -> true
+            Tab.SYLLABUS_ID -> showSyllabus
             else -> {
                 if (attendanceId != 0L && tab.tabId.endsWith(attendanceId.toString())) {
                     TeacherPrefs.attendanceExternalToolId = tab.tabId
@@ -237,6 +237,9 @@ class CourseBrowserFragment : BaseSyncFragment<
                 Tab.STUDENT_VIEW -> {
                     Analytics.logEvent(AnalyticsEventConstants.STUDENT_VIEW_TAPPED)
                     presenter.handleStudentViewClick()
+                }
+                Tab.SYLLABUS_ID -> {
+                    RouteMatcher.route(requireContext(), Route(SyllabusFragment::class.java, presenter.canvasContext))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {
