@@ -31,6 +31,7 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.holders.*
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.util.StudentPrefs
+import org.threeten.bp.OffsetDateTime
 import java.util.*
 
 class DashboardRecyclerAdapter(
@@ -206,7 +207,7 @@ class DashboardRecyclerAdapter(
             // Add course invites
             val validInvites = invites.filter {
                 mCourseMap[it.courseId]?.let { course ->
-                    course.isValidTerm() && !course.accessRestrictedByDate && !course.restrictEnrollmentsToCourseDate} ?: false
+                    course.isValidTerm() && !course.accessRestrictedByDate && isEnrollmentBetweenCourseDatesOrNotRestricted(course) } ?: false
             }
 
             addOrUpdateAllItems(ItemType.INVITATION_HEADER, validInvites)
@@ -219,6 +220,15 @@ class DashboardRecyclerAdapter(
             adapterToRecyclerViewCallback.setDisplayNoConnection(true)
             mAdapterToFragmentCallback.onRefreshFinished()
         }
+    }
+
+    private fun isEnrollmentBetweenCourseDatesOrNotRestricted(course: Course): Boolean {
+        val now = OffsetDateTime.now()
+        val startDate = OffsetDateTime.parse(course.startAt).withOffsetSameInstant(OffsetDateTime.now().offset)
+        val endDate = OffsetDateTime.parse(course.endAt).withOffsetSameInstant(OffsetDateTime.now().offset)
+
+        val isBetweenCourseDates = now.isAfter(startDate) && now.isBefore(endDate)
+        return !course.restrictEnrollmentsToCourseDate || isBetweenCourseDates
     }
 
     override fun itemLayoutResId(viewType: Int) = when (ItemType.values()[viewType]) {
