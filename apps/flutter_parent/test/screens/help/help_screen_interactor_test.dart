@@ -55,7 +55,7 @@ void main() {
     expect(list.any((l) => l.availableTo.contains(AvailableTo.teacher)), false);
     expect(list.any((l) => l.availableTo.contains(AvailableTo.observer)), true);
     expect(list.any((l) => l.availableTo.contains(AvailableTo.user)), true);
-    expect(list.any((l) => l.availableTo.contains(AvailableTo.unenrolled)), true);
+    expect(list.any((l) => l.availableTo.contains(AvailableTo.unenrolled)), false);
   });
 
   test('containsObserverLinks returns true when observer links present in list, false otherwise', () async {
@@ -81,7 +81,6 @@ void main() {
     var observerLinks = [
       createHelpLink(availableTo: [AvailableTo.observer]),
       createHelpLink(availableTo: [AvailableTo.user]),
-      createHelpLink(availableTo: [AvailableTo.unenrolled]),
     ];
 
     var nonObserverLinks = [
@@ -89,6 +88,7 @@ void main() {
       createHelpLink(availableTo: [AvailableTo.teacher]),
       createHelpLink(availableTo: [AvailableTo.admin]),
       createHelpLink(availableTo: [AvailableTo.admin]),
+      createHelpLink(availableTo: [AvailableTo.unenrolled]),
     ];
 
     expect(HelpScreenInteractor().filterObserverLinks(BuiltList.from([...observerLinks, ...nonObserverLinks])),
@@ -120,7 +120,7 @@ void main() {
   test('default list is returned if there are no custom lists', () async {
     var api = _MockHelpLinksApi();
     var defaultLinks = [
-      createHelpLink(availableTo: [AvailableTo.unenrolled]),
+      createHelpLink(availableTo: [AvailableTo.user]),
       createHelpLink(availableTo: [AvailableTo.observer]),
     ];
 
