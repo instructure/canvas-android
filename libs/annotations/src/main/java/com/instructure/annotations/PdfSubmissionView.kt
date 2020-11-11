@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -36,9 +37,9 @@ import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
 import com.instructure.annotations.FileCaching.DocumentListenerSimpleDelegate
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.ApiValues
+import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
-import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -81,7 +82,6 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import java.io.File
 import java.util.*
-import kotlin.jvm.Throws
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -93,10 +93,13 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     protected var noteHinter: AnnotationNoteHinter? = null
     protected val supportFragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
 
+    private val annotationCreationList = mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
+    private val annototationEditList = mutableListOf(AnnotationType.INK, AnnotationType.HIGHLIGHT, AnnotationType.STRIKEOUT, AnnotationType.SQUARE, AnnotationType.STAMP, AnnotationType.FREETEXT)
+
     private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
             .scrollDirection(PageScrollDirection.VERTICAL)
-            .enabledAnnotationTools(setupAnnotationCreationList())
-            .editableAnnotationTypes(setupAnnotationEditList())
+            .enabledAnnotationTools(annotationCreationList)
+            .editableAnnotationTypes(annototationEditList)
             .setAnnotationInspectorEnabled(true)
             .layoutMode(PageLayoutMode.SINGLE)
             .textSelectionEnabled(false)
@@ -150,8 +153,11 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
+        exitHandler?.removeCallbacks(enterCreationMode)
     }
 
+    //private val exitHandler: Handler = Handler(Looper.getMainLooper())
+    //    private val enterCreationMode = Runnable { pdfFragment?.enterAnnotationCreationMode() }
     protected fun unregisterPdfFragmentListeners() {
         pdfFragment?.removeOnAnnotationCreationModeChangeListener(this)
         pdfFragment?.removeOnAnnotationEditingModeChangeListener(this)
@@ -630,16 +636,13 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         }
     }
 
-    private fun setupAnnotationCreationList(): MutableList<AnnotationTool> {
-        return mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
-    }
-
-    private fun setupAnnotationEditList(): MutableList<AnnotationType> {
-        return mutableListOf(AnnotationType.INK, AnnotationType.HIGHLIGHT, AnnotationType.STRIKEOUT, AnnotationType.SQUARE, AnnotationType.STAMP, AnnotationType.FREETEXT)
-    }
-
     //region annotation listeners
+
+    private val exitHandler: Handler = Handler(Looper.getMainLooper())
+    private val enterCreationMode = Runnable { pdfFragment?.enterAnnotationCreationMode() }
     override fun onEnterAnnotationCreationMode(controller: AnnotationCreationController) {
+        exitHandler.removeCallbacks(enterCreationMode)
+
         // We never want to show annotation toolbars if the user doesn't have permission to write
         if (docSession.annotationMetadata?.canWrite() != true) return
         //we only want to disable the viewpager if they are actively annotating
@@ -652,6 +655,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     override fun onExitAnnotationCreationMode(p0: AnnotationCreationController) {
+        exitHandler.post(enterCreationMode)
+
         enableViewPager()
         annotationToolbarLayout.removeContextualToolbar(true)
         annotationCreationToolbar.unbindController()
@@ -661,6 +666,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     override fun onEnterAnnotationEditingMode(controller: AnnotationEditingController) {
+        exitHandler.removeCallbacks(enterCreationMode)
+
         // We never want to show annotation toolbars if the user doesn't have permission to write
         if (docSession.annotationMetadata?.canWrite() == false) return
         currentAnnotationModeType = controller.currentlySelectedAnnotation?.type
@@ -672,6 +679,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     }
 
     override fun onExitAnnotationEditingMode(controller: AnnotationEditingController) {
+        exitHandler.post(enterCreationMode)
+
         enableViewPager()
         annotationToolbarLayout.removeContextualToolbar(true)
         annotationEditingToolbar.unbindController()
