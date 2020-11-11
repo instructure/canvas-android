@@ -153,8 +153,11 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
+        exitHandler?.removeCallbacks(enterCreationMode)
     }
 
+    //private val exitHandler: Handler = Handler(Looper.getMainLooper())
+    //    private val enterCreationMode = Runnable { pdfFragment?.enterAnnotationCreationMode() }
     protected fun unregisterPdfFragmentListeners() {
         pdfFragment?.removeOnAnnotationCreationModeChangeListener(this)
         pdfFragment?.removeOnAnnotationEditingModeChangeListener(this)
