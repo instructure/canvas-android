@@ -24,8 +24,10 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
@@ -148,6 +150,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
-        // TODO MBL-14885
+        val route = Route(CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
+        RouteMatcher.route(context, route)
     }
 }

@@ -50,6 +50,24 @@ class SyllabusPageTest : TeacherTest() {
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 
+    // Tests that we can open a calendar event from the syllabus/summary, and does some verification of the calendar event.
+    @Test
+    fun testSyllabus_openCalendarEvent() {
+        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
+        Thread.sleep(3000)
+        RemoteConfigPrefs.putString(RemoteConfigParam.SHOW_TEACHER_SYLLABUS.rc_name, "true")
+        val data = goToSyllabus(eventCount = 1, assignmentCount = 0)
+
+        val course = data.courses.values.first()
+        val calendarEvent = data.courseCalendarEvents[course.id]!!.first()
+
+        syllabusPage.selectSummaryTab()
+        syllabusPage.assertItemDisplayed(calendarEvent.title!!)
+        syllabusPage.selectSummaryEvent(calendarEvent.title!!)
+        calendarEventPage.verifyTitle(calendarEvent.title!!)
+        calendarEventPage.verifyDescription(calendarEvent.description!!)
+    }
+
     private fun goToSyllabus(eventCount: Int, assignmentCount: Int): MockCanvas {
 
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
