@@ -15,7 +15,6 @@
  */
 package com.instructure.student.ui.interaction
 
-import android.os.SystemClock.sleep
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
@@ -24,7 +23,6 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.canvasapi2.models.QuizQuestion
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601

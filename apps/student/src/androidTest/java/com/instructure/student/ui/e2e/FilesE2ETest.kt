@@ -180,6 +180,16 @@ class FilesE2ETest: StudentTest() {
         // I'd like to go into discussions and verify that our reply-with-attachment shows up,
         // but that info is in a webview and thus would not be easy to verify.
 
-
+        // Test renaming and deleting the discussion attachment
+        pressBack() // Back to Dashboard
+        dashboardPage.gotoGlobalFiles()
+        fileListPage.assertItemDisplayed("unfiled") // Our discussion attachment goes under "unfiled"
+        fileListPage.selectItem("unfiled")
+        fileListPage.assertItemDisplayed(discussionAttachmentFile.name)
+        val newFileName = "blah.txt"
+        fileListPage.renameFile(discussionAttachmentFile.name, newFileName)
+        fileListPage.assertItemDisplayed(newFileName)
+        fileListPage.deleteFile(newFileName)
+        fileListPage.assertViewEmpty()
     }
 }
