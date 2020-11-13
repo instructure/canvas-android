@@ -1,10 +1,10 @@
 gcloud:
   project: delta-essence-114723
 # Use the next two lines to run locally
-  app: ./build/outputs/apk/qa/debug/student-qa-debug.apk
-  test: ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
-#  app: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
-#  test: ./apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+#  app: ./build/outputs/apk/qa/debug/student-qa-debug.apk
+#  test: ./build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
+  app: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
+  test: ./apps/student/build/outputs/apk/androidTest/qa/debug/student-qa-debug-androidTest.apk
   results-bucket: android-student
   auto-google-login: true
   use-orchestrator: true
@@ -13,7 +13,6 @@ gcloud:
   timeout: 60m
   test-targets:
   - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub
-  - class com.instructure.student.ui.interaction.TodoInteractionTest, com.instructure.student.ui.interaction.PushNotificationInteractionTest
   device:
   - model: Nexus9
     version: 25
@@ -25,6 +24,6 @@ gcloud:
     orientation: portrait
 
 flank:
-  testShards: 1
+  testShards: 10
   testRuns: 1
 
