@@ -115,8 +115,6 @@ class CalendarEventFragment : BaseFragment() {
         locationTitle.text = viewState.locationTitle
         locationSubtitle.text = viewState.locationSubtitle
 
-        calendarEventWebView?.setGone()
-
         if (viewState.htmlContent.isNotEmpty()) {
             loadHtmlJob = calendarEventWebView.loadHtmlWithIframes(requireContext(), isTablet, viewState.htmlContent, ::loadCalendarHtml, { url ->
                 val args = LtiLaunchFragment.makeBundle(canvasContext, URLDecoder.decode(url, "utf-8"), getString(R.string.utils_externalToolTitle), true)
@@ -126,7 +124,6 @@ class CalendarEventFragment : BaseFragment() {
     }
 
     private fun loadCalendarHtml(html: String, contentDescription: String?) {
-        calendarEventWebView?.setVisible()
         calendarEventWebView?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.canvasBackgroundLight))
         calendarEventWebView?.loadHtml(html, contentDescription)
     }
