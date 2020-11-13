@@ -26,6 +26,7 @@ import android.widget.TextView
 
 import com.instructure.student.R
 import com.instructure.canvasapi2.models.Assignment
+import org.threeten.bp.OffsetDateTime
 
 import java.util.ArrayList
 import java.util.Date
@@ -86,7 +87,8 @@ class FileUploadAssignmentsAdapter(aContext: Context, val assignments: ArrayList
             val currentDate = Date()
 
             for (assignment in newAssignments) {
-                if (assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD) && (assignment.lockDate == null || assignment.lockDate != null && currentDate.before(assignment.lockDate))) {
+                val isUnlocked = (assignment.lockDate == null || assignment.lockDate != null && currentDate.before(assignment.lockDate)) && (assignment.unlockDate == null || assignment.unlockDate != null && currentDate.after(assignment.unlockDate))
+                if (assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_UPLOAD) && isUnlocked) {
                     onlineUploadAssignments.add(assignment)
                 }
             }
