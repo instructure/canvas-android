@@ -16,19 +16,27 @@
  */
 package com.instructure.student.ui.pages
 
+import androidx.appcompat.widget.AppCompatButton
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.swipeDown
+import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
@@ -68,5 +76,32 @@ class FileListPage : BasePage(R.id.fileListPage) {
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout), isDisplayingAtLeast(50)))
                 .perform(withCustomConstraints(swipeDown(), isDisplayingAtLeast(10)))
+    }
+
+    fun openOptionMenuFor(itemName: String) {
+        val matcher = allOf(withId(R.id.overflowButton), hasSibling(withChild(withText(itemName))))
+        scrollRecyclerView(R.id.listView, matcher)
+        onView(matcher).click()
+    }
+
+    fun renameFile(itemName: String, newName: String) {
+        openOptionMenuFor(itemName)
+        onView(allOf(withId(R.id.title), withText("Rename"))).click()
+        onView(withId(R.id.textInput)).clearText()
+        onView(withId(R.id.textInput)).typeText(newName)
+        onView(containsTextCaseInsensitive("OK")).click()
+        refresh()
+    }
+
+    fun deleteFile(itemName: String) {
+        openOptionMenuFor(itemName)
+        onView(allOf(withId(R.id.title), withText("Delete"))).click()
+        onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("DELETE"), isDisplayed())).click() // confirm
+    }
+
+    fun assertViewEmpty() {
+        // Weird to have "displayed" as the filter and the check, but it's the only way
+        // to distinguish from other emptyViews in the stack.
+        onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
     }
 }

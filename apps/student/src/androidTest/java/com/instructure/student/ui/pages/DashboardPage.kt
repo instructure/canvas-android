@@ -199,6 +199,10 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationToDo)).click()
     }
 
+    fun clickNotificationsTab() {
+        onView(withId(R.id.bottomNavigationNotifications)).click()
+    }
+
     fun clickInboxTab() {
         onView(withId(R.id.bottomNavigationInbox)).click()
     }

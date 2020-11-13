@@ -16,10 +16,15 @@
  */
 package com.instructure.student.ui.pages
 
+import android.widget.Button
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Quiz
@@ -31,6 +36,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.student.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 class TodoPage: BasePage(R.id.todoPage) {
 
@@ -48,6 +54,10 @@ class TodoPage: BasePage(R.id.todoPage) {
         assertTextDisplayedInRecyclerView(quiz.title!!)
     }
 
+    fun assertQuizNotDisplayed(quiz: Quiz) {
+        onView(withText(quiz.title!!)).check(doesNotExist())
+    }
+
     fun selectAssignment(assignment: Assignment) {
         assertTextDisplayedInRecyclerView(assignment.name!!)
         onView(withText(assignment.name!!)).click()
@@ -60,6 +70,16 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun assertQuizDisplayed(quiz: QuizApiModel) {
         assertTextDisplayedInRecyclerView(quiz.title)
+    }
+
+    fun chooseFavoriteCourseFilter() {
+        onView(withId(R.id.todoListFilter)).click()
+        onView(containsTextCaseInsensitive("Favorited Courses")).click()
+        onView(allOf(isAssignableFrom(Button::class.java), containsTextCaseInsensitive("OK"))).click()
+    }
+
+    fun clearFilter() {
+        onView(withId(R.id.clearFilterTextView)).click()
     }
 
     // Assert that a string is displayed somewhere in the RecyclerView

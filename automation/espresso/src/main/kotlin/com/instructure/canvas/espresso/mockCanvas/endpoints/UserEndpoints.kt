@@ -64,6 +64,7 @@ object UserEndpoint : Endpoint(
     Segment("files") to UserFilesEndpoint,
     Segment("todo") to UserTodoEndpoint,
     Segment("observer_pairing_codes") to UserPairingCodeEndpoint,
+    Segment("activity_stream") to UserActivityStreamEndpoint,
     response = {
         GET {
             val userId = pathVars.userId
@@ -324,5 +325,16 @@ var pairingCodeCount = 0
 object UserPairingCodeEndpoint : Endpoint(response = {
     POST {
         request.successResponse(PairingCode((++pairingCodeCount).toString()))
+    }
+})
+
+/**
+ * Endpoint that returns a user's activity stream
+ */
+object UserActivityStreamEndpoint : Endpoint( response = {
+    GET {
+        val userId = pathVars.userId
+        val response = data.streamItems[userId] ?: mutableListOf<StreamItem>()
+        request.successResponse(response)
     }
 })

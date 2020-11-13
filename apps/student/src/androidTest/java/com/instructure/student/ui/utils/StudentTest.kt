@@ -96,6 +96,7 @@ abstract class StudentTest : CanvasTest() {
     val calendarEventPage = CalendarEventPage()
     val quizTakingPage = QuizTakingPage()
     val pandaAvatarPage = PandaAvatarPage()
+    val notificationPage = NotificationPage()
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
