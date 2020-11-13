@@ -70,5 +70,6 @@ abstract class TeacherTest : CanvasTest() {
     val pageListPage = PageListPage()
     val syllabusPage = SyllabusPage()
     val calendarEventPage = CalendarEventPage()
+    val dashboardPage = DashboardPage()
 
 }
