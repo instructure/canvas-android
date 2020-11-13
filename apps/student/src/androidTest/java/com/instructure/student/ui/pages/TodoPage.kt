@@ -82,10 +82,6 @@ class TodoPage: BasePage(R.id.todoPage) {
         onView(withId(R.id.clearFilterTextView)).click()
     }
 
-    fun dismissFilter() {
-
-    }
-
     // Assert that a string is displayed somewhere in the RecyclerView
     private fun assertTextDisplayedInRecyclerView(s: String) {
         // Common matcher
