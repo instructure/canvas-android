@@ -28,8 +28,6 @@ import kotlinx.coroutines.Job
  */
 class SimpleWebViewFragment : InternalWebViewFragment() {
 
-    private var apiCall: Job? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
@@ -37,6 +35,8 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         setShouldLoadUrl(false)
+        setShouldAuthenticateUponLoad(true)
+        setShouldRouteInternally(false)
         canvasWebView.setInitialScale(100)
         super.onActivityCreated(savedInstanceState)
 
