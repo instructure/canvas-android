@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.teacher.ui.pages
 
 import android.view.View
@@ -44,22 +60,23 @@ class DashboardPage : BasePage() {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
         onView(withId(R.id.courseBrowserTitle)).assertContainsText(course.name)
-        onView(withParent(R.id.overlayToolbar) + withContentDescription("Navigate up")).click()
+        navigateBack(R.id.overlayToolbar)
     }
 
-    fun clickCoursesTab() {
-        onView(withId(R.id.tab_courses)).click()
-        onView(withParent(R.id.toolbar) + withText(R.string.courses)).assertDisplayed()
+    fun clickSeeAll() {
+        onView(withId(R.id.seeAllTextView)).click()
     }
 
-    fun clickInboxTab() {
-        onView(withId(R.id.tab_inbox)).click()
-        onView(withParent(R.id.toolbar) + withText(R.string.inbox)).assertDisplayed()
+    fun editFavoriteCoursesWithCourse(course: CourseApiModel) {
+        onView(withId(R.id.menu_edit_favorite_courses)).click()
+        onView(withParent(R.id.toolbar) + withText(R.string.edit_courses)).assertDisplayed()
+        onView(withText(course.name)).click()
+        navigateBack()
     }
 
-    fun clickTodoTab() {
-        onView(withId(R.id.tab_todo)).click()
-        onView(withParent(R.id.toDoToolbar) + withText("To Do")).assertDisplayed()
+    fun navigateBack(toolbarId: Int = R.id.toolbar) {
+        onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
+
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
