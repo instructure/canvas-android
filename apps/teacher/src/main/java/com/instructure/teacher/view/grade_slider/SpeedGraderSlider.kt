@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2020 - present  Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@ package com.instructure.teacher.view.grade_slider
 import android.content.Context
 import android.os.Handler
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.SeekBar
@@ -29,7 +28,6 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.setGone
 import com.instructure.teacher.R
-import com.instructure.teacher.view.edit_rubric.ShowRatingDescriptionEvent
 import kotlinx.android.synthetic.main.view_speed_grader_slider.view.*
 import org.greenrobot.eventbus.EventBus
 import kotlin.properties.Delegates
@@ -40,9 +38,9 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
     var onGradeChanged: (String, Boolean) -> Unit by Delegates.notNull()
 
-    private lateinit var mAssignment: Assignment
-    private var mSubmission: Submission? = null
-    private lateinit var mAssignee: Assignee
+    private lateinit var assignment: Assignment
+    private var submission: Submission? = null
+    private lateinit var assignee: Assignee
 
     private var isExcused: Boolean = false
     private var notGraded: Boolean = false
@@ -50,10 +48,10 @@ class SpeedGraderSlider @JvmOverloads constructor(
     private val longPressHandler = Handler()
     private val longPressRunnable = Runnable {
         if (slider.progress == 0) {
-            EventBus.getDefault().post(ShowSliderGradeEvent(slider, mAssignee.id, context.getString(R.string.not_graded)))
+            EventBus.getDefault().post(ShowSliderGradeEvent(slider, assignee.id, context.getString(R.string.not_graded)))
             notGraded = true
         } else if (slider.progress == slider.max) {
-            EventBus.getDefault().post(ShowSliderGradeEvent(slider, mAssignee.id, context.getString(R.string.excused)))
+            EventBus.getDefault().post(ShowSliderGradeEvent(slider, assignee.id, context.getString(R.string.excused)))
             isExcused = true
         }
     }
@@ -63,32 +61,26 @@ class SpeedGraderSlider @JvmOverloads constructor(
     }
 
     fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
-        mAssignment = assignment
-        mSubmission = submission
-        mAssignee = assignee
+        this.assignment = assignment
+        this.submission = submission
+        this.assignee = assignee
 
-        if (mAssignment.rubric != null && mAssignment.rubric!!.isNotEmpty() && mAssignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
-            setGone()
-            return
-        }
+        tooltipView.assigneeId = this.assignee.id
 
-        tooltipView.assigneeId = mAssignee.id
-
-        slider.max = mAssignment.pointsPossible.toInt()
-        slider.progress = mSubmission?.score?.toInt() ?: 0
+        slider.max = this.assignment.pointsPossible.toInt()
+        slider.progress = this.submission?.score?.toInt() ?: 0
 
         minGrade.text = 0.toString()
-        maxGrade.text = NumberHelper.formatDecimal(mAssignment.pointsPossible, 0, true)
+        maxGrade.text = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
 
-        if (mSubmission?.excused == true) {
+        if (this.submission?.excused == true) {
             slider.progress = slider.max
         }
 
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
-                    announceForAccessibility(progress.toString())
-                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, mAssignee.id, progress.toString()))
+                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
                     if (progress == 0 || progress == seekBar?.max) {
                         startLongPressHandler()
                     } else {

@@ -180,12 +180,22 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             }
         }
 
-        rubricEditView.setData(presenter.assignment, presenter.submission, presenter.assignee)
-        rubricEditView.onAssessmentSaved = { presenter.updateSubmission(it) }
+        if (shouldShowRubricView(presenter.assignment)) {
+            rubricEditView.setData(presenter.assignment, presenter.submission, presenter.assignee)
+            rubricEditView.onAssessmentSaved = { presenter.updateSubmission(it) }
+            rubricEditView.setVisible()
+        }
 
-        speedGraderSlider.setData(presenter.assignment, presenter.submission, presenter.assignee)
-        speedGraderSlider.onGradeChanged = { grade, isExcused -> presenter.updateGrade(grade, isExcused) }
+        if (shouldShowSliderView(presenter.assignment)) {
+            speedGraderSlider.setData(presenter.assignment, presenter.submission, presenter.assignee)
+            speedGraderSlider.onGradeChanged = { grade, isExcused -> presenter.updateGrade(grade, isExcused) }
+            speedGraderSlider.setVisible()
+        }
     }
+
+    private fun shouldShowSliderView(assignment: Assignment): Boolean = (assignment.rubric == null || assignment.rubric!!.isEmpty()) && assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS
+
+    private fun shouldShowRubricView(assignment: Assignment): Boolean = assignment.rubric != null && assignment.rubric!!.isNotEmpty()
 
     private fun showCustomizeGradeDialog() {
         val pointsPossible: String = NumberHelper.formatDecimal(presenter.assignment.pointsPossible, 2, true)

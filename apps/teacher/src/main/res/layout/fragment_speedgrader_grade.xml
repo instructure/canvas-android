@@ -198,13 +198,15 @@
         <com.instructure.teacher.view.edit_rubric.RubricEditView
             android:id="@+id/rubricEditView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
 
         <com.instructure.teacher.view.grade_slider.SpeedGraderSlider
             android:id="@+id/speedGraderSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
+            android:layout_margin="16dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

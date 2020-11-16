@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2020 - present  Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.instructure.teacher.view
 
 import android.animation.Animator
@@ -7,15 +22,16 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.*
-import android.os.Build
-import android.text.*
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.SP
 import com.instructure.pandautils.utils.isRTL
 import com.instructure.teacher.R
-import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.getColorCompat
 import org.greenrobot.eventbus.EventBus
 
@@ -23,17 +39,23 @@ abstract class TooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    /** Maximum line count before truncating */
+    private val MAX_LINES = 3
+
+    /** Maximum tooltip width in DP */
+    private val MAX_WIDTH_DP = 400
+
     /** Maximum tooltip width */
     private val maxWidth = context.DP(MAX_WIDTH_DP).toInt()
 
     /** The [Layout] used for measuring and laying out the tooltip text */
-    private var textLayout: Layout? = null
+    protected var textLayout: Layout? = null
 
     /** Rect of the anchor view */
-    private var anchorRect = Rect()
+    protected var anchorRect = Rect()
 
     /** The animation used to fade the tooltip in an out */
-    private var animator: Animator? = null
+    protected var animator: Animator? = null
 
     /** The size of the triangular tail attaching the tooltip to the anchor point */
     private val tailSize = context.DP(5f)
@@ -128,22 +150,8 @@ abstract class TooltipView @JvmOverloads constructor(
 
         // Draw the tutorial element if the user hasn't seen it previously.
         // Allocations during draw are acceptable as this will only happen once
-        if (!TeacherPrefs.hasViewedRubricTutorial) {
-            val circle = TutorialSwipeView(context)
-            circle.isDrawingCacheEnabled = true
-            circle.showTrail = false
-            val dim = resources.getDimension(R.dimen.speedGraderTutorialTouchSize).toInt()
-            val dimSpec = MeasureSpec.makeMeasureSpec(dim, MeasureSpec.EXACTLY)
-            circle.measure(dimSpec, dimSpec)
-            val radius = dim / 2f
-            circle.layout(0, 0, dim, dim)
-
-            canvas.save()
-            canvas.translate(anchorRect.left - radius, anchorRect.centerY() - radius)
-            circle.buildDrawingCache()
-            canvas.drawBitmap(circle.drawingCache, 0f, 0f, null)
-            canvas.restore()
-            circle.isDrawingCacheEnabled = false
+        if (shouldShowTutorial()) {
+            drawTutorialView(canvas)
         }
 
         // Draw the tutorial bubble and text
@@ -196,12 +204,12 @@ abstract class TooltipView @JvmOverloads constructor(
 
     }
 
-    fun hideTip() {
+    protected fun hideTip() {
         animator?.cancel()
         alpha = 0f
     }
 
-    fun showTip(text: String, anchorRect: Rect) {
+    protected fun showTip(text: String, anchorRect: Rect) {
         animator?.cancel()
         this.anchorRect = anchorRect
         val maxWidth = (width - paddingStart - paddingEnd - bubbleMargin.left - bubbleMargin.right).coerceAtMost(maxWidth)
@@ -219,7 +227,7 @@ abstract class TooltipView @JvmOverloads constructor(
             duration = 200
         }
 
-        if (TeacherPrefs.hasViewedRubricTutorial) {
+        if (!shouldShowTutorial()) {
             animator = AnimatorSet().apply {
                 playSequentially(animIn, animOut)
                 start()
@@ -230,42 +238,17 @@ abstract class TooltipView @JvmOverloads constructor(
     }
 
     private fun buildLayout(text: String, maxWidth: Int): Layout {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            try {
-                // Use reflection on pre-Marshmallow devices to expose constructor with max lines parameter
-                val constructor = StaticLayout::class.java.getDeclaredConstructor(
-                        CharSequence::class.java,
-                        Int::class.javaPrimitiveType,
-                        Int::class.javaPrimitiveType,
-                        TextPaint::class.java,
-                        Int::class.javaPrimitiveType,
-                        Layout.Alignment::class.java,
-                        TextDirectionHeuristic::class.java,
-                        Float::class.javaPrimitiveType,
-                        Float::class.javaPrimitiveType,
-                        Boolean::class.javaPrimitiveType,
-                        TextUtils.TruncateAt::class.java,
-                        Int::class.javaPrimitiveType,
-                        Int::class.javaPrimitiveType
-                )
-                constructor.isAccessible = true
-                constructor.newInstance(text, 0, text.length, textPaint, maxWidth,
-                        Layout.Alignment.ALIGN_NORMAL, TextDirectionHeuristics.FIRSTSTRONG_LTR, 1f,
-                        0f, true, TextUtils.TruncateAt.END, Int.MAX_VALUE, MAX_LINES)
-            } catch (e: Exception) {
-                @Suppress("DEPRECATION")
-                (StaticLayout(text, 0, text.length, textPaint, maxWidth, Layout.Alignment.ALIGN_NORMAL,
-                        1f, 0f, true, TextUtils.TruncateAt.END, Int.MAX_VALUE))
-            }
-        } else {
-            StaticLayout.Builder
-                    .obtain(text, 0, text.length, textPaint, maxWidth)
-                    .setMaxLines(MAX_LINES)
-                    .setEllipsize(TextUtils.TruncateAt.END)
-                    .setIncludePad(true)
-                    .build()
-        }
+        return StaticLayout.Builder
+                .obtain(text, 0, text.length, textPaint, maxWidth)
+                .setMaxLines(MAX_LINES)
+                .setEllipsize(TextUtils.TruncateAt.END)
+                .setIncludePad(true)
+                .build()
     }
+
+    abstract fun shouldShowTutorial(): Boolean
+
+    abstract fun drawTutorialView(canvas: Canvas)
 
     /** Returns the length of the longest line in this layout */
     private fun Layout.maxLineWidth() = (0 until lineCount).map { getLineWidth(it) }.max()?.toInt()
@@ -273,12 +256,4 @@ abstract class TooltipView @JvmOverloads constructor(
 
     /** Returns the length of the visible text */
     private val Layout.visibleTextLength get() = (0 until lineCount).sumBy { getLineVisibleEnd(it) }
-
-    companion object {
-        /** Maximum line count before truncating */
-        private const val MAX_LINES = 3
-
-        /** Maximum tooltip width in DP */
-        private const val MAX_WIDTH_DP = 400
-    }
 }

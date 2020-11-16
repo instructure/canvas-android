@@ -17,11 +17,14 @@
 package com.instructure.teacher.view.edit_rubric
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.util.AttributeSet
 import com.instructure.pandautils.utils.positionOnScreen
+import com.instructure.teacher.R
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.view.TooltipView
+import com.instructure.teacher.view.TutorialSwipeView
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -47,6 +50,26 @@ class RubricTooltipView @JvmOverloads constructor(
             val rect = Rect(anchorX, anchorY, anchorX + event.anchor.width, anchorY + event.anchor.height)
             showTip(event.description, rect)
         }
+    }
+
+    override fun shouldShowTutorial(): Boolean = !TeacherPrefs.hasViewedRubricTutorial
+
+    override fun drawTutorialView(canvas: Canvas) {
+        val circle = TutorialSwipeView(context)
+        circle.isDrawingCacheEnabled = true
+        circle.showTrail = false
+        val dim = resources.getDimension(R.dimen.speedGraderTutorialTouchSize).toInt()
+        val dimSpec = MeasureSpec.makeMeasureSpec(dim, MeasureSpec.EXACTLY)
+        circle.measure(dimSpec, dimSpec)
+        val radius = dim / 2f
+        circle.layout(0, 0, dim, dim)
+
+        canvas.save()
+        canvas.translate(anchorRect.left - radius, anchorRect.centerY() - radius)
+        circle.buildDrawingCache()
+        canvas.drawBitmap(circle.drawingCache, 0f, 0f, null)
+        canvas.restore()
+        circle.isDrawingCacheEnabled = false
     }
 
 }
