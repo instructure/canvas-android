@@ -82,6 +82,7 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import java.io.File
 import java.util.*
+import kotlin.jvm.Throws
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -120,6 +121,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     private var currentAnnotationModeTool: AnnotationTool? = null
     private var currentAnnotationModeType: AnnotationType? = null
     private var isUpdatingWithNoNetwork = false
+    private var stampRaceFlag = true
 
     @get:ColorRes
     abstract val progressColor: Int
@@ -153,7 +155,7 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
-        exitHandler?.removeCallbacks(enterCreationMode)
+        exitHandler.removeCallbacks(enterCreationMode)
     }
 
     //private val exitHandler: Handler = Handler(Looper.getMainLooper())
@@ -464,7 +466,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             }
 
             // If its a stamp we need to modify its rect to match the webs stamp size
-            if (annotation.type == AnnotationType.STAMP) annotation.transformStamp()
+            if (annotation.type == AnnotationType.STAMP) {
+                annotation.transformStamp()
+                // Transforming the stamp causes an update call and a race condition, often allowing for two annotations
+                // to be created. This race flag will prevent the update from happening.
+                stampRaceFlag = false
+            }
 
             createNewAnnotation(annotation)
         }
@@ -559,6 +566,8 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 if (annotation.type == AnnotationType.STAMP) {
                     commentsButton.setVisible()
                     openComments()
+                    // Now that the stamp has been created, re-enable the flag for updates
+                    stampRaceFlag = true
                 }
             }
         } catch {
@@ -566,11 +575,16 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
             toast(R.string.errorOccurred)
             it.printStackTrace()
             commentsButton.isEnabled = true
+
+            // Just in case something went wrong, re-enable stamp updates
+            if (annotation.type == AnnotationType.STAMP) stampRaceFlag = true
         }
     }
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     private fun updateAnnotation(annotation: Annotation) {
+        // Don't want to update if we just created a stamp.
+        if(annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
         updateAnnotationJob = tryWeave {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
