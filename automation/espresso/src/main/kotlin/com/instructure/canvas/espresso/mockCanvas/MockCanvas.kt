@@ -220,6 +220,9 @@ class MockCanvas {
     /** Map of user id to stream items */
     val streamItems = mutableMapOf<Long, MutableList<StreamItem>>()
 
+    /** Map of user id to bookmarks */
+    val bookmarks = mutableMapOf<Long, MutableList<Bookmark>>()
+
     //region Convenience functionality
 
     /** A list of users with at least one Student enrollment */
@@ -400,6 +403,25 @@ fun MockCanvas.Companion.init(
     data.webViewServer.start()
 
     return data
+}
+
+/** Create a bookmark associated with an assignment */
+fun MockCanvas.addBookmark(user: User, assignment: Assignment, name: String) : Bookmark {
+    val bookmark = Bookmark(
+            id = newItemId(),
+            name = name,
+            url = "https://${domain}/api/v1/courses/${assignment.courseId}/assignments/${assignment.id}"
+    )
+
+    var list = bookmarks[user.id]
+    if(list == null) {
+        list = mutableListOf<Bookmark>()
+        bookmarks[user.id] = list
+    }
+
+    list.add(bookmark)
+
+    return bookmark
 }
 
 /**
