@@ -98,12 +98,6 @@ class RubricEditView @JvmOverloads constructor(
         mSubmission = submission
         mAssignee = assignee
 
-        // Hide this view if there is no rubric
-        if (assignment.rubric == null || assignment.rubric!!.isEmpty()) {
-            setGone()
-            return
-        }
-
         mAssignment.rubric?.let { rubric -> criteriaMap = rubric.filter { it.id != null }.associateBy { it.id!! } }
 
         // Otherwise, make this view visible

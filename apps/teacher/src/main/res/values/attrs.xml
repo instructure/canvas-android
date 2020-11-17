@@ -64,7 +64,7 @@
         <attr name="tvs_showTrail" format="boolean"/>
     </declare-styleable>
 
-    <declare-styleable name="RubricTooltipView">
+    <declare-styleable name="TooltipView">
         <attr name="rtt_constrainBubbleToPaddingOf" format="reference"/>
     </declare-styleable>
 
