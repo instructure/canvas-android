@@ -24,9 +24,6 @@ class _$LockedModuleSerializer implements StructuredSerializer<LockedModule> {
       'context_id',
       serializers.serialize(object.contextId,
           specifiedType: const FullType(String)),
-      'require_sequential_progress',
-      serializers.serialize(object.isRequireSequentialProgress,
-          specifiedType: const FullType(bool)),
     ];
     result.add('context_type');
     if (object.contextType == null) {
@@ -48,6 +45,13 @@ class _$LockedModuleSerializer implements StructuredSerializer<LockedModule> {
     } else {
       result.add(serializers.serialize(object.unlockAt,
           specifiedType: const FullType(DateTime)));
+    }
+    result.add('require_sequential_progress');
+    if (object.isRequireSequentialProgress == null) {
+      result.add(null);
+    } else {
+      result.add(serializers.serialize(object.isRequireSequentialProgress,
+          specifiedType: const FullType(bool)));
     }
     return result;
   }
@@ -125,10 +129,6 @@ class _$LockedModule extends LockedModule {
     }
     if (contextId == null) {
       throw new BuiltValueNullFieldError('LockedModule', 'contextId');
-    }
-    if (isRequireSequentialProgress == null) {
-      throw new BuiltValueNullFieldError(
-          'LockedModule', 'isRequireSequentialProgress');
     }
   }
 

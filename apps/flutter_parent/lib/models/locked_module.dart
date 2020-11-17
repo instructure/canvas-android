@@ -42,6 +42,7 @@ abstract class LockedModule implements Built<LockedModule, LockedModuleBuilder> 
   @BuiltValueField(wireName: 'unlock_at')
   DateTime get unlockAt;
 
+  @nullable
   @BuiltValueField(wireName: 'require_sequential_progress')
   bool get isRequireSequentialProgress;
 
