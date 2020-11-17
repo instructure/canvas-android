@@ -35,27 +35,27 @@ import com.instructure.teacher.R
 import com.instructure.teacher.utils.getColorCompat
 import org.greenrobot.eventbus.EventBus
 
+/** Maximum line count before truncating */
+private const val MAX_LINES = 3
+
+/** Maximum tooltip width in DP */
+private const val MAX_WIDTH_DP = 400
+
 abstract class TooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-
-    /** Maximum line count before truncating */
-    private val MAX_LINES = 3
-
-    /** Maximum tooltip width in DP */
-    private val MAX_WIDTH_DP = 400
 
     /** Maximum tooltip width */
     private val maxWidth = context.DP(MAX_WIDTH_DP).toInt()
 
     /** The [Layout] used for measuring and laying out the tooltip text */
-    protected var textLayout: Layout? = null
+    private var textLayout: Layout? = null
 
     /** Rect of the anchor view */
     protected var anchorRect = Rect()
 
     /** The animation used to fade the tooltip in an out */
-    protected var animator: Animator? = null
+    private var animator: Animator? = null
 
     /** The size of the triangular tail attaching the tooltip to the anchor point */
     private val tailSize = context.DP(5f)
