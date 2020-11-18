@@ -95,6 +95,7 @@ object CourseEndpoint : Endpoint(
         Segment("discussion_topics") to CourseDiscussionTopicListEndpoint,
         Segment("modules") to CourseModuleListEndpoint,
         Segment("quizzes") to CourseQuizListEndpoint,
+        Segment("all_quizzes") to CourseQuizListEndpoint,
         Segment("users") to CourseUsersEndpoint,
         Segment("permissions") to CoursePermissionsEndpoint,
         Segment("lti_apps") to CourseLTIAppsEndpoint,

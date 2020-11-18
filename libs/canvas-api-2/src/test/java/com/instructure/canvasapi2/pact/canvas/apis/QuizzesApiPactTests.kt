@@ -43,7 +43,7 @@ class QuizzesApiPactTests : ApiPactTestBase() {
     //
 
     val getAllQuizzesTeacherQuery: String? = null
-    val getAllQuizzesTeacherPath = "/api/v1/courses/3/quizzes"
+    val getAllQuizzesTeacherPath = "/api/v1/courses/3/all_quizzes"
     val getAllQuizzesTeacherResponseBody = LambdaDsl.newJsonArray { array ->
         array.`object` { obj ->
             obj.populateQuizFields("teacher", singleQuiz = false)
