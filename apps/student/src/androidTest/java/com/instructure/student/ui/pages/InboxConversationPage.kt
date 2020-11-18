@@ -150,7 +150,7 @@ class InboxConversationPage : BasePage(R.id.inboxConversationPage) {
     }
 
     fun assertNotStarred() {
-        onView(withId(R.id.starred)).check(matches(ImageViewDrawableMatcher(R.drawable.ic_star, ThemePrefs.brandColor)))
+        onView(withId(R.id.starred)).check(matches(ImageViewDrawableMatcher(R.drawable.ic_star_outline, ThemePrefs.brandColor)))
     }
 
 }
