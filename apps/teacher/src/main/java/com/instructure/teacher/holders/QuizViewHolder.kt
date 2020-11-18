@@ -72,7 +72,7 @@ class QuizViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var pointString : String = ""
         var contentDescriptionPointsString: String = ""
         quiz.pointsPossible?.let{
-            if ((quiz.quizType == Quiz.TYPE_GRADED_SURVEY || quiz.quizType == Quiz.TYPE_ASSIGNMENT)) {
+            if ((quiz.quizType == Quiz.TYPE_GRADED_SURVEY || quiz.quizType == Quiz.TYPE_ASSIGNMENT || quiz.quizType == Quiz.TYPE_NEW_QUIZZES)) {
                 pointString = resources.getQuantityString(
                         R.plurals.quantityPointsAbbreviated,
                         it.toDouble().toInt(),

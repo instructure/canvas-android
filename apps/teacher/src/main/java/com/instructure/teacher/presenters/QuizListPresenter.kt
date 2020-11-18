@@ -87,12 +87,21 @@ class QuizListPresenter(private val mCanvasContext: CanvasContext) :
         val quizzes = quizList ?: return
         quizzes.filterWithQuery(searchQuery, Quiz::title)
             .onEach { it._assignment = assignmentsByQuizId[it.id] }
+            .map { mapNewQuizzes(it) }
             .groupBy { it.quizType }
             .forEach { (quizType, quizList) ->
                 data.addOrUpdateAllItems(quizType!!, quizList)
             }
         viewCallback?.onRefreshFinished()
         viewCallback?.checkIfEmpty()
+    }
+
+    private fun mapNewQuizzes(quiz: Quiz): Quiz {
+        return if (quiz.quizType == Quiz.TYPE_NEW_QUIZZES) {
+            quiz.copy(quizType = Quiz.TYPE_ASSIGNMENT)
+        } else {
+            quiz
+        }
     }
 
     override fun onDestroyed() {
