@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.e2e
 
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.panda_annotations.FeatureCategory
 import com.instructure.panda_annotations.Priority
 import com.instructure.panda_annotations.TestCategory
@@ -47,12 +48,14 @@ class DashboardE2ETest: TeacherTest() {
         dashboardPage.assertDisplaysCourse(data.coursesList[0])
 
         dashboardPage.clickSeeAll()
+        refresh()
         for(course in data.coursesList) {
             dashboardPage.assertDisplaysCourse(course)
         }
         dashboardPage.navigateBack()
         
         dashboardPage.editFavoriteCoursesWithCourse(data.coursesList[1])
+        refresh()
         for(course in data.coursesList) {
             dashboardPage.assertDisplaysCourse(course)
         }
