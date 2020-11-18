@@ -181,6 +181,7 @@ data class Quiz(
         const val TYPE_ASSIGNMENT = "assignment"
         const val TYPE_GRADED_SURVEY = "graded_survey"
         const val TYPE_SURVEY = "survey"
+        const val TYPE_NEW_QUIZZES = "quizzes.next"
 
         const val KEEP_AVERAGE = "keep_average"
         const val KEEP_HIGHEST = "keep_highest"

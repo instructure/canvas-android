@@ -30,7 +30,7 @@ import java.util.*
 object QuizAPI {
 
     internal interface QuizInterface {
-        @GET("{contextType}/{contextId}/quizzes")
+        @GET("{contextType}/{contextId}/all_quizzes")
         fun getFirstPageQuizzesList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<Quiz>>
 
         @GET
@@ -42,7 +42,7 @@ object QuizAPI {
         @GET
         fun getDetailedQuizByUrl(@Url quizUrl: String): Call<Quiz>
 
-        @GET("courses/{courseId}/quizzes")
+        @GET("courses/{courseId}/all_quizzes")
         fun getFirstPageQuizzes(@Path("courseId") contextId: Long): Call<List<Quiz>>
 
         @GET

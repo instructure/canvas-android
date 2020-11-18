@@ -78,7 +78,7 @@ class QuizListRecyclerAdapter(
 
         quizzes.filterWithQuery(searchQuery, Quiz::title).forEach { quiz ->
             when (quiz.quizType) {
-                Quiz.TYPE_ASSIGNMENT -> addOrUpdateItem(assignmentQuizzes, quiz)
+                Quiz.TYPE_ASSIGNMENT, Quiz.TYPE_NEW_QUIZZES -> addOrUpdateItem(assignmentQuizzes, quiz)
                 Quiz.TYPE_SURVEY -> addOrUpdateItem(surveys, quiz)
                 Quiz.TYPE_GRADED_SURVEY -> addOrUpdateItem(gradedSurveys, quiz)
                 Quiz.TYPE_PRACTICE -> addOrUpdateItem(practiceQuizzes, quiz)
