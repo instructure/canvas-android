@@ -40,7 +40,7 @@ class EditFavoritesGroupViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         val name = group.name
         val contentDescResId = if (isFavorite) R.string.groupFavorited else R.string.groupNotFavorited
         title.text = name
-        star.setImageResource(if (isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star)
+        star.setImageResource(if (isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star_outline)
         title.contentDescription = context.getString(contentDescResId, name)
         DrawableCompat.setTint(DrawableCompat.wrap(star.drawable), ThemePrefs.brandColor)
         onClick { callback.onRowClicked(group, adapterPosition, !isFavorite) }

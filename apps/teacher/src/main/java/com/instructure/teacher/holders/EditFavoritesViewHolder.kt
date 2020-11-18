@@ -45,7 +45,7 @@ class EditFavoritesViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
                 star.setImageDrawable(ColorUtils.colorIt(ThemePrefs.brandColor, ContextCompat.getDrawable(context, R.drawable.ic_star_filled)!!))
                 title.contentDescription = String.format(Locale.getDefault(), context.getString(R.string.favorited_content_description), canvasContext.name, context.getString(R.string.content_description_favorite))
             } else {
-                star.setImageDrawable(ColorUtils.colorIt(ThemePrefs.brandColor, ContextCompat.getDrawable(context, R.drawable.ic_star)!!))
+                star.setImageDrawable(ColorUtils.colorIt(ThemePrefs.brandColor, ContextCompat.getDrawable(context, R.drawable.ic_star_outline)!!))
                 title.contentDescription = String.format(Locale.getDefault(), context.getString(R.string.favorited_content_description), canvasContext.name, context.getString(R.string.content_description_not_favorite))
             }
         }
