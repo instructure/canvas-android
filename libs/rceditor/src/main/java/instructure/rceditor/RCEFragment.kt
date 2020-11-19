@@ -76,7 +76,7 @@ class RCEFragment : Fragment() {
                 getString(R.string.rce_insertImage),
                 arguments!!.getInt(THEME_COLOR, Color.BLACK),
                 arguments!!.getInt(BUTTON_COLOR, Color.BLACK))
-        dialog.setListener { url, alt -> rcEditor.insertImage(url, alt) }.show(fragmentManager, RCEInsertDialog::class.java.simpleName)
+        dialog.setListener { url, alt -> rcEditor.insertImage(url, alt) }.show(requireFragmentManager(), RCEInsertDialog::class.java.simpleName)
     }
 
     private val onInsertLink = View.OnClickListener {
@@ -84,7 +84,7 @@ class RCEFragment : Fragment() {
                 getString(R.string.rce_insertLink),
                 arguments!!.getInt(THEME_COLOR, Color.BLACK),
                 arguments!!.getInt(BUTTON_COLOR, Color.BLACK))
-        dialog.setListener { url, alt -> rcEditor.insertLink(url, alt) }.show(fragmentManager, RCEInsertDialog::class.java.simpleName)
+        dialog.setListener { url, alt -> rcEditor.insertLink(url, alt) }.show(requireFragmentManager(), RCEInsertDialog::class.java.simpleName)
     }
 
     interface RCEFragmentCallbacks {
