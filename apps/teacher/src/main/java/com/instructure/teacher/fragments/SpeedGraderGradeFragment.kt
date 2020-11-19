@@ -193,7 +193,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         }
     }
 
-    private fun shouldShowSliderView(assignment: Assignment): Boolean = (assignment.rubric == null || assignment.rubric!!.isEmpty()) && assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS
+    private fun shouldShowSliderView(assignment: Assignment): Boolean = (assignment.rubric == null || assignment.rubric!!.isEmpty())
+            && (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS || assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT)
 
     private fun shouldShowRubricView(assignment: Assignment): Boolean = assignment.rubric != null && assignment.rubric!!.isNotEmpty()
 
