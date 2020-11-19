@@ -20,6 +20,7 @@
     android:id="@+id/pageLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="48dp"
     android:background="?android:selectableItemBackground">
 
     <View
