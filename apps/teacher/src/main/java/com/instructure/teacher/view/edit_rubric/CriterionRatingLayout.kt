@@ -70,8 +70,10 @@ class CriterionRatingLayout @JvmOverloads constructor(
         buttons.forEach { it.isSelected = false }
         if (ratingId != null) {
             val selection = buttons.firstOrNull { it.ratingId == ratingId } ?: buttons.last()
-            value?.let { selection.pointValue = value }
-            selection.isSelected = true
+            value?.let {
+                selection.pointValue = value
+                selection.isSelected = true
+            }
         } else if (value != null) {
             val selection = buttons.firstOrNull { it.pointValue == value } ?: buttons.last()
             selection.pointValue = value
