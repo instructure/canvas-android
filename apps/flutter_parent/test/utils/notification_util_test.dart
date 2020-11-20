@@ -55,7 +55,7 @@ void main() {
 
     InitializationSettings initSettings = verification.captured[0];
     expect(initSettings.android.defaultIcon, 'ic_notification_canvas_logo');
-    expect(initSettings.ios, null);
+    expect(initSettings.iOS, null);
 
     SelectNotificationCallback callback = verification.captured[1];
     expect(callback, isNotNull);
