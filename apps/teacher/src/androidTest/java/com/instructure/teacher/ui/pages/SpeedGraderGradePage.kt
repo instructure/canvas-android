@@ -15,10 +15,9 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
 class SpeedGraderGradePage : BasePage() {
@@ -44,6 +43,11 @@ class SpeedGraderGradePage : BasePage() {
     fun enterNewGrade(grade: String) {
         gradeEditText.replaceText(grade)
         confirmDialogButton.click()
+    }
+
+    fun navigateBack() {
+        onView(withParent(R.id.speedGraderToolbar) + ViewMatchers.withContentDescription("Navigate up")).click()
+
     }
 
     fun assertGradeDialog() {

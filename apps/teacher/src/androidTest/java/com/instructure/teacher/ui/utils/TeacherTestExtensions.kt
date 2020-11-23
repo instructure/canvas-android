@@ -129,6 +129,7 @@ fun TeacherTest.seedAssignments(
         lockAt: String = "",
         unlockAt: String = "",
         dueAt: String = "",
+        pointsPossible: Double? = null,
         submissionTypes: List<SubmissionType> = emptyList(),
         teacherToken: String): List<AssignmentApiModel> {
 
@@ -139,7 +140,8 @@ fun TeacherTest.seedAssignments(
             unlockAt = unlockAt,
             dueAt = dueAt,
             submissionTypes = submissionTypes,
-            teacherToken = teacherToken
+            teacherToken = teacherToken,
+            pointsPossible = pointsPossible
     )
 
     return AssignmentsApi.seedAssignments(request, assignments)

@@ -15,17 +15,15 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.withChild
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 
 
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.teacher.R
 
 class AssignmentSubmissionListPage : BasePage() {
@@ -73,6 +71,11 @@ class AssignmentSubmissionListPage : BasePage() {
 
     fun assertClearFilterGone() {
         assignmentSubmissionClearFilter.assertGone()
+    }
+
+    fun assertStudentHasGrade(grade: String) {
+        assertHasSubmission()
+        onView(withId(R.id.submissionGrade)).assertHasText(grade)
     }
 
     fun clickFilterButton() {
