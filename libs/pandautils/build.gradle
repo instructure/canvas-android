@@ -133,6 +133,7 @@ dependencies {
     implementation Libs.ANDROIDX_DESIGN
     implementation Libs.ANDROIDX_EXIF
     implementation Libs.FIREBASE_MESSAGING
+    implementation Libs.ANDROIDX_SWIPE_REFRESH_LAYOUT
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER

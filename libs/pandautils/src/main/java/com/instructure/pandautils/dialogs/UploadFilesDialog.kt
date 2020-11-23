@@ -92,7 +92,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         EventBus.getDefault().register(this)
         super.onStart()
         // Don't dim the background when the dialog is created.
-        dialog.window?.let {
+        dialog?.window?.let {
             val windowParams = it.attributes
             windowParams.dimAmount = 0f
             windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_DIM_BEHIND
@@ -134,7 +134,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
         getUriContentsJob?.cancel()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         dialogCallback?.invoke(EVENT_DIALOG_CANCELED)
         dialogAttachmentCallback?.invoke(EVENT_DIALOG_CANCELED, null)
@@ -480,7 +480,7 @@ class UploadFilesDialog : AppCompatDialogFragment() {
 
     private fun getUriContents(fileUri: Uri) {
         getUriContentsJob = tryWeave {
-            dialog.fileLoadingContainer.setVisible()
+            dialog?.fileLoadingContainer?.setVisible()
 
             val submitObject = inBackground<FileSubmitObject?> {
                 val cr = requireActivity().contentResolver
@@ -497,10 +497,10 @@ class UploadFilesDialog : AppCompatDialogFragment() {
                 }
             }
 
-            dialog.fileLoadingContainer.setGone()
+            dialog?.fileLoadingContainer?.setGone()
         } catch {
             Logger.e("Error with UploadFilesDialog.getUriContents: " + it.message)
-            if(isAdded) dialog.fileLoadingContainer.setGone()
+            if(isAdded) dialog?.fileLoadingContainer?.setGone()
         }
     }
 

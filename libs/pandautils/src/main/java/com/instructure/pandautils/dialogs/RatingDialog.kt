@@ -54,7 +54,7 @@ class RatingDialog : DialogFragment() {
      *
      * @param dialog
      */
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         Prefs.dateShowAgain = FOUR_WEEKS // Show again in 4 weeks
         Prefs.dateFirstLaunched = System.currentTimeMillis() // Reset the date_first_launched to be right now
