@@ -43,9 +43,9 @@ dependencies:
   firebase_remote_config: ^0.4.2
   firebase_core: ^0.5.2
   firebase_crashlytics: ^0.2.3
-  get_it: ^5.0.1
+  get_it: ^3.0.1
   intl: ^0.16.0
-  provider: ^4.3.2+2
+  provider: ^3.1.0+1
   vector_math: 2.1.0-nullsafety.3
   tuple: 1.0.3
   flutter_slidable: 0.5.7
@@ -69,8 +69,8 @@ dependencies:
   transparent_image: 1.0.0
   cached_network_image: 2.3.3
   photo_view: 0.9.1
-  video_player: 1.0.1
-  chewie: 0.12.0
+  video_player: 0.10.5+1
+  chewie: 0.9.10
   barcode_scan: ^3.0.1
 
   # Networking / Serialization
@@ -85,7 +85,7 @@ dependencies:
   device_info: 1.0.0
   encrypted_shared_preferences: # Used by ApiPrefs to securely store data
     path: ./plugins/encrypted_shared_preferences
-  flutter_local_notifications: 3.0.1+4
+  flutter_local_notifications: 1.4.4+5
   intent: 1.4.0 # TODO: Remove once android_intent can handle emails properly (see help_screen.dart for more info)
   package_info: 0.4.3+2
   permission_handler: ^4.0.0
