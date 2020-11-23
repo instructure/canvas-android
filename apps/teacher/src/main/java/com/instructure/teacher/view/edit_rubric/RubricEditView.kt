@@ -237,7 +237,7 @@ class RubricEditView @JvmOverloads constructor(
     }
 
     /** Filters out assessments that have no data */
-    private val mHasData = { (points, comments): RubricCriterionAssessment -> points != null || comments != null }
+    private val mHasData = { criterion: RubricCriterionAssessment -> criterion.points != null || criterion.comments != null }
 
     val hasUnsavedChanges: Boolean get() = mOriginalAssessment.filterValues(mHasData) != mAssessment.filterValues(mHasData)
 
