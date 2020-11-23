@@ -47,7 +47,7 @@ class EditQuizDetailsPage : BasePage() {
     private val noDescriptionTextView by OnViewWithId(R.id.noDescriptionTextView, autoAssert = false)
 
     fun saveQuiz() {
-        callOnClick(withId(R.id.menuSave))
+        saveButton.click()
     }
 
     fun editQuizTitle(newName: String) {
