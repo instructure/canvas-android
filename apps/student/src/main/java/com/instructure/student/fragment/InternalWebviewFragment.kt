@@ -357,13 +357,14 @@ open class InternalWebviewFragment : ParentFragment() {
      * Otherwise the canvasContext won't be saved and will cause issues with the dropdown navigation
      * -dw
      */
-        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String): Route =
+        fun makeRoute(url: String, title: String, authenticate: Boolean, html: String, allowUnsupportedRouting: Boolean = true): Route =
                 Route(InternalWebviewFragment::class.java, CanvasContext.emptyUserContext(),
                         CanvasContext.emptyUserContext().makeBundle().apply {
                             putString(Const.INTERNAL_URL, url)
                             putString(Const.ACTION_BAR_TITLE, title)
                             putBoolean(Const.AUTHENTICATE, authenticate)
                             putString(Const.HTML, html)
+                            putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
                         })
 
         fun makeRoute(canvasContext: CanvasContext, url: String?, title: String?, authenticate: Boolean, html: String): Route =

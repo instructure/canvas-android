@@ -78,7 +78,7 @@ class AnnouncementViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
         }
 
         onClick {
-            RouteMatcher.route(context, InternalWebviewFragment.makeRoute("", announcement.subject, false, announcement.message))
+            RouteMatcher.route(context, InternalWebviewFragment.makeRoute("", announcement.subject, false, announcement.message, allowUnsupportedRouting = false))
         }
 
         dismissImageButton.onClickWithRequireNetwork { dismiss() }
