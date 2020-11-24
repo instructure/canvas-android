@@ -58,7 +58,7 @@ import 'package:flutter_parent/utils/veneers/flutter_snackbar_veneer.dart';
 class PandaRouter {
   static WebContentInteractor get _interactor => locator<WebContentInteractor>();
 
-  static final Router router = Router();
+  static final FluroRouter router = FluroRouter();
 
   static bool _isInitialized = false;
 

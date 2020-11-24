@@ -28,7 +28,8 @@ import 'package:flutter_parent/utils/db/reminder_db.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class NotificationUtil {
-  static const notificationChannelReminders = 'com.instructure.parentapp/reminders';
+  static const notificationChannelReminders =
+      'com.instructure.parentapp/reminders';
 
   static FlutterLocalNotificationsPlugin _plugin;
 
@@ -56,7 +57,8 @@ class NotificationUtil {
   }
 
   @visibleForTesting
-  static Future<void> handlePayload(String rawPayload, Completer<void> appCompleter) async {
+  static Future<void> handlePayload(
+      String rawPayload, Completer<void> appCompleter) async {
     try {
       NotificationPayload payload = deserialize(json.decode(rawPayload));
       switch (payload.type) {
@@ -72,7 +74,8 @@ class NotificationUtil {
   }
 
   @visibleForTesting
-  static Future<void> handleReminder(NotificationPayload payload, Completer<void> appCompleter) async {
+  static Future<void> handleReminder(
+      NotificationPayload payload, Completer<void> appCompleter) async {
     Reminder reminder = Reminder.fromNotification(payload);
 
     // Delete reminder from db
@@ -82,7 +85,8 @@ class NotificationUtil {
     String route;
     switch (reminder.type) {
       case Reminder.TYPE_ASSIGNMENT:
-        route = PandaRouter.assignmentDetails(reminder.courseId, reminder.itemId);
+        route =
+            PandaRouter.assignmentDetails(reminder.courseId, reminder.itemId);
         break;
       case Reminder.TYPE_EVENT:
         route = PandaRouter.eventDetails(reminder.courseId, reminder.itemId);
@@ -90,10 +94,12 @@ class NotificationUtil {
     }
 
     // Push route, but only after the app has finished building
-    appCompleter.future.then((_) => WidgetsBinding.instance?.handlePushRoute(route));
+    appCompleter.future
+        .then((_) => WidgetsBinding.instance?.handlePushRoute(route));
   }
 
-  Future<void> scheduleReminder(AppLocalizations l10n, String title, String body, Reminder reminder) {
+  Future<void> scheduleReminder(
+      AppLocalizations l10n, String title, String body, Reminder reminder) {
     final payload = NotificationPayload((b) => b
       ..type = NotificationPayloadType.reminder
       ..data = json.encode(serialize(reminder)));
@@ -108,9 +114,11 @@ class NotificationUtil {
     );
 
     if (reminder.type == Reminder.TYPE_ASSIGNMENT) {
-      locator<Analytics>().logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE);
+      locator<Analytics>()
+          .logEvent(AnalyticsEventConstants.REMINDER_ASSIGNMENT_CREATE);
     } else {
-      locator<Analytics>().logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
+      locator<Analytics>()
+          .logEvent(AnalyticsEventConstants.REMINDER_EVENT_CREATE);
     }
 
     return _plugin.schedule(
