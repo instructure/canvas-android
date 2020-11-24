@@ -418,6 +418,7 @@
     <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentários</string>
     <string name="sg_tab_files">Arquivos</string>
+    <string name="sg_tab_files_w_counter">Arquivo (%d)</string>
     <string name="filter_submissions">Filtrar envios</string>
     <string name="all_submissions">Todos os envios</string>
     <string name="submitted_late">Enviado atrasado</string>
@@ -654,7 +655,6 @@
 
     <string name="unsupportedFileMessage">Não foi possível exibir este arquivo. Use o botão abaixo para abrir o arquivo com outro aplicativo no seu dispositivo.</string>
     <string name="speedGraderNoneMessage">Esta tarefa não permite envios.</string>
-    <string name="speedGraderExternalToolMessage">Esta tarefa é vinculada a uma ferramenta interna para envios.</string>
     <string name="speedGraderOnPaperMessage">Esta tarefa permite apenas envios em papel.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Este envio era uma URL para uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
     <string name="speedGraderOpenUrl">Abrir URL</string>
@@ -747,7 +747,6 @@
     <string name="quizDescriptionContentDescription">Descrição do teste</string>
     <string name="removeDueDate">Remover prazo de entrega</string>
     <string name="removeDueDateMessage">Isso removerá o prazo de entrega e todos os cessionários associados.</string>
-    <string name="openTool">Abrir ferramenta</string>
     <string name="email">E-mail</string>
     <string name="fullscreen">tela cheia</string>
     <string name="addNew">Adicionar novo</string>

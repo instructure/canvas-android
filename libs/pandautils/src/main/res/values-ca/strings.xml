@@ -185,6 +185,8 @@
     <string name="noPages">No hi ha cap pàgina</string>
     <string name="noPagesSubtext">Sembla que encara no s\'ha creat cap pàgina.</string>
 
+    <string name="modulesLockedSubtext">S’han inhabilitat mòduls per a aquest curs.</string>
+    <string name="modulesLocked">Alguna cosa no ha anat bé</string>
     <!--General-->
     <string name="yes">Sí</string>
     <string name="no">No</string>
@@ -226,6 +228,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->

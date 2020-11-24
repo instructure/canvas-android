@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Note</string>
     <string name="sg_tab_comments">Kommentare</string>
     <string name="sg_tab_files">Dateien</string>
+    <string name="sg_tab_files_w_counter">Dateien (%d)</string>
     <string name="filter_submissions">Abgaben filtern</string>
     <string name="all_submissions">Alle Abgaben</string>
     <string name="submitted_late">Verspätet abgegeben</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Diese Datei konnte nicht angezeigt werden. Verwenden Sie die Schaltfläche unten, um die Datei mit einer anderen App auf Ihrem Gerät zu öffnen.</string>
     <string name="speedGraderNoneMessage">Diese Aufgabe lässt keine Abgaben zu.</string>
-    <string name="speedGraderExternalToolMessage">Diese Aufgabe hat einen Link zu einem externen Tool für die Abgaben.</string>
     <string name="speedGraderOnPaperMessage">Diese Aufgabe erlaubt nur Abgaben auf Papier.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Diese Abgabe war ein URL zu einer externen Seite. Bedenken Sie, dass diese Seite seit der erstmaligen Abgabe möglicherweise geändert wurde.</string>
     <string name="speedGraderOpenUrl">URL öffnen</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Quizbeschreibung</string>
     <string name="removeDueDate">Abgabetermin entfernen</string>
     <string name="removeDueDateMessage">Dadurch werden das Fälligkeitsdatum und alle zugehörigen Aufgabenempfänger entfernt.</string>
-    <string name="openTool">Tool öffnen</string>
     <string name="email">E-Mail</string>
     <string name="fullscreen">Vollbild</string>
     <string name="addNew">Neu hinzufügen</string>

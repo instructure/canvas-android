@@ -425,6 +425,7 @@
     <string name="sg_tab_grade">Оценка</string>
     <string name="sg_tab_comments">Комментарии</string>
     <string name="sg_tab_files">Файлы</string>
+    <string name="sg_tab_files_w_counter">Файлы (%d)</string>
     <string name="filter_submissions">Фильтр отправок</string>
     <string name="all_submissions">Все отправки</string>
     <string name="submitted_late">Отправлено поздно</string>
@@ -677,7 +678,6 @@
 
     <string name="unsupportedFileMessage">Невозможно отобразить этот файл. Используйте расположенную ниже кнопку, чтобы открыть файл с помощью другого приложения на вашем устройстве.</string>
     <string name="speedGraderNoneMessage">Это задание не может быть отправлено.</string>
-    <string name="speedGraderExternalToolMessage">Это задание содержит ссылку на внешний инструмент для отправки.</string>
     <string name="speedGraderOnPaperMessage">Это задание может быть отправлено только в печатном виде.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Эта отправка была URL-адресом на внешнюю страницу. Имейте в виду, что после первоначальной отправки эта страница могла измениться.</string>
     <string name="speedGraderOpenUrl">Открыть URL</string>
@@ -770,7 +770,6 @@
     <string name="quizDescriptionContentDescription">Описание теста</string>
     <string name="removeDueDate">Удалить срок исполнения</string>
     <string name="removeDueDateMessage">Это приведет к удалению даты исполнения и всех связанных получателей.</string>
-    <string name="openTool">Открыть инструмент</string>
     <string name="email">Адрес электронной почты</string>
     <string name="fullscreen">во весь экран</string>
     <string name="addNew">Добавить новое</string>

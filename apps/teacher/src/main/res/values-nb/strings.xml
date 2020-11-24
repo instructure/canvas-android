@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Karakter</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
+    <string name="sg_tab_files_w_counter">Filer (%d)</string>
     <string name="filter_submissions">Filtrer innleveringer</string>
     <string name="all_submissions">Alle innleveringer</string>
     <string name="submitted_late">Levert etter fristen</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Denne filen kunne ikke vises. Bruk knappen nedenfor til å åpne filen med en annen app på enheten.</string>
     <string name="speedGraderNoneMessage">Denne oppgaven tillater ikke innleveringer.</string>
-    <string name="speedGraderExternalToolMessage">Denne oppgaven er lenket til et eksternt verktøy for innleveringer.</string>
     <string name="speedGraderOnPaperMessage">Denne oppgaven tillater kun innlevering på papir.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Denne innleveringen var en URL til en ekstern side. Husk at denne siden kan ha endret seg siden innleveringen opprinnelig skjedde.</string>
     <string name="speedGraderOpenUrl">Åpne URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Testbeskrivelse</string>
     <string name="removeDueDate">Fjerne forfallsdato</string>
     <string name="removeDueDateMessage">Dette vil fjerne forfallsdatoen og alle tilknyttede stedfortredere.</string>
-    <string name="openTool">Åpne verktøy</string>
     <string name="email">E-post</string>
     <string name="fullscreen">fullskjerm</string>
     <string name="addNew">Legg til ny</string>

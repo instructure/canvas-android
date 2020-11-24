@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Attempts Used</string>
     <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit Assignment</string>
+    <string name="launchingExternalTool">Launching External Tool…</string>
     <string name="launchExternalTool">Launch External Tool</string>
     <string name="preview">Preview</string>
     <string name="submissionUploadFailedMessage">One or more files failed to upload. Check your internet connection and retry to submit.</string>
@@ -97,6 +98,8 @@
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
     <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
     <string name="noOnlineSubmissions">No Online Submissions</string>
+    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
+    <string name="openTool">Open Tool</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
     <string name="enterWhatIfScore">Enter what-if score</string>
+    <string name="scoreStatisticsLow">Low: %s</string>
+    <string name="scoreStatisticsMean">Mean: %s</string>
+    <string name="scoreStatisticsHigh">High: %s</string>
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Enter your Canvas URL:</string>
+    <string name="enterValue">Enter a value</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
     <string name="mobileVerifyGeneral">This app is not authorized for use</string>
@@ -786,7 +793,7 @@
     <string name="notification_desc_appointment_cancelations">Get notified when there’s an appointment cancellation.</string>
     <string name="notification_desc_appointment_availability">Get notified when an appointment slot becomes available.</string>
     <string name="notification_desc_calendar">Get notified about new and updated calendar items.</string>
-    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrolllment is accepted or rejected.</string>
+    <string name="notification_desc_membership_update">Admin only, pending enrollment activated. Get notified when a group enrollment is accepted or rejected.</string>
     <string name="notification_desc_admin">Instructor &amp; Admin only. Get notified about course enrollments, reports generated, content exported, migration reports, new account users, and new student groups.</string>
     <string name="notification_desc_recording_ready">Get notified when a conference recording is ready.</string>
 

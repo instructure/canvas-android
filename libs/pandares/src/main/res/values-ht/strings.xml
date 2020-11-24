@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Pa Rete Tantativ</string>
     <string name="resubmitAssignment">Resoumèt Sesyon</string>
 
+    <string name="launchingExternalTool">Lansman Zouti Ekstèn</string>
     <string name="launchExternalTool">Lanse Zouti Eksteryè</string>
 
     <string name="preview">Apèsi</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
     <string name="onPaperContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
     <string name="noOnlineSubmissions">Pa Gen Soumisyon an Liy</string>
+    <string name="speedGraderExternalToolMessage">Sesyon sa a relye a yon zouti ekstèn pou soumisyon.</string>
+    <string name="openTool">Ouvri Zouti</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sou %s pwen</string>
     <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s sou %2$s pwen</string>
     <string name="enterWhatIfScore">Antre yon Nòt sizoka</string>
+    <string name="scoreStatisticsLow">Ba: %s</string>
+    <string name="scoreStatisticsMean">Mwayen: %s</string>
+    <string name="scoreStatisticsHigh">Wo: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Nòt pèsonalize</string>
     <string name="rubricEmptyMessage">Pa gen ribrik pou devwa sa a</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Antre URL Canvas ou a:</string>
+    <string name="enterValue">Antre yon chif</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">W ap eseye konekte sou Canvas Network?</string>
     <string name="mobileVerifyGeneral">App sa a pa gen ototrizasyon pou li itilize</string>
@@ -771,7 +778,7 @@
     <string name="notification_desc_appointment_cancelations">Resevwa avètisman lè gen yon randevou ki anile.</string>
     <string name="notification_desc_appointment_availability">Resevwa avètisman lè gen yon randevou ki disponib.</string>
     <string name="notification_desc_calendar">Resevwa avètisman sou eleman nan kalandriye a ki nouvo oswa aktyalize.</string>
-    <string name="notification_desc_membership_update">Sèlman Admin, enskripsyon annatant aktive. Resevwa avètisman lè yo aksepte oswa refize yon enskripsyon pou gwoup.</string>
+    <string name="notification_desc_membership_update">Sèlman Admin, enskripsyon annatant aktive. Resevwa notifikasyon lè yo aksepte oswa rejte yon enskripsyon gwoup.</string>
     <string name="notification_desc_admin">Pwofesèr &amp; Admin sèlman. Resevwa avètisman sou enskipsyon, rapò ki jenere kontni ki ekspòte, rapò migrasyon, nouvo itilizatè kont ak nouvo gwoup elèv.</string>
     <string name="notification_desc_recording_ready">Resevwa avètisman lè anrejistreman yon konferans pare.</string>
 

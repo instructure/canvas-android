@@ -184,6 +184,8 @@
     <string name="noPages">Brak stron</string>
     <string name="noPagesSubtext">Wygląda na to, że nie utworzono jeszcze stron.</string>
 
+    <string name="modulesLockedSubtext">Wyłączono moduły dla tego kursu.</string>
+    <string name="modulesLocked">Coś poszło nie tak</string>
     <!--General-->
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

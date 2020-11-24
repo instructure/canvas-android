@@ -183,6 +183,8 @@
     <string name="noPages">Ni strani.</string>
     <string name="noPagesSubtext">Zdi se, da ni ustvarjene še nobene strani.</string>
 
+    <string name="modulesLockedSubtext">Za ta predmet so bili nekateri moduli onemogočeni.</string>
+    <string name="modulesLocked">Prišlo je do težav</string>
     <!--General-->
     <string name="yes">Da</string>
     <string name="no">Ne</string>
@@ -224,6 +226,7 @@
     <string name="utils_canvas">Sistem Canvas</string>
     <string name="utils_canvasTeacher">Izvajalec v sistemu Canvas</string>
     <string name="utils_canvasParent">Aplikacija Canvas Parent</string>
+    <string name="utils_polls">Ankete sistema Canvas</string>
     <string name="utils_speedgrader">Aplikacija SpeedGrader</string>
 
     <!-- Rating Dialog -->

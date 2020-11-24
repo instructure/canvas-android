@@ -184,6 +184,8 @@
     <string name="noPages">لا توجد صفحات</string>
     <string name="noPagesSubtext">يبدو أنه لم يتم إنشاء أي صفحات حتى الآن.</string>
 
+    <string name="modulesLockedSubtext">تم تعطيل وحدات نمطية لهذا المساق.</string>
+    <string name="modulesLocked">حدث خطأ ما</string>
     <!--General-->
     <string name="yes">نعم</string>
     <string name="no">لا</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

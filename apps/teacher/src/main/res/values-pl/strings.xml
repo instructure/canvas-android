@@ -425,6 +425,7 @@
     <string name="sg_tab_grade">Ocena</string>
     <string name="sg_tab_comments">Komentarze</string>
     <string name="sg_tab_files">Pliki</string>
+    <string name="sg_tab_files_w_counter">Pliki (%d)</string>
     <string name="filter_submissions">Filtry materiałów</string>
     <string name="all_submissions">Wszystkie przesłane materiały</string>
     <string name="submitted_late">Przesłano z opóźnieniem</string>
@@ -677,7 +678,6 @@
 
     <string name="unsupportedFileMessage">Nie można wyświetlić pliku. Użyj przycisku poniżej, aby otworzyć plik w innej aplikacji na urządzeniu.</string>
     <string name="speedGraderNoneMessage">To zadanie nie umożliwia przesłania.</string>
-    <string name="speedGraderExternalToolMessage">To zadanie odnosi się do zewnętrznego narzędzia do przesyłania.</string>
     <string name="speedGraderOnPaperMessage">To zadanie umożliwia tylko przesłanie dokumentu papierowego.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">To przesłane zadanie było adresem URL do zewnętrznej strony. Pamiętaj, że strona mogła ulec zmianie od czasu przesłania zadania.</string>
     <string name="speedGraderOpenUrl">Otwórz adres URL</string>
@@ -770,7 +770,6 @@
     <string name="quizDescriptionContentDescription">Opis testu</string>
     <string name="removeDueDate">Usuń termin</string>
     <string name="removeDueDateMessage">Czynność ta spowoduje usunięcie terminu i wszystkich uczestników, którym został przypisany.</string>
-    <string name="openTool">Otwórz narzędzie</string>
     <string name="email">E-mail</string>
     <string name="fullscreen">pełny ekran</string>
     <string name="addNew">Dodaj nową</string>

@@ -413,6 +413,7 @@
     <string name="sg_tab_grade">評分</string>
     <string name="sg_tab_comments">評論</string>
     <string name="sg_tab_files">文檔</string>
+    <string name="sg_tab_files_w_counter">檔案 (%d)</string>
     <string name="filter_submissions">篩選器所選項目</string>
     <string name="all_submissions">所有提交項目</string>
     <string name="submitted_late">逾期提交</string>
@@ -641,7 +642,6 @@
 
     <string name="unsupportedFileMessage">無法顯示檔案。按下下方按鈕，使用裝置上其他應用程式開啟檔案。</string>
     <string name="speedGraderNoneMessage">此作業不允許提交。</string>
-    <string name="speedGraderExternalToolMessage">此作業已連結至外部工具以供提交。</string>
     <string name="speedGraderOnPaperMessage">此作業只能以紙本提交。</string>
     <string name="speedGraderUrlSubmissionDisclaimer">此提交件是連結至外部頁面的URL。請謹記，自從最初提交之後，此頁面可能已更改。</string>
     <string name="speedGraderOpenUrl">開啟URL</string>
@@ -734,7 +734,6 @@
     <string name="quizDescriptionContentDescription">測驗描述</string>
     <string name="removeDueDate">移除截止日期</string>
     <string name="removeDueDateMessage">這會移除截止日期和所有相關獲配人。</string>
-    <string name="openTool">開啟工具</string>
     <string name="email">電子郵件</string>
     <string name="fullscreen">全螢幕</string>
     <string name="addNew">添加新項目</string>

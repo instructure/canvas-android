@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Gradd</string>
     <string name="sg_tab_comments">Sylwadau</string>
     <string name="sg_tab_files">Ffeiliau</string>
+    <string name="sg_tab_files_w_counter">Ffeiliau (%d)</string>
     <string name="filter_submissions">Hidlo Cyflwyniadau</string>
     <string name="all_submissions">Pob Cyflwyniad</string>
     <string name="submitted_late">Wedi’i gyflwyno’n hwyr</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Doedd dim modd dangos y ffeil hon. Defnyddiwch y botwm isod i agor y ffeil gydag ap arall ar eich dyfais.</string>
     <string name="speedGraderNoneMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau.</string>
-    <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
     <string name="speedGraderOnPaperMessage">Dydy’r aseiniad hwn ond yn caniatáu cyflwyniadau ar bapur.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Roedd y cyflwyniad hwn yn URL i dudalen allanol. Cofiwch efallai bod y dudalen hon wedi newid ers y cyflwyniad gwreiddiol.</string>
     <string name="speedGraderOpenUrl">Agor URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Disgrifiad o’r Cwis</string>
     <string name="removeDueDate">Tynnu Dyddiad Erbyn</string>
     <string name="removeDueDateMessage">Bydd hyn yn tynnu\'r dyddiad erbyn a phob aseinî cysylltiedig.</string>
-    <string name="openTool">Agor Adnodd</string>
     <string name="email">E-bost</string>
     <string name="fullscreen">sgrin lawn</string>
     <string name="addNew">Ychwanegu Newydd</string>

@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Yritystä käytetty</string>
     <string name="noAttemptsLeft">Ei yrityksiä jäljellä</string>
     <string name="resubmitAssignment">Lähetä tehtävä uudelleen</string>
+    <string name="launchingExternalTool">Käynnistä ulkoinen työkalu...</string>
     <string name="launchExternalTool">Käynnistä ulkoinen työkalu</string>
     <string name="preview">Esikatsele</string>
     <string name="submissionUploadFailedMessage">Yksi tai useampi tiedosto ei latautunut. Tarkista Internet-yhteytesi ja yritä lähettää uudelleen.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
     <string name="noOnlineSubmissions">Ei verkkolähetyksiä</string>
 
+    <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
+    <string name="openTool">Avaa työkalu</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s/%2$s pistettä</string>
     <string name="enterWhatIfScore">Syötä Mitä jos -pistemäärä.</string>
 
+    <string name="scoreStatisticsLow">Matala: %s</string>
+    <string name="scoreStatisticsMean">Keskiarvo: %s</string>
+    <string name="scoreStatisticsHigh">Korkea: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Mukautettu pistemäärä </string>
     <string name="rubricEmptyMessage">Tälle tehtävälle ei ole rubriikkia</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas-logo</string>
     <string name="enterURL">Syötä Canvas-URL:</string>
+    <string name="enterValue">Anna arvo</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Yritätkö kirjautua Canvas-verkostoon?</string>
     <string name="mobileVerifyGeneral">Tätä sovellusta ei ole valtuutettu käyttöön</string>

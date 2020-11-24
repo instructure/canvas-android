@@ -413,6 +413,7 @@
     <string name="sg_tab_grade">成績</string>
     <string name="sg_tab_comments">コメント</string>
     <string name="sg_tab_files">ファイル</string>
+    <string name="sg_tab_files_w_counter">ファイル (%d)</string>
     <string name="filter_submissions">フィルターを提出</string>
     <string name="all_submissions">すべての提出物</string>
     <string name="submitted_late">遅れた提出</string>
@@ -641,7 +642,6 @@
 
     <string name="unsupportedFileMessage">このファイルを表示できませんでした。下のボタンを使用して、デバイス上の別のアプリでファイルを開きます。</string>
     <string name="speedGraderNoneMessage">この課題は提出を許可していません。</string>
-    <string name="speedGraderExternalToolMessage">この課題は、提出用の外部ツールにリンクします。</string>
     <string name="speedGraderOnPaperMessage">この課題は、論文の提出のみを許可します。</string>
     <string name="speedGraderUrlSubmissionDisclaimer">この提出物は、外部ページへの URL でした。このページは、最初に提出されたときから、変更されている可能性がありますので注意してください。</string>
     <string name="speedGraderOpenUrl">URL を開く</string>
@@ -734,7 +734,6 @@
     <string name="quizDescriptionContentDescription">クイズ説明</string>
     <string name="removeDueDate">期限を削除する</string>
     <string name="removeDueDateMessage">これにより、期日と関連するすべての課題対象者が削除されます。</string>
-    <string name="openTool">オープンツール</string>
     <string name="email">メールアドレス</string>
     <string name="fullscreen">全画面</string>
     <string name="addNew">新規を追加する</string>

@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Na voljo ni več noben poskus</string>
     <string name="resubmitAssignment">Ponovno pošlji nalogo</string>
 
+    <string name="launchingExternalTool">Zaganjam zunanje orodje ...</string>
     <string name="launchExternalTool">Zaženi zunanje orodje</string>
 
     <string name="preview">Predogled</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
     <string name="onPaperContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
     <string name="noOnlineSubmissions">Ni spletnih oddaj</string>
+    <string name="speedGraderExternalToolMessage">Ta naloga je za oddaje povezana z zunanjim orodjem.</string>
+    <string name="openTool">Odpri orodje</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Od %s točk</string>
     <string name="outOfPointsAbbreviatedFormatted">Od %s točk</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s od %2$s točk</string>
     <string name="enterWhatIfScore">Vnesite simulacijo rezultatov</string>
+    <string name="scoreStatisticsLow">Nizko: %s</string>
+    <string name="scoreStatisticsMean">Povprečje: %s</string>
+    <string name="scoreStatisticsHigh">Visoko: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Po meri prilagojen rezultat</string>
     <string name="rubricEmptyMessage">Za to nalogo ni ocenjevalnega vodnika</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logotip sistema Canvas</string>
     <string name="enterURL">Vnesite svoj naslov URL Canvas:</string>
+    <string name="enterValue">Vnesite vrednost</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Ali se poskušate vpisati v omrežje Canvas Network?</string>
     <string name="mobileVerifyGeneral">Te aplikacije ni dovoljeno uporabljati</string>

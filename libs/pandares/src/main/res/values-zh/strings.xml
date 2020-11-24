@@ -55,6 +55,7 @@
     <string name="noAttemptsLeft">尝试次数已用完</string>
     <string name="resubmitAssignment">重新提交作业</string>
 
+    <string name="launchingExternalTool">正在启动外部工具&#8230;</string>
     <string name="launchExternalTool">启动外部工具</string>
 
     <string name="preview">预览</string>
@@ -97,6 +98,8 @@
     <string name="noneContentMessage">此作业不允许在线提交</string>
     <string name="onPaperContentMessage">此作业不允许在线提交</string>
     <string name="noOnlineSubmissions">无在线提交项</string>
+    <string name="speedGraderExternalToolMessage">此作业关联用于提交的外部工具。</string>
+    <string name="openTool">打开工具</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">满分 %s</string>
     <string name="outOfPointsAbbreviatedFormatted">满分 %s</string>
@@ -105,6 +108,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">得分 %1$s，总分 %2$s</string>
     <string name="enterWhatIfScore">输入假设分数</string>
+    <string name="scoreStatisticsLow">低：%s</string>
+    <string name="scoreStatisticsMean">中等：%s</string>
+    <string name="scoreStatisticsHigh">高：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自定义评分</string>
     <string name="rubricEmptyMessage">此作业没有评估表格</string>
@@ -133,6 +139,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas 标志</string>
     <string name="enterURL">输入您的 Canvas URL:</string>
+    <string name="enterValue">输入值</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">试图登录到Canvas的网络？</string>
     <string name="mobileVerifyGeneral">此应用程序没有得到授权使用</string>
@@ -765,7 +772,7 @@
     <string name="notification_desc_appointment_cancelations">当取消预约时收到通知。</string>
     <string name="notification_desc_appointment_availability">当预约时间段空闲时收到通知。</string>
     <string name="notification_desc_calendar">当新建和更新日历项时收到通知。</string>
-    <string name="notification_desc_membership_update">仅限管理员，已激活待处理的注册。小组注册被接受或拒绝时收到通知。</string>
+    <string name="notification_desc_membership_update">仅限管理员，已激活待处理的注册。组注册被接受或拒绝时获得通知。</string>
     <string name="notification_desc_admin">仅限讲师和管理员。接收与课程注册、生成的报告、导出课程、迁移报告、新帐户用户和新学生组有关的通知。</string>
     <string name="notification_desc_recording_ready">当会议录制准备就绪时收到通知。</string>
 

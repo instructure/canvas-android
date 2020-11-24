@@ -184,6 +184,8 @@
     <string name="noPages">Geen pagina\'s</string>
     <string name="noPagesSubtext">Het lijkt erop dat er nog geen pagina\'s zijn gemaakt.</string>
 
+    <string name="modulesLockedSubtext">Er zijn voor deze cursus modules uitgeschakeld.</string>
+    <string name="modulesLocked">Er is iets misgegaan</string>
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas-docent</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas-polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

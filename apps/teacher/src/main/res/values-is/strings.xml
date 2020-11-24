@@ -418,6 +418,7 @@
     <string name="sg_tab_grade">Einkunn</string>
     <string name="sg_tab_comments">Athugasemdir</string>
     <string name="sg_tab_files">Skrár</string>
+    <string name="sg_tab_files_w_counter">Skrár (%d)</string>
     <string name="filter_submissions">Sía skil</string>
     <string name="all_submissions">Öll skil</string>
     <string name="submitted_late">Skilað seint</string>
@@ -654,7 +655,6 @@
 
     <string name="unsupportedFileMessage">Ekki var hægt að sýna þessa skrá. Notaðu hnappinn hér að neðan til að opna skránna með öðru appi á tækinu.</string>
     <string name="speedGraderNoneMessage">Þetta verkefni leyfir ekki skil.</string>
-    <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra tæki fyrir skil.</string>
     <string name="speedGraderOnPaperMessage">Þetta verkefni leyfir aðeins skil á pappír.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Þessi skil voru vefslóð á ytri síðu. Hafðu í huga að þessi síða kann að hafa breyst síðan var skilað.</string>
     <string name="speedGraderOpenUrl">Opna vefslóð</string>
@@ -747,7 +747,6 @@
     <string name="quizDescriptionContentDescription">Lýsing prófs</string>
     <string name="removeDueDate">Fjarlægja skiladag</string>
     <string name="removeDueDateMessage">Þetta fjarlægir skiladag og alla tengda viðtakendur.</string>
-    <string name="openTool">Opið verkfæri</string>
     <string name="email">Netfang</string>
     <string name="fullscreen">heilskjár</string>
     <string name="addNew">Bæta við nýjum</string>

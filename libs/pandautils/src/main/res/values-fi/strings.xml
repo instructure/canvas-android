@@ -182,6 +182,8 @@
     <string name="noPages">Ei sivuja</string>
     <string name="noPagesSubtext">Näyttäisi siltä, että sivuja ei ole vielä julkaistu.</string>
 
+    <string name="modulesLockedSubtext">Tälle kurssille moduulit on poistettu käytöstä.</string>
+    <string name="modulesLocked">Jotakin meni pieleen</string>
     <!--General-->
     <string name="yes">Kyllä</string>
     <string name="no">Ei</string>
@@ -223,6 +225,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas-kyselyt</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->

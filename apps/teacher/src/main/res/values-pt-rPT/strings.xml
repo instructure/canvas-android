@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Nota</string>
     <string name="sg_tab_comments">Comentários</string>
     <string name="sg_tab_files">Ficheiros</string>
+    <string name="sg_tab_files_w_counter">Ficheiros (%d)</string>
     <string name="filter_submissions">Submissões de Filtro</string>
     <string name="all_submissions">Todas as submissões</string>
     <string name="submitted_late">Submetido tardiamente</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">O ficheiro não pode ser mostrado. Use o botão abaixo para abrir o ficheiro com outra aplicação no seu dispositivo.</string>
     <string name="speedGraderNoneMessage">Esta tarefa não permite submissões.</string>
-    <string name="speedGraderExternalToolMessage">Esta atribuição liga a uma ferramenta externa para submissões.</string>
     <string name="speedGraderOnPaperMessage">Esta tarefa só permite submissões em papel.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Este envio era um URL de uma página externa. Tenha em mente que esta página pode ter sido alterada desde o envio original.</string>
     <string name="speedGraderOpenUrl">Abrir URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Descrição  do teste</string>
     <string name="removeDueDate">Remover data de vencimento</string>
     <string name="removeDueDateMessage">Isso eliminará a data de vencimento e todos os cessionários associados.</string>
-    <string name="openTool">Abrir ferramenta</string>
     <string name="email">Email</string>
     <string name="fullscreen">ecrã inteiro</string>
     <string name="addNew">Adicionar Nova</string>

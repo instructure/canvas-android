@@ -217,6 +217,7 @@
     </plurals>
 
     <string name="delete_assignment_message">Er du sikker på, du vil slette denne opgave?</string>
+
     <string name="max_count">99+</string>
     <string name="message_student">Send besked til eleverne</string>
 
@@ -312,6 +313,7 @@
     <string name="assignments_list">Opgaveliste</string>
     <string name="syllabus">Fagplan</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flere forfaldsdatoer</string>
     <string name="everyone">Alle</string>
@@ -414,9 +416,11 @@
 
   <string name="not_a_teacher">Ikke en lærer?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">En af vores andre apps kan være bedre egnet. Tryk på et for at besøge Play Store.</string>
+
     <string name="sg_tab_grade">Vurdering</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
+    <string name="sg_tab_files_w_counter">Filer (%d)</string>
     <string name="filter_submissions">Filtrer afleveringer</string>
     <string name="all_submissions">Alle afleveringer</string>
     <string name="submitted_late">Afleveret sent</string>
@@ -653,7 +657,6 @@
 
     <string name="unsupportedFileMessage">Denne fil kunne ikke vises. Brug knappen herunder til at åbne filen med en anden app på enheden.</string>
     <string name="speedGraderNoneMessage">Denne opgave tillader ikke afleveringer.</string>
-    <string name="speedGraderExternalToolMessage">Denne opgave henviser til et eksternt værktøj til aflevering.</string>
     <string name="speedGraderOnPaperMessage">Denne opgave tillader kun aflevering på papir.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Afleveringen var en URL til en ekstern side. Husk på, at denne side eventuelt er blevet ændret, siden den oprindelige aflevering fandt sted.</string>
     <string name="speedGraderOpenUrl">Åbn URL</string>
@@ -746,7 +749,6 @@
     <string name="quizDescriptionContentDescription">Quizbeskrivelse</string>
     <string name="removeDueDate">Fjern afleveringsdato</string>
     <string name="removeDueDateMessage">Dette fjerner afleveringsdatoen og alle af de tilknyttede assignatarer.</string>
-    <string name="openTool">Åbn værktøj</string>
     <string name="email">E-mail</string>
     <string name="fullscreen">fuld skærm</string>
     <string name="addNew">Tilføj ny</string>

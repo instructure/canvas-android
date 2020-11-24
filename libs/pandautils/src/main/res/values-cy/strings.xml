@@ -184,6 +184,8 @@
     <string name="noPages">Dim Tudalennau</string>
     <string name="noPagesSubtext">Mae’n edrych yn debyg nad os tudalennau wedi’u creu eto.</string>
 
+    <string name="modulesLockedSubtext">Mae modiwlau wedi’u hanalluogi ar gyfer y cwrs hwn.</string>
+    <string name="modulesLocked">Aeth rhywbeth o’i le</string>
     <!--General-->
     <string name="yes">Iawn</string>
     <string name="no">Na</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

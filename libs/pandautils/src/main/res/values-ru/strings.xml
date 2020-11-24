@@ -184,6 +184,8 @@
     <string name="noPages">Страницы отсутствуют</string>
     <string name="noPagesSubtext">Похоже, что страницы еще не создавались.</string>
 
+    <string name="modulesLockedSubtext">Модули были отключены для этого курса.</string>
+    <string name="modulesLocked">Что-то пошло не так</string>
     <!--General-->
     <string name="yes">Да</string>
     <string name="no">Нет</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Преподаватель Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Опросы Canvas</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

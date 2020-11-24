@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Dim ceisiadau ar ôl</string>
     <string name="resubmitAssignment">Ailgyflwyno Aseiniad</string>
 
+    <string name="launchingExternalTool">Lansio Adnodd Allanol</string>
     <string name="launchExternalTool">Lansio Adnodd Allanol</string>
 
     <string name="preview">Rhagolwg</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
     <string name="onPaperContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
     <string name="noOnlineSubmissions">Dim Cyflwyniadau Ar-lein</string>
+    <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
+    <string name="openTool">Agor Adnodd</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Allan o %s pwynt</string>
     <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s allan o %2$s pwynt</string>
     <string name="enterWhatIfScore">Rhoi sgôr beth-os</string>
+    <string name="scoreStatisticsLow">Isel: %s</string>
+    <string name="scoreStatisticsMean">Cymedr: %s</string>
+    <string name="scoreStatisticsHigh">Uchel: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sgôr personol</string>
     <string name="rubricEmptyMessage">Does dim cyfarwyddyd sgorio ar gyfer yr aseiniad hwn</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Rhowch eich URL Canvas:</string>
+    <string name="enterValue">Rhowch werth</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Ceisio mewngofnodi i Canvas Network?</string>
     <string name="mobileVerifyGeneral">Dydy’r ap hwn ddim wedi’i awdurdodi i’w ddefnyddio</string>
@@ -887,7 +894,7 @@
     <string name="noFilesSubtextCourse">Does dim ffeiliau\'n gysylltiedig â’r cwrs hwn.</string>
     <string name="noFilesSubtextGroup">Does dim ffeiliau’n gysylltiedig â’r grŵp hwn.</string>
     <string name="fileTypeNotSupported">Mathau o Ffeil Anghydnaws</string>
-    <string name="fileTypeNotSupportedBody">Dydy\'r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
+    <string name="fileTypeNotSupportedBody">Dydy&apos;r aseiniad hwn ddim ond yn caniatáu mathau penodol o ffeil: %s</string>
 
     <array name="file_size_units">
         <item>B</item>

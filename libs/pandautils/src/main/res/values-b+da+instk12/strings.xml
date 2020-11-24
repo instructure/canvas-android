@@ -183,6 +183,8 @@
     <string name="noPages">Ingen sier</string>
     <string name="noPagesSubtext">Det ser ud til, at der ikke er oprettet nogen sider endnu.</string>
 
+    <string name="modulesLockedSubtext">Forløb er blevet deaktiveret for dette fag</string>
+    <string name="modulesLocked">Noget gik galt</string>
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
@@ -224,6 +226,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas Teacher</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas Polls</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->

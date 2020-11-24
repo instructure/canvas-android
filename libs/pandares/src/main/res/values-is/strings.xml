@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Tilraunir notaðar</string>
     <string name="noAttemptsLeft">Engar tilraunir eftir</string>
     <string name="resubmitAssignment">Endurskila verkefni</string>
+    <string name="launchingExternalTool">Ræsir ytra verkfæri...</string>
     <string name="launchExternalTool">Nota ytra verkfæri</string>
     <string name="preview">Forskoðun</string>
     <string name="submissionUploadFailedMessage">Ein eða fleiri af skránum hlóðst ekki upp. Athugaðu nettenginguna þína og reyndu aftur til að skila inn.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Þetta verkefni leyfir ekki netskil</string>
     <string name="noOnlineSubmissions">Engin netskil</string>
 
+    <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra verkfæri fyrir skil.</string>
+    <string name="openTool">Opna verkfæri</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Af %s stigum</string>
     <string name="outOfPointsAbbreviatedFormatted">Af %s st</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s af %2$s stigum</string>
     <string name="enterWhatIfScore">Færa inn spáða einkunn</string>
 
+    <string name="scoreStatisticsLow">Lágt: %s</string>
+    <string name="scoreStatisticsMean">Meðal: %s</string>
+    <string name="scoreStatisticsHigh">Hátt: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Sérsniðin einkunn</string>
     <string name="rubricEmptyMessage">Það eru engin matsviðmið fyrir þetta verkefni</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas myndmerki</string>
     <string name="enterURL">Settu inn Canvas-vefslóðina þína:</string>
+    <string name="enterValue">Slá inn gildi</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Ertu að reyna að skrá þig inn á Canvas net?</string>
     <string name="mobileVerifyGeneral">Þetta app er ekki heimilt til notkunar</string>
@@ -783,7 +790,7 @@
     <string name="notification_desc_appointment_cancelations">Fá tilkynningu þegar skráning á fund er afturkölluð.</string>
     <string name="notification_desc_appointment_availability">Fá tilkynningu þegar fundartími losnar.</string>
     <string name="notification_desc_calendar">Fá tilkynningu um ný og uppfærð dagatalsatriði.</string>
-    <string name="notification_desc_membership_update">Aðeins stjórnandi, þangað til innritun er virkjuð. Fá tilkynningar þegar hópinnritun er samþykkt eða henni hafnað.</string>
+    <string name="notification_desc_membership_update">Aðeins stjórnandi, þangað til innritun er virkjuð. Fá tilkynningu þegar hópinnritun hefur verið samþykkt eða hafnað.</string>
     <string name="notification_desc_admin">Aðeins fyrir leiðbeinanda og stjórnanda. Fá tilkynningar um skráningu í námskeið, skýrslugerð, útflutt efni, afritunarskýrslur, nýja notendur reiknings og nýja nemendahópa.</string>
     <string name="notification_desc_recording_ready">Fá tilkynningu þegar ráðstefnuupptaka er tilbúin.</string>
 

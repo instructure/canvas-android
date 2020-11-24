@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Keine Versuche übrig</string>
     <string name="resubmitAssignment">Aufgabe neu einreichen</string>
 
+    <string name="launchingExternalTool">Externes Tool starten &#8230;</string>
     <string name="launchExternalTool">Externes Tool starten</string>
 
     <string name="preview">Vorschau</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Für diese Aufgabe sind Online-Abgaben unzulässig.</string>
     <string name="onPaperContentMessage">Für diese Aufgabe sind Online-Abgaben unzulässig.</string>
     <string name="noOnlineSubmissions">Keine Online-Abgaben</string>
+    <string name="speedGraderExternalToolMessage">Diese Aufgabe hat einen Link zu einem externen Tool für die Abgaben.</string>
+    <string name="openTool">Tool öffnen</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">von %s Punkten</string>
     <string name="outOfPointsAbbreviatedFormatted">von %s Pkten.</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s von %2$s Punkten</string>
     <string name="enterWhatIfScore">Hypothetische Punktzahl eingeben</string>
+    <string name="scoreStatisticsLow">Gering: %s</string>
+    <string name="scoreStatisticsMean">Mittel: %s</string>
+    <string name="scoreStatisticsHigh">Hoch: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Benutzerdefinierte Punktzahl</string>
     <string name="rubricEmptyMessage">Für diese Aufgabe gibt es kein Bewertungsschema</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas-Logo</string>
     <string name="enterURL">Geben Sie Ihre Canvas-URL ein:</string>
+    <string name="enterValue">Geben Sie einen Wert ein</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Sie versuchen sich im Canvas-Netzwerk anzumelden?</string>
     <string name="mobileVerifyGeneral">Diese App ist für die Verwendung nicht autorisiert</string>
@@ -771,7 +778,7 @@
     <string name="notification_desc_appointment_cancelations">Benachrichtigung erhalten, wenn ein Lehrergespräch storniert wird.</string>
     <string name="notification_desc_appointment_availability">Benachrichtigung erhalten, wenn ein Termin frei wird.</string>
     <string name="notification_desc_calendar">Benachrichtigung erhalten über neue und aktualisierte Kalendereinträge.</string>
-    <string name="notification_desc_membership_update">Nur für Administratoren, anhängige Anmeldung aktiviert. Benachrichtigung erhalten, wenn eine Gruppeanmeldung akzeptiert oder abgelehnt wird.</string>
+    <string name="notification_desc_membership_update">Nur für Administratoren, anhängige Anmeldung aktiviert. Benachrichtigung erhalten, wenn eine Gruppenanmeldung akzeptiert oder abgelehnt wird.</string>
     <string name="notification_desc_admin">Nur für Kursleiter und Administratoren. Benachrichtigung erhalten über Kursanmeldungen, generierte Berichte, exportierte Inhalte, Migrationsberichte, neue Kontobenutzer und neue studentische Gruppen.</string>
     <string name="notification_desc_recording_ready">Benachrichtigung erhalten, wenn eine Konferenzaufzeichnung fertig ist.</string>
 

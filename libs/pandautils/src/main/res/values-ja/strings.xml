@@ -184,6 +184,8 @@
     <string name="noPages">ページなし</string>
     <string name="noPagesSubtext">まだページが作成されていないようです。</string>
 
+    <string name="modulesLockedSubtext">このコースではモジュールが無効になっています。</string>
+    <string name="modulesLocked">なにかが失敗しました</string>
     <!--General-->
     <string name="yes">はい</string>
     <string name="no">いいえ</string>
@@ -225,6 +227,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas 講師</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas サーベイ</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

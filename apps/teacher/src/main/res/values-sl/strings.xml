@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Ocena</string>
     <string name="sg_tab_comments">Komentarji</string>
     <string name="sg_tab_files">Datoteke</string>
+    <string name="sg_tab_files_w_counter">Datoteke (%d)</string>
     <string name="filter_submissions">Filtriraj oddaje</string>
     <string name="all_submissions">Vse oddaje</string>
     <string name="submitted_late">Poslano z zamudo</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Te datoteko ni bilo mogoče prikazati. S spodnjim gumbom odprete datoteko z drugo aplikacijo na svoji napravi.</string>
     <string name="speedGraderNoneMessage">Pri tej nalogi oddaje niso dovoljene.</string>
-    <string name="speedGraderExternalToolMessage">Ta naloga je za oddaje povezana z zunanjim orodjem.</string>
     <string name="speedGraderOnPaperMessage">Pri tej nalogi so dovoljene le oddaje na papirju.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Ta oddaja je bila v obliki naslova URL za zunanjo stran. Ne pozabite, da se je ta stran morda spremenila, od kar se je oddaja prvič pojavila.</string>
     <string name="speedGraderOpenUrl">Odpri naslov URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Opis kviza</string>
     <string name="removeDueDate">Odstrani rok</string>
     <string name="removeDueDateMessage">S tem bodo odstranjeni rok in vsi povezani prevzemniki.</string>
-    <string name="openTool">Odpri orodje</string>
     <string name="email">E-pošta</string>
     <string name="fullscreen">celoten zaslon</string>
     <string name="addNew">Dodaj novo</string>

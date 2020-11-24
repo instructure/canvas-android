@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Note</string>
     <string name="sg_tab_comments">Commentaires</string>
     <string name="sg_tab_files">Fichiers</string>
+    <string name="sg_tab_files_w_counter">Fichiers (%d)</string>
     <string name="filter_submissions">Filtrer les envois</string>
     <string name="all_submissions">Tous les envois</string>
     <string name="submitted_late">Envoyé tardivement</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Impossible d’afficher ce fichier. Utiliser le bouton ci-dessous pour ouvrir le fichier avec une autre application sur votre appareil.</string>
     <string name="speedGraderNoneMessage">Cette tâche ne permet pas d’envoi.</string>
-    <string name="speedGraderExternalToolMessage">Cette tâche comporte des liens vers un outil externe pour les envois.</string>
     <string name="speedGraderOnPaperMessage">Cette tâche permet uniquement des envois sur support papier.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Cet envoi correspond à une URL vers une page externe. Gardez à l’esprit que cette page peut avoir été modifiée depuis l’envoi d’origine.</string>
     <string name="speedGraderOpenUrl">Ouvrir l\'URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Description du questionnaire</string>
     <string name="removeDueDate">Supprimer la date d\'échéance</string>
     <string name="removeDueDateMessage">Cela va supprimer la date d\'échéance et tous les assignés associés.</string>
-    <string name="openTool">Ouvrir outil</string>
     <string name="email">Courriel</string>
     <string name="fullscreen">plein écran</string>
     <string name="addNew">Ajouter nouveau</string>
