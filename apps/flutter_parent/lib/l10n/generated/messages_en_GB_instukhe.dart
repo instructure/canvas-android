@@ -41,51 +41,51 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(count) => "${count}+";
 
-  static m12(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
+  static m13(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
 
-  static m13(studentShortName) => "för ${studentShortName}";
+  static m14(studentShortName) => "för ${studentShortName}";
 
-  static m14(threshold) => "Kursbedömning över ${threshold}";
+  static m15(threshold) => "Kursbedömning över ${threshold}";
 
-  static m15(threshold) => "Kursbedömning under ${threshold}";
+  static m16(threshold) => "Kursbedömning under ${threshold}";
 
-  static m16(date, time) => "${date} kl. ${time}";
+  static m17(date, time) => "${date} kl. ${time}";
 
-  static m17(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
+  static m19(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
 
-  static m18(date, time) => "Ska lämnas in ${date} klockan ${time}";
+  static m20(date, time) => "Ska lämnas in ${date} klockan ${time}";
 
-  static m21(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
+  static m23(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
 
-  static m22(startAt, endAt) => "${startAt}/${endAt}";
+  static m24(startAt, endAt) => "${startAt}/${endAt}";
 
-  static m23(grade) => "Slutbedömning: ${grade}";
+  static m25(grade) => "Slutbedömning: ${grade}";
 
-  static m24(studentName) => "Angående : ${studentName}, framsida";
+  static m26(studentName) => "Angående : ${studentName}, framsida";
 
-  static m25(score, pointsPossible) => "${score} / ${pointsPossible}";
+  static m27(score, pointsPossible) => "${score} / ${pointsPossible}";
 
-  static m26(studentName) => "Angående : ${studentName}, bedömningar";
+  static m28(studentName) => "Angående : ${studentName}, bedömningar";
 
-  static m27(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
+  static m29(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
 
-  static m28(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
+  static m30(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
 
-  static m29(percentage) => "Måste vara över ${percentage}";
+  static m31(percentage) => "Måste vara över ${percentage}";
 
-  static m30(percentage) => "Måste vara under ${percentage}";
+  static m32(percentage) => "Måste vara under ${percentage}";
 
-  static m33(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
+  static m35(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
 
-  static m34(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
+  static m36(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
 
-  static m35(count) => "+${count}";
+  static m37(count) => "+${count}";
 
-  static m40(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
+  static m45(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
 
-  static m41(studentName) => "Angående : ${studentName}, kursöversikt";
+  static m46(studentName) => "Angående : ${studentName}, kursöversikt";
 
-  static m42(count) => "${count} olästa";
+  static m47(count) => "${count} olästa";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -250,7 +250,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your inbox messages." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in dina meddelanden i inkorgen."),
     "There was an error loading your student\'s alerts." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din elevs notiser."),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in dina elever."),
-    "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din elevs kurser."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Det finns inget att avisera om än."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Den här appen har inte auktoriserats för användning."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Den här kursen har inga uppgifter eller kalenderhändelser än."),
@@ -298,39 +297,39 @@ class MessageLookup extends MessageLookupByLibrary {
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas-logotyp"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas Support"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("minimerad"),
-    "contentDescriptionScoreOutOfPointsPossible" : m12,
-    "courseForWhom" : m13,
-    "courseGradeAboveThreshold" : m14,
-    "courseGradeBelowThreshold" : m15,
+    "contentDescriptionScoreOutOfPointsPossible" : m13,
+    "courseForWhom" : m14,
+    "courseGradeAboveThreshold" : m15,
+    "courseGradeBelowThreshold" : m16,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Kurser"),
-    "dateAtTime" : m16,
-    "domainSearchHelpBody" : m17,
+    "dateAtTime" : m17,
+    "domainSearchHelpBody" : m19,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Hur hittar jag min skola eller distrikt?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Ange skolans namn eller distrikt..."),
-    "dueDateAtTime" : m18,
-    "eventSubjectMessage" : m21,
-    "eventTime" : m22,
+    "dueDateAtTime" : m20,
+    "eventSubjectMessage" : m23,
+    "eventTime" : m24,
     "expanded" : MessageLookupByLibrary.simpleMessage("expanderad"),
-    "finalGrade" : m23,
+    "finalGrade" : m25,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Sök skola"),
-    "frontPageSubjectMessage" : m24,
-    "gradeFormatScoreOutOfPointsPossible" : m25,
-    "gradesSubjectMessage" : m26,
-    "latePenalty" : m27,
+    "frontPageSubjectMessage" : m26,
+    "gradeFormatScoreOutOfPointsPossible" : m27,
+    "gradesSubjectMessage" : m28,
+    "latePenalty" : m29,
     "me" : MessageLookupByLibrary.simpleMessage("jag"),
-    "messageLinkPostscript" : m28,
+    "messageLinkPostscript" : m30,
     "minus" : MessageLookupByLibrary.simpleMessage("minus"),
-    "mustBeAboveN" : m29,
-    "mustBeBelowN" : m30,
+    "mustBeAboveN" : m31,
+    "mustBeBelowN" : m32,
     "next" : MessageLookupByLibrary.simpleMessage("Nästa"),
-    "noDomainResults" : m33,
+    "noDomainResults" : m35,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m34,
-    "plusRecipientCount" : m35,
+    "outOfPoints" : m36,
+    "plusRecipientCount" : m37,
     "send" : MessageLookupByLibrary.simpleMessage("skicka"),
-    "submissionStatusSuccessSubtitle" : m40,
-    "syllabusSubjectMessage" : m41,
+    "submissionStatusSuccessSubtitle" : m45,
+    "syllabusSubjectMessage" : m46,
     "unread" : MessageLookupByLibrary.simpleMessage("olästa"),
-    "unreadCount" : m42
+    "unreadCount" : m47
   };
 }
