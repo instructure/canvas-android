@@ -43,73 +43,84 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m11(count) => "${count}+";
 
-  static m12(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
+  static m12(studentName) => "Ändra färg för ${studentName}";
 
-  static m13(studentShortName) => "för ${studentShortName}";
+  static m13(score, pointsPossible) => "${score} av ${pointsPossible} poäng";
 
-  static m14(threshold) => "Kursomdöme över ${threshold}";
+  static m14(studentShortName) => "för ${studentShortName}";
 
-  static m15(threshold) => "Kursomdöme under ${threshold}";
+  static m15(threshold) => "Kursomdöme över ${threshold}";
 
-  static m16(date, time) => "${date} kl. ${time}";
+  static m16(threshold) => "Kursomdöme under ${threshold}";
 
-  static m17(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
+  static m17(date, time) => "${date} kl. ${time}";
 
-  static m18(date, time) => "Ska lämnas in ${date} klockan ${time}";
+  static m18(alertTitle) => "Avvisa ${alertTitle}";
 
-  static m19(userName) => "Du kommer att sluta agera som ${userName} och loggas ut.";
+  static m19(canvasGuides, canvasSupport) => "Försök med att söka efter namnet på skolan eller distrikten du vill ansluta till, t.ex. “Allmänna skolan” eller “Skolor i Skåne”. Du kan även ange en Canvas-domän direkt, t.ex. “smith.instructure.com.”\n\nMer information om hur du kan hitta din institutions Canvas-konto finns på ${canvasGuides} eller kontakta ${canvasSupport} eller din skola för att få hjälp.";
 
-  static m20(userName) => "Du kommer att sluta agera som ${userName} och återgå till ditt ursprungliga konto.";
+  static m20(date, time) => "Ska lämnas in ${date} klockan ${time}";
 
-  static m21(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
+  static m21(userName) => "Du kommer att sluta agera som ${userName} och loggas ut.";
 
-  static m22(startAt, endAt) => "${startAt}/${endAt}";
+  static m22(userName) => "Du kommer att sluta agera som ${userName} och återgå till ditt ursprungliga konto.";
 
-  static m23(grade) => "Totalt omdöme: ${grade}";
+  static m23(studentName, eventTitle) => "Angående : ${studentName}, händelse – ${eventTitle}";
 
-  static m24(studentName) => "Angående : ${studentName}, framsida";
+  static m24(startAt, endAt) => "${startAt}/${endAt}";
 
-  static m25(score, pointsPossible) => "${score}/${pointsPossible}";
+  static m25(grade) => "Totalt omdöme: ${grade}";
 
-  static m26(studentName) => "Angående : ${studentName}, omdömen";
+  static m26(studentName) => "Angående : ${studentName}, framsida";
 
-  static m27(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
+  static m27(score, pointsPossible) => "${score}/${pointsPossible}";
 
-  static m28(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
+  static m28(studentName) => "Angående : ${studentName}, omdömen";
 
-  static m29(percentage) => "Måste vara över ${percentage}";
+  static m29(pointsLost) => "Förseningsbestraffning (-${pointsLost})";
 
-  static m30(percentage) => "Måste vara under ${percentage}";
+  static m30(studentName, linkUrl) => "Angående : ${studentName}, ${linkUrl}";
 
-  static m31(month) => "Nästa månad: ${month}";
+  static m31(percentage) => "Måste vara över ${percentage}";
 
-  static m32(date) => "Nästa vecka börjar ${date}";
+  static m32(percentage) => "Måste vara under ${percentage}";
 
-  static m33(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
+  static m33(month) => "Nästa månad: ${month}";
 
-  static m34(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
+  static m34(date) => "Nästa vecka börjar ${date}";
 
-  static m35(count) => "+${count}";
+  static m35(query) => "Det gick inte att hitta skolar som matchar \"${query}\"";
 
-  static m36(points) => "${points} möjliga poäng";
+  static m36(points, howMany) => "${Intl.plural(howMany, one: 'En av 1 poäng', other: 'En av ${points} poäng')}";
 
-  static m37(month) => "Föregående månad: ${month}";
+  static m37(count) => "+${count}";
 
-  static m38(date) => "Föregående vecka startade ${date}";
+  static m38(points) => "${points} möjliga poäng";
 
-  static m39(month) => "Månaden ${month}";
+  static m39(month) => "Föregående månad: ${month}";
 
-  static m40(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
+  static m40(date) => "Föregående vecka startade ${date}";
 
-  static m41(studentName) => "Angående : ${studentName}, kursöversikt";
+  static m41(termsOfService, privacyPolicy) => "Genom att trycka på Skapa konto samtycker du till ${termsOfService} och ${privacyPolicy}";
 
-  static m42(count) => "${count} olästa";
+  static m42(version) => "Förslag för Android – Canvas Parent ${version}";
+
+  static m43(month) => "Månaden ${month}";
+
+  static m44(position) => "${Intl.plural(position, one: '${position} stjärna', other: '${position} stjärnor')}";
+
+  static m45(date, time) => "Uppgiften lämnades in ${date} kl. ${time} och väntar på bedömning";
+
+  static m46(studentName) => "Angående : ${studentName}, kursöversikt";
+
+  static m47(count) => "${count} olästa";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
     "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users\' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user." : MessageLookupByLibrary.simpleMessage("\"Att uppträda som\", loggar huvudsakligen in som den här användaren utan lösenord. Du kommer att kunna vidta åtgärder som om du var den här användaren, och från andra användares synpunkter kommer det att upplevas som om den här användaren utförde dem. I historik-loggar registreras dock att du var den som utförde åtgärderna på den här användarens vägnar."),
     "-" : MessageLookupByLibrary.simpleMessage("-"),
     "A description is required." : MessageLookupByLibrary.simpleMessage("Beskrivning är obligatorisk."),
+    "A network error occurred when adding this student. Check your connection and try again." : MessageLookupByLibrary.simpleMessage("Ett nätverksfel inträffade när du lade till den här studenten. Kontrollera din anslutning och försök igen."),
     "A subject is required." : MessageLookupByLibrary.simpleMessage("Ämne är obligatoriskt."),
     "Act As User" : MessageLookupByLibrary.simpleMessage("Agera som användare"),
     "Add Student" : MessageLookupByLibrary.simpleMessage("Lägg till student"),
@@ -119,8 +130,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "Alert Settings" : MessageLookupByLibrary.simpleMessage("Notisinställningar"),
     "Alert me when…" : MessageLookupByLibrary.simpleMessage("Notifiera mig om..."),
     "All Grading Periods" : MessageLookupByLibrary.simpleMessage("Alla bedömningsperioder"),
+    "Already have an account? " : MessageLookupByLibrary.simpleMessage("Har du redan ett konto? "),
     "An email address is required." : MessageLookupByLibrary.simpleMessage("E-postadressen är obligatorisk."),
     "An error occurred when trying to display this link" : MessageLookupByLibrary.simpleMessage("Ett fel uppstod när länken skulle visas"),
+    "An error occurred while saving your selection. Please try again." : MessageLookupByLibrary.simpleMessage("Ett fel inträffade när ditt val sparades. Försök igen."),
     "An unexpected error occurred" : MessageLookupByLibrary.simpleMessage("Ett oväntat fel inträffade"),
     "Android OS version" : MessageLookupByLibrary.simpleMessage("Android AS-version"),
     "Appearance" : MessageLookupByLibrary.simpleMessage("Utseende"),
@@ -130,9 +143,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "Are you sure you wish to close this page? Your unsent message will be lost." : MessageLookupByLibrary.simpleMessage("Är du säker på att du vill stänga den här sidan? Ditt meddelande du ännu inte skickat kommer att tas bort."),
     "Assignment Details" : MessageLookupByLibrary.simpleMessage("Uppgiftens detaljer"),
     "Assignment grade above" : MessageLookupByLibrary.simpleMessage("Uppgiftsomdöme över"),
-    "Assignment grade below" : MessageLookupByLibrary.simpleMessage("Uppgiftsomdöme under"),
-    "Assignment missing" : MessageLookupByLibrary.simpleMessage("Uppgift saknas"),
+    "Assignment grade below" : MessageLookupByLibrary.simpleMessage("Uppgiftsbetyg nedan"),
+    "Assignment missing" : MessageLookupByLibrary.simpleMessage("Tilldelning saknas"),
+    "Barney, Fuschia" : MessageLookupByLibrary.simpleMessage("Barney, Fuschia"),
     "Calendars" : MessageLookupByLibrary.simpleMessage("Kalendrar"),
+    "Camera Permission" : MessageLookupByLibrary.simpleMessage("Kamerabehörighet"),
     "Cancel" : MessageLookupByLibrary.simpleMessage("Avbryt"),
     "Canvas Student" : MessageLookupByLibrary.simpleMessage("Canvas-student"),
     "Canvas Teacher" : MessageLookupByLibrary.simpleMessage("Canvas-lärare"),
@@ -143,8 +158,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "Contact Support" : MessageLookupByLibrary.simpleMessage("Kontakta support"),
     "Course Announcement" : MessageLookupByLibrary.simpleMessage("Anslag"),
     "Course Announcements" : MessageLookupByLibrary.simpleMessage("Anslag"),
-    "Course grade above" : MessageLookupByLibrary.simpleMessage("Kursomdöme över"),
-    "Course grade below" : MessageLookupByLibrary.simpleMessage("Kursomdöme under"),
+    "Course grade above" : MessageLookupByLibrary.simpleMessage("Kursbetyg över"),
+    "Course grade below" : MessageLookupByLibrary.simpleMessage("Kursbetyg under"),
+    "Create Account" : MessageLookupByLibrary.simpleMessage("Skapa konto"),
     "Dark Mode" : MessageLookupByLibrary.simpleMessage("Mörkt läge"),
     "Date" : MessageLookupByLibrary.simpleMessage("Datum"),
     "Delete" : MessageLookupByLibrary.simpleMessage("Ta bort"),
@@ -153,38 +169,53 @@ class MessageLookup extends MessageLookupByLibrary {
     "Device model" : MessageLookupByLibrary.simpleMessage("Enhetsmodell"),
     "Domain" : MessageLookupByLibrary.simpleMessage("Domän"),
     "Domain:" : MessageLookupByLibrary.simpleMessage("Domän:"),
+    "Don\'t show again" : MessageLookupByLibrary.simpleMessage("Visa inte igen"),
     "Done" : MessageLookupByLibrary.simpleMessage("Klar"),
     "Download" : MessageLookupByLibrary.simpleMessage("Ladda ned"),
     "Due" : MessageLookupByLibrary.simpleMessage("Inlämningsdatum"),
     "EXTREME CRITICAL EMERGENCY!!" : MessageLookupByLibrary.simpleMessage("EXTREMT KRITISKT NÖDFALL!!"),
+    "Electric, blue" : MessageLookupByLibrary.simpleMessage("Elektrisk, blå"),
     "Email Address" : MessageLookupByLibrary.simpleMessage("E-postadress"),
     "Email:" : MessageLookupByLibrary.simpleMessage("E-post:"),
+    "Email…" : MessageLookupByLibrary.simpleMessage("E-post …"),
     "Enter the student pairing code provided to you. If the pairing code doesn\'t work, it may have expired" : MessageLookupByLibrary.simpleMessage("Ange den studentparkopplingskod du har fått. Om parkopplingskoden inte fungerar kan den ha gått ut"),
     "Event" : MessageLookupByLibrary.simpleMessage("Händelse"),
     "Excused" : MessageLookupByLibrary.simpleMessage("Ursäktad"),
+    "Expired QR Code" : MessageLookupByLibrary.simpleMessage("Utgången QR-kod"),
     "Failed. Tap for options." : MessageLookupByLibrary.simpleMessage("Misslyckades. Tryck för alternativ."),
     "Filter" : MessageLookupByLibrary.simpleMessage("Filtrera"),
     "Filter by" : MessageLookupByLibrary.simpleMessage("Filtrera efter"),
+    "Fire, Orange" : MessageLookupByLibrary.simpleMessage("Eld, orange"),
     "Front Page" : MessageLookupByLibrary.simpleMessage("Framsida"),
+    "Full Name" : MessageLookupByLibrary.simpleMessage("Fullständigt namn"),
+    "Full Name…" : MessageLookupByLibrary.simpleMessage("Fullständigt namn ..."),
     "Full error message" : MessageLookupByLibrary.simpleMessage("Fullständigt felmeddelande"),
+    "Go to today" : MessageLookupByLibrary.simpleMessage("Gå till i dag"),
     "Grade" : MessageLookupByLibrary.simpleMessage("Omdöme"),
     "Grade percentage" : MessageLookupByLibrary.simpleMessage("Omdömesprocent"),
     "Graded" : MessageLookupByLibrary.simpleMessage("Har bedömts"),
     "Grades" : MessageLookupByLibrary.simpleMessage("Omdömen"),
     "Help" : MessageLookupByLibrary.simpleMessage("Hjälp"),
+    "Hide Password" : MessageLookupByLibrary.simpleMessage("Dölj lösenord"),
     "High Contrast Mode" : MessageLookupByLibrary.simpleMessage("Högt kontrastläge"),
+    "How are we doing?" : MessageLookupByLibrary.simpleMessage("Hur går det för oss?"),
     "How is this affecting you?" : MessageLookupByLibrary.simpleMessage("Hur påverkar detta dig?"),
     "I can\'t get things done until I hear back from you." : MessageLookupByLibrary.simpleMessage("Jag kan inte göra något tills jag hör ifrån er."),
+    "I don\'t have a Canvas account" : MessageLookupByLibrary.simpleMessage("Jag har inte ett Canvas-konto"),
+    "I have a Canvas account" : MessageLookupByLibrary.simpleMessage("Jag har ett Canvas-konto"),
     "I need some help but it\'s not urgent." : MessageLookupByLibrary.simpleMessage("Jag behöver hjälp men det är inte bråttom."),
     "I\'m having trouble logging in" : MessageLookupByLibrary.simpleMessage("Jag kan inte logga in"),
     "Idea for Canvas Parent App [Android]" : MessageLookupByLibrary.simpleMessage("Idéer för appen Canvas Parent [Android]"),
+    "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again." : MessageLookupByLibrary.simpleMessage("För att tillhandahålla dig en förbättrad upplevelse har vi uppdaterat påminnelsefunktionen. Du kan lägga till nya påminnelser genom att visa en uppgift eller en kalenderhändelse och trycka på reglaget under avsnittet \"Påminn mig\".\n\nTänk på att påminnelser som skapats i äldre versionen av den här appen inte är kompatibla med de nya ändringarna och måste därför skapas om igen."),
     "Inbox" : MessageLookupByLibrary.simpleMessage("Inkorg"),
     "Inbox Zero" : MessageLookupByLibrary.simpleMessage("Inbox Zero"),
     "Incomplete" : MessageLookupByLibrary.simpleMessage("Ej fullständig"),
+    "Incorrect Domain" : MessageLookupByLibrary.simpleMessage("Felaktig domän"),
     "Institution Announcement" : MessageLookupByLibrary.simpleMessage("Institutionsmeddelande"),
     "Institution Announcements" : MessageLookupByLibrary.simpleMessage("Institutionsannonseringar"),
     "Instructions" : MessageLookupByLibrary.simpleMessage("Instruktioner"),
     "Interactions on this page are limited by your institution." : MessageLookupByLibrary.simpleMessage("Interaktioner på den här sidan har begränsats av din institution."),
+    "Invalid QR Code" : MessageLookupByLibrary.simpleMessage("Ogiltig QR-kod"),
     "It looks like a great day to rest, relax, and recharge." : MessageLookupByLibrary.simpleMessage("Det verkar vara en bra dag för vila, avslappning och omladdning."),
     "It looks like assignments haven\'t been created in this space yet." : MessageLookupByLibrary.simpleMessage("Det verkar som om inga uppgifter har skapats för den här platsen än."),
     "Just a casual question, comment, idea, suggestion…" : MessageLookupByLibrary.simpleMessage("Bara en vanlig fråga, kommentar, idé, förslag ..."),
@@ -194,6 +225,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Light Mode" : MessageLookupByLibrary.simpleMessage("Ljust läge"),
     "Link Error" : MessageLookupByLibrary.simpleMessage("Länkfel"),
     "Locale:" : MessageLookupByLibrary.simpleMessage("Plats:"),
+    "Locate QR Code" : MessageLookupByLibrary.simpleMessage("Lokalisera QR-kod"),
     "Location" : MessageLookupByLibrary.simpleMessage("Plats"),
     "Locked" : MessageLookupByLibrary.simpleMessage("Låst"),
     "Log Out" : MessageLookupByLibrary.simpleMessage("Logga ut"),
@@ -229,17 +261,33 @@ class MessageLookup extends MessageLookupByLibrary {
     "OS Version" : MessageLookupByLibrary.simpleMessage("Operativsystemets version"),
     "Observer" : MessageLookupByLibrary.simpleMessage("Observatör"),
     "One of our other apps might be a better fit. Tap one to visit the Play Store." : MessageLookupByLibrary.simpleMessage("Någon av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play Store."),
+    "Open Canvas Student" : MessageLookupByLibrary.simpleMessage("Öppna Canvas Student"),
     "Open In Browser" : MessageLookupByLibrary.simpleMessage("Öppna i webbläsare"),
     "Open with another app" : MessageLookupByLibrary.simpleMessage("Öppna med en annan app"),
     "Pairing Code" : MessageLookupByLibrary.simpleMessage("Parkopplingskod"),
+    "Password" : MessageLookupByLibrary.simpleMessage("Lösenord"),
+    "Password is required" : MessageLookupByLibrary.simpleMessage("Lösenord krävs"),
+    "Password must contain at least 8 characters" : MessageLookupByLibrary.simpleMessage("Lösenord måste innehålla minst 8 tecken"),
+    "Password…" : MessageLookupByLibrary.simpleMessage("Lösenord ..."),
+    "Planner Note" : MessageLookupByLibrary.simpleMessage("Planner-anteckning"),
+    "Please enter a valid email address" : MessageLookupByLibrary.simpleMessage("Ange en giltig e-postadress"),
+    "Please enter an email address" : MessageLookupByLibrary.simpleMessage("Ange en e-postadress"),
+    "Please enter full name" : MessageLookupByLibrary.simpleMessage("Ange fullständigt namn"),
+    "Please scan a QR code generated by Canvas" : MessageLookupByLibrary.simpleMessage("Skanna en QR-kod som genererats i Canvas."),
+    "Plum, Purple" : MessageLookupByLibrary.simpleMessage("Plommon, lila"),
     "Preparing…" : MessageLookupByLibrary.simpleMessage("Förbereder..."),
     "Previous Logins" : MessageLookupByLibrary.simpleMessage("Tidigare inloggningar"),
-    "Privacy Policy" : MessageLookupByLibrary.simpleMessage("Integritetspolicy"),
+    "Privacy Policy" : MessageLookupByLibrary.simpleMessage("Sekretesspolicy"),
+    "Privacy Policy Link" : MessageLookupByLibrary.simpleMessage("Länk till sekretesspolicy"),
     "Privacy policy, terms of use, open source" : MessageLookupByLibrary.simpleMessage("Integritetspolicy, användarvillkor, öppen källkod"),
     "QR Code" : MessageLookupByLibrary.simpleMessage("QR-kod"),
+    "QR scanning requires camera access" : MessageLookupByLibrary.simpleMessage("QR-skanning kräver kameraåtkomst"),
+    "Raspberry, Red" : MessageLookupByLibrary.simpleMessage("Hallon, röd"),
     "Recipients" : MessageLookupByLibrary.simpleMessage("Mottagare"),
+    "Refresh" : MessageLookupByLibrary.simpleMessage("Uppdatera"),
     "Remind Me" : MessageLookupByLibrary.simpleMessage("Påminn mig"),
     "Reminders" : MessageLookupByLibrary.simpleMessage("Påminnelser"),
+    "Reminders have changed!" : MessageLookupByLibrary.simpleMessage("Påminnelser har ändrats!"),
     "Reply" : MessageLookupByLibrary.simpleMessage("Svara"),
     "Reply All" : MessageLookupByLibrary.simpleMessage("Svara alla"),
     "Report A Problem" : MessageLookupByLibrary.simpleMessage("Rapportera ett problem"),
@@ -249,17 +297,28 @@ class MessageLookup extends MessageLookupByLibrary {
     "Retry" : MessageLookupByLibrary.simpleMessage("Försök igen"),
     "Return to Login" : MessageLookupByLibrary.simpleMessage("Gå tillbaka till inloggning"),
     "STUDENT" : MessageLookupByLibrary.simpleMessage("STUDENT"),
+    "Screenshot showing location of QR code generation in browser" : MessageLookupByLibrary.simpleMessage("Skärmdumpen visar platsen för QR-kodgenerering i webbläsaren"),
+    "Screenshot showing location of pairing QR code generation in the Canvas Student app" : MessageLookupByLibrary.simpleMessage("Skärmbild som visar var QR-kodens parkopplingsgenerering görs i Canvas Student-appen"),
+    "Select" : MessageLookupByLibrary.simpleMessage("Välj"),
+    "Select Student Color" : MessageLookupByLibrary.simpleMessage("Välj studentfärg"),
     "Select recipients" : MessageLookupByLibrary.simpleMessage("Välj mottagare"),
+    "Send Feedback" : MessageLookupByLibrary.simpleMessage("Skicka feedback"),
     "Send a message about this assignment" : MessageLookupByLibrary.simpleMessage("Skicka ett meddelande om den här kursen"),
     "Send a message about this course" : MessageLookupByLibrary.simpleMessage("Skicka ett meddelande om den här kursen"),
     "Send message" : MessageLookupByLibrary.simpleMessage("Skicka meddelandet"),
     "Set a date and time to be notified of this event." : MessageLookupByLibrary.simpleMessage("Ange ett datum och tid för att få en notis för den här händelsen."),
     "Set a date and time to be notified of this specific assignment." : MessageLookupByLibrary.simpleMessage("Ange ett datum och tid för att få en notis för den här specifika uppgiften."),
     "Settings" : MessageLookupByLibrary.simpleMessage("Inställningar"),
+    "Shamrock, Green" : MessageLookupByLibrary.simpleMessage("Klöver, grön"),
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Dela din kärlek till appen"),
+    "Show Password" : MessageLookupByLibrary.simpleMessage("Visa lösenord"),
+    "Sign In" : MessageLookupByLibrary.simpleMessage("Logga in"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Det är något som inte fungerar men jag kan göra det jag ska ändå."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Sluta att agera som en användare"),
     "Student" : MessageLookupByLibrary.simpleMessage("Student"),
+    "Student Pairing" : MessageLookupByLibrary.simpleMessage("Student-parkoppling"),
+    "Students can create a QR code using the Canvas Student app on their mobile device" : MessageLookupByLibrary.simpleMessage("Studenter kan skapa en QR-kod i Canvas Student-appen i sina mobiler."),
+    "Students can obtain a pairing code through the Canvas website" : MessageLookupByLibrary.simpleMessage("Studenter kan få en parkopplingskod genom att använda Canvas Student-appen i sina mobiler."),
     "Subject" : MessageLookupByLibrary.simpleMessage("Ämne"),
     "Submitted" : MessageLookupByLibrary.simpleMessage("Skickad"),
     "Successfully submitted!" : MessageLookupByLibrary.simpleMessage("Uppgiften har skickats in!"),
@@ -268,20 +327,25 @@ class MessageLookup extends MessageLookupByLibrary {
     "Syllabus" : MessageLookupByLibrary.simpleMessage("Kursöversikt"),
     "TA" : MessageLookupByLibrary.simpleMessage("Lärarassistent"),
     "TEACHER" : MessageLookupByLibrary.simpleMessage("LÄRARE"),
-    "Tap to favorite the courses you want to see on the Calendar." : MessageLookupByLibrary.simpleMessage("Tryck för att favoritmarkera de kurser du vill se i kalendern."),
+    "Tap to favorite the courses you want to see on the Calendar. Select up to 10." : MessageLookupByLibrary.simpleMessage("Tryck för att favoritmarkera de kurser du vill se i kalendern. Välj upp till 10."),
     "Tap to pair with a new student" : MessageLookupByLibrary.simpleMessage("Tryck för att koppla samman med en ny student"),
     "Tap to select this student" : MessageLookupByLibrary.simpleMessage("Tryck för att välja den här studenten"),
     "Tap to show student selector" : MessageLookupByLibrary.simpleMessage("Tryck för att visa studentväljare"),
     "Teacher" : MessageLookupByLibrary.simpleMessage("Lärare"),
     "Tell us about your favorite parts of the app" : MessageLookupByLibrary.simpleMessage("Berätta vad du tycker om mest med appen"),
+    "Terms of Service" : MessageLookupByLibrary.simpleMessage("Tjänstvillkor"),
+    "Terms of Service Link" : MessageLookupByLibrary.simpleMessage("Länk till tjänstvillkor"),
     "Terms of Use" : MessageLookupByLibrary.simpleMessage("Användarvillkor"),
+    "The QR code you scanned may have expired. Refresh the code on the student\'s device and try again." : MessageLookupByLibrary.simpleMessage("QR-koden du skannade kan har gått ut. Uppdatera koden på studentens enhet och försök igen."),
     "The following information will help us better understand your idea:" : MessageLookupByLibrary.simpleMessage("Följande information kommer att hjälpa oss att förstå din idé bättre:"),
     "The server you entered is not authorized for this app." : MessageLookupByLibrary.simpleMessage("Den server du har angett har inte auktoriserats för den här appen."),
+    "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code." : MessageLookupByLibrary.simpleMessage("Studenten du försöker lägga tillhör en annan skola. Logga in eller skapa ett konto med den skolans för att skanna den här koden."),
     "The user agent for this app is not authorized." : MessageLookupByLibrary.simpleMessage("Användaragenten för den här appen är inte auktoriserad."),
     "Theme" : MessageLookupByLibrary.simpleMessage("Tema"),
     "There are no installed applications that can open this file" : MessageLookupByLibrary.simpleMessage("Det finns inga installerade program som kan öppna den här filen"),
     "There is no page information available." : MessageLookupByLibrary.simpleMessage("Det finns ingen sidinformation tillgänglig."),
     "There was a problem loading the Terms of Use" : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in användarvillkoren"),
+    "There was a problem removing this student from your account. Please check your connection and try again." : MessageLookupByLibrary.simpleMessage("Det gick inte att ta bort studenten från ditt konto. Kontrollera din anslutning och försök igen."),
     "There was an error loading recipients for this course" : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in mottagare för den här kursen"),
     "There was an error loading the summary details for this course." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in sammanfattningsinformationen för den här kursen."),
     "There was an error loading this announcement" : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in den här annonsen"),
@@ -291,12 +355,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "There was an error loading your student\'s alerts." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din students notiser."),
     "There was an error loading your student\'s calendar" : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din studentkalender."),
     "There was an error loading your students." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in dina studenter."),
-    "There was an error loading your your student’s courses." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din students kurser."),
+    "There was an error loading your student’s courses." : MessageLookupByLibrary.simpleMessage("Det gick inte att läsa in din students kurser."),
+    "There was an error logging in. Please generate another QR Code and try again." : MessageLookupByLibrary.simpleMessage("Det gick inte att logga in. Generera en annan QR-kod och försök igen."),
     "There was an error trying to act as this user. Please check the Domain and User ID and try again." : MessageLookupByLibrary.simpleMessage("Ett fel inträffade under Agera som den här användaren. Kontrollera domänen och användar-ID:t och försök igen."),
     "There’s nothing to be notified of yet." : MessageLookupByLibrary.simpleMessage("Det finns inget att avisera om än."),
     "This app is not authorized for use." : MessageLookupByLibrary.simpleMessage("Den här appen har inte auktoriserats för användning."),
     "This course does not have any assignments or calendar events yet." : MessageLookupByLibrary.simpleMessage("Den här kursen har inga uppgifter eller kalenderhändelser än."),
     "This file is unsupported and can’t be viewed through the app" : MessageLookupByLibrary.simpleMessage("Den här filen stöds inte och kan inte visas i appen"),
+    "This will unpair and remove all enrollments for this student from your account." : MessageLookupByLibrary.simpleMessage("Detta kommer att koppla från och ta bort alla registreringar för den här studenten från ditt konto."),
     "Total Grade" : MessageLookupByLibrary.simpleMessage("Total omdöme"),
     "Uh oh!" : MessageLookupByLibrary.simpleMessage("Oj då!"),
     "Unable to fetch courses. Please check your connection and try again." : MessageLookupByLibrary.simpleMessage("Det gick inte att hämta kurser. Kontrollera din anslutning och försök igen."),
@@ -309,21 +375,29 @@ class MessageLookup extends MessageLookupByLibrary {
     "Unsupported File" : MessageLookupByLibrary.simpleMessage("Filtyp som inte stöds"),
     "Upload File" : MessageLookupByLibrary.simpleMessage("Ladda upp fil"),
     "Use Camera" : MessageLookupByLibrary.simpleMessage("Använd kamera"),
+    "Use Dark Theme in Web Content" : MessageLookupByLibrary.simpleMessage("Använd mörkt tema i webbinnehållet"),
     "User ID" : MessageLookupByLibrary.simpleMessage("Användar-ID"),
     "User ID:" : MessageLookupByLibrary.simpleMessage("Användar-ID:"),
     "Version Number" : MessageLookupByLibrary.simpleMessage("Versionsnummer"),
+    "View Description" : MessageLookupByLibrary.simpleMessage("Visa beskrivning"),
     "View error details" : MessageLookupByLibrary.simpleMessage("Visa felinformation"),
+    "View the Privacy Policy" : MessageLookupByLibrary.simpleMessage("Visa sekretesspolicyn"),
     "We are currently building this feature for your viewing pleasure." : MessageLookupByLibrary.simpleMessage("Vi bygger den här funktionen för dig."),
     "We are unable to display this link, it may belong to an institution you currently aren\'t logged in to." : MessageLookupByLibrary.simpleMessage("Det går inte att visa den här länken. Den kan tillhöra en institution du för närvarande inte är inloggad på."),
     "We couldn\'t find any students associated with this account" : MessageLookupByLibrary.simpleMessage("Det gick inte att hitta studenter kopplade till det här kontot"),
     "We were unable to verify the server for use with this app." : MessageLookupByLibrary.simpleMessage("Vi kunde inte verifiera servern för användning med den här appen."),
     "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening." : MessageLookupByLibrary.simpleMessage("Vi vet inte vad som hände, men det fungerar inte. Kontakta oss om detta fortsätter att inträffa."),
+    "What can we do better?" : MessageLookupByLibrary.simpleMessage("Vad kan vi förbättra?"),
     "Yes" : MessageLookupByLibrary.simpleMessage("Ja"),
     "You are not observing any students." : MessageLookupByLibrary.simpleMessage("Du observerar inga studenter."),
+    "You may only choose 10 calendars to display" : MessageLookupByLibrary.simpleMessage("Du kan endast välja 10 kalendrar att visa"),
     "You must enter a user id" : MessageLookupByLibrary.simpleMessage("Du måste ange ett giltigt användar-ID"),
     "You must enter a valid domain" : MessageLookupByLibrary.simpleMessage("Du måste ange en giltig domän"),
+    "You must select at least one calendar to display" : MessageLookupByLibrary.simpleMessage("Du måste välja minst en kalender att visa"),
     "You will be notified about this assignment on…" : MessageLookupByLibrary.simpleMessage("Du kommer att få en notis om den här uppgiften på..."),
     "You will be notified about this event on…" : MessageLookupByLibrary.simpleMessage("Du kommer att få en notis om den här händelsen den..."),
+    "You\'ll find the QR code on the web in your account profile. Click \'QR for Mobile Login\' in the list." : MessageLookupByLibrary.simpleMessage("Du hittar QR-koden på webben i din kontoprofil. Klicka på \"QR för mobil inloggning\" i listan."),
+    "You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there." : MessageLookupByLibrary.simpleMessage("Du måste öppna din students Canvas Student-app för att fortsätta. Gå till Huvudmenyn > Inställningar > Parkoppla med observatör och skanna QR-koden du ser där."),
     "Your code is incorrect or expired." : MessageLookupByLibrary.simpleMessage("Din kod är fel eller har gått ut."),
     "Your student’s courses might not be published yet." : MessageLookupByLibrary.simpleMessage("Dina studentkurser kanske inte publicerats än."),
     "You’re all caught up!" : MessageLookupByLibrary.simpleMessage("Du är helt i kapp!"),
@@ -344,50 +418,55 @@ class MessageLookup extends MessageLookupByLibrary {
     "canvasGuides" : MessageLookupByLibrary.simpleMessage("Canvas-guider"),
     "canvasLogoLabel" : MessageLookupByLibrary.simpleMessage("Canvas-logotyp"),
     "canvasSupport" : MessageLookupByLibrary.simpleMessage("Canvas Support"),
+    "changeStudentColorLabel" : m12,
     "collapse" : MessageLookupByLibrary.simpleMessage("dölj"),
     "collapsed" : MessageLookupByLibrary.simpleMessage("minimerad"),
-    "contentDescriptionScoreOutOfPointsPossible" : m12,
-    "courseForWhom" : m13,
-    "courseGradeAboveThreshold" : m14,
-    "courseGradeBelowThreshold" : m15,
+    "contentDescriptionScoreOutOfPointsPossible" : m13,
+    "courseForWhom" : m14,
+    "courseGradeAboveThreshold" : m15,
+    "courseGradeBelowThreshold" : m16,
     "coursesLabel" : MessageLookupByLibrary.simpleMessage("Kurser"),
-    "dateAtTime" : m16,
-    "domainSearchHelpBody" : m17,
+    "dateAtTime" : m17,
+    "dismissAlertLabel" : m18,
+    "domainSearchHelpBody" : m19,
     "domainSearchHelpLabel" : MessageLookupByLibrary.simpleMessage("Hur hittar jag min skola eller distrikt?"),
     "domainSearchInputHint" : MessageLookupByLibrary.simpleMessage("Ange skolans namn eller distrikt..."),
-    "dueDateAtTime" : m18,
-    "endMasqueradeLogoutMessage" : m19,
-    "endMasqueradeMessage" : m20,
-    "eventSubjectMessage" : m21,
-    "eventTime" : m22,
+    "dueDateAtTime" : m20,
+    "endMasqueradeLogoutMessage" : m21,
+    "endMasqueradeMessage" : m22,
+    "eventSubjectMessage" : m23,
+    "eventTime" : m24,
     "expand" : MessageLookupByLibrary.simpleMessage("visa"),
     "expanded" : MessageLookupByLibrary.simpleMessage("expanderad"),
-    "finalGrade" : m23,
+    "finalGrade" : m25,
     "findSchool" : MessageLookupByLibrary.simpleMessage("Sök skola"),
-    "frontPageSubjectMessage" : m24,
-    "gradeFormatScoreOutOfPointsPossible" : m25,
-    "gradesSubjectMessage" : m26,
-    "latePenalty" : m27,
+    "frontPageSubjectMessage" : m26,
+    "gradeFormatScoreOutOfPointsPossible" : m27,
+    "gradesSubjectMessage" : m28,
+    "latePenalty" : m29,
     "me" : MessageLookupByLibrary.simpleMessage("jag"),
-    "messageLinkPostscript" : m28,
+    "messageLinkPostscript" : m30,
     "minus" : MessageLookupByLibrary.simpleMessage("minus"),
-    "mustBeAboveN" : m29,
-    "mustBeBelowN" : m30,
+    "mustBeAboveN" : m31,
+    "mustBeBelowN" : m32,
     "next" : MessageLookupByLibrary.simpleMessage("Nästa"),
-    "nextMonth" : m31,
-    "nextWeek" : m32,
-    "noDomainResults" : m33,
+    "nextMonth" : m33,
+    "nextWeek" : m34,
+    "noDomainResults" : m35,
     "ok" : MessageLookupByLibrary.simpleMessage("OK"),
-    "outOfPoints" : m34,
-    "plusRecipientCount" : m35,
-    "pointsPossible" : m36,
-    "previousMonth" : m37,
-    "previousWeek" : m38,
-    "selectedMonthLabel" : m39,
+    "outOfPoints" : m36,
+    "plusRecipientCount" : m37,
+    "pointsPossible" : m38,
+    "previousMonth" : m39,
+    "previousWeek" : m40,
+    "qrCreateAccountTos" : m41,
+    "ratingDialogEmailSubject" : m42,
+    "selectedMonthLabel" : m43,
     "send" : MessageLookupByLibrary.simpleMessage("skicka"),
-    "submissionStatusSuccessSubtitle" : m40,
-    "syllabusSubjectMessage" : m41,
+    "starRating" : m44,
+    "submissionStatusSuccessSubtitle" : m45,
+    "syllabusSubjectMessage" : m46,
     "unread" : MessageLookupByLibrary.simpleMessage("olästa"),
-    "unreadCount" : m42
+    "unreadCount" : m47
   };
 }
