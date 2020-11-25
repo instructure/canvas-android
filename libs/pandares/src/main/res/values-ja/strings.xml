@@ -55,6 +55,7 @@
     <string name="noAttemptsLeft">残り試行回数なし</string>
     <string name="resubmitAssignment">課題を再提出する</string>
 
+    <string name="launchingExternalTool">外部ツールを起動中</string>
     <string name="launchExternalTool">外部ツールを起動する</string>
 
     <string name="preview">プレビュー</string>
@@ -97,6 +98,8 @@
     <string name="noneContentMessage">この課題はオンライン提出ができません</string>
     <string name="onPaperContentMessage">この課題はオンライン提出ができません</string>
     <string name="noOnlineSubmissions">オンライン提出がありません</string>
+    <string name="speedGraderExternalToolMessage">この課題は、提出用の外部ツールにリンクします。</string>
+    <string name="openTool">オープンツール</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s 点</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
@@ -105,6 +108,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s 点/ %2$s 点</string>
     <string name="enterWhatIfScore">仮説スコアを入力する</string>
+    <string name="scoreStatisticsLow">低：%s</string>
+    <string name="scoreStatisticsMean">中程度：%s</string>
+    <string name="scoreStatisticsHigh">高：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">カスタムスコア</string>
     <string name="rubricEmptyMessage">この課題に説明はありません</string>
@@ -133,6 +139,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas ロゴ</string>
     <string name="enterURL">Canvas URLを入力してください:</string>
+    <string name="enterValue">値を入力します</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Canvas Network にサインインしようとしていますか?</string>
     <string name="mobileVerifyGeneral">このアプリは、使用許可されていません</string>

@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Kaore ngā whakamātau e toe ana</string>
     <string name="resubmitAssignment">Tuku anō i te whakataunga</string>
 
+    <string name="launchingExternalTool">Tuku ana Taputapu Waho&#8230;</string>
     <string name="launchExternalTool">Neke Taputapu Waho</string>
 
     <string name="preview">Arokite</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Kāore tēnei whakataunga e whakāe ngā tāpaetanga i runga i te ipurangi</string>
     <string name="onPaperContentMessage">Kāore tēnei whakataunga e whakāe ngā tāpaetanga i runga i te ipurangi</string>
     <string name="noOnlineSubmissions">Kaore he tāpaetanga i runga i te tpurangi</string>
+    <string name="speedGraderExternalToolMessage">Ka hono tēnei whakataunga ki tetahi taputapu waho mo ngā tāpaetanga.</string>
+    <string name="openTool">Huaki taputapu</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">I waho o %s ngā koinga</string>
     <string name="outOfPointsAbbreviatedFormatted">I waho o %s pts</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s waho ō %2$s ngā koinga</string>
     <string name="enterWhatIfScore">Whakauru he aha te kaute</string>
+    <string name="scoreStatisticsLow">Raro: %s</string>
+    <string name="scoreStatisticsMean">Waenganui: %s</string>
+    <string name="scoreStatisticsHigh">Tiketike: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Kaute tikanga</string>
     <string name="rubricEmptyMessage">Kaore he rubric mo tēnei whakataunga</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Moko</string>
     <string name="enterURL">Whakauru ki tō URL Canvas:</string>
+    <string name="enterValue">Whakauru he uara</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">E ngana ana ki te haina ki Canvas Whatunga?</string>
     <string name="mobileVerifyGeneral">Kaore tēnei taupānga e manahia ki te whakamahi</string>

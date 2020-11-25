@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Använda försök</string>
     <string name="noAttemptsLeft">Inga försök kvar</string>
     <string name="resubmitAssignment">Skicka uppgift igen</string>
+    <string name="launchingExternalTool">Startar externt verktyg&#8230;</string>
     <string name="launchExternalTool">Starta externt verktyg</string>
     <string name="preview">Förhandsgranska</string>
 
@@ -99,6 +100,8 @@
     <string name="noneContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="onPaperContentMessage">Den här uppgiften tillåter inte onlineinlämningar</string>
     <string name="noOnlineSubmissions">Inga onlineinlämningar</string>
+    <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
+    <string name="openTool">Öppna verktyg</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poäng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poäng</string>
@@ -108,6 +111,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poäng</string>
     <string name="enterWhatIfScore">Ange Vad om-resultat</string>
+    <string name="scoreStatisticsLow">Låg: %s</string>
+    <string name="scoreStatisticsMean">Medel: %s</string>
+    <string name="scoreStatisticsHigh">Hög: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Anpassat resultat</string>
     <string name="rubricEmptyMessage">Det finns ingen matris för den här uppgiften</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas-logo</string>
     <string name="enterURL">Ange din Canvas-URL:</string>
+    <string name="enterValue">Ange ett värde</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Försöker du logga in på Canvas nätverk?</string>
     <string name="mobileVerifyGeneral">Den här appen har inte auktoriserats för användning</string>
@@ -774,7 +781,7 @@
     <string name="notification_desc_appointment_cancelations">Få aviseringar vid avbeställning av tid.</string>
     <string name="notification_desc_appointment_availability">Få aviseringar när en möteslucka blir tillgänglig.</string>
     <string name="notification_desc_calendar">Få aviseringar om nya och uppdaterade kalenderobjekt.</string>
-    <string name="notification_desc_membership_update">Endast admin, väntande registrering aktiverad. Få aviseringar när en gruppregistrering accepteras eller avvisas.</string>
+    <string name="notification_desc_membership_update">Endast admin, väntande registrering aktiverad. Få avisering när en gruppregistrering accepteras eller nekas.</string>
     <string name="notification_desc_admin">Endast lärare och admin. Få aviseringar om kursregistreringar, genererade rapporter, exporterat innehåll, migrationsrapporter, nya kontoanvändare, och nya studentgrupper.</string>
     <string name="notification_desc_recording_ready">Få aviseringar när en konferensinspelning är klar.</string>
 

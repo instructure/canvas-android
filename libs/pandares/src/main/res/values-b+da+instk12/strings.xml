@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Brugte forsøg</string>
     <string name="noAttemptsLeft">Ingen forsøg tilbage</string>
     <string name="resubmitAssignment">Gen-indsend opgave</string>
+    <string name="launchingExternalTool">Starter eksternt værktøj ...</string>
     <string name="launchExternalTool">Start eksternt værktøj</string>
     <string name="preview">Eksempel</string>
     <string name="submissionUploadFailedMessage">En eller flere filer kunne ikke uploades. Kontroller din internetforbindelse, og prøv igen for at aflevere.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Denne opgave tillader ikke online indsendelser</string>
     <string name="noOnlineSubmissions">Ingen online indsendelser</string>
 
+    <string name="speedGraderExternalToolMessage">Denne opgave henviser til et eksternt værktøj til aflevering.</string>
+    <string name="openTool">Åbn værktøj</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Ud af %s point</string>
     <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s ud af %2$s point</string>
     <string name="enterWhatIfScore">Indtast Hvad-nu-hvis-resultat.</string>
 
+    <string name="scoreStatisticsLow">Lav: %s</string>
+    <string name="scoreStatisticsMean">Middel: %s</string>
+    <string name="scoreStatisticsHigh">Høj: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Brugerdefineret resultat</string>
     <string name="rubricEmptyMessage">Der er ingen vurderingskriterier til denne opgave</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas Logo</string>
     <string name="enterURL">Indtast dit Canvas URL:</string>
+    <string name="enterValue">Indtast en værdi</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Prøve du at logge ind på Canvas Network?</string>
     <string name="mobileVerifyGeneral">Denne app er ikke autoriseret for brug</string>

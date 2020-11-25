@@ -55,6 +55,7 @@
     <string name="noAttemptsLeft">不可再次嘗試</string>
     <string name="resubmitAssignment">重新提交作業</string>
 
+    <string name="launchingExternalTool">啟動外部工具中&#8230;</string>
     <string name="launchExternalTool">啟動外部工具</string>
 
     <string name="preview">預覽</string>
@@ -97,6 +98,8 @@
     <string name="noneContentMessage">此作業不允許線上提交項目</string>
     <string name="onPaperContentMessage">此作業不允許線上提交項目</string>
     <string name="noOnlineSubmissions">沒有線上提交項目</string>
+    <string name="speedGraderExternalToolMessage">此作業已連結至外部工具以供提交。</string>
+    <string name="openTool">開啟工具</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">滿分為 %s 分</string>
     <string name="outOfPointsAbbreviatedFormatted">滿分為 %s 分</string>
@@ -105,6 +108,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">得分為 %1$s，滿分為 %2$s</string>
     <string name="enterWhatIfScore">輸入假設分數</string>
+    <string name="scoreStatisticsLow">低：%s</string>
+    <string name="scoreStatisticsMean">平均：%s</string>
+    <string name="scoreStatisticsHigh">高：%s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">自訂分數</string>
     <string name="rubricEmptyMessage">此作業沒有評分標準</string>
@@ -133,6 +139,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas 標誌</string>
     <string name="enterURL">請輸入您的 Canvas URL：</string>
+    <string name="enterValue">請輸入值</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">嘗試登入 Canvas Network？</string>
     <string name="mobileVerifyGeneral">該應用程式未獲得使用授權</string>
@@ -765,7 +772,7 @@
     <string name="notification_desc_appointment_cancelations">在取消預約時收到通知。</string>
     <string name="notification_desc_appointment_availability">在預約時段變為可用時收到通知。</string>
     <string name="notification_desc_calendar">在獲取關於新的和更新的行事曆項目時收到通知。</string>
-    <string name="notification_desc_membership_update">只限管理員，等待註冊激活。在群組註冊被接受或拒絕時收到通知。</string>
+    <string name="notification_desc_membership_update">只限系統管理員，等待註冊啟用。在群組註冊遭到接受或拒絕時收到通知。</string>
     <string name="notification_desc_admin">只限導師和管理員。在獲取關於課程註冊、已生成的報告、匯出內容、遷移報告、新帳戶使用者和新學生群組時收到通知。</string>
     <string name="notification_desc_recording_ready">在會議錄製準備就緒時收到通知。</string>
 

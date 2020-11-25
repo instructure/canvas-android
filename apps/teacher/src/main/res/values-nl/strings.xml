@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Cijfer</string>
     <string name="sg_tab_comments">Opmerkingen</string>
     <string name="sg_tab_files">Bestanden</string>
+    <string name="sg_tab_files_w_counter">Bestanden (%d)</string>
     <string name="filter_submissions">Inzendingen filteren</string>
     <string name="all_submissions">Alle inzendingen</string>
     <string name="submitted_late">Laat ingezonden</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Dit bestand kan niet worden weergegeven. Gebruik de knop hieronder om het bestand met een andere app op je apparaat te openen.</string>
     <string name="speedGraderNoneMessage">Voor deze opdracht zijn geen inzendingen toegestaan.</string>
-    <string name="speedGraderExternalToolMessage">Deze opdracht heeft een link naar een externe tool voor inzendingen.</string>
     <string name="speedGraderOnPaperMessage">Voor deze opdracht zijn alleen schriftelijke inzendingen toegestaan.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Deze inzending was een URL naar een externe pagina. Houd in gedachten dat deze pagina gewijzigd kan zijn na de oorspronkelijke inzending.</string>
     <string name="speedGraderOpenUrl">URL openen</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Toetsbeschrijving</string>
     <string name="removeDueDate">Inleverdatum verbergen</string>
     <string name="removeDueDateMessage">Hiermee wordt de inleverdatum en alle daaraan gekoppelde ontvangers verwijderd.</string>
-    <string name="openTool">Tool openen</string>
     <string name="email">E-mail</string>
     <string name="fullscreen">volledig scherm</string>
     <string name="addNew">Nieuwe toevoegen</string>

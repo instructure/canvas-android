@@ -433,6 +433,7 @@
     <string name="sg_tab_grade">الدرجة</string>
     <string name="sg_tab_comments">التعليقات</string>
     <string name="sg_tab_files">الملفات</string>
+    <string name="sg_tab_files_w_counter">الملفات (%d)</string>
     <string name="filter_submissions">تصفية الإرسالات</string>
     <string name="all_submissions">جميع الإرسالات</string>
     <string name="submitted_late">تم الإرسال متأخرًا</string>
@@ -701,7 +702,6 @@
 
     <string name="unsupportedFileMessage">تعذر عرض هذا الملف. استخدم الزر أدناه لفتح الملف بواسطة تطبيق آخر على جهازك.</string>
     <string name="speedGraderNoneMessage">لا تسمح هذه المهمة بإرسالات.</string>
-    <string name="speedGraderExternalToolMessage">ترتبط هذه المهمة بأداة خارجية للإرسالات.</string>
     <string name="speedGraderOnPaperMessage">لا تسمح هذه المهمة إلا بالإرسالات الورقية.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">كان هذا الإرسال هو عنوان URL المؤدي إلى صفحة خارجية. ضع في اعتبارك أن هذه الصفحة ربما قد تغيرت منذ حدوث الإرسال الأصلي.</string>
     <string name="speedGraderOpenUrl">فتح رابط URL</string>
@@ -794,7 +794,6 @@
     <string name="quizDescriptionContentDescription">وصف الاختبار الموجز</string>
     <string name="removeDueDate">إزالة تاريخ الاستحقاق</string>
     <string name="removeDueDateMessage">سيؤدي هذا إلى إزالة تاريخ الاستحقاق وجميع المعين لهم المقترنين.</string>
-    <string name="openTool">فتح أداة</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="fullscreen">شاشة كاملة</string>
     <string name="addNew">إضافة جديد</string>

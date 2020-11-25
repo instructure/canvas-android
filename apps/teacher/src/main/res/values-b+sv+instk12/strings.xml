@@ -217,6 +217,7 @@
     </plurals>
 
     <string name="delete_assignment_message">Vill du radera den här uppgiften?</string>
+
     <string name="max_count">99+</string>
     <string name="message_student">Skicka meddelande till eleven</string>
 
@@ -312,6 +313,7 @@
     <string name="assignments_list">Uppgiftslista</string>
     <string name="syllabus">Kursöversikt</string>
     <!--End Course Settings-->
+
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Flera inlämningsdatum</string>
     <string name="everyone">Alla</string>
@@ -418,6 +420,7 @@
     <string name="sg_tab_grade">Omdöme</string>
     <string name="sg_tab_comments">Kommentarer</string>
     <string name="sg_tab_files">Filer</string>
+    <string name="sg_tab_files_w_counter">Filer (%d)</string>
     <string name="filter_submissions">Filtrera inlämningar</string>
     <string name="all_submissions">Alla inlämningar</string>
     <string name="submitted_late">Sent inskickad</string>
@@ -654,7 +657,6 @@
 
     <string name="unsupportedFileMessage">Det gick inte att visa filen. Använd knappen nedan för att öppna filen med en annan app på din enhet.</string>
     <string name="speedGraderNoneMessage">Den här uppgiften tillåter inte inlämningar.</string>
-    <string name="speedGraderExternalToolMessage">Den här uppgiften länkar till ett externt verktyg för inlämningar.</string>
     <string name="speedGraderOnPaperMessage">Den här uppgiften tillåter endast inlämningar på papper.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Den här inskickningen var en URL till en extern sida. Kom ihåg att den här sidan kan ha ändrats sedan inlämningen ursprungligen gjordes.</string>
     <string name="speedGraderOpenUrl">Öppna URL</string>
@@ -747,7 +749,6 @@
     <string name="quizDescriptionContentDescription">Quizbeskrivning</string>
     <string name="removeDueDate">Ta bort inlämningsdatum</string>
     <string name="removeDueDateMessage">Detta kommer att ta bort inlämningsdatumet och alla tillhörande tilldelade personer.</string>
-    <string name="openTool">Öppna verktyg</string>
     <string name="email">E-post</string>
     <string name="fullscreen">fullskärm</string>
     <string name="addNew">Lägg till ny</string>

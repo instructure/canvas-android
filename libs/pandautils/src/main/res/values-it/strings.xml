@@ -185,6 +185,8 @@
     <string name="noPages">Nessuna pagina</string>
     <string name="noPagesSubtext">Sembra che non siano ancora state create delle pagine.</string>
 
+    <string name="modulesLockedSubtext">I moduli sono stati disabilitati per questo corso.</string>
+    <string name="modulesLocked">Si è verificato un problema</string>
     <!--General-->
     <string name="yes">Sì</string>
     <string name="no">No</string>
@@ -226,6 +228,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Insegnante Canvas</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Sondaggi Canvas</string>
     <string name="utils_speedgrader">SpeedGrader</string>
 
     <!-- Rating Dialog -->

@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">No attempts left</string>
     <string name="resubmitAssignment">Resubmit assignment</string>
 
+    <string name="launchingExternalTool">Launching External Tool&#8230;</string>
     <string name="launchExternalTool">Launch external tool</string>
 
     <string name="preview">Preview</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
     <string name="onPaperContentMessage">This assignment does not allow online submissions</string>
     <string name="noOnlineSubmissions">No Online Submissions</string>
+    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
+    <string name="openTool">Open tool</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Out of %s pts</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s out of %2$s points</string>
     <string name="enterWhatIfScore">Enter what-if score</string>
+    <string name="scoreStatisticsLow">Low: %s</string>
+    <string name="scoreStatisticsMean">Mean: %s</string>
+    <string name="scoreStatisticsHigh">High: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Custom score</string>
     <string name="rubricEmptyMessage">There is no rubric for this assignment</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas logo</string>
     <string name="enterURL">Enter your Canvas URL:</string>
+    <string name="enterValue">Enter a value</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Trying to sign into Canvas Network?</string>
     <string name="mobileVerifyGeneral">This app is not authorised for use</string>

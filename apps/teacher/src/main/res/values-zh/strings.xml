@@ -413,6 +413,7 @@
     <string name="sg_tab_grade">评分</string>
     <string name="sg_tab_comments">评论</string>
     <string name="sg_tab_files">文件</string>
+    <string name="sg_tab_files_w_counter">文件(%d)</string>
     <string name="filter_submissions">筛选器提交项</string>
     <string name="all_submissions">所有提交项</string>
     <string name="submitted_late">迟交</string>
@@ -641,7 +642,6 @@
 
     <string name="unsupportedFileMessage">无法显示文件。使用下面的按钮以使用设备上的其他应用程序打开文件。</string>
     <string name="speedGraderNoneMessage">此作业不允许提交。</string>
-    <string name="speedGraderExternalToolMessage">此作业关联用于提交的外部工具。</string>
     <string name="speedGraderOnPaperMessage">此作业仅允许纸上提交。</string>
     <string name="speedGraderUrlSubmissionDisclaimer">此提交是指向外部页面的一个 URL。请记住，此页面自最初进行提交后可能已更改。</string>
     <string name="speedGraderOpenUrl">打开 URL</string>
@@ -734,7 +734,6 @@
     <string name="quizDescriptionContentDescription">测验说明</string>
     <string name="removeDueDate">删除截止日期</string>
     <string name="removeDueDateMessage">这将删除截止日期和所有关联的指定人员。</string>
-    <string name="openTool">打开工具</string>
     <string name="email">电子邮件</string>
     <string name="fullscreen">全屏</string>
     <string name="addNew">新增</string>

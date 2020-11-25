@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Tentativas usadas</string>
     <string name="noAttemptsLeft">Nenhuma tentativa restante</string>
     <string name="resubmitAssignment">Re-enviar Tarefa</string>
+    <string name="launchingExternalTool">Ferramenta externa de inicialização...</string>
     <string name="launchExternalTool">Executar ferramenta externa</string>
     <string name="preview">Pré-visualização</string>
     <string name="submissionUploadFailedMessage">Falha no carregamento de um ou mais arquivos. Verifique sua conexão à Internet e tente enviar novamente.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Esta tarefa não permite envios on-line</string>
     <string name="noOnlineSubmissions">Nenhum envio on-line</string>
 
+    <string name="speedGraderExternalToolMessage">Esta tarefa é vinculada a uma ferramenta interna para envios.</string>
+    <string name="openTool">Abrir ferramenta</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s pontos</string>
 
     <string name="enterWhatIfScore">Inserir pontuação E-Se</string>
+    <string name="scoreStatisticsLow">Baixa: %s</string>
+    <string name="scoreStatisticsMean">Média: %s</string>
+    <string name="scoreStatisticsHigh">Alta: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Pontuação personalizada</string>
     <string name="rubricEmptyMessage">Não há nenhuma rubrica para essa tarefa</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logotipo do Canvas</string>
     <string name="enterURL">Insira o seu URL do Canvas:</string>
+    <string name="enterValue">Inserir um valor</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Tentando entrar na Canvas Network?</string>
     <string name="mobileVerifyGeneral">Este aplicativo não está autorizado para uso</string>
@@ -782,7 +789,7 @@
     <string name="notification_desc_appointment_cancelations">Ser notificado quando houver um cancelamento de compromisso.</string>
     <string name="notification_desc_appointment_availability">Ser notificado quando o horário de um compromisso se tornar disponível.</string>
     <string name="notification_desc_calendar">Ser notificado sobre itens de calendário novos e atualizados.</string>
-    <string name="notification_desc_membership_update">Apenas Administrador, matrícula pendente ativada. Ser notificado quando uma matrícula de grupo for aceita ou rejeitada.</string>
+    <string name="notification_desc_membership_update">Apenas Administrador, matrícula pendente ativada. Seja notificado quando uma matrícula de grupo for aceita ou rejeitada.</string>
     <string name="notification_desc_admin">Apenas Instrutor e Admin. Ser notificado sobre matrículas de cursos, relatórios gerados, conteúdo exportado, relatórios de migração, novos usuários de contas e novos grupos de alunos.</string>
     <string name="notification_desc_recording_ready">Ser notificado quando uma gravação de conferência estiver pronta.</string>
 

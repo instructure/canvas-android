@@ -185,6 +185,8 @@
     <string name="noPages">Inga sidor</string>
     <string name="noPagesSubtext">Det verkar inte som om några sidor har skapats än.</string>
 
+    <string name="modulesLockedSubtext">Moduler har inaktiverats för den här kursen.</string>
+    <string name="modulesLocked">Något gick fel</string>
     <!--General-->
     <string name="yes">Ja</string>
     <string name="no">Nej</string>
@@ -226,6 +228,7 @@
     <string name="utils_canvas">Canvas</string>
     <string name="utils_canvasTeacher">Canvas-lärare</string>
     <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_polls">Canvas-omröstningar</string>
     <string name="utils_speedgrader">Speedgrader</string>
 
     <!-- Rating Dialog -->

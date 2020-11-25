@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Tentativi usati</string>
     <string name="noAttemptsLeft">Nessun tentativo rimasto</string>
     <string name="resubmitAssignment">Reinvia compito</string>
+    <string name="launchingExternalTool">Avvio strumento esterno in corso&#8230;</string>
     <string name="launchExternalTool">Avvia strumento esterno</string>
     <string name="preview">Anteprima</string>
     <string name="submissionUploadFailedMessage">Impossibile caricare uno o più file. Controlla la tua connessione Internet e riprova a inviare.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Questo compito non consente consegne online</string>
     <string name="noOnlineSubmissions">Nessuna consegna online</string>
 
+    <string name="speedGraderExternalToolMessage">Questo compito include link a uno strumento esterno per le consegne.</string>
+    <string name="openTool">Apri strumento</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Su %s punti</string>
     <string name="outOfPointsAbbreviatedFormatted">su %s pt</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s su %2$s punti</string>
     <string name="enterWhatIfScore">Inserisci punteggio What-If</string>
 
+    <string name="scoreStatisticsLow">Basso: %s</string>
+    <string name="scoreStatisticsMean">Medio: %s</string>
+    <string name="scoreStatisticsHigh">Alto: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Punteggio personalizzato</string>
     <string name="rubricEmptyMessage">Non c’è alcuna rubrica per questo compito</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Inserisci il tuo URL Canvas:</string>
+    <string name="enterValue">Inserisci un valore</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Stai cercando di accedere a Canvas Network?</string>
     <string name="mobileVerifyGeneral">Questa app non è autorizzata per l’uso</string>

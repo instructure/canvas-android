@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Aucune tentative restante</string>
     <string name="resubmitAssignment">Soumettre à nouveau le travail</string>
 
+    <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
     <string name="launchExternalTool">Lancer l\'outil externe</string>
 
     <string name="preview">Aperçu</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Ce travail ne permet pas les envois en ligne.</string>
     <string name="onPaperContentMessage">Ce travail ne permet pas les envois en ligne.</string>
     <string name="noOnlineSubmissions">Aucune soumission en ligne</string>
+    <string name="speedGraderExternalToolMessage">Cette tâche renvoie à un outil externe pour les envois.</string>
+    <string name="openTool">Ouvrir outil</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sur %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Sur %s pts</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s sur %2$s points</string>
     <string name="enterWhatIfScore">Entrez la note de simulation</string>
+    <string name="scoreStatisticsLow">Faible : %s</string>
+    <string name="scoreStatisticsMean">Moyen : %s</string>
+    <string name="scoreStatisticsHigh">Élevé : %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Score personnalisé</string>
     <string name="rubricEmptyMessage">Il n’existe aucun barème pour ce travail</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo de Canvas</string>
     <string name="enterURL">Saisir votre URL Canvas :</string>
+    <string name="enterValue">Saisir une valeur</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Vous essayez de vous connecter au Canvas Network ?</string>
     <string name="mobileVerifyGeneral">Cette application n\'est pas autorisée à être utilisée</string>
@@ -771,7 +778,7 @@
     <string name="notification_desc_appointment_cancelations">Être notifié lors de l’annulation d’un rendez-vous.</string>
     <string name="notification_desc_appointment_availability">Être notifié lorsqu’un créneau de rendez-vous est disponible.</string>
     <string name="notification_desc_calendar">Être notifié de l’apparition d’éléments nouveaux ou mis à jour sur le calendrier.</string>
-    <string name="notification_desc_membership_update">Administrateur uniquement, inscription en attente activée. Être notifié lorsqu’une inscription à un groupe est acceptée ou refusée.</string>
+    <string name="notification_desc_membership_update">Administrateur uniquement, inscription en attente activée. Soyez averti lorsqu\'une inscription de groupe est acceptée ou refusée.</string>
     <string name="notification_desc_admin">Instructeur &amp; Admin uniquement. Être notifié des inscriptions aux cours, des rapports générés, des contenus exportés, des rapports de migration, des nouveaux comptes utilisateur et des nouveaux groupes d’élèves.</string>
     <string name="notification_desc_recording_ready">Être notifié lorsqu’un nouvel enregistrement de conférence est prêt.</string>
 

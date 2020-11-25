@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Arvosana</string>
     <string name="sg_tab_comments">Kommentit</string>
     <string name="sg_tab_files">Tiedostot</string>
+    <string name="sg_tab_files_w_counter">Tiedostot (%d)</string>
     <string name="filter_submissions">Suodattimen lähetykset</string>
     <string name="all_submissions">Kaikki lähetykset</string>
     <string name="submitted_late">Lähetetty myöhässä</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Tiedostoa ei voitu näyttää. Käytä tätä painiketta alla avataksesi tiedosto toisessa sovelluksessa laitteessasi.</string>
     <string name="speedGraderNoneMessage">Tämä tehtävä ei salli lähetyksiä.</string>
-    <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
     <string name="speedGraderOnPaperMessage">Tämä tehtävä sallii vain paperilla tehtävät lähetykset.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Tämä lähetys oli URL ulkoiselle sivulle. Muista, että tämä sivu on ehkä muuttunut siitä, kun lähetys alunperin tapahtui.</string>
     <string name="speedGraderOpenUrl">Avaa URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Tietovisan kuvaus</string>
     <string name="removeDueDate">Poista määräpäivä</string>
     <string name="removeDueDateMessage">Tämä poistaa määräpäivän ja kaikki liitetyn tehtävänsaajat.</string>
-    <string name="openTool">Avaa työkalu</string>
     <string name="email">Sähköposti</string>
     <string name="fullscreen">koko näyttö</string>
     <string name="addNew">Lisää uusi</string>

@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Kōeke</string>
     <string name="sg_tab_comments">Ngā Kōrerorero</string>
     <string name="sg_tab_files">Kōnae</string>
+    <string name="sg_tab_files_w_counter">Ngā kōnae (%d)</string>
     <string name="filter_submissions">Tātari ngā tukunga</string>
     <string name="all_submissions">Ngā tāpaetanga katoa</string>
     <string name="submitted_late">Tukunga tūreiti</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Kaore tēnei kōnae e whakātutia Mahia te pātene i raro ki te huaki i te kōnae me tētahi atu taupanga i runga i tō pūrere.</string>
     <string name="speedGraderNoneMessage">Kāore tēnei whakataunga e whakāe ngā tukunga</string>
-    <string name="speedGraderExternalToolMessage">Ka hono tēnei whakataunga ki tetahi taputapu waho mo ngā tāpaetanga.</string>
     <string name="speedGraderOnPaperMessage">Tēnei tukunga e whakaae ana pepa tukunga anake.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Tēnei tukunga ko te URL ki te whārangi waho. Kia mahara ki e kua puta ke ai tēnei whārangi mai i te tuatahi i puta i te tāpaetanga.</string>
     <string name="speedGraderOpenUrl">Huaki URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Quiz Whakāturanga</string>
     <string name="removeDueDate">Tango Rā tika</string>
     <string name="removeDueDateMessage">Ko tēnei ka tango i te rā tika me ngā rīwhi hoapā katoa.</string>
-    <string name="openTool">Huaki taputapu</string>
     <string name="email">Īmēra</string>
     <string name="fullscreen">mata katoa</string>
     <string name="addNew">Tāpiri Hou</string>

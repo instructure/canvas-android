@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-08-07T11:03:26.707583",
+  "@@last_modified": "2020-09-18T11:03:20.748250",
   "alertsLabel": "アラート",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1340,6 +1340,11 @@
   },
   "Your code is incorrect or expired.": "コードが間違っているか、期限が切れています。",
   "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "アカウントを作成しようとしたときに問題が発生しました。学校に連絡して支援を求めてください。",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
     "type": "text",
     "placeholders": {}
   },

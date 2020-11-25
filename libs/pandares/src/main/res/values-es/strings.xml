@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Intentos usados</string>
     <string name="noAttemptsLeft">No quedan intentos</string>
     <string name="resubmitAssignment">Volver a entregar la tarea</string>
+    <string name="launchingExternalTool">Iniciando Herramienta externa&#8230;</string>
     <string name="launchExternalTool">Iniciar la herramienta externa</string>
     <string name="preview">Vista previa</string>
     <string name="submissionUploadFailedMessage">No se pudieron cargar uno o más archivos. Compruebe su conexión a Internet y vuelva a entregarlos.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Esta tarea no permite entregas en línea</string>
     <string name="noOnlineSubmissions">Sin entregas en línea</string>
 
+    <string name="speedGraderExternalToolMessage">Esta tarea se vincula con una herramienta externa para entregas.</string>
+    <string name="openTool">Abrir herramienta</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s puntos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s puntos</string>
     <string name="enterWhatIfScore">Ingresar puntaje hipotético</string>
 
+    <string name="scoreStatisticsLow">Bajo: %s</string>
+    <string name="scoreStatisticsMean">Promedio: %s</string>
+    <string name="scoreStatisticsHigh">Alto: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Puntaje personalizado</string>
     <string name="rubricEmptyMessage">No hay ninguna rúbrica para esta tarea</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logotipo de Canvas</string>
     <string name="enterURL">Ingrese su URL de Canvas:</string>
+    <string name="enterValue">Ingresar un valor</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">¿Está intentando acceder a Canvas Network?</string>
     <string name="mobileVerifyGeneral">Esta aplicación no está autorizada para su uso</string>
@@ -783,7 +790,7 @@
     <string name="notification_desc_appointment_cancelations">Reciba notificaciones cuando haya una cancelación de una cita.</string>
     <string name="notification_desc_appointment_availability">Reciba notificaciones cuando haya disponible una franja horaria para una cita.</string>
     <string name="notification_desc_calendar">Reciba notificaciones sobre items nuevos y actualizados del calendario.</string>
-    <string name="notification_desc_membership_update">Solo para administradores, activación de inscripciones pendientes. Reciba notificaciones cuando se acepte o se rechace una inscripción grupal.</string>
+    <string name="notification_desc_membership_update">Solo para administradores, activación de inscripciones pendientes. Recibir una notificación cuando se acepta o rechaza una inscripción de grupo.</string>
     <string name="notification_desc_admin">Profesor y administrador solamente. Reciba notificaciones sobre inscripciones del curso, informes generados, contenido exportado, informes de migración, nuevos usuarios de cuenta y nuevos grupos de estudiantes.</string>
     <string name="notification_desc_recording_ready">Reciba notificaciones cuando esté lista la grabación de una conferencia.</string>
 

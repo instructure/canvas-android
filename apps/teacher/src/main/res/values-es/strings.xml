@@ -418,6 +418,7 @@
     <string name="sg_tab_grade">Calificación</string>
     <string name="sg_tab_comments">Comentarios</string>
     <string name="sg_tab_files">Archivos</string>
+    <string name="sg_tab_files_w_counter">Archivos (%d)</string>
     <string name="filter_submissions">Filtrar entregas</string>
     <string name="all_submissions">Todas las entregas</string>
     <string name="submitted_late">Entregado con atraso</string>
@@ -654,7 +655,6 @@
 
     <string name="unsupportedFileMessage">No se pudo mostrar este archivo. Utilice el botón de abajo para abrir el archivo con otra aplicación en su dispositivo.</string>
     <string name="speedGraderNoneMessage">Esta tarea no permite entregas.</string>
-    <string name="speedGraderExternalToolMessage">Esta tarea se vincula con una herramienta externa para entregas.</string>
     <string name="speedGraderOnPaperMessage">Esta tarea solo permite entregas en papel.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Esta entrega fue una URL hacia una página externa. Recuerde que esta página puede haber cambiado desde que ocurrió la entrega original.</string>
     <string name="speedGraderOpenUrl">Abrir URL</string>
@@ -747,7 +747,6 @@
     <string name="quizDescriptionContentDescription">Descripción del examen</string>
     <string name="removeDueDate">Eliminar fecha de entrega</string>
     <string name="removeDueDateMessage">Esto eliminará la fecha de entrega y todas las personas asignadas asociadas.</string>
-    <string name="openTool">Abrir herramienta</string>
     <string name="email">Correo electrónico</string>
     <string name="fullscreen">pantalla completa</string>
     <string name="addNew">Agregar nuevo</string>

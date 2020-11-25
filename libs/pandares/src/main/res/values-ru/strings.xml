@@ -57,6 +57,7 @@
     <string name="attemptsUsedLabel">Использованное число попыток</string>
     <string name="noAttemptsLeft">Попыток не осталось</string>
     <string name="resubmitAssignment">Повторная отправка задания</string>
+    <string name="launchingExternalTool">Запуск внешнего инструмента&#8230;</string>
     <string name="launchExternalTool">Запуск внешнего инструмента</string>
     <string name="preview">Предпросмотр</string>
     <string name="submissionUploadFailedMessage">Не удалось загрузить один или несколько файлов. Проверьте подключение к Интернету и повторите отправку.</string>
@@ -100,6 +101,8 @@
     <string name="onPaperContentMessage">Это задание не допускает отправку данных онлайн</string>
     <string name="noOnlineSubmissions">Отправка данных онлайн невозможна</string>
 
+    <string name="speedGraderExternalToolMessage">Это задание содержит ссылку на внешний инструмент для отправки.</string>
+    <string name="openTool">Открыть инструмент</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Из %s баллов</string>
     <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
@@ -109,6 +112,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s из %2$s баллов</string>
     <string name="enterWhatIfScore">Ввести оценку «что, если»</string>
 
+    <string name="scoreStatisticsLow">Низкий: %s</string>
+    <string name="scoreStatisticsMean">Средний: %s</string>
+    <string name="scoreStatisticsHigh">Высокий: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Персонализированная оценка</string>
     <string name="rubricEmptyMessage">Нет раздела для этого задания</string>
@@ -139,6 +145,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Логотип Canvas</string>
     <string name="enterURL">Введите Ваш URL Canvas:</string>
+    <string name="enterValue">Ввести значение</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Пытаетесь войти в сеть Canvas?</string>
     <string name="mobileVerifyGeneral">Это приложение не авторизовано для использования</string>

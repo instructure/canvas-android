@@ -418,6 +418,7 @@
     <string name="sg_tab_grade">Qualificació</string>
     <string name="sg_tab_comments">Comentaris</string>
     <string name="sg_tab_files">Fitxers</string>
+    <string name="sg_tab_files_w_counter">Fitxers (%d)</string>
     <string name="filter_submissions">Filtra les entregues</string>
     <string name="all_submissions">Totes les entregues</string>
     <string name="submitted_late">Entregat tard</string>
@@ -654,7 +655,6 @@
 
     <string name="unsupportedFileMessage">No s\'ha pogut mostrar aquest fitxer. Utilitzeu el botó de sota per obrir el fitxer amb una altra aplicació del dispositiu.</string>
     <string name="speedGraderNoneMessage">Amb aquesta tasca no es permet fer entregues.</string>
-    <string name="speedGraderExternalToolMessage">Aquesta tasca enllaça amb una eina externa per fer entregues.</string>
     <string name="speedGraderOnPaperMessage">Amb aquesta tasca només es permet fer entregues en paper.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Aquesta entrega era un URL a una pàgina externa. Recordeu que és possible que aquesta pàgina hagi canviat des que es va entregar originalment.</string>
     <string name="speedGraderOpenUrl">Obre l\'URL</string>
@@ -747,7 +747,6 @@
     <string name="quizDescriptionContentDescription">Descripció del qüestionari</string>
     <string name="removeDueDate">Elimina la data de venciment</string>
     <string name="removeDueDateMessage">Amb aquesta acció s\'eliminaran la data de venciment i tots els beneficiaris associats.</string>
-    <string name="openTool">Obre l\'eina</string>
     <string name="email">Correu electrònic</string>
     <string name="fullscreen">pantalla completa</string>
     <string name="addNew">Afegeix nou</string>

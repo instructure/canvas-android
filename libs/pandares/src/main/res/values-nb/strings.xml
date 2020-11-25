@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Ingen forsøk igjen</string>
     <string name="resubmitAssignment">Send oppgaven inn på nytt</string>
 
+    <string name="launchingExternalTool">Starter eksternt verktøy&#8230;</string>
     <string name="launchExternalTool">Åpne eksternt verktøy</string>
 
     <string name="preview">Forhåndsvisning</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Denne oppgaven tillater ikke levering på nett</string>
     <string name="onPaperContentMessage">Denne oppgaven tillater ikke levering på nett</string>
     <string name="noOnlineSubmissions">Ingen levering på nett</string>
+    <string name="speedGraderExternalToolMessage">Denne oppgaven er lenket til et eksternt verktøy for innleveringer.</string>
+    <string name="openTool">Åpne verktøy</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Av %s poeng</string>
     <string name="outOfPointsAbbreviatedFormatted">Av %s poeng</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s av %2$s poeng</string>
     <string name="enterWhatIfScore">Skriv inn what-If resultat</string>
+    <string name="scoreStatisticsLow">Lav: %s</string>
+    <string name="scoreStatisticsMean">Gjennomsnitt: %s</string>
+    <string name="scoreStatisticsHigh">Høy: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Egendefinert resultat</string>
     <string name="rubricEmptyMessage">Det er ingen vurderingsveiledning for denne oppgaven</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Canvas-logo</string>
     <string name="enterURL">Skriv inn din Canvas URL:</string>
+    <string name="enterValue">Skriv inn en verdi</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Prøve å logge på Canvas Network?</string>
     <string name="mobileVerifyGeneral">Denne appen er ikke godkjent for bruk</string>
@@ -771,7 +778,7 @@
     <string name="notification_desc_appointment_cancelations">Bli varslet når det er en avbestilling av avtale.</string>
     <string name="notification_desc_appointment_availability">Bli varslet når en timeavtale blir tilgjengelig.</string>
     <string name="notification_desc_calendar">Bli varslet om nye og oppdaterte kalenderelementer.</string>
-    <string name="notification_desc_membership_update">Bare admin, ventende påmelding aktivert. Bli varslet når en gruppepåmelding er akseptert eller avvist.</string>
+    <string name="notification_desc_membership_update">Bare admin, ventende påmelding aktivert. Bli varlset når en gruppepåmelding blir godtatt eller avslått.</string>
     <string name="notification_desc_admin">Instruktør &amp; kun Admin. Få beskjed om emnepåmeldinger, rapporter generert, innhold eksportert, flyttingsrapporter, nye kontobrukere og nye studentgrupper.</string>
     <string name="notification_desc_recording_ready">Bli varslet når et konferanseopptak er klart.</string>
 

@@ -57,6 +57,7 @@
     <string name="attemptsUsedLabel">Wykorzystana próba</string>
     <string name="noAttemptsLeft">Brak pozostałych prób</string>
     <string name="resubmitAssignment">Wyślij ponownie zadanie</string>
+    <string name="launchingExternalTool">Uruchamianie narzędzia zewnętrzne...</string>
     <string name="launchExternalTool">Uruchom narzędzie zewnętrzne</string>
     <string name="preview">Podgląd</string>
     <string name="submissionUploadFailedMessage">Nie udało się przesłać co najmniej jednego pliku. Sprawdź połączenie internetowe i ponów przesyłanie.</string>
@@ -100,6 +101,8 @@
     <string name="onPaperContentMessage">To zadanie nie umożliwia przesyłania online</string>
     <string name="noOnlineSubmissions">Brak przesyłek online</string>
 
+    <string name="speedGraderExternalToolMessage">To zadanie odnosi się do zewnętrznego narzędzia do przesyłania.</string>
+    <string name="openTool">Otwórz narzędzie</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Z %s pkt</string>
     <string name="outOfPointsAbbreviatedFormatted">Z %s pkt</string>
@@ -109,6 +112,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s z %2$s pkt</string>
     <string name="enterWhatIfScore">Wprowadź wynik dla a-co-jeśli</string>
 
+    <string name="scoreStatisticsLow">Niski: %s</string>
+    <string name="scoreStatisticsMean">Średni: %s</string>
+    <string name="scoreStatisticsHigh">Wysoki: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Niestandardowy wynik punktowy</string>
     <string name="rubricEmptyMessage">Nie ma rubryki dla tego zadania</string>
@@ -139,6 +145,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Wprowadź swój adres URL dla Canvas:</string>
+    <string name="enterValue">Wprowadź wartość</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Czy próbujesz się zarejestrować w sieci Canvas Network?</string>
     <string name="mobileVerifyGeneral">Ta aplikacja nie została zatwierdzona do użytku</string>

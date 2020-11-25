@@ -56,6 +56,7 @@
     <string name="noAttemptsLeft">Não há mais tentativas</string>
     <string name="resubmitAssignment">Voltar a submeter tarefa</string>
 
+    <string name="launchingExternalTool">Lançar Ferramenta Externa...</string>
     <string name="launchExternalTool">Lançar Ferramenta Externa</string>
 
     <string name="preview">Visualização</string>
@@ -98,6 +99,8 @@
     <string name="noneContentMessage">Esta tarefa não permite envios online</string>
     <string name="onPaperContentMessage">Esta tarefa não permite envios online</string>
     <string name="noOnlineSubmissions">Nenhum envio online</string>
+    <string name="speedGraderExternalToolMessage">Esta atribuição liga a uma ferramenta externa para submissões.</string>
+    <string name="openTool">Abrir ferramenta</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Fora de %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">Fora de %s pts</string>
@@ -106,6 +109,9 @@
     <string name="gradeFormatScoreOutOfPointsPossible">%1$s/%2$s</string>
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s pontos</string>
     <string name="enterWhatIfScore">Inserir pontuação de variações hipotéticas</string>
+    <string name="scoreStatisticsLow">Baixa: %s</string>
+    <string name="scoreStatisticsMean">Média: %s</string>
+    <string name="scoreStatisticsHigh">Alta: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Personalizar pontuação</string>
     <string name="rubricEmptyMessage">Não existe rubrica para esta atribuição</string>
@@ -134,6 +140,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logo Canvas</string>
     <string name="enterURL">Insira o seu URL Canvas:</string>
+    <string name="enterValue">Insira um valor</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Esta a tentar registar-se na Canvas Network?</string>
     <string name="mobileVerifyGeneral">Esta app não está autorizada para utilização</string>

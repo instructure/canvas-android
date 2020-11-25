@@ -55,6 +55,7 @@
     <string name="attemptsUsedLabel">Intents utilitzats</string>
     <string name="noAttemptsLeft">No queda cap intent</string>
     <string name="resubmitAssignment">Torneu a enviar la tasca</string>
+    <string name="launchingExternalTool">S’està iniciant l’eina externa&#8230;</string>
     <string name="launchExternalTool">Inicieu l\'eina externa</string>
     <string name="preview">Visualització prèvia</string>
     <string name="submissionUploadFailedMessage">No s\'han pogut penjar un o més fitxers. Reviseu la connexió a Internet i torneu a provar de fer l\'entrega.</string>
@@ -98,6 +99,8 @@
     <string name="onPaperContentMessage">Amb aquesta tasca no es permeten entregues en línia</string>
     <string name="noOnlineSubmissions">Sense entregues en línia</string>
 
+    <string name="speedGraderExternalToolMessage">Aquesta tasca enllaça amb una eina externa per fer entregues.</string>
+    <string name="openTool">Obre l\'eina</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s punts</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s punts</string>
@@ -107,6 +110,9 @@
     <string name="contentDescriptionScoreOutOfPointsPossible">%1$s de %2$s punts</string>
     <string name="enterWhatIfScore">Introduïu una puntuació Què passaria si</string>
 
+    <string name="scoreStatisticsLow">Baixa: %s</string>
+    <string name="scoreStatisticsMean">Mitjana: %s</string>
+    <string name="scoreStatisticsHigh">Alta: %s</string>
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Puntuació personalitzada</string>
     <string name="rubricEmptyMessage">No hi ha cap rúbrica per a aquesta tasca</string>
@@ -137,6 +143,7 @@
     <!-- Content Descriptions -->
     <string name="canvasLogo">Logotip de Canvas</string>
     <string name="enterURL">Introduïu l\'URL de Canvas:</string>
+    <string name="enterValue">Introduïu un valor</string>
     <string name="exampleURLSimple">myschool.instructure.com</string>
     <string name="signIntoCanvasNetwork">Esteu provant d\'iniciar la sessió a la xarxa Canvas?</string>
     <string name="mobileVerifyGeneral">Aquesta aplicació no té autorització perquè s\'utilitzi</string>

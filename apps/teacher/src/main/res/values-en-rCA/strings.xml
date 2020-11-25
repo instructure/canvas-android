@@ -420,6 +420,7 @@
     <string name="sg_tab_grade">Grade</string>
     <string name="sg_tab_comments">Comments</string>
     <string name="sg_tab_files">Files</string>
+    <string name="sg_tab_files_w_counter">Files (%d)</string>
     <string name="filter_submissions">Filter Submissions</string>
     <string name="all_submissions">All Submissions</string>
     <string name="submitted_late">Submitted Late</string>
@@ -656,7 +657,6 @@
 
     <string name="unsupportedFileMessage">This file could not be displayed. Use the button below to open the file with another app on your device.</string>
     <string name="speedGraderNoneMessage">This assignment does not allow submissions.</string>
-    <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="speedGraderOnPaperMessage">This assignment only allows on-paper submissions.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">This submission was a URL to an external page. Keep in mind that this page may have changed since the submission originally occurred.</string>
     <string name="speedGraderOpenUrl">Open URL</string>
@@ -749,7 +749,6 @@
     <string name="quizDescriptionContentDescription">Quiz Description</string>
     <string name="removeDueDate">Remove Due Date</string>
     <string name="removeDueDateMessage">This will remove the due date and all of the associated assignees.</string>
-    <string name="openTool">Open Tool</string>
     <string name="email">Email</string>
     <string name="fullscreen">fullscreen</string>
     <string name="addNew">Add New</string>

@@ -417,6 +417,7 @@
     <string name="sg_tab_grade">Klas</string>
     <string name="sg_tab_comments">Kòmantè</string>
     <string name="sg_tab_files">Fichye</string>
+    <string name="sg_tab_files_w_counter">Fichye (%d)</string>
     <string name="filter_submissions">Soumisyon Filtrasyon</string>
     <string name="all_submissions">Tout Soumisyon</string>
     <string name="submitted_late">Soumèt an Reta</string>
@@ -653,7 +654,6 @@
 
     <string name="unsupportedFileMessage">Fichye sa a paka afiche Itilize bouton pi ba a pou ouvri fichye a ak yon lòt app sou aparèy ou a.</string>
     <string name="speedGraderNoneMessage">Sesyon sa a pa otorize soumisyon.</string>
-    <string name="speedGraderExternalToolMessage">Sesyon sa a relye a yon zouti ekstèn pou soumisyon.</string>
     <string name="speedGraderOnPaperMessage">Sesyon sa a otorize soumisyon ou papye sèlman.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Soumisyon sa a se te yon URL a yon paj ekstèn. Sonje ke sa ka rive ke paj sa a chanje aprè soumisyon orijinal la.</string>
     <string name="speedGraderOpenUrl">Ouvri URL</string>
@@ -746,7 +746,6 @@
     <string name="quizDescriptionContentDescription">Deskripsyon Quiz</string>
     <string name="removeDueDate">Elimine Delè</string>
     <string name="removeDueDateMessage">Sa ap elimine delè a ak tout sesyonè ki asosye yo.</string>
-    <string name="openTool">Ouvri Zouti</string>
     <string name="email">Imèl</string>
     <string name="fullscreen">plen ekran</string>
     <string name="addNew">Ajoute Nouvo</string>

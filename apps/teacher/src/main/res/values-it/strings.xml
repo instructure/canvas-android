@@ -418,6 +418,7 @@
     <string name="sg_tab_grade">Voto</string>
     <string name="sg_tab_comments">Commenti</string>
     <string name="sg_tab_files">File</string>
+    <string name="sg_tab_files_w_counter">File (%d)</string>
     <string name="filter_submissions">Filtra consegne</string>
     <string name="all_submissions">Tutte le Consegne</string>
     <string name="submitted_late">Inviato in ritardo</string>
@@ -654,7 +655,6 @@
 
     <string name="unsupportedFileMessage">Impossibile visualizzare questo file. Usa il pulsante qui sotto per aprire il file con un’altra app sul dispositivo.</string>
     <string name="speedGraderNoneMessage">Questo compito non consente consegne.</string>
-    <string name="speedGraderExternalToolMessage">Questo compito include link a uno strumento esterno per le consegne.</string>
     <string name="speedGraderOnPaperMessage">Questo compito consente solo consegne in formato cartaceo.</string>
     <string name="speedGraderUrlSubmissionDisclaimer">Questa consegna era un URL a una pagina esterna. Tieni presente che questa pagina potrebbe essere cambiata sin da quando è stata inviata originariamente la consegna.</string>
     <string name="speedGraderOpenUrl">Apri URL</string>
@@ -747,7 +747,6 @@
     <string name="quizDescriptionContentDescription">Descrizione quiz</string>
     <string name="removeDueDate">Rimuovi data di scadenza</string>
     <string name="removeDueDateMessage">Questo rimuoverà la data di scadenza e tutti gli assegnatari associati.</string>
-    <string name="openTool">Apri strumento</string>
     <string name="email">E-mail</string>
     <string name="fullscreen">tutto schermo</string>
     <string name="addNew">Aggiungi Nuovo</string>

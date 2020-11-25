@@ -1,5 +1,5 @@
 ﻿{
-  "@@last_modified": "2020-08-07T11:03:26.707583",
+  "@@last_modified": "2020-09-18T11:03:20.748250",
   "alertsLabel": "Alertas",
   "@alertsLabel": {
     "description": "The label for the Alerts tab",
@@ -1340,6 +1340,11 @@
   },
   "Your code is incorrect or expired.": "O seu código está incorrecto ou expirou.",
   "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Algo correu mal ao tentar criar a sua conta, por favor contacte a sua escola para obter assistência.",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
     "type": "text",
     "placeholders": {}
   },
