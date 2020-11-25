@@ -32,6 +32,7 @@ import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupMenu
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
@@ -60,7 +61,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     init {
+        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditSyllabus() }
+        setEditVisibility(false)
         ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+
         syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
 
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -69,6 +73,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         syllabusPager.adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
         syllabusTabLayout.setupWithViewPager(syllabusPager, true)
+    }
+
+    private fun setEditVisibility(isVisible: Boolean) {
+        val editItem = toolbar.menu?.findItem(R.id.menu_edit)
+        editItem?.isVisible = isVisible
     }
 
     private fun getTabTitles(): List<String> {
@@ -99,6 +108,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     private fun renderLoadedState(state: SyllabusViewState.Loaded) {
         swipeRefreshLayout.isRefreshing = false
 
+        setEditVisibility(state.canEdit)
+
         val hasBoth = state.eventsState != null && state.syllabus != null
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
@@ -107,6 +118,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         if (state.syllabus != null) syllabusWebView?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
         if (state.eventsState != null) renderEvents(state.eventsState)
+    }
+
+    private fun openEditSyllabus() {
+        // TODO Open edit
     }
 
     private fun renderEvents(eventsState: EventsViewState) {

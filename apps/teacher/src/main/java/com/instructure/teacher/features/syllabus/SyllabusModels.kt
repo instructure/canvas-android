@@ -17,13 +17,14 @@
 package com.instructure.teacher.features.syllabus
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SyllabusEvent {
     object PullToRefresh : SyllabusEvent()
-    data class DataLoaded(val course: DataResult<Course>, val events: DataResult<List<ScheduleItem>>) : SyllabusEvent()
+    data class DataLoaded(val course: DataResult<Course>, val events: DataResult<List<ScheduleItem>>, val permissionsResult: DataResult<CanvasContextPermission>) : SyllabusEvent()
     data class SyllabusItemClicked(val itemId: String) : SyllabusEvent()
 }
 
@@ -38,5 +39,6 @@ data class SyllabusModel(
         val isLoading: Boolean = false,
         val course: DataResult<Course>? = null,
         val syllabus: ScheduleItem? = null,
-        val events: DataResult<List<ScheduleItem>>? = null
+        val events: DataResult<List<ScheduleItem>>? = null,
+        val permissions: DataResult<CanvasContextPermission>? = null
 )

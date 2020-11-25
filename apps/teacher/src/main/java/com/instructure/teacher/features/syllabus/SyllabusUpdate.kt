@@ -32,10 +32,11 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
             SyllabusEvent.PullToRefresh -> Next.next(model.copy(isLoading = true), setOf<SyllabusEffect>(SyllabusEffect.LoadData(model.courseId, true)))
             is SyllabusEvent.DataLoaded -> {
                 Next.next(model.copy(
-                        isLoading = false,
-                        course = event.course,
-                        events = event.events,
-                        syllabus = event.course.dataOrNull?.let { ScheduleItem.createSyllabus(it.name, it.syllabusBody) }
+                    isLoading = false,
+                    course = event.course,
+                    events = event.events,
+                    syllabus = event.course.dataOrNull?.let { ScheduleItem.createSyllabus(it.name, it.syllabusBody) },
+                    permissions = event.permissionsResult
                 ))
             }
             is SyllabusEvent.SyllabusItemClicked -> {

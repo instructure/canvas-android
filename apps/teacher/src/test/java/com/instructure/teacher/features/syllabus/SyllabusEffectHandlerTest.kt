@@ -19,10 +19,7 @@ package com.instructure.teacher.features.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.CourseSettings
-import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.teacher.features.syllabus.ui.SyllabusView
@@ -48,6 +45,8 @@ class SyllabusEffectHandlerTest {
         connect(eventConsumer)
     }
 
+    private val permissions = CanvasContextPermission(canManageContent = true)
+
     private lateinit var course: Course
 
     @ExperimentalCoroutinesApi
@@ -72,7 +71,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Fail(), DataResult.Fail())
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Fail(), DataResult.Fail(), DataResult.Fail())
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -90,6 +89,9 @@ class SyllabusEffectHandlerTest {
         every { CourseManager.getCourseSettingsAsync(COURSE_ID, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), any(), any(), any(), any(), any()) } returns mockk {
@@ -100,7 +102,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Fail())
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Fail(), DataResult.Success(permissions))
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -133,6 +135,9 @@ class SyllabusEffectHandlerTest {
         every { CourseManager.getCourseSettingsAsync(COURSE_ID, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
@@ -152,7 +157,7 @@ class SyllabusEffectHandlerTest {
             sortedEvents.add(calendarEvents[i])
         }
 
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(sortedEvents))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(sortedEvents), DataResult.Success(permissions))
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -172,6 +177,9 @@ class SyllabusEffectHandlerTest {
         every { CourseManager.getCourseSettingsAsync(COURSE_ID, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
@@ -185,7 +193,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(assignments))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(assignments), DataResult.Success(permissions))
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -205,6 +213,9 @@ class SyllabusEffectHandlerTest {
         every { CourseManager.getCourseSettingsAsync(COURSE_ID, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
         }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
@@ -218,7 +229,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(calendarEvents))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(calendarEvents), DataResult.Success(permissions))
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -239,6 +250,9 @@ class SyllabusEffectHandlerTest {
         every { CourseManager.getCourseWithSyllabusAsync(COURSE_ID, false) } returns mockk {
             coEvery { await() } returns DataResult.Success(course)
         }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
@@ -252,7 +266,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(emptyList()))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(emptyList()), DataResult.Success(permissions))
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }

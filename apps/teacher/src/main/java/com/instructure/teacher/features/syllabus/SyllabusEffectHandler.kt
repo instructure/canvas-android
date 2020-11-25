@@ -19,6 +19,7 @@ package com.instructure.teacher.features.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.exhaustive
@@ -48,7 +49,7 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
             val summaryResult: DataResult<List<ScheduleItem>>
             if (course.isFail) {
                 summaryResult = if (summaryAllowed) DataResult.Fail() else DataResult.Success(emptyList())
-                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
+                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, DataResult.Fail()))
                 return@launch
             }
 
@@ -70,7 +71,10 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
                 }
             }
 
-            consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult))
+            val permissionsDeferred = CourseManager.getPermissionsAsync(course.dataOrThrow.id, listOf(CanvasContextPermission.MANAGE_CONTENT))
+            val permissionsResult = permissionsDeferred.await()
+
+            consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, permissionsResult))
         }
     }
 
