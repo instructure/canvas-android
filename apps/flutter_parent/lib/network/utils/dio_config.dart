@@ -14,6 +14,7 @@
 
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:dio_retry/dio_retry.dart';
@@ -121,7 +122,24 @@ class DioConfig {
       error: debug,
     ));
 
+    if (DebugFlags.isDebug) {
+      _configureDebugProxy(dio);
+    }
+
     return dio;
+  }
+
+  void _configureDebugProxy(Dio dio) {
+    const proxyIp = String.fromEnvironment('PROXY_IP', defaultValue: null);
+    const proxyPort = String.fromEnvironment('PROXY_PORT', defaultValue: null);
+    if (proxyIp == null) return;
+
+    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (client) {
+      client.findProxy = (uri) => "PROXY $proxyIp:$proxyPort;";
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
   }
 
   Interceptor _cacheInterceptor() {
