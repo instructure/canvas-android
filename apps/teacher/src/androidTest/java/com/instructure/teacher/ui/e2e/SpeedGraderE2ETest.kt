@@ -36,19 +36,23 @@ import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.*
 import org.junit.Test
 
-class SpeedGraderE2ETest: TeacherTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+class SpeedGraderE2ETest : TeacherTest() {
+    override fun displaysPageObjects() = Unit
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We dont want to see accessibility errors on E2E tests
     }
 
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.GRADES, TestCategory.E2E)
     fun testSpeedGraderE2E() {
-        val data = seedData(1, 1,1,1)
+        val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val student = data.studentsList[0]
+        val gradedStudent = data.studentsList[1]
+        val noSubStudent = data.studentsList[2]
 
         val assignment = seedAssignments(
                 courseId = course.id,
@@ -67,19 +71,42 @@ class SpeedGraderE2ETest: TeacherTest() {
                 studentToken = student.token
         )
 
+        val gradedSubmission = seedAssignmentSubmission(
+                submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                        amount = 1,
+                        submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )),
+                assignmentId = assignment[0].id,
+                courseId = course.id,
+                studentToken = gradedStudent.token
+        )
+
+        SubmissionsApi.gradeSubmission(
+                teacherToken = teacher.token,
+                courseId = course.id,
+                assignmentId = assignment[0].id,
+                studentId = gradedStudent.id,
+                postedGrade = "15",
+                excused = false
+        )
+
         tokenLogin(teacher)
-        /*
+
         coursesListPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
-        these can fail on landscape mode because cardView is not displayed for at least 90%
-        */
-        onView(withText(course.name)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
-        onView(withText("Assignments")).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
 
         assignmentListPage.clickAssignment(assignment[0])
+        assignmentDetailsPage.assertHasSubmitted(actual = 1, outOf = 3)
+        assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
+        assignmentDetailsPage.openNotSubmittedSubmissions()
+        assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = noSubStudent)
+        assignmentSubmissionListPage.navigateBack()
+        assignmentDetailsPage.openGradedSubmissions()
+        assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = gradedStudent)
+        assignmentSubmissionListPage.navigateBack()
         assignmentDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.assertDisplaysTextSubmissionView()
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(studentName = student.name)
         speedGraderPage.selectGradesTab()
         speedGraderGradePage.openGradeDialog()
         val grade = "10"
@@ -87,12 +114,17 @@ class SpeedGraderE2ETest: TeacherTest() {
         speedGraderGradePage.assertHasGrade(grade)
         speedGraderGradePage.navigateBack()
         refresh()
-        assignmentSubmissionListPage.assertStudentHasGrade(grade)
+
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmissions()
-        //assignmentSubmissionListPage.clickFilterUngraded()
-        onView(withText(R.string.not_graded)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogOk()
         assignmentSubmissionListPage.assertHasNoSubmission()
+
+        assignmentSubmissionListPage.clickFilterButton()
+        assignmentSubmissionListPage.clickFilterSubmissions()
+        onView(withText(R.string.not_submitted)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.assertHasSubmission(1)
     }
 }
