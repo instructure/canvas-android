@@ -65,6 +65,7 @@ object UserEndpoint : Endpoint(
     Segment("todo") to UserTodoEndpoint,
     Segment("observer_pairing_codes") to UserPairingCodeEndpoint,
     Segment("activity_stream") to UserActivityStreamEndpoint,
+    Segment("bookmarks") to UserBookmarksEndpoint,
     response = {
         GET {
             val userId = pathVars.userId
@@ -338,3 +339,73 @@ object UserActivityStreamEndpoint : Endpoint( response = {
         request.successResponse(response)
     }
 })
+
+object UserBookmarksEndpoint : Endpoint(
+
+        // Logic to change info for a specific bookmark
+        LongId(PathVars::bookmarkId) to Endpoint(response = {
+            PUT {
+                // path vars
+                val bookmarkId = pathVars.bookmarkId
+                val userId = pathVars.userId
+
+                // query vars
+                val name = request.url().queryParameter("name")
+                val url = request.url().queryParameter("url")
+                val position = request.url().queryParameter("position")
+
+                val bookmark = data.bookmarks[userId]?.firstOrNull {b -> b.id == bookmarkId}
+                if(bookmark != null) {
+                    // If the bookmark actually exists, modify it and return the modified bookmark
+                    val bookmarkCopy = bookmark.copy(
+                            id = bookmark.id,
+                            name = name ?: bookmark.name,
+                            url = url ?: bookmark.url,
+                            position = position?.toInt() ?: bookmark.position
+                    )
+
+                    data.bookmarks[userId]!!.remove(bookmark)
+                    data.bookmarks[userId]!!.add(bookmarkCopy)
+
+                    request.successResponse(bookmarkCopy)
+                }
+                else {
+                    // Bookmark with specified id does not exist
+                    request.unauthorizedResponse()
+                }
+            }
+        }),
+
+        // Logic to create a new bookmark or grab a list of bookmarks
+        response = {
+
+            POST {
+                val name = request.url().queryParameter("name")
+                val url = request.url().queryParameter("url")
+                val position = request.url().queryParameter("position")?.toInt() ?: 0
+
+                val bookmark = Bookmark(
+                        id = data.newItemId(),
+                        name = name,
+                        url = url,
+                        position = position
+                )
+
+                val userId = pathVars.userId
+                var list = data.bookmarks[userId]
+                if (list == null) {
+                    list = mutableListOf<Bookmark>()
+                    data.bookmarks[userId] = list!!
+                }
+                list!!.add(bookmark)
+
+                request.successResponse(bookmark)
+            }
+
+            GET {
+                val userId = pathVars.userId
+                val response = data.bookmarks[userId] ?: mutableListOf<Bookmark>()
+                request.successResponse(response)
+            }
+        }
+)

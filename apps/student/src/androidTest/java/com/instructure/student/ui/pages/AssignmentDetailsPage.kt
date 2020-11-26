@@ -18,19 +18,24 @@ package com.instructure.student.ui.pages
 
 import android.view.View
 import android.widget.ScrollView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
+import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -38,6 +43,7 @@ import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
+import com.instructure.espresso.typeText
 import com.instructure.espresso.waitForCheck
 import com.instructure.student.R
 import org.hamcrest.Matcher
@@ -96,6 +102,18 @@ open class AssignmentDetailsPage : BasePage(R.id.assignmentDetailsPage) {
 
     fun scrollToAssignmentDescription() {
         waitForMatcherWithSleeps(withId(R.id.descriptionWebView), waitMs = 30000, sleepMs = 1000).scrollTo()
+    }
+
+    fun bookmark(bookmarkName: String) {
+        Espresso.onView(
+                allOf(
+                        ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                        isDisplayed()
+                )).click()
+        Espresso.onView(withText("Add Bookmark")).click()
+        Espresso.onView(withId(R.id.bookmarkEditText)).clearText()
+        Espresso.onView(withId(R.id.bookmarkEditText)).typeText(bookmarkName)
+        Espresso.onView(allOf(isAssignableFrom(AppCompatButton::class.java), containsTextCaseInsensitive("Save"))).click()
     }
 }
 
