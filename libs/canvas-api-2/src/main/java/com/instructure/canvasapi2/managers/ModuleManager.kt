@@ -42,6 +42,27 @@ object ModuleManager {
         ModuleAPI.getFirstPageModuleObjects(adapter, params, canvasContext.id, callback)
     }
 
+    fun getAllModuleObjets(
+        canvasContext: CanvasContext,
+        callback: StatusCallback<List<ModuleObject>>,
+        forceNetwork: Boolean
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(
+                canvasContext = canvasContext,
+                usePerPageQueryParam = true,
+                isForceReadFromNetwork = forceNetwork
+        )
+        val depaginatedCallback = object : ExhaustiveListCallback<ModuleObject>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<ModuleObject>>, nextUrl: String, isCached: Boolean) {
+                val nextParams = params.copy(canvasContext = null, usePerPageQueryParam = false)
+                ModuleAPI.getAllModuleObjects(adapter, nextParams, canvasContext.id, callback)
+            }
+        }
+        adapter.statusCallback = depaginatedCallback
+        ModuleAPI.getAllModuleObjects(adapter, params, canvasContext.id, depaginatedCallback)
+    }
+
     fun getFirstPageModulesWithItems(
         canvasContext: CanvasContext,
         callback: StatusCallback<List<ModuleObject>>,

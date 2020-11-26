@@ -83,7 +83,7 @@ open class ModuleListRecyclerAdapter(
 
         }
         isExpandedByDefault = false
-        isDisplayEmptyCell = true
+//        isDisplayEmptyCell = true TODO - make this work with scroll to functionality
         if (adapterToFragmentCallback != null) loadData() // Callback is null when testing
     }
 
@@ -339,7 +339,10 @@ open class ModuleListRecyclerAdapter(
                         ModuleManager.getFirstPageModuleItems(courseContext, it.id, getModuleItemsCallback(it, true), true)
                     }
                 }
-                adapterToFragmentCallback?.onRefreshFinished()
+                if(!this.moreCallsExist()) {
+                    // Wait until we are done exhausting pagination
+                    adapterToFragmentCallback?.onRefreshFinished()
+                }
             }
 
             override fun onFinished(type: ApiType) {
@@ -355,17 +358,13 @@ open class ModuleListRecyclerAdapter(
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
-                ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+                ModuleManager.getAllModuleObjets(courseContext, mModuleObjectCallback!!, true)
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
             }
         } catch {
             adapterToFragmentCallback?.onRefreshFinished(true)
         }
-    }
-
-    override fun loadNextPage(nextURL: String) {
-        ModuleManager.getNextPageModuleObjects(nextURL, mModuleObjectCallback!!, true)
     }
 
     // endregion

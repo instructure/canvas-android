@@ -70,6 +70,14 @@ internal object ModuleAPI {
         }
     }
 
+    fun getAllModuleObjects(adapter: RestBuilder, params: RestParams, contextId: Long, callback: StatusCallback<List<ModuleObject>>) {
+        if (StatusCallback.isFirstPage(callback.linkHeaders)) {
+            callback.addCall(adapter.build(ModuleInterface::class.java, params).getFirstPageModuleObjects(contextId)).enqueue(callback)
+        } else {
+            callback.addCall(adapter.build(ModuleInterface::class.java, params).getNextPageModuleObjectList(callback.linkHeaders?.nextUrl ?: "")).enqueue(callback)
+        }
+    }
+
     fun getFirstPageModuleItems(adapter: RestBuilder, params: RestParams, contextId: Long, moduleId: Long, callback: StatusCallback<List<ModuleItem>>) {
         callback.addCall(adapter.build(ModuleInterface::class.java, params).getFirstPageModuleItems(contextId, moduleId)).enqueue(callback)
     }
