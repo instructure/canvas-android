@@ -6,3 +6,6 @@
 -dontwarn com.crashlytics.**
 
 -keep enum com.google.zxing.** { *; }
+
+# Android framework
+-keep class androidx.lifecycle.** { *; }
