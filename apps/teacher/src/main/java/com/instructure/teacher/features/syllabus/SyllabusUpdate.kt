@@ -36,7 +36,8 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
                     course = event.course,
                     events = event.events,
                     syllabus = event.course.dataOrNull?.let { ScheduleItem.createSyllabus(it.name, it.syllabusBody) },
-                    permissions = event.permissionsResult
+                    permissions = event.permissionsResult,
+                    summaryAllowed = event.summaryAllowed
                 ))
             }
             is SyllabusEvent.SyllabusItemClicked -> {
@@ -47,6 +48,9 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
                             else -> SyllabusEffect.ShowScheduleItemView(item, model.course!!.dataOrThrow)
                         }
                 ))
+            }
+            is SyllabusEvent.EditClicked -> {
+                Next.dispatch(setOf(SyllabusEffect.OpenEditSyllabus(model.course!!.dataOrThrow, model.summaryAllowed)))
             }
         }
     }

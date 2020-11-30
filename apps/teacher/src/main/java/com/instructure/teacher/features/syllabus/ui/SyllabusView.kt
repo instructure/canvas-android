@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
@@ -29,6 +30,7 @@ import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
+import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
@@ -61,7 +63,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     init {
-        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditSyllabus() }
+        toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
         ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
 
@@ -120,10 +122,6 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         if (state.eventsState != null) renderEvents(state.eventsState)
     }
 
-    private fun openEditSyllabus() {
-        // TODO Open edit
-    }
-
     private fun renderEvents(eventsState: EventsViewState) {
         with(eventsState) {
             syllabusEmptyView?.setVisible(visibility.empty)
@@ -167,5 +165,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
         val route = Route(CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
         RouteMatcher.route(context, route)
+    }
+
+    fun openEditSyllabus(course: Course, summaryAllowed: Boolean) {
+        val fragmentArgs = EditSyllabusFragment.createArgs(course, summaryAllowed)
+        RouteMatcher.route(context, Route(EditSyllabusFragment::class.java, course, fragmentArgs))
     }
 }

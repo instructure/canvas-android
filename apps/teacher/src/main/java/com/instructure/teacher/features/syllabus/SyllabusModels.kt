@@ -24,14 +24,23 @@ import com.instructure.canvasapi2.utils.DataResult
 
 sealed class SyllabusEvent {
     object PullToRefresh : SyllabusEvent()
-    data class DataLoaded(val course: DataResult<Course>, val events: DataResult<List<ScheduleItem>>, val permissionsResult: DataResult<CanvasContextPermission>) : SyllabusEvent()
+
+    data class DataLoaded(
+        val course: DataResult<Course>,
+        val events: DataResult<List<ScheduleItem>>,
+        val permissionsResult: DataResult<CanvasContextPermission>,
+        val summaryAllowed: Boolean = false
+    ) : SyllabusEvent()
+
     data class SyllabusItemClicked(val itemId: String) : SyllabusEvent()
+    object EditClicked : SyllabusEvent()
 }
 
 sealed class SyllabusEffect {
     data class LoadData(val courseId: Long, val forceNetwork: Boolean) : SyllabusEffect()
     data class ShowAssignmentView(val assignment: Assignment, val course: Course) : SyllabusEffect()
     data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val course: Course) : SyllabusEffect()
+    data class OpenEditSyllabus(val course: Course, val summaryAllowed: Boolean) : SyllabusEffect()
 }
 
 data class SyllabusModel(
@@ -40,5 +49,6 @@ data class SyllabusModel(
         val course: DataResult<Course>? = null,
         val syllabus: ScheduleItem? = null,
         val events: DataResult<List<ScheduleItem>>? = null,
-        val permissions: DataResult<CanvasContextPermission>? = null
+        val permissions: DataResult<CanvasContextPermission>? = null,
+        val summaryAllowed: Boolean = false
 )

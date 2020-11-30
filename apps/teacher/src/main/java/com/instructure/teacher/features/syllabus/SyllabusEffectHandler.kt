@@ -34,6 +34,7 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
             is SyllabusEffect.LoadData -> loadData(effect)
             is SyllabusEffect.ShowAssignmentView -> view?.showAssignmentView(effect.assignment, effect.course)
             is SyllabusEffect.ShowScheduleItemView -> view?.showScheduleItemView(effect.scheduleItem, effect.course)
+            is SyllabusEffect.OpenEditSyllabus -> view?.openEditSyllabus(effect.course, effect.summaryAllowed)
         }.exhaustive
     }
 
@@ -49,7 +50,7 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
             val summaryResult: DataResult<List<ScheduleItem>>
             if (course.isFail) {
                 summaryResult = if (summaryAllowed) DataResult.Fail() else DataResult.Success(emptyList())
-                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, DataResult.Fail()))
+                consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, DataResult.Fail(), summaryAllowed))
                 return@launch
             }
 
@@ -74,7 +75,7 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
             val permissionsDeferred = CourseManager.getPermissionsAsync(course.dataOrThrow.id, listOf(CanvasContextPermission.MANAGE_CONTENT))
             val permissionsResult = permissionsDeferred.await()
 
-            consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, permissionsResult))
+            consumer.accept(SyllabusEvent.DataLoaded(course, summaryResult, permissionsResult, summaryAllowed))
         }
     }
 

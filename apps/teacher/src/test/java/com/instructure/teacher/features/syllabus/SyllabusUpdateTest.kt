@@ -140,4 +140,18 @@ class SyllabusUpdateTest {
                 UpdateSpec.assertThatNext(matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowScheduleItemView(events.data[0], course)))
             )
     }
+
+    @Test
+    fun `EditClicked event should dispatch OpenEditSyllabus`() {
+        val courseResult = DataResult.Success(course)
+
+        val initModel = initModel.copy(course = courseResult, summaryAllowed = true)
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SyllabusEvent.EditClicked)
+            .then(
+                UpdateSpec.assertThatNext(matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.OpenEditSyllabus(course, true)))
+            )
+    }
 }

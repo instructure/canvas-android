@@ -71,7 +71,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Fail(), DataResult.Fail(), DataResult.Fail())
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Fail(), DataResult.Fail(), DataResult.Fail(), true)
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -102,7 +102,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Fail(), DataResult.Success(permissions))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Fail(), DataResult.Success(permissions), true)
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -157,7 +157,7 @@ class SyllabusEffectHandlerTest {
             sortedEvents.add(calendarEvents[i])
         }
 
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(sortedEvents), DataResult.Success(permissions))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(sortedEvents), DataResult.Success(permissions), true)
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -193,7 +193,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(assignments), DataResult.Success(permissions))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(assignments), DataResult.Success(permissions), true)
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -229,7 +229,7 @@ class SyllabusEffectHandlerTest {
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
         // Then
-        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(calendarEvents), DataResult.Success(permissions))
+        val expectedEvent = SyllabusEvent.DataLoaded(DataResult.Success(course), DataResult.Success(calendarEvents), DataResult.Success(permissions), true)
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
@@ -301,6 +301,19 @@ class SyllabusEffectHandlerTest {
         // Then
         verify(timeout = 100) {
             view.showScheduleItemView(scheduleItem, course)
+        }
+
+        confirmVerified(view)
+    }
+
+    @Test
+    fun `OpenEditSyllabus results in opening the edit syllabus screen`() {
+        // When
+        effectHandler.accept(SyllabusEffect.OpenEditSyllabus(course, true))
+
+        // Then
+        verify(timeout = 100) {
+            view.openEditSyllabus(course, true)
         }
 
         confirmVerified(view)
