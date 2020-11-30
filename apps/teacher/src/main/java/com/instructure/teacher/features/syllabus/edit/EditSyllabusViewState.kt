@@ -18,4 +18,5 @@ package com.instructure.teacher.features.syllabus.edit
 
 sealed class EditSyllabusViewState {
     data class Loaded(val content: String? = null, val showSummary: Boolean = false) : EditSyllabusViewState()
+    object Saving : EditSyllabusViewState()
 }

@@ -16,13 +16,13 @@
  */
 package com.instructure.teacher.features.syllabus.edit
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.utils.BooleanArg
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.*
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 import com.instructure.teacher.mobius.common.ui.Presenter
@@ -39,11 +39,24 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
 
     override fun makeUpdate(): UpdateInit<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect> = EditSyllabusUpdate()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): EditSyllabusView = EditSyllabusView(inflater, parent)
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): EditSyllabusView = EditSyllabusView(inflater, parent) { MediaUploadUtils.showPickImageDialog(this) }
 
     override fun makePresenter(): Presenter<EditSyllabusModel, EditSyllabusViewState> = EditSyllabusPresenter()
 
     override fun makeInitModel(): EditSyllabusModel = EditSyllabusModel(course, summaryAllowed)
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            // Get the image Uri
+            when (requestCode) {
+                RequestCodes.PICK_IMAGE_GALLERY -> data?.data
+                RequestCodes.CAMERA_PIC_REQUEST -> MediaUploadUtils.handleCameraPicResult(requireActivity(), null)
+                else -> null
+            }?.let { imageUri ->
+                view.uploadRceImage(imageUri, requireActivity(), course)
+            }
+        }
+    }
 
     companion object {
 

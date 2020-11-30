@@ -16,12 +16,33 @@
  */
 package com.instructure.teacher.features.syllabus.edit
 
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.teacher.mobius.common.ui.EffectHandler
+import kotlinx.coroutines.launch
 
 class EditSyllabusEffectHandler : EffectHandler<EditSyllabusView, EditSyllabusEvent, EditSyllabusEffect>() {
 
-    override fun accept(value: EditSyllabusEffect) {
+    override fun accept(effect: EditSyllabusEffect) {
+        when (effect) {
+            is EditSyllabusEffect.SaveData -> saveData(effect)
+            EditSyllabusEffect.CloseEdit -> view?.closeEditSyllabus()
+            EditSyllabusEffect.ShowSaveError -> view?.showSaveError()
+        }.exhaustive
+    }
 
+    private fun saveData(effect: EditSyllabusEffect.SaveData) {
+        launch {
+            val id = effect.course.id
+            val syllabusBody = effect.newContent
+            val editedCourse = CourseManager.editCourseSyllabusAsync(id, syllabusBody).await()
+
+            if (editedCourse.isFail) {
+                consumer.accept(EditSyllabusEvent.SyllabusSaveError)
+            } else {
+                consumer.accept(EditSyllabusEvent.SyllabusSaveSuccess)
+            }
+        }
     }
 
 }

@@ -22,8 +22,10 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import kotlinx.coroutines.Deferred
 import java.io.IOException
 import java.util.ArrayList
 import java.util.HashMap
@@ -183,6 +185,20 @@ object CourseManager {
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
+
+        CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
+    }
+
+    fun editCourseSyllabusAsync(courseId: Long, syllabusBody: String): Deferred<DataResult<Course>> {
+        return apiAsync { editCourseSyllabus(courseId, syllabusBody, it) }
+    }
+
+    private fun editCourseSyllabus(courseId: Long, syllabusBody: String, callback: StatusCallback<Course>) {
+        val queryParams = HashMap<String, String>()
+        queryParams["course[syllabus_body]"] = syllabusBody
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = true)
 
         CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
     }

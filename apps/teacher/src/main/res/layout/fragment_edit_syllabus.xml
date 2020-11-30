@@ -14,11 +14,12 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -31,82 +32,101 @@
         app:navigationIcon="@drawable/ic_back_arrow"
         app:theme="@style/ToolBarStyle"
         app:title="Edit Syllabus"
-        app:titleTextColor="@color/black" />
+        app:titleTextColor="@color/black" >
 
-    <TextView
-        android:id="@+id/contentLabel"
-        style="@style/TextFont.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/description"
-        android:textColor="@color/defaultTextGray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        <ProgressBar
+            android:id="@+id/savingProgressBar"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"/>
 
-    <instructure.rceditor.RCETextEditorView
-        android:id="@+id/contentRCEView"
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/rce_view_min_height"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        app:rce_controls_margin_end="12dp"
-        app:rce_controls_margin_start="12dp"
-        app:rce_editor_padding="12dp"
-        app:layout_constraintTop_toBottomOf="@id/contentLabel"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/divider"
-        layout="@layout/view_divider"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        app:layout_constraintTop_toBottomOf="@id/contentRCEView"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        tools:layout_editor_absoluteX="-6dp"
-        tools:layout_editor_absoluteY="394dp" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp">
 
-    <TextView
-        android:id="@+id/detailsLabel"
-        style="@style/TextFont.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Detail"
-        android:textColor="@color/defaultTextGray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+            <TextView
+                android:id="@+id/contentLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/description"
+                android:textColor="@color/defaultTextGray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/showSummaryLabel"
-        style="@style/TextFont.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:labelFor="@+id/frontPageSwitch"
-        android:text="Show course summary"
-        android:textSize="16sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/detailsLabel"
-        app:layout_constraintStart_toStartOf="parent"/>
+            <instructure.rceditor.RCETextEditorView
+                android:id="@+id/contentRCEView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/rce_view_min_height"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contentLabel"
+                app:rce_controls_margin_end="12dp"
+                app:rce_controls_margin_start="12dp"
+                app:rce_editor_padding="12dp" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/showSummarySwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:maxWidth="48dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:backgroundTint="@color/teacher_colorPrimary"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/showSummaryLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:checked="true"/>
+            <include
+                android:id="@+id/divider"
+                layout="@layout/view_divider"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contentRCEView"
+                tools:layout_editor_absoluteX="-6dp"
+                tools:layout_editor_absoluteY="394dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/detailsLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:text="Detail"
+                android:textColor="@color/defaultTextGray"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
+
+            <TextView
+                android:id="@+id/showSummaryLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/frontPageSwitch"
+                android:text="Show course summary"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailsLabel" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/showSummarySwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:backgroundTint="@color/teacher_colorPrimary"
+                android:maxWidth="48dp"
+                android:minHeight="48dp"
+                app:layout_constraintBaseline_toBaselineOf="@id/showSummaryLabel"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:checked="true" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

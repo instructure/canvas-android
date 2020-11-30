@@ -22,6 +22,9 @@ import com.instructure.teacher.mobius.common.ui.Presenter
 class EditSyllabusPresenter : Presenter<EditSyllabusModel, EditSyllabusViewState> {
 
     override fun present(model: EditSyllabusModel, context: Context): EditSyllabusViewState {
-        return EditSyllabusViewState.Loaded(model.course.syllabusBody, model.summaryAllowed)
+        return when {
+            model.isSaving -> EditSyllabusViewState.Saving
+            else -> EditSyllabusViewState.Loaded(model.course.syllabusBody, model.summaryAllowed)
+        }
     }
 }

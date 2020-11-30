@@ -19,11 +19,15 @@ package com.instructure.teacher.features.syllabus.edit
 import com.instructure.canvasapi2.models.Course
 
 sealed class EditSyllabusEvent {
-    object SaveClicked : EditSyllabusEvent()
+    data class SaveClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
+    object SyllabusSaveSuccess : EditSyllabusEvent()
+    object SyllabusSaveError : EditSyllabusEvent()
 }
 
 sealed class EditSyllabusEffect {
-    data class SaveData(val course: Course) : EditSyllabusEffect()
+    data class SaveData(val course: Course, val newContent: String, val summaryAllowed: Boolean) : EditSyllabusEffect()
+    object CloseEdit : EditSyllabusEffect()
+    object ShowSaveError : EditSyllabusEffect()
 }
 
-data class EditSyllabusModel(val course: Course, val summaryAllowed: Boolean)
+data class EditSyllabusModel(val course: Course, val summaryAllowed: Boolean, val isSaving: Boolean = false)

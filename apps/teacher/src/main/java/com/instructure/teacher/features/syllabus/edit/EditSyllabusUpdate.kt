@@ -27,6 +27,22 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
     }
 
     override fun update(model: EditSyllabusModel, event: EditSyllabusEvent): Next<EditSyllabusModel, EditSyllabusEffect> {
-        return Next.next(model.copy())
+        return when(event) {
+            is EditSyllabusEvent.SaveClicked -> handleSaveClicked(model, event)
+            is EditSyllabusEvent.SyllabusSaveSuccess -> handleSyllabusSaved(model)
+            is EditSyllabusEvent.SyllabusSaveError -> handleSyllabusSaveError(model)
+        }
+    }
+
+    private fun handleSaveClicked(model: EditSyllabusModel, event: EditSyllabusEvent.SaveClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
+        return Next.next(model.copy(isSaving = true), setOf(EditSyllabusEffect.SaveData(model.course, event.content, event.summaryAllowed)))
+    }
+
+    private fun handleSyllabusSaved(model: EditSyllabusModel): Next<EditSyllabusModel, EditSyllabusEffect> {
+        return Next.next(model.copy(isSaving = false), setOf(EditSyllabusEffect.CloseEdit))
+    }
+
+    private fun handleSyllabusSaveError(model: EditSyllabusModel): Next<EditSyllabusModel, EditSyllabusEffect> {
+        return Next.next(model.copy(isSaving = false), setOf(EditSyllabusEffect.ShowSaveError))
     }
 }
