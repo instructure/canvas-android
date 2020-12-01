@@ -14,6 +14,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart';
+import 'package:flutter_parent/utils/remote_config_utils.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
 
 class RemoteConfigScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class RemoteConfigScreen extends StatefulWidget {
 class _RemoteConfigScreenState extends State<RemoteConfigScreen> {
   RemoteConfigInteractor _interactor = locator<RemoteConfigInteractor>();
 
-  Future<Map<String, String>> _remoteConfigFuture;
+  Future<Map<RemoteConfigParams, String>> _remoteConfigFuture;
 
   @override
   void initState() {
@@ -36,7 +37,7 @@ class _RemoteConfigScreenState extends State<RemoteConfigScreen> {
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: _remoteConfigFuture,
-        builder: (context, AsyncSnapshot<Map<String, String>> snapshot) {
+        builder: (context, AsyncSnapshot<Map<RemoteConfigParams, String>> snapshot) {
           return Scaffold(
             appBar: AppBar(title: Text('Remote Config Params')),
             body: Padding(
@@ -49,21 +50,25 @@ class _RemoteConfigScreenState extends State<RemoteConfigScreen> {
         });
   }
 
-  List<Widget> _createListItems(Map<String, String> remoteConfigParams) {
+  List<Widget> _createListItems(Map<RemoteConfigParams, String> remoteConfigParams) {
     return remoteConfigParams.entries.map((e) => _createListItem(e)).toList();
   }
 
-  Widget _createListItem(MapEntry<String, String> entry) {
+  Widget _createListItem(MapEntry<RemoteConfigParams, String> entry) {
     return Row(children: [
       Align(
-        child: Text(entry.key),
+        child: Text(RemoteConfigUtils.getRemoteConfigName(entry.key)),
         alignment: Alignment.centerLeft,
       ),
       Flexible(
           child: Padding(
         padding: EdgeInsets.only(left: 8.0),
-        child:
-            TextField(controller: TextEditingController()..text = entry.value),
+        child: TextField(
+          controller: TextEditingController()..text = entry.value,
+          onChanged: (value) => {
+            _interactor.updateRemoteConfig(entry.key, value)
+          },
+        ),
       ))
     ]);
   }

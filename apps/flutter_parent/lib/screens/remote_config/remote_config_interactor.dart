@@ -16,7 +16,11 @@ import 'package:flutter_parent/utils/remote_config_utils.dart';
 
 class RemoteConfigInteractor {
 
-  Future<Map<String, String>> getRemoteConfigParams() async {
-    return Map.fromIterable(RemoteConfigParams.values, key: (rc) => RemoteConfigUtils.getRemoteConfigName(rc), value: (rc) => RemoteConfigUtils.getStringValue(rc));
+  Future<Map<RemoteConfigParams, String>> getRemoteConfigParams() async {
+    return Map.fromIterable(RemoteConfigParams.values, key: (rc) => rc, value: (rc) => RemoteConfigUtils.getStringValue(rc));
+  }
+
+  void updateRemoteConfig(RemoteConfigParams rcKey, String value) {
+    RemoteConfigUtils.updateRemoteConfig(rcKey, value);
   }
 }

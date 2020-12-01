@@ -50,7 +50,8 @@ class RemoteConfigUtils {
    */
   @visibleForTesting
   static Future<void> initializeExplicit(RemoteConfig remoteConfig) async {
-    if (_remoteConfig != null) throw StateError('double-initialization of RemoteConfigUtils');
+    if (_remoteConfig != null)
+      throw StateError('double-initialization of RemoteConfigUtils');
 
     _remoteConfig = remoteConfig;
 
@@ -93,7 +94,8 @@ class RemoteConfigUtils {
 
   /** Fetch the value (in string form) of the specified RemoteConfigParams element. */
   static String getStringValue(RemoteConfigParams rcParam) {
-    if (_remoteConfig == null) throw StateError('RemoteConfigUtils not yet initialized');
+    if (_remoteConfig == null)
+      throw StateError('RemoteConfigUtils not yet initialized');
 
     var rcDefault = _getRemoteConfigDefaultValue(rcParam);
     var rcPreferencesName = _getSharedPreferencesName(rcParam);
@@ -142,5 +144,9 @@ class RemoteConfigUtils {
   // remote config name for rcParam.
   static String _getSharedPreferencesName(RemoteConfigParams rcParam) {
     return 'rc_${getRemoteConfigName(rcParam)}';
+  }
+
+  static void updateRemoteConfig(RemoteConfigParams rcParam, String newValue) {
+    _prefs.setString(_getSharedPreferencesName(rcParam), newValue);
   }
 }
