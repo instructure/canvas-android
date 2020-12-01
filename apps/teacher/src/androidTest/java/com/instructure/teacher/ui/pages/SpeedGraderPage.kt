@@ -19,6 +19,7 @@ import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -27,6 +28,7 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 @Suppress("unused")
 class SpeedGraderPage : BasePage() {
@@ -57,7 +59,8 @@ class SpeedGraderPage : BasePage() {
     }
 
     fun selectGradesTab() {
-        gradeTab.click()
+        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).toUpperCase()
+        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
     }
 
     fun selectCommentsTab() {
@@ -99,6 +102,10 @@ class SpeedGraderPage : BasePage() {
 
     fun assertDisplaysTextSubmissionView() {
         waitForViewWithId(R.id.textSubmissionWebView).assertVisible()
+    }
+
+    fun assertDisplaysTextSubmissionViewWithStudentName(studentName: String) {
+        onView(allOf(withText(studentName), isDisplayed()))
     }
 
     fun assertDisplaysEmptyState(@StringRes stringRes: Int) {

@@ -15,11 +15,12 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.getStringFromResource
-import com.instructure.espresso.page.onViewWithId
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
 
 class SpeedGraderGradePage : BasePage() {
 
@@ -38,12 +39,16 @@ class SpeedGraderGradePage : BasePage() {
 
 
     fun openGradeDialog() {
-        gradeTextContainer.click()
+        onView(Matchers.allOf((withId(R.id.gradeTextContainer)), ViewMatchers.isDisplayed())).click()
     }
 
     fun enterNewGrade(grade: String) {
         gradeEditText.replaceText(grade)
         confirmDialogButton.click()
+    }
+
+    fun navigateBack() {
+        onView(Matchers.allOf((withParent(R.id.speedGraderToolbar) + withContentDescription("Navigate up")), ViewMatchers.isDisplayed())).click()
     }
 
     fun assertGradeDialog() {
@@ -52,7 +57,7 @@ class SpeedGraderGradePage : BasePage() {
     }
 
     fun assertHasGrade(grade: String) {
-        gradeValueText.assertContainsText(grade)
+        onView(Matchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertContainsText(grade)
     }
 
     fun assertRubricHidden() {

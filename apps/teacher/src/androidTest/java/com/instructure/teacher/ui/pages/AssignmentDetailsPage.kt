@@ -85,6 +85,18 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         viewAllSubmissions.click()
     }
 
+    fun openGradedSubmissions() {
+        gradedDonutWrapper.click()
+    }
+
+    fun openUngradedSubmissions() {
+        ungradedDonutWrapper.click()
+    }
+
+    fun openNotSubmittedSubmissions() {
+        notSubmittedDonutWrapper.click()
+    }
+
     fun assertAssignmentDetails(assignment: Assignment) {
         assignmentNameTextView.assertHasText(assignment.name!!)
         if (assignment.published) {
@@ -139,14 +151,14 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         pointsTextView.assertContainsText(newAssignmentPoints)
     }
 
-    fun assertHasSubmitted() {
+    fun assertHasSubmitted(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
-        ungradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(1, 1))
+        ungradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(actual, outOf))
     }
 
-    fun assertNotSubmitted() {
+    fun assertNotSubmitted(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
-        notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(1, 1))
+        notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(actual, outOf))
     }
 
     fun waitForRender() {

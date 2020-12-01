@@ -15,18 +15,16 @@
  */
 package com.instructure.teacher.ui.pages
 
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 
 
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
 
 class AssignmentSubmissionListPage : BasePage() {
 
@@ -38,7 +36,7 @@ class AssignmentSubmissionListPage : BasePage() {
 
     private val assignmentSubmissionClearFilter by OnViewWithId(R.id.clearFilterTextView, false)
 
-    private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter)
+    private val assignmentSubmissionFilterButton by OnViewWithId(R.id.submissionFilter, false)
 
     private val assignmentSubmissionFilterBySubmissionsButton by WaitForViewWithText(R.string.filterSubmissionsLowercase)
 
@@ -75,6 +73,10 @@ class AssignmentSubmissionListPage : BasePage() {
         assignmentSubmissionClearFilter.assertGone()
     }
 
+    fun assertStudentHasGrade(grade: String) {
+        onView(withId(R.id.submissionGrade)).assertHasText(grade)
+    }
+
     fun clickFilterButton() {
         assignmentSubmissionFilterButton.click()
     }
@@ -105,8 +107,8 @@ class AssignmentSubmissionListPage : BasePage() {
         assignmentSubmissionListFilterLabel.assertHasText(text)
     }
 
-    fun assertHasSubmission() {
-        assignmentSubmissionRecyclerView.check(RecyclerViewItemCountAssertion(1))
+    fun assertHasSubmission(expectedCount: Int = 1) {
+        assignmentSubmissionRecyclerView.check(RecyclerViewItemCountAssertion(expectedCount))
     }
 
     fun assertHasNoSubmission() {
@@ -155,5 +157,10 @@ class AssignmentSubmissionListPage : BasePage() {
 
     fun clickFilterDialogOk() {
         waitForViewWithText(android.R.string.ok).click()
+    }
+
+    fun navigateBack() {
+        onView(Matchers.allOf((withParent(R.id.assignmentSubmissionListToolbar) + ViewMatchers.withContentDescription("Navigate up")), ViewMatchers.isDisplayed())).click()
+
     }
 }
