@@ -25,29 +25,26 @@ class RemoteConfigScreen extends StatefulWidget {
 class _RemoteConfigScreenState extends State<RemoteConfigScreen> {
   RemoteConfigInteractor _interactor = locator<RemoteConfigInteractor>();
 
-  Future<Map<RemoteConfigParams, String>> _remoteConfigFuture;
+  Map<RemoteConfigParams, String> _remoteConfig;
 
   @override
   void initState() {
-    _remoteConfigFuture = _interactor.getRemoteConfigParams();
+    _remoteConfig = _interactor.getRemoteConfigParams();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _remoteConfigFuture,
-        builder: (context, AsyncSnapshot<Map<RemoteConfigParams, String>> snapshot) {
           return Scaffold(
             appBar: AppBar(title: Text('Remote Config Params')),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView(
-                children: _createListItems(snapshot.data),
+                key: Key('remote_config_params_list'),
+                children: _createListItems(_remoteConfig),
               ),
             ),
           );
-        });
   }
 
   List<Widget> _createListItems(Map<RemoteConfigParams, String> remoteConfigParams) {

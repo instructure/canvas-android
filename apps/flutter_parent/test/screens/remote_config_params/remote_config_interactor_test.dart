@@ -23,16 +23,9 @@ import '../../utils/test_helpers/mock_helpers.dart';
 
 void main() {
   test('getRemoteConfigParams returns correct map', () async {
-    final mockRemoteConfig =
-        setupMockRemoteConfig(valueSettings: {'test_string': 'fetched value', 'mobile_verify_beta_enabled' : 'false'});
+    final mockRemoteConfig = setupMockRemoteConfig(valueSettings: {'test_string': 'fetched value', 'mobile_verify_beta_enabled' : 'false'});
     await setupPlatformChannels(
         config: PlatformConfig(initRemoteConfig: mockRemoteConfig));
-    Future<Map> future = RemoteConfigInteractor().getRemoteConfigParams();
-    expect(
-        future,
-        completion(equals({
-          RemoteConfigParams.TEST_STRING: 'fetched value',
-          RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED: 'false'
-        })));
+    expect(RemoteConfigInteractor().getRemoteConfigParams(), equals({RemoteConfigParams.TEST_STRING: 'fetched value', RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED: 'false'}));
   });
 }
