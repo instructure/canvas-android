@@ -16,6 +16,8 @@
  */
 package com.instructure.teacher.features.syllabus.edit
 
+import com.instructure.teacher.events.SyllabusUpdatedEvent
+import com.instructure.teacher.events.post
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -53,6 +55,7 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
 
     private fun handleSyllabusSaved(model: EditSyllabusModel, event: EditSyllabusEvent.SyllabusSaveSuccess): Next<EditSyllabusModel, EditSyllabusEffect> {
         val course = model.course.copy(syllabusBody = event.content)
+        SyllabusUpdatedEvent().post()
         return Next.next(model.copy(isSaving = false, course = course, summaryAllowed = event.summaryAllowed), setOf(EditSyllabusEffect.CloseEdit, EditSyllabusEffect.ShowSaveSuccess))
     }
 

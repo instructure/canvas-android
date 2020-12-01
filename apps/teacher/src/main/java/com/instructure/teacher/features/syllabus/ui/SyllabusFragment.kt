@@ -40,6 +40,16 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
 
     override fun makeInitModel() = SyllabusModel(canvasContext.id)
 
+    override fun onStart() {
+        super.onStart()
+        view.registerEventBus()
+    }
+
+    override fun onStop() {
+        view.unregisterEventBus()
+        super.onStop()
+    }
+
     companion object {
         fun newInstance(canvasContext: CanvasContext?) = if (isValidRoute(canvasContext)) createFragmentWithCanvasContext(canvasContext) else null
 

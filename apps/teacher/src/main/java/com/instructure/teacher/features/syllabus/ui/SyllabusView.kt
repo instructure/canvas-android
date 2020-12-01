@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
@@ -39,6 +40,9 @@ import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
 import kotlinx.android.synthetic.main.fragment_syllabus_webview.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 private const val SYLLABUS_TAB_POSITION = 0
 private const val SUMMARY_TAB_POSITION = 1
@@ -170,5 +174,21 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     fun openEditSyllabus(course: Course, summaryAllowed: Boolean) {
         val fragmentArgs = EditSyllabusFragment.createArgs(course, summaryAllowed)
         RouteMatcher.route(context, Route(EditSyllabusFragment::class.java, course, fragmentArgs))
+    }
+
+    fun registerEventBus() {
+        EventBus.getDefault().register(this)
+    }
+
+    fun unregisterEventBus() {
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onSyllabusUpdated(event: SyllabusUpdatedEvent) {
+        event.once(javaClass.simpleName) {
+            consumer?.accept(SyllabusEvent.PullToRefresh)
+        }
     }
 }

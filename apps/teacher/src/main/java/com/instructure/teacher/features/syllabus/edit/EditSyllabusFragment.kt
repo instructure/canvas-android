@@ -60,6 +60,10 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
         }
     }
 
+    override fun onHandleBackPressed() = view.onHandleBackPressed()
+
+    override fun onHandleClose() = false
+
     companion object {
 
         fun newInstance(bundle: Bundle): EditSyllabusFragment {
@@ -75,8 +79,4 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
             return extras
         }
     }
-
-    override fun onHandleBackPressed() = view.onHandleBackPressed()
-
-    override fun onHandleClose() = false
 }
