@@ -36,11 +36,12 @@ class EditSyllabusEffectHandler : EffectHandler<EditSyllabusView, EditSyllabusEv
             val id = effect.course.id
             val syllabusBody = effect.newContent
             val editedCourse = CourseManager.editCourseSyllabusAsync(id, syllabusBody).await()
+            val courseSettings = CourseManager.editCourseSettingsAsync(id, effect.summaryAllowed).await()
 
-            if (editedCourse.isFail) {
+            if (editedCourse.isFail || courseSettings.isFail) {
                 consumer.accept(EditSyllabusEvent.SyllabusSaveError)
             } else {
-                consumer.accept(EditSyllabusEvent.SyllabusSaveSuccess)
+                consumer.accept(EditSyllabusEvent.SyllabusSaveSuccess(syllabusBody, effect.summaryAllowed))
             }
         }
     }

@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.Course
 
 sealed class EditSyllabusEvent {
     data class SaveClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
-    object SyllabusSaveSuccess : EditSyllabusEvent()
+    data class SyllabusSaveSuccess(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     object SyllabusSaveError : EditSyllabusEvent()
 }
 

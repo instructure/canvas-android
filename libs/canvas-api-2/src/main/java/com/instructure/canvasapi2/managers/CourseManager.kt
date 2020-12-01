@@ -132,6 +132,20 @@ object CourseManager {
         CourseAPI.getCourseSettings(courseId, adapter, it, params)
     }
 
+    fun editCourseSettingsAsync(courseId: Long, summaryAllowed: Boolean): Deferred<DataResult<CourseSettings>> {
+        return apiAsync { editCourseSettings(courseId, summaryAllowed, it) }
+    }
+
+    private fun editCourseSettings(courseId: Long, summaryAllowed: Boolean, callback: StatusCallback<CourseSettings>) {
+        val queryParams = HashMap<String, Boolean>()
+        queryParams["syllabus_course_summary"] = summaryAllowed
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(isForceReadFromNetwork = true)
+
+        CourseAPI.updateCourseSettings(courseId, queryParams, adapter, callback, params)
+    }
+
     fun getCourseWithGrade(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
