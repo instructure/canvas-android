@@ -194,7 +194,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: () => _interactor.routeToThemeViewer(context),
       );
 
-  Widget _remoteConfigs(BuildContext context) => ListTile(
+  Widget _remoteConfigs(BuildContext context) =>
+      ListTile(
         key: Key('remote-configs'),
         title: Row(
           children: [
@@ -203,6 +204,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Text('Remote Config Params')
           ],
         ),
+        onTap: () => _interactor.routeToRemoteConfig(context),
       );
 
   Container _debugLabel(BuildContext context) {

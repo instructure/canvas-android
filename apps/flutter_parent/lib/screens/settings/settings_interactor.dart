@@ -14,6 +14,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/remote_config/remote_config_screen.dart';
 import 'package:flutter_parent/utils/debug_flags.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
@@ -27,6 +28,10 @@ class SettingsInteractor {
 
   void routeToThemeViewer(BuildContext context) {
     locator<QuickNav>().push(context, ThemeViewerScreen());
+  }
+  
+  void routeToRemoteConfig(BuildContext context) {
+    locator<QuickNav>().push(context, RemoteConfigScreen());
   }
 
   void toggleDarkMode(context, anchorKey) {

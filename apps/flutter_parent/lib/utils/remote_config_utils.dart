@@ -70,7 +70,7 @@ class RemoteConfigUtils {
     if (updated) {
       // If we actually fetched something, then store the fetched info into _prefs
       RemoteConfigParams.values.forEach((rc) {
-        String rcParamName = _getRemoteConfigName(rc);
+        String rcParamName = getRemoteConfigName(rc);
         String rcParamValue = _remoteConfig.getString(rcParamName);
         String rcPreferencesName = _getSharedPreferencesName(rc);
         print(
@@ -82,7 +82,7 @@ class RemoteConfigUtils {
       // a local remote-config settings page, which is not supported at this time.
       print('RemoteConfigUtils.initialize(): No update');
       RemoteConfigParams.values.forEach((rc) {
-        String rcParamName = _getRemoteConfigName(rc);
+        String rcParamName = getRemoteConfigName(rc);
         String rcPreferencesName = _getSharedPreferencesName(rc);
         String rcParamValue = _prefs.getString(rcPreferencesName);
         print(
@@ -111,7 +111,7 @@ class RemoteConfigUtils {
   // Switch statements are required to cover all possible cases, so if we add
   // a new element in RemoveConfigParams, we'll be forced to add handling for
   // it here.
-  static String _getRemoteConfigName(RemoteConfigParams rcParam) {
+  static String getRemoteConfigName(RemoteConfigParams rcParam) {
     switch (rcParam) {
       case RemoteConfigParams.TEST_STRING:
         return 'test_string';
@@ -141,6 +141,6 @@ class RemoteConfigUtils {
   // that corresponds to rcParam.  Just prepends an 'rc_' to the
   // remote config name for rcParam.
   static String _getSharedPreferencesName(RemoteConfigParams rcParam) {
-    return 'rc_${_getRemoteConfigName(rcParam)}';
+    return 'rc_${getRemoteConfigName(rcParam)}';
   }
 }
