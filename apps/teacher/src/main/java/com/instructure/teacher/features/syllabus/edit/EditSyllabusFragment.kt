@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
@@ -30,7 +31,7 @@ import com.instructure.teacher.mobius.common.ui.UpdateInit
 
 private const val SUMMARY_ALLOWED = "summaryAllowed"
 
-class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect, EditSyllabusView, EditSyllabusViewState>() {
+class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect, EditSyllabusView, EditSyllabusViewState>(), NavigationCallbacks {
 
     private val course by ParcelableArg<Course>()
     private val summaryAllowed: Boolean by BooleanArg(key = SUMMARY_ALLOWED)
@@ -39,7 +40,8 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
 
     override fun makeUpdate(): UpdateInit<EditSyllabusModel, EditSyllabusEvent, EditSyllabusEffect> = EditSyllabusUpdate()
 
-    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): EditSyllabusView = EditSyllabusView(inflater, parent) { MediaUploadUtils.showPickImageDialog(this) }
+    override fun makeView(inflater: LayoutInflater, parent: ViewGroup): EditSyllabusView =
+        EditSyllabusView(requireFragmentManager(), inflater, parent) { MediaUploadUtils.showPickImageDialog(this) }
 
     override fun makePresenter(): Presenter<EditSyllabusModel, EditSyllabusViewState> = EditSyllabusPresenter()
 
@@ -73,4 +75,8 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
             return extras
         }
     }
+
+    override fun onHandleBackPressed() = view.onHandleBackPressed()
+
+    override fun onHandleClose() = false
 }

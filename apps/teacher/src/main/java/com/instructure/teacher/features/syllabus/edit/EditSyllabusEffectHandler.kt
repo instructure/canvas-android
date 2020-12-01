@@ -27,7 +27,9 @@ class EditSyllabusEffectHandler : EffectHandler<EditSyllabusView, EditSyllabusEv
         when (effect) {
             is EditSyllabusEffect.SaveData -> saveData(effect)
             EditSyllabusEffect.CloseEdit -> view?.closeEditSyllabus()
+            EditSyllabusEffect.ShowSaveSuccess -> view?.showSaveSuccess()
             EditSyllabusEffect.ShowSaveError -> view?.showSaveError()
+            EditSyllabusEffect.ShowCloseConfirmationDialog -> view?.showCloseConfirmationDialog()
         }.exhaustive
     }
 

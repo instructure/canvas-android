@@ -21,13 +21,16 @@ import com.instructure.canvasapi2.models.Course
 sealed class EditSyllabusEvent {
     data class SaveClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     data class SyllabusSaveSuccess(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
+    data class BackClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     object SyllabusSaveError : EditSyllabusEvent()
 }
 
 sealed class EditSyllabusEffect {
     data class SaveData(val course: Course, val newContent: String, val summaryAllowed: Boolean) : EditSyllabusEffect()
     object CloseEdit : EditSyllabusEffect()
+    object ShowSaveSuccess : EditSyllabusEffect()
     object ShowSaveError : EditSyllabusEffect()
+    object ShowCloseConfirmationDialog : EditSyllabusEffect()
 }
 
 data class EditSyllabusModel(val course: Course, val summaryAllowed: Boolean, val isSaving: Boolean = false)

@@ -27,11 +27,24 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
     }
 
     override fun update(model: EditSyllabusModel, event: EditSyllabusEvent): Next<EditSyllabusModel, EditSyllabusEffect> {
-        return when(event) {
+        return when (event) {
             is EditSyllabusEvent.SaveClicked -> handleSaveClicked(model, event)
             is EditSyllabusEvent.SyllabusSaveSuccess -> handleSyllabusSaved(model, event)
             is EditSyllabusEvent.SyllabusSaveError -> handleSyllabusSaveError(model)
+            is EditSyllabusEvent.BackClicked -> handleBackClick(model, event)
         }
+    }
+
+    private fun handleBackClick(model: EditSyllabusModel, event: EditSyllabusEvent.BackClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
+        return if (isSyllabusChanged(model, event)) {
+            Next.dispatch(setOf(EditSyllabusEffect.CloseEdit))
+        } else {
+            Next.dispatch(setOf(EditSyllabusEffect.ShowCloseConfirmationDialog))
+        }
+    }
+
+    private fun isSyllabusChanged(model: EditSyllabusModel, event: EditSyllabusEvent.BackClicked): Boolean {
+        return model.summaryAllowed == event.summaryAllowed && model.course.syllabusBody == event.content
     }
 
     private fun handleSaveClicked(model: EditSyllabusModel, event: EditSyllabusEvent.SaveClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
@@ -40,7 +53,7 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
 
     private fun handleSyllabusSaved(model: EditSyllabusModel, event: EditSyllabusEvent.SyllabusSaveSuccess): Next<EditSyllabusModel, EditSyllabusEffect> {
         val course = model.course.copy(syllabusBody = event.content)
-        return Next.next(model.copy(isSaving = false, course = course, summaryAllowed = event.summaryAllowed), setOf(EditSyllabusEffect.CloseEdit))
+        return Next.next(model.copy(isSaving = false, course = course, summaryAllowed = event.summaryAllowed), setOf(EditSyllabusEffect.CloseEdit, EditSyllabusEffect.ShowSaveSuccess))
     }
 
     private fun handleSyllabusSaveError(model: EditSyllabusModel): Next<EditSyllabusModel, EditSyllabusEffect> {

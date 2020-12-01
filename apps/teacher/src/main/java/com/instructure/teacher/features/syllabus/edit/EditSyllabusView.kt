@@ -24,7 +24,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.views.CanvasWebView
@@ -36,7 +38,8 @@ import com.instructure.teacher.utils.withRequireNetwork
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_edit_syllabus.*
 
-class EditSyllabusView(inflater: LayoutInflater, parent: ViewGroup, uploadImageCallback: () -> Unit) : MobiusView<EditSyllabusViewState, EditSyllabusEvent>(R.layout.fragment_edit_syllabus, inflater, parent) {
+class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInflater, parent: ViewGroup, uploadImageCallback: () -> Unit)
+    : MobiusView<EditSyllabusViewState, EditSyllabusEvent>(R.layout.fragment_edit_syllabus, inflater, parent) {
 
     private val placeHolderList = mutableListOf<Placeholder>()
 
@@ -44,7 +47,7 @@ class EditSyllabusView(inflater: LayoutInflater, parent: ViewGroup, uploadImageC
     private val saveMenuView: TextView? get() = rootView?.findViewById(R.id.menuSaveSyllabus)
 
     private var consumer: Consumer<EditSyllabusEvent>? = null
-
+    private var shouldClose = false
 
     init {
         contentRCEView?.hideEditorToolbar()
@@ -122,12 +125,31 @@ class EditSyllabusView(inflater: LayoutInflater, parent: ViewGroup, uploadImageC
     }
 
     fun closeEditSyllabus() {
-        context.toast("Save success", Toast.LENGTH_SHORT) // TODO String
+        shouldClose = true
         val activity = context as? FragmentActivity
         activity?.onBackPressed()
     }
 
+    fun showSaveSuccess() {
+        context.toast("Save success", Toast.LENGTH_SHORT) // TODO String
+    }
+
     fun showSaveError() {
         context.toast("Save error", Toast.LENGTH_SHORT) // TODO String
+    }
+
+    fun showCloseConfirmationDialog() {
+        UnsavedChangesExitDialog.show(fragmentManager) {
+            closeEditSyllabus()
+        }
+    }
+
+    fun onHandleBackPressed(): Boolean {
+        return if (shouldClose) {
+            false
+        } else {
+            consumer?.accept(EditSyllabusEvent.BackClicked(contentRCEView.html, showSummarySwitch.isChecked))
+            true
+        }
     }
 }
