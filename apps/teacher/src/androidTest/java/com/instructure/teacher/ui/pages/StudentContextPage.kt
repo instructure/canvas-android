@@ -17,11 +17,13 @@
 
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
@@ -47,4 +49,15 @@ class StudentContextPage : BasePage(R.id.studentContextPage) {
         courseName.assertHasText(course.name)
     }
 
+    fun assertStudentGrade(grade: String) {
+        onView(withId(R.id.gradeBeforePosting)).assertHasText(grade)
+    }
+
+    fun assertStudentSubmission(submittedCount: String) {
+        onView(withId(R.id.submittedCount)).assertHasText(submittedCount)
+    }
+
+    fun navigateBack() {
+        onView(withParent(R.id.toolbar) + withContentDescription("Navigate up")).click()
+    }
 }
