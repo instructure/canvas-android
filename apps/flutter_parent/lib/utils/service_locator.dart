@@ -58,6 +58,7 @@ import 'package:flutter_parent/screens/pairing/pairing_interactor.dart';
 import 'package:flutter_parent/screens/pairing/pairing_util.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_tutorial_screen_interactor.dart';
 import 'package:flutter_parent/screens/qr_login/qr_login_util.dart';
+import 'package:flutter_parent/screens/remote_config/remote_config_interactor.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/splash/splash_screen_interactor.dart';
 import 'package:flutter_parent/screens/web_login/web_login_interactor.dart';
@@ -137,6 +138,7 @@ void setupLocator() {
   locator.registerFactory<MasqueradeScreenInteractor>(() => MasqueradeScreenInteractor());
   locator.registerFactory<PairingInteractor>(() => PairingInteractor());
   locator.registerFactory<QRLoginTutorialScreenInteractor>(() => QRLoginTutorialScreenInteractor());
+  locator.registerFactory<RemoteConfigInteractor>(() => RemoteConfigInteractor());
   locator.registerFactory<SettingsInteractor>(() => SettingsInteractor());
   locator.registerFactory<SplashScreenInteractor>(() => SplashScreenInteractor());
   locator.registerFactory<StudentColorPickerInteractor>(() => StudentColorPickerInteractor());

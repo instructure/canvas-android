@@ -15,6 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/network/utils/analytics.dart';
+import 'package:flutter_parent/screens/remote_config/remote_config_screen.dart';
 import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/screens/theme_viewer_screen.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
@@ -42,6 +43,19 @@ void main() {
 
     var screen = verify(nav.push(context, captureAny)).captured[0];
     expect(screen, isA<ThemeViewerScreen>());
+  });
+
+  test('routeToRemoteConfig call through to navigator', () {
+    var nav = _MockNav();
+    setupTestLocator((locator) {
+      locator.registerLazySingleton<QuickNav>(() => nav);
+    });
+
+    var context = _MockContext();
+    SettingsInteractor().routeToRemoteConfig(context);
+
+    var screen = verify(nav.push(context, captureAny)).captured[0];
+    expect(screen, isA<RemoteConfigScreen>());
   });
 
   testNonWidgetsWithContext('toggle dark mode sets dark mode to true', (tester) async {

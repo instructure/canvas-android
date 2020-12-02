@@ -55,6 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               if (ParentTheme.of(context).isDarkMode) _webViewDarkModeSwitch(context),
               _highContrastModeSwitch(context),
               if (_interactor.isDebugMode()) _themeViewer(context),
+              if (_interactor.isDebugMode()) _remoteConfigs(context)
             ],
           ),
         ),
@@ -193,6 +194,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onTap: () => _interactor.routeToThemeViewer(context),
       );
 
+  Widget _remoteConfigs(BuildContext context) =>
+      ListTile(
+        key: Key('remote-configs'),
+        title: Row(
+          children: [
+            _debugLabel(context),
+            SizedBox(width: 16),
+            Text('Remote Config Params')
+          ],
+        ),
+        onTap: () => _interactor.routeToRemoteConfig(context),
+      );
+
   Container _debugLabel(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -200,7 +214,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(32),
       ),
       padding: const EdgeInsets.all(4),
-      child: Icon(Icons.bug_report, color: Theme.of(context).accentIconTheme.color, size: 16),
+      child: Icon(Icons.bug_report,
+          color: Theme.of(context).accentIconTheme.color, size: 16),
     );
   }
 }

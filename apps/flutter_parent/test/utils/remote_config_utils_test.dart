@@ -70,4 +70,15 @@ void main() {
 
     expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'fetched value');
   });
+
+  test('update cached value', () async {
+    final mockRemoteConfig = setupMockRemoteConfig();
+    final platformConfig =
+    PlatformConfig(mockPrefs: {'rc_test_string': 'cached value'}, initRemoteConfig: mockRemoteConfig);
+    await setupPlatformChannels(config: platformConfig);
+
+    RemoteConfigUtils.updateRemoteConfig(RemoteConfigParams.TEST_STRING, 'updated cached value');
+
+    expect(RemoteConfigUtils.getStringValue(RemoteConfigParams.TEST_STRING), 'updated cached value');
+  });
 }

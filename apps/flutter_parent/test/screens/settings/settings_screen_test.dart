@@ -32,6 +32,7 @@ void main() {
   AppLocalizations l10n = AppLocalizations();
 
   themeViewerButton() => find.byKey(Key('theme-viewer'));
+  remoteConfigsButton() => find.byKey(Key('remote-configs'));
   darkModeButton() => find.byKey(Key('dark-mode-button'));
   lightModeButton() => find.byKey(Key('light-mode-button'));
   hcToggle() => find.text(l10n.highContrastLabel);
@@ -64,11 +65,26 @@ void main() {
     expect(themeViewerButton(), findsOneWidget);
   });
 
+  testWidgetsWithAccessibilityChecks('Displays remote config params button in debug mode', (tester) async {
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    await ensureVisibleByScrolling(themeViewerButton(), tester, scrollFrom: ScreenVerticalLocation.MID_BOTTOM);
+    await tester.pumpAndSettle();
+    expect(remoteConfigsButton(), findsOneWidget);
+  });
+
   testWidgetsWithAccessibilityChecks('Hides theme viewer button in non-debug mode', (tester) async {
     when(interactor.isDebugMode()).thenReturn(false);
     await tester.pumpWidget(TestApp(SettingsScreen()));
     await tester.pumpAndSettle();
     expect(themeViewerButton(), findsNothing);
+  });
+
+  testWidgetsWithAccessibilityChecks('Hide remote config params button in non-debug mode', (tester) async {
+    when(interactor.isDebugMode()).thenReturn(false);
+    await tester.pumpWidget(TestApp(SettingsScreen()));
+    await tester.pumpAndSettle();
+    expect(remoteConfigsButton(), findsNothing);
   });
 
   testWidgetsWithAccessibilityChecks(
