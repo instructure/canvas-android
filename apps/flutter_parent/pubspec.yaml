@@ -25,7 +25,7 @@ description: Canvas Parent
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.3.1+36
+version: 3.3.2+37
 
 module:
   androidX: true
@@ -86,7 +86,7 @@ dependencies:
   encrypted_shared_preferences: # Used by ApiPrefs to securely store data
     path: ./plugins/encrypted_shared_preferences
   flutter_local_notifications: 1.4.4+5
-  intent: 1.4.0 # TODO: Remove once android_intent can handle emails properly (see help_screen.dart for more info)
+  intent: 1.1.0 # TODO: Remove once android_intent can handle emails properly (see help_screen.dart for more info)
   package_info: 0.4.3+2
   permission_handler: ^4.0.0
   shared_preferences: 0.5.12+4 # Used to cache remote config properties
