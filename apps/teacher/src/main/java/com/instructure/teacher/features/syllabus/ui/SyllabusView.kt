@@ -115,6 +115,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         swipeRefreshLayout.isRefreshing = false
 
         setEditVisibility(state.canEdit)
+        // We need to do this again after changing the edit button to visible to make it the correct color.
+        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
 
         val hasBoth = state.eventsState != null && state.syllabus != null
         syllabusTabLayout.setVisible(hasBoth)

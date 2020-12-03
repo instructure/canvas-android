@@ -53,13 +53,12 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
         contentRCEView?.hideEditorToolbar()
         contentRCEView?.actionUploadImageCallback = uploadImageCallback
         setupToolbar()
+        showSummarySwitch.applyTheme()
     }
 
     fun setupToolbar() {
         val activity = context as? FragmentActivity
-        toolbar.setupCloseButton {
-            activity?.onBackPressed()
-        }
+        toolbar.setupCloseButton { activity?.onBackPressed() }
         toolbar.setupMenu(R.menu.menu_edit_syllabus) { menuItem ->
             when (menuItem.itemId) {
                 R.id.menuSaveSyllabus -> activity?.withRequireNetwork { savePage() }
@@ -94,6 +93,7 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
 
     private fun renderSavingState() {
         savingProgressBar.setVisible()
+        savingProgressBar.announceForAccessibility(context.getString(R.string.saving))
         saveMenuButton.isVisible = false
     }
 
@@ -106,14 +106,14 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
             contentRCEView?.setHtml(DiscussionUtils.createLTIPlaceHolders(context, content) { _, placeholder ->
                 placeHolderList.add(placeholder)
             },
-                context.getString(R.string.pageDetails), // TODO Strings
+                context.getString(R.string.editSyllabusContentAccessibilityLabel),
                 context.getString(R.string.rce_empty_description),
                 ThemePrefs.brandColor, ThemePrefs.buttonColor
             )
         } else {
             contentRCEView?.setHtml(
                 content,
-                context.getString(R.string.pageDetails),
+                context.getString(R.string.editSyllabusContentAccessibilityLabel),
                 context.getString(R.string.rce_empty_description),
                 ThemePrefs.brandColor, ThemePrefs.buttonColor
             )
@@ -131,11 +131,11 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
     }
 
     fun showSaveSuccess() {
-        context.toast("Save success", Toast.LENGTH_SHORT) // TODO String
+        context.toast(R.string.syllabusSuccessfullyUpdated, Toast.LENGTH_SHORT)
     }
 
     fun showSaveError() {
-        context.toast("Save error", Toast.LENGTH_SHORT) // TODO String
+        context.toast(R.string.errorSavingSyllabus, Toast.LENGTH_SHORT)
     }
 
     fun showCloseConfirmationDialog() {
