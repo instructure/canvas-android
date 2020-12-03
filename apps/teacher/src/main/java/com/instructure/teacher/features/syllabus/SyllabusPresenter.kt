@@ -53,7 +53,8 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         return SyllabusViewState.Loaded(
             syllabus = body,
             eventsState = events.takeUnless { it == EventsViewState.Empty && body != null },
-            canEdit = canEdit)
+            canEdit = canEdit,
+            showSummary = model.summaryAllowed)
     }
 
     private fun mapEventsResultToViewState(color: Int, eventsResult: DataResult<List<ScheduleItem>>?, context: Context): EventsViewState {

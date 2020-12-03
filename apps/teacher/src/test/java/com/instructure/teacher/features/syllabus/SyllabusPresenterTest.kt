@@ -198,14 +198,15 @@ class SyllabusPresenterTest {
         val model = baseModel.copy(
             course = DataResult.Success(baseCourse),
             events = DataResult.Success(baseEvents),
-            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody)
+            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody),
+            summaryAllowed = true
         )
 
         // When
         val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
-        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState))
+        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), showSummary = true)
         assertEquals(expectedState, syllabusViewState)
     }
 

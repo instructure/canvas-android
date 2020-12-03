@@ -56,7 +56,7 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
 
     private fun handleSyllabusSaved(model: EditSyllabusModel, event: EditSyllabusEvent.SyllabusSaveSuccess): Next<EditSyllabusModel, EditSyllabusEffect> {
         val course = model.course.copy(syllabusBody = event.content)
-        SyllabusUpdatedEvent().post()
+        SyllabusUpdatedEvent(event.content, event.summaryAllowed).post()
         return Next.next(model.copy(isSaving = false, course = course, summaryAllowed = event.summaryAllowed), setOf(EditSyllabusEffect.CloseEdit, EditSyllabusEffect.ShowSaveSuccess))
     }
 

@@ -118,7 +118,8 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
         // We need to do this again after changing the edit button to visible to make it the correct color.
         ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
 
-        val hasBoth = state.eventsState != null && state.syllabus != null
+        val showSummary = state.showSummary && state.eventsState != null
+        val hasBoth = showSummary && state.syllabus != null
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
 
@@ -190,7 +191,7 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onSyllabusUpdated(event: SyllabusUpdatedEvent) {
         event.once(javaClass.simpleName) {
-            consumer?.accept(SyllabusEvent.PullToRefresh)
+            consumer?.accept(SyllabusEvent.SyllabusUpdatedEvent(event.content, event.summaryAllowed))
         }
     }
 }

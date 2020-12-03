@@ -33,6 +33,7 @@ sealed class SyllabusEvent {
     ) : SyllabusEvent()
 
     data class SyllabusItemClicked(val itemId: String) : SyllabusEvent()
+    data class SyllabusUpdatedEvent(val content: String, val summaryAllowed: Boolean) : SyllabusEvent()
     object EditClicked : SyllabusEvent()
 }
 
