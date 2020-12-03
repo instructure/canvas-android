@@ -152,4 +152,8 @@ class EditSyllabusView(val fragmentManager: FragmentManager, inflater: LayoutInf
             true
         }
     }
+
+    fun saveState() {
+        consumer?.accept(EditSyllabusEvent.SaveState(contentRCEView.html, showSummarySwitch.isChecked))
+    }
 }

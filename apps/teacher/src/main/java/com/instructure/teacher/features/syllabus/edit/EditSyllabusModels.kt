@@ -22,6 +22,7 @@ sealed class EditSyllabusEvent {
     data class SaveClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     data class SyllabusSaveSuccess(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     data class BackClicked(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
+    data class SaveState(val content: String, val summaryAllowed: Boolean) : EditSyllabusEvent()
     object SyllabusSaveError : EditSyllabusEvent()
 }
 
@@ -33,4 +34,4 @@ sealed class EditSyllabusEffect {
     object ShowCloseConfirmationDialog : EditSyllabusEffect()
 }
 
-data class EditSyllabusModel(val course: Course, val summaryAllowed: Boolean, val isSaving: Boolean = false)
+data class EditSyllabusModel(val course: Course, val summaryAllowed: Boolean, val isSaving: Boolean = false, val isChanged: Boolean = false)

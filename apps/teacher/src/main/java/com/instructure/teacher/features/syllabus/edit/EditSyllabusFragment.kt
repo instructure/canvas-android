@@ -64,6 +64,11 @@ class EditSyllabusFragment : MobiusFragment<EditSyllabusModel, EditSyllabusEvent
 
     override fun onHandleClose() = false
 
+    override fun onPause() {
+        view.saveState()
+        super.onPause()
+    }
+
     companion object {
 
         fun newInstance(bundle: Bundle): EditSyllabusFragment {
