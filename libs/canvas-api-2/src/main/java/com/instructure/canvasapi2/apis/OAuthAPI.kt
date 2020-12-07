@@ -35,24 +35,26 @@ object OAuthAPI {
         @DELETE("/login/oauth2/token")
         fun deleteToken(): Call<Void>
 
+        @FormUrlEncoded
         @POST("/login/oauth2/token")
         fun getToken(
-                @Query("client_id") clientId: String,
-                @Query("client_secret") clientSecret: String,
-                @Query("code") oAuthRequest: String,
-                @Query(value = "redirect_uri", encoded = true) redirectURI: String,
-                @Query("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
+                @Field("client_id") clientId: String,
+                @Field("client_secret") clientSecret: String,
+                @Field("code") oAuthRequest: String,
+                @Field(value = "redirect_uri", encoded = true) redirectURI: String,
+                @Field("grant_type") grantType: String = "authorization_code"): Call<OAuthTokenResponse>
 
         @GET("/login/session_token")
         fun getAuthenticatedSession(@Query("return_to") targetUrl: String): Call<AuthenticatedSession>
 
+        @FormUrlEncoded
         @POST("/login/oauth2/token")
         fun refreshAccessToken(
-            @Query("client_id") clientId: String,
-            @Query("client_secret") clientSecret: String,
-            @Query(value = "redirect_uri", encoded = true) redirectURI: String,
-            @Query("refresh_token") refreshToken: String,
-            @Query("grant_type") grantType: String = "refresh_token"
+            @Field("client_id") clientId: String,
+            @Field("client_secret") clientSecret: String,
+            @Field(value = "redirect_uri", encoded = true) redirectURI: String,
+            @Field("refresh_token") refreshToken: String,
+            @Field("grant_type") grantType: String = "refresh_token"
         ): Call<OAuthTokenResponse>
     }
 
