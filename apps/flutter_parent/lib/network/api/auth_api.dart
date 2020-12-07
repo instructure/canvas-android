@@ -30,7 +30,7 @@ class AuthApi {
       'grant_type': 'refresh_token',
       'refresh_token': ApiPrefs.getRefreshToken(),
     };
-    return fetch(dio.post('login/oauth2/token', queryParameters: params));
+    return fetch(dio.post('login/oauth2/token', data: params));
   }
 
   Future<CanvasToken> getTokens(MobileVerifyResult verifyResult, String requestCode) async {
@@ -41,7 +41,7 @@ class AuthApi {
       'code': requestCode,
       'redirect_uri': 'urn:ietf:wg:oauth:2.0:oob',
     };
-    return fetch(dio.post('${verifyResult.baseUrl}/login/oauth2/token', queryParameters: params));
+    return fetch(dio.post('${verifyResult.baseUrl}/login/oauth2/token', data: params));
   }
 
   Future<MobileVerifyResult> mobileVerify(String domain, {bool forceBetaDomain = false}) async {
@@ -71,6 +71,6 @@ class AuthApi {
   Future<void> deleteToken(String domain, String token) async {
     Dio dio = DioConfig().dio;
     var params = {'access_token': token};
-    await dio.delete('$domain/login/oauth2/token', queryParameters: params);
+    await dio.delete('$domain/login/oauth2/token', data: params);
   }
 }
