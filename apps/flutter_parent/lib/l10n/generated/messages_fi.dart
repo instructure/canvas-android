@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Jaa rakkautesi sovellusta kohtaan"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Näytä salasana"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Kirjaudu sisään"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("Ilmeni virhe, kun tiliäsi yritettiin luoda. Pyydä apua koulultasi."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Jotakin on rikki, mutta löydän tavan saada tehdyksi, mitä minun pitää saada tehdyksi."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Lopeta toimiminen käyttäjänä"),
     "Student" : MessageLookupByLibrary.simpleMessage("Opiskelija"),

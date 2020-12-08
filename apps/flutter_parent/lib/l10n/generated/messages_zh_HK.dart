@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("分享您對於本應用程式的喜愛"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("顯示密碼"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("登入"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("嘗試建立您的錯誤時發生錯誤，請聯絡您的學校尋求協助。"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("有些地方出現了問題，但我能繞過問題實現我的目的。"),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("停止作為使用者"),
     "Student" : MessageLookupByLibrary.simpleMessage("學生"),

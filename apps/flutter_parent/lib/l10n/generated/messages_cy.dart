@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Rhowch eich barn am yr ap"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Dangos Cyfrinair"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Mewngofnodi"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("Aeth rhywbeth o’i le wrth geisio creu eich cyfrif, gofynnwch i’ch ysgol am gymorth."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Mae rhywbeth wedi mynd o’i le, ond fe alla i ddal i wneud yr hyn rydw i angen ei wneud."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Stopio Gweithredu fel Defnyddiwr"),
     "Student" : MessageLookupByLibrary.simpleMessage("Myfyriwr"),
