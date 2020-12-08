@@ -52,8 +52,9 @@ object CourseAPI {
         @GET("courses/{courseId}/settings")
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
 
+        @FormUrlEncoded
         @PUT("courses/{course_id}/settings")
-        fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
+        fun updateCourseSettings(@Path("course_id") courseId: Long, @FieldMap params: Map<String, Boolean>): Call<CourseSettings>
 
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
@@ -80,8 +81,9 @@ object CourseAPI {
         @DELETE("users/self/favorites/courses/{courseId}")
         fun removeCourseFromFavorites(@Path("courseId") courseId: Long): Call<Favorite>
 
+        @FormUrlEncoded
         @PUT("courses/{course_id}")
-        fun updateCourse(@Path("course_id") courseId: Long, @QueryMap params: Map<String, String>): Call<Course>
+        fun updateCourse(@Path("course_id") courseId: Long, @FieldMap params: Map<String, String>): Call<Course>
 
         @GET("courses/{courseId}/groups?include[]=users")
         fun getFirstPageGroups(@Path("courseId") courseId: Long): Call<List<Group>>
