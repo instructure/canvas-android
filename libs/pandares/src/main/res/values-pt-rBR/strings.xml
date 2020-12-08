@@ -708,6 +708,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Controle deslizante de nota</string>
     <string name="createNewCalendarEvent">Criar novo evento</string>
     <string name="enableFunMode">Desligar os pandas</string>
 

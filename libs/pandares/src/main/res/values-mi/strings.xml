@@ -697,6 +697,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Rahi</string>
 
+    <string name="content_description_speed_grader_slider">Keke retireti</string>
     <string name="createNewCalendarEvent">Waihanga Tauwhāinga Hōu</string>
     <string name="enableFunMode">Whakaweto ngā Pandas</string>
 

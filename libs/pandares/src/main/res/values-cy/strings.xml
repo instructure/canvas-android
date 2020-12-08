@@ -697,6 +697,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Medrydd</string>
 
+    <string name="content_description_speed_grader_slider">Llithrydd graddau</string>
     <string name="createNewCalendarEvent">Creu Digwyddiad Newydd</string>
     <string name="enableFunMode">Diffodd pandas</string>
 

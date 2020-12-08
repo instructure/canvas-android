@@ -697,6 +697,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Cijferslider</string>
     <string name="createNewCalendarEvent">Een nieuwe gebeurtenis maken</string>
     <string name="enableFunMode">Panda\'s uitzetten</string>
 

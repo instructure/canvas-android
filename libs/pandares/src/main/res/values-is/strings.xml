@@ -709,6 +709,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mælir</string>
 
+    <string name="content_description_speed_grader_slider">Einkunnasleði</string>
     <string name="createNewCalendarEvent">Stofna nýjan viðburð</string>
     <string name="enableFunMode">Slökkva á pöndunum</string>
 

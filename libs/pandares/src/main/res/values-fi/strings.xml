@@ -709,6 +709,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mittari</string>
 
+    <string name="content_description_speed_grader_slider">Arvosanojen liukuasteikko</string>
     <string name="createNewCalendarEvent">Luo uusi tapahtuma</string>
     <string name="enableFunMode">Kytke pandat pois päältä</string>
 

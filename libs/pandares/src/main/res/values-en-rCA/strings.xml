@@ -711,6 +711,7 @@
 
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
+    <string name="content_description_speed_grader_slider">Grade slider</string>
 
     <string name="createNewCalendarEvent">Create New Event</string>
     <string name="enableFunMode">Turn off the pandas</string>

@@ -709,6 +709,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Vurderingsglidebryter</string>
     <string name="createNewCalendarEvent">Opprett ny hendelse</string>
     <string name="enableFunMode">Skru av pandaene</string>
 

@@ -700,6 +700,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mätare</string>
 
+    <string name="content_description_speed_grader_slider">Omdömesreglage</string>
     <string name="createNewCalendarEvent">Skapa ny händelse</string>
     <string name="enableFunMode">Stäng av pandorna</string>
 

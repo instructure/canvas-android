@@ -697,6 +697,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Ba klasman</string>
     <string name="createNewCalendarEvent">Kreye Nouvo Aktivite</string>
     <string name="enableFunMode">Fèmen Panda a</string>
 
