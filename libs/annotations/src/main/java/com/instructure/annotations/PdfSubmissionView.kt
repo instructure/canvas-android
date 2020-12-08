@@ -82,7 +82,6 @@ import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import java.io.File
 import java.util.*
-import kotlin.jvm.Throws
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -653,7 +652,12 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
     //region annotation listeners
 
     private val exitHandler: Handler = Handler(Looper.getMainLooper())
-    private val enterCreationMode = Runnable { pdfFragment?.enterAnnotationCreationMode() }
+    private val enterCreationMode = Runnable {
+        if (pdfFragment?.isAdded == true) {
+            pdfFragment?.enterAnnotationCreationMode()
+        }
+    }
+
     override fun onEnterAnnotationCreationMode(controller: AnnotationCreationController) {
         exitHandler.removeCallbacks(enterCreationMode)
 
