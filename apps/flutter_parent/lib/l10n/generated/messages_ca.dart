@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Compartiu l\'interès que us desperta l\'aplicació"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Mostra la contrasenya"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Inicia la sessió"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("Alguna cosa no ha anat bé en intentar crear el vostre compte, poseu-vos en contacte amb la vostra escola per obtenir assistència."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Alguna cosa no funciona bé però per ara puc seguir treballant per tal d\'acabar de fer allò que necessito."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Deixa d\'actuar com a usuari"),
     "Student" : MessageLookupByLibrary.simpleMessage("Estudiant"),

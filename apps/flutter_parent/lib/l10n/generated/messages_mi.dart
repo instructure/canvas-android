@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Tuari Tō Aroha mō te Taupānga"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Whakatu Kupuhipa"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Waitohu I roto i"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("I raruraru tētahi mea i te wā e ngāna ana ki te hanga i tō pūkete; tēnā koa toro atu ki tō kura hei āwhina."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Kua pakaru tētahi mea ēngari ka taea e ahau te mahi a tawhio noa ki a oti ai ngā mea e hiahia ana ahau."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Kati te mahi rite tonu i te kaiwhakamahi"),
     "Student" : MessageLookupByLibrary.simpleMessage("Ākonga"),

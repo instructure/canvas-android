@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Delite svoje navdušenje nad aplikacijo"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Pokaži geslo"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Prijava"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("Pri poskusu ustvarjanja računa je prišlo do napake. Za pomoč se obrnite na šolo."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Nekaj ne deluje, a znam to rešiti, da dokončam, kar je treba."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Opustite vlogo uporabnika"),
     "Student" : MessageLookupByLibrary.simpleMessage("Študent"),

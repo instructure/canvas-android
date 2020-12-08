@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("アプリへの愛を共有しましょう"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("パスワードを表示する"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("サインイン"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("アカウントを作成しようとしたときに問題が発生しました。学校に連絡して支援を求めてください。"),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("何かが機能していないのですが、必要なことはそれを使わずに実行できます。"),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("ユーザーとしての機能を停止する"),
     "Student" : MessageLookupByLibrary.simpleMessage("受講者"),

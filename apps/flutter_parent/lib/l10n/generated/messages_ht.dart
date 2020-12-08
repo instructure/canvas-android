@@ -313,6 +313,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "Share Your Love for the App" : MessageLookupByLibrary.simpleMessage("Pataje lanmou ou genyen pou App la"),
     "Show Password" : MessageLookupByLibrary.simpleMessage("Afiche Modpas"),
     "Sign In" : MessageLookupByLibrary.simpleMessage("Konekte"),
+    "Something went wrong trying to create your account, please reach out to your school for assistance." : MessageLookupByLibrary.simpleMessage("Gen yon bagay ki pase mal pandan w ap eseye kreye kont ou a, tanpri kontakte lekòl ou a pou yo ka ede w."),
     "Something\'s broken but I can work around it to get what I need done." : MessageLookupByLibrary.simpleMessage("Gen yon entèripsyon men mwen ka kontounen li pou mwen jwenn sa mwen bezwen an."),
     "Stop Acting as User" : MessageLookupByLibrary.simpleMessage("Sispann Pase pou Itilizatè"),
     "Student" : MessageLookupByLibrary.simpleMessage("Elèv"),
