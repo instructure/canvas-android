@@ -697,6 +697,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Merilo</string>
 
+    <string name="content_description_speed_grader_slider">Drsnik za ocene</string>
     <string name="createNewCalendarEvent">Ustvari nov dogodek</string>
     <string name="enableFunMode">Izklopi pande</string>
 

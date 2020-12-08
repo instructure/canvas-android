@@ -696,6 +696,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">成績スライダー</string>
     <string name="createNewCalendarEvent">新しいイベントを作成</string>
     <string name="enableFunMode">パンダをオフにする</string>
 

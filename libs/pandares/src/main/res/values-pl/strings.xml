@@ -721,6 +721,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Suwak stopni</string>
     <string name="createNewCalendarEvent">Utwórz nowe wydarzenie</string>
     <string name="enableFunMode">Wyłącz pandy</string>
 

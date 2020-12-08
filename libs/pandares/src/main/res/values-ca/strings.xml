@@ -710,6 +710,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Mesura</string>
 
+    <string name="content_description_speed_grader_slider">Control lliscant de qualificacions</string>
     <string name="createNewCalendarEvent">Crea un esdeveniment nou</string>
     <string name="enableFunMode">Desactiva els pandes</string>
 

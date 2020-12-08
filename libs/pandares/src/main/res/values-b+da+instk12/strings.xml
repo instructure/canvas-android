@@ -709,6 +709,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">Vurdering-skyder</string>
     <string name="createNewCalendarEvent">Opret ny begivenhed</string>
     <string name="enableFunMode">Deaktiver pandaerne</string>
 

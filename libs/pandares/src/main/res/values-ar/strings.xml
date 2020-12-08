@@ -720,6 +720,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">مقياس</string>
 
+    <string name="content_description_speed_grader_slider">شريط تمرير التقديرات</string>
     <string name="createNewCalendarEvent">إنشاء حدث جديد</string>
     <string name="enableFunMode">إيقاف تشغيل الباندا</string>
 

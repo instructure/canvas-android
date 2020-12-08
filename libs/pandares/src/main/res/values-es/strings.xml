@@ -709,6 +709,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Indicador</string>
 
+    <string name="content_description_speed_grader_slider">Control deslizante de calificaciones</string>
     <string name="createNewCalendarEvent">Crear nuevo evento</string>
     <string name="enableFunMode">Apagar los pandas</string>
 

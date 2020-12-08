@@ -691,6 +691,7 @@
     <string name="speedgrader">SpeedGrader</string>
     <string name="gauge">Gauge</string>
 
+    <string name="content_description_speed_grader_slider">評分滑條</string>
     <string name="createNewCalendarEvent">創建新活動</string>
     <string name="enableFunMode">關閉熊貓頭像</string>
 
