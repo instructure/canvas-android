@@ -34,20 +34,8 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
             is EditSyllabusEvent.SyllabusSaveSuccess -> handleSyllabusSaved(model, event)
             is EditSyllabusEvent.SyllabusSaveError -> handleSyllabusSaveError(model)
             is EditSyllabusEvent.BackClicked -> handleBackClick(model, event)
-            is EditSyllabusEvent.SaveState -> handleSaveInstanceState(model, event)
+            is EditSyllabusEvent.SaveState -> handleSaveState(model, event)
         }
-    }
-
-    private fun handleBackClick(model: EditSyllabusModel, event: EditSyllabusEvent.BackClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
-        return if (isSyllabusChanged(model, event)) {
-            Next.dispatch(setOf(EditSyllabusEffect.ShowCloseConfirmationDialog))
-        } else {
-            Next.dispatch(setOf(EditSyllabusEffect.CloseEdit))
-        }
-    }
-
-    private fun isSyllabusChanged(model: EditSyllabusModel, event: EditSyllabusEvent.BackClicked): Boolean {
-        return model.summaryAllowed != event.summaryAllowed || model.course.syllabusBody != event.content || model.isChanged
     }
 
     private fun handleSaveClicked(model: EditSyllabusModel, event: EditSyllabusEvent.SaveClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
@@ -64,9 +52,21 @@ class EditSyllabusUpdate : UpdateInit<EditSyllabusModel, EditSyllabusEvent, Edit
         return Next.next(model.copy(isSaving = false), setOf(EditSyllabusEffect.ShowSaveError))
     }
 
-    private fun handleSaveInstanceState(model: EditSyllabusModel, event: EditSyllabusEvent.SaveState): Next<EditSyllabusModel, EditSyllabusEffect> {
+    private fun handleBackClick(model: EditSyllabusModel, event: EditSyllabusEvent.BackClicked): Next<EditSyllabusModel, EditSyllabusEffect> {
+        return if (isSyllabusChanged(model, event.content, event.summaryAllowed)) {
+            Next.dispatch(setOf(EditSyllabusEffect.ShowCloseConfirmationDialog))
+        } else {
+            Next.dispatch(setOf(EditSyllabusEffect.CloseEdit))
+        }
+    }
+
+    private fun isSyllabusChanged(model: EditSyllabusModel, content: String, summaryAllowed: Boolean): Boolean {
+        return model.summaryAllowed != summaryAllowed || model.course.syllabusBody != content || model.isChanged
+    }
+
+    private fun handleSaveState(model: EditSyllabusModel, event: EditSyllabusEvent.SaveState): Next<EditSyllabusModel, EditSyllabusEffect> {
         val course = model.course.copy(syllabusBody = event.content)
-        val isChanged = model.summaryAllowed == event.summaryAllowed && model.course.syllabusBody == event.content
+        val isChanged = isSyllabusChanged(model, event.content, event.summaryAllowed)
         return Next.next(model.copy(course = course, summaryAllowed = event.summaryAllowed, isChanged = isChanged))
     }
 }
