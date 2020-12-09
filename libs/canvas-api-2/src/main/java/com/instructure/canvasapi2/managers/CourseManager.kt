@@ -137,13 +137,13 @@ object CourseManager {
     }
 
     private fun editCourseSettings(courseId: Long, summaryAllowed: Boolean, callback: StatusCallback<CourseSettings>) {
-        val queryParams = HashMap<String, Boolean>()
-        queryParams["syllabus_course_summary"] = summaryAllowed
+        val bodyFields = HashMap<String, Boolean>()
+        bodyFields["syllabus_course_summary"] = summaryAllowed
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
 
-        CourseAPI.updateCourseSettings(courseId, queryParams, adapter, callback, params)
+        CourseAPI.updateCourseSettings(courseId, bodyFields, adapter, callback, params)
     }
 
     fun getCourseWithGrade(courseId: Long, callback: StatusCallback<Course>, forceNetwork: Boolean) {
@@ -179,13 +179,13 @@ object CourseManager {
     }
 
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
-        val queryParams = HashMap<String, String>()
-        queryParams["course[name]"] = newCourseName
+        val bodyFields = HashMap<String, String>()
+        bodyFields["course[name]"] = newCourseName
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
+        CourseAPI.updateCourse(courseId, bodyFields, adapter, callback, params)
     }
 
     fun editCourseHomePage(
@@ -194,13 +194,13 @@ object CourseManager {
         forceNetwork: Boolean,
         callback: StatusCallback<Course>
     ) {
-        val queryParams = HashMap<String, String>()
-        queryParams["course[default_view]"] = newHomePage
+        val bodyFields = HashMap<String, String>()
+        bodyFields["course[default_view]"] = newHomePage
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
+        CourseAPI.updateCourse(courseId, bodyFields, adapter, callback, params)
     }
 
     fun editCourseSyllabusAsync(courseId: Long, syllabusBody: String): Deferred<DataResult<Course>> {
@@ -208,13 +208,13 @@ object CourseManager {
     }
 
     private fun editCourseSyllabus(courseId: Long, syllabusBody: String, callback: StatusCallback<Course>) {
-        val queryParams = HashMap<String, String>()
-        queryParams["course[syllabus_body]"] = syllabusBody
+        val bodyFields = HashMap<String, String>()
+        bodyFields["course[syllabus_body]"] = syllabusBody
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
 
-        CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
+        CourseAPI.updateCourse(courseId, bodyFields, adapter, callback, params)
     }
 
     fun getCoursesWithEnrollmentType(forceNetwork: Boolean, callback: StatusCallback<List<Course>>, type: String) {

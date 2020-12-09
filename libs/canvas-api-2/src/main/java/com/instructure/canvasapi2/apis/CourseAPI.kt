@@ -179,8 +179,8 @@ object CourseAPI {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getCourseSettings(courseId)).enqueue(callback)
     }
 
-    fun updateCourseSettings(courseId: Long, queryParams: Map<String, Boolean>, adapter: RestBuilder, callback: StatusCallback<CourseSettings>, params: RestParams) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourseSettings(courseId, queryParams)).enqueue(callback)
+    fun updateCourseSettings(courseId: Long, bodyFields: Map<String, Boolean>, adapter: RestBuilder, callback: StatusCallback<CourseSettings>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourseSettings(courseId, bodyFields)).enqueue(callback)
     }
 
     fun getCourseWithSyllabus(courseId: Long, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
@@ -213,8 +213,8 @@ object CourseAPI {
      * @param courseId The id for the course
      * @param params   A map of the fields to change and the values they will change to
      */
-    fun updateCourse(courseId: Long, queryParams: Map<String, String>, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourse(courseId, queryParams)).enqueue(callback)
+    fun updateCourse(courseId: Long, bodyFields: Map<String, String>, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourse(courseId, bodyFields)).enqueue(callback)
     }
 
     fun getFirstPageGroups(courseId: Long, adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams) {
