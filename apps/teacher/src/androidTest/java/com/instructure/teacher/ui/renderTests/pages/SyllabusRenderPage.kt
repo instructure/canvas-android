@@ -35,6 +35,7 @@ class SyllabusRenderPage : SyllabusPage() {
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecyclerView)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)
+    private val editIcon by WaitForViewWithId(R.id.menu_edit)
 
     fun assertDisplaysToolbarText(text: String) {
         findChildTextInToolbar(text).assertDisplayed()
@@ -75,5 +76,9 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun swipeToSyllabusTab() {
         onView(withId(R.id.syllabusPager)).perform(ViewActions.swipeRight())
+    }
+
+    fun assertDisplayEditIcon() {
+        editIcon.assertDisplayed()
     }
 }
