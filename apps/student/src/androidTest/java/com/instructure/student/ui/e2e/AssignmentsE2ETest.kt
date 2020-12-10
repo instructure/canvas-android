@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
@@ -24,8 +40,10 @@ import org.junit.Rule
 import org.junit.Test
 
 class AssignmentsE2ETest: StudentTest() {
-    override fun displaysPageObjects() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun displaysPageObjects() = Unit
+
+    override fun enableAndConfigureAccessibilityChecks() {
+        //We dont want to see accessibility errors on E2E tests
     }
 
     @Rule
@@ -38,14 +56,12 @@ class AssignmentsE2ETest: StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    fun testAssignmentsE2E() {
-        // Seed basic student/teacher/course data
+    fun testPointsGradeTextAssignmentE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        // Seed some assignments
         val pointsTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -55,6 +71,62 @@ class AssignmentsE2ETest: StudentTest() {
                 dueAt = 1.days.fromNow.iso8601
         ))
 
+        // Sign in with lone student
+        tokenLogin(student)
+
+        // Go into our course
+        dashboardPage.waitForRender()
+        dashboardPage.selectCourse(course)
+
+        // Select the assignments tab
+        courseBrowserPage.selectAssignments()
+
+        // Verify that our assignments are present, along with any grade/date info
+        assignmentListPage.assertHasAssignment(pointsTextAssignment)
+
+        // Let's submit a text assignment
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        SubmissionsApi.submitCourseAssignment(
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+                courseId = course.id,
+                assignmentId = pointsTextAssignment.id,
+                studentToken = student.token,
+                fileIds = emptyList<Long>().toMutableList()
+        )
+
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.verifyAssignmentSubmitted()
+
+        val textGrade = SubmissionsApi.gradeSubmission(
+                teacherToken = teacher.token,
+                courseId = course.id,
+                assignmentId = pointsTextAssignment.id,
+                studentId = student.id,
+                postedGrade = "13",
+                excused = false
+        )
+
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.verifyAssignmentGraded("13")
+        // Back to assignment list page
+        Espresso.pressBack()
+
+        assignmentListPage.refresh()
+        assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
+
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testLetterGradeTextAssignmentE2E() {
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        // Pre-seed a submission and a grade for the letter grade text assignment
         val letterGradeTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -62,17 +134,6 @@ class AssignmentsE2ETest: StudentTest() {
                 teacherToken = teacher.token,
                 pointsPossible = 20.0
         ))
-
-        val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
-                courseId = course.id,
-                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
-                gradingType = GradingType.PERCENT,
-                teacherToken = teacher.token,
-                pointsPossible = 25.0,
-                allowedExtensions = listOf("txt", "pdf", "jpg")
-        ))
-
-        // Pre-seed a submission and a grade for the letter grade assignment
         SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
                 assignmentId = letterGradeTextAssignment.id,
                 courseId = course.id,
@@ -91,8 +152,6 @@ class AssignmentsE2ETest: StudentTest() {
                 postedGrade = "16",
                 excused = false
         )
-
-
         // Sign in with lone student
         tokenLogin(student)
 
@@ -104,38 +163,39 @@ class AssignmentsE2ETest: StudentTest() {
         courseBrowserPage.selectAssignments()
 
         // Verify that our assignments are present, along with any grade/date info
-        assignmentListPage.assertHasAssignment(pointsTextAssignment)
         assignmentListPage.assertHasAssignment(letterGradeTextAssignment, submissionGrade.grade)
-        assignmentListPage.assertHasAssignment(percentageFileAssignment)
 
-        // Let's submit a text assignment
-        assignmentListPage.clickAssignment(pointsTextAssignment)
+    }
 
-        SubmissionsApi.submitCourseAssignment(
-                submissionType = SubmissionType.ONLINE_TEXT_ENTRY,
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testPercentageFileAssignmentWithCommentE2E() {
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        val percentageFileAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
                 courseId = course.id,
-                assignmentId = pointsTextAssignment.id,
-                studentToken = student.token,
-                fileIds = emptyList<Long>().toMutableList()
-        )
-
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentSubmitted()
-
-        // Let's grade the assignment
-        val textGrade = SubmissionsApi.gradeSubmission(
+                submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD),
+                gradingType = GradingType.PERCENT,
                 teacherToken = teacher.token,
-                courseId = course.id,
-                assignmentId = pointsTextAssignment.id,
-                studentId = student.id,
-                postedGrade = "13",
-                excused = false
-        )
+                pointsPossible = 25.0,
+                allowedExtensions = listOf("txt", "pdf", "jpg")
+        ))
 
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.verifyAssignmentGraded("13")
+        tokenLogin(student)
 
-        Espresso.pressBack() // Back to assignment list
+        // Go into our course
+        dashboardPage.waitForRender()
+        dashboardPage.selectCourse(course)
+
+        // Select the assignments tab
+        courseBrowserPage.selectAssignments()
+
+        // Verify that our assignments are present, along with any grade/date info
+        assignmentListPage.assertHasAssignment(percentageFileAssignment)
 
         // Upload a text file for submission
         assignmentListPage.clickAssignment(percentageFileAssignment)
@@ -160,7 +220,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.verifyAssignmentSubmitted()
 
         // Grade the assignment
-        val fileGrade = SubmissionsApi.gradeSubmission(
+        SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
                 assignmentId = percentageFileAssignment.id,
@@ -173,17 +233,7 @@ class AssignmentsE2ETest: StudentTest() {
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.verifyAssignmentGraded("22")
 
-        // Back to assignment list page
-        Espresso.pressBack()
-
-        // Let's verify that the assignments in the list all have grades now
-        assignmentListPage.refresh()
-        assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
-        assignmentListPage.assertHasAssignment(letterGradeTextAssignment, submissionGrade.grade)
-        assignmentListPage.assertHasAssignment(percentageFileAssignment, fileGrade.grade)
-
         // Let's make sure that comments are working
-        assignmentListPage.clickAssignment(percentageFileAssignment)
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.assertCommentDisplayed(
@@ -197,6 +247,86 @@ class AssignmentsE2ETest: StudentTest() {
                 "My comment!!",
                 student
         )
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testMultipleAssignmentsE2E() {
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        // Pre-seed submissions and grade for letter grade assignment and points text assignment
+        val letterGradeTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.LETTER_GRADE,
+                teacherToken = teacher.token,
+                pointsPossible = 20.0
+        ))
+
+        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
+                assignmentId = letterGradeTextAssignment.id,
+                courseId = course.id,
+                studentToken = student.token,
+                submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
+                        amount = 1,
+                        submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                ))
+        ))
+
+        SubmissionsApi.gradeSubmission(
+                teacherToken = teacher.token,
+                courseId = course.id,
+                assignmentId = letterGradeTextAssignment.id,
+                studentId = student.id,
+                postedGrade = "16",
+                excused = false
+        )
+
+        val pointsTextAssignment = AssignmentsApi.createAssignment(AssignmentsApi.CreateAssignmentRequest(
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+        ))
+
+        SubmissionsApi.seedAssignmentSubmission(SubmissionsApi.SubmissionSeedRequest(
+                assignmentId = pointsTextAssignment.id,
+                courseId = course.id,
+                studentToken = student.token,
+                submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
+                        amount = 1,
+                        submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                ))
+        ))
+
+        SubmissionsApi.gradeSubmission(
+                teacherToken = teacher.token,
+                courseId = course.id,
+                assignmentId = pointsTextAssignment.id,
+                studentId = student.id,
+                postedGrade = "13",
+                excused = false
+        )
+
+        // Sign in with lone student
+        tokenLogin(student)
+
+        // Go into our course
+        dashboardPage.waitForRender()
+        dashboardPage.selectCourse(course)
+
+        // Select the assignments tab
+        courseBrowserPage.selectAssignments()
+
+        // Verify that our assignments are present, along with any grade/date info
+        assignmentListPage.assertHasAssignment(pointsTextAssignment,"13")
+        assignmentListPage.assertHasAssignment(letterGradeTextAssignment, "16")
     }
 
     @E2E
@@ -250,14 +380,13 @@ class AssignmentsE2ETest: StudentTest() {
         // You could also break this out to a separate E2E test and annotate it with
         // @Stub, so that we can run it locally but it doesn't run as part of our CI suite.
         // send video comment
-//        submissionDetailsPage.addAndSendVideoComment()
-//        sleep(3000) // wait for video comment submission to propagate
-//        submissionDetailsPage.assertVideoCommentDisplayed()
+        //submissionDetailsPage.addAndSendVideoComment()
+        //sleep(3000) // wait for video comment submission to propagate
+        //submissionDetailsPage.assertVideoCommentDisplayed()
 
         // send audio comment
         submissionDetailsPage.addAndSendAudioComment()
         sleep(3000) // wait for audio comment submission to propagate
         submissionDetailsPage.assertAudioCommentDisplayed()
     }
-
 }
