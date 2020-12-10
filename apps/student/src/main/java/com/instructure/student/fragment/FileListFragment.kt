@@ -188,7 +188,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                             url = item.getFilePreviewUrl(ApiPrefs.fullDomain, canvasContext),
                             authenticate = true,
                             isUnsupportedFeature = false,
-                            allowUnsupportedRouting = false
+                            allowUnsupportedRouting = false,
+                            shouldRouteInternally = false
                         ))
                     } else {
                         openMedia(item.contentType, item.url, item.displayName, canvasContext)
