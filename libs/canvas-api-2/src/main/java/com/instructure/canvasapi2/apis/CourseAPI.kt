@@ -52,9 +52,8 @@ object CourseAPI {
         @GET("courses/{courseId}/settings")
         fun getCourseSettings(@Path("courseId") courseId: Long): Call<CourseSettings>
 
-        @FormUrlEncoded
         @PUT("courses/{course_id}/settings")
-        fun updateCourseSettings(@Path("course_id") courseId: Long, @FieldMap params: Map<String, Boolean>): Call<CourseSettings>
+        fun updateCourseSettings(@Path("course_id") courseId: Long, @QueryMap params: Map<String, Boolean>): Call<CourseSettings>
 
         @GET("courses/{courseId}?include[]=syllabus_body&include[]=term&include[]=license&include[]=is_public&include[]=permissions")
         fun getCourseWithSyllabus(@Path("courseId") courseId: Long): Call<Course>
@@ -81,9 +80,8 @@ object CourseAPI {
         @DELETE("users/self/favorites/courses/{courseId}")
         fun removeCourseFromFavorites(@Path("courseId") courseId: Long): Call<Favorite>
 
-        @FormUrlEncoded
         @PUT("courses/{course_id}")
-        fun updateCourse(@Path("course_id") courseId: Long, @FieldMap params: Map<String, String>): Call<Course>
+        fun updateCourse(@Path("course_id") courseId: Long, @QueryMap params: Map<String, String>): Call<Course>
 
         @GET("courses/{courseId}/groups?include[]=users")
         fun getFirstPageGroups(@Path("courseId") courseId: Long): Call<List<Group>>
@@ -179,8 +177,8 @@ object CourseAPI {
         callback.addCall(adapter.build(CoursesInterface::class.java, params).getCourseSettings(courseId)).enqueue(callback)
     }
 
-    fun updateCourseSettings(courseId: Long, bodyFields: Map<String, Boolean>, adapter: RestBuilder, callback: StatusCallback<CourseSettings>, params: RestParams) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourseSettings(courseId, bodyFields)).enqueue(callback)
+    fun updateCourseSettings(courseId: Long, queryParams: Map<String, Boolean>, adapter: RestBuilder, callback: StatusCallback<CourseSettings>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourseSettings(courseId, queryParams)).enqueue(callback)
     }
 
     fun getCourseWithSyllabus(courseId: Long, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
@@ -213,8 +211,8 @@ object CourseAPI {
      * @param courseId The id for the course
      * @param params   A map of the fields to change and the values they will change to
      */
-    fun updateCourse(courseId: Long, bodyFields: Map<String, String>, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
-        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourse(courseId, bodyFields)).enqueue(callback)
+    fun updateCourse(courseId: Long, queryParams: Map<String, String>, adapter: RestBuilder, callback: StatusCallback<Course>, params: RestParams) {
+        callback.addCall(adapter.build(CoursesInterface::class.java, params).updateCourse(courseId, queryParams)).enqueue(callback)
     }
 
     fun getFirstPageGroups(courseId: Long, adapter: RestBuilder, callback: StatusCallback<List<Group>>, params: RestParams) {
