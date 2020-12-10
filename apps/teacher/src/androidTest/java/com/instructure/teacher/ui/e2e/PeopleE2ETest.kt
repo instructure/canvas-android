@@ -43,11 +43,11 @@ class PeopleE2ETest: TeacherTest() {
 
         val data = seedData(teachers = 1, students = 2, courses = 1)
         val teacher = data.teachersList[0]
-        val notGradedstudent = data.studentsList[0]
+        val notGradedStudent = data.studentsList[0]
         val gradedStudent = data.studentsList[1]
         val course = data.coursesList[0]
 
-        val assignment = seedAssignments(
+        val assignments = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
                 submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
@@ -55,12 +55,12 @@ class PeopleE2ETest: TeacherTest() {
                 pointsPossible = 10.0
         )
 
-        val gradedSubmission = seedAssignmentSubmission(
+        seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
                         submissionType = SubmissionType.ONLINE_TEXT_ENTRY
                 )),
-                assignmentId = assignment[0].id,
+                assignmentId = assignments[0].id,
                 courseId = course.id,
                 studentToken = gradedStudent.token
         )
@@ -68,7 +68,7 @@ class PeopleE2ETest: TeacherTest() {
         SubmissionsApi.gradeSubmission(
                 teacherToken = teacher.token,
                 courseId = course.id,
-                assignmentId = assignment[0].id,
+                assignmentId = assignments[0].id,
                 studentId = gradedStudent.id,
                 postedGrade = "10",
                 excused = false
@@ -83,8 +83,8 @@ class PeopleE2ETest: TeacherTest() {
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.navigateBack()
 
-        peopleListPage.clickPerson(notGradedstudent)
-        studentContextPage.assertDisplaysStudentInfo(notGradedstudent)
+        peopleListPage.clickPerson(notGradedStudent)
+        studentContextPage.assertDisplaysStudentInfo(notGradedStudent)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
