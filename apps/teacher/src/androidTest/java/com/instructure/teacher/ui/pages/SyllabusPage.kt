@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
@@ -48,6 +49,10 @@ open class SyllabusPage : BasePage(R.id.syllabusPage) {
 
     fun refresh() {
         Espresso.onView(Matchers.allOf(ViewMatchers.withId(R.id.swipeRefreshLayout), withAncestor(R.id.syllabusPage))).swipeDown()
+    }
+
+    fun openEditSyllabus() {
+        onViewWithId(R.id.menu_edit).click()
     }
 
 }
