@@ -43,7 +43,8 @@ class SyllabusRenderTest : TeacherRenderTest() {
             course = DataResult.Success(Course(id = courseId, name = "Test Course", syllabusBody = syllabusDescription)),
             isLoading = false,
             syllabus = ScheduleItem.createSyllabus("", "<p>$syllabusDescription</p>"),
-            events = DataResult.Success(emptyList())
+            events = DataResult.Success(emptyList()),
+            summaryAllowed = true
         )
     }
 
