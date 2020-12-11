@@ -58,7 +58,7 @@ class DashboardPage : BasePage() {
 
     fun assertOpensCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
-        onView(withText(course.name)).click()
+        openCourse(courseName = course.name)
         onView(withId(R.id.courseBrowserTitle)).assertContainsText(course.name)
         navigateBack(R.id.overlayToolbar)
     }
@@ -77,6 +77,10 @@ class DashboardPage : BasePage() {
     fun navigateBack(toolbarId: Int = R.id.toolbar) {
         onView(withParent(toolbarId) + withContentDescription("Navigate up")).click()
 
+    }
+
+    fun openCourse(courseName: String) {
+        onView(withText(courseName)).click()
     }
 
     private fun scrollAndAssertDisplayed(matcher: Matcher<View>) {
