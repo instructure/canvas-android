@@ -47,10 +47,7 @@ import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.GradeViewHolder
 import com.instructure.student.interfaces.AdapterToFragmentCallback
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.ArrayList
 import java.util.HashMap
 
@@ -151,6 +148,8 @@ open class GradesListRecyclerAdapter(
                isRefresh = true
                updateCourseGrade()
                updateWithAllAssignments()
+           } catch (e: CancellationException) {
+               //We cancelled the job, nothing to do here
            } catch (e: Throwable) {
                Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
            }
@@ -199,6 +198,8 @@ open class GradesListRecyclerAdapter(
                             adapterToGradesCallback?.notifyGradeChanged(courseGrade)
                         }
                     }
+            } catch (e: CancellationException) {
+                //We cancelled the job, nothing to do here
             } catch (e: Throwable) {
                 Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
             }
@@ -247,6 +248,8 @@ open class GradesListRecyclerAdapter(
 
                     // Inform the spinner things are done
                     adapterToGradesCallback?.setTermSpinnerState(true)
+                } catch (e: CancellationException) {
+                    //We cancelled the job, nothing to do here
                 } catch (e: Throwable) {
                     Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
                 }
@@ -278,6 +281,8 @@ open class GradesListRecyclerAdapter(
                 // Standard load assignments, unfiltered
                 val aGroups = awaitApi<List<AssignmentGroup>>{AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext!!.id, true, it)}
                 updateAssignmentGroups(aGroups)
+            } catch (e: CancellationException) {
+                //We cancelled the job, nothing to do here
             } catch (e: Throwable) {
                 Toast.makeText(context, R.string.errorOccurred, Toast.LENGTH_SHORT).show()
             }
