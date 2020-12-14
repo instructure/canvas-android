@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.models.User
 import okhttp3.*
 import okio.Buffer
+import okio.IOException
 
 /**
  * Creates a successful response for this [Request] with a response code of 200 and response [body] serialized to json
@@ -213,13 +214,24 @@ private fun grabJsonFieldFromBuffer(buffer: Buffer, jsonObject: JsonObject): Boo
         }
         else{
             fieldValue = fieldStringValue.toDoubleOrNull()
-            if(fieldValue != null) {
+            if (fieldValue != null) {
                 jsonObject.addProperty(fieldName, fieldValue as Double)
-            }
-            else {
+            } else {
                 jsonObject.addProperty(fieldName, fieldStringValue)
             }
         }
     }
     return true
+}
+
+inline fun <reified T> getJsonFromRequestBody(requestBody: RequestBody?): T? {
+    val jsonString = try {
+        val buffer = Buffer()
+        requestBody?.writeTo(buffer)
+        buffer.readUtf8()
+    } catch (e: IOException) {
+        return null
+    }
+
+    return Gson().fromJson(jsonString, T::class.java)
 }

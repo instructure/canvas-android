@@ -21,14 +21,15 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.postmodels.UpdateCourseBody
+import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import kotlinx.coroutines.Deferred
 import java.io.IOException
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 object CourseManager {
 
@@ -208,16 +209,16 @@ object CourseManager {
     }
 
     private fun editCourseSyllabus(courseId: Long, syllabusBody: String, callback: StatusCallback<Course>) {
-        val queryParams = HashMap<String, String>()
-        queryParams["course[syllabus_body]"] = syllabusBody
+        val updateCourseBody = UpdateCourseBody(syllabusBody)
+        val updateCourseWrapper = UpdateCourseWrapper(updateCourseBody)
 
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = true)
 
-        CourseAPI.updateCourse(courseId, queryParams, adapter, callback, params)
+        CourseAPI.updateCourse(courseId, updateCourseWrapper, adapter, callback, params)
     }
 
-    fun getCoursesWithEnrollmentType(forceNetwork: Boolean, callback: StatusCallback<List<Course>>, type: String) {
+    private fun getCoursesWithEnrollmentType(forceNetwork: Boolean, callback: StatusCallback<List<Course>>, type: String) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
