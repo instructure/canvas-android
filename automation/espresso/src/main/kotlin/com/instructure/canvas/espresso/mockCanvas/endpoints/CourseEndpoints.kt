@@ -112,6 +112,20 @@ object CourseEndpoint : Endpoint(
                         val settings = data.courseSettings[courseId] ?: CourseSettings()
                         request.successResponse(settings)
                     }
+
+                    PUT {
+                        val courseId = pathVars.courseId
+                        val settings = data.courseSettings[courseId] ?: CourseSettings()
+
+                        // Handle course settings change, if present
+                        val newSyllabusSummaryVisibility = request.url().queryParameter("syllabus_course_summary")
+                        if (newSyllabusSummaryVisibility != null) {
+                            settings.courseSummary = newSyllabusSummaryVisibility.toBoolean()
+                        }
+
+                        // Return the updated course
+                        request.successResponse(settings)
+                    }
                 }
         ),
 
@@ -146,6 +160,12 @@ object CourseEndpoint : Endpoint(
                         "wiki" -> Course.HomePage.HOME_WIKI
                         else -> Course.HomePage.HOME_MODULES
                     }
+                }
+
+                // Handle course syllabus change, if present
+                val newSyllabusBody = request.url().queryParameter("course[syllabus_body]")
+                if (newSyllabusBody != null) {
+                    course.syllabusBody = newSyllabusBody
                 }
 
                 // Return the updated course

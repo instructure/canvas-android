@@ -16,16 +16,31 @@
  */
 package com.instructure.teacher.ui.pages
 
-import com.instructure.espresso.WaitForViewWithText
-import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
 class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
 
     private val toolbar by WaitForViewWithText(R.string.editSyllabusTitle)
+    private val saveButton by OnViewWithId(R.id.menuSaveSyllabus)
+    private val contentRceView by WaitForViewWithId(R.id.rce_webView)
+    private val showCourseSummarySwitch by OnViewWithId(R.id.showSummarySwitch)
 
     fun assertToolbarDisplayedWithCorrectTitle() {
         toolbar.assertDisplayed()
+    }
+
+    fun editSyllabusBody(text: String) {
+        contentRceView.perform(TypeInRCETextEditor(text))
+    }
+
+    fun saveSyllabusEdit() {
+        saveButton.click()
+    }
+
+    fun changeShowSummary() {
+        showCourseSummarySwitch.click()
     }
 }

@@ -48,12 +48,6 @@ class SyllabusRenderPage : SyllabusPage() {
         webView.assertNotDisplayed()
     }
 
-    fun assertDisplaysSyllabus(text: String, shouldDisplayTabs: Boolean = true) {
-        if (shouldDisplayTabs) tabs.assertDisplayed() else tabs.assertNotDisplayed()
-        webView.assertDisplayed()
-        Web.onWebView().withElement(DriverAtoms.findElement(Locator.TAG_NAME, "p")).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(text)))
-    }
-
     fun assertDisplaysEmpty() {
         eventsEmpty.assertDisplayed()
     }

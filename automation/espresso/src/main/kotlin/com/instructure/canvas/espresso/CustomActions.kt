@@ -16,13 +16,14 @@
  */
 package com.instructure.canvas.espresso
 
+import android.app.Activity
 import android.os.SystemClock
 import android.os.SystemClock.sleep
-import android.util.Log
 import android.view.InputDevice
 import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
@@ -30,23 +31,19 @@ import androidx.test.espresso.PerformException
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.CoordinatesProvider
-import androidx.test.espresso.action.GeneralClickAction
-import androidx.test.espresso.action.Press
-import androidx.test.espresso.action.Tap
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.util.HumanReadables
 import androidx.viewpager.widget.ViewPager
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.swipeUp
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.*
 
 //
 // This is a repo for generally useful Espresso actions
@@ -318,13 +315,21 @@ class SetViewPagerCurrentItemAction(private val pageNumber: Int) : ViewAction {
 
         if (pageNumber >= adapter.count) throw PerformException.Builder()
                 .withActionDescription(this.description)
-                .withViewDescription(HumanReadables.describe(view))
-                .withCause(IndexOutOfBoundsException("Requested page $pageNumber in ViewPager of size ${adapter.count}"))
-                .build()
+            .withViewDescription(HumanReadables.describe(view))
+            .withCause(IndexOutOfBoundsException("Requested page $pageNumber in ViewPager of size ${adapter.count}"))
+            .build()
 
         pager.setCurrentItem(pageNumber, false)
 
         uiController.loopMainThreadUntilIdle()
     }
 
+}
+
+fun checkToastText(text: String, activity: Activity) {
+    onView(withText(text)).inRoot(withDecorView(not(`is`(activity.window.decorView)))).check(matches(isDisplayed()))
+}
+
+fun checkToastText(@StringRes stringRes: Int, activity: Activity) {
+    onView(withText(stringRes)).inRoot(withDecorView(not(`is`(activity.window.decorView)))).check(matches(isDisplayed()))
 }
