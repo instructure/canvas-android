@@ -40,7 +40,7 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
         saveButton.click()
     }
 
-    fun changeShowSummary() {
+    fun toggleShowSummary() {
         showCourseSummarySwitch.click()
     }
 }

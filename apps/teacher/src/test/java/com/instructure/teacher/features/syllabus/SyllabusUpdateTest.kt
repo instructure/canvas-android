@@ -184,4 +184,19 @@ class SyllabusUpdateTest {
                 UpdateSpec.assertThatNext(NextMatchers.hasModel(expectedModel))
             )
     }
+
+    @Test
+    fun `SyllabusUpdatedEvent should load data if summary allowed was not changed but content is empty`() {
+        val expectedModel = initModel.copy(isLoading = true)
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = false, content = ""))
+            .then(
+                UpdateSpec.assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.LoadData(course.id, true))
+                )
+            )
+    }
 }

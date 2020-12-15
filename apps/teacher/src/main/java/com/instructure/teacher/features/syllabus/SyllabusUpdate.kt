@@ -68,7 +68,7 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
     }
 
     private fun handleSyllabusUpdatedEvent(model: SyllabusModel, event: SyllabusEvent.SyllabusUpdatedEvent): Next<SyllabusModel, SyllabusEffect> {
-        return if (model.summaryAllowed == event.summaryAllowed) {
+        return if (model.summaryAllowed == event.summaryAllowed && event.content.isNotEmpty()) {
             val course = model.course?.dataOrNull?.copy(syllabusBody = event.content)
             val syllabus = ScheduleItem.createSyllabus(course?.name, event.content)
             val courseResult = course?.let {

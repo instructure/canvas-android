@@ -49,7 +49,7 @@ class EditSyllabusPageTest : TeacherTest() {
         goToEditSyllabus()
 
         editSyllabusPage.editSyllabusBody("Syllabus edited")
-        editSyllabusPage.changeShowSummary()
+        editSyllabusPage.toggleShowSummary()
         editSyllabusPage.saveSyllabusEdit()
 
         syllabusPage.assertDisplaysSyllabus("Syllabus edited", false)
