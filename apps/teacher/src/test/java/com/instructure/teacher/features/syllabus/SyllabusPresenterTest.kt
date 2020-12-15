@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -195,16 +196,74 @@ class SyllabusPresenterTest {
         // Given
         val syllabusBody = "Syllabus body"
         val model = baseModel.copy(
-                course = DataResult.Success(baseCourse),
-                events = DataResult.Success(baseEvents),
-                syllabus = ScheduleItem.createSyllabus("Title", syllabusBody)
+            course = DataResult.Success(baseCourse),
+            events = DataResult.Success(baseEvents),
+            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody),
+            summaryAllowed = true
         )
 
         // When
         val syllabusViewState = syllabusPresenter.present(model, context)
 
         // Then
-        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState))
+        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), showSummary = true)
+        assertEquals(expectedState, syllabusViewState)
+    }
+
+    @Test
+    fun `Should return loaded state with possibility to edit if user has the permission to edit`() {
+        // Given
+        val syllabusBody = "Syllabus body"
+        val model = baseModel.copy(
+            course = DataResult.Success(baseCourse),
+            events = DataResult.Success(baseEvents),
+            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody),
+            permissions = DataResult.Success(CanvasContextPermission(canManageContent = true))
+        )
+
+        // When
+        val syllabusViewState = syllabusPresenter.present(model, context)
+
+        // Then
+        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), canEdit = true)
+        assertEquals(expectedState, syllabusViewState)
+    }
+
+    @Test
+    fun `Should return loaded state without possibility to edit if user does not have the permission to edit`() {
+        // Given
+        val syllabusBody = "Syllabus body"
+        val model = baseModel.copy(
+            course = DataResult.Success(baseCourse),
+            events = DataResult.Success(baseEvents),
+            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody),
+            permissions = DataResult.Success(CanvasContextPermission(canManageContent = false))
+        )
+
+        // When
+        val syllabusViewState = syllabusPresenter.present(model, context)
+
+        // Then
+        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), canEdit = false)
+        assertEquals(expectedState, syllabusViewState)
+    }
+
+    @Test
+    fun `Should return loaded state without possibility to edit if permissions fail`() {
+        // Given
+        val syllabusBody = "Syllabus body"
+        val model = baseModel.copy(
+            course = DataResult.Success(baseCourse),
+            events = DataResult.Success(baseEvents),
+            syllabus = ScheduleItem.createSyllabus("Title", syllabusBody),
+            permissions = DataResult.Fail()
+        )
+
+        // When
+        val syllabusViewState = syllabusPresenter.present(model, context)
+
+        // Then
+        val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), canEdit = false)
         assertEquals(expectedState, syllabusViewState)
     }
 }

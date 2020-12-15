@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.renderTests
 
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -42,7 +43,8 @@ class SyllabusRenderTest : TeacherRenderTest() {
             course = DataResult.Success(Course(id = courseId, name = "Test Course", syllabusBody = syllabusDescription)),
             isLoading = false,
             syllabus = ScheduleItem.createSyllabus("", "<p>$syllabusDescription</p>"),
-            events = DataResult.Success(emptyList())
+            events = DataResult.Success(emptyList()),
+            summaryAllowed = true
         )
     }
 
@@ -123,6 +125,15 @@ class SyllabusRenderTest : TeacherRenderTest() {
         syllabusRenderPage.assertDisplaysEvents()
         syllabusRenderPage.swipeToSyllabusTab()
         syllabusRenderPage.assertDisplaysEvents()
+    }
+
+    @Test
+    fun editShownIfTeacherHavePermissionToEdit() {
+        val permissions = CanvasContextPermission(canManageContent = true)
+        val model = baseModel.copy(syllabus = null, events = DataResult.Success(List(3) { ScheduleItem(title = it.toString()) }), permissions = DataResult.Success(permissions))
+        loadPageWithModel(model)
+
+        syllabusRenderPage.assertDisplayEditIcon()
     }
 
     private fun loadPageWithModel(model: SyllabusModel) {

@@ -68,12 +68,24 @@ class SyllabusPageTest : TeacherTest() {
         calendarEventPage.verifyDescription(calendarEvent.description!!)
     }
 
+    // Tests that we can open the edit syllabus.
+    @Test
+    fun testSyllabus_openEditSyllabus() {
+        // We have to add this delay to be sure that the remote config is already fetched before we want to override remote config values.
+        Thread.sleep(3000)
+        RemoteConfigPrefs.putString(RemoteConfigParam.SHOW_TEACHER_SYLLABUS.rc_name, "true")
+        goToSyllabus(eventCount = 0, assignmentCount = 1)
+
+        syllabusPage.openEditSyllabus()
+        editSyllabusPage.assertToolbarDisplayedWithCorrectTitle()
+    }
+
     private fun goToSyllabus(eventCount: Int, assignmentCount: Int): MockCanvas {
 
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val course = data.courses.values.first()
 
-        data.addCoursePermissions(course.id, CanvasContextPermission())
+        data.addCoursePermissions(course.id, CanvasContextPermission(canManageContent = true))
 
         // Give the course a syllabus body
         val updatedCourse = course.copy(syllabusBody = "Syllabus Body")

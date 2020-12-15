@@ -21,7 +21,9 @@ sealed class SyllabusViewState {
 
     data class Loaded(
             val syllabus: String? = null,
-            val eventsState: EventsViewState? = null
+            val eventsState: EventsViewState? = null,
+            val canEdit: Boolean = false,
+            val showSummary: Boolean = false
     ) : SyllabusViewState()
 }
 

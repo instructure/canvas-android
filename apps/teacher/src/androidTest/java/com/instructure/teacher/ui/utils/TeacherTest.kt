@@ -17,11 +17,17 @@
 package com.instructure.teacher.ui.utils
 
 import android.app.Activity
+import android.view.View
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.*
+import instructure.rceditor.RCETextEditor
+import org.hamcrest.Matcher
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -71,5 +77,26 @@ abstract class TeacherTest : CanvasTest() {
     val syllabusPage = SyllabusPage()
     val calendarEventPage = CalendarEventPage()
     val dashboardPage = DashboardPage()
+    val editSyllabusPage = EditSyllabusPage()
 
+}
+
+/*
+ * Custom action to enter text into an RCETextEditor
+ * This had to go here, instead of CustomActions, because CustomActions is not aware of RCETExtEditor.
+ */
+class TypeInRCETextEditor(val text: String) : ViewAction {
+    override fun getDescription(): String {
+        return "Enters text into an RCETextEditor"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return ViewMatchers.isAssignableFrom(RCETextEditor::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is RCETextEditor -> view.applyHtml(text)
+        }
+    }
 }

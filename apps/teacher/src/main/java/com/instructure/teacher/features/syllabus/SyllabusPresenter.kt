@@ -48,10 +48,13 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
         val course = model.course?.dataOrNull
         val events = mapEventsResultToViewState(course?.color ?: 0, model.events, context)
         val body = model.syllabus?.description?.takeIf { it.isValid() }
+        val canEdit = model.permissions?.dataOrNull?.canManageContent == true
 
         return SyllabusViewState.Loaded(
-                syllabus = body,
-                eventsState = events.takeUnless { it == EventsViewState.Empty && body != null })
+            syllabus = body,
+            eventsState = events.takeUnless { it == EventsViewState.Empty && body != null },
+            canEdit = canEdit,
+            showSummary = model.summaryAllowed)
     }
 
     private fun mapEventsResultToViewState(color: Int, eventsResult: DataResult<List<ScheduleItem>>?, context: Context): EventsViewState {

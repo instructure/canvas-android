@@ -207,3 +207,5 @@ class SubmissionFilterChangedEvent(val filterIndex: Int = -1, val canvasContext:
 class CourseColorOverlayToggledEvent
 
 class DiscussionOverflowMenuClickedEvent(val type: DiscussionBottomSheetChoice, val entryId: Long)
+
+class SyllabusUpdatedEvent(val content: String, val summaryAllowed: Boolean, skipId: String? = null) : RationedBusEvent<String>(content, skipId)

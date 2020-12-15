@@ -35,6 +35,7 @@ class SyllabusRenderPage : SyllabusPage() {
     private val eventsRecycler by WaitForViewWithId(R.id.syllabusEventsRecyclerView)
     private val eventsEmpty by WaitForViewWithId(R.id.syllabusEmptyView)
     private val eventsError by WaitForViewWithId(R.id.syllabusEventsError)
+    private val editIcon by WaitForViewWithId(R.id.menu_edit)
 
     fun assertDisplaysToolbarText(text: String) {
         findChildTextInToolbar(text).assertDisplayed()
@@ -45,12 +46,6 @@ class SyllabusRenderPage : SyllabusPage() {
     fun assertDoesNotDisplaySyllabus() {
         tabs.assertNotDisplayed()
         webView.assertNotDisplayed()
-    }
-
-    fun assertDisplaysSyllabus(text: String, shouldDisplayTabs: Boolean = true) {
-        if (shouldDisplayTabs) tabs.assertDisplayed() else tabs.assertNotDisplayed()
-        webView.assertDisplayed()
-        Web.onWebView().withElement(DriverAtoms.findElement(Locator.TAG_NAME, "p")).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.comparesEqualTo(text)))
     }
 
     fun assertDisplaysEmpty() {
@@ -75,5 +70,9 @@ class SyllabusRenderPage : SyllabusPage() {
 
     fun swipeToSyllabusTab() {
         onView(withId(R.id.syllabusPager)).perform(ViewActions.swipeRight())
+    }
+
+    fun assertDisplayEditIcon() {
+        editIcon.assertDisplayed()
     }
 }

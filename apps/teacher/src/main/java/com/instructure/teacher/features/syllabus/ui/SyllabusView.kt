@@ -22,20 +22,27 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
+import com.instructure.teacher.events.SyllabusUpdatedEvent
 import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.syllabus.SyllabusEvent
+import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.fragments.AssignmentDetailsFragment
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.instructure.teacher.router.RouteMatcher
+import com.instructure.teacher.utils.setupMenu
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
 import kotlinx.android.synthetic.main.fragment_syllabus_webview.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 private const val SYLLABUS_TAB_POSITION = 0
 private const val SUMMARY_TAB_POSITION = 1
@@ -60,7 +67,10 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     }
 
     init {
+        toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
+        setEditVisibility(false)
         ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+
         syllabusTabLayout.setBackgroundColor(ColorKeeper.getOrGenerateColor(canvasContext))
 
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
@@ -69,6 +79,11 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
 
         syllabusPager.adapter = SyllabusTabAdapter(canvasContext, getTabTitles())
         syllabusTabLayout.setupWithViewPager(syllabusPager, true)
+    }
+
+    private fun setEditVisibility(isVisible: Boolean) {
+        val editItem = toolbar.menu?.findItem(R.id.menu_edit)
+        editItem?.isVisible = isVisible
     }
 
     private fun getTabTitles(): List<String> {
@@ -99,7 +114,12 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     private fun renderLoadedState(state: SyllabusViewState.Loaded) {
         swipeRefreshLayout.isRefreshing = false
 
-        val hasBoth = state.eventsState != null && state.syllabus != null
+        setEditVisibility(state.canEdit)
+        // We need to do this again after changing the edit button to visible to make it the correct color.
+        ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
+
+        val showSummary = state.showSummary && state.eventsState != null
+        val hasBoth = showSummary && state.syllabus != null
         syllabusTabLayout.setVisible(hasBoth)
         syllabusPager.canSwipe = hasBoth
 
@@ -152,5 +172,26 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {
         val route = Route(CalendarEventFragment::class.java, canvasContext, CalendarEventFragment.createArgs(canvasContext, scheduleItem))
         RouteMatcher.route(context, route)
+    }
+
+    fun openEditSyllabus(course: Course, summaryAllowed: Boolean) {
+        val fragmentArgs = EditSyllabusFragment.createArgs(course, summaryAllowed)
+        RouteMatcher.route(context, Route(EditSyllabusFragment::class.java, course, fragmentArgs))
+    }
+
+    fun registerEventBus() {
+        EventBus.getDefault().register(this)
+    }
+
+    fun unregisterEventBus() {
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onSyllabusUpdated(event: SyllabusUpdatedEvent) {
+        event.once(javaClass.simpleName) {
+            consumer?.accept(SyllabusEvent.SyllabusUpdatedEvent(event.content, event.summaryAllowed))
+        }
     }
 }

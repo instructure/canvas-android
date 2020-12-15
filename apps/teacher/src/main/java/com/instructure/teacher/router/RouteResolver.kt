@@ -14,6 +14,7 @@ import com.instructure.teacher.features.calendar.event.CalendarEventFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
+import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.fragments.*
 import instructure.rceditor.RCEFragment
@@ -168,6 +169,8 @@ object RouteResolver {
             fragment = CreateOrEditPageDetailsFragment.newInstance(route.arguments)
         } else if (SyllabusFragment::class.java.isAssignableFrom(cls)) {
             fragment = SyllabusFragment.newInstance(canvasContext ?: route.canvasContext)
+        } else if (EditSyllabusFragment::class.java.isAssignableFrom(cls)) {
+            fragment = EditSyllabusFragment.newInstance(route.arguments)
         } else if (CalendarEventFragment::class.java.isAssignableFrom(cls)) {
             fragment = CalendarEventFragment.newInstance(route.arguments)
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {

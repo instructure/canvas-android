@@ -37,7 +37,7 @@ data class Course(
         @SerializedName("end_at")
         val endAt: String? = null,
         @SerializedName("syllabus_body")
-        val syllabusBody: String? = null,
+        var syllabusBody: String? = null,
         @SerializedName("hide_final_grades")
         val hideFinalGrades: Boolean = false,
         @SerializedName("is_public")

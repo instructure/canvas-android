@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.syllabus
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
@@ -80,12 +81,13 @@ class SyllabusUpdateTest {
         val events = DataResult.Success(List(4) {
             ScheduleItem(itemId = it.toString())
         })
+        val permissionsResult = DataResult.Success(CanvasContextPermission(canManageContent = true))
 
-        val expectedModel = initModel.copy(isLoading = false, course = course, events = events, syllabus = syllabus)
+        val expectedModel = initModel.copy(isLoading = false, course = course, events = events, syllabus = syllabus, permissions = permissionsResult)
 
         updateSpec
             .given(initModel.copy(isLoading = true))
-            .whenEvent(SyllabusEvent.DataLoaded(course, events))
+            .whenEvent(SyllabusEvent.DataLoaded(course, events, permissionsResult))
             .then(
                 UpdateSpec.assertThatNext(NextMatchers.hasModel(expectedModel))
             )
@@ -96,11 +98,13 @@ class SyllabusUpdateTest {
         val initModel = initModel.copy(isLoading = true, course = DataResult.Success(course), events = DataResult.Success(emptyList()), syllabus = ScheduleItem.createSyllabus(null, null))
 
         val course = DataResult.Fail()
-        val expectedModel = initModel.copy(isLoading = false, course = course, events = course, syllabus = null)
+        val permissionsResult = DataResult.Success(CanvasContextPermission(canManageContent = true))
+
+        val expectedModel = initModel.copy(isLoading = false, course = course, events = course, syllabus = null, permissions = permissionsResult)
 
         updateSpec
             .given(initModel)
-            .whenEvent(SyllabusEvent.DataLoaded(course, course))
+            .whenEvent(SyllabusEvent.DataLoaded(course, course, permissionsResult))
             .then(
                 UpdateSpec.assertThatNext(NextMatchers.hasModel(expectedModel))
             )
@@ -134,6 +138,65 @@ class SyllabusUpdateTest {
             .whenEvent(SyllabusEvent.SyllabusItemClicked("1"))
             .then(
                 UpdateSpec.assertThatNext(matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowScheduleItemView(events.data[0], course)))
+            )
+    }
+
+    @Test
+    fun `EditClicked event should dispatch OpenEditSyllabus`() {
+        val courseResult = DataResult.Success(course)
+
+        val initModel = initModel.copy(course = courseResult, summaryAllowed = true)
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SyllabusEvent.EditClicked)
+            .then(
+                UpdateSpec.assertThatNext(matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.OpenEditSyllabus(course, true)))
+            )
+    }
+
+    @Test
+    fun `SyllabusUpdatedEvent should load data if summary allowed was changed`() {
+        val expectedModel = initModel.copy(isLoading = true)
+        updateSpec
+            .given(initModel)
+            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = true, content = "Web Content"))
+            .then(
+                UpdateSpec.assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.LoadData(course.id, true))
+                )
+            )
+    }
+
+    @Test
+    fun `SyllabusUpdatedEvent should create new model with updated syllabus if summary allowed was not changed`() {
+        val givenModel = initModel.copy(course = DataResult.Success(course))
+
+        val courseResult = DataResult.Success(course.copy(syllabusBody = "New Syllabus Body"))
+        val syllabus = ScheduleItem.createSyllabus(course.name, "New Syllabus Body")
+        val expectedModel = initModel.copy(course = courseResult, syllabus = syllabus)
+
+        updateSpec
+            .given(givenModel)
+            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = false, content = "New Syllabus Body"))
+            .then(
+                UpdateSpec.assertThatNext(NextMatchers.hasModel(expectedModel))
+            )
+    }
+
+    @Test
+    fun `SyllabusUpdatedEvent should load data if summary allowed was not changed but content is empty`() {
+        val expectedModel = initModel.copy(isLoading = true)
+
+        updateSpec
+            .given(initModel)
+            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = false, content = ""))
+            .then(
+                UpdateSpec.assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.LoadData(course.id, true))
+                )
             )
     }
 }
