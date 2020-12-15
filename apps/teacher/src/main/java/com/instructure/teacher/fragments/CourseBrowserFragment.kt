@@ -134,6 +134,9 @@ class CourseBrowserFragment : BaseSyncFragment<
         courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name ?: ""
         mCourseBrowserHeader.setTitleAndSubtitle(presenter.canvasContext.name ?: "", (presenter.canvasContext as? Course)?.term?.name ?: "")
         setupToolbar()
+        if (!presenter.isEmpty) {
+            checkIfEmpty()
+        }
     }
 
     override fun onPause() {
