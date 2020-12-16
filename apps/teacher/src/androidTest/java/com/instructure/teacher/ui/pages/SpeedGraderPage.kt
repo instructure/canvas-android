@@ -34,7 +34,7 @@ import org.hamcrest.Matchers.allOf
 class SpeedGraderPage : BasePage() {
 
     private val speedGraderActivityToolbar by OnViewWithId(R.id.speedGraderToolbar)
-    private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout)
+    private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout,false)
     private val submissionPager by OnViewWithId(R.id.submissionContentPager)
 
     private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).toUpperCase())

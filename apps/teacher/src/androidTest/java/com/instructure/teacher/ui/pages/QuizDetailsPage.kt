@@ -16,10 +16,8 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.InstrumentationRegistry
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Quiz
-import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.scrollTo
@@ -28,7 +26,7 @@ import com.instructure.teacher.R
 
 class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
 
-    private val backButton by OnViewWithContentDescription(R.string.abc_action_bar_up_description)
+    private val backButton by OnViewWithContentDescription(R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.quiz_details)
     private val quizTitleTextView by OnViewWithId(R.id.quizTitleTextView)
     private val pointsTextView by OnViewWithId(R.id.pointsTextView, autoAssert = false)

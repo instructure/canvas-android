@@ -19,10 +19,7 @@ package com.instructure.teacher.ui.pages
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
 class QuizSubmissionListPage : BasePage() {
@@ -45,7 +42,7 @@ class QuizSubmissionListPage : BasePage() {
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
 
     fun assertDisplaysNoSubmissionsView() {
-        emptyPandaView.assertDisplayed()
+        onView(withText("No items") + withAncestor(R.id.emptyPandaView)).assertDisplayed()
     }
 
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {

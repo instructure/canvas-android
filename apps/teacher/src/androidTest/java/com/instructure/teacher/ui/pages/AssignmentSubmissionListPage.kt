@@ -54,7 +54,7 @@ class AssignmentSubmissionListPage : BasePage() {
     private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
 
     fun assertDisplaysNoSubmissionsView() {
-        emptyPandaView.assertDisplayed()
+        onView(withText("No items") + withAncestor(R.id.emptyPandaView)).assertDisplayed()
     }
 
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {

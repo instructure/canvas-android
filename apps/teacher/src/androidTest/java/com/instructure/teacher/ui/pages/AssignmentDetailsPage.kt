@@ -39,7 +39,7 @@ import com.instructure.teacher.R
 @Suppress("unused")
 class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
 
-    private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description)
+    private val backButton by OnViewWithContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description,false)
     private val toolbarTitle by OnViewWithText(R.string.assignment_details)
     private val assignmentNameTextView by OnViewWithId(R.id.assignmentNameTextView)
     private val pointsTextView by OnViewWithId(R.id.pointsTextView)
