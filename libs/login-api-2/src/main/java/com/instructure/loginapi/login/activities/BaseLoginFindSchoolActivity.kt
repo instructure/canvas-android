@@ -217,8 +217,13 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
     private fun validateDomain(accountDomain: AccountDomain) {
         var url: String? = accountDomain.domain!!.toLowerCase().replace(" ", "")
 
+        //if the last character of the account domain is a period remove it
+        if (url!![url.length - 1] == '.') {
+            url = url.substring(0, url.length - 1)
+        }
+
         //if the user enters nothing, try to connect to canvas.instructure.com
-        if (url!!.trim { it <= ' ' }.isEmpty()) {
+        if (url.trim { it <= ' ' }.isEmpty()) {
             url = "canvas.instructure.com"
         }
 

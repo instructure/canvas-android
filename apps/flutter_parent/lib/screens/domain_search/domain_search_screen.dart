@@ -276,6 +276,7 @@ class _DomainSearchScreenState extends State<DomainSearchScreen> {
 
   void _next(BuildContext context) {
     var domain = _query;
+    if (domain.endsWith('.')) domain = domain.substring(0, domain.length - 1);
     if (domain.startsWith('www.')) domain = domain.substring(4); // Strip off www. if they typed it
     if (!domain.contains('.') || domain.endsWith('.beta')) domain += '.instructure.com';
     locator<QuickNav>().pushRoute(context, PandaRouter.loginWeb(domain, loginFlow: widget.loginFlow));
