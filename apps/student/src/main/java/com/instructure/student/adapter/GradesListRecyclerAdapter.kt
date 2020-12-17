@@ -295,12 +295,13 @@ open class GradesListRecyclerAdapter(
         var hasValidGroupRule = false
         for (group in aGroups) {
             // Mark the flag as true if any group has a valid rule
-            if(group.rules?.hasValidRule() == true) {
+            if (group.rules?.hasValidRule() == true) {
                 hasValidGroupRule = true
             }
 
-            addOrUpdateAllItems(group, group.assignments)
-            for (assignment in group.assignments) {
+            val gradedAssignments = group.assignments.filter { isGradedAssignment(it) }
+            addOrUpdateAllItems(group, gradedAssignments)
+            for (assignment in gradedAssignments) {
                 assignmentsHash[assignment.id] = assignment
             }
             if (!assignmentGroups.contains(group)) {
@@ -310,7 +311,7 @@ open class GradesListRecyclerAdapter(
         isAllPagesLoaded = true
 
         // We want to disable what if grading if MGP weights are enabled, or assignment groups are enabled
-        if((canvasContext as Course).isWeightedGradingPeriods || hasValidGroupRule) {
+        if ((canvasContext as Course).isWeightedGradingPeriods || hasValidGroupRule) {
             adapterToGradesCallback?.setIsWhatIfGrading(false)
         } else {
             adapterToGradesCallback?.setIsWhatIfGrading(true)
@@ -318,6 +319,11 @@ open class GradesListRecyclerAdapter(
 
         adapterToFragmentCallback?.onRefreshFinished()
         this@GradesListRecyclerAdapter.onCallbackFinished(null)
+    }
+
+    private fun isGradedAssignment(assignment: Assignment): Boolean {
+        val gradingType = assignment.gradingType ?: ""
+        return Assignment.getGradingTypeFromAPIString(gradingType) != Assignment.GradingType.NOT_GRADED
     }
 
     override fun setupCallbacks() {
