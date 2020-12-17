@@ -196,6 +196,9 @@ class AssignmentDetailsView(
         }
         if(state.visibilities.quizDetails) renderQuizDetails(state.quizDescriptionViewState!!)
         if(state.visibilities.discussionTopicHeader) renderDiscussionTopicHeader(state.discussionHeaderViewState!!)
+
+        val submissionAndRubricText = if (state.canSubmit) R.string.submissionAndRubric else R.string.commentsAndRubric
+        submissionAndRubricLabel.text = context.getText(submissionAndRubricText)
     }
 
     private fun loadDescriptionHtml(html: String, contentDescrption: String?) {

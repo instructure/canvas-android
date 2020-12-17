@@ -243,7 +243,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             quizDescriptionViewState = quizDescriptionViewState,
             discussionHeaderViewState = discussionHeaderViewState,
             allowedAttempts = assignment.allowedAttempts,
-            usedAttempts = assignment.submission?.attempt ?: 0
+            usedAttempts = assignment.submission?.attempt ?: 0,
+            canSubmit = assignment.canSubmit
         )
     }
 
@@ -279,7 +280,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             lockMessage = lockMessage,
             assignmentDetailsVisibilities = visibilities,
             allowedAttempts = assignment.allowedAttempts,
-            usedAttempts = assignment.submission?.attempt ?: 0
+            usedAttempts = assignment.submission?.attempt ?: 0,
+            canSubmit = assignment.canSubmit
         )
     }
 

@@ -1114,7 +1114,12 @@ class AssignmentDetailsPresenterTest : Assert() {
         assertFalse(actual.allowedAttempts)
     }
 
-
+    @Test
+    fun `Uses correct can submit property`() {
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(canSubmit = false)))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertFalse(state.canSubmit)
+    }
 
     private val discussionHtml = "<!DOCTYPE html>\n" +
             "<html>\n" +
