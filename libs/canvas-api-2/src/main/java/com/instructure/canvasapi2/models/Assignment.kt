@@ -101,11 +101,7 @@ data class Assignment(
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
         @SerializedName("external_tool_tag_attributes")
         val externalToolAttributes: ExternalToolAttributes? = null,
-        var isStudioEnabled: Boolean = false,
-        // We want to use true as a default value, because for some assignments this property is not returned, even thought it can be submitted.
-        // We want the API to explicitly tell us if an assignment cant be submitted.
-        @SerializedName("can_submit")
-        val canSubmit: Boolean = true
+        var isStudioEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt

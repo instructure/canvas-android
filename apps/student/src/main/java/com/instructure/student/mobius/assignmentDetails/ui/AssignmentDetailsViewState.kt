@@ -46,7 +46,7 @@ sealed class AssignmentDetailsViewState(val visibilities: AssignmentDetailsVisib
         val isExternalToolSubmission: Boolean = false,
         val quizDescriptionViewState: QuizDescriptionViewState? = null,
         val discussionHeaderViewState: DiscussionHeaderViewState? = null,
-        val canSubmit: Boolean = true
+        val showSubmissionsAndRubric: Boolean = true
     ) : AssignmentDetailsViewState(assignmentDetailsVisibilities)
 }
 

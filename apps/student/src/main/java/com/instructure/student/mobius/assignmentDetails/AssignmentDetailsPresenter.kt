@@ -223,6 +223,8 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             visibilities.submissionUploadStatusFailed = databaseSubmission.errorFlag
         }
 
+        val showSubmissionsAndRubric = showSubmissionsAndRubric(assignment)
+
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),
             assignmentPoints = points,
@@ -244,8 +246,15 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             discussionHeaderViewState = discussionHeaderViewState,
             allowedAttempts = assignment.allowedAttempts,
             usedAttempts = assignment.submission?.attempt ?: 0,
-            canSubmit = assignment.canSubmit
+            showSubmissionsAndRubric = showSubmissionsAndRubric
         )
+    }
+
+    private fun showSubmissionsAndRubric(assignment: Assignment): Boolean {
+        val gradingType = assignment.gradingType ?: ""
+        val isGraded = Assignment.getGradingTypeFromAPIString(gradingType) != Assignment.GradingType.NOT_GRADED
+
+        return assignment.isSubmitted || isGraded
     }
 
     private fun makeLockedState(
@@ -270,6 +279,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             val timeString = DateFormat.getTimeInstance(DateFormat.SHORT).format(unlockDate)
             context.getString(R.string.lockedSubtext, dateString, timeString)
         }
+        val showSubmissionsAndRubric = showSubmissionsAndRubric(assignment)
         return AssignmentDetailsViewState.Loaded(
             assignmentName = assignment.name.orEmpty(),
             assignmentPoints = points,
@@ -281,7 +291,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             assignmentDetailsVisibilities = visibilities,
             allowedAttempts = assignment.allowedAttempts,
             usedAttempts = assignment.submission?.attempt ?: 0,
-            canSubmit = assignment.canSubmit
+            showSubmissionsAndRubric = showSubmissionsAndRubric
         )
     }
 

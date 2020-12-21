@@ -1115,10 +1115,24 @@ class AssignmentDetailsPresenterTest : Assert() {
     }
 
     @Test
-    fun `Uses correct can submit property`() {
-        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(canSubmit = false)))
+    fun `Show submission and rubric when assignment is graded`() {
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(gradingType = Assignment.POINTS_TYPE)))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertFalse(state.canSubmit)
+        assertTrue(state.showSubmissionsAndRubric)
+    }
+
+    @Test
+    fun `Show submission and rubric when assignment is not graded but has submission`() {
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(gradingType = Assignment.NOT_GRADED_TYPE, submission = baseSubmission)))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertTrue(state.showSubmissionsAndRubric)
+    }
+
+    @Test
+    fun `Dont show submission and rubric when assignment is not graded and does not have submission`() {
+        val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment.copy(gradingType = Assignment.NOT_GRADED_TYPE)))
+        val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
+        assertFalse(state.showSubmissionsAndRubric)
     }
 
     private val discussionHtml = "<!DOCTYPE html>\n" +
