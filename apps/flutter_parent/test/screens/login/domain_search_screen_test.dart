@@ -464,6 +464,25 @@ void main() {
     WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
     expect(webLogin.domain, 'mobileqa.beta.instructure.com');
   });
+
+  testWidgets('clears period at the end of the domain', (WidgetTester tester) async {
+    when(interactor.performSearch(any)).thenAnswer((_) => Future.value([]));
+    when(webInteractor.mobileVerify(any)).thenAnswer((_) => Future.value(MobileVerifyResult()));
+
+    await tester.pumpWidget(TestApp(DomainSearchScreen()));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'mobileqa.beta.');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(l10n.next));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(WebLoginScreen), findsOneWidget);
+
+    WebLoginScreen webLogin = tester.widget(find.byType(WebLoginScreen));
+    expect(webLogin.domain, 'mobileqa.beta.instructure.com');
+  });
 }
 
 class _MockInteractor extends Mock implements DomainSearchInteractor {}

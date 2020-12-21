@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
 import kotlinx.android.synthetic.main.activity_find_school.*
 import retrofit2.Response
+import java.util.regex.Pattern
 
 abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
 
@@ -222,8 +223,15 @@ abstract class BaseLoginFindSchoolActivity : AppCompatActivity(), ErrorReportDia
             url = "canvas.instructure.com"
         }
 
+        //remove invalid characters at the end of the domain
+        val pattern = Pattern.compile("(.*)([a-zA-Z0-9]){1}")
+        val matcher = pattern.matcher(url)
+        if (matcher.find()) {
+            url = matcher.group()
+        }
+
         //if there are no periods, append .instructure.com
-        if (!url.contains(".") || url.endsWith(".beta")) {
+        if (!url!!.contains(".") || url.endsWith(".beta")) {
             url += ".instructure.com"
         }
 
