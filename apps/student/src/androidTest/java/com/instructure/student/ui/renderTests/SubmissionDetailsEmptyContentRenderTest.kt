@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.LockedModule
+import com.instructure.student.R
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
@@ -202,6 +203,19 @@ class SubmissionDetailsEmptyContentRenderTest : StudentRenderTest() {
 
         submissionDetailsEmptyContentRenderPage.assertExpectedDueDate(expectedText)
 
+    }
+
+    @Test
+    fun onlyDisplayNoSubmissionAllowedTitleWhenTheAssignmentIsNotGraded() {
+        loadPageWithModel(baseModel.copy(
+            assignment = baseAssignment.copy(
+                gradingType = "not_graded"
+            )
+        ))
+
+        submissionDetailsEmptyContentRenderPage.assertSubmitButtonHidden()
+        submissionDetailsEmptyContentRenderPage.assertTitleText(R.string.submissionDetailsNoSubmissionAllowed)
+        submissionDetailsEmptyContentRenderPage.assertExpectedDueDate("")
     }
 
     private fun loadPageWithModel(model: SubmissionDetailsEmptyContentModel) {
