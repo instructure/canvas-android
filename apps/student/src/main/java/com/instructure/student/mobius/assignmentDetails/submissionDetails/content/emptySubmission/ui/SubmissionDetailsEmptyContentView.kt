@@ -70,10 +70,10 @@ class SubmissionDetailsEmptyContentView(
     override fun render(state: SubmissionDetailsEmptyContentViewState) {
         when(state) {
             is Loaded -> {
-                title.text = if (state.isAllowedToSubmit) context.getString(R.string.submissionDetailsNoSubmissionYet) else context.getString(R.string.submissionDetailsAssignmentLocked)
-                message.text = state.dueDateText
+                title.text = state.emptyViewTitleText
+                message.text = state.emptyViewSubtitleText
                 submitButton.apply {
-                    setHidden(!state.isAllowedToSubmit || state.isObserver)
+                    setHidden(!state.submitButtonVisible)
                     text = state.submitButtonText
                 }
             }

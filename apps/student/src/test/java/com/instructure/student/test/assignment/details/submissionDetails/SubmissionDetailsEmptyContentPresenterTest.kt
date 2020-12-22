@@ -80,8 +80,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Due tomorrow at 1:59 pm"
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Due tomorrow at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -98,8 +99,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Due today at 1:59 pm"
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Due today at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -118,8 +120,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Due yesterday at 1:59 pm"
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Due yesterday at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -146,8 +149,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = expectedDueDate
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = expectedDueDate
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -164,8 +168,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Your assignment has no due date"
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Your assignment has no due date"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -184,8 +189,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = false,
-            dueDateText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
+            submitButtonVisible = false,
+            emptyViewTitleText = "Assignment Locked",
+            emptyViewSubtitleText = "Your assignment was locked on Apr 2, 2016 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -204,8 +210,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = false,
-            dueDateText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
+            submitButtonVisible = false,
+            emptyViewTitleText = "Assignment Locked",
+            emptyViewSubtitleText = "Your assignment will unlock on Apr 2, 2067 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -226,8 +233,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = false,
-            dueDateText = "Your assignment is locked by module \"Test Module\""
+            submitButtonVisible = false,
+            emptyViewTitleText = "Assignment Locked",
+            emptyViewSubtitleText = "Your assignment is locked by module \"Test Module\""
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -246,8 +254,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = false,
-            dueDateText = "Your assignment is locked by a module requirement"
+            submitButtonVisible = false,
+            emptyViewTitleText = "Assignment Locked",
+            emptyViewSubtitleText = "Your assignment is locked by a module requirement"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -270,8 +279,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Due Apr 2, 2018 at 1:59 pm"
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Due Apr 2, 2018 at 1:59 pm"
         )
 
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
@@ -283,15 +293,25 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
     fun `Sets enable button visible state when Assignment is not locked`() {
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
-        assertTrue((actualState as Loaded).isAllowedToSubmit)
+        assertTrue((actualState as Loaded).submitButtonVisible)
     }
 
     @Test
-    fun `Sets isObserver visible state when isObserver`() {
-        baseModel = baseModel.copy(isObserver = true)
+    fun `Dont show submit button, when is observer`() {
+        // Given
+        baseAssignment = baseAssignment.copy(
+            dueAt = OffsetDateTime.now().plusDays(1L).withHour(13).withMinute(59).format(
+                DateTimeFormatter.ISO_DATE_TIME
+            )
+        )
+
+        baseModel = baseModel.copy(assignment = baseAssignment, isObserver = true)
+
+        // When
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
-        assertTrue((actualState as Loaded).isObserver)
+        // Then
+        assertFalse((actualState as Loaded).submitButtonVisible)
     }
 
 
@@ -300,7 +320,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(Assignment(lockedForUser = true, submissionTypesRaw = listOf("online_upload")))
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
-        assertFalse((actualState as Loaded).isAllowedToSubmit)
+        assertFalse((actualState as Loaded).submitButtonVisible)
     }
 
     @Test
@@ -308,7 +328,7 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(Assignment(lockedForUser = true, submissionTypesRaw = listOf("external_tool")))
         val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
 
-        assertFalse((actualState as Loaded).isAllowedToSubmit)
+        assertFalse((actualState as Loaded).submitButtonVisible)
     }
 
     @Test
@@ -320,8 +340,9 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         baseModel = baseModel.copy(assignment = baseAssignment)
 
         val expectedState = defaultLoadedState.copy(
-            isAllowedToSubmit = true,
-            dueDateText = "Due today at 1:59 pm",
+            submitButtonVisible = true,
+            emptyViewTitleText = "No Submission Yet",
+            emptyViewSubtitleText = "Due today at 1:59 pm",
             submitButtonText = "Submit Assignment"
         )
 
@@ -360,5 +381,26 @@ class SubmissionDetailsEmptyContentPresenterTest : Assert() {
         val model = baseModel.copy(assignment = assignment)
         val state = SubmissionDetailsEmptyContentPresenter.present(model, context) as Loaded
         assertEquals("Launch External Tool", state.submitButtonText)
+    }
+
+    @Test
+    fun `Not graded assignments makes the submit button and the subtitle invisible and sets correct text for title`() {
+        // Given
+        baseAssignment = baseAssignment.copy(gradingType = "not_graded")
+
+        baseModel = baseModel.copy(assignment = baseAssignment)
+
+        // When
+        val actualState = SubmissionDetailsEmptyContentPresenter.present(baseModel, context)
+
+        // Then
+        val expectedState = defaultLoadedState.copy(
+            submitButtonVisible = false,
+            emptyViewTitleText = "No Submission Allowed",
+            emptyViewSubtitleText = "",
+            submitButtonText = "Submit Assignment"
+        )
+
+        assertEquals(expectedState, actualState)
     }
 }

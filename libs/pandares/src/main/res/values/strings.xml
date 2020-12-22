@@ -94,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No Submission Allowed</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
