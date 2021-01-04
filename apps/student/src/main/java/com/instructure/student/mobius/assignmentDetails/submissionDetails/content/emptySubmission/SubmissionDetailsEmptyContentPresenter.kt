@@ -30,24 +30,12 @@ import org.threeten.bp.temporal.ChronoUnit
 object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmptyContentModel, SubmissionDetailsEmptyContentViewState> {
     override fun present(model: SubmissionDetailsEmptyContentModel, context: Context): SubmissionDetailsEmptyContentViewState {
         return SubmissionDetailsEmptyContentViewState.Loaded(
-            allowedToSubmit(model.assignment, model.course),
-            model.assignment.getDueString(context),
             getSubmitButtonTextResource(context, model.assignment),
-            model.isObserver
+            getEmptyViewTitleText(model.assignment, context, model.course),
+            getEmptyViewSubtitleText(model.assignment, context),
+            isSubmitButtonVisible(model.assignment, model.course, model.isObserver)
         )
     }
-
-    private fun allowedToSubmit(assignment: Assignment, course: Course): Boolean {
-        return if(!course.isReadOnlyForCurrentDate()) {
-            // Don't show submit if the course is soft concluded
-            return false
-        } else if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL) {
-            assignment.isAllowedToSubmit
-        } else {
-            true
-        }
-    }
-
 
     private fun getSubmitButtonTextResource(context: Context, assignment: Assignment): String {
         val isExternalToolSubmission = assignment.getSubmissionTypes()
@@ -64,9 +52,41 @@ object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmpty
             }
         )
     }
+
+    private fun getEmptyViewTitleText(assignment: Assignment, context: Context, course: Course): String {
+        return when {
+            !isGraded(assignment) -> context.getString(R.string.submissionDetailsNoSubmissionAllowed)
+            allowedToSubmit(assignment, course) -> context.getString(R.string.submissionDetailsNoSubmissionYet)
+            else -> context.getString(R.string.submissionDetailsAssignmentLocked)
+        }
+    }
+
+    private fun getEmptyViewSubtitleText(assignment: Assignment, context: Context): String {
+        return if (isGraded(assignment)) assignment.getDueString(context) else ""
+    }
+
+    private fun isSubmitButtonVisible(assignment: Assignment, course: Course, isObserver: Boolean): Boolean {
+        return allowedToSubmit(assignment, course) && !isObserver && isGraded(assignment)
+    }
+
+    private fun isGraded(assignment: Assignment): Boolean {
+        val gradingType = (assignment.gradingType ?: "")
+        return Assignment.getGradingTypeFromAPIString(gradingType) != Assignment.GradingType.NOT_GRADED
+    }
+
+    private fun allowedToSubmit(assignment: Assignment, course: Course): Boolean {
+        return if (!course.isReadOnlyForCurrentDate()) {
+            // Don't show submit if the course is soft concluded
+            return false
+        } else if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL) {
+            assignment.isAllowedToSubmit
+        } else {
+            true
+        }
+    }
 }
 
-fun Assignment.getDueString(context: Context): String {
+private fun Assignment.getDueString(context: Context): String {
     if (!isAllowedToSubmit)
         return getLockedString(context)
 
@@ -97,7 +117,7 @@ fun Assignment.getDueString(context: Context): String {
     }
 }
 
-fun Assignment.getLockedString(context: Context): String {
+private fun Assignment.getLockedString(context: Context): String {
     val now = LocalDate.now()
 
     // Check if the user is locked out by a module

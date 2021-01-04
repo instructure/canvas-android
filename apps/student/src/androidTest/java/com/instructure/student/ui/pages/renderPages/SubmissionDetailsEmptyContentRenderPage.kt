@@ -15,20 +15,21 @@
  */
 package com.instructure.student.ui.pages.renderPages
 
+import androidx.annotation.StringRes
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.student.R
 import com.instructure.student.ui.pages.SubmissionDetailsEmptyContentPage
-import com.instructure.student.ui.pages.SubmissionDetailsPage
 import org.hamcrest.CoreMatchers.not
 
 class SubmissionDetailsEmptyContentRenderPage : SubmissionDetailsEmptyContentPage() {
-    val dueDateTextView by OnViewWithId(R.id.message)
-    val submitButton by OnViewWithId(R.id.submitButton)
+    private val emptyViewTitle by OnViewWithId(R.id.title)
+    private val dueDateTextView by OnViewWithId(R.id.message)
+    private val submitButton by OnViewWithId(R.id.submitButton)
 
     fun assertSubmitButtonEnabled() {
         submitButton.check(matches(isEnabled()))
@@ -40,6 +41,10 @@ class SubmissionDetailsEmptyContentRenderPage : SubmissionDetailsEmptyContentPag
 
     fun assertExpectedDueDate(expectedText: String) {
         dueDateTextView.assertContainsText(expectedText)
+    }
+
+    fun assertTitleText(@StringRes expectedStringRes: Int) {
+        emptyViewTitle.assertHasText(expectedStringRes)
     }
 
 }
