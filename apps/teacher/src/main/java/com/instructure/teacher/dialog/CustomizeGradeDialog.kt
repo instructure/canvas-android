@@ -124,6 +124,10 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
             handled
         }
 
+        if (Assignment.getGradingTypeFromAPIString(mGradingType) == Assignment.GradingType.PERCENT || Assignment.getGradingTypeFromAPIString(mGradingType) == Assignment.GradingType.POINTS) {
+            excusedCheckBox.visibility = View.GONE
+        }
+
         return gradeDialog
     }
 
