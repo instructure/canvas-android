@@ -216,6 +216,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            // The intention of this delay is that we don't want to show/hide the progress bar multiple times
+            // when loading multiple pages after each other.
             shouldShowProgressBar = false
             progressBarHandler.postDelayed({
                 if (!shouldShowProgressBar) webViewProgressBar.setGone()
@@ -473,6 +475,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private fun loadUrl(webView: WebView, url: String?, headers: Map<String, String>) {
         webView.loadUrl(url, headers)
+        // We need to delay this, because it can happen that this method is called a couple of milliseconds
+        // before the onPageFinished triggered for the previous page resulting in hiding the progress bar while still loading.
         progressBarHandler.postDelayed({ showLoading() }, 50)
     }
 
