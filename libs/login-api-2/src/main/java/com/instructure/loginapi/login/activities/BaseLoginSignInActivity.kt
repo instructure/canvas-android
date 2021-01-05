@@ -66,6 +66,9 @@ import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import kotlinx.android.synthetic.main.activity_sign_in.*
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -87,11 +90,13 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private lateinit var webView: WebView
     private var canvasLogin = 0
-    var specialCase = false
+    private var specialCase = false
     private var authenticationURL: String? = null
     private var httpAuthHandler: HttpAuthHandler? = null
+    private var shouldShowProgressBar = false
 
-    val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) }
+    private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) }
+    private val progressBarHandler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -164,9 +169,9 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 }
                 url.contains(ERROR_URL) -> {
                     clearCookies()
-                    view.loadUrl(authenticationURL, headers)
+                    loadUrl(view, authenticationURL, headers)
                 }
-                else -> view.loadUrl(url, headers)
+                else -> loadUrl(view, url, headers)
             }
             return true // then it is not handled by default action
         }
@@ -207,6 +212,14 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             }
             super.onReceivedHttpError(view, request, errorResponse)
         }
+
+        override fun onPageFinished(view: WebView?, url: String?) {
+            super.onPageFinished(view, url)
+            shouldShowProgressBar = false
+            progressBarHandler.postDelayed({
+                if (!shouldShowProgressBar) webViewProgressBar.setGone()
+            }, 50)
+        }
     }
 
     private fun beginSignIn(accountDomain: AccountDomain) {
@@ -230,9 +243,12 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                         clientId,
                         false
                     )
-                    webView.loadUrl(authenticationURL, headers)
+                    loadUrl(webView, authenticationURL, headers)
                 }
-                .setNegativeButton(R.string.cancel) { _, _ -> mobileVerify(url, mobileVerifyCallback) }
+                .setNegativeButton(R.string.cancel) { _, _ ->
+                    mobileVerify(url, mobileVerifyCallback)
+                    showLoading()
+                }
                 .create()
             dialog.setOnShowListener {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK)
@@ -241,6 +257,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             dialog.show()
         } else {
             mobileVerify(url, mobileVerifyCallback)
+            showLoading()
         }
     }
 
@@ -297,6 +314,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                     loadAuthenticationUrl(apiProtocol, domain)
                 } else {
                     //Error message
+                    shouldShowProgressBar = false
+                    webViewProgressBar.setGone()
                     val errorId: Int = when (domainVerificationResult?.result) {
                         DomainVerificationResult.DomainVerificationCode.GeneralError -> R.string.mobileVerifyGeneral
                         DomainVerificationResult.DomainVerificationCode.DomainNotAuthorized -> R.string.mobileVerifyDomainUnauthorized
@@ -330,7 +349,7 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 cookieManager.setCookie(domain, "canvas_sa_delegated=1")
             }
         }
-        webView.loadUrl(authenticationURL, headers)
+        loadUrl(webView, authenticationURL, headers)
         if (0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) {
             webView.postDelayed({
                 if (intent.hasExtra(SNICKER_DOODLES)) {
@@ -438,9 +457,20 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                 } else {
                     specialCase = false
                 }
-                webView.loadUrl(authenticationURL, headers)
+                loadUrl(webView, authenticationURL, headers)
             }
         }
+
+    private fun loadUrl(webView: WebView, url: String?, headers: Map<String, String>) {
+        webView.loadUrl(url, headers)
+        progressBarHandler.postDelayed({ showLoading() }, 50)
+    }
+
+    private fun showLoading() {
+        shouldShowProgressBar = true
+        webViewProgressBar.setVisible()
+        webViewProgressBar.announceForAccessibility(getString(R.string.loading))
+    }
 
     /**
      * Override and do not call super if you need additional logic before launching the main activity intent.
