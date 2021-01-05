@@ -29,6 +29,7 @@ import android.view.LayoutInflater
 import android.webkit.*
 import android.widget.EditText
 import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -280,7 +281,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
             "session_locale" to Locale.getDefault().language
         )
 
-    //region Callbacks
     private var mobileVerifyCallback: StatusCallback<DomainVerificationResult> =
         object : StatusCallback<DomainVerificationResult>() {
             override fun onResponse(response: Response<DomainVerificationResult>, linkHeaders: LinkHeaders, type: ApiType) {
@@ -314,25 +314,35 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
                     loadAuthenticationUrl(apiProtocol, domain)
                 } else {
                     //Error message
-                    shouldShowProgressBar = false
-                    webViewProgressBar.setGone()
                     val errorId: Int = when (domainVerificationResult?.result) {
                         DomainVerificationResult.DomainVerificationCode.GeneralError -> R.string.mobileVerifyGeneral
                         DomainVerificationResult.DomainVerificationCode.DomainNotAuthorized -> R.string.mobileVerifyDomainUnauthorized
                         DomainVerificationResult.DomainVerificationCode.UnknownUserAgent -> R.string.mobileVerifyUserAgentUnauthorized
                         else -> R.string.mobileVerifyUnknownError
                     }
-                    if (!this@BaseLoginSignInActivity.isFinishing) {
-                        val builder = AlertDialog.Builder(this@BaseLoginSignInActivity)
-                        builder.setTitle(R.string.errorOccurred)
-                        builder.setMessage(errorId)
-                        builder.setCancelable(true)
-                        val dialog = builder.create()
-                        dialog.show()
-                    }
+                    showErrorDialog(errorId)
                 }
             }
+
+            override fun onFail(call: Call<DomainVerificationResult>?, error: Throwable, response: Response<*>?) {
+                showErrorDialog(R.string.mobileVerifyUnknownError)
+            }
         }
+
+    private fun showErrorDialog(@StringRes resId: Int) {
+        shouldShowProgressBar = false
+        webViewProgressBar.setGone()
+
+        if (!isFinishing) {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(R.string.errorOccurred)
+            builder.setMessage(resId)
+            builder.setCancelable(true)
+            builder.setOnCancelListener { finish() }
+            val dialog = builder.create()
+            dialog.show()
+        }
+    }
 
     protected fun loadAuthenticationUrl(apiProtocol: String, domain: String?) {
         if (canvasLogin == CANVAS_LOGIN_FLOW) {
@@ -483,7 +493,6 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
         finish()
     }
 
-    //endregion
     //region Snicker Doodles
     private fun populateWithSnickerDoodle(snickerDoodle: SnickerDoodle) {
         webView.settings.domStorageEnabled = true
