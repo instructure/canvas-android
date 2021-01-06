@@ -35,7 +35,7 @@ import org.threeten.bp.ZoneId
 class CalendarEventStateTransformerTest {
 
     private val baseDate =
-        OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(14).withMinute(0)
+        OffsetDateTime.now().withYear(2020).withMonth(4).withDayOfMonth(2).withHour(14).withMinute(0)
 
     lateinit var context: Context
 
