@@ -67,7 +67,8 @@ void main() {
     when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value(MobileVerifyResult()));
 
     await tester.pumpWidget(TestApp(WebLoginScreen(domain), platformConfig: PlatformConfig(initWebview: true)));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
   });
@@ -77,7 +78,8 @@ void main() {
     when(interactor.mobileVerify(domain)).thenAnswer((_) => Future.value(MobileVerifyResult()));
 
     await tester.pumpWidget(TestApp(WebLoginScreen(domain), platformConfig: PlatformConfig(initWebview: true)));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
     expect(find.byType(Dialog), findsNothing);
@@ -93,7 +95,8 @@ void main() {
       WebLoginScreen(domain, authenticationProvider: provider),
       platformConfig: PlatformConfig(initWebview: true),
     ));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
     expect(find.byType(Dialog), findsNothing);
@@ -109,7 +112,8 @@ void main() {
       WebLoginScreen(domain, loginFlow: LoginFlow.siteAdmin),
       platformConfig: PlatformConfig(initWebview: true),
     ));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
     expect(find.byType(Dialog), findsNothing);
@@ -123,7 +127,8 @@ void main() {
       WebLoginScreen(domain, loginFlow: LoginFlow.siteAdmin),
       platformConfig: PlatformConfig(initWebview: true),
     ));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(WebView), findsOneWidget);
     expect(find.byType(Dialog), findsNothing);
@@ -280,7 +285,8 @@ void main() {
     expect(find.text(AppLocalizations().skipMobileVerifyTitle), findsOneWidget);
 
     await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(Dialog), findsNothing);
     verify(interactor.mobileVerify(any));
@@ -303,7 +309,8 @@ void main() {
     expect(find.text(AppLocalizations().skipMobileVerifyTitle), findsOneWidget);
 
     await tester.tap(find.text(AppLocalizations().cancel.toUpperCase()));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
 
     expect(find.byType(Dialog), findsNothing);
     verify(interactor.mobileVerify(any));
