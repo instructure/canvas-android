@@ -72,6 +72,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   WebViewController _controller;
   String _authUrl;
   String _domain;
+  bool _showLoading = false;
+  bool _isMobileVerifyError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,8 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator();
         } else {
-          if (snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success)) {
+          _isMobileVerifyError = snapshot.hasError || (snapshot.hasData && snapshot.data.result != VerifyResultEnum.success);
+          if (_isMobileVerifyError) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               _showErrorDialog(context, snapshot);
             });
@@ -121,13 +124,23 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   Widget _webView(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) {
     final verifyResult = snapshot.data;
 
-    return WebView(
-      navigationDelegate: (request) => _navigate(context, request, verifyResult),
-      javascriptMode: JavascriptMode.unrestricted,
-      darkMode: ParentTheme.of(context).isWebViewDarkMode,
-      userAgent: ApiPrefs.getUserAgent(),
-      onPageFinished: (url) => _pageFinished(url, verifyResult),
-      onWebViewCreated: (controller) => _webViewCreated(controller, verifyResult),
+    return Stack(
+      children: [
+        WebView(
+            navigationDelegate: (request) =>
+                _navigate(context, request, verifyResult),
+            javascriptMode: JavascriptMode.unrestricted,
+            darkMode: ParentTheme
+                .of(context)
+                .isWebViewDarkMode,
+            userAgent: ApiPrefs.getUserAgent(),
+            onPageFinished: (url) => _pageFinished(url, verifyResult),
+            onPageStarted: (url) => _showLoadingState(),
+            onWebViewCreated: (controller) =>
+                _webViewCreated(controller, verifyResult)
+        ),
+        if (_showLoading) LoadingIndicator(),
+      ],
     );
   }
 
@@ -143,6 +156,10 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
   }
 
   void _pageFinished(String url, MobileVerifyResult verifyResult) {
+    if (!_isMobileVerifyError) {
+      setState(() => _showLoading = false);
+    }
+
     _controllerCompleter.future.then((controller) async {
       if (widget.user != null && widget.pass != null) {
         // SnickerDoodle login
@@ -165,6 +182,12 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
         _loadAuthUrl();
       }
     });
+  }
+
+  void _showLoadingState() {
+    if (!_isMobileVerifyError) {
+      setState(() => _showLoading = true);
+    }
   }
 
   NavigationDecision _navigate(BuildContext context, NavigationRequest request, MobileVerifyResult result) {
@@ -198,6 +221,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
 
   /// Load the authenticated url with any necessary cookies
   void _loadAuthUrl() async {
+    _showLoadingState();
     CookieManager().clearCookies();
 
     if (widget.loginFlow == LoginFlow.siteAdmin) {
