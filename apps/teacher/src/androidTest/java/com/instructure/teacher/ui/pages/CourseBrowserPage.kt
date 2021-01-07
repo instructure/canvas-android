@@ -64,7 +64,9 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openDiscussionsTab() {
-        onView(withId(R.id.courseBrowserRecyclerView)).perform(actionOnItemAtPosition<CourseBrowserViewHolder>(2, click()))
+        //onView(withId(R.id.courseBrowserRecyclerView)).perform(actionOnItemAtPosition<CourseBrowserViewHolder>(2, click()))
+        scrollDownToCourseBrowser()
+        waitForViewWithText("Discussions").click()
     }
 
     fun openAnnouncementsTab() {
