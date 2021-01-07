@@ -17,7 +17,7 @@
 package com.instructure.teacher.ui.pages
 
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
@@ -26,7 +26,7 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
     private val toolbar by WaitForViewWithText(R.string.editSyllabusTitle)
     private val saveButton by OnViewWithId(R.id.menuSaveSyllabus)
     private val contentRceView by WaitForViewWithId(R.id.rce_webView)
-    private val showCourseSummarySwitch by OnViewWithId(R.id.showSummarySwitch)
+    private val showCourseSummarySwitch by OnViewWithText(R.id.showSummarySwitch)
 
     fun assertToolbarDisplayedWithCorrectTitle() {
         toolbar.assertDisplayed()
@@ -41,6 +41,10 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
     }
 
     fun toggleShowSummary() {
-        showCourseSummarySwitch.click()
+        onView(withText("SUMMARY")).click()
+    }
+
+    fun assertHasSummaryEntry(calendarTitle: String) {
+        onView(withId(R.id.syllabusItemTitle) + withText(calendarTitle)).assertDisplayed()
     }
 }

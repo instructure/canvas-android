@@ -104,6 +104,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openSyllabus() {
+        scrollDownToCourseBrowser()
         waitForViewWithText("Syllabus").click()
     }
 }
