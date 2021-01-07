@@ -897,5 +897,7 @@
     <string name="editSyllabusDetails">Details</string>
     <string name="editSyllabusShowCourseSummary">Show course summary</string>
     <string name="editSyllabusContentAccessibilityLabel">Syllabus content</string>
+    <string name="no_grade">No grade</string>
+    <string name="excuse">Excuse</string>
 
 </resources>

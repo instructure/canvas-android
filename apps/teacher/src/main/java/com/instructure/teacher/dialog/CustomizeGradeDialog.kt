@@ -43,15 +43,17 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
     private var mGradingType by StringArg()
     private var mPointsPossible by StringArg()
     private var mIsGroupSubmission by BooleanArg()
+    private var mShouldShowExcuse by BooleanArg()
 
     companion object {
-        fun getInstance(fragmentManager: FragmentManager, pointsPossible: String, grade: String?, gradingType: String, isGroupSubmission: Boolean, callback: (String, Boolean) -> Unit) = CustomizeGradeDialog().apply {
+        fun getInstance(fragmentManager: FragmentManager, pointsPossible: String, grade: String?, gradingType: String, isGroupSubmission: Boolean, shouldShowExcuse: Boolean, callback: (String, Boolean) -> Unit) = CustomizeGradeDialog().apply {
             fragmentManager.dismissExisting<CustomizeGradeDialog>()
             mGrade = grade
             mGradingType = gradingType
             mPointsPossible = pointsPossible
             mIsGroupSubmission = isGroupSubmission
             mCustomizeGradeCallback = callback
+            mShouldShowExcuse = shouldShowExcuse
         }
     }
 
@@ -124,7 +126,7 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
             handled
         }
 
-        if (Assignment.getGradingTypeFromAPIString(mGradingType) == Assignment.GradingType.PERCENT || Assignment.getGradingTypeFromAPIString(mGradingType) == Assignment.GradingType.POINTS) {
+        if (!mShouldShowExcuse) {
             excusedCheckBox.visibility = View.GONE
         }
 

@@ -58,6 +58,16 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
     init {
         View.inflate(context, R.layout.view_speed_grader_slider, this)
+
+        noGradeButton.setOnClickListener {
+            notGraded = true
+            updateGrade(null)
+        }
+
+        excuseButton.setOnClickListener {
+            isExcused = true
+            updateGrade(null)
+        }
     }
 
     fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
@@ -122,10 +132,16 @@ class SpeedGraderSlider @JvmOverloads constructor(
     }
 
     private fun updateGrade(progress: Int?) {
-        val grade = if (notGraded) {
-            context.getString(R.string.not_graded)
-        } else {
-            progress.toString()
+        val grade = when {
+            notGraded -> {
+                context.getString(R.string.not_graded)
+            }
+            isExcused -> {
+                context.getString(R.string.excused)
+            }
+            else -> {
+                progress.toString()
+            }
         }
         if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
             onGradeChanged("$grade%", isExcused)

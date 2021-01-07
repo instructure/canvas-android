@@ -151,6 +151,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         if (presenter.assignment.moderatedGrading) {
             gradeContainer.setGone()
             rubricEditView.setGone()
+            speedGraderSlider.setGone()
             moderatedGradingMessage.setVisible()
             return
         }
@@ -206,7 +207,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         }
 
         val dialog = CustomizeGradeDialog.getInstance(requireActivity().supportFragmentManager,
-                pointsPossible, grade, presenter.assignment.gradingType!!, presenter.assignee is GroupAssignee) { currentGrade, isExcused ->
+                pointsPossible, grade, presenter.assignment.gradingType!!, presenter.assignee is GroupAssignee, !shouldShowSliderView(presenter.assignment)) { currentGrade, isExcused ->
 
             presenter.updateGrade(currentGrade, isExcused)
         }

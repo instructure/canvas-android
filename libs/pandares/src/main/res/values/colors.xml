@@ -252,4 +252,6 @@
     <color name="blue">@color/defaultPrimary</color>
     <color name="darker_blue">@color/defaultPrimaryDark</color>
 
+    <color name="speed_grader_button_text_color">#008EE2</color>
+
 </resources>
