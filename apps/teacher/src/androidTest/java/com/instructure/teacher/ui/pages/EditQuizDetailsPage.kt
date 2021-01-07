@@ -92,6 +92,7 @@ class EditQuizDetailsPage : BasePage() {
         // scroll to bottom to make the 2nd override button visible
         addOverrideButton().scrollTo()
 
+        onViewWithContentDescription("remove_override_button_1").scrollTo()
         ClickUntilMethod.run(
                 onView(withContentDescription("remove_override_button_1")),
                 onView(withText("Remove Due Date"))
