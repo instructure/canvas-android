@@ -106,9 +106,11 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             gradeValueText.setVisible(false)
             addGradeIcon.setVisible(true)
             gradeValueText.text = ""
+            editGradeIcon.setVisible(false)
         } else {
             gradeValueText.setVisible(true)
             addGradeIcon.setVisible(false)
+            editGradeIcon.setVisible(true)
 
             var currentGrade = displayGrade
             // Check to see if this submission has a late penalty
@@ -132,11 +134,6 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
             }
             gradeValueText.text = currentGrade.text
             gradeValueText.contentDescription = currentGrade.contentDescription
-
-            if(displayGrade.text == getString(R.string.not_graded) || presenter.submission?.hasRealSubmission() == true) {
-                // We need to set the text to be gray
-                gradeValueText.setTextColor(requireContext().getColorCompat(R.color.defaultTextGray))
-            }
         }
     }
 
@@ -225,6 +222,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     override fun onRefreshStarted() {
         gradeValueText.setGone()
         addGradeIcon.setGone()
+        editGradeIcon.setGone()
         gradeProgressSpinner.announceForAccessibility(getString(R.string.loading))
         gradeProgressSpinner.setVisible()
         hiddenIcon.setGone()

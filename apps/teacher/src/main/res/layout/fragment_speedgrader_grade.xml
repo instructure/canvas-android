@@ -49,11 +49,10 @@
             android:paddingEnd="16dp"
             android:paddingBottom="8dp">
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/gradeTextContainer"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
                 android:minHeight="48dp">
 
                 <TextView
@@ -64,6 +63,9 @@
                     android:focusable="true"
                     android:text="@string/grade"
                     android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:ignore="RelativeOverlap"
                     tools:text="Grade" />
 
@@ -72,11 +74,12 @@
                     style="@style/TextFont.Regular"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/gradeText"
                     android:focusable="true"
                     android:textColor="@color/defaultTextGray"
                     android:textSize="14sp"
                     android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/gradeText"
                     tools:text="Calculated by rubric"
                     tools:visibility="gone" />
 
@@ -84,12 +87,29 @@
                     android:id="@+id/hiddenIcon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_alignBottom="@+id/gradeValueText"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="8dp"
                     android:contentDescription="@string/hidden"
                     android:src="@drawable/ic_grade_hidden"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/editGradeIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@id/hiddenIcon"
+                    android:contentDescription="@string/customize_grade"
+                    android:focusable="true"
+                    android:tint="@color/defaultActionColor"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/hiddenIcon"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_edit" />
 
                 <TextView
                     android:id="@+id/gradeValueText"
@@ -97,12 +117,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignWithParentIfMissing="true"
-                    android:layout_toStartOf="@+id/hiddenIcon"
+                    android:layout_marginEnd="8dp"
+                    android:layout_toStartOf="@+id/editGradeIcon"
                     android:ellipsize="end"
                     android:focusable="true"
                     android:maxLines="1"
                     android:textSize="20sp"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/editGradeIcon"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Excusasdfsdfsdfdsfad" />
 
                 <ImageView
@@ -114,6 +138,9 @@
                     android:focusable="true"
                     android:tint="@color/defaultActionColor"
                     android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_add" />
 
                 <ProgressBar
@@ -121,8 +148,11 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
                 android:id="@+id/latePolicy"
