@@ -16,10 +16,13 @@
 package com.instructure.teacher.ui.pages
 
 
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
@@ -98,11 +101,11 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     fun clickFilterSubmittedLate() {
-        onViewWithText(R.string.submitted_late).click()
+        onView(withText(R.string.submitted_late)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun clickFilterUngraded() {
-        onViewWithText(R.string.not_graded).click()
+        onView(withText(R.string.not_graded)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun assertFilterLabelText(text: Int) {
