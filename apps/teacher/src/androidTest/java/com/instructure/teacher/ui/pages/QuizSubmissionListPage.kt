@@ -16,6 +16,9 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
@@ -82,15 +85,15 @@ class QuizSubmissionListPage : BasePage() {
     }
 
     fun filterSubmittedLate() {
-        onViewWithText(R.string.submitted_late).click()
+        onView(withText(R.string.submitted_late)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun filterPendingReview() {
-        onViewWithText(R.string.havent_been_graded).click()
+        onView(withText(R.string.havent_been_graded)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun filterNotGraded() {
-        onViewWithText("Not Graded").click()
+        onView(withText(R.string.not_graded)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun assertFilterLabelText(text: Int) {
