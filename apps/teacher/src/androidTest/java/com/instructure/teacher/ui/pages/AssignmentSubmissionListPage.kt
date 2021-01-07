@@ -15,14 +15,15 @@
  */
 package com.instructure.teacher.ui.pages
 
+
 import androidx.test.espresso.matcher.ViewMatchers
+import com.instructure.canvas.espresso.refresh
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
-
-
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 
@@ -91,7 +92,8 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     fun clickSubmission(student: User) {
-        waitForMatcherWithRefreshes(withText(student.name))
+        refresh()
+        scrollRecyclerView(R.id.submissionsRecyclerView, student.name)
         waitForViewWithText(student.name).click()
     }
 
