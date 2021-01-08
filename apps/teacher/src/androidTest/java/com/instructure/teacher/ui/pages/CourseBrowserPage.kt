@@ -18,14 +18,10 @@ package com.instructure.teacher.ui.pages
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.click
@@ -64,7 +60,6 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openDiscussionsTab() {
-        //onView(withId(R.id.courseBrowserRecyclerView)).perform(actionOnItemAtPosition<CourseBrowserViewHolder>(2, click()))
         scrollDownToCourseBrowser()
         waitForViewWithText("Discussions").click()
     }
