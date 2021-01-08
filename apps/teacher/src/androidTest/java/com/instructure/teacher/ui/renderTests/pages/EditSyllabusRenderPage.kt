@@ -27,6 +27,7 @@ import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.containsString
 
@@ -46,9 +47,10 @@ class EditSyllabusRenderPage : BasePage(R.id.editSyllabusPage) {
         saveButton.assertDisplayed()
         contentLabel.assertDisplayed()
         contentRceView.assertDisplayed()
+        showCourseSummaryLabel.scrollTo()
         detailsLabel.assertDisplayed()
         showCourseSummaryLabel.assertDisplayed()
-        showCourseSummaryLabel.assertDisplayed()
+        showCourseSummarySwitch.assertDisplayed()
     }
 
     fun assertSavingStateDisplayed() {

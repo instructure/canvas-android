@@ -16,6 +16,9 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
@@ -26,7 +29,8 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
     private val toolbar by WaitForViewWithText(R.string.editSyllabusTitle)
     private val saveButton by OnViewWithId(R.id.menuSaveSyllabus)
     private val contentRceView by WaitForViewWithId(R.id.rce_webView)
-    private val showCourseSummarySwitch by OnViewWithText(R.id.showSummarySwitch)
+    private val editSyllabusShowCourseSummarySwitch by OnViewWithText(R.id.showSummarySwitch)
+    private val editSyllabusShowCourseSummaryLabel by OnViewWithId(R.id.showSummaryLabel)
 
     fun assertToolbarDisplayedWithCorrectTitle() {
         toolbar.assertDisplayed()
@@ -40,8 +44,13 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
         saveButton.click()
     }
 
-    fun toggleShowSummary() {
+    fun showSummary() {
         onView(withText("SUMMARY")).click()
+    }
+
+    fun editSyllabusToggleShowSummary() {
+        editSyllabusShowCourseSummaryLabel.scrollTo()
+        onView(withId(R.id.showSummarySwitch)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
     }
 
     fun assertHasSummaryEntry(calendarTitle: String) {
