@@ -17,6 +17,7 @@
 package com.instructure.teacher.view.grade_slider
 
 import android.content.Context
+import android.graphics.Rect
 import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
@@ -27,6 +28,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.view_speed_grader_slider.view.*
 import org.greenrobot.eventbus.EventBus
@@ -44,17 +46,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
     private var isExcused: Boolean = false
     private var notGraded: Boolean = false
-
-    private val longPressHandler = Handler()
-    private val longPressRunnable = Runnable {
-        if (slider.progress == 0) {
-            EventBus.getDefault().post(ShowSliderGradeEvent(slider, assignee.id, context.getString(R.string.not_graded)))
-            notGraded = true
-        } else if (slider.progress == slider.max) {
-            EventBus.getDefault().post(ShowSliderGradeEvent(slider, assignee.id, context.getString(R.string.excused)))
-            isExcused = true
-        }
-    }
+    private var isOverGraded: Boolean = false
 
     init {
         View.inflate(context, R.layout.view_speed_grader_slider, this)
@@ -68,6 +60,8 @@ class SpeedGraderSlider @JvmOverloads constructor(
             isExcused = true
             updateGrade(null)
         }
+
+        slider.max = 0
     }
 
     fun setData(assignment: Assignment, submission: Submission?, assignee: Assignee) {
@@ -77,53 +71,51 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
         tooltipView.assigneeId = this.assignee.id
 
-        if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
-            slider.max = this.assignment.pointsPossible.toInt()
-            slider.progress = this.submission?.score?.toInt() ?: 0
+        isOverGraded = this.assignment.pointsPossible < this.submission?.score?.toInt() ?: 0
 
+        if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
+            if (isOverGraded) {
+                if (slider.max < this.submission!!.score.toInt()) {
+                    slider.max = this.submission!!.score.toInt()
+                    maxGrade.text = NumberHelper.formatDecimal(this.submission!!.score, 0, true)
+                }
+            } else {
+                slider.max = this.assignment.pointsPossible.toInt()
+                maxGrade.text = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+            }
+            slider.progress = this.submission?.score?.toInt() ?: 0
             minGrade.text = 0.toString()
-            maxGrade.text = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+
         } else if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
-            slider.max = 100
+            if (isOverGraded) {
+                slider.max = 200
+                maxGrade.text = "200%"
+            } else {
+                slider.max = 100
+                maxGrade.text = "100%"
+            }
             slider.progress = this.submission?.score?.div(this.assignment.pointsPossible)?.times(100)?.toInt()
                     ?: 0
-
             minGrade.text = "0%"
-            maxGrade.text = "100%"
-        }
-
-
-
-        if (this.submission?.excused == true) {
-            slider.progress = slider.max
         }
 
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
-                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
-                    } else {
-                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
-                    }
-                    if (progress == 0 || progress == seekBar?.max) {
-                        startLongPressHandler()
-                    } else {
-                        stopLongPressHandler()
-                    }
+                if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
+                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
+                } else {
+                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
                 }
+
                 notGraded = false
                 isExcused = false
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                if (seekBar?.progress == 0 || seekBar?.progress == seekBar?.max) {
-                    startLongPressHandler()
-                }
+
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                stopLongPressHandler()
                 updateGrade(seekBar?.progress)
             }
 
@@ -148,14 +140,6 @@ class SpeedGraderSlider @JvmOverloads constructor(
         } else {
             onGradeChanged(grade, isExcused)
         }
-    }
-
-    private fun startLongPressHandler() {
-        longPressHandler.postDelayed(longPressRunnable, 1000)
-    }
-
-    private fun stopLongPressHandler() {
-        longPressHandler.removeCallbacks(longPressRunnable)
     }
 
 }

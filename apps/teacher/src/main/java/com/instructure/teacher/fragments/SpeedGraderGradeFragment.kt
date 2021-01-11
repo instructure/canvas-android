@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.fragments
 
+import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.fragments.BasePresenterFragment
@@ -75,7 +76,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
         val submissionId = presenter?.submission?.id ?: return
         event.once(javaClass.simpleName + submissionId) {
-            if(mAssignment.id == it) {
+            if (mAssignment.id == it) {
                 presenter?.refreshSubmission()
             }
         }
@@ -83,10 +84,10 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
     companion object {
         fun newInstance(
-            submission: Submission?,
-            assignment: Assignment,
-            course: Course,
-            assignee: Assignee
+                submission: Submission?,
+                assignment: Assignment,
+                course: Course,
+                assignee: Assignee
         ) = SpeedGraderGradeFragment().apply {
             mSubmission = submission
             mAssignment = assignment
@@ -97,12 +98,24 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
     override fun updateGradeText() {
         // Show 'grade hidden' icon if the submission is graded but there is no postAt date
-        val showHiddenIcon = presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null } ?: false
+        val showHiddenIcon = presenter.submission?.let { (it.isGraded || it.excused) && it.postedAt == null }
+                ?: false
         hiddenIcon.setVisible(showHiddenIcon)
+
+        presenter.submission?.let {
+            if (it.score > presenter.assignment.pointsPossible) {
+                gradeText.text = getString(R.string.speed_grader_overgraded_by, it.score - presenter.assignment.pointsPossible)
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.alertOrange))
+            } else {
+                gradeText.setText(R.string.grade)
+                gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+        }
+
 
         val displayGrade = presenter.assignment.getDisplayGrade(presenter.submission, requireContext())
         // Toggle visibility and set text
-        if(displayGrade.text.isBlank()) {
+        if (displayGrade.text.isBlank()) {
             gradeValueText.setVisible(false)
             addGradeIcon.setVisible(true)
             gradeValueText.text = ""
@@ -114,7 +127,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
             var currentGrade = displayGrade
             // Check to see if this submission has a late penalty
-            if(presenter.submission?.pointsDeducted != null && presenter.submission?.pointsDeducted as Double > 0.0) {
+            if (presenter.submission?.pointsDeducted != null && presenter.submission?.pointsDeducted as Double > 0.0) {
                 // Make the late policy information visible
                 finalGradeValueText.setVisible(true)
                 latePenaltyValue.setVisible(true)
@@ -126,8 +139,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
                 finalGradeValueText.text = displayGrade.text
                 finalGradeValueText.contentDescription = displayGrade.contentDescription
-                latePenaltyValue.text = requireContext().resources.getQuantityString(R.plurals.latePolicyPenalty, if(presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
-                latePenaltyValue.contentDescription = requireContext().resources.getQuantityString(R.plurals.latePolicyPenaltyFull, if(presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+                latePenaltyValue.text = requireContext().resources.getQuantityString(R.plurals.latePolicyPenalty, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
+                latePenaltyValue.contentDescription = requireContext().resources.getQuantityString(R.plurals.latePolicyPenaltyFull, if (presenter.submission?.pointsDeducted as Double == 1.0) 1 else 2, NumberHelper.formatDecimal(presenter.submission?.pointsDeducted as Double, 2, true))
 
                 // Change the currentGrade variable to the entered grade because the actual grade on the submission applies the late penalty
                 currentGrade = presenter.assignment.getDisplayGrade(presenter.submission, requireContext(), true, true)
@@ -199,7 +212,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
     private fun showCustomizeGradeDialog() {
         val pointsPossible: String = NumberHelper.formatDecimal(presenter.assignment.pointsPossible, 2, true)
         var grade: String? = ""
-        if(presenter.submission != null) {
+        if (presenter.submission != null) {
             grade = presenter.submission?.grade
         }
 
@@ -228,7 +241,7 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
         hiddenIcon.setGone()
     }
 
-    val  hasUnsavedChanges: Boolean get() = rubricEditView?.hasUnsavedChanges ?: false
+    val hasUnsavedChanges: Boolean get() = rubricEditView?.hasUnsavedChanges ?: false
 
     override fun onRefreshFinished() {
         gradeProgressSpinner.setGone()
