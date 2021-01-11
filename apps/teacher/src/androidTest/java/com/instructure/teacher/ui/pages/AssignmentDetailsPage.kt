@@ -124,22 +124,27 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     }
 
     fun assertSubmissionTypeNone() {
+        scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_none)
     }
 
     fun assertSubmissionTypeOnPaper() {
+        scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onPaper)
     }
 
     fun assertSubmissionTypeOnlineTextEntry() {
+        scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineTextEntry)
     }
 
     fun assertSubmissionTypeOnlineUrl() {
+        scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineURL)
     }
 
     fun assertSubmissionTypeOnlineUpload() {
+        scrollToSubmissionType()
         submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineUpload)
     }
 
@@ -159,6 +164,10 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     fun assertNotSubmitted(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(actual, outOf))
+    }
+
+    fun scrollToSubmissionType() {
+        scrollTo(R.id.submissionTypesTextView)
     }
 
     fun waitForRender() {

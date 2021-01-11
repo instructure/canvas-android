@@ -45,15 +45,14 @@ class EditSyllabusPageTest : TeacherTest() {
     }
 
     @Test
-    fun testSaveEditedSyllabusWhenShowSummaryWasDisabled() {
+    fun testEditSyllabusAndDisableSummary() {
         goToEditSyllabus()
 
         editSyllabusPage.editSyllabusBody("Syllabus edited")
-        editSyllabusPage.toggleShowSummary()
+        editSyllabusPage.editSyllabusToggleShowSummary()
         editSyllabusPage.saveSyllabusEdit()
 
         syllabusPage.assertDisplaysSyllabus("Syllabus edited", false)
-        syllabusPage.assertSuccessfulSave(ActivityHelper.currentActivity())
     }
 
     private fun goToEditSyllabus(): MockCanvas {
