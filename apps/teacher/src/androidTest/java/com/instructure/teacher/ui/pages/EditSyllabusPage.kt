@@ -44,16 +44,8 @@ class EditSyllabusPage : BasePage(R.id.editSyllabusPage) {
         saveButton.click()
     }
 
-    fun showSummary() {
-        onView(withText("SUMMARY")).click()
-    }
-
     fun editSyllabusToggleShowSummary() {
         editSyllabusShowCourseSummaryLabel.scrollTo()
         onView(withId(R.id.showSummarySwitch)).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
-    }
-
-    fun assertHasSummaryEntry(calendarTitle: String) {
-        onView(withId(R.id.syllabusItemTitle) + withText(calendarTitle)).assertDisplayed()
     }
 }

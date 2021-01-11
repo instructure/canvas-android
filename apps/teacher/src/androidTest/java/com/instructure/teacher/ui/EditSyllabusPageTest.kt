@@ -45,18 +45,6 @@ class EditSyllabusPageTest : TeacherTest() {
     }
 
     @Test
-    fun testSaveEditedSyllabusSummary() {
-        goToEditSyllabus()
-
-        editSyllabusPage.editSyllabusBody("Syllabus edited")
-        editSyllabusPage.saveSyllabusEdit()
-        editSyllabusPage.showSummary()
-        editSyllabusPage.assertHasSummaryEntry("Test Calendar Event")
-        editSyllabusPage.assertHasSummaryEntry("Assignment: 1")
-
-    }
-
-    @Test
     fun testEditSyllabusAndDisableSummary() {
         goToEditSyllabus()
 
