@@ -38,6 +38,7 @@ import com.instructure.student.adapter.ModuleListRecyclerAdapter
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
 import kotlinx.android.synthetic.main.fragment_module_list.*
@@ -145,8 +146,9 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 val moduleItemsArray = groups.indices.mapTo(ArrayList<ArrayList<ModuleItem>>()) { recyclerAdapter.getItems(groups[it]) }
                 val moduleHelper = ModuleProgressionUtility.prepareModulesForCourseProgression(requireContext(), moduleItem.id, groups, moduleItemsArray)
 
-                RouteMatcher.route(requireContext(), CourseModuleProgressionFragment.makeRoute(groups,
-                        moduleHelper.strippedModuleItems,
+                CourseModulesStore.moduleListItems = moduleHelper.strippedModuleItems
+                CourseModulesStore.moduleObjects = groups
+                RouteMatcher.route(requireContext(), CourseModuleProgressionFragment.makeRoute(
                         canvasContext,
                         moduleHelper.newGroupPosition,
                         moduleHelper.newChildPosition))
