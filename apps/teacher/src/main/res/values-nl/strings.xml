@@ -348,7 +348,7 @@
     <string name="override">Overschrijving</string>
     <string name="calculated_by_rubric">Berekend op basis van rubric</string>
     <string name="customize_grade">Beoordeling aanpassen</string>
-    <string name="out_of_points">Vanuit %1$s</string>
+    <string name="out_of_points">Max %1$s</string>
     <string name="gpa">GPA</string>
     <string name="letter_grade">Beoordeling in lettervorm</string>
     <string name="excuse_student">Cursist vrijstelling geven</string>

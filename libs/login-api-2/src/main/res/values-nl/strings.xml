@@ -80,10 +80,10 @@
     <string name="errorReportThankyou">Bedankt dat je dit probleem bij onze helpdesk hebt gemeld.  Je ontvangt een bevestiging en updates per e-mail.</string>
     <string name="errorReportSeverityText">Wat voor gevolgen heeft dit voor jou?</string>
     <string name="errorSeverityCasualQuestion">Gewoon een informele vraag, opmerking, idee of suggestie...</string>
-    <string name="errorSeverityNeedHelp">Ik heb wat hulp nodig, maar het is niet urgent</string>
+    <string name="errorSeverityNeedHelp">Ik heb hulp nodig, maar het is niet dringend</string>
     <string name="errorSeveritySomethingsBroken">Er is iets stuk, maar daar kan ik wel omheen werken om gedaan te krijgen wat ik wil.</string>
-    <string name="errorSeverityCantGetThingsDone">Ik kan niets doen tot ik een antwoord van je terugkrijg.</string>
-    <string name="errorSeverityExtremelyCritical">EXTREEM NOODGEVAL!</string>
+    <string name="errorSeverityCantGetThingsDone">Er is een probleem, ik kan niets doen zonder antwoord van jullie.</string>
+    <string name="errorSeverityExtremelyCritical">ER IS EEN PROBLEEM, GRAAG DRINGEND HULP!</string>
     <string name="errorReportEmailAddress">E-mailadres</string>
     <string name="errorReportEnterEmail">Voer je e-mailadres in...</string>
     <string name="errorReportUnknown">Onbekend</string>

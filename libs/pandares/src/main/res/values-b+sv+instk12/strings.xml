@@ -991,7 +991,7 @@
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiceringsinställningar</string>
-    <string name="postGradesTab">Publicera omdömen</string>
+    <string name="postGradesTab">Offentliggör omdömen</string>
     <string name="hideGradesTab">Dölj omdömen</string>
     <plurals name="gradesPostedCount">
         <item quantity="one">%d omdöme publicerat för närvarande</item>
@@ -1013,7 +1013,7 @@
     <string name="postPolicyAllPostedMessage">Alla omdömen har publicerats.</string>
     <string name="postPolicyPostedToast">Publicerade omdömen</string>
     <string name="postPolicyHiddenToast">Dolda omdömen</string>
-    <string name="postPolicyPostFailedToast">Det gick inte att publicera omdömen</string>
+    <string name="postPolicyPostFailedToast">Det gick inte att offentliggör omdömen</string>
     <string name="postPolicyHideFailedToast">Det gick inte att dölja omdömen</string>
     <string name="gradeBeforePosting">Bedöm före publicering</string>
     <string name="gradeAfterPosting">Bedöm efter publicering</string>

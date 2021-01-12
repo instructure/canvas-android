@@ -1706,7 +1706,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "I need some help but it's not urgent.": "Ik heb wat hulp nodig, maar het is niet dringend.",
+  "I need some help but it's not urgent.": "Ik heb hulp nodig, maar het is niet dringend.",
   "@I need some help but it's not urgent.": {
     "type": "text",
     "placeholders": {}
@@ -1721,7 +1721,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "EXTREME CRITICAL EMERGENCY!!": "EXTREEM NOODGEVAL!",
+  "EXTREME CRITICAL EMERGENCY!!": "ER IS EEN PROBLEEM, GRAAG DRINGEND HULP!",
   "@EXTREME CRITICAL EMERGENCY!!": {
     "type": "text",
     "placeholders": {}

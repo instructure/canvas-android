@@ -976,12 +976,12 @@
     <string name="addChildSubTitle">Ange kopplingskoden du fått för studenter.</string>
     <string name="addChildHint">Kopplingskod ...</string>
     <string name="addChildErrorMessage">Det gick inte att koppla. Se till att din kopplingskod är korrekt och att dess tidsgräns inte har överskridits.</string>
-    <string name="gradeComplete">Färdiga</string>
-    <string name="gradeIncomplete">Ej fullständiga</string>
+    <string name="gradeComplete">Färdig</string>
+    <string name="gradeIncomplete">ofullständig</string>
 
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiceringsinställningar</string>
-    <string name="postGradesTab">Publicera omdömen</string>
+    <string name="postGradesTab">Offentliggör omdömen</string>
     <string name="hideGradesTab">Dölj omdömen</string>
     <plurals name="gradesPostedCount">
         <item quantity="one">%d omdöme publicerat för närvarande</item>
@@ -1003,7 +1003,7 @@
     <string name="postPolicyAllPostedMessage">Alla omdömen har publicerats.</string>
     <string name="postPolicyPostedToast">Publicerade omdömen</string>
     <string name="postPolicyHiddenToast">Dolda omdömen</string>
-    <string name="postPolicyPostFailedToast">Det gick inte att publicera omdömen</string>
+    <string name="postPolicyPostFailedToast">Det gick inte att offentliggör omdömen</string>
     <string name="postPolicyHideFailedToast">Det gick inte att dölja omdömen</string>
     <string name="gradeBeforePosting">Bedöm före publicering</string>
     <string name="gradeAfterPosting">Bedöm efter publicering</string>

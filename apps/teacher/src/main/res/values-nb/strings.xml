@@ -353,8 +353,8 @@
     <string name="letter_grade">Bokstavkarakter</string>
     <string name="excuse_student">Frita student</string>
     <string name="excuseGroup">Frita gruppe</string>
-    <string name="complete_grade">Fullført</string>
-    <string name="incomplete_grade">Ufullstendig</string>
+    <string name="complete_grade">Godkjent</string>
+    <string name="incomplete_grade">Ikke godkjent</string>
     <string name="not_graded">Ikke karaktersatt</string>
     <string name="excused">Fritatt</string>
     <string formatted="false" name="grade_value_format">%s %s</string>
