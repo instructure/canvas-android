@@ -353,8 +353,8 @@
     <string name="letter_grade">Bokstavsomdöme</string>
     <string name="excuse_student">Låt studenten slippa göra</string>
     <string name="excuseGroup">Låt gruppen slippa göra</string>
-    <string name="complete_grade">Fullständig</string>
-    <string name="incomplete_grade">Ofullständig</string>
+    <string name="complete_grade">Färdig</string>
+    <string name="incomplete_grade">ofullständig</string>
     <string name="not_graded">Ej bedömd</string>
     <string name="excused">Ursäktad</string>
     <string formatted="false" name="grade_value_format">%s %s</string>

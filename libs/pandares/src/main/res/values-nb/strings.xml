@@ -972,7 +972,7 @@
     <string name="addChildSubTitle">Oppgi studentparingskoden som ble gitt til deg.</string>
     <string name="addChildHint">Paringskode &#8230;</string>
     <string name="addChildErrorMessage">Paring mislyktes. Pass på at paringskoden er korrekt og innenfor tidsbegrensningen for bruk.</string>
-    <string name="gradeComplete">Fullført</string>
+    <string name="gradeComplete">Godkjent</string>
     <string name="gradeIncomplete">Ikke godkjent</string>
     <!--Teacher Strings-->
     <string name="postPolicyTitle">Publiseringsinnstillinger</string>

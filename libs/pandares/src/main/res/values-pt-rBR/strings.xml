@@ -383,7 +383,7 @@
     <string name="syllabus">Programa</string>
     <string name="summary">Resumo</string>
     <string name="coursePeople">Pessoas</string>
-    <string name="teachersTas">Professores &amp; Assistentes do Professor</string>
+    <string name="teachersTas">Professores &amp; Assistentes</string>
     <string name="students">Alunos</string>
     <string name="observers">Observadores</string>
     <string name="syllabusMissing">Um programa não foi adicionado.</string>
@@ -618,7 +618,7 @@
 
     <!-- Ask Instructor -->
     <string name="whichCourse">Esta pergunta é sobre qual curso?</string>
-    <string name="allTeachers">Esta mensagem será enviada para todos os Professores e Assistentes de Professor no curso</string>
+    <string name="allTeachers">Esta mensagem será enviada para todos os Professores e Assistentes no curso</string>
     <string name="sending">Enviando&#8230;</string>
     <string name="error">Erro</string>
 

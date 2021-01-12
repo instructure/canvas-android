@@ -1075,7 +1075,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Complete": "Fullført",
+  "Complete": "Godkjent",
   "@Complete": {
     "description": "Grading status for an assignment marked as complete",
     "type": "text",
