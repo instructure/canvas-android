@@ -43,17 +43,16 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/scrollInstructions"
             android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="8dp">
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/gradeTextContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp">
+                android:minHeight="48dp"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="16dp">
 
                 <TextView
                     android:id="@+id/gradeText"
@@ -159,6 +158,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusable="true"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -186,6 +188,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:focusable="true"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="8dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
@@ -217,22 +222,23 @@
 
             </RelativeLayout>
 
+            <com.instructure.teacher.view.grade_slider.SpeedGraderSlider
+                android:id="@+id/speedGraderSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height=".5dp"
+            android:layout_marginTop="8dp"
             android:background="@color/defaultTrackColor"
             tools:layout_height="1dp" />
 
         <com.instructure.teacher.view.edit_rubric.RubricEditView
             android:id="@+id/rubricEditView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <com.instructure.teacher.view.grade_slider.SpeedGraderSlider
-            android:id="@+id/speedGraderSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone" />
