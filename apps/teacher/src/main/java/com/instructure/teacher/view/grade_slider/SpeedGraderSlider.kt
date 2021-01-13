@@ -18,7 +18,6 @@ package com.instructure.teacher.view.grade_slider
 
 import android.content.Context
 import android.graphics.Rect
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -32,6 +31,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.view_speed_grader_slider.view.*
 import org.greenrobot.eventbus.EventBus
+import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
 class SpeedGraderSlider @JvmOverloads constructor(
@@ -79,9 +79,11 @@ class SpeedGraderSlider @JvmOverloads constructor(
                     slider.max = this.submission!!.score.toInt()
                     maxGrade.text = NumberHelper.formatDecimal(this.submission!!.score, 0, true)
                 }
+                showPointsPossibleView()
             } else {
                 slider.max = this.assignment.pointsPossible.toInt()
                 maxGrade.text = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+                pointsPossibleView.setGone()
             }
             slider.progress = this.submission?.score?.toInt() ?: 0
             minGrade.text = 0.toString()
@@ -90,9 +92,11 @@ class SpeedGraderSlider @JvmOverloads constructor(
             if (isOverGraded) {
                 slider.max = 200
                 maxGrade.text = "200%"
+                showPointsPossibleView()
             } else {
                 slider.max = 100
                 maxGrade.text = "100%"
+                pointsPossibleView.setGone()
             }
             slider.progress = this.submission?.score?.div(this.assignment.pointsPossible)?.times(100)?.toInt()
                     ?: 0
@@ -140,6 +144,33 @@ class SpeedGraderSlider @JvmOverloads constructor(
         } else {
             onGradeChanged(grade, isExcused)
         }
+    }
+
+    private fun showPointsPossibleView() {
+        slider.viewTreeObserver.addOnGlobalLayoutListener {
+            val anchorRect = Rect()
+            val localRect = Rect()
+            val width = slider.width - slider.paddingStart - slider.paddingEnd
+            val stepWidth = width.toFloat() / slider.max.toFloat()
+            slider.getGlobalVisibleRect(anchorRect)
+            slider.getLocalVisibleRect(localRect)
+            
+            val label: String
+            if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
+                anchorRect.left = anchorRect.left + slider.paddingLeft + (this.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
+                label = NumberHelper.formatDecimal(this.assignment.pointsPossible, 0, true)
+            } else {
+                anchorRect.left = anchorRect.left + slider.paddingLeft + width / 2
+                label = "100%"
+            }
+
+            anchorRect.right = anchorRect.left + 4
+            anchorRect.top = localRect.top
+            anchorRect.bottom = localRect.bottom
+            pointsPossibleView.showPossiblePoint(anchorRect, label)
+            pointsPossibleView.setVisible(true)
+        }
+
     }
 
 }

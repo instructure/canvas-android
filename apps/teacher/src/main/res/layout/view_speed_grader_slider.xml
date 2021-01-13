@@ -111,4 +111,10 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="6dp" />
+
+    <com.instructure.teacher.view.grade_slider.PossiblePointView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/pointsPossibleView"
+        android:visibility="gone"/>
 </FrameLayout>
