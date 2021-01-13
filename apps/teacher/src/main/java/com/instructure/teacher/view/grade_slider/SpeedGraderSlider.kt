@@ -105,10 +105,12 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
         slider.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
-                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
-                } else {
-                    EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
+                if (!isExcused && !notGraded) {
+                    if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.PERCENT) {
+                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, "$progress%"))
+                    } else {
+                        EventBus.getDefault().post(ShowSliderGradeEvent(seekBar, this@SpeedGraderSlider.assignee.id, progress.toString()))
+                    }
                 }
 
                 notGraded = false
@@ -130,12 +132,18 @@ class SpeedGraderSlider @JvmOverloads constructor(
     private fun updateGrade(progress: Int?) {
         val grade = when {
             notGraded -> {
+                enableNoGradeButton(false)
+                enableExcuseButton(true)
                 context.getString(R.string.not_graded)
             }
             isExcused -> {
+                enableExcuseButton(false)
+                enableNoGradeButton(true)
                 context.getString(R.string.excused)
             }
             else -> {
+                enableExcuseButton(true)
+                enableNoGradeButton(true)
                 progress.toString()
             }
         }
@@ -146,7 +154,18 @@ class SpeedGraderSlider @JvmOverloads constructor(
         }
     }
 
+    fun enableExcuseButton(isEnabled: Boolean) {
+        excuseButton.isEnabled = isEnabled
+        excuseButton.alpha = if (isEnabled) 1.0F else 0.6F
+    }
+
+    fun enableNoGradeButton(isEnabled: Boolean) {
+        noGradeButton.isEnabled = isEnabled
+        noGradeButton.alpha = if (isEnabled) 1.0F else 0.6F
+    }
+
     private fun showPointsPossibleView() {
+        pointsPossibleView.setVisible(true)
         slider.viewTreeObserver.addOnGlobalLayoutListener {
             val anchorRect = Rect()
             val localRect = Rect()
@@ -154,7 +173,7 @@ class SpeedGraderSlider @JvmOverloads constructor(
             val stepWidth = width.toFloat() / slider.max.toFloat()
             slider.getGlobalVisibleRect(anchorRect)
             slider.getLocalVisibleRect(localRect)
-            
+
             val label: String
             if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
                 anchorRect.left = anchorRect.left + slider.paddingLeft + (this.assignment.pointsPossible.toInt() * stepWidth).roundToInt()
@@ -168,7 +187,6 @@ class SpeedGraderSlider @JvmOverloads constructor(
             anchorRect.top = localRect.top
             anchorRect.bottom = localRect.bottom
             pointsPossibleView.showPossiblePoint(anchorRect, label)
-            pointsPossibleView.setVisible(true)
         }
 
     }
