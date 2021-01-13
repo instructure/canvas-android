@@ -49,6 +49,7 @@ import com.instructure.student.R
 import com.instructure.student.events.ModuleUpdatedEvent
 import com.instructure.student.events.post
 import com.instructure.student.util.Const
+import com.instructure.student.util.CourseModulesStore
 import com.instructure.student.util.ModuleProgressionUtility
 import com.instructure.student.util.ModuleUtility
 import kotlinx.android.synthetic.main.course_module_progression.*
@@ -751,22 +752,30 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             else -> !moduleItem.title.equals(context.getString(R.string.loading), ignoreCase = true)
         }
 
-        fun makeRoute(moduleObjects: ArrayList<ModuleObject>, itemList: ArrayList<ArrayList<ModuleItem>>, canvasContext: CanvasContext, groupPos: Int, childPos: Int): Route {
+        fun makeRoute(canvasContext: CanvasContext, groupPos: Int, childPos: Int): Route {
             return Route(null, CourseModuleProgressionFragment::class.java, canvasContext, canvasContext.makeBundle(Bundle().apply {
-                putParcelableArrayList(MODULE_OBJECTS, moduleObjects)
-                putSerializable(MODULE_ITEMS, itemList)
                 putInt(GROUP_POSITION, groupPos)
                 putInt(CHILD_POSITION, childPos)
             }))
         }
 
-        fun newInstance(route: Route): CourseModuleProgressionFragment? = if (validRoute(route)) CourseModuleProgressionFragment().apply {
-            arguments = route.arguments
-            moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: ""
-        } else null
+        fun newInstance(route: Route): CourseModuleProgressionFragment? {
+            val fragment = if (validRoute(route)) CourseModuleProgressionFragment().apply {
+                arguments = route.arguments.apply {
+                    putSerializable(MODULE_ITEMS, CourseModulesStore.moduleListItems)
+                    putParcelableArrayList(MODULE_OBJECTS, CourseModulesStore.moduleObjects)
+                }
+                moduleItemId = route.queryParamsHash[RouterParams.MODULE_ITEM_ID] ?: ""
+            } else null
+
+            CourseModulesStore.moduleListItems = null
+            CourseModulesStore.moduleObjects = null
+
+            return fragment
+        }
 
         private fun validRoute(route: Route): Boolean = route.canvasContext != null
-                && (route.arguments.containsKey(MODULE_OBJECTS) && route.arguments.containsKey(MODULE_ITEMS))
-                || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
+            && (CourseModulesStore.moduleObjects != null && CourseModulesStore.moduleListItems != null)
+            || route.queryParamsHash.keys.any { it == RouterParams.MODULE_ITEM_ID }
     }
 }
