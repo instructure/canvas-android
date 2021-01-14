@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.syllabus
 
 import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.teacher.mobius.common.ui.UpdateInit
 import com.spotify.mobius.First
 import com.spotify.mobius.Next
@@ -68,16 +67,6 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
     }
 
     private fun handleSyllabusUpdatedEvent(model: SyllabusModel, event: SyllabusEvent.SyllabusUpdatedEvent): Next<SyllabusModel, SyllabusEffect> {
-        return if (model.summaryAllowed == event.summaryAllowed && event.content.isNotEmpty()) {
-            val course = model.course?.dataOrNull?.copy(syllabusBody = event.content)
-            val syllabus = ScheduleItem.createSyllabus(course?.name, event.content)
-            val courseResult = course?.let {
-                DataResult.Success(course)
-            } ?: DataResult.Fail()
-
-            Next.next(model.copy(course = courseResult, syllabus = syllabus))
-        } else {
-            Next.next(model.copy(isLoading = true), setOf<SyllabusEffect>(SyllabusEffect.LoadData(model.courseId, true)))
-        }
+        return Next.next(SyllabusModel(courseId = model.courseId, isLoading = true), setOf<SyllabusEffect>(SyllabusEffect.LoadData(model.courseId, true)))
     }
 }
