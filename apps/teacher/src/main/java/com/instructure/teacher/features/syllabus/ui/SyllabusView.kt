@@ -114,6 +114,12 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
     private fun renderLoadedState(state: SyllabusViewState.Loaded) {
         swipeRefreshLayout.isRefreshing = false
 
+        if (syllabusPager.currentItem == SYLLABUS_TAB_POSITION) {
+            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
+        } else {
+            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
+        }
+
         setEditVisibility(state.canEdit)
         // We need to do this again after changing the edit button to visible to make it the correct color.
         ViewStyler.themeToolbar(context as Activity, toolbar, canvasContext)
@@ -134,12 +140,6 @@ class SyllabusView(val canvasContext: CanvasContext, inflater: LayoutInflater, p
             syllabusEmptyView?.setVisible(visibility.empty)
             syllabusEventsError?.setVisible(visibility.error)
             syllabusEventsRecyclerView?.setVisible(visibility.list)
-        }
-
-        if (syllabusPager.currentItem == SYLLABUS_TAB_POSITION) {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusWebView)
-        } else {
-            swipeRefreshLayout.setSwipeableChildren(R.id.syllabusEventsRecyclerView, R.id.syllabusEmptyView)
         }
 
         when (eventsState) {
