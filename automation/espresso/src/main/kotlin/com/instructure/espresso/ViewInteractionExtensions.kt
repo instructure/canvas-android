@@ -22,8 +22,7 @@ import android.view.View
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.EspressoKey
-import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.*
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.SetViewPagerCurrentItemAction
@@ -128,6 +127,14 @@ fun ViewInteraction.pageToItem(pageNumber: Int): ViewInteraction = perform(
         pageNumber
     )
 )
+
+fun ViewInteraction.swipeToTop(): ViewInteraction = perform(GeneralSwipeAction(Swipe.FAST, CoordinatesProvider {
+        GeneralLocation.CENTER.calculateCoordinates(it)
+    }, CoordinatesProvider {
+        val coordinates = GeneralLocation.CENTER.calculateCoordinates(it)
+        coordinates[1] = 0F
+        coordinates
+    }, Press.FINGER))
 
 fun ViewInteraction.waitForCheck(assertion: ViewAssertion) {
     val waitTime = TimeUnit.SECONDS.toMillis(10)
