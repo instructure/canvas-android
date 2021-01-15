@@ -95,7 +95,7 @@ class AssignmentSubmissionListPage : BasePage() {
     }
 
     fun clickSubmission(student: User) {
-        refresh()
+        waitForMatcherWithRefreshes(withId(R.id.submissionsRecyclerView))
         scrollRecyclerView(R.id.submissionsRecyclerView, student.name)
         waitForViewWithText(student.name).click()
     }
