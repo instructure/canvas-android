@@ -69,8 +69,6 @@ class SpeedGraderCommentsPageTest : TeacherTest() {
                 withComment = true
         )
 
-        speedGraderPage.commentsTab.swipeToTop()
-
         val commentText = submission!!.submissionComments[0].comment!!
         speedGraderCommentsPage.assertDisplaysCommentText(commentText)
     }
