@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.randomString
+import com.instructure.espresso.swipeToTop
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
