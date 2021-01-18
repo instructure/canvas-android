@@ -34,7 +34,7 @@ class SpeedGraderGradePage : BasePage() {
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
     private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
-    private val excuseStudentCheckbox by WaitForViewWithId(R.id.excuseStudentCheckbox)
+    val excuseStudentCheckbox by WaitForViewWithId(R.id.excuseStudentCheckbox)
     private val confirmDialogButton by WaitForViewWithStringText(getStringFromResource(android.R.string.ok).toUpperCase())
 
 
@@ -53,7 +53,6 @@ class SpeedGraderGradePage : BasePage() {
 
     fun assertGradeDialog() {
         customizeGradeTitle.assertDisplayed()
-        excuseStudentCheckbox.assertDisplayed()
     }
 
     fun assertHasGrade(grade: String) {

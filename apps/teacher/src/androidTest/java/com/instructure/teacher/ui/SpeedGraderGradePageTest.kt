@@ -23,6 +23,8 @@ import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertGone
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import org.junit.Test
@@ -40,6 +42,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.openGradeDialog()
         speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.excuseStudentCheckbox.assertGone()
     }
 
     @Test
