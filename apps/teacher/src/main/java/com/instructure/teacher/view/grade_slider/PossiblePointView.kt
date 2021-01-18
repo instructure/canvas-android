@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 - present  Instructure, Inc.
+ * Copyright (C) 2021 - present  Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -51,8 +51,8 @@ class PossiblePointView @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
 
-        canvas?.drawLine(anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 4.toPx, anchorRect.left.toFloat(), anchorRect.bottom.toFloat(), linePaint)
-        canvas?.drawText(label, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() + 24.toPx, textPaint)
+        canvas?.drawLine(anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 16.toPx, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() - 8.toPx, linePaint)
+        canvas?.drawText(label, anchorRect.left.toFloat(), anchorRect.bottom.toFloat() + 16.toPx, textPaint)
     }
 
     fun showPossiblePoint(anchorRect: Rect, label: String) {

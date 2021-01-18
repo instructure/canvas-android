@@ -26,7 +26,6 @@ import com.instructure.teacher.dialog.PassFailGradeDailog
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderGradePresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderGradePresenter
-import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
@@ -34,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_speedgrader_grade.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.text.DecimalFormat
 
 class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter, SpeedGraderGradeView>(), SpeedGraderGradeView {
 
@@ -104,7 +104,8 @@ class SpeedGraderGradeFragment : BasePresenterFragment<SpeedGraderGradePresenter
 
         presenter.submission?.let {
             if (it.score > presenter.assignment.pointsPossible) {
-                gradeText.text = getString(R.string.speed_grader_overgraded_by, it.score - presenter.assignment.pointsPossible)
+                val numberFormatter = DecimalFormat("##.##")
+                gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
                 gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.alertOrange))
             } else {
                 gradeText.setText(R.string.grade)

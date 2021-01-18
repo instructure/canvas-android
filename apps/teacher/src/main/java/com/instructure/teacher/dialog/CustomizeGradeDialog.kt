@@ -38,22 +38,22 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
         retainInstance = true
     }
 
-    private var mCustomizeGradeCallback: (String, Boolean) -> Unit by Delegates.notNull()
-    private var mGrade by NullableStringArg()
-    private var mGradingType by StringArg()
-    private var mPointsPossible by StringArg()
-    private var mIsGroupSubmission by BooleanArg()
-    private var mShouldShowExcuse by BooleanArg()
+    private var customizeGradeCallback: (String, Boolean) -> Unit by Delegates.notNull()
+    private var grade by NullableStringArg()
+    private var gradingType by StringArg()
+    private var pointsPossible by StringArg()
+    private var isGroupSubmission by BooleanArg()
+    private var shouldShowExcuse by BooleanArg()
 
     companion object {
         fun getInstance(fragmentManager: FragmentManager, pointsPossible: String, grade: String?, gradingType: String, isGroupSubmission: Boolean, shouldShowExcuse: Boolean, callback: (String, Boolean) -> Unit) = CustomizeGradeDialog().apply {
             fragmentManager.dismissExisting<CustomizeGradeDialog>()
-            mGrade = grade
-            mGradingType = gradingType
-            mPointsPossible = pointsPossible
-            mIsGroupSubmission = isGroupSubmission
-            mCustomizeGradeCallback = callback
-            mShouldShowExcuse = shouldShowExcuse
+            this.grade = grade
+            this.gradingType = gradingType
+            this.pointsPossible = pointsPossible
+            this.isGroupSubmission = isGroupSubmission
+            this.customizeGradeCallback = callback
+            this.shouldShowExcuse = shouldShowExcuse
         }
     }
 
@@ -68,22 +68,22 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
         ViewStyler.themeCheckBox(requireContext(), excusedCheckBox, ThemePrefs.brandColor)
 
         // Change wording for groups
-        if (mIsGroupSubmission) excusedCheckBox.setText(R.string.excuseGroup)
+        if (isGroupSubmission) excusedCheckBox.setText(R.string.excuseGroup)
 
         //We need to adjust the padding for the edit text so it doesn't run into our "hint view"
         gradeTextHint.addOnLayoutChangeListener { _, left, _, right, _, _, _, _, _ ->
             gradeEditText.setPaddingRelative(gradeEditText.paddingStart, gradeEditText.paddingTop, right - left, gradeEditText.paddingBottom)
         }
 
-        gradeEditText.setText(mGrade ?: "", TextView.BufferType.EDITABLE)
-        gradeEditText.setSelection(mGrade?.length ?: 0)
+        gradeEditText.setText(grade ?: "", TextView.BufferType.EDITABLE)
+        gradeEditText.setSelection(grade?.length ?: 0)
         gradeEditText.hint = ""
 
-        when(Assignment.getGradingTypeFromAPIString(mGradingType)) {
+        when(Assignment.getGradingTypeFromAPIString(gradingType)) {
             Assignment.GradingType.PERCENT -> gradeTextHint.text = "%"
             Assignment.GradingType.GPA_SCALE -> gradeTextHint.text = getString(R.string.gpa)
             Assignment.GradingType.LETTER_GRADE -> gradeTextHint.text = getString(R.string.letter_grade)
-            else -> gradeTextHint.text = getString(R.string.out_of_points, mPointsPossible)
+            else -> gradeTextHint.text = getString(R.string.out_of_points, pointsPossible)
         }
 
         //listen for checkbox
@@ -104,7 +104,7 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
                 .setTitle(getString(R.string.customize_grade))
                 .setView(view)
                 .setPositiveButton(getString(android.R.string.ok).toUpperCase()) { _, _ ->
-                    updateGrade(gradeEditText.text.toString(), mGradingType, excusedCheckBox.isChecked)
+                    updateGrade(gradeEditText.text.toString(), gradingType, excusedCheckBox.isChecked)
                 }
                 .setNegativeButton(getString(android.R.string.cancel).toUpperCase(), null)
                 .create()
@@ -126,7 +126,7 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
             handled
         }
 
-        if (!mShouldShowExcuse) {
+        if (!shouldShowExcuse) {
             excusedCheckBox.visibility = View.GONE
         }
 
@@ -138,13 +138,13 @@ class CustomizeGradeDialog : AppCompatDialogFragment() {
         if (Assignment.getGradingTypeFromAPIString(gradingType) == Assignment.GradingType.PERCENT) {
             //check to see if they already have a % sign at the end
             if(gradeText.isNotEmpty() && gradeText.last().toString() == "%") {
-                mCustomizeGradeCallback(gradeText, isChecked)
+                customizeGradeCallback(gradeText, isChecked)
             } else {
-                mCustomizeGradeCallback("$gradeText%", isChecked)
+                customizeGradeCallback("$gradeText%", isChecked)
             }
         } else {
             //Otherwise we handle the grade like normal
-            mCustomizeGradeCallback(gradeText, isChecked)
+            customizeGradeCallback(gradeText, isChecked)
         }
     }
 
