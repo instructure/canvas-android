@@ -67,6 +67,10 @@ class SpeedGraderPage : BasePage() {
         commentsTab.click()
     }
 
+    fun swipeUpCommentsTab() {
+        commentsTab.swipeToTop()
+    }
+
     fun selectFilesTab(fileCount: Int) {
         val filesTab = waitForViewWithText(getStringFromResource(R.string.sg_tab_files_w_counter, fileCount).toUpperCase())
         filesTab.click()

@@ -20,6 +20,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.google.android.apps.common.testing.accessibility.framework.integrations.AccessibilityViewCheckException
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.espresso.*
@@ -60,7 +61,7 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun addComment(comment: String) {
-        commentEditText.replaceText(comment)
+        commentEditText.typeText(comment)
         callOnClick(withId(R.id.sendCommentButton))
     }
 
