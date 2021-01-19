@@ -100,6 +100,11 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
         isOverGraded = this.assignment.pointsPossible < this.submission?.score?.toInt() ?: 0
 
+        this.submission?.let {
+            enableExcuseButton(!it.excused)
+            enableNoGradeButton(it.isGraded || it.excused)
+        }
+
         if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
             if (isOverGraded) {
                 if (slider.max < this.submission!!.score.toInt()) {
@@ -181,12 +186,12 @@ class SpeedGraderSlider @JvmOverloads constructor(
         }
     }
 
-    fun enableExcuseButton(isEnabled: Boolean) {
+    private fun enableExcuseButton(isEnabled: Boolean) {
         excuseButton.isEnabled = isEnabled
         excuseButton.alpha = if (isEnabled) 1.0F else 0.6F
     }
 
-    fun enableNoGradeButton(isEnabled: Boolean) {
+    private fun enableNoGradeButton(isEnabled: Boolean) {
         noGradeButton.isEnabled = isEnabled
         noGradeButton.alpha = if (isEnabled) 1.0F else 0.6F
     }

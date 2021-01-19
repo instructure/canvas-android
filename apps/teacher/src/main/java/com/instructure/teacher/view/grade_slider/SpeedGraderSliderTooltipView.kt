@@ -29,6 +29,8 @@ class SpeedGraderSliderTooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : TooltipView(context, attrs, defStyleAttr) {
 
+    override val forceDrawAbove = true
+
     /** Subscription to [ShowSliderGradeEvent] */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
