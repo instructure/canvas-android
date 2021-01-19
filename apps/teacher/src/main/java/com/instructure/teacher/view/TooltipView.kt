@@ -45,6 +45,8 @@ abstract class TooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
+    protected abstract val forceDrawAbove: Boolean
+
     /** Maximum tooltip width */
     private val maxWidth = context.DP(MAX_WIDTH_DP).toInt()
 
@@ -175,7 +177,7 @@ abstract class TooltipView @JvmOverloads constructor(
             }
 
             // Determine if there is enough space to draw above the tooltip
-            val drawBelow = bubbleHeight + tailSize + bubbleOffset > anchorRect.top
+            val drawBelow = !forceDrawAbove && bubbleHeight + tailSize + bubbleOffset > anchorRect.top
 
             // Offset bubble if we have to draw below
             if (drawBelow) bubbleRect.offset(0f, bubbleRect.height() + anchorRect.height() + 2 * (bubbleOffset + tailSize))

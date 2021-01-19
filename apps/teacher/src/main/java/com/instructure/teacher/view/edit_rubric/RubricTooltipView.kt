@@ -32,6 +32,8 @@ class RubricTooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : TooltipView(context, attrs, defStyleAttr) {
 
+    override val forceDrawAbove = false
+
     /** Subscription to [ShowRatingDescriptionEvent] */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -21,17 +21,19 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
 
         <TextView
             android:id="@+id/minGrade"
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/slider"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/slider"
             tools:text="0" />
 
         <TextView
@@ -39,23 +41,73 @@
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/slider"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/slider"
             tools:text="10" />
 
         <SeekBar
             android:id="@+id/slider"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:contentDescription="@string/content_description_speed_grader_slider"
+            android:minHeight="40dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintEnd_toStartOf="@id/maxGrade"
             app:layout_constraintStart_toEndOf="@id/minGrade"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/content_description_speed_grader_slider"/>
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/defaultTrackColor"
+            app:layout_constraintTop_toBottomOf="@id/slider"
+            tools:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/noGradeButton"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_comment_attachment"
+            android:contentDescription="@string/no_grade"
+            android:minHeight="0dp"
+            android:text="@string/no_grade"
+            android:textColor="@color/speed_grader_button_text_color"
+            app:layout_constraintEnd_toStartOf="@+id/excuseButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/separator" />
+
+        <Button
+            android:id="@+id/excuseButton"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_comment_attachment"
+            android:contentDescription="@string/excuse"
+            android:minHeight="0dp"
+            android:text="@string/excuse"
+            android:textColor="@color/speed_grader_button_text_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/noGradeButton"
+            app:layout_constraintTop_toBottomOf="@id/separator" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.instructure.teacher.view.grade_slider.PossiblePointView
+        android:id="@+id/pointsPossibleView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <com.instructure.teacher.view.grade_slider.SpeedGraderSliderTooltipView
         android:id="@+id/tooltipView"
@@ -65,4 +117,5 @@
         android:paddingTop="4dp"
         android:paddingEnd="8dp"
         android:paddingBottom="6dp" />
+
 </FrameLayout>

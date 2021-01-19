@@ -20,6 +20,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.util.AttributeSet
+import com.instructure.pandautils.utils.positionOnScreen
 import com.instructure.teacher.view.TooltipView
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -28,6 +29,8 @@ class SpeedGraderSliderTooltipView @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : TooltipView(context, attrs, defStyleAttr) {
 
+    override val forceDrawAbove = true
+
     /** Subscription to [ShowSliderGradeEvent] */
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -35,8 +38,12 @@ class SpeedGraderSliderTooltipView @JvmOverloads constructor(
         if (event.seekBar == null) {
             hideTip()
         } else if (event.assigneeId == assigneeId) {
+            val (x, y) = event.seekBar.positionOnScreen
+            val (thisX, thisY) = positionOnScreen
+            val anchorX = x - thisX + (event.seekBar.width / 2)
+            val anchorY = y - thisY + computeVerticalScrollOffset()
+            val rect = Rect(anchorX, anchorY + (3 * event.seekBar.thumb.intrinsicHeight / 2), anchorX + event.seekBar.thumb.intrinsicWidth, anchorY + event.seekBar.thumb.intrinsicHeight)
             val thumbRect = event.seekBar.thumb.bounds
-            val rect = Rect(thumbRect)
             rect.left = event.seekBar.left + thumbRect.left + event.seekBar.paddingLeft
             showTip(event.description, rect)
         }
