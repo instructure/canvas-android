@@ -34,7 +34,6 @@ class SpeedGraderGradePage : BasePage() {
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
     private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
-    val excuseStudentCheckbox by WaitForViewWithId(R.id.excuseStudentCheckbox)
     private val confirmDialogButton by WaitForViewWithStringText(getStringFromResource(android.R.string.ok).toUpperCase())
 
 
