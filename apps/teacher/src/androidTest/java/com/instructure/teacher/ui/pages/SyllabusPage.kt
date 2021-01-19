@@ -17,8 +17,6 @@
 package com.instructure.teacher.ui.pages
 
 import android.app.Activity
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.assertion.WebViewAssertions
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -28,9 +26,7 @@ import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.comparesEqualTo
@@ -45,19 +41,23 @@ open class SyllabusPage : BasePage(R.id.syllabusPage) {
     }
 
     fun assertEmptyView() {
-        Espresso.onView(ViewMatchers.withId(R.id.syllabusEmptyView)).assertDisplayed()
+        onView(withId(R.id.syllabusEmptyView)).assertDisplayed()
     }
 
     fun selectSummaryTab() {
-        Espresso.onView(containsTextCaseInsensitive("summary")).click()
+        onView(containsTextCaseInsensitive("summary") + withAncestor(R.id.syllabusTabLayout)).click()
+    }
+
+    fun selectSyllabusTab() {
+        onView(containsTextCaseInsensitive("syllabus") + withAncestor(R.id.syllabusTabLayout)).click()
     }
 
     fun selectSummaryEvent(name: String) {
-        Espresso.onView(containsTextCaseInsensitive(name)).click()
+        onView(containsTextCaseInsensitive(name)).click()
     }
 
     fun refresh() {
-        Espresso.onView(allOf(ViewMatchers.withId(R.id.swipeRefreshLayout), withAncestor(R.id.syllabusPage))).swipeDown()
+        onView(allOf(withId(R.id.swipeRefreshLayout), withAncestor(R.id.syllabusPage))).swipeDown()
     }
 
     fun openEditSyllabus() {
