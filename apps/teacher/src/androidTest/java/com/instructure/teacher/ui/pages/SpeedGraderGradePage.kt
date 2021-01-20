@@ -62,4 +62,16 @@ class SpeedGraderGradePage : BasePage() {
         onViewWithId(R.id.rubricEditView).assertGone()
     }
 
+    fun assertRubricVisible() {
+        onViewWithId(R.id.rubricEditView).assertVisible()
+    }
+
+    fun assertSliderVisible() {
+        onViewWithId(R.id.speedGraderSlider).assertVisible()
+    }
+
+    fun assertSliderHidden() {
+        onViewWithId(R.id.speedGraderSlider).assertGone()
+    }
+
 }

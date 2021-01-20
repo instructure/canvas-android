@@ -16,28 +16,68 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
-import com.instructure.teacher.R
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
-import kotlinx.android.synthetic.main.dialog_customize_grade.view.*
 import org.junit.Test
 
 class SpeedGraderGradePageTest : TeacherTest() {
+
 
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertPageObjects()
+    }
+
+    @Test
+    fun correctViewsForPointGradedWithoutRubric() {
+        goToSpeedGraderGradePage("points")
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertRubricHidden()
+    }
+
+    @Test
+    fun correctViewsForPercentageGradedWithoutRubric() {
+        goToSpeedGraderGradePage("percent")
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertRubricHidden()
+    }
+
+    @Test
+    fun correctViewsForPointGradedWithRubric() {
+        goToSpeedGraderGradePage("points", true)
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.assertRubricVisible()
+    }
+
+    @Test
+    fun correctViewsForPercentageGradedWithRubric() {
+        goToSpeedGraderGradePage("percent", true)
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.assertRubricVisible()
+    }
+
+    @Test
+    fun sliderGoneForPassFailAssignment() {
+        goToSpeedGraderGradePage("pass_fail")
+        speedGraderGradePage.assertSliderHidden()
+    }
+
+    @Test
+    fun sliderGoneForLetterGradeAssignment() {
+        goToSpeedGraderGradePage("letter_grade")
+        speedGraderGradePage.assertSliderHidden()
+    }
+
+    @Test
+    fun sliderGoneForGpaScaleAssignment() {
+        goToSpeedGraderGradePage("gpa_scale")
+        speedGraderGradePage.assertSliderHidden()
     }
 
     @Test
@@ -68,7 +108,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
         speedGraderGradePage.assertRubricHidden()
     }
 
-    private fun goToSpeedGraderGradePage() {
+    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -83,8 +123,24 @@ class SpeedGraderGradePageTest : TeacherTest() {
                 courseId = course.id,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
                 pointsPossible = 20,
-                gradingType = "points"
+                gradingType = gradingType
         )
+
+        if (hasRubric) {
+            val rubricCriterion = RubricCriterion(
+                    id = data.newItemId().toString(),
+                    description = "Description of criterion",
+                    longDescription = "0, 3, 7 or 10 points",
+                    points = 10.0,
+                    ratings = mutableListOf(
+                            RubricCriterionRating(id="1",points=0.0,description="No Marks", longDescription = "Really?"),
+                            RubricCriterionRating(id="2",points=3.0,description="Meh", longDescription = "You're better than this!"),
+                            RubricCriterionRating(id="3",points=7.0,description="Passable", longDescription = "Getting there!"),
+                            RubricCriterionRating(id="4",points=10.0,description="Full Marks", longDescription = "Way to go!")
+                    )
+            )
+            data.addRubricToAssignment(assignment.id, listOf(rubricCriterion))
+        }
 
         val submission = data.addSubmissionForAssignment(
                 assignmentId = assignment.id,
