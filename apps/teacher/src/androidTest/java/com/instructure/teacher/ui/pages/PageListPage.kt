@@ -15,17 +15,18 @@
  */
 package com.instructure.teacher.ui.pages
 
+import android.view.View
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.matcher.ViewMatchers.*
+import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvasapi2.models.Page
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.RecyclerViewItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.waitForCheck
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
+import org.hamcrest.Matchers.containsString
 
 class PageListPage : BasePage() {
 
@@ -41,6 +42,12 @@ class PageListPage : BasePage() {
         waitForViewWithText(page.title!!).assertDisplayed()
     }
 
+    fun openPage(pageTitle: String) {
+        val matcher = getPageMatcherByTitle(pageTitle = pageTitle)
+        scrollRecyclerView(R.id.pageRecyclerView, matcher)
+        onView(matcher).click()
+    }
+
     fun openSearch() {
         searchButton.click()
     }
@@ -53,4 +60,51 @@ class PageListPage : BasePage() {
         pageRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
     }
 
+    fun assertFrontPageDisplayed(pageTitle: String) {
+        val matcher = getFrontPageMatcher(pageTitle = pageTitle)
+        scrollRecyclerView(R.id.pageRecyclerView, matcher)
+        Espresso.onView(matcher).assertDisplayed()
+    }
+
+    fun assertPageDisplayed(pageTitle: String) {
+        assertCommonPageDisplayed(pageTitle)
+    }
+
+    fun assertPageIsUnpublished(pageTitle: String) {
+        checkPagePublishedStatus(pageTitle = pageTitle, published = false)
+    }
+
+    fun assertPageIsPublished(pageTitle: String) {
+        checkPagePublishedStatus(pageTitle = pageTitle, published = true)
+    }
+
+    private fun checkPagePublishedStatus(pageTitle: String, published: Boolean) {
+        onView(allOf(
+                withId(R.id.pageLayout),
+                withContentDescription(containsString(pageTitle)),
+                withContentDescription(containsString(if(published) "Published" else "Unpublished"))))
+                .assertDisplayed()
+    }
+    private fun assertCommonPageDisplayed(pageTitle: String) {
+        val matcher = getPageMatcherByTitle(pageTitle)
+        scrollRecyclerView(R.id.pageRecyclerView, matcher)
+        onView(matcher).assertDisplayed()
+    }
+
+    private fun getPageMatcherByTitle(pageTitle: String) : Matcher<View> {
+        return allOf(
+                withId(R.id.pageTitle),
+                withText(pageTitle)
+        )
+    }
+
+    private fun getFrontPageMatcher(pageTitle: String) : Matcher<View> {
+        return allOf(
+                withId(R.id.pageTitle),
+                withText(pageTitle),
+                hasSibling(allOf(
+                        withId(R.id.statusIndicator),
+                        withText(R.string.frontPage)
+                )))
+    }
 }
