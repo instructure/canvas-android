@@ -31,6 +31,8 @@ class SpeedGraderGradePage : BasePage() {
     private val addGradeIcon by WaitForViewWithId(R.id.addGradeIcon)
     private val gradeValueText by WaitForViewWithId(R.id.gradeValueText)
 
+    private val slider by OnViewWithId(R.id.speedGraderSlider)
+
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
     private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
@@ -67,11 +69,19 @@ class SpeedGraderGradePage : BasePage() {
     }
 
     fun assertSliderVisible() {
-        onViewWithId(R.id.speedGraderSlider).assertVisible()
+        slider.assertVisible()
     }
 
     fun assertSliderHidden() {
-        onViewWithId(R.id.speedGraderSlider).assertGone()
+        slider.assertGone()
+    }
+
+    fun assertCheckboxVisible() {
+        onViewWithId(R.id.excuseStudentCheckbox).assertVisible()
+    }
+
+    fun assertCheckboxHidden() {
+        onViewWithId(R.id.excuseStudentCheckbox).assertGone()
     }
 
 }

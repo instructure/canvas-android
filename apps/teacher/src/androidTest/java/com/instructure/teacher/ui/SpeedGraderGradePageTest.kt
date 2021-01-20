@@ -39,6 +39,9 @@ class SpeedGraderGradePageTest : TeacherTest() {
         goToSpeedGraderGradePage("points")
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxHidden()
     }
 
     @Test
@@ -46,6 +49,9 @@ class SpeedGraderGradePageTest : TeacherTest() {
         goToSpeedGraderGradePage("percent")
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxHidden()
     }
 
     @Test
@@ -53,6 +59,9 @@ class SpeedGraderGradePageTest : TeacherTest() {
         goToSpeedGraderGradePage("points", true)
         speedGraderGradePage.assertSliderHidden()
         speedGraderGradePage.assertRubricVisible()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
@@ -60,24 +69,36 @@ class SpeedGraderGradePageTest : TeacherTest() {
         goToSpeedGraderGradePage("percent", true)
         speedGraderGradePage.assertSliderHidden()
         speedGraderGradePage.assertRubricVisible()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
-    fun sliderGoneForPassFailAssignment() {
+    fun correctViewsForPassFailAssignment() {
         goToSpeedGraderGradePage("pass_fail")
         speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
-    fun sliderGoneForLetterGradeAssignment() {
+    fun correctViewsForLetterGradeAssignment() {
         goToSpeedGraderGradePage("letter_grade")
         speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
-    fun sliderGoneForGpaScaleAssignment() {
+    fun correctViewsForGpaScaleAssignment() {
         goToSpeedGraderGradePage("gpa_scale")
         speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
