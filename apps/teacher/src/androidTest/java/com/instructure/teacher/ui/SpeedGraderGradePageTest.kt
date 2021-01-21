@@ -36,8 +36,11 @@ class SpeedGraderGradePageTest : TeacherTest() {
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
-        goToSpeedGraderGradePage("points")
+        val possiblePoint = 20
+        goToSpeedGraderGradePage(gradingType = "points", pointsPossible = possiblePoint)
         speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSliderMinValue("0")
+        speedGraderGradePage.assertSliderMaxValue(possiblePoint.toString())
         speedGraderGradePage.assertRubricHidden()
         speedGraderGradePage.openGradeDialog()
         speedGraderGradePage.assertGradeDialog()
@@ -48,6 +51,8 @@ class SpeedGraderGradePageTest : TeacherTest() {
     fun correctViewsForPercentageGradedWithoutRubric() {
         goToSpeedGraderGradePage("percent")
         speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSliderMinValue("0%")
+        speedGraderGradePage.assertSliderMaxValue("100%")
         speedGraderGradePage.assertRubricHidden()
         speedGraderGradePage.openGradeDialog()
         speedGraderGradePage.assertGradeDialog()
@@ -110,7 +115,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
 
     @Test
     fun displaysNewGrade() {
-        if(isLowResDevice()) {
+        if (isLowResDevice()) {
             // We don't want to run accessibility tests on this device, because it's impossible to
             // make all touch targets in the openGradeDialog 48dp high
             Log.v("SkippedTest", "SpeedGraderGradePageTest.displaysNewGrade skipped due to low resolution")
@@ -129,7 +134,19 @@ class SpeedGraderGradePageTest : TeacherTest() {
         speedGraderGradePage.assertRubricHidden()
     }
 
-    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false) {
+    @Test
+    fun overgradePointAssignment() {
+        val pointsPossible = 20
+        goToSpeedGraderGradePage(pointsPossible = pointsPossible)
+        speedGraderGradePage.openGradeDialog()
+        val grade = 28.6
+        speedGraderGradePage.enterNewGrade(grade.toString())
+        speedGraderGradePage.assertHasGrade(grade.toString())
+        speedGraderGradePage.assertHasOvergradeWarning(grade - pointsPossible)
+        speedGraderGradePage.assertSliderMaxValue(grade.toInt().toString())
+    }
+
+    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -143,7 +160,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
         val assignment = data.addAssignment(
                 courseId = course.id,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                pointsPossible = 20,
+                pointsPossible = pointsPossible,
                 gradingType = gradingType
         )
 
@@ -154,10 +171,10 @@ class SpeedGraderGradePageTest : TeacherTest() {
                     longDescription = "0, 3, 7 or 10 points",
                     points = 10.0,
                     ratings = mutableListOf(
-                            RubricCriterionRating(id="1",points=0.0,description="No Marks", longDescription = "Really?"),
-                            RubricCriterionRating(id="2",points=3.0,description="Meh", longDescription = "You're better than this!"),
-                            RubricCriterionRating(id="3",points=7.0,description="Passable", longDescription = "Getting there!"),
-                            RubricCriterionRating(id="4",points=10.0,description="Full Marks", longDescription = "Way to go!")
+                            RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
+                            RubricCriterionRating(id = "2", points = 3.0, description = "Meh", longDescription = "You're better than this!"),
+                            RubricCriterionRating(id = "3", points = 7.0, description = "Passable", longDescription = "Getting there!"),
+                            RubricCriterionRating(id = "4", points = 10.0, description = "Full Marks", longDescription = "Way to go!")
                     )
             )
             data.addRubricToAssignment(assignment.id, listOf(rubricCriterion))

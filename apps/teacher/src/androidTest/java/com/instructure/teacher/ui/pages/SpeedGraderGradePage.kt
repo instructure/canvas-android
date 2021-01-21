@@ -21,6 +21,7 @@ import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
+import java.text.DecimalFormat
 
 class SpeedGraderGradePage : BasePage() {
 
@@ -82,6 +83,19 @@ class SpeedGraderGradePage : BasePage() {
 
     fun assertCheckboxHidden() {
         onViewWithId(R.id.excuseStudentCheckbox).assertGone()
+    }
+
+    fun assertSliderMaxValue(value: String) {
+        onView(Matchers.allOf((withId(R.id.maxGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+    }
+
+    fun assertSliderMinValue(value: String) {
+        onView(Matchers.allOf((withId(R.id.minGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+    }
+
+    fun assertHasOvergradeWarning(overgradedBy: Double) {
+        val numberFormatter = DecimalFormat("##.##")
+        onView(Matchers.allOf((withId(R.id.gradeText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.speed_grader_overgraded_by, numberFormatter.format(overgradedBy)))
     }
 
 }
