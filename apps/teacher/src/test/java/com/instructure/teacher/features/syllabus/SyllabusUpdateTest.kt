@@ -156,42 +156,11 @@ class SyllabusUpdateTest {
     }
 
     @Test
-    fun `SyllabusUpdatedEvent should load data if summary allowed was changed`() {
+    fun `SyllabusUpdatedEvent should load data if syllabus was updated`() {
         val expectedModel = initModel.copy(isLoading = true)
         updateSpec
             .given(initModel)
             .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = true, content = "Web Content"))
-            .then(
-                UpdateSpec.assertThatNext(
-                    NextMatchers.hasModel(expectedModel),
-                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.LoadData(course.id, true))
-                )
-            )
-    }
-
-    @Test
-    fun `SyllabusUpdatedEvent should create new model with updated syllabus if summary allowed was not changed`() {
-        val givenModel = initModel.copy(course = DataResult.Success(course))
-
-        val courseResult = DataResult.Success(course.copy(syllabusBody = "New Syllabus Body"))
-        val syllabus = ScheduleItem.createSyllabus(course.name, "New Syllabus Body")
-        val expectedModel = initModel.copy(course = courseResult, syllabus = syllabus)
-
-        updateSpec
-            .given(givenModel)
-            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = false, content = "New Syllabus Body"))
-            .then(
-                UpdateSpec.assertThatNext(NextMatchers.hasModel(expectedModel))
-            )
-    }
-
-    @Test
-    fun `SyllabusUpdatedEvent should load data if summary allowed was not changed but content is empty`() {
-        val expectedModel = initModel.copy(isLoading = true)
-
-        updateSpec
-            .given(initModel)
-            .whenEvent(SyllabusEvent.SyllabusUpdatedEvent(summaryAllowed = false, content = ""))
             .then(
                 UpdateSpec.assertThatNext(
                     NextMatchers.hasModel(expectedModel),
