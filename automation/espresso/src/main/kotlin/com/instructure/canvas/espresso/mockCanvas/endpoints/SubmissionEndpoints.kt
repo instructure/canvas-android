@@ -166,6 +166,7 @@ object SubmissionUserEndpoint : Endpoint(
                 val comment = request.url().queryParameter("comment[text_comment]")
                 val user = request.user!!
                 val grade = request.url().queryParameter("submission[posted_grade]")
+                val excused = request.url().queryParameter("submission[excuse]")
                 if (comment != null && comment.length > 0) {
                     val newCommentList = mutableListOf<SubmissionComment>().apply { addAll(submission.submissionComments) }
                     newCommentList.add(SubmissionComment(
@@ -182,8 +183,7 @@ object SubmissionUserEndpoint : Endpoint(
                     submission.submissionComments = newCommentList
                     Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")
                     request.successResponse(submission)
-                }
-                else if (grade != null) {
+                } else if (grade != null) {
                     val assignment = data.assignments[pathVars.assignmentId]!!
                     val updatedSubmission = submission.copy(
                             grade = grade,
@@ -191,15 +191,29 @@ object SubmissionUserEndpoint : Endpoint(
                                 "points" -> grade.toDouble() // For "points" and "percent" grades, let's be accurate
                                 "percent" -> grade.toDouble()
                                 else -> 90.0 // for everything else, make something up for now
-                            }
+                            },
+                            excused = false
+                    )
+                    data.submissions[pathVars.assignmentId]?.remove(submission)
+                    data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
+                    request.successResponse(updatedSubmission)
+                } else if (excused == "true") {
+                    val updatedSubmission = submission.copy(
+                            grade = null,
+                            excused = true
                     )
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
                     request.successResponse(updatedSubmission)
                 }
                 else {
-                    // We don't know why we're here
-                    throw Exception("Unhandled submission-user-put")
+                    val updatedSubmission = submission.copy(
+                            grade = null,
+                            excused = false
+                    )
+                    data.submissions[pathVars.assignmentId]?.remove(submission)
+                    data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
+                    request.successResponse(updatedSubmission)
                 }
             }
             else {

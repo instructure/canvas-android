@@ -15,12 +15,15 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.not
 import java.text.DecimalFormat
 
 class SpeedGraderGradePage : BasePage() {
@@ -96,6 +99,22 @@ class SpeedGraderGradePage : BasePage() {
     fun assertHasOvergradeWarning(overgradedBy: Double) {
         val numberFormatter = DecimalFormat("##.##")
         onView(Matchers.allOf((withId(R.id.gradeText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.speed_grader_overgraded_by, numberFormatter.format(overgradedBy)))
+    }
+
+    fun clickExcuseStudentButton() {
+        onViewWithId(R.id.excuseButton).click()
+    }
+
+    fun assertStudentExcused() {
+        waitForView(Matchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.excused))
+    }
+
+    fun assertExcuseButtonEnabled() {
+        onViewWithId(R.id.excuseButton).check(matches(isEnabled()))
+    }
+
+    fun assertExcuseButtonDisabled() {
+        onViewWithId(R.id.excuseButton).check(matches(not(isEnabled())))
     }
 
 }

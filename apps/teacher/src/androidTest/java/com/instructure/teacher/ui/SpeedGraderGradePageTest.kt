@@ -146,6 +146,15 @@ class SpeedGraderGradePageTest : TeacherTest() {
         speedGraderGradePage.assertSliderMaxValue(grade.toInt().toString())
     }
 
+    @Test
+    fun excuseStudentCheckbox() {
+        goToSpeedGraderGradePage()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+        speedGraderGradePage.clickExcuseStudentButton()
+        speedGraderGradePage.assertStudentExcused()
+        speedGraderGradePage.assertExcuseButtonDisabled()
+    }
+
     private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
