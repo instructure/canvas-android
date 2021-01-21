@@ -33,6 +33,8 @@ import com.instructure.student.interfaces.ModuleAdapterToFragmentCallback
 import com.instructure.student.util.ModuleUtility
 import kotlinx.android.synthetic.main.viewholder_module.view.*
 
+private const val MODULE_INDENT_IN_DP = 10
+
 class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     fun bind(
@@ -48,6 +50,9 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         setOnClickListener {
             adapterToFragmentCallback?.onRowClicked(moduleObject!!, moduleItem, adapterPosition, true)
         }
+
+        val indentInPx = context.DP(MODULE_INDENT_IN_DP).toInt()
+        moduleItemIndent.layoutParams.width = indentInPx * moduleItem.indent
 
         // Title
         title.text = moduleItem.title
