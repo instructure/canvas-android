@@ -366,7 +366,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         CookieManager.getInstance().acceptThirdPartyCookies(webView)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun routeInternallyCallback(url: String) {
-                if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)) {
+                if (!RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, routeIfPossible = true, allowUnsupported = false)) {
                     RouteMatcher.route(requireContext(), InternalWebviewFragment.makeRoute(url, url, false, ""))
                 }
             }
