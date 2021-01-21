@@ -16,28 +16,94 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockCanvas.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertGone
-import com.instructure.teacher.R
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.tokenLogin
-import kotlinx.android.synthetic.main.dialog_customize_grade.view.*
 import org.junit.Test
 
 class SpeedGraderGradePageTest : TeacherTest() {
+
 
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertPageObjects()
+    }
+
+    @Test
+    fun correctViewsForPointGradedWithoutRubric() {
+        val possiblePoint = 20
+        goToSpeedGraderGradePage(gradingType = "points", pointsPossible = possiblePoint)
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSliderMinValue("0")
+        speedGraderGradePage.assertSliderMaxValue(possiblePoint.toString())
+        speedGraderGradePage.assertRubricHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxHidden()
+    }
+
+    @Test
+    fun correctViewsForPercentageGradedWithoutRubric() {
+        goToSpeedGraderGradePage("percent")
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSliderMinValue("0%")
+        speedGraderGradePage.assertSliderMaxValue("100%")
+        speedGraderGradePage.assertRubricHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxHidden()
+    }
+
+    @Test
+    fun correctViewsForPointGradedWithRubric() {
+        goToSpeedGraderGradePage("points", true)
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.assertRubricVisible()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
+    }
+
+    @Test
+    fun correctViewsForPercentageGradedWithRubric() {
+        goToSpeedGraderGradePage("percent", true)
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.assertRubricVisible()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
+    }
+
+    @Test
+    fun correctViewsForPassFailAssignment() {
+        goToSpeedGraderGradePage("pass_fail")
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
+    }
+
+    @Test
+    fun correctViewsForLetterGradeAssignment() {
+        goToSpeedGraderGradePage("letter_grade")
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
+    }
+
+    @Test
+    fun correctViewsForGpaScaleAssignment() {
+        goToSpeedGraderGradePage("gpa_scale")
+        speedGraderGradePage.assertSliderHidden()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.assertGradeDialog()
+        speedGraderGradePage.assertCheckboxVisible()
     }
 
     @Test
@@ -49,7 +115,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
 
     @Test
     fun displaysNewGrade() {
-        if(isLowResDevice()) {
+        if (isLowResDevice()) {
             // We don't want to run accessibility tests on this device, because it's impossible to
             // make all touch targets in the openGradeDialog 48dp high
             Log.v("SkippedTest", "SpeedGraderGradePageTest.displaysNewGrade skipped due to low resolution")
@@ -68,7 +134,40 @@ class SpeedGraderGradePageTest : TeacherTest() {
         speedGraderGradePage.assertRubricHidden()
     }
 
-    private fun goToSpeedGraderGradePage() {
+    @Test
+    fun overgradePointAssignment() {
+        val pointsPossible = 20
+        goToSpeedGraderGradePage(pointsPossible = pointsPossible)
+        speedGraderGradePage.openGradeDialog()
+        val grade = 28.6
+        speedGraderGradePage.enterNewGrade(grade.toString())
+        speedGraderGradePage.assertHasGrade(grade.toString())
+        speedGraderGradePage.assertHasOvergradeWarning(grade - pointsPossible)
+        speedGraderGradePage.assertSliderMaxValue(grade.toInt().toString())
+    }
+
+    @Test
+    fun excuseStudent() {
+        goToSpeedGraderGradePage()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+        speedGraderGradePage.clickExcuseStudentButton()
+        speedGraderGradePage.assertStudentExcused()
+        speedGraderGradePage.assertExcuseButtonDisabled()
+    }
+
+    @Test
+    fun clearGrade() {
+        goToSpeedGraderGradePage()
+        speedGraderGradePage.assertNoGradeButtonDisabled()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.enterNewGrade("15")
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.clickNoGradeButton()
+        speedGraderGradePage.assertNoGradeButtonDisabled()
+        speedGraderGradePage.assertHasNoGrade()
+    }
+
+    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -82,9 +181,25 @@ class SpeedGraderGradePageTest : TeacherTest() {
         val assignment = data.addAssignment(
                 courseId = course.id,
                 submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
-                pointsPossible = 20,
-                gradingType = "points"
+                pointsPossible = pointsPossible,
+                gradingType = gradingType
         )
+
+        if (hasRubric) {
+            val rubricCriterion = RubricCriterion(
+                    id = data.newItemId().toString(),
+                    description = "Description of criterion",
+                    longDescription = "0, 3, 7 or 10 points",
+                    points = 10.0,
+                    ratings = mutableListOf(
+                            RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
+                            RubricCriterionRating(id = "2", points = 3.0, description = "Meh", longDescription = "You're better than this!"),
+                            RubricCriterionRating(id = "3", points = 7.0, description = "Passable", longDescription = "Getting there!"),
+                            RubricCriterionRating(id = "4", points = 10.0, description = "Full Marks", longDescription = "Way to go!")
+                    )
+            )
+            data.addRubricToAssignment(assignment.id, listOf(rubricCriterion))
+        }
 
         val submission = data.addSubmissionForAssignment(
                 assignmentId = assignment.id,

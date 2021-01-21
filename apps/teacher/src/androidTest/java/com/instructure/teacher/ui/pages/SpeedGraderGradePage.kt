@@ -15,12 +15,16 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.not
+import java.text.DecimalFormat
 
 class SpeedGraderGradePage : BasePage() {
 
@@ -30,6 +34,8 @@ class SpeedGraderGradePage : BasePage() {
 
     private val addGradeIcon by WaitForViewWithId(R.id.addGradeIcon)
     private val gradeValueText by WaitForViewWithId(R.id.gradeValueText)
+
+    private val slider by OnViewWithId(R.id.speedGraderSlider)
 
     //dialog views
     private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
@@ -60,6 +66,72 @@ class SpeedGraderGradePage : BasePage() {
 
     fun assertRubricHidden() {
         onViewWithId(R.id.rubricEditView).assertGone()
+    }
+
+    fun assertRubricVisible() {
+        onViewWithId(R.id.rubricEditView).assertVisible()
+    }
+
+    fun assertSliderVisible() {
+        slider.assertVisible()
+    }
+
+    fun assertSliderHidden() {
+        slider.assertGone()
+    }
+
+    fun assertCheckboxVisible() {
+        onViewWithId(R.id.excuseStudentCheckbox).assertVisible()
+    }
+
+    fun assertCheckboxHidden() {
+        onViewWithId(R.id.excuseStudentCheckbox).assertGone()
+    }
+
+    fun assertSliderMaxValue(value: String) {
+        onView(Matchers.allOf((withId(R.id.maxGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+    }
+
+    fun assertSliderMinValue(value: String) {
+        onView(Matchers.allOf((withId(R.id.minGrade)), ViewMatchers.isDisplayed())).assertContainsText(value)
+    }
+
+    fun assertHasOvergradeWarning(overgradedBy: Double) {
+        val numberFormatter = DecimalFormat("##.##")
+        onView(Matchers.allOf((withId(R.id.gradeText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.speed_grader_overgraded_by, numberFormatter.format(overgradedBy)))
+    }
+
+    fun clickExcuseStudentButton() {
+        onViewWithId(R.id.excuseButton).click()
+    }
+
+    fun assertStudentExcused() {
+        waitForView(Matchers.allOf((withId(R.id.gradeValueText)), ViewMatchers.isDisplayed())).assertHasText(getStringFromResource(R.string.excused))
+    }
+
+    fun assertExcuseButtonEnabled() {
+        onViewWithId(R.id.excuseButton).check(matches(isEnabled()))
+    }
+
+    fun assertExcuseButtonDisabled() {
+        onViewWithId(R.id.excuseButton).check(matches(not(isEnabled())))
+    }
+
+    fun assertNoGradeButtonEnabled() {
+        onViewWithId(R.id.noGradeButton).check(matches(isEnabled()))
+    }
+
+    fun assertNoGradeButtonDisabled() {
+        onViewWithId(R.id.noGradeButton).check(matches(not(isEnabled())))
+    }
+
+    fun clickNoGradeButton() {
+        onViewWithId(R.id.noGradeButton).click()
+    }
+
+    fun assertHasNoGrade() {
+        onViewWithId(R.id.gradeValueText).assertGone()
+        onViewWithId(R.id.addGradeIcon).assertVisible()
     }
 
 }
