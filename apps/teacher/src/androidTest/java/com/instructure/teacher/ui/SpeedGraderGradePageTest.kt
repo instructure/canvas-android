@@ -147,12 +147,24 @@ class SpeedGraderGradePageTest : TeacherTest() {
     }
 
     @Test
-    fun excuseStudentCheckbox() {
+    fun excuseStudent() {
         goToSpeedGraderGradePage()
         speedGraderGradePage.assertExcuseButtonEnabled()
         speedGraderGradePage.clickExcuseStudentButton()
         speedGraderGradePage.assertStudentExcused()
         speedGraderGradePage.assertExcuseButtonDisabled()
+    }
+
+    @Test
+    fun clearGrade() {
+        goToSpeedGraderGradePage()
+        speedGraderGradePage.assertNoGradeButtonDisabled()
+        speedGraderGradePage.openGradeDialog()
+        speedGraderGradePage.enterNewGrade("15")
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.clickNoGradeButton()
+        speedGraderGradePage.assertNoGradeButtonDisabled()
+        speedGraderGradePage.assertHasNoGrade()
     }
 
     private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20) {

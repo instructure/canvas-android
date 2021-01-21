@@ -117,4 +117,21 @@ class SpeedGraderGradePage : BasePage() {
         onViewWithId(R.id.excuseButton).check(matches(not(isEnabled())))
     }
 
+    fun assertNoGradeButtonEnabled() {
+        onViewWithId(R.id.noGradeButton).check(matches(isEnabled()))
+    }
+
+    fun assertNoGradeButtonDisabled() {
+        onViewWithId(R.id.noGradeButton).check(matches(not(isEnabled())))
+    }
+
+    fun clickNoGradeButton() {
+        onViewWithId(R.id.noGradeButton).click()
+    }
+
+    fun assertHasNoGrade() {
+        onViewWithId(R.id.gradeValueText).assertGone()
+        onViewWithId(R.id.addGradeIcon).assertVisible()
+    }
+
 }

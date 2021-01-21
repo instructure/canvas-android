@@ -183,7 +183,7 @@ object SubmissionUserEndpoint : Endpoint(
                     submission.submissionComments = newCommentList
                     Log.d("<--", "put-submission-user comments: ${submission.submissionComments.joinToString()}")
                     request.successResponse(submission)
-                } else if (grade != null) {
+                } else if (grade != null && grade != "Not Graded") {
                     val assignment = data.assignments[pathVars.assignmentId]!!
                     val updatedSubmission = submission.copy(
                             grade = grade,
@@ -205,8 +205,7 @@ object SubmissionUserEndpoint : Endpoint(
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
                     request.successResponse(updatedSubmission)
-                }
-                else {
+                } else if (grade == "Not Graded") {
                     val updatedSubmission = submission.copy(
                             grade = null,
                             excused = false
@@ -214,6 +213,9 @@ object SubmissionUserEndpoint : Endpoint(
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
                     request.successResponse(updatedSubmission)
+                } else {
+                    // We don't know why we're here
+                    throw Exception("Unhandled submission-user-put")
                 }
             }
             else {
