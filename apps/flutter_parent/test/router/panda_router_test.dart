@@ -25,6 +25,7 @@ import 'package:flutter_parent/screens/announcements/announcement_details_screen
 import 'package:flutter_parent/screens/assignments/assignment_details_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
+import 'package:flutter_parent/screens/courses/details/course_details_interactor.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
@@ -417,6 +418,15 @@ void main() {
 
     test('returns course details ', () {
       final url = 'https://test.instructure.com/courses/123';
+      final widget = _getWidgetFromRoute(
+        _rootWithUrl(url),
+      );
+
+      expect(widget, isA<CourseDetailsScreen>());
+    });
+
+    test('returns course details for grades', () {
+      final url = 'https://test.instructure.com/courses/123/grades';
       final widget = _getWidgetFromRoute(
         _rootWithUrl(url),
       );
