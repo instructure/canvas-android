@@ -28,6 +28,7 @@ import 'package:flutter_parent/screens/assignments/assignment_details_screen.dar
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/details/course_details_screen.dart';
+import 'package:flutter_parent/screens/courses/details/course_grades_screen.dart';
 import 'package:flutter_parent/screens/courses/routing_shell/course_routing_shell_screen.dart';
 import 'package:flutter_parent/screens/dashboard/dashboard_screen.dart';
 import 'package:flutter_parent/screens/domain_search/domain_search_screen.dart';
@@ -98,6 +99,8 @@ class PandaRouter {
   static String frontPage(String courseId) => '/courses/$courseId/pages/first-page';
 
   static String frontPageWiki(String courseId) => '/courses/$courseId/wiki';
+
+  static String gradesPage(String courseId) => '/courses/$courseId/grades';
 
   static String help() => '/help';
 
@@ -187,6 +190,7 @@ class PandaRouter {
       router.define(eventDetails(':${_RouterKeys.courseId}', ':${_RouterKeys.eventId}'), handler: _eventDetailsHandler);
       router.define(frontPage(':${_RouterKeys.courseId}'), handler: _frontPageHandler);
       router.define(frontPageWiki(':${_RouterKeys.courseId}'), handler: _frontPageHandler);
+      router.define(gradesPage(':${_RouterKeys.courseId}'), handler: _gradesPageHandler);
       router.define(help(), handler: _helpHandler);
       router.define(institutionAnnouncementDetails(':${_RouterKeys.accountNotificationId}'),
           handler: _institutionAnnouncementDetailsHandler);
@@ -285,6 +289,10 @@ class PandaRouter {
 
   static Handler _frontPageHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
     return CourseRoutingShellScreen(params[_RouterKeys.courseId][0], CourseShellType.frontPage);
+  });
+
+  static Handler _gradesPageHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
+    return CourseDetailsScreen(params[_RouterKeys.courseId][0]);
   });
 
   static Handler _helpHandler = Handler(handlerFunc: (BuildContext context, Map<String, List<String>> params) {
