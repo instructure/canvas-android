@@ -597,11 +597,15 @@ class SubmissionContentView(
                     @Suppress("NON_EXHAUSTIVE_WHEN") //we don't want to update for all states, just these three
                     when (newState) {
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
+                            submissionVersionsButton?.isClickable = true
                             postPanelEvent(newState, 0.5f)
                         }
-                        SlidingUpPanelLayout.PanelState.EXPANDED ->
+                        SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                            submissionVersionsButton?.isClickable = false
                             postPanelEvent(newState, 1.0f)
+                        }
                         SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                                submissionVersionsButton?.isClickable = true
                             //fix for rotating when the panel is collapsed
                             pdfFragment?.notifyLayoutChanged()
                             postPanelEvent(newState, 0.0f)
