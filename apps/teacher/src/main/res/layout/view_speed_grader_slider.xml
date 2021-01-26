@@ -69,37 +69,56 @@
             app:layout_constraintTop_toBottomOf="@id/slider"
             tools:layout_height="1dp" />
 
-        <Button
-            android:id="@+id/noGradeButton"
+        <!-- Had to add these FrameLayouts for accessible touch target. -->
+        <FrameLayout
+            android:id="@+id/noGradeButtonWrapper"
             android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/bg_comment_attachment"
-            android:contentDescription="@string/no_grade"
-            android:minHeight="0dp"
-            android:text="@string/no_grade"
-            android:textColor="@color/speed_grader_button_text_color"
-            app:layout_constraintEnd_toStartOf="@+id/excuseButton"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/excuseButtonWrapper"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintTop_toBottomOf="@id/separator" >
 
-        <Button
-            android:id="@+id/excuseButton"
+            <Button
+                android:id="@+id/noGradeButton"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_comment_attachment"
+                android:contentDescription="@string/no_grade"
+                android:minHeight="0dp"
+                android:text="@string/no_grade"
+                android:textColor="@color/speed_grader_button_text_color" />
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/excuseButtonWrapper"
             android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/bg_comment_attachment"
-            android:contentDescription="@string/excuse"
-            android:minHeight="0dp"
-            android:text="@string/excuse"
-            android:textColor="@color/speed_grader_button_text_color"
+            android:layout_height="wrap_content"
+            android:paddingBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/noGradeButton"
-            app:layout_constraintTop_toBottomOf="@id/separator" />
+            app:layout_constraintStart_toEndOf="@id/noGradeButtonWrapper"
+            app:layout_constraintTop_toBottomOf="@id/separator">
+
+            <Button
+                android:id="@+id/excuseButton"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/bg_comment_attachment"
+                android:contentDescription="@string/excuse"
+                android:minHeight="0dp"
+                android:text="@string/excuse"
+                android:textColor="@color/speed_grader_button_text_color" />
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

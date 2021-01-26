@@ -19,7 +19,6 @@ package com.instructure.teacher.view.grade_slider
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.view.TouchDelegate
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.SeekBar
@@ -27,9 +26,9 @@ import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.utils.accessibleTouchTarget
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
 import com.instructure.teacher.R
 import kotlinx.android.synthetic.main.view_speed_grader_slider.view.*
 import org.greenrobot.eventbus.EventBus
@@ -52,40 +51,21 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
     init {
         View.inflate(context, R.layout.view_speed_grader_slider, this)
-        post {
-            val delegateArea = Rect()
-            noGradeButton.apply {
-                setOnClickListener {
-                    notGraded = true
-                    updateGrade(null)
-                }
-                getHitRect(delegateArea)
-            }
 
-            delegateArea.top -= 6.toPx
-            delegateArea.bottom += 6.toPx
-
-            noGradeButton.parent.apply {
-                touchDelegate = TouchDelegate(delegateArea, noGradeButton)
+        noGradeButton.apply {
+            setOnClickListener {
+                notGraded = true
+                updateGrade(null)
             }
+            accessibleTouchTarget()
         }
 
-        post {
-            val delegateArea = Rect()
-            excuseButton.apply {
-                setOnClickListener {
-                    isExcused = true
-                    updateGrade(null)
-                }
-                getHitRect(delegateArea)
+        excuseButton.apply {
+            setOnClickListener {
+                isExcused = true
+                updateGrade(null)
             }
-
-            delegateArea.top -= 6.toPx
-            delegateArea.bottom += 6.toPx
-
-            excuseButton.parent.apply {
-                touchDelegate = TouchDelegate(delegateArea, excuseButton)
-            }
+            accessibleTouchTarget()
         }
 
         slider.max = 0
