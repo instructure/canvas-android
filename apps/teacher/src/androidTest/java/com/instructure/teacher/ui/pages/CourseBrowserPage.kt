@@ -22,15 +22,13 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import org.hamcrest.Description
 import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 
 class CourseBrowserPage : BasePage() {
 
@@ -104,5 +102,21 @@ class CourseBrowserPage : BasePage() {
     fun openSyllabus() {
         scrollDownToCourseBrowser()
         waitForViewWithText("Syllabus").click()
+    }
+
+    fun openModulesTab() {
+        //modules sits at the end of the list, so on smaller resolutions it may be necessary to scroll down twitce
+        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser()
+        waitForViewWithText("Modules").click()
+    }
+
+    fun assertCourseBrowserPageDisplayed() {
+        onView(withId(R.id.courseBrowserRecyclerView)).assertDisplayed()
+        onView(withId(R.id.courseBrowserTitle)).assertDisplayed()
+    }
+
+    fun refresh() {
+        onView(allOf(withId(R.id.swipeRefreshLayout))).swipeDown()
     }
 }
