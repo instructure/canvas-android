@@ -81,6 +81,8 @@
             android:minHeight="0dp"
             android:text="@string/no_grade"
             android:textColor="@color/speed_grader_button_text_color"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/excuseButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/separator" />
@@ -97,6 +99,8 @@
             android:minHeight="0dp"
             android:text="@string/excuse"
             android:textColor="@color/speed_grader_button_text_color"
+            android:layout_marginBottom="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/noGradeButton"
             app:layout_constraintTop_toBottomOf="@id/separator" />

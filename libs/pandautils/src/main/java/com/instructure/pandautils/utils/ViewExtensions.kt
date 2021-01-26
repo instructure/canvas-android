@@ -696,7 +696,7 @@ val Attachment.iconRes: Int
             "rtf" -> R.drawable.ic_document
             "pdf" -> R.drawable.ic_pdf
             "xls" -> R.drawable.ic_document
-            "zip","tar", "7z", "apk", "jar", "rar" -> R.drawable.ic_attachment
+            "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.ic_attachment
             else -> R.drawable.ic_attachment
         }
     }
@@ -706,3 +706,33 @@ val Int.toDp: Int
 
 val Int.toPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+private const val ACCESSIBILITY_MIN_DIMENSION_IN_DP = 48
+
+fun View.accessibleTouchTarget() {
+    post {
+        val delegateArea = Rect()
+        getHitRect(delegateArea)
+
+        val accessibilityMin = context.DP(ACCESSIBILITY_MIN_DIMENSION_IN_DP)
+
+        val height = delegateArea.bottom - delegateArea.top
+        if (accessibilityMin > height) {
+            // Add +1 px just in case min - height is odd and will be rounded down
+            val addition = ((accessibilityMin - height) / 2).toInt() + 1
+            delegateArea.top -= addition
+            delegateArea.bottom += addition
+        }
+
+        val width = delegateArea.right - delegateArea.left
+        if (accessibilityMin > width) {
+            // Add +1 px just in case min - width is odd and will be rounded down
+            val addition = ((accessibilityMin - width) / 2).toInt() + 1
+            delegateArea.left -= addition
+            delegateArea.right += addition
+        }
+
+        val parentView = parent as? View
+        parentView?.touchDelegate = TouchDelegate(delegateArea, this)
+    }
+}
