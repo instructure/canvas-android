@@ -83,8 +83,6 @@ class PagesE2ETest : TeacherTest() {
 
     }
 
-    //TODO remove Stub annotation once MBL-15145 is done
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
@@ -116,8 +114,6 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertPageIsUnpublished(editedUnpublishedPageName)
     }
 
-    //TODO remove Stub annotation once MBL-15145 is done
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
@@ -148,8 +144,6 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertFrontPageDisplayed(pageTitle = publishedPage.title)
     }
 
-    //TODO remove Stub annotation once MBL-15145 is done
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)
@@ -177,8 +171,6 @@ class PagesE2ETest : TeacherTest() {
         pageListPage.assertPageIsPublished(pageTitle = unpublishedPage.title)
     }
 
-    //TODO remove Stub annotation once MBL-15145 is done
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.PAGES, TestCategory.E2E)

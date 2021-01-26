@@ -101,14 +101,14 @@ class CreateOrEditPageDetailsFragment :
 
     private fun shouldAllowExit() : Boolean {
         // Check if this is a new page and has changes
-        if(presenter?.page?.id == 0L &&
+        if(presenter.page.id == 0L &&
                 !pageRCEView?.html.isValid() &&
                 !pageNameEditText.text.toString().isValid()) {
             return true
         }
         // Check if edited page has changes
-        if(presenter?.page?.id != 0L &&
-                presenter?.page?.body ?: "" == pageRCEView?.html &&
+        if(presenter.page.id != 0L &&
+                presenter.page.body ?: "" == pageRCEView?.html &&
                 mPage?.title ?: "" == pageNameEditText.text.toString() &&
                 mPage?.frontPage == frontPageSwitch.isChecked &&
                 mPage?.published == publishSwitch.isChecked) {
@@ -294,6 +294,7 @@ class CreateOrEditPageDetailsFragment :
         } else {
             toast(R.string.pageSuccessfullyCreated)
         }
+        forceQuit = true
         pageNameEditText.hideKeyboard() // Close the keyboard
         requireActivity().onBackPressed() // Close this fragment
     }
