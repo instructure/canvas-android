@@ -84,11 +84,6 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     override fun getSelectedParamName() = RouterParams.ASSIGNMENT_ID
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.assignment_list_layout, container, false)
 

@@ -113,7 +113,6 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         selectedContext = nonNullArgs.getParcelable(Const.CANVAS_CONTEXT)
     }

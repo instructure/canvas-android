@@ -64,11 +64,6 @@ class CourseBrowserFragment : Fragment(), FragmentInteractions, AppBarLayout.OnO
     override val navigation: Navigation?
         get() = if (activity is Navigation) activity as Navigation else null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     //region Fragment Lifecycle Overrides
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_course_browser, container, false)

@@ -101,11 +101,6 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     //endregion
 
     //region Fragment Lifecycle Overrides
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             layoutInflater.inflate(R.layout.fragment_discussions_details, container, false)
 

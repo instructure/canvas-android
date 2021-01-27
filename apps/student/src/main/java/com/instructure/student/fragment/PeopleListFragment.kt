@@ -57,11 +57,6 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
 
     override fun title(): String = getString(R.string.coursePeople)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_people_list, container, false)
     }
