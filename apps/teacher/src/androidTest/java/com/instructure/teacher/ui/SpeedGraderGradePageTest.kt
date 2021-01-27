@@ -149,6 +149,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
     @Test
     fun excuseStudent() {
         goToSpeedGraderGradePage()
+        speedGraderPage.swipeUpGradesTab()
         speedGraderGradePage.assertExcuseButtonEnabled()
         speedGraderGradePage.clickExcuseStudentButton()
         speedGraderGradePage.assertStudentExcused()
@@ -158,6 +159,7 @@ class SpeedGraderGradePageTest : TeacherTest() {
     @Test
     fun clearGrade() {
         goToSpeedGraderGradePage()
+        speedGraderPage.swipeUpGradesTab()
         speedGraderGradePage.assertNoGradeButtonDisabled()
         speedGraderGradePage.openGradeDialog()
         speedGraderGradePage.enterNewGrade("15")
