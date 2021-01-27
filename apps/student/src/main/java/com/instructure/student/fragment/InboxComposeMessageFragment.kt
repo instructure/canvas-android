@@ -51,7 +51,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLEncoder
-import java.util.*
+import java.util.ArrayList
 
 class InboxComposeMessageFragment : ParentFragment() {
 
