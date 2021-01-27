@@ -17,9 +17,7 @@
 package com.instructure.student.fragment
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -101,11 +99,6 @@ class InboxFragment : ParentFragment() {
             throw ClassCastException(context!!.toString() + " must implement OnUnreadCountInvalidated")
         }
 
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

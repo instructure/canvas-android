@@ -73,7 +73,6 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
 
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         checkForPermission()
         retainInstance = true

@@ -254,8 +254,4 @@
 # Kotlin
 -dontwarn kotlinx.atomicfu.AtomicBoolean
 
-# NewRelic
-
--keep class com.newrelic.** { *; }
--dontwarn com.newrelic.**
 -keepattributes Exceptions, Signature, InnerClasses, LineNumberTable, SourceFile, EnclosingMethod

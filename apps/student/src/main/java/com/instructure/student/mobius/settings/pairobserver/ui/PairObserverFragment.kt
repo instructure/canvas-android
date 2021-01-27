@@ -16,20 +16,13 @@
  */
 package com.instructure.student.mobius.settings.pairobserver.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.utils.*
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.settings.pairobserver.*
 
 class PairObserverFragment : MobiusFragment<PairObserverModel, PairObserverEvent, PairObserverEffect, PairObserverView, PairObserverViewState>() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun makeEffectHandler() =
         PairObserverEffectHandler()

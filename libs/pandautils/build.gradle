@@ -137,7 +137,4 @@ dependencies {
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
-
-    /* New Relic */
-    implementation Libs.NEW_RELIC
 }

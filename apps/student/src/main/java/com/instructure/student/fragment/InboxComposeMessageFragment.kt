@@ -51,7 +51,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.net.URLEncoder
-import java.util.ArrayList
+import java.util.*
 
 class InboxComposeMessageFragment : ParentFragment() {
 
@@ -113,7 +113,6 @@ class InboxComposeMessageFragment : ParentFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         selectedContext = nonNullArgs.getParcelable(Const.CANVAS_CONTEXT)
     }

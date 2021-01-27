@@ -24,7 +24,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
-apply plugin: 'newrelic'
 
 def coverageEnabled = project.hasProperty('coverage')
 
@@ -70,7 +69,6 @@ android {
         /* Add private data */
         PrivateData.merge(project, "student")
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
-        buildConfigField "String", "NEWRELIC_APP_TOKEN", "\"$newRelicAppToken\""
 
         testBuildType = "debug"
     }

@@ -19,24 +19,19 @@ package com.instructure.student.activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.core.content.ContextCompat
 import android.webkit.CookieManager
-import com.instructure.student.BuildConfig
-import com.instructure.student.R
+import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.loginapi.login.activities.BaseLoginInitActivity
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.services.PushNotificationRegistrationService
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.TelemetryUtils
 import com.instructure.pandautils.utils.Utils
+import com.instructure.student.BuildConfig
+import com.instructure.student.R
 
 
 class LoginActivity : BaseLoginInitActivity() {
@@ -71,14 +66,6 @@ class LoginActivity : BaseLoginInitActivity() {
     override val isTesting: Boolean = BuildConfig.IS_TESTING
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val startNewRelic =
-                RemoteConfigUtils.getString(RemoteConfigParam.USE_NEW_RELIC)?.equals("true",ignoreCase = true) ?: false
-
-        Log.v("LoginActivity","startNewRelic=$startNewRelic")
-
-        if(startNewRelic) {
-            TelemetryUtils.initialize(this.applicationContext, BuildConfig.NEWRELIC_APP_TOKEN)
-        }
         super.onCreate(savedInstanceState)
 
         // Check to see if we are switching users from an external QR scan

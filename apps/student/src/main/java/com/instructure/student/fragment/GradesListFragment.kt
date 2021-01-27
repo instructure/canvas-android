@@ -73,7 +73,6 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName(): String = RouterParams.ASSIGNMENT_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         allTermsGradingPeriod = GradingPeriod()
         allTermsGradingPeriod.title = getString(R.string.allGradingPeriods)

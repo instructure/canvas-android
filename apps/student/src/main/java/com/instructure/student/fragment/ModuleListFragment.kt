@@ -70,7 +70,6 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
         super.onCreate(savedInstanceState)
         retainInstance = true
     }
