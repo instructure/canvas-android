@@ -16,20 +16,13 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.espresso.matcher.ViewMatchers.*
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.dataseeding.model.AttachmentApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.matchers.WaitForViewMatcher
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.callOnClick
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 
 class SpeedGraderCommentsPage : BasePage() {
 
@@ -41,7 +34,7 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun assertDisplaysCommentText(comment: String) {
-        WaitForViewMatcher.waitForView(Matchers.allOf(ViewMatchers.withId(R.id.commentTextView), ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+        waitForView(Matchers.allOf(withId(R.id.commentTextView), withEffectiveVisibility(Visibility.VISIBLE)))
                 .assertHasText(comment)
     }
 
@@ -54,13 +47,14 @@ class SpeedGraderCommentsPage : BasePage() {
     }
 
     fun assertDisplaysSubmissionFile(attachment: Attachment) {
-        val parentMatcher = ViewMatchers.withParent(ViewMatchers.withId(R.id.commentSubmissionAttachmentView))
-        val match = Espresso.onView(Matchers.allOf(parentMatcher, ViewMatchers.withId(R.id.titleTextView)))
+        val parentMatcher = withParent(withId(R.id.commentSubmissionAttachmentView))
+        val match = onView(allOf(parentMatcher, withId(R.id.titleTextView)))
         match.assertHasText(attachment.displayName!!)
     }
 
     fun addComment(comment: String) {
-        commentEditText.replaceText(comment)
+        commentEditText.typeText(comment)
+        Espresso.closeSoftKeyboard()
         callOnClick(withId(R.id.sendCommentButton))
     }
 
