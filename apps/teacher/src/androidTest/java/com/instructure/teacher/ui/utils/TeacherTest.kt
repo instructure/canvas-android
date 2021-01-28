@@ -80,6 +80,7 @@ abstract class TeacherTest : CanvasTest() {
     val editSyllabusPage = EditSyllabusPage()
     val editPageDetailsPage = EditPageDetailsPage()
     val modulesPage = ModulesPage()
+    val editAnnouncementPage = EditAnnouncementPage()
 
 }
 
