@@ -46,7 +46,7 @@ void main() {
     await tester.tap(find.text(l10n.privacyPolicy));
     await tester.pumpAndSettle();
 
-    verify(mockLauncher.launch('https://www.instructure.com/policies/privacy/')).called(1);
+    verify(mockLauncher.launch('https://www.instructure.com/canvas/privacy')).called(1);
   });
 
   testWidgetsWithAccessibilityChecks('tapping github launches url', (tester) async {

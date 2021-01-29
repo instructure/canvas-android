@@ -72,11 +72,6 @@ class ToDoListFragment : ParentFragment() {
 
     override fun title(): String = getString(R.string.Todo)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = layoutInflater.inflate(R.layout.fragment_list_todo, container, false)
         with (rootView.toolbar) {

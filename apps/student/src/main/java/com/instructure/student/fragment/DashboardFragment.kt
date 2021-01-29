@@ -80,11 +80,6 @@ class DashboardFragment : ParentFragment() {
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         layoutInflater.inflate(R.layout.fragment_course_grid, container, false)
 

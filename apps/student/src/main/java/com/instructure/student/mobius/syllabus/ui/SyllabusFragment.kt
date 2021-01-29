@@ -16,13 +16,15 @@
  */
 package com.instructure.student.mobius.syllabus.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.common.ui.MobiusFragment
 import com.instructure.student.mobius.syllabus.*
 
@@ -30,11 +32,6 @@ import com.instructure.student.mobius.syllabus.*
 class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState>() {
 
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun makeEffectHandler() = SyllabusEffectHandler()
 

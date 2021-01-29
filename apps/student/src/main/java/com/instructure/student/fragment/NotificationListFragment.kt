@@ -93,11 +93,6 @@ class NotificationListFragment : ParentFragment(), Bookmarkable {
 
     override fun title(): String = getString(if (canvasContext.isCourse || canvasContext.isGroup) R.string.homePageIdForNotifications else R.string.notifications)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
             = layoutInflater.inflate(R.layout.fragment_list_notification, container, false)
 

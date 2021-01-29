@@ -16,7 +16,6 @@
  */
 package com.instructure.student.mobius.assignmentDetails.ui
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.CanvasRestAdapter
@@ -51,11 +50,6 @@ class AssignmentDetailsFragment :
                     assignmentId.toString()
                 )
         }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        TelemetryUtils.setInteractionName(this::class.java.simpleName)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun makeEffectHandler() = AssignmentDetailsEffectHandler(requireContext(), assignmentId)
 
