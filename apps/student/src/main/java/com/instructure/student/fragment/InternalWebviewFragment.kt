@@ -63,6 +63,7 @@ open class InternalWebviewFragment : ParentFragment() {
     private var shouldAuthenticate: Boolean by BooleanArg(key = Const.AUTHENTICATE)
     var title: String? by NullableStringArg(key = Const.ACTION_BAR_TITLE)
     var url: String? by NullableStringArg(key = Const.INTERNAL_URL)
+    var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
 
     // Used for external urls that reject the candroid user agent string
     var originalUserAgentString: String = ""
@@ -126,7 +127,18 @@ open class InternalWebviewFragment : ParentFragment() {
 
                 override fun canRouteInternallyDelegate(url: String): Boolean {
                     if (activity == null) return false
-                    return shouldRouteInternally && !isUnsupportedFeature && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
+                    return shouldRouteInternally
+                        && shouldRouteIfUrlIsTheSame(url)
+                        && !isUnsupportedFeature
+                        && RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, false, allowUnsupportedRouting)
+                }
+
+                // We currently have a flaw in our routing implementation what causes that the when the WebView loads an URL what can be routed internally
+                // will be routed to the same screen again. To prevent this we check if the loaded url is the same as the url what we opened the Fragment with.
+                // We need to check if it contains the loaded url, because when authenticating it can contain additional params, so they won't be exactly the same.
+                private fun shouldRouteIfUrlIsTheSame(url: String): Boolean {
+                    val sameUrl = this@InternalWebviewFragment.url?.contains(url) ?: false
+                    return !sameUrl || allowRoutingTheSameUrlInternally
                 }
 
                 override fun routeInternallyCallback(url: String) {
@@ -347,6 +359,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     companion object {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
+        const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
 
         fun newInstance(route: Route): InternalWebviewFragment {
             return InternalWebviewFragment().withArgs(route.argsWithContext)
@@ -439,16 +452,17 @@ open class InternalWebviewFragment : ParentFragment() {
             authenticate: Boolean,
             isUnsupportedFeature: Boolean,
             shouldRouteInternally: Boolean = true,
-            allowUnsupportedRouting: Boolean = true
-        ): Route =
-                Route(InternalWebviewFragment::class.java, canvasContext,
-                        canvasContext.makeBundle().apply {
-                            putString(Const.INTERNAL_URL, url)
-                            putBoolean(Const.AUTHENTICATE, authenticate)
-                            putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
-                            putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
-                            putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
-                        })
+            allowUnsupportedRouting: Boolean = true,
+            allowRoutingTheSameUrlInternally: Boolean = true
+        ): Route = Route(InternalWebviewFragment::class.java, canvasContext,
+            canvasContext.makeBundle().apply {
+                putString(Const.INTERNAL_URL, url)
+                putBoolean(Const.AUTHENTICATE, authenticate)
+                putBoolean(Const.IS_UNSUPPORTED_FEATURE, isUnsupportedFeature)
+                putBoolean(SHOULD_ROUTE_INTERNALLY, shouldRouteInternally)
+                putBoolean(Const.ALLOW_UNSUPPORTED_ROUTING, allowUnsupportedRouting)
+                putBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, allowRoutingTheSameUrlInternally)
+            })
 
         fun makeRoute(bundle: Bundle) = Route(InternalWebviewFragment::class.java, null, bundle)
 
