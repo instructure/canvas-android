@@ -189,7 +189,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
                             authenticate = true,
                             isUnsupportedFeature = false,
                             allowUnsupportedRouting = false,
-                            shouldRouteInternally = false
+                            shouldRouteInternally = true,
+                            allowRoutingTheSameUrlInternally = false
                         ))
                     } else {
                         openMedia(item.contentType, item.url, item.displayName, canvasContext)
