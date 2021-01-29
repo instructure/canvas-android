@@ -21,7 +21,9 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityNodeInfo
 import com.instructure.pandautils.utils.*
+import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
 import java.util.*
 import kotlin.random.Random
@@ -47,7 +49,17 @@ class CriterionRatingLayout @JvmOverloads constructor(
         removeAllViews()
         ratings.forEach { rating ->
             val button = CriterionRatingButton(context, rating, tint)
-            button.onClick { onRatingClicked(rating.id) }
+            button.accessibilityDelegate = object : AccessibilityDelegate() {
+                override fun onInitializeAccessibilityNodeInfo(host: View?, info: AccessibilityNodeInfo?) {
+                    super.onInitializeAccessibilityNodeInfo(host, info)
+                    val description = resources.getString(R.string.a11y_criterion_button_click_description)
+                    info?.addAction(AccessibilityNodeInfo.AccessibilityAction(AccessibilityNodeInfo.ACTION_CLICK, description))
+                }
+            }
+            button.contentDescription = resources.getString(R.string.a11y_criterion_content_description, rating.text)
+            button.onClick {
+                onRatingClicked(rating.id)
+            }
             addView(button)
         }
     }

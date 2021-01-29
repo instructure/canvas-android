@@ -17,7 +17,9 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.binders
 
 import android.animation.LayoutTransition
+import android.os.Handler
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.asStateList
@@ -55,6 +57,14 @@ class RubricListCriterionBinder : BasicItemBinder<Criterion, RubricListCallback>
             ratingDescription.setTextForVisibility(newItem.ratingDescription)
             ratingInfoContainer.setVisible(newItem.ratingTitle.isValid() || newItem.ratingDescription.isValid())
             ratingLayout.updateRatingData(newItem.ratings)
+            ratingInfoContainer.contentDescription = context.getString(R.string.a11y_criterion_description_content_description, newItem.ratingTitle, newItem.ratingDescription)
+
+            //We need this delay to allow TalkBack to focus on the view.
+            Handler().apply {
+                postDelayed( {
+                    ratingInfoContainer.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                }, 1000)
+            }
             return@Item
         }
 
