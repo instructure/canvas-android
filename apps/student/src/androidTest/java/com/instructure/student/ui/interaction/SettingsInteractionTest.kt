@@ -242,7 +242,7 @@ class SettingsInteractionTest : StudentTest() {
         canvasWebViewPage.acceptCookiePolicyIfNecessary()
         canvasWebViewPage.runTextChecks(
                 // Potentially brittle, as this content could be changed by another team.
-                WebViewTextCheck(Locator.ID, "block-mainpagecontent", "Privacy Policy", 20)
+                WebViewTextCheck(Locator.ID, "pour-commitment-span-classemphasisto-privacyspanp", "Our Commitment to Privacy", 20)
         )
     }
 

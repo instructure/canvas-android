@@ -82,7 +82,7 @@ class LegalDialogStyled : AppCompatDialogFragment() {
         }
 
         view.privacyPolicy.onClick {
-            val intent = InternalWebViewActivity.createIntent(activity, "https://www.instructure.com/policies/privacy/", getString(R.string.privacyPolicy), false)
+            val intent = InternalWebViewActivity.createIntent(activity, "https://www.instructure.com/canvas/privacy", getString(R.string.privacyPolicy), false)
             requireContext().startActivity(intent)
             dialog?.dismiss()
         }
