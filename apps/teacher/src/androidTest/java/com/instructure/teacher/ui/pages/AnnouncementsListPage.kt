@@ -20,9 +20,9 @@ import androidx.test.espresso.action.ViewActions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 
 class AnnouncementsListPage : BasePage() {
 
@@ -33,11 +33,23 @@ class AnnouncementsListPage : BasePage() {
     private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
 
     fun clickDiscussion(discussion: DiscussionApiModel) {
-        waitForViewWithText(discussion.title).click()
+        clickDiscussion(discussion.title)
+    }
+
+    fun clickDiscussion(discussionTitle: String) {
+        waitForViewWithText(discussionTitle).click()
     }
 
     fun assertHasAnnouncement(discussion: DiscussionTopicHeader) {
-        waitForViewWithText(discussion.title!!).assertDisplayed()
+        assertHasAnnouncement(discussion.title!!)
+    }
+
+    fun assertHasAnnouncement(discussion: DiscussionApiModel) {
+        assertHasAnnouncement(discussion.title)
+    }
+
+    fun assertHasAnnouncement(announcementName: String) {
+        onView(withText(announcementName)).assertDisplayed()
     }
 
     fun assertFAB() {
@@ -54,5 +66,20 @@ class AnnouncementsListPage : BasePage() {
 
     fun assertAnnouncementCount(count: Int) {
         announcementsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+    }
+
+    fun assertEmpty() {
+        onView(withId(R.id.emptyPandaView)).assertDisplayed()
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun createAnnouncement(announcementName: String, announcementDetails: String) {
+        onView(withId(R.id.createNewDiscussion)).click()
+        onView(withId(R.id.announcementNameEditText)).replaceText(announcementName)
+        onView(withId(R.id.rce_webView)).perform(TypeInRCETextEditor(announcementDetails))
+        onView(withId(R.id.menuSaveAnnouncement)).click()
     }
 }
