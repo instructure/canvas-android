@@ -20,7 +20,7 @@ package com.instructure.student.test.adapter
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.student.adapter.AssignmentDateListRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentDateListRecyclerAdapter
 import junit.framework.TestCase
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -34,7 +34,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.AssignmentDateListRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentDateListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
@@ -89,9 +89,9 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         recyclerAdapter = AssignmentDateListRecyclerAdapter(
-            requireContext(),
-            canvasContext,
-            adapterToAssignmentsCallback
+                requireContext(),
+                canvasContext,
+                adapterToAssignmentsCallback
         )
 
         configureRecyclerView(
