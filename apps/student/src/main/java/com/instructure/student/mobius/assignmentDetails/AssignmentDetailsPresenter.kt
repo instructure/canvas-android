@@ -178,7 +178,7 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
         visibilities.allowedAttempts = assignment.allowedAttempts != -1L
         visibilities.submitButtonEnabled = assignment.allowedAttempts == -1L || (assignment.submission?.attempt?.let{ it < assignment.allowedAttempts } ?: true)
 
-        if (isObserver || !course.isReadOnlyForCurrentDate()) {
+        if (isObserver || !course.isBetweenValidDateRange()) {
             // Observers shouldn't see the submit button
             // OR if the course is soft concluded
             visibilities.submitButton = false
