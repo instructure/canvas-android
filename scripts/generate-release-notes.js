@@ -20,7 +20,7 @@
 //  Generates release notes from our common commit message format
 //
 
-//const { spawnSync } = require('child_process')
+const { spawnSync } = require('child_process')
 //const { addFixVersion } = require('./update-jira-issues')
 
 console.log('Engage Release Notes Automation!')
@@ -41,32 +41,25 @@ function run (cmd, args) {
 }
 
 function generateReleaseNotes () {
-  const tag = process.argv[2] || ''
-  const app = tag.split('-')[0]
-  if (![ 'Parent', 'Student', 'Teacher' ].includes(app)) {
-    throw new Error('The tag argument is required and must start with Parent-, Student-, or Teacher-')
-  }
-
+  const app = process.argv[2] || ''
+  
   console.log('Executing git fetch to make sure we have the latest tags....')
   run('git', [ 'fetch', '--force', '--tags' ])
 
   const tags = run('git', [ 'ls-remote', '--tags', '--sort=v:refname', 'origin', `refs/tags/${app}-*` ])
     .split('\n').map(line => line.split('/').pop()).filter(Boolean)
-  const currentIndex = tags.indexOf(tag)
-  const sinceTag = tags[currentIndex - 1]
-  if (currentIndex < 0) {
-    throw new Error(`${tag} is not a valid tag`)
-  } else if (!sinceTag) {
+  const sinceTag = tags[tags.length-1]
+  if (!sinceTag) {
     throw new Error('Could not find a previous tag')
   }
 
-  console.log(`Generating release notes for ${app} ${sinceTag}...${tag}`)
-  let result = run('git', [ 'log', `${sinceTag}...${tag}`, `--pretty=format:commit:%H%n%B${delimiter}`, '--' ])
-  return parseGitLog(result, app.toLowerCase(), tag)
+  console.log(`Generating release notes for ${app} ${sinceTag}...`)
+  let result = run('git', [ 'log', `${sinceTag}...HEAD`, `--pretty=format:commit:%H%n%B${delimiter}`, '--' ])
+  return parseGitLog(result, app.toLowerCase())
 }
 
 // Parses through the gitlog, using the app to know which ones to filter out
-async function parseGitLog (log, app, tag) {
+async function parseGitLog (log, app) {
   let commits = log.split(delimiter).map(item => item.trim()).filter(a => a)
   let numCommitsForApp = 0
   let numCommitsForAppWithoutReleaseNote = 0
@@ -131,9 +124,6 @@ async function parseGitLog (log, app, tag) {
   console.log(releaseNotes.map(item => `- ${item}`).join('\n'))
   console.log('')
 
-  if (process.env.JIRA_USERNAME && process.env.JIRA_API_TOKEN) {
-    await addFixVersion(tag, allJiras)
-  }
 }
 
 // Parses the commit message and looks for affects: "parent, student", etc.
