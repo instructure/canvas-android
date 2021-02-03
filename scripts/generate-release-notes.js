@@ -41,14 +41,12 @@ function run (cmd, args) {
 }
 
 function generateReleaseNotes () {
-  const app = process.argv[2] || ''
+  const app = 'teacher'
   
   console.log('Executing git fetch to make sure we have the latest tags....')
   run('git', [ 'fetch', '--force', '--tags' ])
 
-  const tags = run('git', [ 'ls-remote', '--tags', '--sort=v:refname', 'origin', `refs/tags/${app}-*` ])
-    .split('\n').map(line => line.split('/').pop()).filter(Boolean)
-  const sinceTag = tags[tags.length-1]
+  const sinceTag = process.argv[2] || ''
   if (!sinceTag) {
     throw new Error('Could not find a previous tag')
   }
