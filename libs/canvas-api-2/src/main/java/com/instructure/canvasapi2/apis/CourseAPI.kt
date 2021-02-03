@@ -38,7 +38,7 @@ object CourseAPI {
         @get:GET("dashboard/dashboard_cards")
         val dashboardCourses: Call<List<DashboardCard>>
 
-        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available")
+        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=current_and_concluded")
         val firstPageCourses: Call<List<Course>>
 
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&state[]=completed&state[]=available&include[]=observed_users")
@@ -137,14 +137,6 @@ object CourseAPI {
     fun getNextPageFavoriteCourses(forceNetwork: Boolean, nextUrl: String, adapter: RestBuilder, callback: StatusCallback<List<Course>>) {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
         callback.addCall(adapter.build(CoursesInterface::class.java, params).next(nextUrl)).enqueue(callback)
-    }
-
-    fun getCourses(adapter: RestBuilder, callback: StatusCallback<List<Course>>, params: RestParams) {
-        if (StatusCallback.isFirstPage(callback.linkHeaders)) {
-            callback.addCall(adapter.build(CoursesInterface::class.java, params).firstPageCourses).enqueue(callback)
-        } else if (callback.linkHeaders != null && StatusCallback.moreCallsExist(callback.linkHeaders)) {
-            callback.addCall(adapter.build(CoursesInterface::class.java, params).next(callback.linkHeaders!!.nextUrl!!)).enqueue(callback)
-        }
     }
 
     fun getDashboardCourses(adapter: RestBuilder, callback: StatusCallback<List<DashboardCard>>, params: RestParams) {

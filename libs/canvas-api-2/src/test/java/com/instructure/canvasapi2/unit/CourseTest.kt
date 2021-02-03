@@ -21,17 +21,16 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Term
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.isNotDeleted
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import java.time.OffsetDateTime
-import java.util.*
 
 class CourseTest {
 
-    val baseCourse = Course(accessRestrictedByDate = false, workflowState = "completed")
+    private val baseCourse = Course(accessRestrictedByDate = false, workflowState = "completed")
 
     @Before
     fun setup() {
@@ -538,10 +537,26 @@ class CourseTest {
         val term = Term(startAt = startDate.toString(), endAt = endDate.toString())
         val section = Section(startAt = startDate.toString(), endAt = endDate.toString())
         val course = baseCourse.copy(restrictEnrollmentsToCourseDate = true,
-                startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
+            startAt = startDate.toString(), endAt = endDate.toString(), term = term, sections = listOf(section))
 
         assertFalse(course.isReadOnlyForCurrentDate())
     }
 
+    @Test
+    fun `Course is not deleted when workflow state is available`() {
+        val course = baseCourse.copy(workflowState = "available")
+        assertTrue(course.isNotDeleted())
+    }
 
+    @Test
+    fun `Course is not deleted when workflow state is completed`() {
+        val course = baseCourse.copy(workflowState = "completed")
+        assertTrue(course.isNotDeleted())
+    }
+
+    @Test
+    fun `Course is deleted when workflow state is deleted`() {
+        val course = baseCourse.copy(workflowState = "deleted")
+        assertFalse(course.isNotDeleted())
+    }
 }
