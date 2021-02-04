@@ -90,6 +90,7 @@ class AddMessagePage: BasePage() {
     }
 
     fun addMessage(message: String) {
+        messageEditText.scrollTo()
         messageEditText.replaceText(message)
     }
 
