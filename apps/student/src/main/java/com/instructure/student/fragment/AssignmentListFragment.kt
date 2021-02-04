@@ -17,6 +17,7 @@
 
 package com.instructure.student.fragment
 
+import android.app.AlertDialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -34,8 +35,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
-import com.instructure.student.adapter.assignment.AssignmentDateListRecyclerAdapter
 import com.instructure.student.adapter.TermSpinnerAdapter
+import com.instructure.student.adapter.assignment.AssignmentDateListRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentTypeListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
@@ -46,7 +49,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
-    private lateinit var recyclerAdapter: AssignmentDateListRecyclerAdapter
+    private lateinit var recyclerAdapter: AssignmentRecyclerAdapter
     private var termAdapter: TermSpinnerAdapter? = null
 
     private val allTermsGradingPeriod by lazy {
@@ -111,6 +114,31 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                 setRefreshingEnabled(false)
             }
         })
+
+        setupSortByButton()
+    }
+
+    private fun setupSortByButton() {
+        sortByButton.onClick {
+            AlertDialog.Builder(context)
+                .setTitle(R.string.sortByDialogTitle)
+                .setSingleChoiceItems(R.array.assignmentsSortByOptions, 0) { dialog, which ->
+                    when (which) {
+                        0 -> {
+                            dialog.dismiss()
+                            recyclerAdapter = AssignmentDateListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+                            listView.adapter = recyclerAdapter
+                        }
+                        1 -> {
+                            dialog.dismiss()
+                            recyclerAdapter = AssignmentTypeListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+                            listView.adapter = recyclerAdapter
+                        }
+                    }
+                }
+                .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
     }
 
     override fun applyTheme() {

@@ -17,7 +17,12 @@
 package com.instructure.student.adapter.assignment
 
 import android.content.Context
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.filterWithQuery
+import com.instructure.pandarecycler.util.GroupSortedList
+import com.instructure.pandarecycler.util.Types
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 
 class AssignmentTypeListRecyclerAdapter(
@@ -28,7 +33,19 @@ class AssignmentTypeListRecyclerAdapter(
 ) : AssignmentRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
 
     override fun populateData() {
+        assignmentGroups.forEach { assignmentGroup ->
+            val filteredAssignments = assignmentGroup.assignments.filterWithQuery(searchQuery, Assignment::name)
+            addOrUpdateAllItems(assignmentGroup, filteredAssignments)
+        }
         isAllPagesLoaded = true
     }
 
+    override fun createItemCallback() = object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
+        private val sameCheck = compareBy<Assignment>({ it.dueAt }, { it.name })
+        override fun areContentsTheSame(old: Assignment, new: Assignment) = sameCheck.compare(old, new) == 0
+        override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
+        override fun getChildType(group: AssignmentGroup, item: Assignment) = Types.TYPE_ITEM
+        override fun getUniqueItemId(item: Assignment) = item.id
+        override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment) = o1.position - o2.position
+    }
 }

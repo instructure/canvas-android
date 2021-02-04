@@ -20,9 +20,16 @@ package com.instructure.student.adapter.assignment
 import android.content.Context
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.*
+import com.instructure.pandarecycler.util.GroupSortedList
+import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import java.util.*
+
+private const val HEADER_POSITION_OVERDUE = 0
+private const val HEADER_POSITION_UPCOMING = 1
+private const val HEADER_POSITION_UNDATED = 2
+private const val HEADER_POSITION_PAST = 3
 
 class AssignmentDateListRecyclerAdapter(
         context: Context,
@@ -31,16 +38,24 @@ class AssignmentDateListRecyclerAdapter(
         isTesting: Boolean = false
 ) : AssignmentRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
 
-    private val overdue: AssignmentGroup
-    private val upcoming: AssignmentGroup
-    private val undated: AssignmentGroup
-    private val past: AssignmentGroup
+    private val overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
+    private val upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)
+    private val undated = AssignmentGroup(name = context.getString(R.string.undatedAssignments), position = HEADER_POSITION_UNDATED)
+    private val past = AssignmentGroup(name = context.getString(R.string.pastAssignments), position = HEADER_POSITION_PAST)
 
-    init {
-        overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
-        upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)
-        undated = AssignmentGroup(name = context.getString(R.string.undatedAssignments), position = HEADER_POSITION_UNDATED)
-        past = AssignmentGroup(name = context.getString(R.string.pastAssignments), position = HEADER_POSITION_PAST)
+    override fun createItemCallback() = object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
+        private val sameCheck = compareBy<Assignment>({ it.dueAt }, { it.name })
+        override fun areContentsTheSame(old: Assignment, new: Assignment) = sameCheck.compare(old, new) == 0
+        override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
+        override fun getChildType(group: AssignmentGroup, item: Assignment) = Types.TYPE_ITEM
+        override fun getUniqueItemId(item: Assignment) = item.id
+        override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment): Int {
+            return when (group.position) {
+                HEADER_POSITION_UNDATED -> o1.name?.toLowerCase()?.compareTo(o2.name?.toLowerCase() ?: "") ?: 0
+                HEADER_POSITION_PAST -> o2.dueAt?.compareTo(o1.dueAt ?: "") ?: 0 // Sort newest date first (o1 and o2 switched places)
+                else -> o1.dueAt?.compareTo(o2.dueAt ?: "") ?: 0 // Sort oldest date first
+            }
+        }
     }
 
     override fun populateData() {

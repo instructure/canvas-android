@@ -222,37 +222,10 @@ abstract class AssignmentRecyclerAdapter (
         override fun getUniqueGroupId(group: AssignmentGroup) = group.position.toLong()
     }
 
-    override fun createItemCallback() = itemCallback
-
     // endregion
 
     override fun cancel() {
         super.cancel()
         apiJob?.cancel()
     }
-
-    companion object {
-        const val HEADER_POSITION_OVERDUE = 0
-        const val HEADER_POSITION_UPCOMING = 1
-        const val HEADER_POSITION_UNDATED = 2
-        const val HEADER_POSITION_PAST = 3
-
-        // Decoupled for testability
-        val itemCallback = object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
-            private val sameCheck = compareBy<Assignment>({ it.dueAt }, { it.name })
-            override fun areContentsTheSame(old: Assignment, new: Assignment) = sameCheck.compare(old, new) == 0
-            override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
-            override fun getChildType(group: AssignmentGroup, item: Assignment) = Types.TYPE_ITEM
-            override fun getUniqueItemId(item: Assignment) = item.id
-            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment): Int {
-                val position = group.position
-                return when (position) {
-                    HEADER_POSITION_UNDATED -> o1.name?.toLowerCase()?.compareTo(o2.name?.toLowerCase() ?: "") ?: 0
-                    HEADER_POSITION_PAST -> o2.dueAt?.compareTo(o1.dueAt ?: "") ?: 0 // Sort newest date first (o1 and o2 switched places)
-                    else -> o1.dueAt?.compareTo(o2.dueAt ?: "") ?: 0 // Sort oldest date first
-                }
-            }
-        }
-    }
-
 }
