@@ -24,7 +24,7 @@ class InboxE2ETest : TeacherTest() {
     @Test
     @TestMetaData(Priority.P0, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxE2E() {
-        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val student1 = data.studentsList[0]
