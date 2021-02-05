@@ -42,7 +42,11 @@ import com.instructure.student.adapter.assignment.AssignmentTypeListRecyclerAdap
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
+import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
+
+private const val SORT_BY_TYPE = "type"
+private const val SORT_BY_TIME = "time"
 
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
@@ -51,6 +55,12 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private lateinit var recyclerAdapter: AssignmentRecyclerAdapter
     private var termAdapter: TermSpinnerAdapter? = null
+
+    private var sortBy: String
+        get() = StudentPrefs.getString("sortBy_${canvasContext.contextId}", SORT_BY_TIME) ?: SORT_BY_TIME
+        set(value) {
+            StudentPrefs.putString("sortBy_${canvasContext.contextId}", value)
+        }
 
     private val allTermsGradingPeriod by lazy {
         GradingPeriod().apply { title = getString(R.string.allGradingPeriods) }
@@ -91,11 +101,22 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             inflater.inflate(R.layout.assignment_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = AssignmentDateListRecyclerAdapter(
+        recyclerAdapter = if (sortBy == SORT_BY_TIME) {
+            AssignmentDateListRecyclerAdapter(
                 requireContext(),
                 canvasContext,
                 adapterToAssignmentsCallback
-        )
+            )
+        } else {
+            AssignmentTypeListRecyclerAdapter(
+                requireContext(),
+                canvasContext,
+                adapterToAssignmentsCallback
+            )
+        }
+
+        val sortByButtonResId = if (sortBy == SORT_BY_TIME) R.string.sortByTime else R.string.sortByType
+        sortByButton.setText(sortByButtonResId)
 
         configureRecyclerView(
             view,
@@ -120,19 +141,28 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
     private fun setupSortByButton() {
         sortByButton.onClick {
+            val checkedItemIndex = if (sortBy == SORT_BY_TIME) 0 else 1
             AlertDialog.Builder(context)
                 .setTitle(R.string.sortByDialogTitle)
-                .setSingleChoiceItems(R.array.assignmentsSortByOptions, 0) { dialog, which ->
+                .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex) { dialog, which ->
                     when (which) {
                         0 -> {
                             dialog.dismiss()
-                            recyclerAdapter = AssignmentDateListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
-                            listView.adapter = recyclerAdapter
+                            if (sortBy != SORT_BY_TIME) {
+                                recyclerAdapter = AssignmentDateListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+                                listView.adapter = recyclerAdapter
+                                sortBy = SORT_BY_TIME
+                                sortByButton.setText(R.string.sortByTime)
+                            }
                         }
                         1 -> {
                             dialog.dismiss()
-                            recyclerAdapter = AssignmentTypeListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
-                            listView.adapter = recyclerAdapter
+                            if (sortBy != SORT_BY_TYPE) {
+                                recyclerAdapter = AssignmentTypeListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+                                listView.adapter = recyclerAdapter
+                                sortBy = SORT_BY_TYPE
+                                sortByButton.setText(R.string.sortByType)
+                            }
                         }
                     }
                 }
