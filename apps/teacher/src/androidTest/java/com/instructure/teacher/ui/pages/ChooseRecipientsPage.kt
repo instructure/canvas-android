@@ -53,4 +53,8 @@ class ChooseRecipientsPage: BasePage() {
     fun clickStudent(student: User) {
         waitForViewWithText(student.shortName!!).click()
     }
+
+    fun clickStudent(student: CanvasUserApiModel) {
+        waitForViewWithText(student.shortName).click()
+    }
 }
