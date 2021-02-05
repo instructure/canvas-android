@@ -67,9 +67,11 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
-        override fun setTermSpinnerState(isEnabled: Boolean) {
-            termSpinner?.isEnabled = isEnabled
-            termAdapter?.isLoading = !isEnabled
+        override fun assignmentLoadingFinished() {
+            // If we only have one grading period we want to disable the spinner
+            val termCount = termAdapter?.count ?: 0
+            termSpinner.isEnabled = termCount > 1
+            termAdapter?.isLoading = false
             termAdapter?.notifyDataSetChanged()
         }
 
@@ -116,7 +118,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         val sortByButtonResId = if (sortBy == SORT_BY_TIME) R.string.sortByTime else R.string.sortByType
-        sortByButton.setText(sortByButtonResId)
+        sortByTextView.setText(sortByButtonResId)
 
         configureRecyclerView(
             view,
@@ -142,7 +144,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private fun setupSortByButton() {
         sortByButton.onClick {
             val checkedItemIndex = if (sortBy == SORT_BY_TIME) 0 else 1
-            AlertDialog.Builder(context)
+            AlertDialog.Builder(context, R.style.AccentDialogTheme)
                 .setTitle(R.string.sortByDialogTitle)
                 .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex) { dialog, which ->
                     when (which) {
@@ -152,7 +154,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                                 recyclerAdapter = AssignmentDateListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
                                 listView.adapter = recyclerAdapter
                                 sortBy = SORT_BY_TIME
-                                sortByButton.setText(R.string.sortByTime)
+                                sortByTextView.setText(R.string.sortByTime)
                             }
                         }
                         1 -> {
@@ -161,7 +163,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                                 recyclerAdapter = AssignmentTypeListRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
                                 listView.adapter = recyclerAdapter
                                 sortBy = SORT_BY_TYPE
-                                sortByButton.setText(R.string.sortByType)
+                                sortByTextView.setText(R.string.sortByType)
                             }
                         }
                     }
@@ -187,11 +189,14 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupGradingPeriods(periods: List<GradingPeriod>) {
+        val hasGradingPeriods = periods.isNotEmpty()
         val adapter = TermSpinnerAdapter(
             requireContext(),
             android.R.layout.simple_spinner_dropdown_item,
-            periods + allTermsGradingPeriod
+            periods + allTermsGradingPeriod,
+            hasGradingPeriods
         )
+        termSpinner.isEnabled = hasGradingPeriods
         termAdapter = adapter
         termSpinner.adapter = adapter
         termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -219,8 +224,6 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                 toast(R.string.errorOccurred)
             }
         }
-
-        termSpinnerLayout.setVisible()
     }
 
     override fun handleBackPressed() = toolbar.closeSearch()

@@ -40,7 +40,6 @@ import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.interfaces.GradingPeriodsCallback
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
 
 abstract class AssignmentRecyclerAdapter (
         context: Context,
@@ -81,11 +80,11 @@ abstract class AssignmentRecyclerAdapter (
                 assignmentGroups = response.body()!!
                 populateData()
                 adapterToAssignmentsCallback.onRefreshFinished()
-                adapterToAssignmentsCallback.setTermSpinnerState(true)
+                adapterToAssignmentsCallback.assignmentLoadingFinished()
             }
 
             override fun onFail(call: Call<List<AssignmentGroup>>?, error: Throwable, response: Response<*>?) {
-                adapterToAssignmentsCallback.setTermSpinnerState(true)
+                adapterToAssignmentsCallback.assignmentLoadingFinished()
             }
 
             override fun onFinished(type: ApiType) {
