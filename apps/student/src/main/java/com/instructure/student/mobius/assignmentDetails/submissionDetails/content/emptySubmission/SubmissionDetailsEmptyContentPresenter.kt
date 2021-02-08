@@ -75,7 +75,7 @@ object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmpty
     }
 
     private fun allowedToSubmit(assignment: Assignment, course: Course): Boolean {
-        return if (!course.isReadOnlyForCurrentDate()) {
+        return if (!course.isBetweenValidDateRange()) {
             // Don't show submit if the course is soft concluded
             return false
         } else if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL) {
