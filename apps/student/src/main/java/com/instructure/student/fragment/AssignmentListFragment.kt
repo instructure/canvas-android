@@ -122,6 +122,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 
         val sortByButtonResId = if (sortBy == SORT_BY_TIME) R.string.sortByTime else R.string.sortByType
         sortByTextView.setText(sortByButtonResId)
+        sortByButton.contentDescription = getString(sortByButtonResId)
 
         configureRecyclerView(
             view,
@@ -145,6 +146,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupSortByButton() {
+        sortByButton.importantForAccessibility
         sortByButton.onClick {
             val checkedItemIndex = if (sortBy == SORT_BY_TIME) SORT_BY_TIME_INDEX else SORT_BY_TYPE_INDEX
             AlertDialog.Builder(context, R.style.AccentDialogTheme)
@@ -169,6 +171,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             listView.adapter = recyclerAdapter
             sortBy = SORT_BY_TIME
             sortByTextView.setText(R.string.sortByTime)
+            sortByButton.contentDescription = getString(R.string.sortByTime)
         }
     }
 
@@ -178,6 +181,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             listView.adapter = recyclerAdapter
             sortBy = SORT_BY_TYPE
             sortByTextView.setText(R.string.sortByType)
+            sortByButton.contentDescription = getString(R.string.sortByType)
         }
     }
 

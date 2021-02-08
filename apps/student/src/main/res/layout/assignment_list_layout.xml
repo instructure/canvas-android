@@ -55,9 +55,14 @@
                 android:id="@+id/sortByButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/sortByTime"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:gravity="center_vertical"
+                android:importantForAccessibility="yes"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -67,12 +72,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="4dp"
+                    android:importantForAccessibility="no"
                     android:text="@string/sortByTime" />
 
                 <ImageView
                     android:layout_marginTop="2dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_chevron_down" />
 
             </LinearLayout>
