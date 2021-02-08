@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.models.CanvasComparable
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.isInvited
-import com.instructure.canvasapi2.utils.isValidTerm
+import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
@@ -129,7 +129,7 @@ class EditFavoritesRecyclerAdapter(
             val (rawCourses, rawGroups) = awaitApis<List<Course>,List<Group>>(
                     { CourseManager.getCourses(true, it) },
                     { GroupManager.getAllGroups(it,true)})
-            val validCourses = rawCourses.filter { !it.accessRestrictedByDate && !it.isInvited() }
+            val validCourses = rawCourses.filter { !it.accessRestrictedByDate && !it.isInvited() && it.isNotDeleted() }
             addOrUpdateAllItems(ItemType.COURSE_HEADER,validCourses)
             val courseMap = rawCourses.associateBy { it.id }
             val groups = rawGroups.filter { group -> group.isActive(courseMap[group.courseId]) }
