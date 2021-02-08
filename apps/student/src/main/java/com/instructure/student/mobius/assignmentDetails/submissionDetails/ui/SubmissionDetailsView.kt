@@ -118,7 +118,19 @@ class SubmissionDetailsView(
                 panel: View?,
                 previousState: SlidingUpPanelLayout.PanelState?,
                 newState: SlidingUpPanelLayout.PanelState?
-            ) = Unit
+            ) {
+                when (newState) {
+                    SlidingUpPanelLayout.PanelState.ANCHORED -> {
+                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                    }
+                    SlidingUpPanelLayout.PanelState.EXPANDED -> {
+                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
+                    }
+                    SlidingUpPanelLayout.PanelState.COLLAPSED -> {
+                        submissionContent.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
+                    }
+                }
+            }
 
             override fun onPanelSlide(panel: View?, offset: Float) {
                 val maxHeight = contentWrapper.height
