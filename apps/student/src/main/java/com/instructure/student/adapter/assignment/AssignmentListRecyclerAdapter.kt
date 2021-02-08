@@ -41,7 +41,7 @@ import com.instructure.student.interfaces.GradingPeriodsCallback
 import retrofit2.Call
 import retrofit2.Response
 
-abstract class AssignmentRecyclerAdapter (
+abstract class AssignmentListRecyclerAdapter (
         context: Context,
         private val canvasContext: CanvasContext,
         private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
@@ -88,7 +88,7 @@ abstract class AssignmentRecyclerAdapter (
             }
 
             override fun onFinished(type: ApiType) {
-                this@AssignmentRecyclerAdapter.onCallbackFinished(type)
+                this@AssignmentListRecyclerAdapter.onCallbackFinished(type)
             }
         }
 
@@ -209,7 +209,7 @@ abstract class AssignmentRecyclerAdapter (
         AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext.id, isRefresh, assignmentGroupCallback!!)
     }
 
-    abstract protected fun populateData()
+    protected abstract fun populateData()
 
     // region Expandable callbacks
 

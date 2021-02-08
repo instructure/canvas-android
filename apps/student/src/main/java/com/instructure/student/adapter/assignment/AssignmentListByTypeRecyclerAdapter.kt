@@ -25,12 +25,12 @@ import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 
-class AssignmentTypeListRecyclerAdapter(
+class AssignmentListByTypeRecyclerAdapter(
         context: Context,
         canvasContext: CanvasContext,
         adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
         isTesting: Boolean = false
-) : AssignmentRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
 
     override fun populateData() {
         assignmentGroups.forEach { assignmentGroup ->

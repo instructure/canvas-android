@@ -31,12 +31,12 @@ private const val HEADER_POSITION_UPCOMING = 1
 private const val HEADER_POSITION_UNDATED = 2
 private const val HEADER_POSITION_PAST = 3
 
-class AssignmentDateListRecyclerAdapter(
+class AssignmentListByDateRecyclerAdapter(
         context: Context,
         canvasContext: CanvasContext,
         adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
         isTesting: Boolean = false
-) : AssignmentRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
+) : AssignmentListRecyclerAdapter(context, canvasContext, adapterToAssignmentsCallback, isTesting) {
 
     private val overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
     private val upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)
