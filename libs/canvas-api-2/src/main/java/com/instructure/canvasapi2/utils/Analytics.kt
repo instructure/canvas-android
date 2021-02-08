@@ -78,6 +78,8 @@ object AnalyticsEventConstants {
     const val SUBMIT_FILEUPLOAD_FAILED = "submit_fileupload_failed"
     const val SUBMIT_FILEUPLOAD_SUCCEEDED = "submit_fileupload_succeeded"
     const val UNSUPPORTED_SUBMISSION_CONTENT = "unsupported_submission_content"
+    const val ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED = "assignment_list_sort_by_type_selected"
+    const val ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED = "assignment_list_sort_by_time_selected"
 
     /* Panda Avatar */
     const val PANDA_AVATAR_EDITOR_OPENED = "panda_avatar_editor_opened"

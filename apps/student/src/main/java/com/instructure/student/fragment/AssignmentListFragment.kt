@@ -28,6 +28,8 @@ import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.bookmarks.Bookmarkable
 import com.instructure.interactions.bookmarks.Bookmarker
@@ -154,10 +156,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
                 .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex) { dialog, index ->
                     if (index == SORT_BY_TIME_INDEX) {
                         dialog.dismiss()
-                        sortByTime()
+                        sortByTimeSelected()
                     } else if (index == SORT_BY_TYPE_INDEX) {
                         dialog.dismiss()
-                        sortByType()
+                        sortByTypeSelected()
                     }
                 }
                 .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
@@ -165,23 +167,25 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
-    private fun sortByTime() {
+    private fun sortByTimeSelected() {
         if (sortBy != SORT_BY_TIME) {
             recyclerAdapter = AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
             listView.adapter = recyclerAdapter
             sortBy = SORT_BY_TIME
             sortByTextView.setText(R.string.sortByTime)
             sortByButton.contentDescription = getString(R.string.sortByTime)
+            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED)
         }
     }
 
-    private fun sortByType() {
+    private fun sortByTypeSelected() {
         if (sortBy != SORT_BY_TYPE) {
             recyclerAdapter = AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
             listView.adapter = recyclerAdapter
             sortBy = SORT_BY_TYPE
             sortByTextView.setText(R.string.sortByType)
             sortByButton.contentDescription = getString(R.string.sortByType)
+            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED)
         }
     }
 
