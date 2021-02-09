@@ -232,7 +232,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
         // If we have a "current" grading period select it
-        if (recyclerAdapter.currentGradingPeriod != null) {
+        if (hasGradingPeriods && recyclerAdapter.currentGradingPeriod != null) {
             val position = adapter.getPositionForId(recyclerAdapter.currentGradingPeriod?.id ?: 0)
             if (position != -1) {
                 termSpinner.setSelection(position)

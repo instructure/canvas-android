@@ -141,6 +141,8 @@ abstract class AssignmentListRecyclerAdapter (
                     loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
                     return
                 }
+            } else {
+                adapterToAssignmentsCallback.gradingPeriodsFetched(emptyList())
             }
         }
         //If we made it this far, MGP is disabled so we just go forward with the standard
@@ -154,6 +156,7 @@ abstract class AssignmentListRecyclerAdapter (
             }.gradingPeriodList
             adapterToAssignmentsCallback.gradingPeriodsFetched(periods)
         } catch {
+            adapterToAssignmentsCallback.gradingPeriodsFetched(emptyList())
             Logger.w("Unable to fetch grading periods")
             it.printStackTrace()
         }
