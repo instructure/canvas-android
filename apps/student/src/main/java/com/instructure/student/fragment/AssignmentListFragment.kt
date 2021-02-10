@@ -18,6 +18,7 @@
 package com.instructure.student.fragment
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,19 +40,13 @@ import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.adapter.TermSpinnerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListByDateRecyclerAdapter
-import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
 import com.instructure.student.adapter.assignment.AssignmentListByTypeRecyclerAdapter
+import com.instructure.student.adapter.assignment.AssignmentListRecyclerAdapter
 import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.StudentPrefs
 import kotlinx.android.synthetic.main.assignment_list_layout.*
-
-private const val SORT_BY_TYPE = "type"
-private const val SORT_BY_TIME = "time"
-
-private const val SORT_BY_TIME_INDEX = 0
-private const val SORT_BY_TYPE_INDEX = 1
 
 @PageView(url = "{canvasContext}/assignments")
 class AssignmentListFragment : ParentFragment(), Bookmarkable {
@@ -61,10 +56,13 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     private lateinit var recyclerAdapter: AssignmentListRecyclerAdapter
     private var termAdapter: TermSpinnerAdapter? = null
 
-    private var sortBy: String
-        get() = StudentPrefs.getString("sortBy_${canvasContext.contextId}", SORT_BY_TIME) ?: SORT_BY_TIME
+    private var sortOrder: AssignmentsSortOrder
+        get() {
+            val preferenceKey = StudentPrefs.getString("sortBy_${canvasContext.contextId}", AssignmentsSortOrder.SORT_BY_TIME.preferenceKey)
+            return AssignmentsSortOrder.fromPreferenceKey(preferenceKey)
+        }
         set(value) {
-            StudentPrefs.putString("sortBy_${canvasContext.contextId}", value)
+            StudentPrefs.putString("sortBy_${canvasContext.contextId}", value.preferenceKey)
         }
 
     private val allTermsGradingPeriod by lazy {
@@ -108,23 +106,10 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             inflater.inflate(R.layout.assignment_list_layout, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        recyclerAdapter = if (sortBy == SORT_BY_TIME) {
-            AssignmentListByDateRecyclerAdapter(
-                requireContext(),
-                canvasContext,
-                adapterToAssignmentsCallback
-            )
-        } else {
-            AssignmentListByTypeRecyclerAdapter(
-                requireContext(),
-                canvasContext,
-                adapterToAssignmentsCallback
-            )
-        }
+        recyclerAdapter = createRecyclerAdapter()
 
-        val sortByButtonResId = if (sortBy == SORT_BY_TIME) R.string.sortByTime else R.string.sortByType
-        sortByTextView.setText(sortByButtonResId)
-        sortByButton.contentDescription = getString(sortByButtonResId)
+        sortByTextView.setText(sortOrder.buttonTextRes)
+        sortByButton.contentDescription = getString(sortOrder.contentDescriptionRes)
 
         configureRecyclerView(
             view,
@@ -147,44 +132,35 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         setupSortByButton()
     }
 
+    private fun createRecyclerAdapter(): AssignmentListRecyclerAdapter {
+        return if (sortOrder == AssignmentsSortOrder.SORT_BY_TIME) {
+            AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+        } else {
+            AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+        }
+    }
+
     private fun setupSortByButton() {
         sortByButton.onClick {
-            val checkedItemIndex = if (sortBy == SORT_BY_TIME) SORT_BY_TIME_INDEX else SORT_BY_TYPE_INDEX
+            val checkedItemIndex = sortOrder.index
             AlertDialog.Builder(context, R.style.AccentDialogTheme)
                 .setTitle(R.string.sortByDialogTitle)
-                .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex) { dialog, index ->
-                    if (index == SORT_BY_TIME_INDEX) {
-                        dialog.dismiss()
-                        sortByTimeSelected()
-                    } else if (index == SORT_BY_TYPE_INDEX) {
-                        dialog.dismiss()
-                        sortByTypeSelected()
-                    }
-                }
+                .setSingleChoiceItems(R.array.assignmentsSortByOptions, checkedItemIndex, this@AssignmentListFragment::sortOrderSelected)
                 .setNegativeButton(R.string.sortByDialogCancel) { dialog, _ -> dialog.dismiss() }
                 .show()
         }
     }
 
-    private fun sortByTimeSelected() {
-        if (sortBy != SORT_BY_TIME) {
-            recyclerAdapter = AssignmentListByDateRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
+    private fun sortOrderSelected(dialog: DialogInterface, index: Int) {
+        dialog.dismiss()
+        val selectedSortOrder = AssignmentsSortOrder.fromIndex(index)
+        if (sortOrder != selectedSortOrder) {
+            sortOrder = selectedSortOrder
+            recyclerAdapter = createRecyclerAdapter()
             listView.adapter = recyclerAdapter
-            sortBy = SORT_BY_TIME
-            sortByTextView.setText(R.string.sortByTime)
-            sortByButton.contentDescription = getString(R.string.sortByTime)
-            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED)
-        }
-    }
-
-    private fun sortByTypeSelected() {
-        if (sortBy != SORT_BY_TYPE) {
-            recyclerAdapter = AssignmentListByTypeRecyclerAdapter(requireContext(), canvasContext, adapterToAssignmentsCallback)
-            listView.adapter = recyclerAdapter
-            sortBy = SORT_BY_TYPE
-            sortByTextView.setText(R.string.sortByType)
-            sortByButton.contentDescription = getString(R.string.sortByType)
-            Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED)
+            sortByTextView.setText(selectedSortOrder.buttonTextRes)
+            sortByButton.contentDescription = getString(selectedSortOrder.contentDescriptionRes)
+            Analytics.logEvent(selectedSortOrder.analyticsKey)
         }
     }
 
@@ -290,4 +266,33 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
     }
 
+}
+
+enum class AssignmentsSortOrder(
+    val index: Int,
+    val preferenceKey: String,
+    val buttonTextRes: Int,
+    val contentDescriptionRes: Int,
+    val analyticsKey: String) {
+
+    SORT_BY_TIME(0, "time", R.string.sortByTime, R.string.sortByTime, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED),
+    SORT_BY_TYPE(1, "type", R.string.sortByType, R.string.sortByType, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED);
+
+    companion object {
+        fun fromPreferenceKey(key: String?): AssignmentsSortOrder {
+            return when (key) {
+                SORT_BY_TIME.preferenceKey -> SORT_BY_TIME
+                SORT_BY_TYPE.preferenceKey -> SORT_BY_TYPE
+                else -> SORT_BY_TIME // This will be the default value
+            }
+        }
+
+        fun fromIndex(key: Int): AssignmentsSortOrder {
+            return when (key) {
+                SORT_BY_TIME.index -> SORT_BY_TIME
+                SORT_BY_TYPE.index -> SORT_BY_TYPE
+                else -> SORT_BY_TIME // This will be the default value
+            }
+        }
+    }
 }
