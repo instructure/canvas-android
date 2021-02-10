@@ -20,6 +20,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingPeriod
 
 interface AdapterToAssignmentsCallback : AdapterToFragmentCallback<Assignment> {
-    fun setTermSpinnerState(isEnabled: Boolean)
+    fun assignmentLoadingFinished()
     fun gradingPeriodsFetched(periods: List<GradingPeriod>)
 }

@@ -197,6 +197,16 @@
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sort by</string>
+    <string name="sortByDialogTimeOption">Time</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sort by Time</string>
+    <string name="sortByType">Sort by Type</string>
+    <string name="sortByDialogCancel">Cancel</string>
+    <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
+    <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
+    <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
+    <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>

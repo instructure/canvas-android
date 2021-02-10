@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 - present Instructure, Inc.
+ * Copyright (C) 2021 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,8 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-package com.instructure.student.adapter
+package com.instructure.student.adapter.assignment
 
 import android.content.Context
 import android.view.View
@@ -33,6 +32,7 @@ import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
+import com.instructure.student.adapter.ExpandableRecyclerAdapter
 import com.instructure.student.holders.AssignmentViewHolder
 import com.instructure.student.holders.EmptyViewHolder
 import com.instructure.student.holders.ExpandableViewHolder
@@ -40,27 +40,22 @@ import com.instructure.student.interfaces.AdapterToAssignmentsCallback
 import com.instructure.student.interfaces.GradingPeriodsCallback
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
 
-open class AssignmentDateListRecyclerAdapter(
-    context: Context,
-    private val canvasContext: CanvasContext,
-    private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
-    isTesting: Boolean = false
+abstract class AssignmentListRecyclerAdapter (
+        context: Context,
+        private val canvasContext: CanvasContext,
+        private val adapterToAssignmentsCallback: AdapterToAssignmentsCallback,
+        isTesting: Boolean = false
 ) : ExpandableRecyclerAdapter<AssignmentGroup, Assignment, RecyclerView.ViewHolder>(
-    context,
-    AssignmentGroup::class.java,
-    Assignment::class.java
+        context,
+        AssignmentGroup::class.java,
+        Assignment::class.java
 ), GradingPeriodsCallback {
 
-    private val overdue: AssignmentGroup
-    private val upcoming: AssignmentGroup
-    private val undated: AssignmentGroup
-    private val past: AssignmentGroup
     private var assignmentGroupCallback: StatusCallback<List<AssignmentGroup>>? = null
     override var currentGradingPeriod: GradingPeriod? = null
     private var apiJob: WeaveJob? = null
-    private var assignmentGroups: List<AssignmentGroup> = emptyList()
+    protected var assignmentGroups: List<AssignmentGroup> = emptyList()
 
     var searchQuery: String = ""
         set(value) {
@@ -73,10 +68,6 @@ open class AssignmentDateListRecyclerAdapter(
         }
 
     init {
-        overdue = AssignmentGroup(name = context.getString(R.string.overdueAssignments), position = HEADER_POSITION_OVERDUE)
-        upcoming = AssignmentGroup(name = context.getString(R.string.upcomingAssignments), position = HEADER_POSITION_UPCOMING)
-        undated = AssignmentGroup(name = context.getString(R.string.undatedAssignments), position = HEADER_POSITION_UNDATED)
-        past = AssignmentGroup(name = context.getString(R.string.pastAssignments), position = HEADER_POSITION_PAST)
         isExpandedByDefault = true
         isDisplayEmptyCell = true
         if (!isTesting) loadData()
@@ -89,15 +80,15 @@ open class AssignmentDateListRecyclerAdapter(
                 assignmentGroups = response.body()!!
                 populateData()
                 adapterToAssignmentsCallback.onRefreshFinished()
-                adapterToAssignmentsCallback.setTermSpinnerState(true)
+                adapterToAssignmentsCallback.assignmentLoadingFinished()
             }
 
             override fun onFail(call: Call<List<AssignmentGroup>>?, error: Throwable, response: Response<*>?) {
-                adapterToAssignmentsCallback.setTermSpinnerState(true)
+                adapterToAssignmentsCallback.assignmentLoadingFinished()
             }
 
             override fun onFinished(type: ApiType) {
-                this@AssignmentDateListRecyclerAdapter.onCallbackFinished(type)
+                this@AssignmentListRecyclerAdapter.onCallbackFinished(type)
             }
         }
 
@@ -127,7 +118,7 @@ open class AssignmentDateListRecyclerAdapter(
 
         //This check is for the "all grading periods" option
         if (currentGradingPeriod != null && currentGradingPeriod!!.title != null
-            && currentGradingPeriod!!.title == context.getString(R.string.allGradingPeriods)) {
+                && currentGradingPeriod!!.title == context.getString(R.string.allGradingPeriods)) {
             loadAssignment()
             return
         }
@@ -150,6 +141,8 @@ open class AssignmentDateListRecyclerAdapter(
                     loadAssignmentsForGradingPeriod(currentGradingPeriod!!.id, true)
                     return
                 }
+            } else {
+                adapterToAssignmentsCallback.gradingPeriodsFetched(emptyList())
             }
         }
         //If we made it this far, MGP is disabled so we just go forward with the standard
@@ -163,6 +156,7 @@ open class AssignmentDateListRecyclerAdapter(
             }.gradingPeriodList
             adapterToAssignmentsCallback.gradingPeriodsFetched(periods)
         } catch {
+            adapterToAssignmentsCallback.gradingPeriodsFetched(emptyList())
             Logger.w("Unable to fetch grading periods")
             it.printStackTrace()
         }
@@ -173,9 +167,9 @@ open class AssignmentDateListRecyclerAdapter(
     override val isPaginated get() = false
 
     override fun onBindChildHolder(
-        holder: RecyclerView.ViewHolder,
-        assignmentGroup: AssignmentGroup,
-        assignment: Assignment
+            holder: RecyclerView.ViewHolder,
+            assignmentGroup: AssignmentGroup,
+            assignment: Assignment
     ) {
         (holder as AssignmentViewHolder).bind(context, assignment, canvasContext.color, adapterToAssignmentsCallback)
     }
@@ -185,16 +179,16 @@ open class AssignmentDateListRecyclerAdapter(
     }
 
     override fun onBindHeaderHolder(
-        holder: RecyclerView.ViewHolder,
-        assignmentGroup: AssignmentGroup,
-        isExpanded: Boolean
+            holder: RecyclerView.ViewHolder,
+            assignmentGroup: AssignmentGroup,
+            isExpanded: Boolean
     ) {
         (holder as ExpandableViewHolder).bind(
-            context,
-            assignmentGroup,
-            assignmentGroup.name ?: "",
-            isExpanded,
-            viewHolderHeaderClicked
+                context,
+                assignmentGroup,
+                assignmentGroup.name ?: "",
+                isExpanded,
+                viewHolderHeaderClicked
         )
     }
 
@@ -206,11 +200,11 @@ open class AssignmentDateListRecyclerAdapter(
         // Scope assignments if its for a student
         val scopeToStudent = (canvasContext as Course).isStudent
         AssignmentManager.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-            canvasContext.id,
-            gradingPeriodID,
-            scopeToStudent,
-            isRefresh,
-            assignmentGroupCallback!!
+                canvasContext.id,
+                gradingPeriodID,
+                scopeToStudent,
+                isRefresh,
+                assignmentGroupCallback!!
         )
     }
 
@@ -218,35 +212,7 @@ open class AssignmentDateListRecyclerAdapter(
         AssignmentManager.getAssignmentGroupsWithAssignments(canvasContext.id, isRefresh, assignmentGroupCallback!!)
     }
 
-    private fun populateData() {
-        val today = Date()
-        for (assignmentGroup in assignmentGroups) {
-            // TODO canHaveOverDueAssignment
-            // web does it like this
-            // # only handles observer observing one student, this needs to change to handle multiple users in the future
-            // canHaveOverdueAssignment = !ENV.current_user_has_been_observer_in_this_course || ENV.observed_student_ids?.length == 1I
-            // endtodo
-            assignmentGroup.assignments
-                .filterWithQuery(searchQuery, Assignment::name)
-                .forEach { assignment ->
-                    val dueAt = assignment.dueAt
-                    val submission = assignment.submission
-                    assignment.submission = submission
-                    val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
-                    val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
-                    if (dueAt == null) {
-                        addOrUpdateItem(undated, assignment)
-                    } else {
-                        when {
-                            today.before(dueAt.toDate()) -> addOrUpdateItem(upcoming, assignment)
-                            isOverdue -> addOrUpdateItem(overdue, assignment)
-                            else -> addOrUpdateItem(past, assignment)
-                        }
-                    }
-                }
-        }
-        isAllPagesLoaded = true
-    }
+    protected abstract fun populateData()
 
     // region Expandable callbacks
 
@@ -258,37 +224,10 @@ open class AssignmentDateListRecyclerAdapter(
         override fun getUniqueGroupId(group: AssignmentGroup) = group.position.toLong()
     }
 
-    override fun createItemCallback() = itemCallback
-
     // endregion
 
     override fun cancel() {
         super.cancel()
         apiJob?.cancel()
     }
-
-    companion object {
-        const val HEADER_POSITION_OVERDUE = 0
-        const val HEADER_POSITION_UPCOMING = 1
-        const val HEADER_POSITION_UNDATED = 2
-        const val HEADER_POSITION_PAST = 3
-
-        // Decoupled for testability
-        val itemCallback = object : GroupSortedList.ItemComparatorCallback<AssignmentGroup, Assignment> {
-            private val sameCheck = compareBy<Assignment>({ it.dueAt }, { it.name })
-            override fun areContentsTheSame(old: Assignment, new: Assignment) = sameCheck.compare(old, new) == 0
-            override fun areItemsTheSame(item1: Assignment, item2: Assignment) = item1.id == item2.id
-            override fun getChildType(group: AssignmentGroup, item: Assignment) = Types.TYPE_ITEM
-            override fun getUniqueItemId(item: Assignment) = item.id
-            override fun compare(group: AssignmentGroup, o1: Assignment, o2: Assignment): Int {
-                val position = group.position
-                return when (position) {
-                    HEADER_POSITION_UNDATED -> o1.name?.toLowerCase()?.compareTo(o2.name?.toLowerCase() ?: "") ?: 0
-                    HEADER_POSITION_PAST -> o2.dueAt?.compareTo(o1.dueAt ?: "") ?: 0 // Sort newest date first (o1 and o2 switched places)
-                    else -> o1.dueAt?.compareTo(o2.dueAt ?: "") ?: 0 // Sort oldest date first
-                }
-            }
-        }
-    }
-
 }
