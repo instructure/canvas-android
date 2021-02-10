@@ -25,6 +25,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import androidx.annotation.StringRes
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -161,6 +162,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
             sortByTextView.setText(selectedSortOrder.buttonTextRes)
             sortByButton.contentDescription = getString(selectedSortOrder.contentDescriptionRes)
             Analytics.logEvent(selectedSortOrder.analyticsKey)
+            listView.announceForAccessibility(getString(selectedSortOrder.orderSelectedAnnouncement))
         }
     }
 
@@ -271,12 +273,16 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
 enum class AssignmentsSortOrder(
     val index: Int,
     val preferenceKey: String,
-    val buttonTextRes: Int,
-    val contentDescriptionRes: Int,
+    @StringRes val buttonTextRes: Int,
+    @StringRes val contentDescriptionRes: Int,
+    @StringRes val orderSelectedAnnouncement: Int,
     val analyticsKey: String) {
 
-    SORT_BY_TIME(0, "time", R.string.sortByTime, R.string.sortByTime, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED),
-    SORT_BY_TYPE(1, "type", R.string.sortByType, R.string.sortByType, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED);
+    SORT_BY_TIME(0, "time", R.string.sortByTime, R.string.a11y_sortByTimeButton,
+        R.string.a11y_assignmentsSortedByTime, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TIME_SELECTED),
+
+    SORT_BY_TYPE(1, "type", R.string.sortByType, R.string.a11y_sortByTypeButton,
+        R.string.a11y_assignmentsSortedByType, AnalyticsEventConstants.ASSIGNMENT_LIST_SORT_BY_TYPE_SELECTED);
 
     companion object {
         fun fromPreferenceKey(key: String?): AssignmentsSortOrder {
