@@ -148,7 +148,6 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
     }
 
     private fun setupSortByButton() {
-        sortByButton.importantForAccessibility
         sortByButton.onClick {
             val checkedItemIndex = if (sortBy == SORT_BY_TIME) SORT_BY_TIME_INDEX else SORT_BY_TYPE_INDEX
             AlertDialog.Builder(context, R.style.AccentDialogTheme)
