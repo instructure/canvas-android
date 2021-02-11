@@ -305,7 +305,7 @@ class FileListFragment : BaseSyncFragment<
         fabOpen = false
     } else {
         addFab.startAnimation(fabRotateForward)
-        addFolderFab.requestAccessibilityFocus(0)
+        addFab.announceForAccessibility(getString(R.string.a11y_create_file_folder_visible))
         addFab.contentDescription = getString(R.string.hideCreateFileFolderFabContentDesc)
         addFolderFab.apply {
             startAnimation(fabReveal)
