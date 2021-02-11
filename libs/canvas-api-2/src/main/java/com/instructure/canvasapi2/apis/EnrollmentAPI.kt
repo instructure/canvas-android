@@ -31,6 +31,7 @@ object EnrollmentAPI {
 
     const val STATE_ACTIVE = "active"
     const val STATE_INVITED = "invited"
+    const val STATE_CURRENT_AND_FUTURE = "current_and_future"
 
     internal interface EnrollmentInterface {
 
