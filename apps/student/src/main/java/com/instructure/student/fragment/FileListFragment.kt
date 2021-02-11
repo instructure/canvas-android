@@ -450,6 +450,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
 
     private fun animateFabs() = if (mFabOpen) {
         addFab.startAnimation(fabRotateBackwards)
+        addFab.announceForAccessibility(getString(R.string.a11y_create_file_folder_gone))
+        addFab.contentDescription = getString(R.string.createFileFolderFabContentDesc)
         addFolderFab.startAnimation(fabHide)
         addFolderFab.isClickable = false
 
@@ -462,6 +464,8 @@ class FileListFragment : ParentFragment(), Bookmarkable {
         mFabOpen = false
     } else {
         addFab.startAnimation(fabRotateForward)
+        addFab.announceForAccessibility(getString(R.string.a11y_create_file_folder_visible))
+        addFab.contentDescription = getString(R.string.hideCreateFileFolderFabContentDesc)
         addFolderFab.apply {
             startAnimation(fabReveal)
             isClickable = true

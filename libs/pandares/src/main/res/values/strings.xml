@@ -266,6 +266,7 @@
     <string name="createFolder">Create Folder</string>
     <string name="createAFile">Create A File</string>
     <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
     <string name="folderCreationError">An error occurred during folder creation.</string>
     <string name="rename">Rename</string>
     <string name="renameFile">Rename file</string>
