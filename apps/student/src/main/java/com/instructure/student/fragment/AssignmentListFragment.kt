@@ -67,7 +67,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         }
 
     private val allTermsGradingPeriod by lazy {
-        GradingPeriod().apply { title = getString(R.string.allGradingPeriods) }
+        GradingPeriod().apply { title = getString(R.string.assignmentsListAllGradingPeriods) }
     }
 
     private val adapterToAssignmentsCallback = object : AdapterToAssignmentsCallback {
@@ -194,7 +194,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         termSpinner.adapter = adapter
         termSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(adapterView: AdapterView<*>, view: View?, i: Int, l: Long) {
-                if (adapter.getItem(i)!!.title == getString(R.string.allGradingPeriods)) {
+                if (adapter.getItem(i)!!.title == getString(R.string.assignmentsListAllGradingPeriods)) {
                     recyclerAdapter.loadAssignment()
                 } else {
                     recyclerAdapter.loadAssignmentsForGradingPeriod(adapter.getItem(i)!!.id, true)
