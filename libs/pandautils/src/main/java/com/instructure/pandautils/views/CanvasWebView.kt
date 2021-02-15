@@ -474,35 +474,34 @@ class CanvasWebView @JvmOverloads constructor(
      * press back 2 or 3 times.
      *
      * @param html
-     * @param contentDescription
+     * @param title
      * @return
      */
-    fun loadHtml(html: String, contentDescription: String?): String {
-        val result = formatHtml(html)
+    fun loadHtml(html: String, title: String?): String {
+        val result = formatHtml(html, title)
         loadDataWithBaseURL(getReferrer(true), result, "text/html", encoding, getHtmlAsUrl(result))
-        setupAccessibilityContentDescription(result, contentDescription)
         return result
     }
 
     /**
      * Helper function that makes html content somewhat suitable for mobile
      */
-    fun formatHtml(html: String): String {
+    fun formatHtml(html: String, title: String? = ""): String {
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
         val htmlWrapper = getAssetsFile(context, "html_wrapper.html")
-        return htmlWrapper.replace("{\$CONTENT$}", formatted)
+        return htmlWrapper
+            .replace("{\$CONTENT$}", formatted)
+            .replace("{\$TITLE$}", title ?: "")
     }
 
     /**
      * Loads the provided HTML string without modification
      * @param html The raw HTML to load
-     * @param contentDescription The content description of the HTML
      */
-    fun loadRawHtml(html: String, contentDescription: String?) {
+    fun loadRawHtml(html: String) {
         loadDataWithBaseURL(getReferrer(true), html, "text/html", encoding, getHtmlAsUrl(html))
-        setupAccessibilityContentDescription(html, contentDescription)
     }
 
     /*
