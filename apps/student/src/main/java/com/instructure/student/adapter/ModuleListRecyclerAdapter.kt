@@ -57,10 +57,10 @@ import retrofit2.Response
 import java.util.*
 
 open class ModuleListRecyclerAdapter(
-        val courseContext: CanvasContext,
+        private val courseContext: CanvasContext,
         context: Context,
-        val shouldExhaustPagination: Boolean,
-        val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
+        private var shouldExhaustPagination: Boolean,
+        private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
     private val mModuleItemCallbacks = HashMap<Long, ModuleItemCallback>()
@@ -137,6 +137,7 @@ open class ModuleListRecyclerAdapter(
     }
 
     override fun refresh() {
+        shouldExhaustPagination = false
         mModuleItemCallbacks.clear()
         checkCourseTabsJob?.cancel()
         collapseAll()

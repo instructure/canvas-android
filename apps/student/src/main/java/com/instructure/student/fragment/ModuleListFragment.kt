@@ -172,6 +172,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                         if (groupPosition >= 0) {
                             val lm = listView?.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)
+                            arguments?.remove(MODULE_ID)
                         }
                     }, 1000)
                 }
