@@ -162,16 +162,16 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
                 } else if (recyclerAdapter.size() == 0) {
                     setEmptyView(emptyView, R.drawable.ic_panda_nomodules, R.string.noModules, R.string.noModulesSubtext)
                 } else if (!arguments?.getString(MODULE_ID).isNullOrEmpty()) {
-                    val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
-                    if (groupPosition >= 0) {
-                        // We need to delay scrolling until the expand animation has completed, otherwise modules
-                        // that appear near the end of the list will not have the extra 'expanded' space needed
-                        // to scroll as far as possible toward the top
-                        listView?.postDelayed({
+                    // We need to delay scrolling until the expand animation has completed, otherwise modules
+                    // that appear near the end of the list will not have the extra 'expanded' space needed
+                    // to scroll as far as possible toward the top
+                    listView?.postDelayed({
+                        val groupPosition = recyclerAdapter.getGroupItemPosition(arguments!!.getString(MODULE_ID)!!.toLong())
+                        if (groupPosition >= 0) {
                             val lm = listView?.layoutManager as? LinearLayoutManager
                             lm?.scrollToPositionWithOffset(groupPosition, 0)
-                        }, 1000)
-                    }
+                        }
+                    }, 1000)
                 }
             }
         })

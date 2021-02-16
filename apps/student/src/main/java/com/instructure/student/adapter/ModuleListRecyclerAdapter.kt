@@ -83,7 +83,7 @@ open class ModuleListRecyclerAdapter(
 
         }
         isExpandedByDefault = false
-//        isDisplayEmptyCell = true TODO - make this work with scroll to functionality
+        isDisplayEmptyCell = true
         if (adapterToFragmentCallback != null) loadData() // Callback is null when testing
     }
 
