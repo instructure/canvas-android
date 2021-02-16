@@ -59,6 +59,7 @@ import java.util.*
 open class ModuleListRecyclerAdapter(
         val courseContext: CanvasContext,
         context: Context,
+        val shouldExhaustPagination: Boolean,
         val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
 ) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
 
@@ -67,7 +68,7 @@ open class ModuleListRecyclerAdapter(
     private var checkCourseTabsJob: Job? = null
 
     /* For testing purposes only */
-    protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), context, null) // Callback not needed for testing, cast to null
+    protected constructor(context: Context) : this(CanvasContext.defaultCanvasContext(), context, false,null) // Callback not needed for testing, cast to null
 
     init {
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
@@ -339,8 +340,8 @@ open class ModuleListRecyclerAdapter(
                         ModuleManager.getFirstPageModuleItems(courseContext, it.id, getModuleItemsCallback(it, true), true)
                     }
                 }
-                if(!this.moreCallsExist()) {
-                    // Wait until we are done exhausting pagination
+                if(!shouldExhaustPagination || !this.moreCallsExist()) {
+                    // If we should exhaust pagination wait until we are done exhausting pagination
                     adapterToFragmentCallback?.onRefreshFinished()
                 }
             }
@@ -358,13 +359,21 @@ open class ModuleListRecyclerAdapter(
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
-                ModuleManager.getAllModuleObjets(courseContext, mModuleObjectCallback!!, true)
+                if (shouldExhaustPagination) {
+                    ModuleManager.getAllModuleObjets(courseContext, mModuleObjectCallback!!, true)
+                } else {
+                    ModuleManager.getFirstPageModuleObjects(courseContext, mModuleObjectCallback!!, true)
+                }
             } else {
                 adapterToFragmentCallback?.onRefreshFinished(true)
             }
         } catch {
             adapterToFragmentCallback?.onRefreshFinished(true)
         }
+    }
+
+    override fun loadNextPage(nextURL: String) {
+        ModuleManager.getNextPageModuleObjects(nextURL, mModuleObjectCallback!!, true)
     }
 
     // endregion

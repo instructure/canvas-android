@@ -129,7 +129,9 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun getSelectedParamName(): String = RouterParams.MODULE_ID
 
     fun setupViews() {
-        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), object : ModuleAdapterToFragmentCallback {
+        val navigatingToSpecificModule = !arguments?.getString(MODULE_ID).isNullOrEmpty()
+
+        recyclerAdapter = ModuleListRecyclerAdapter(canvasContext, requireContext(), navigatingToSpecificModule, object : ModuleAdapterToFragmentCallback {
             override fun onRowClicked(moduleObject: ModuleObject, moduleItem: ModuleItem, position: Int, isOpenDetail: Boolean) {
                 if (moduleItem.type != null && moduleItem.type == ModuleObject.State.UnlockRequirements.apiString) return
 
