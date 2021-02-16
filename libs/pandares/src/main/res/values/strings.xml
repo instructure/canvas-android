@@ -102,6 +102,7 @@
     <string name="noOnlineSubmissions">No Online Submissions</string>
     <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="openTool">Open Tool</string>
+    <string name="a11y_submissionText">Submission text</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
