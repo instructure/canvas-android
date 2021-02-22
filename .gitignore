@@ -49,3 +49,8 @@ apps/true/
 fastlane/.idea
 
 apps/captures
+
+apps/flutter_parent/ios/Flutter/.last_build_id
+*.xcworkspacedata
+apps/flutter_parent/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+apps/flutter_parent/ios/Runner.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
