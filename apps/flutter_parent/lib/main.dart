@@ -32,16 +32,16 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
 
   setupLocator();
   runZonedGuarded<Future<void>>(() async {
     await Future.wait([
       ApiPrefs.init(),
       ThemePrefs.init(),
-      RemoteConfigUtils.initialize(),
-      CrashUtils.init(),
-      FlutterDownloader.initialize(),
+      // RemoteConfigUtils.initialize(),
+      // CrashUtils.init(),
+      // FlutterDownloader.initialize(),
       DbUtil.init()
     ]);
     PandaRouter.init();
@@ -50,11 +50,18 @@ void main() async {
     final Completer<void> _appCompleter = Completer<void>();
     NotificationUtil.init(_appCompleter);
 
-    await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+    // await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
 
     // Set environment properties for analytics. No need to await this.
     locator<Analytics>().setEnvironmentProperties();
 
     runApp(ParentApp(_appCompleter));
-  }, FirebaseCrashlytics.instance.recordError);
+  }, recordError);
+}
+
+Future<void> recordError(dynamic exception, StackTrace stack,
+    {dynamic reason,
+      Iterable<DiagnosticsNode> information,
+      bool printDetails}) async {
+
 }

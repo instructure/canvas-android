@@ -43,12 +43,12 @@ class ApiPrefs {
   static const String KEY_RATING_DONT_SHOW_AGAIN = 'dont_show_again';
   static const String KEY_RATING_NEXT_SHOW_DATE = 'next_show_date';
 
-  static EncryptedSharedPreferences _prefs;
+  static SharedPreferences _prefs;
   static PackageInfo _packageInfo;
   static Login _currentLogin;
 
   static Future<void> init() async {
-    if (_prefs == null) _prefs = await EncryptedSharedPreferences.getInstance();
+    if (_prefs == null) _prefs = await EncryptedSharedPreferences().getInstance();
     _packageInfo = await PackageInfo.fromPlatform();
     await _migrateToEncryptedPrefs();
   }

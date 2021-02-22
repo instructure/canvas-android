@@ -83,8 +83,7 @@ dependencies:
   # Platform interactions
   android_intent: 0.3.7+7
   device_info: 1.0.0
-  encrypted_shared_preferences: # Used by ApiPrefs to securely store data
-    path: ./plugins/encrypted_shared_preferences
+  encrypted_shared_preferences: 1.0.7
   flutter_local_notifications: 1.4.4+5
   intent: 1.1.0 # TODO: Remove once android_intent can handle emails properly (see help_screen.dart for more info)
   package_info: 0.4.3+2
