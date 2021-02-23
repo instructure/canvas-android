@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -41,7 +42,7 @@ void main() async {
       ThemePrefs.init(),
       RemoteConfigUtils.initialize(),
       CrashUtils.init(),
-      // FlutterDownloader.initialize(),
+      FlutterDownloader.initialize(),
       DbUtil.init()
     ]);
     PandaRouter.init();
@@ -50,7 +51,10 @@ void main() async {
     final Completer<void> _appCompleter = Completer<void>();
     NotificationUtil.init(_appCompleter);
 
-    // await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+    // TODO Only migrate ol logins from the Android app. If we want to do this for iOS we need to channel method calls.
+    if (Platform.isAndroid) {
+      await locator<OldAppMigration>().performMigrationIfNecessary(); // ApiPrefs must be initialized before calling this
+    }
 
     // Set environment properties for analytics. No need to await this.
     locator<Analytics>().setEnvironmentProperties();

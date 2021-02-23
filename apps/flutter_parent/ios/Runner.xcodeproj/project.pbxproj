@@ -16,6 +16,7 @@
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BBD1E928B2C03899815C146A /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8477B0CA861125453165245 /* Pods_Runner.framework */; };
 		CE0552AB25E5286B00D9E940 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE0552AA25E5286B00D9E940 /* GoogleService-Info.plist */; };
+		CE0552AD25E53A2E00D9E940 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0552AC25E53A1000D9E940 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +50,7 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CE0552AA25E5286B00D9E940 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE0552AC25E53A1000D9E940 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		E8477B0CA861125453165245 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -57,6 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE0552AD25E53A2E00D9E940 /* libsqlite3.tbd in Frameworks */,
 				BBD1E928B2C03899815C146A /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,6 +80,7 @@
 		53FB2A51C02708CDF055AD78 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE0552AC25E53A1000D9E940 /* libsqlite3.tbd */,
 				E8477B0CA861125453165245 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
