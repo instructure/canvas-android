@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
@@ -257,7 +258,7 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     }
 
     // Prepare login information
-    var purpose = await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
+    var purpose = Platform.isIOS ? await getIosDeviceInfo() : await getAndroidDeviceInfo(); // TODO Move this logic to a separate class, we might need it elsewhere.
     var clientId = verifyResult != null ? Uri.encodeQueryComponent(verifyResult?.clientId) : '';
     var redirect = Uri.encodeQueryComponent('https://canvas.instructure.com/login/oauth2/auth');
 
@@ -283,6 +284,10 @@ class _WebLoginScreenState extends State<WebLoginScreen> {
     _authUrl = result;
     _domain = baseUrl;
   }
+
+  Future<String> getAndroidDeviceInfo() async => await DeviceInfoPlugin().androidInfo.then((info) => info.model.replaceAll(' ', '_'));
+
+  Future<String> getIosDeviceInfo() async => await DeviceInfoPlugin().iosInfo.then((info) => info.model.replaceAll(' ', '_'));
 
   /// Shows a simple alert dialog with an error message that correlates to the result code
   _showErrorDialog(BuildContext context, AsyncSnapshot<MobileVerifyResult> snapshot) => showDialog(
