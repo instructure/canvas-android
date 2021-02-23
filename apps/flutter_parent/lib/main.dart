@@ -32,15 +32,15 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   setupLocator();
   runZonedGuarded<Future<void>>(() async {
     await Future.wait([
       ApiPrefs.init(),
       ThemePrefs.init(),
-      // RemoteConfigUtils.initialize(),
-      // CrashUtils.init(),
+      RemoteConfigUtils.initialize(),
+      CrashUtils.init(),
       // FlutterDownloader.initialize(),
       DbUtil.init()
     ]);

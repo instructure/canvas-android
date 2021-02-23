@@ -49,12 +49,11 @@ class AuthApi {
     //   (1) we are forcing the beta domain (typically in UI tests) OR
     //   (2) the remote firebase config setting for MOBILE_VERIFY_BETA_ENABLED is true
     // AND we are trying to use a beta domain
-    // var mobileVerifyBetaEnabled = (forceBetaDomain ||
-    //         RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true') &&
-    //     domain.contains('.beta.');
-    // TODO uncomment if firebase is working.
+    var mobileVerifyBetaEnabled = (forceBetaDomain ||
+            RemoteConfigUtils.getStringValue(RemoteConfigParams.MOBILE_VERIFY_BETA_ENABLED)?.toLowerCase() == 'true') &&
+        domain.contains('.beta.');
 
-    Dio dio = DioConfig.core(useBetaDomain: false).dio;
+    Dio dio = DioConfig.core(useBetaDomain: mobileVerifyBetaEnabled).dio;
 
     String userAgent = ApiPrefs.getUserAgent();
     return fetch(
