@@ -29,6 +29,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 
 class PlannerFetcher extends ChangeNotifier {
   final Map<String, AsyncSnapshot<List<PlannerItem>>> daySnapshots = {};
+  final Map<String, AsyncSnapshot<List<PlannerItem>>> monthSnapshots = {};
 
   final Map<String, bool> failedMonths = {};
 
@@ -96,6 +97,22 @@ class PlannerFetcher extends ChangeNotifier {
     } else {
       return calendarFilter.filters.toSet();
     }
+  }
+
+  AsyncSnapshot<Map<String, List<PlannerItem>>> getSnapshotsForWeek(DateTime date) {
+    final lastSunday = date.subtract(Duration(days: date.weekday - 1)).subtract(Duration(days: 1));
+    final snapshots = Map<String, List<PlannerItem>>();
+    for (var i = 0; i < 7; i++) {
+      final day = lastSunday.add(Duration(days: i));
+      final dayKey = dayKeyForDate(day);
+      final snapshot = getSnapshotForDate(day);
+      if (snapshot.hasData) {
+        snapshots[dayKey] = snapshot.data;
+      } else {
+        return AsyncSnapshot.waiting();
+      }
+    }
+    return AsyncSnapshot.withData(ConnectionState.done, snapshots);
   }
 
   AsyncSnapshot<List<PlannerItem>> getSnapshotForDate(DateTime date) {

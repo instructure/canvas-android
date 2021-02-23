@@ -18,6 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_agenda.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
@@ -81,7 +82,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         }
       },
       dayBuilder: (BuildContext context, DateTime day) {
-        return CalendarDayPlanner(day);
+        return CalendarAgenda(day, false);
       },
     );
   }
