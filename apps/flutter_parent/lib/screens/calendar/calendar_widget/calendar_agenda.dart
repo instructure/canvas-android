@@ -69,8 +69,10 @@ class AgendaList extends StatelessWidget {
   Widget build(BuildContext context) {
     final _list = List();
     _agenda.forEach((key, value) {
-      _list.add(key);
-      _list.addAll(value);
+      if (value.isNotEmpty) {
+        _list.add(key);
+        _list.addAll(value);
+      }
     });
     return ListView.builder(
       itemCount: _list.length,
@@ -90,16 +92,10 @@ class AgendaList extends StatelessWidget {
   Widget _dayHeader(BuildContext context, String title, int index) {
     final date = DateFormat("yyyy-MM-dd").parse(title);
     String formattedDate = DateFormat('EEEE, MM/dd/yyyy').format(date);
-    return Column(
-      children: [
-        Divider(height: 1),
-        ListTile(
-          key: Key(title),
-          title: Text(formattedDate),
-          tileColor: Colors.black12,
-        ),
-        Divider(height: 1)
-      ],
+    return ListTile(
+      key: Key(title),
+      title: Text(formattedDate),
+      tileColor: Colors.black12,
     );
   }
 }

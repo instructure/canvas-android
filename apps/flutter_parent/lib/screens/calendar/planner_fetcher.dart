@@ -107,7 +107,9 @@ class PlannerFetcher extends ChangeNotifier {
       final dayKey = dayKeyForDate(day);
       final snapshot = getSnapshotForDate(day);
       if (snapshot.hasData) {
-        snapshots[dayKey] = snapshot.data;
+        if (snapshot.data.isNotEmpty) {
+          snapshots[dayKey] = snapshot.data;
+        }
       } else {
         return AsyncSnapshot.waiting();
       }
