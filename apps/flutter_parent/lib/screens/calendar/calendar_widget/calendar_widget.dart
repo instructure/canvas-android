@@ -72,7 +72,8 @@ class CalendarWidget extends StatefulWidget {
 enum CalendarPageChangeBehavior { none, jump, animate }
 
 @visibleForTesting
-class CalendarWidgetState extends State<CalendarWidget> with TickerProviderStateMixin {
+class CalendarWidgetState extends State<CalendarWidget>
+    with TickerProviderStateMixin {
   // Day, week, and month page indices for 'today'.
   //
   // Rather than track dates from the beginning of time/unix epoch/whatever, they are tracked
@@ -103,6 +104,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   // Page controllers
   PageController _dayController;
+  PageController _agendaController;
   PageController _weekController;
   PageController _monthController;
 
@@ -122,7 +124,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   // Returns the allowed expansion height of the month calendar, i.e. the difference between the height of the
   // week widget and the height of the fully-expanded month widget.
-  double get _monthExpansionHeight => _fullMonthHeight - CalendarWeek.weekHeight;
+  double get _monthExpansionHeight =>
+      _fullMonthHeight - CalendarWeek.weekHeight;
 
   // Controller for animating the month expand/collapse progress when the user presses the expand/collapse button
   AnimationController _monthExpandAnimController;
@@ -136,7 +139,9 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   // Returns the full month height for the month found at the specified month pager index
   static double _calculateFullMonthHeight(int monthIndex) {
     var yearMonth = _yearAndMonthForIndex(monthIndex);
-    var weeks = CalendarMonth.generateWeekStarts(yearMonth.item1, yearMonth.item2).length;
+    var weeks =
+        CalendarMonth.generateWeekStarts(yearMonth.item1, yearMonth.item2)
+            .length;
     return DayOfWeekHeaders.headerHeight + (weeks * CalendarDay.dayHeight);
   }
 
@@ -144,14 +149,17 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static DateTime _dayForIndex(int index) {
     final today = DateTime.now();
     final diff = index - _todayDayIndex;
-    return DateTime(today.year, today.month, today.day).add(Duration(days: diff)).roundToMidnight();
+    return DateTime(today.year, today.month, today.day)
+        .add(Duration(days: diff))
+        .roundToMidnight();
   }
 
   // Returns the DateTime that represents the first day of the week associated with the specified week pager index
   static DateTime _weekStartForIndex(int index) {
     final today = DateTime.now();
     int weekOffset = index - _todayWeekIndex;
-    return DateTime(today.year, today.month, today.day + (weekOffset * 7)).withFirstDayOfWeek();
+    return DateTime(today.year, today.month, today.day + (weekOffset * 7))
+        .withFirstDayOfWeek();
   }
 
   // Returns the year and month associated with the specified month pager index
@@ -187,7 +195,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
   static int _dayIndexForDay(DateTime day) {
     final todayNow = DateTime.now();
     final today = DateTime(todayNow.year, todayNow.month, todayNow.day);
-    final diff = today.difference(day).inMicroseconds / Duration.microsecondsPerDay;
+    final diff =
+        today.difference(day).inMicroseconds / Duration.microsecondsPerDay;
     return _todayDayIndex - diff.round();
   }
 
@@ -213,19 +222,23 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     }
 
     // Set up animation controller for tap-to-expand/collapse button
-    _monthExpandAnimController = AnimationController(duration: CalendarWidget.animDuration, vsync: this);
+    _monthExpandAnimController =
+        AnimationController(duration: CalendarWidget.animDuration, vsync: this);
 
     // Set up animation controller for animating month height changes due to different week counts
-    _monthHeightAdjustAnimController = AnimationController(duration: CalendarWidget.animDuration, vsync: this);
+    _monthHeightAdjustAnimController =
+        AnimationController(duration: CalendarWidget.animDuration, vsync: this);
 
     // Set up animation controller for expand/collapse fling animation
-    _monthFlingAnimController = AnimationController(duration: CalendarWidget.animDuration, vsync: this);
+    _monthFlingAnimController =
+        AnimationController(duration: CalendarWidget.animDuration, vsync: this);
     _monthFlingAnimController.addListener(() {
       _monthExpansionNotifier.value = _monthFlingAnimController.value;
     });
 
     // Set up controllers for day, week, and month pagers
     _dayController = PageController(initialPage: _todayDayIndex);
+    _agendaController = PageController(initialPage: _todayWeekIndex);
     _weekController = PageController(initialPage: _todayWeekIndex);
     _monthController = PageController(initialPage: _todayMonthIndex);
 
@@ -259,7 +272,7 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
                   children: <Widget>[
                     _calendar(),
                     Divider(height: 1),
-                    Expanded(child: _dayPager()),
+                    Expanded(child: _agendaPager()),
                   ],
                 ),
               ],
@@ -288,8 +301,11 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           key: Key('expand-button'),
           onTap: _canExpandMonth ? _toggleExpanded : null,
           child: Semantics(
-            label: L10n(context).selectedMonthLabel(DateFormat.yMMMM(supportedDateLocale).format(selectedDay)),
-            onTapHint: _isMonthExpanded ? L10n(context).monthTapCollapseHint : L10n(context).monthTapExpandHint,
+            label: L10n(context).selectedMonthLabel(
+                DateFormat.yMMMM(supportedDateLocale).format(selectedDay)),
+            onTapHint: _isMonthExpanded
+                ? L10n(context).monthTapCollapseHint
+                : L10n(context).monthTapExpandHint,
             excludeSemantics: true,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -303,7 +319,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
                   Row(
                     children: <Widget>[
                       Text(
-                        DateFormat.MMMM(supportedDateLocale).format(selectedDay),
+                        DateFormat.MMMM(supportedDateLocale)
+                            .format(selectedDay),
                         style: Theme.of(context).textTheme.display1,
                       ),
                       SizedBox(width: 10),
@@ -312,7 +329,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
                         child: ValueListenableBuilder(
                           builder: (BuildContext context, value, Widget child) {
                             return DropdownArrow(
-                                specificProgress: value, color: ParentTheme.of(context).onSurfaceColor);
+                                specificProgress: value,
+                                color: ParentTheme.of(context).onSurfaceColor);
                           },
                           valueListenable: _monthExpansionNotifier,
                         ),
@@ -334,7 +352,10 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
               child: Text(
                 L10n(context).calendars,
-                style: Theme.of(context).textTheme.caption.copyWith(color: Theme.of(context).accentColor),
+                style: Theme.of(context)
+                    .textTheme
+                    .caption
+                    .copyWith(color: Theme.of(context).accentColor),
               ),
             ),
           ),
@@ -348,7 +369,9 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
       onVerticalDragUpdate: _canExpandMonth
           ? (details) {
               var expansionDiff = details.primaryDelta / _monthExpansionHeight;
-              _monthExpansionNotifier.value = (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
+              _monthExpansionNotifier.value =
+                  (_monthExpansionNotifier.value + expansionDiff)
+                      .clamp(0.0, 1.0);
             }
           : null,
       onVerticalDragEnd: _canExpandMonth
@@ -356,7 +379,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
               _monthFlingAnimController?.stop();
               if (_isMonthExpanded) {
                 _monthFlingAnimController.value = _monthExpansionNotifier.value;
-                _monthFlingAnimController.fling(velocity: details.primaryVelocity / _monthExpansionHeight);
+                _monthFlingAnimController.fling(
+                    velocity: details.primaryVelocity / _monthExpansionHeight);
               }
             }
           : null,
@@ -378,6 +402,61 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     );
   }
 
+  Widget _agendaPager() {
+    final pager = PageView.builder(
+      key: _dayKey,
+      controller: _agendaController,
+      itemCount: _maxWeekIndex,
+      itemBuilder: (context, index) {
+        var weekStart = _weekStartForIndex(index);
+        var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
+        var newSelectedDay = DateTime(
+            weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
+        return widget.dayBuilder(context, newSelectedDay);
+      },
+      onPageChanged: (index) {
+        var weekStart = _weekStartForIndex(index);
+        var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
+        var newSelectedDay = DateTime(
+            weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
+
+        selectDay(newSelectedDay,
+            dayPagerBehavior: CalendarPageChangeBehavior.none);
+      },
+    );
+
+    GestureDragUpdateCallback updateCallback = null;
+    GestureDragEndCallback endCallback = null;
+
+    if (_isMonthExpanded) {
+      updateCallback = (details) {
+        var expansionDiff = details.primaryDelta / _monthExpansionHeight;
+        _monthExpansionNotifier.value =
+            (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
+      };
+      endCallback = (details) {
+        _monthFlingAnimController?.stop();
+        _monthFlingAnimController.value = _monthExpansionNotifier.value;
+        _monthFlingAnimController.fling(
+            velocity: details.primaryVelocity / _monthExpansionHeight);
+      };
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        pager,
+        if (_isMonthExpanded)
+          GestureDetector(
+            excludeFromSemantics: true,
+            behavior: HitTestBehavior.translucent,
+            onVerticalDragUpdate: updateCallback,
+            onVerticalDragEnd: endCallback,
+          ),
+      ],
+    );
+  }
+
   Widget _dayPager() {
     final pager = PageView.builder(
       key: _dayKey,
@@ -388,7 +467,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         return widget.dayBuilder(context, date);
       },
       onPageChanged: (index) {
-        selectDay(_dayForIndex(index), dayPagerBehavior: CalendarPageChangeBehavior.none);
+        selectDay(_dayForIndex(index),
+            dayPagerBehavior: CalendarPageChangeBehavior.none);
       },
     );
 
@@ -398,12 +478,14 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     if (_isMonthExpanded) {
       updateCallback = (details) {
         var expansionDiff = details.primaryDelta / _monthExpansionHeight;
-        _monthExpansionNotifier.value = (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
+        _monthExpansionNotifier.value =
+            (_monthExpansionNotifier.value + expansionDiff).clamp(0.0, 1.0);
       };
       endCallback = (details) {
         _monthFlingAnimController?.stop();
         _monthFlingAnimController.value = _monthExpansionNotifier.value;
-        _monthFlingAnimController.fling(velocity: details.primaryVelocity / _monthExpansionHeight);
+        _monthFlingAnimController.fling(
+            velocity: details.primaryVelocity / _monthExpansionHeight);
       };
     }
 
@@ -448,7 +530,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         var maxDays = DateTime(yearMonth.item1, yearMonth.item2 + 1, 0).day;
         int dayOfMonth = min(maxDays, selectedDay.day);
         selectDay(DateTime(yearMonth.item1, yearMonth.item2, dayOfMonth),
-            monthPagerBehavior: CalendarPageChangeBehavior.none, weekPagerBehavior: CalendarPageChangeBehavior.jump);
+            monthPagerBehavior: CalendarPageChangeBehavior.none,
+            weekPagerBehavior: CalendarPageChangeBehavior.jump);
 
         if (oldHeight != newHeight) {
           double begin = oldHeight / newHeight;
@@ -457,11 +540,14 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           _monthHeightAdjustAnimController.reset();
           Tween<double> tween = Tween<double>(begin: begin, end: end);
           Animation<double> anim = tween.animate(
-            CurvedAnimation(parent: _monthHeightAdjustAnimController, curve: CalendarWidget.animCurve),
+            CurvedAnimation(
+                parent: _monthHeightAdjustAnimController,
+                curve: CalendarWidget.animCurve),
           );
           VoidCallback listener;
           listener = () {
-            if (anim.status == AnimationStatus.completed) anim.removeListener(listener);
+            if (anim.status == AnimationStatus.completed)
+              anim.removeListener(listener);
             _fullMonthHeight = anim.value * newHeight;
             _monthExpansionNotifier.notify();
           };
@@ -474,9 +560,12 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   void selectDay(
     DateTime day, {
-    CalendarPageChangeBehavior dayPagerBehavior: CalendarPageChangeBehavior.jump,
-    CalendarPageChangeBehavior weekPagerBehavior: CalendarPageChangeBehavior.animate,
-    CalendarPageChangeBehavior monthPagerBehavior: CalendarPageChangeBehavior.animate,
+    CalendarPageChangeBehavior dayPagerBehavior:
+        CalendarPageChangeBehavior.jump,
+    CalendarPageChangeBehavior weekPagerBehavior:
+        CalendarPageChangeBehavior.animate,
+    CalendarPageChangeBehavior monthPagerBehavior:
+        CalendarPageChangeBehavior.animate,
   }) {
     // Do nothing if the day is already selected
     if (selectedDay.isSameDayAs(day)) return;
@@ -484,7 +573,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     selectedDay = day;
 
     // Enable/disable the today button
-    Provider.of<CalendarTodayNotifier>(context, listen: false).value = !DateTime.now().isSameDayAs(selectedDay);
+    Provider.of<CalendarTodayNotifier>(context, listen: false).value =
+        !DateTime.now().isSameDayAs(selectedDay);
 
     // Month change
     if (monthPagerBehavior == CalendarPageChangeBehavior.animate) {
@@ -494,7 +584,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         curve: CalendarWidget.animCurve,
       );
     } else if (monthPagerBehavior == CalendarPageChangeBehavior.jump) {
-      _monthController.jumpToPage(_indexForYearAndMonth(selectedDay.year, selectedDay.month));
+      _monthController.jumpToPage(
+          _indexForYearAndMonth(selectedDay.year, selectedDay.month));
     }
 
     // Week change
@@ -534,7 +625,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
           displayDayOfWeekHeader: true,
           onDaySelected: (day) {
             selectDay(day,
-                dayPagerBehavior: CalendarPageChangeBehavior.jump, weekPagerBehavior: CalendarPageChangeBehavior.none);
+                dayPagerBehavior: CalendarPageChangeBehavior.jump,
+                weekPagerBehavior: CalendarPageChangeBehavior.none);
           },
         );
       },
@@ -542,7 +634,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
         if (_isMonthExpanded) return;
         var weekStart = _weekStartForIndex(index);
         var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
-        var newSelectedDay = DateTime(weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
+        var newSelectedDay = DateTime(
+            weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
 
         selectDay(
           newSelectedDay,
@@ -596,10 +689,12 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     final format = DateFormat.MMMM(supportedDateLocale).add_y();
 
     final previousMonth = _yearAndMonthForIndex(index - 1);
-    final previousMonthName = format.format(DateTime(previousMonth.item1, previousMonth.item2));
+    final previousMonthName =
+        format.format(DateTime(previousMonth.item1, previousMonth.item2));
 
     final nextMonth = _yearAndMonthForIndex(index + 1);
-    final nextMonthName = format.format(DateTime(nextMonth.item1, nextMonth.item2));
+    final nextMonthName =
+        format.format(DateTime(nextMonth.item1, nextMonth.item2));
 
     return [
       IconButton(
@@ -647,12 +742,14 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
     _monthExpandAnimController.reset();
     Tween<double> tween = Tween<double>(begin: begin, end: end);
     final Animation<double> anim = tween.animate(
-      CurvedAnimation(parent: _monthExpandAnimController, curve: CalendarWidget.animCurve),
+      CurvedAnimation(
+          parent: _monthExpandAnimController, curve: CalendarWidget.animCurve),
     );
     VoidCallback listener;
     listener = () {
       _monthExpansionNotifier.value = anim.value;
-      if (anim.status == AnimationStatus.completed) anim.removeListener(listener);
+      if (anim.status == AnimationStatus.completed)
+        anim.removeListener(listener);
     };
     anim.addListener(listener);
     _monthExpandAnimController.forward();
@@ -660,7 +757,8 @@ class CalendarWidgetState extends State<CalendarWidget> with TickerProviderState
 
   // Use a date without a time (default to midnight), otherwise the second call to selectDay() in the day/month pager
   // will be off by one day
-  _todayClicked() => selectDay(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+  _todayClicked() => selectDay(
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
 
   @override
   void dispose() {

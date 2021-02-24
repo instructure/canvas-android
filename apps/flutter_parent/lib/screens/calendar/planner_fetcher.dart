@@ -100,7 +100,7 @@ class PlannerFetcher extends ChangeNotifier {
   }
 
   AsyncSnapshot<Map<String, List<PlannerItem>>> getSnapshotsForWeek(DateTime date) {
-    final lastSunday = date.subtract(Duration(days: date.weekday - 1)).subtract(Duration(days: 1));
+    final lastSunday = date.subtract(Duration(days: date.weekday % 7));
     final snapshots = Map<String, List<PlannerItem>>();
     for (var i = 0; i < 7; i++) {
       final day = lastSunday.add(Duration(days: i));
