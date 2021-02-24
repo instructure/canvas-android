@@ -258,9 +258,16 @@ class _ResizingWebViewState extends State<_ResizingWebView> with WidgetsBindingO
   }
 
   Future<NavigationDecision> _handleNavigation(NavigationRequest request) async {
-    // Otherwise, we'll let the router handle it
-    locator<QuickNav>().routeInternally(context, request.url);
-    return NavigationDecision.prevent;
+    // TODO On iOS the webview plugin works differently and this method is called with the baseUrl when we try to load a html content.
+    // Maybe there is a better solution for this, but for now we just check whether the navigation request is for the base url
+    final baseUrl = "${ApiPrefs.getDomain()}/";
+    if (request.url == baseUrl) {
+      return NavigationDecision.navigate;
+    } else {
+      // Otherwise, we'll let the router handle it
+      locator<QuickNav>().routeInternally(context, request.url);
+      return NavigationDecision.prevent;
+    }
   }
 
   void _handleWebViewCreated(WebViewController webViewController) async {
