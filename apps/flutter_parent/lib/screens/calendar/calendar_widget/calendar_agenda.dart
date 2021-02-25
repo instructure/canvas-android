@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/planner_item.dart';
 import 'package:flutter_parent/models/user_color.dart';
@@ -44,7 +45,7 @@ class CalendarAgendaState extends State<CalendarAgenda> {
               header: SizedBox(height: 32),
             );
           } else {
-            body = AgendaList(snapshot.data);
+            body = AgendaList(snapshot.data, widget._day);
           }
         }
 
@@ -62,8 +63,11 @@ class CalendarAgendaState extends State<CalendarAgenda> {
 
 class AgendaList extends StatelessWidget {
   final Map<String, List<PlannerItem>> _agenda;
+  final DateTime _selectedDate;
+  final _tileHeight = 65.0;
+  final _scrollController = ScrollController();
 
-  AgendaList(this._agenda);
+  AgendaList(this._agenda, this._selectedDate);
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +78,9 @@ class AgendaList extends StatelessWidget {
         _list.addAll(value);
       }
     });
-    return ListView.builder(
+    final widget = ListView.builder(
       itemCount: _list.length,
+      controller: _scrollController,
       itemBuilder: (context, index) {
         if (_list[index] is String) {
           return _dayHeader(context, _list[index], index);
@@ -84,18 +89,35 @@ class AgendaList extends StatelessWidget {
         }
       },
     );
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      _scrollToIndex(_list.indexOf(_dayKeyForDate(_selectedDate)));
+    });
+
+    return widget;
   }
 
+  _scrollToIndex(i) => _scrollController.animateTo(i * _tileHeight,
+      duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+
   Widget _dayTile(BuildContext context, PlannerItem plannerItem, int index) =>
-      CalendarDayListTile(plannerItem);
+      SizedBox(height: _tileHeight, child: CalendarDayListTile(plannerItem));
 
   Widget _dayHeader(BuildContext context, String title, int index) {
     final date = DateFormat("yyyy-MM-dd").parse(title);
     String formattedDate = DateFormat('EEEE, MM/dd/yyyy').format(date);
-    return ListTile(
-      key: Key(title),
-      title: Text(formattedDate),
-      tileColor: Colors.black12,
+    return SizedBox(
+      height: _tileHeight,
+      child: ListTile(
+        key: Key(title),
+        title: Text(formattedDate),
+        tileColor: Colors.black12,
+      ),
     );
   }
+
+  String _dayKeyForDate(DateTime date) =>
+      _dayKeyForYearMonthDay(date.year, date.month, date.day);
+
+  String _dayKeyForYearMonthDay(int year, int month, int day) =>
+      '$year-$month-$day';
 }
