@@ -416,11 +416,12 @@ class CalendarWidgetState extends State<CalendarWidget>
       },
       onPageChanged: (index) {
         var weekStart = _weekStartForIndex(index);
-        var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
         var newSelectedDay = DateTime(
-            weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
+            weekStart.year, weekStart.month, weekStart.day);
 
         selectDay(newSelectedDay,
+            dayPagerBehavior: CalendarPageChangeBehavior.none,
+            weekPagerBehavior: CalendarPageChangeBehavior.jump,
             monthPagerBehavior: CalendarPageChangeBehavior.jump,
             agendaPagerBehavior: CalendarPageChangeBehavior.none);
       },
