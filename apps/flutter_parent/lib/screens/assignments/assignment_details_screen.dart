@@ -11,6 +11,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/assignment.dart';
@@ -28,6 +31,7 @@ import 'package:flutter_parent/utils/design/canvas_icons_solid.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/quick_nav.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AssignmentDetailsScreen extends StatefulWidget {
@@ -54,6 +58,8 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   Future<Reminder> _reminderFuture;
   Future<void> _animationFuture;
   User _currentStudent;
+
+  DateTime _timePickerDateTime = DateTime.now();
 
   @override
   void initState() {
@@ -101,10 +107,11 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(L10n(context).assignmentDetailsTitle),
+            PlatformText(L10n(context).assignmentDetailsTitle),
             if (snapshot.hasData)
-              Text(snapshot.data.course?.name ?? '',
-                  style: Theme.of(context).primaryTextTheme.caption, key: Key("assignment_details_coursename")),
+              PlatformText(snapshot.data.course?.name ?? '',
+                  style: Theme.of(context).primaryTextTheme.caption,
+                  key: Key("assignment_details_coursename")),
           ],
         ),
       );
@@ -155,18 +162,21 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
             titleStyle: textTheme.display1,
             child: Row(
               children: <Widget>[
-                Text(l10n.assignmentTotalPoints(points),
+                PlatformText(l10n.assignmentTotalPoints(points),
                     style: textTheme.caption,
-                    semanticsLabel: l10n.assignmentTotalPointsAccessible(points),
+                    semanticsLabel: l10n.assignmentTotalPointsAccessible(
+                        points),
                     key: Key("assignment_details_total_points")),
                 if (showStatus) SizedBox(width: 16),
                 if (showStatus) _statusIcon(submitted, submittedColor),
                 if (showStatus) SizedBox(width: 8),
                 if (showStatus)
-                  Text(
+                  PlatformText(
                       !submitted
                           ? l10n.assignmentNotSubmittedLabel
-                          : submission?.isGraded() == true ? l10n.assignmentGradedLabel : l10n.assignmentSubmittedLabel,
+                          : submission?.isGraded() == true ? l10n
+                          .assignmentGradedLabel : l10n
+                          .assignmentSubmittedLabel,
                       style: textTheme.caption.copyWith(
                         color: submittedColor,
                       ),
@@ -191,10 +201,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
               future: _reminderFuture,
               builder: (BuildContext context, AsyncSnapshot<Reminder> snapshot) {
                 Reminder reminder = snapshot.data;
-                return SwitchListTile(
+                return SwitchListTile.adaptive(
                   contentPadding: EdgeInsets.zero,
                   value: reminder != null,
-                  title: Text(
+                  title: PlatformText(
                     reminder?.date == null
                         ? L10n(context).assignmentRemindMeDescription
                         : L10n(context).assignmentRemindMeSet,
@@ -204,10 +214,12 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
                       ? null
                       : Padding(
                           padding: const EdgeInsets.only(top: 8),
-                          child: Text(
-                            _dateFormat(reminder?.date?.toLocal()),
-                            style: textTheme.subhead.copyWith(color: ParentTheme.of(context).studentColor),
-                          ),
+                    child: PlatformText(
+                      _dateFormat(reminder?.date?.toLocal()),
+                      style: textTheme.subhead.copyWith(color: ParentTheme
+                          .of(context)
+                          .studentColor),
+                    ),
                         ),
                   onChanged: (checked) => _handleAlarmSwitch(context, assignment, checked, reminder),
                 );
@@ -274,7 +286,10 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
   List<Widget> _rowTile({String title, TextStyle titleStyle, Widget child}) {
     return [
       SizedBox(height: 16),
-      Text(title ?? '', style: titleStyle ?? Theme.of(context).textTheme.overline),
+      PlatformText(title ?? '', style: titleStyle ?? Theme
+          .of(context)
+          .textTheme
+          .overline),
       SizedBox(height: 8),
       child,
       SizedBox(height: 16),
@@ -312,12 +327,16 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
       DateTime date;
       TimeOfDay time;
 
-      date = await showDatePicker(
-        context: context,
-        initialDate: initialDate,
-        firstDate: now,
-        lastDate: initialDate.add(Duration(days: 365)),
-      );
+      if (Platform.isIOS) {
+        _showCupertinoDatePicker(context, assignment);
+      } else {
+        date = await showDatePicker(
+          context: context,
+          initialDate: initialDate,
+          firstDate: now,
+          lastDate: initialDate.add(Duration(days: 365)),
+        );
+      }
 
       if (date != null) {
         time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initialDate));
@@ -343,10 +362,56 @@ class _AssignmentDetailsScreenState extends State<AssignmentDetailsScreen> {
     });
   }
 
+  _showCupertinoDatePicker(BuildContext context, Assignment assignment) async {
+    showCupertinoModalPopup(
+        context: context,
+        builder: (_) =>
+            Container(
+              height: 500,
+              color: Color.fromARGB(255, 255, 255, 255),
+              child: Column(
+                children: [
+                  Container(
+                    height: 400,
+                    child: CupertinoDatePicker(
+                        initialDateTime: DateTime.now(),
+                        onDateTimeChanged: (dateTime) {
+                          _timePickerDateTime = dateTime;
+                        }),
+                  ),
+
+                  // Close the modal
+                  CupertinoButton(
+                    child: Text('OK'),
+                    onPressed: () async {
+                      var body = assignment.dueAt.l10nFormat(L10n(context).dueDateAtTime) ?? L10n(context).noDueDate;
+                      await _interactor.createReminder(
+                        L10n(context),
+                        _timePickerDateTime,
+                        assignment.id,
+                        assignment.courseId,
+                        assignment.name,
+                        body,
+                      );
+                      setState(() {
+                        _reminderFuture = _loadReminder();
+                        _timePickerDateTime = DateTime.now();
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ),
+            ));
+  }
+
   _sendMessage(AssignmentDetails details) {
-    String subject = L10n(context).assignmentSubjectMessage(_currentStudent.name, details.assignment.name);
-    String postscript = L10n(context).messageLinkPostscript(_currentStudent.name, details.assignment.htmlUrl);
-    Widget screen = CreateConversationScreen(widget.courseId, _currentStudent.id, subject, postscript);
+    String subject = L10n(context).assignmentSubjectMessage(
+        _currentStudent.name, details.assignment.name);
+    String postscript = L10n(context).messageLinkPostscript(
+        _currentStudent.name, details.assignment.htmlUrl);
+    Widget screen = CreateConversationScreen(
+        widget.courseId, _currentStudent.id, subject, postscript);
     locator.get<QuickNav>().push(context, screen);
   }
 }

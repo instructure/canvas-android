@@ -20,6 +20,7 @@ import 'package:flutter_parent/screens/settings/settings_interactor.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/theme_transition/theme_transition_target.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -40,14 +41,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: DefaultParentTheme(
         builder: (context) => Scaffold(
           appBar: AppBar(
-            title: Text(L10n(context).settings),
-            bottom: ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
+            title: PlatformText(L10n(context).settings),
+            bottom:
+                ParentTheme.of(context).appBarDivider(shadowInLightMode: false),
           ),
           body: ListView(
             children: [
               Container(
                 child: ListTile(
-                  title: Text(L10n(context).theme),
+                  title: PlatformText(L10n(context).theme),
                 ),
               ),
               _themeButtons(context),
@@ -143,11 +145,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _webViewDarkModeSwitch(BuildContext context) {
     return MergeSemantics(
       child: ListTile(
-        title: Text(L10n(context).webViewDarkModeLabel),
-        trailing: Switch(
-          value: ParentTheme.of(context).isWebViewDarkMode,
+        title: PlatformText(L10n(context).webViewDarkModeLabel),
+        trailing: PlatformSwitch(
+          value: ParentTheme
+              .of(context)
+              .isWebViewDarkMode,
           onChanged: (_) => _toggleWebViewDarkMode(context),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          material: (_, __) => MaterialSwitchData(materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
         ),
         onTap: () => _toggleWebViewDarkMode(context),
       ),
@@ -166,12 +170,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _highContrastModeSwitch(BuildContext context) {
     return MergeSemantics(
       child: ListTile(
-        title: Text(L10n(context).highContrastLabel),
-        trailing: Switch(
+        title: PlatformText(L10n(context).highContrastLabel),
+        trailing: PlatformSwitch(
           key: _highContrastModeKey,
           value: ParentTheme.of(context).isHC,
           onChanged: (_) => _onHighContrastModeChanged(context),
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          material: (_, __) => MaterialSwitchData(materialTapTargetSize: MaterialTapTargetSize.shrinkWrap),
         ),
         onTap: () => _onHighContrastModeChanged(context),
       ),
@@ -188,7 +192,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: <Widget>[
             _debugLabel(context),
             SizedBox(width: 16),
-            Text('Theme Viewer'), // Not shown in release mode, not translated
+            PlatformText('Theme Viewer'), // Not shown in release mode, not translated
           ],
         ),
         onTap: () => _interactor.routeToThemeViewer(context),
@@ -201,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           children: [
             _debugLabel(context),
             SizedBox(width: 16),
-            Text('Remote Config Params')
+            PlatformText('Remote Config Params')
           ],
         ),
         onTap: () => _interactor.routeToRemoteConfig(context),
