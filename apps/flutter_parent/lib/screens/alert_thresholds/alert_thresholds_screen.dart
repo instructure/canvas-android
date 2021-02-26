@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parent/l10n/app_localizations.dart';
 import 'package:flutter_parent/models/alert.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/design/student_color_set.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'alert_thresholds_extensions.dart';
@@ -61,7 +63,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
       useNonPrimaryAppBar: false,
       builder: (context) => Scaffold(
         appBar: AppBar(
-          title: Text(L10n(context).alertSettings),
+          title: PlatformText(L10n(context).alertSettings),
           bottom: ParentTheme.of(context).appBarDivider(),
           actions: <Widget>[_deleteOption()],
         ),
@@ -109,16 +111,16 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
       builder: (_) {
         return StatefulBuilder(
           builder: (BuildContext context, void Function(void Function()) setState) {
-            return AlertDialog(
-              title: Text(L10n(context).delete),
+            return PlatformAlertDialog(
+              title: PlatformText(L10n(context).delete),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text(L10n(context).confirmDeleteStudentMessage),
+                  PlatformText(L10n(context).confirmDeleteStudentMessage),
                   if (error)
                     Padding(
                       padding: const EdgeInsets.only(top: 16),
-                      child: Text(
+                      child: PlatformText(
                         L10n(context).deleteStudentFailure,
                         style: Theme.of(context).textTheme.bodyText1.copyWith(color: ParentColors.failure),
                       ),
@@ -193,7 +195,7 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
                 horizontal: 16,
                 vertical: 6,
               ),
-              child: Text(
+              child: PlatformText(
                 L10n(context).alertMeWhen,
                 style: Theme.of(context).textTheme.subhead.copyWith(color: ParentColors.ash),
               ),
@@ -234,11 +236,11 @@ class AlertThresholdsState extends State<AlertThresholdsScreen> {
   Widget _percentageTile(AlertType type) {
     int value = int.tryParse(_thresholds.getThreshold(type)?.threshold ?? '');
     return ListTile(
-      title: Text(
+      title: PlatformText(
         type.getTitle(context),
         style: Theme.of(context).textTheme.subhead,
       ),
-      trailing: Text(
+      trailing: PlatformText(
         value != null ? NumberFormat.percentPattern().format(value / 100) : L10n(context).never,
         style: Theme.of(context).textTheme.subhead.copyWith(color: StudentColorSet.electric.light),
       ),
@@ -330,7 +332,7 @@ class _TalkbackSwitchTileState extends State<_TalkbackSwitchTile> {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
+    return SwitchListTile.adaptive(
       title: Text(widget.title),
       value: _value,
       contentPadding: const EdgeInsets.fromLTRB(16, 0, 7, 0),

@@ -56,6 +56,7 @@ dependencies:
   collection: ^1.14.11
   flutter_linkify: 4.0.2
   email_validator: ^1.0.5
+  flutter_platform_widgets: 0.72.0
 
   # File handling
   path_provider: 1.6.24

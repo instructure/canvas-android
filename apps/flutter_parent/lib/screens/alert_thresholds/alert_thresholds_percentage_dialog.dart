@@ -23,6 +23,7 @@ import 'package:flutter_parent/utils/common_widgets/arrow_aware_focus_scope.dart
 import 'package:flutter_parent/utils/design/parent_colors.dart';
 import 'package:flutter_parent/utils/design/parent_theme.dart';
 import 'package:flutter_parent/utils/service_locator.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 class AlertThresholdsPercentageDialog extends StatefulWidget {
   final AlertType _alertType;
@@ -76,17 +77,28 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
     return DefaultParentTheme(
       builder: (context) => ArrowAwareFocusScope(
         node: _focusScopeNode,
-        child: AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-          title: Text(widget._alertType.getTitle(context)),
-          content: TextFormField(
+        child: PlatformAlertDialog(
+          material: (_, __) => MaterialAlertDialogData(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          ),
+          title: PlatformText(widget._alertType.getTitle(context)),
+          content: PlatformTextField(
             key: _formKey,
             autofocus: true,
-            autovalidate: true,
             keyboardType: TextInputType.number,
-            initialValue: _threshold?.threshold,
+            controller: TextEditingController(text: _threshold?.threshold),
+            material: (_, __) => MaterialTextFieldData(
+              decoration: InputDecoration(
+                  hintText: L10n(context).gradePercentage,
+                  hintStyle: TextStyle(color: ParentColors.ash),
+                  contentPadding: EdgeInsets.only(bottom: 2),
+                )
+            ),
+            cupertino: (_, __) => CupertinoTextFieldData(
+                placeholder: L10n(context).gradePercentage
+            ),
             maxLength: 3,
-            buildCounter: (_, {currentLength, maxLength, isFocused}) => null, // Don't show the counter
+            // buildCounter: (_, {currentLength, maxLength, isFocused}) => null, // Don't show the counter
             inputFormatters: [
               // Only accept numbers, no other characters (including '-')
               BlacklistingTextInputFormatter(RegExp('[^0-9]')),
@@ -120,63 +132,67 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                 }
               });
             },
-            validator: (input) {
-              if (_networkError) {
-                errorMsg = L10n(context).genericNetworkError;
-              }
-              return errorMsg;
-            },
-            onSaved: (input) async {
-              // Don't do anything if there are existing validation errors and the user didn't click 'Never'
-              if (!_formKey.currentState.validate() && !_neverClicked) return;
-
-              if (_threshold == null && input.isEmpty) {
-                // Threshold is already disabled
-                Navigator.of(context).pop(null);
-              }
-
-              _showNetworkError(false);
-
-              var result = await locator<AlertThresholdsInteractor>()
-                  .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
-                      value: input.isNotEmpty && !_neverClicked ? input : '-1')
-                  .catchError((_) => null);
-
-              if (result != null) {
-                // Threshold was updated/deleted successfully
-                if (input.isEmpty || _neverClicked) {
-                  // Deleted a threshold
-                  Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
-                } else {
-                  // Updated a threshold
-                  Navigator.of(context).pop(result);
-                }
-              } else {
-                // There was a network error
-                _showNetworkError(true);
-              }
-
-              _neverClicked = false;
-            },
-            onFieldSubmitted: (input) async {
-              _formKey.currentState.save();
-            },
-            decoration: InputDecoration(
-              hintText: L10n(context).gradePercentage,
-              hintStyle: TextStyle(color: ParentColors.ash),
-              contentPadding: EdgeInsets.only(bottom: 2),
-            ),
+            // validator: (input) {
+            //             //   if (_networkError) {
+            //             //     errorMsg = L10n(context).genericNetworkError;
+            //             //   }
+            //             //   return errorMsg;
+            //             // },
+            // onSaved: (input) async {
+            //   // Don't do anything if there are existing validation errors and the user didn't click 'Never'
+            //   if (!_formKey.currentState.validate() && !_neverClicked) return;
+            //
+            //   if (_threshold == null && input.isEmpty) {
+            //     // Threshold is already disabled
+            //     Navigator.of(context).pop(null);
+            //   }
+            //
+            //   _showNetworkError(false);
+            //
+            //   var result = await locator<AlertThresholdsInteractor>()
+            //       .updateAlertThreshold(widget._alertType, widget._studentId, _threshold,
+            //           value: input.isNotEmpty && !_neverClicked ? input : '-1')
+            //       .catchError((_) => null);
+            //
+            //   if (result != null) {
+            //     // Threshold was updated/deleted successfully
+            //     if (input.isEmpty || _neverClicked) {
+            //       // Deleted a threshold
+            //       Navigator.of(context).pop(_threshold.rebuild((b) => b.threshold = '-1'));
+            //     } else {
+            //       // Updated a threshold
+            //       Navigator.of(context).pop(result);
+            //     }
+            //   } else {
+            //     // There was a network error
+            //     _showNetworkError(true);
+            //   }
+            //
+            //   _neverClicked = false;
+            // },
+            // onFieldSubmitted: (input) async {
+            //   _formKey.currentState.save();
+            // },
+            // decoration: InputDecoration(
+            //   hintText: L10n(context).gradePercentage,
+            //   hintStyle: TextStyle(color: ParentColors.ash),
+            //   contentPadding: EdgeInsets.only(bottom: 2),
+            // ),
           ),
           actions: <Widget>[
-            FlatButton(
-                child: Text(L10n(context).cancel.toUpperCase()),
-                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+            PlatformButton(
+                child: PlatformText(L10n(context).cancel.toUpperCase()),
+                materialFlat: (_, __) => MaterialFlatButtonData(
+                  disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                ),
                 onPressed: () {
                   Navigator.of(context).pop(null);
                 }),
-            FlatButton(
-                child: Text(L10n(context).never.toUpperCase()),
-                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+            PlatformButton(
+                child: PlatformText(L10n(context).never.toUpperCase()),
+                materialFlat: (_, __) => MaterialFlatButtonData(
+                  disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+                ),
                 onPressed: () async {
                   if (_threshold == null) {
                     // Threshold is already disabled
@@ -188,10 +204,12 @@ class AlertThresholdsPercentageDialogState extends State<AlertThresholdsPercenta
                   _showNetworkError(false);
                   _formKey.currentState.save();
                 }),
-            FlatButton(
+            PlatformButton(
               key: okButtonKey,
-              child: Text(L10n(context).ok),
-              disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+              child: PlatformText(L10n(context).ok),
+              materialFlat: (_, __) => MaterialFlatButtonData(
+                disabledTextColor: ParentColors.parentApp.withAlpha(_disabledAlpha),
+              ),
               onPressed: _disableButtons
                   ? null
                   : () async {

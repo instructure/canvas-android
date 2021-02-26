@@ -443,6 +443,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_platform_widgets:
+    dependency: "direct main"
+    description:
+      name: flutter_platform_widgets
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.72.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
