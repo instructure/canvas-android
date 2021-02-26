@@ -55,10 +55,13 @@ class CalendarWidget extends StatefulWidget {
   /// Starting view, either 'week' or 'calendar'
   final CalendarView startingView;
 
+  final ViewType viewType;
+
   const CalendarWidget({
     Key key,
     @required this.dayBuilder,
     @required this.fetcher,
+    @required this.viewType,
     this.onFilterTap,
     this.startingDate,
     this.startingView,
@@ -272,7 +275,7 @@ class CalendarWidgetState extends State<CalendarWidget>
                   children: <Widget>[
                     _calendar(),
                     Divider(height: 1),
-                    Expanded(child: _agendaPager()),
+                    Expanded(child: _getPager()),
                   ],
                 ),
               ],
@@ -281,6 +284,14 @@ class CalendarWidgetState extends State<CalendarWidget>
         ],
       ),
     );
+  }
+
+  Widget _getPager() {
+    if (widget.viewType == ViewType.Day) {
+      return _dayPager();
+    } else {
+      return _agendaPager();
+    }
   }
 
   Widget _calendarHeader() {
@@ -416,8 +427,8 @@ class CalendarWidgetState extends State<CalendarWidget>
       },
       onPageChanged: (index) {
         var weekStart = _weekStartForIndex(index);
-        var newSelectedDay = DateTime(
-            weekStart.year, weekStart.month, weekStart.day);
+        var newSelectedDay =
+            DateTime(weekStart.year, weekStart.month, weekStart.day);
 
         selectDay(newSelectedDay,
             dayPagerBehavior: CalendarPageChangeBehavior.none,
@@ -602,24 +613,29 @@ class CalendarWidgetState extends State<CalendarWidget>
     }
 
     // Day change
-    if (dayPagerBehavior == CalendarPageChangeBehavior.animate) {
-      _dayController.animateToPage(
-        _dayIndexForDay(day),
-        duration: CalendarWidget.animDuration,
-        curve: CalendarWidget.animCurve,
-      );
-    } else if (dayPagerBehavior == CalendarPageChangeBehavior.jump) {
-      _dayController.jumpToPage(_dayIndexForDay(day));
+    if (widget.viewType == ViewType.Day) {
+      if (dayPagerBehavior == CalendarPageChangeBehavior.animate) {
+        _dayController.animateToPage(
+          _dayIndexForDay(day),
+          duration: CalendarWidget.animDuration,
+          curve: CalendarWidget.animCurve,
+        );
+      } else if (dayPagerBehavior == CalendarPageChangeBehavior.jump) {
+        _dayController.jumpToPage(_dayIndexForDay(day));
+      }
     }
 
-    if (agendaPagerBehavior == CalendarPageChangeBehavior.animate) {
-      _agendaController.animateToPage(
-        _weekIndexForDay(selectedDay),
-        duration: CalendarWidget.animDuration,
-        curve: CalendarWidget.animCurve,
-      );
-    } else if (agendaPagerBehavior == CalendarPageChangeBehavior.jump) {
-      _agendaController.jumpToPage(_weekIndexForDay(selectedDay));
+    //Agenda change
+    if (widget.viewType == ViewType.Agenda) {
+      if (agendaPagerBehavior == CalendarPageChangeBehavior.animate) {
+        _agendaController.animateToPage(
+          _weekIndexForDay(selectedDay),
+          duration: CalendarWidget.animDuration,
+          curve: CalendarWidget.animCurve,
+        );
+      } else if (agendaPagerBehavior == CalendarPageChangeBehavior.jump) {
+        _agendaController.jumpToPage(_weekIndexForDay(selectedDay));
+      }
     }
 
     setState(() {});
@@ -637,9 +653,13 @@ class CalendarWidgetState extends State<CalendarWidget>
           firstDay: weekStart,
           displayDayOfWeekHeader: true,
           onDaySelected: (day) {
-            selectDay(day,
-                dayPagerBehavior: CalendarPageChangeBehavior.none,
-                weekPagerBehavior: CalendarPageChangeBehavior.none,);
+            selectDay(
+              day,
+              dayPagerBehavior: CalendarPageChangeBehavior.jump,
+              agendaPagerBehavior: CalendarPageChangeBehavior.jump,
+              monthPagerBehavior: CalendarPageChangeBehavior.jump,
+              weekPagerBehavior: CalendarPageChangeBehavior.none,
+            );
           },
         );
       },
@@ -650,10 +670,13 @@ class CalendarWidgetState extends State<CalendarWidget>
         var newSelectedDay = DateTime(
             weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
 
-        selectDay(newSelectedDay,
-            dayPagerBehavior: CalendarPageChangeBehavior.none,
-            weekPagerBehavior: CalendarPageChangeBehavior.none,
-            monthPagerBehavior: CalendarPageChangeBehavior.jump,);
+        selectDay(
+          newSelectedDay,
+          dayPagerBehavior: CalendarPageChangeBehavior.jump,
+          agendaPagerBehavior: CalendarPageChangeBehavior.jump,
+          monthPagerBehavior: CalendarPageChangeBehavior.jump,
+          weekPagerBehavior: CalendarPageChangeBehavior.none,
+        );
       },
     );
   }
@@ -780,3 +803,5 @@ class CalendarWidgetState extends State<CalendarWidget>
 }
 
 enum CalendarView { Month, Week }
+
+enum ViewType { Day, Agenda }

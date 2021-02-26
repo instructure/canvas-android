@@ -19,6 +19,7 @@ import 'package:flutter_parent/models/user.dart';
 import 'package:flutter_parent/network/utils/api_prefs.dart';
 import 'package:flutter_parent/screens/calendar/calendar_day_planner.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_agenda.dart';
+import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_day.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_filter_screen/calendar_filter_list_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/calendar/planner_fetcher.dart';
@@ -30,12 +31,13 @@ import 'package:provider/provider.dart';
 class CalendarScreen extends StatefulWidget {
   final DateTime startDate;
   final CalendarView startView;
+  final ViewType viewType;
 
   // Keys for the deep link parameter map passed in via DashboardScreen
   static final startDateKey = 'startDate';
   static final startViewKey = 'startView';
 
-  CalendarScreen({Key key, this.startDate, this.startView = CalendarView.Week}) : super(key: key);
+  CalendarScreen({Key key, this.startDate, this.startView = CalendarView.Week, @required this.viewType}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => CalendarScreenState();
@@ -70,6 +72,7 @@ class CalendarScreenState extends State<CalendarScreen> {
       fetcher: _fetcher,
       startingDate: widget.startDate,
       startingView: widget.startView,
+      viewType: widget.viewType,
       onFilterTap: () async {
         Set<String> currentContexts = await _fetcher.getContexts();
         Set<String> updatedContexts = await locator.get<QuickNav>().push(
@@ -82,7 +85,11 @@ class CalendarScreenState extends State<CalendarScreen> {
         }
       },
       dayBuilder: (BuildContext context, DateTime day) {
-        return CalendarAgenda(day, false);
+        if (widget.viewType == ViewType.Agenda) {
+          return CalendarAgenda(day);
+        } else {
+          return CalendarDayPlanner(day);
+        }
       },
     );
   }

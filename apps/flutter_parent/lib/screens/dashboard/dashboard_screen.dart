@@ -493,7 +493,7 @@ class DashboardState extends State<DashboardScreen> {
               ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
                   ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
                   : null)
-              : null,
+              : null, viewType: ViewType.Agenda,
         );
         break;
       case DashboardContentScreens.Alerts:

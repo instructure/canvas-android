@@ -15,9 +15,8 @@ import '../planner_fetcher.dart';
 
 class CalendarAgenda extends StatefulWidget {
   final DateTime _day;
-  final bool _monthlyView;
 
-  CalendarAgenda(this._day, this._monthlyView);
+  CalendarAgenda(this._day);
 
   @override
   State<StatefulWidget> createState() => CalendarAgendaState();
