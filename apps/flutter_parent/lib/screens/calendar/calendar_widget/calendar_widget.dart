@@ -91,12 +91,14 @@ class CalendarWidgetState extends State<CalendarWidget>
   static const int _todayDayIndex = 100000;
   static const int _todayWeekIndex = 10000;
   static const int _todayMonthIndex = 1000;
+  static const int _todayAgendaIndex = 10000;
 
   // The max indices for the day, week, and month pagers. Because the 'today' indices represent the center of the
   // calendar range, these indices are simply double that of the 'today' indices.
   static const int _maxDayIndex = _todayDayIndex * 2;
   static const int _maxWeekIndex = _todayWeekIndex * 2;
   static const int _maxMonthIndex = _todayMonthIndex * 2;
+  static const int _maxAgendaIndex = _todayAgendaIndex * 2;
 
   /// The currently-selected date
   DateTime selectedDay = DateTime.now();
@@ -105,6 +107,7 @@ class CalendarWidgetState extends State<CalendarWidget>
   Key _dayKey = GlobalKey();
   Key _weekKey = GlobalKey();
   Key _monthKey = GlobalKey();
+  Key _agendaKey = GlobalKey();
 
   // Page controllers
   PageController _dayController;
@@ -162,6 +165,13 @@ class CalendarWidgetState extends State<CalendarWidget>
         .roundToMidnight();
   }
 
+  static DateTime _agendaStartForIndex(int index) {
+    final today = DateTime.now();
+    int weekOffset = index - _todayWeekIndex;
+    return DateTime(today.year, today.month, today.day + (weekOffset * 7))
+        .withFirstDayOfWeek();
+  }
+
   // Returns the DateTime that represents the first day of the week associated with the specified week pager index
   static DateTime _weekStartForIndex(int index) {
     final today = DateTime.now();
@@ -189,6 +199,13 @@ class CalendarWidgetState extends State<CalendarWidget>
     int yearOffset = year - today.year;
     int monthOffset = month - today.month;
     return _todayMonthIndex + monthOffset + (yearOffset * 12);
+  }
+
+  static int _agendaIndexForDay(DateTime day) {
+    final weekStart = day.withFirstDayOfWeek();
+    final thisWeekStart = DateTime.now().withFirstDayOfWeek();
+    double weeksDiff = thisWeekStart.difference(weekStart).inDays / 7;
+    return _todayAgendaIndex - weeksDiff.round();
   }
 
   // Returns the week pager index associated with the week in which the specified day falls
@@ -246,7 +263,7 @@ class CalendarWidgetState extends State<CalendarWidget>
 
     // Set up controllers for day, week, and month pagers
     _dayController = PageController(initialPage: _todayDayIndex);
-    _agendaController = PageController(initialPage: _todayWeekIndex);
+    _agendaController = PageController(initialPage: _todayAgendaIndex);
     _weekController = PageController(initialPage: _todayWeekIndex);
     _monthController = PageController(initialPage: _todayMonthIndex);
 
@@ -293,7 +310,7 @@ class CalendarWidgetState extends State<CalendarWidget>
   }
 
   Widget _getPager() {
-    if (viewType == CalendarViewType.Day) {
+    if (widget.viewType == CalendarViewType.Day) {
       return _dayPager();
     } else {
       return _agendaPager();
@@ -421,18 +438,18 @@ class CalendarWidgetState extends State<CalendarWidget>
 
   Widget _agendaPager() {
     final pager = PageView.builder(
-      key: _dayKey,
+      key: _agendaKey,
       controller: _agendaController,
-      itemCount: _maxWeekIndex,
+      itemCount: _maxAgendaIndex,
       itemBuilder: (context, index) {
-        var weekStart = _weekStartForIndex(index);
+        var weekStart = _agendaStartForIndex(index);
         var selectedDayOffset = (selectedDay.weekday - weekStart.weekday) % 7;
         var newSelectedDay = DateTime(
             weekStart.year, weekStart.month, weekStart.day + selectedDayOffset);
         return widget.dayBuilder(context, newSelectedDay);
       },
       onPageChanged: (index) {
-        var weekStart = _weekStartForIndex(index);
+        var weekStart = _agendaStartForIndex(index);
         var newSelectedDay =
             DateTime(weekStart.year, weekStart.month, weekStart.day);
 
@@ -634,12 +651,12 @@ class CalendarWidgetState extends State<CalendarWidget>
     if (widget.viewType == CalendarViewType.Agenda) {
       if (agendaPagerBehavior == CalendarPageChangeBehavior.animate) {
         _agendaController.animateToPage(
-          _weekIndexForDay(selectedDay),
+          _agendaIndexForDay(selectedDay),
           duration: CalendarWidget.animDuration,
           curve: CalendarWidget.animCurve,
         );
       } else if (agendaPagerBehavior == CalendarPageChangeBehavior.jump) {
-        _agendaController.jumpToPage(_weekIndexForDay(selectedDay));
+        _agendaController.jumpToPage(_agendaIndexForDay(selectedDay));
       }
     }
 

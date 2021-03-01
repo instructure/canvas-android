@@ -29,7 +29,7 @@ import 'package:flutter_parent/utils/service_locator.dart';
 import 'package:provider/provider.dart';
 
 class CalendarScreen extends StatefulWidget {
-  final DateTime startDate;
+  DateTime startDate;
   final CalendarView startView;
   final CalendarViewType viewType;
 
@@ -64,6 +64,12 @@ class CalendarScreenState extends State<CalendarScreen> {
         _fetcher.setObserveeId(_student.id);
       }
     }
+  }
+
+
+  @override
+  void didUpdateWidget(CalendarScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

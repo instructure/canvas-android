@@ -350,10 +350,10 @@ class DashboardState extends State<DashboardScreen> {
           return [
             PopupMenuItem(
                 value: CalendarViewType.Day,
-                child: Text(CalendarViewType.Day.toString())),
+                child: Text("Day")),
             PopupMenuItem(
                 value: CalendarViewType.Agenda,
-                child: Text(CalendarViewType.Agenda.toString()))
+                child: Text("Agenda"))
           ];
         },
       );
@@ -534,7 +534,11 @@ class DashboardState extends State<DashboardScreen> {
     switch (_currentIndex) {
       case DashboardContentScreens.Calendar:
         _page = CalendarScreen(
-          startDate: DateTime.now(),
+          startDate: currentDeepLinkParams != null
+              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
+              ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
+              : null)
+              : null,
           startView: currentDeepLinkParams != null
               ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
                   ? currentDeepLinkParams[CalendarScreen.startViewKey]
