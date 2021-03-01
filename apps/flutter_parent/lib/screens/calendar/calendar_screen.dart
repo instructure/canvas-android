@@ -31,7 +31,7 @@ import 'package:provider/provider.dart';
 class CalendarScreen extends StatefulWidget {
   final DateTime startDate;
   final CalendarView startView;
-  final ViewType viewType;
+  final CalendarViewType viewType;
 
   // Keys for the deep link parameter map passed in via DashboardScreen
   static final startDateKey = 'startDate';
@@ -85,7 +85,7 @@ class CalendarScreenState extends State<CalendarScreen> {
         }
       },
       dayBuilder: (BuildContext context, DateTime day) {
-        if (widget.viewType == ViewType.Agenda) {
+        if (widget.viewType == CalendarViewType.Agenda) {
           return CalendarAgenda(day);
         } else {
           return CalendarDayPlanner(day);

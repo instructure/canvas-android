@@ -23,6 +23,7 @@ import 'package:flutter_parent/screens/alerts/alerts_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_screen.dart';
 import 'package:flutter_parent/screens/calendar/calendar_today_click_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_today_notifier.dart';
+import 'package:flutter_parent/screens/calendar/calendar_view_type_notifier.dart';
 import 'package:flutter_parent/screens/calendar/calendar_widget/calendar_widget.dart';
 import 'package:flutter_parent/screens/courses/courses_screen.dart';
 import 'package:flutter_parent/screens/dashboard/selected_student_notifier.dart';
@@ -51,7 +52,9 @@ import 'package:provider/provider.dart';
 import 'dashboard_interactor.dart';
 
 class DashboardScreen extends StatefulWidget {
-  DashboardScreen({Key key, this.students, this.startingPage, this.deepLinkParams}) : super(key: key);
+  DashboardScreen(
+      {Key key, this.students, this.startingPage, this.deepLinkParams})
+      : super(key: key);
 
   final List<User> students;
 
@@ -73,6 +76,9 @@ class DashboardState extends State<DashboardScreen> {
 
   bool _studentsLoading = false;
   bool _selfLoading = false;
+
+  bool _calendarViewTypeSelectorVisible = false;
+  CalendarViewType _selectedViewType = CalendarViewType.Day;
 
   // This will likely be used when we have specs for the error state
   // ignore: unused_field
@@ -102,7 +108,9 @@ class DashboardState extends State<DashboardScreen> {
     if (widget.students?.isNotEmpty == true) {
       _students = widget.students;
       String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
-      _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
+      _selectedStudent = _students.firstWhere(
+          (it) => it.id == selectedStudentId,
+          orElse: () => _students.first);
       _updateStudentColor(_selectedStudent.id);
       _selectedStudentNotifier.value = _selectedStudent;
       ApiPrefs.setCurrentStudent(_selectedStudent);
@@ -165,8 +173,11 @@ class DashboardState extends State<DashboardScreen> {
 
       if (_selectedStudent == null && _students.isNotEmpty) {
         setState(() {
-          String selectedStudentId = ApiPrefs.getCurrentLogin()?.selectedStudentId;
-          _selectedStudent = _students.firstWhere((it) => it.id == selectedStudentId, orElse: () => _students.first);
+          String selectedStudentId =
+              ApiPrefs.getCurrentLogin()?.selectedStudentId;
+          _selectedStudent = _students.firstWhere(
+              (it) => it.id == selectedStudentId,
+              orElse: () => _students.first);
           _selectedStudentNotifier.value = _selectedStudent;
           _updateStudentColor(_selectedStudent.id);
           ApiPrefs.setCurrentStudent(_selectedStudent);
@@ -215,8 +226,10 @@ class DashboardState extends State<DashboardScreen> {
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<SelectedStudentNotifier>(create: (context) => _selectedStudentNotifier),
-        ChangeNotifierProvider<CalendarTodayNotifier>(create: (context) => _showTodayNotifier),
+        ChangeNotifierProvider<SelectedStudentNotifier>(
+            create: (context) => _selectedStudentNotifier),
+        ChangeNotifierProvider<CalendarTodayNotifier>(
+            create: (context) => _showTodayNotifier),
       ],
       child: Consumer<SelectedStudentNotifier>(
         builder: (context, model, _) {
@@ -232,7 +245,8 @@ class DashboardState extends State<DashboardScreen> {
                       return Semantics(
                         label: L10n(context).gotoTodayButtonLabel,
                         child: InkResponse(
-                          onTap: () => {locator<CalendarTodayClickNotifier>().trigger()},
+                          onTap: () =>
+                              {locator<CalendarTodayClickNotifier>().trigger()},
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16.0),
                             child: SvgPicture.asset(
@@ -244,7 +258,8 @@ class DashboardState extends State<DashboardScreen> {
                     } else {
                       return SizedBox.shrink();
                     }
-                  })
+                  }),
+                  _viewTypeSelector(),
                 ],
 
                 flexibleSpace: Semantics(
@@ -261,10 +276,12 @@ class DashboardState extends State<DashboardScreen> {
                       key: Key("drawer_menu"),
                     ),
                     countListenable: _interactor.getInboxCountNotifier(),
-                    options: BadgeOptions(includeBorder: true, onPrimarySurface: true),
+                    options: BadgeOptions(
+                        includeBorder: true, onPrimarySurface: true),
                   ),
                   onPressed: () => scaffoldKey.currentState.openDrawer(),
-                  tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
               ),
             ),
@@ -299,14 +316,17 @@ class DashboardState extends State<DashboardScreen> {
               ),
               Expanded(child: _currentPage())
             ]),
-            bottomNavigationBar: ParentTheme.of(context).bottomNavigationDivider(
+            bottomNavigationBar:
+                ParentTheme.of(context).bottomNavigationDivider(
               _students.isEmpty
                   ? Container()
                   : BottomNavigationBar(
-                      unselectedItemColor: ParentTheme.of(context).onSurfaceColor,
+                      unselectedItemColor:
+                          ParentTheme.of(context).onSurfaceColor,
                       selectedFontSize: 10,
                       unselectedFontSize: 10,
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       items: _bottomNavigationBarItems(),
                       currentIndex: this._currentIndex.index,
                       onTap: (item) => _handleBottomBarClick(item),
@@ -316,6 +336,30 @@ class DashboardState extends State<DashboardScreen> {
         },
       ),
     );
+  }
+
+  Widget _viewTypeSelector() {
+    if (_calendarViewTypeSelectorVisible) {
+      return PopupMenuButton<CalendarViewType>(
+        onSelected: (selected) {
+          setState(() {
+            _selectedViewType = selected;
+          });
+        },
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem(
+                value: CalendarViewType.Day,
+                child: Text(CalendarViewType.Day.toString())),
+            PopupMenuItem(
+                value: CalendarViewType.Agenda,
+                child: Text(CalendarViewType.Agenda.toString()))
+          ];
+        },
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 
   Widget _appBarStudents(List<User> students, User selectedStudent) {
@@ -344,13 +388,16 @@ class DashboardState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Avatar(selectedStudent.avatarUrl,
-                  name: selectedStudent.shortName, radius: 24, key: Key("student_expansion_touch_target")),
+                  name: selectedStudent.shortName,
+                  radius: 24,
+                  key: Key("student_expansion_touch_target")),
               SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  UserName.fromUserShortName(selectedStudent, style: Theme.of(context).primaryTextTheme.subhead),
+                  UserName.fromUserShortName(selectedStudent,
+                      style: Theme.of(context).primaryTextTheme.subhead),
                   SizedBox(width: 6),
                   DropdownArrow(rotate: expand),
                 ],
@@ -422,11 +469,12 @@ class DashboardState extends State<DashboardScreen> {
     ];
   }
 
-  Widget _navBarIcon({@required String light, @required String dark, bool active: false}) {
+  Widget _navBarIcon(
+      {@required String light, @required String dark, bool active: false}) {
     bool darkMode = ParentTheme.of(context).isDarkMode;
     return SvgPicture.asset(
       darkMode ? dark : light,
-      color: active? ParentTheme.of(context).studentColor : null,
+      color: active ? ParentTheme.of(context).studentColor : null,
       width: 24,
       height: 24,
     );
@@ -450,10 +498,10 @@ class DashboardState extends State<DashboardScreen> {
         ),
 
         // App version
-        if (ApiPrefs.getCurrentLogin()?.canMasquerade == true && !ApiPrefs.isMasquerading())
+        if (ApiPrefs.getCurrentLogin()?.canMasquerade == true &&
+            !ApiPrefs.isMasquerading())
           _navDrawerActAsUser(),
-        if (ApiPrefs.isMasquerading())
-          _navDrawerStopActingAsUser(),
+        if (ApiPrefs.isMasquerading()) _navDrawerStopActingAsUser(),
         _navDrawerAppVersion(),
       ]),
     );
@@ -462,6 +510,8 @@ class DashboardState extends State<DashboardScreen> {
   _handleBottomBarClick(item) {
     setState(() {
       _currentIndex = DashboardContentScreens.values[item];
+      _calendarViewTypeSelectorVisible = DashboardContentScreens.values[item] ==
+          DashboardContentScreens.Calendar;
     });
   }
 
@@ -484,16 +534,14 @@ class DashboardState extends State<DashboardScreen> {
     switch (_currentIndex) {
       case DashboardContentScreens.Calendar:
         _page = CalendarScreen(
-          startDate: currentDeepLinkParams != null
-              ? (currentDeepLinkParams.containsKey(CalendarScreen.startDateKey)
-                  ? currentDeepLinkParams[CalendarScreen.startDateKey] as DateTime
-                  : null)
-              : null,
+          startDate: DateTime.now(),
           startView: currentDeepLinkParams != null
               ? (currentDeepLinkParams.containsKey(CalendarScreen.startViewKey)
-                  ? currentDeepLinkParams[CalendarScreen.startViewKey] as CalendarView
+                  ? currentDeepLinkParams[CalendarScreen.startViewKey]
+                      as CalendarView
                   : null)
-              : null, viewType: ViewType.Agenda,
+              : null,
+          viewType: _selectedViewType,
         );
         break;
       case DashboardContentScreens.Alerts:
@@ -525,7 +573,8 @@ class DashboardState extends State<DashboardScreen> {
                   FlatButton(
                     child: Text(L10n(context).ok),
                     onPressed: () {
-                      locator<Analytics>().logEvent(AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE);
+                      locator<Analytics>().logEvent(
+                          AnalyticsEventConstants.VIEWED_OLD_REMINDER_MESSAGE);
                       Navigator.of(context).pop();
                     },
                   )
@@ -545,7 +594,8 @@ class DashboardState extends State<DashboardScreen> {
   _navigateToManageStudents(context) async {
     // Close the drawer, then push the Manage Children screen in
     Navigator.of(context).pop();
-    var _addedStudentFuture = await locator<QuickNav>().push(context, ManageStudentsScreen(_students));
+    var _addedStudentFuture = await locator<QuickNav>()
+        .push(context, ManageStudentsScreen(_students));
     if (_addedStudentFuture) {
       _addStudent();
     }
@@ -565,10 +615,12 @@ class DashboardState extends State<DashboardScreen> {
 
   _performLogOut(BuildContext context, {bool switchingUsers = false}) async {
     await ParentTheme.of(context).setSelectedStudent(null);
-    await ApiPrefs.performLogout(switchingLogins: switchingUsers, app: ParentApp.of(context));
+    await ApiPrefs.performLogout(
+        switchingLogins: switchingUsers, app: ParentApp.of(context));
     MasqueradeUI.of(context).refresh();
-    locator<Analytics>()
-        .logEvent(switchingUsers ? AnalyticsEventConstants.SWITCH_USERS : AnalyticsEventConstants.LOGOUT);
+    locator<Analytics>().logEvent(switchingUsers
+        ? AnalyticsEventConstants.SWITCH_USERS
+        : AnalyticsEventConstants.LOGOUT);
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 
@@ -581,7 +633,8 @@ class DashboardState extends State<DashboardScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+            child: UserName.fromUser(user,
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -607,7 +660,8 @@ class DashboardState extends State<DashboardScreen> {
     return ListView.separated(
       itemCount: items.length,
       itemBuilder: (context, index) => items[index],
-      separatorBuilder: (context, index) => const Divider(height: 0, indent: 16),
+      separatorBuilder: (context, index) =>
+          const Divider(height: 0, indent: 16),
     );
   }
 
@@ -622,10 +676,13 @@ class DashboardState extends State<DashboardScreen> {
         ),
       );
 
-  _navDrawerManageStudents() =>
-      ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
+  _navDrawerManageStudents() => ListTile(
+      title: Text(L10n(context).manageStudents),
+      onTap: () => _navigateToManageStudents(context));
 
-  _navDrawerSettings() => ListTile(title: Text(L10n(context).settings), onTap: () => _navigateToSettings(context));
+  _navDrawerSettings() => ListTile(
+      title: Text(L10n(context).settings),
+      onTap: () => _navigateToSettings(context));
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),
@@ -642,11 +699,13 @@ class DashboardState extends State<DashboardScreen> {
                 content: Text(L10n(context).logoutConfirmation),
                 actions: <Widget>[
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                    child: Text(
+                        MaterialLocalizations.of(context).cancelButtonLabel),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    child:
+                        Text(MaterialLocalizations.of(context).okButtonLabel),
                     onPressed: () => _performLogOut(context),
                   )
                 ],
@@ -675,7 +734,8 @@ class DashboardState extends State<DashboardScreen> {
         title: Text(L10n(context).stopActAsUser),
         onTap: () {
           Navigator.of(context).pop();
-          MasqueradeUI.showMasqueradeCancelDialog(Navigator.of(context).widget.key);
+          MasqueradeUI.showMasqueradeCancelDialog(
+              Navigator.of(context).widget.key);
         },
       );
 
@@ -687,7 +747,8 @@ class DashboardState extends State<DashboardScreen> {
               padding: const EdgeInsets.all(16),
               child: FutureBuilder(
                 future: PackageInfo.fromPlatform(),
-                builder: (BuildContext context, AsyncSnapshot<PackageInfo> snapshot) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<PackageInfo> snapshot) {
                   return Text(
                     L10n(context).appVersion(snapshot.data?.version),
                     style: Theme.of(context).textTheme.subtitle,

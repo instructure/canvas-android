@@ -32,6 +32,7 @@ import 'package:intl/intl.dart' hide TextDirection;
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import '../calendar_view_type_notifier.dart';
 import 'calendar_day_of_week_headers.dart';
 
 class CalendarWidget extends StatefulWidget {
@@ -55,7 +56,7 @@ class CalendarWidget extends StatefulWidget {
   /// Starting view, either 'week' or 'calendar'
   final CalendarView startingView;
 
-  final ViewType viewType;
+  final CalendarViewType viewType;
 
   const CalendarWidget({
     Key key,
@@ -68,7 +69,7 @@ class CalendarWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  CalendarWidgetState createState() => CalendarWidgetState();
+  CalendarWidgetState createState() => CalendarWidgetState(viewType);
 }
 
 @visibleForTesting
@@ -111,6 +112,8 @@ class CalendarWidgetState extends State<CalendarWidget>
   PageController _weekController;
   PageController _monthController;
 
+  CalendarViewType viewType;
+
   // Notifier that tracks the current month collapse/expand progress
   MonthExpansionNotifier _monthExpansionNotifier = MonthExpansionNotifier(0.0);
 
@@ -124,6 +127,8 @@ class CalendarWidgetState extends State<CalendarWidget>
 
   // The height of the fully-expanded month widget, which will vary depending on the number of week in the month.
   double _fullMonthHeight = _calculateFullMonthHeight(_todayMonthIndex);
+
+  CalendarWidgetState(this.viewType);
 
   // Returns the allowed expansion height of the month calendar, i.e. the difference between the height of the
   // week widget and the height of the fully-expanded month widget.
@@ -252,6 +257,7 @@ class CalendarWidgetState extends State<CalendarWidget>
           dayPagerBehavior: CalendarPageChangeBehavior.jump,
           weekPagerBehavior: CalendarPageChangeBehavior.jump,
           monthPagerBehavior: CalendarPageChangeBehavior.jump,
+          agendaPagerBehavior: CalendarPageChangeBehavior.jump
         );
       });
     }
@@ -287,7 +293,7 @@ class CalendarWidgetState extends State<CalendarWidget>
   }
 
   Widget _getPager() {
-    if (widget.viewType == ViewType.Day) {
+    if (viewType == CalendarViewType.Day) {
       return _dayPager();
     } else {
       return _agendaPager();
@@ -432,8 +438,6 @@ class CalendarWidgetState extends State<CalendarWidget>
 
         selectDay(newSelectedDay,
             dayPagerBehavior: CalendarPageChangeBehavior.none,
-            weekPagerBehavior: CalendarPageChangeBehavior.jump,
-            monthPagerBehavior: CalendarPageChangeBehavior.jump,
             agendaPagerBehavior: CalendarPageChangeBehavior.none);
       },
     );
@@ -481,7 +485,8 @@ class CalendarWidgetState extends State<CalendarWidget>
       },
       onPageChanged: (index) {
         selectDay(_dayForIndex(index),
-            dayPagerBehavior: CalendarPageChangeBehavior.none);
+            dayPagerBehavior: CalendarPageChangeBehavior.none,
+            agendaPagerBehavior: CalendarPageChangeBehavior.none);
       },
     );
 
@@ -613,7 +618,7 @@ class CalendarWidgetState extends State<CalendarWidget>
     }
 
     // Day change
-    if (widget.viewType == ViewType.Day) {
+    if (widget.viewType == CalendarViewType.Day) {
       if (dayPagerBehavior == CalendarPageChangeBehavior.animate) {
         _dayController.animateToPage(
           _dayIndexForDay(day),
@@ -626,7 +631,7 @@ class CalendarWidgetState extends State<CalendarWidget>
     }
 
     //Agenda change
-    if (widget.viewType == ViewType.Agenda) {
+    if (widget.viewType == CalendarViewType.Agenda) {
       if (agendaPagerBehavior == CalendarPageChangeBehavior.animate) {
         _agendaController.animateToPage(
           _weekIndexForDay(selectedDay),
@@ -657,7 +662,6 @@ class CalendarWidgetState extends State<CalendarWidget>
               day,
               dayPagerBehavior: CalendarPageChangeBehavior.jump,
               agendaPagerBehavior: CalendarPageChangeBehavior.jump,
-              monthPagerBehavior: CalendarPageChangeBehavior.jump,
               weekPagerBehavior: CalendarPageChangeBehavior.none,
             );
           },
@@ -804,4 +808,4 @@ class CalendarWidgetState extends State<CalendarWidget>
 
 enum CalendarView { Month, Week }
 
-enum ViewType { Day, Agenda }
+enum CalendarViewType { Day, Agenda }
