@@ -80,6 +80,7 @@ abstract class TeacherTest : CanvasTest() {
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
     val studentContextPage = StudentContextPage()
     val syllabusPage = SyllabusPage()
+    val todoPage = TodoPage()
     val webViewLoginPage = WebViewLoginPage()
 
 }

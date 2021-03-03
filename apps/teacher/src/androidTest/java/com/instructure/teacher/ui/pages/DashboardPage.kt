@@ -94,4 +94,8 @@ class DashboardPage : BasePage() {
     fun openInbox() {
         inboxTab.click()
     }
+
+    fun openTodo() {
+        todoTab.click()
+    }
 }
