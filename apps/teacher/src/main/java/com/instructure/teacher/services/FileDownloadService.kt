@@ -319,8 +319,10 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
         if (isCanceled) {
             notificationManager.cancel(NOTIFICATION_ID)
         } else {
-            notificationBuilder?.setOngoing(false)
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder?.build())
+            if (notificationBuilder != null) {
+                notificationBuilder?.setOngoing(false)
+                notificationManager.notify(NOTIFICATION_ID, notificationBuilder?.build())
+            }
         }
     }
 
