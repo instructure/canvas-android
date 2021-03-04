@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
     <string name="emptySubmissionCommentsSubtext">Have questions about your assignment?\nMessage your instructor.</string>
     <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
+    <string name="mediaUpload">Media Upload</string>
     <string name="mediaUploadAudio">Media Upload - Audio</string>
     <string name="mediaUploadVideo">Media Upload - Video</string>
     <string name="commentSubmissionTypeText">Text Submission</string>

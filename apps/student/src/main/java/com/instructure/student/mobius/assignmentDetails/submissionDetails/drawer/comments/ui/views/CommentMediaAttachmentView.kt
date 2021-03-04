@@ -46,6 +46,10 @@ class CommentMediaAttachmentView(
                 view.iconImageView.setImageResource(R.drawable.ic_media)
                 view.attachmentNameTextView.text = context.getString(R.string.mediaUploadVideo)
             }
+            else -> {
+                view.iconImageView.setImageResource(R.drawable.ic_media)
+                view.attachmentNameTextView.text = context.getString(R.string.mediaUpload)
+            }
         }
         view.iconImageView.setColorFilter(tint)
         view.onClickWithRequireNetwork { onAttachmentClicked(mediaComment.asAttachment()) }

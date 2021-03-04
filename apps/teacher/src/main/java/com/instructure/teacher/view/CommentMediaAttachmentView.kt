@@ -41,6 +41,10 @@ class CommentMediaAttachmentView(context: Context, mediaComment: MediaComment, o
                 view.iconImageView.setImageResource(R.drawable.ic_media)
                 view.attachmentNameTextView.text = context.getString(R.string.mediaUploadVideo)
             }
+            else -> {
+                view.iconImageView.setImageResource(R.drawable.ic_media)
+                view.attachmentNameTextView.text = context.getString(R.string.mediaUpload)
+            }
         }
         view.onClickWithRequireNetwork { onAttachmentClicked(mediaComment.asAttachment()) }
     }
