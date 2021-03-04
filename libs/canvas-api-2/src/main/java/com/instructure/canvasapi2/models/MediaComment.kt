@@ -38,10 +38,10 @@ data class MediaComment(
 ) : Parcelable {
 
     enum class MediaType {
-        @SerializedName("audio")
+        @SerializedName("audio", alternate = ["audio/*"])
         AUDIO,
 
-        @SerializedName("video")
+        @SerializedName("video", alternate = ["video/*"])
         VIDEO
     }
 

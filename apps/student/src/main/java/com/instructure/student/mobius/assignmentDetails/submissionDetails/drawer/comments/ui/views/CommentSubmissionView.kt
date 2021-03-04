@@ -94,9 +94,10 @@ class CommentSubmissionView(
             }
             SubmissionType.MEDIA_RECORDING -> {
                 val media = submission.mediaComment ?: throw IllegalStateException("Media comment is null for media submission. WHY!?")
-                val subtitle = when (media.mediaType!!) {
+                val subtitle = when (media.mediaType) {
                     MediaComment.MediaType.AUDIO -> context.getString(R.string.commentSubmissionTypeAudio)
                     MediaComment.MediaType.VIDEO -> context.getString(R.string.commentSubmissionTypeVideo)
+                    else -> ""
                 }
                 Triple(R.drawable.ic_media, context.getString(R.string.commentSubmissionTypeMediaFile), subtitle)
             }
