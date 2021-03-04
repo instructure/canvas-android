@@ -73,7 +73,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private var moduleItemId: String by StringArg(key = ITEM_ID)
 
     // Default number will get reset
-    private var NUM_ITEMS = 3
+    private var itemsCount = 3
 
     private lateinit var adapter: CourseModuleProgressionAdapter
 
@@ -164,7 +164,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     private val nextItemClickCallback = View.OnClickListener {
         setupNextModuleName(currentPos)
         setupNextModule(getModuleItemGroup(currentPos))
-        if (currentPos < NUM_ITEMS - 1) {
+        if (currentPos < itemsCount - 1) {
             viewPager.currentItem = ++currentPos
         }
         updateBottomNavBarButtons()
@@ -175,28 +175,34 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         next_item.setOnClickListener(nextItemClickCallback)
 
         markDoneButton.setOnClickListener {
-            if (getModelObject() != null && getModelObject()!!.completionRequirement != null) {
-                if (getModelObject()!!.completionRequirement!!.completed) {
-                    ModuleManager.markAsNotDone(canvasContext, getModelObject()!!.moduleId, getModelObject()!!.id,
+            val moduleItem = getModelObject()
+            if (moduleItem?.completionRequirement != null) {
+                if (moduleItem.completionRequirement!!.completed) {
+                    ModuleManager.markAsNotDone(canvasContext, moduleItem.moduleId, moduleItem.id,
                             object : StatusCallback<ResponseBody>() {
                                 override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    markDoneCheckbox.isChecked = false
-                                    getModelObject()!!.completionRequirement!!.completed = false
-                                    notifyOfItemChanged(getModelObject())
+                                    setMarkDone(moduleItem, false)
                                 }
                             })
                 } else {
-                    ModuleManager.markAsDone(canvasContext, getModelObject()!!.moduleId, getModelObject()!!.id,
+                    ModuleManager.markAsDone(canvasContext, moduleItem.moduleId, moduleItem.id,
                             object : StatusCallback<ResponseBody>() {
                                 override fun onResponse(response: Response<ResponseBody>, linkHeaders: LinkHeaders, type: ApiType) {
-                                    markDoneCheckbox.isChecked = true
-                                    getModelObject()!!.completionRequirement!!.completed = true
-                                    notifyOfItemChanged(getModelObject())
+                                    setMarkDone(moduleItem, true)
                                 }
                             })
                 }
             }
         }
+    }
+
+    private fun setMarkDone(moduleItem: ModuleItem, markDone: Boolean) {
+        val currentModuleItem = getModelObject()
+        if (isAdded && moduleItem == currentModuleItem) {
+            markDoneCheckbox.isChecked = markDone
+        }
+        moduleItem.completionRequirement?.completed = markDone
+        notifyOfItemChanged(moduleItem)
     }
 
     private fun setModuleName(name: String) {
@@ -209,7 +215,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         // Figure out the total size so the adapter knows how many items it will have
         var size = 0
         for (i in items.indices) { size += items[i].size }
-        NUM_ITEMS = size
+        itemsCount = size
 
         currentPos = if (bundle != null && bundle.containsKey(Const.MODULE_POSITION)) {
             bundle.getInt(Const.MODULE_POSITION)
@@ -308,7 +314,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             prev_item.setInvisible()
         }
         // Don't show the next_item button if we're on the last item
-        if (currentPosition >= NUM_ITEMS - 1) {
+        if (currentPosition >= itemsCount - 1) {
             next_item.visibility = View.INVISIBLE
         }
     }
@@ -367,7 +373,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                     itemsAdded++
                 }
             }
-            NUM_ITEMS += itemsAdded
+            itemsCount += itemsAdded
 
             //only add to currentPos if we're adding to the module that is the previous module
             //Without this check it will modify the index of the array while we are progressing through
@@ -588,7 +594,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
     //endregion
 
-    fun getModelObject(): ModuleItem? = getCurrentModuleItem(currentPos)
+    private fun getModelObject(): ModuleItem? = getCurrentModuleItem(currentPos)
 
     //region Adapter
     inner class CourseModuleProgressionAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
@@ -609,7 +615,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
 
-        override fun getCount(): Int = NUM_ITEMS
+        override fun getCount(): Int = itemsCount
 
         override fun getItem(position: Int): Fragment {
             expectingUpdate = true
@@ -650,7 +656,7 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
     }
 
     // For RTL - this prevents the scrolling animations (ViewPager doesn't come with RTL support and default page transition animations are backwards)
-    val pageTransformer = ViewPager.PageTransformer { page, position ->
+    private val pageTransformer = ViewPager.PageTransformer { page, position ->
         // Page on right, position = 1
         // Page on left, position = -1
         // Page on screen, position = 0
@@ -737,7 +743,6 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         const val MODULE_ITEMS = "module_item"
         const val MODULE_OBJECTS = "module_objects"
-        const val MODULE_ID = "module_id"
         const val MODULE_POSITION = "module_position"
         const val GROUP_POSITION = "group_position"
         const val CHILD_POSITION = "child_position"
