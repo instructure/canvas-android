@@ -21,7 +21,7 @@
     <style name="LoginFlowTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#FFFFFF</item>
         <item name="colorPrimaryDark">#FFFFFF</item>
-        <item name="colorAccent">#8B969E</item>
+        <item name="colorAccent">#556572</item>
         <item name="android:windowBackground">@color/white</item>
     </style>
 
