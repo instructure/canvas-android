@@ -72,14 +72,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/"), CoursesFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
-        val showSyllabus = RemoteConfigUtils.getBoolean(RemoteConfigParam.SHOW_TEACHER_SYLLABUS)
-        val syllabusRoute = if (showSyllabus) {
-            Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java)
-        } else {
-            // We don't want to route to the syllabus, but this needs to be above the other assignments routing so it catches here first
-            Route(courseOrGroup("/:course_id/assignments/syllabus"), RouteContext.DO_NOT_ROUTE)
-        }
-        routes.add(syllabusRoute)
+        routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/assignments"), AssignmentListFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id/assignments/:assignment_id"), AssignmentListFragment::class.java, AssignmentDetailsFragment::class.java))
