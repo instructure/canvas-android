@@ -170,8 +170,6 @@ class CanvasWebView @JvmOverloads constructor(
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initSettings() {
-        // Enabled to allow better support for http content
-        this.settings.mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
         this.settings.javaScriptEnabled = true
         this.settings.builtInZoomControls = true
         // Hide the zoom controls
