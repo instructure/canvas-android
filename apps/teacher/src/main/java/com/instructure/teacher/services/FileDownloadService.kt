@@ -50,7 +50,7 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
     private var isCanceled = false
     private var url = ""
     private var fileName = ""
-    private lateinit var notificationBuilder: NotificationCompat.Builder
+    private var notificationBuilder: NotificationCompat.Builder? = null
     private lateinit var file: File
     private val notificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
 
@@ -271,20 +271,20 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
                 .setSmallIcon(android.R.drawable.stat_sys_download)
                 .setProgress(0, 0, true)
 
-        startForeground(NOTIFICATION_ID, notificationBuilder.build())
+        startForeground(NOTIFICATION_ID, notificationBuilder?.build())
     }
 
     private fun updateNotificationError(message: String) {
-        notificationBuilder.setContentText(message).setProgress(0, 0, false)
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+        notificationBuilder?.setContentText(message)?.setProgress(0, 0, false)
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder?.build())
     }
 
     private fun updateNotificationComplete(routeInternally: Boolean = true) {
-        notificationBuilder.setProgress(0, 0, false)
-                .setContentTitle(getString(R.string.fileDownloadedSuccessfully))
-                .setContentText(fileName)
-                .setSmallIcon(android.R.drawable.stat_sys_download_done)
-                .setAutoCancel(true)
+        notificationBuilder?.setProgress(0, 0, false)
+                ?.setContentTitle(getString(R.string.fileDownloadedSuccessfully))
+                ?.setContentText(fileName)
+                ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
+                ?.setAutoCancel(true)
 
         if (!routeInternally) {
             // This is here specifically for Ark video downloads
@@ -296,7 +296,7 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             val pendingIntent = PendingIntent.getActivity(this@FileDownloadService, 0, contentIntent, 0)
-            notificationBuilder.setContentIntent(pendingIntent)
+            notificationBuilder?.setContentIntent(pendingIntent)
         } else {
             // All other downloads
             val intent = RouteValidatorActivity.createIntent(this, Uri.parse(url))
@@ -305,11 +305,11 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
             intent.putExtras(bundle)
 
             val contentIntent = PendingIntent.getActivity(this@FileDownloadService, NOTIFICATION_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-            notificationBuilder.setContentIntent(contentIntent)
+            notificationBuilder?.setContentIntent(contentIntent)
 
         }
 
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder?.build())
     }
 
 
@@ -319,8 +319,10 @@ class FileDownloadService @JvmOverloads constructor(name: String = FileUploadSer
         if (isCanceled) {
             notificationManager.cancel(NOTIFICATION_ID)
         } else {
-            notificationBuilder.setOngoing(false)
-            notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+            if (notificationBuilder != null) {
+                notificationBuilder?.setOngoing(false)
+                notificationManager.notify(NOTIFICATION_ID, notificationBuilder?.build())
+            }
         }
     }
 
