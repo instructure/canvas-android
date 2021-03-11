@@ -114,7 +114,7 @@ class CalendarScreenState extends State<CalendarScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay));
+          var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(initialDate: _currentDay, channelId: widget.channelId));
           _refreshDates(updatedDates);
         },
         child: Icon(Icons.add, semanticLabel: L10n(context).newToDo),

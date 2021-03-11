@@ -150,7 +150,7 @@ class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
   }
 
   Future<void> _edit(BuildContext context) async {
-    var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(editToDo: widget.toDo));
+    var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(editToDo: widget.toDo, channelId: widget.channelId));
     if (updatedDates != null) {
       // The planner API does not provide a way to got a single planner note with its surrounding PlannerItem
       // data (like context name), so rather than try cobble together updated information in this screen,
