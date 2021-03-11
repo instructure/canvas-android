@@ -18,6 +18,7 @@ import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/planner_item.dart';
 import 'package:flutter_student_embed/network/api/planner_api.dart';
 import 'package:flutter_student_embed/screens/to_do/create_update_to_do_screen.dart';
+import 'package:flutter_student_embed/utils/alert_dialog_channel.dart';
 import 'package:flutter_student_embed/utils/common_widgets/appbar_dynamic_style.dart';
 import 'package:flutter_student_embed/utils/core_extensions/date_time_extensions.dart';
 import 'package:flutter_student_embed/utils/design/student_colors.dart';
@@ -25,16 +26,35 @@ import 'package:flutter_student_embed/utils/design/student_theme.dart';
 import 'package:flutter_student_embed/utils/quick_nav.dart';
 import 'package:flutter_student_embed/utils/service_locator.dart';
 
-class ToDoDetailsScreen extends StatelessWidget {
+class ToDoDetailsScreen extends StatefulWidget {
   final PlannerItem toDo;
 
+  final String channelId;
+
+  ToDoDetailsScreen(this.toDo, this.channelId, {Key key}) : super(key: key);
+
+  @override
+  ToDoDetailsScreenState createState() => ToDoDetailsScreenState();
+}
+
+class ToDoDetailsScreenState extends State<ToDoDetailsScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
-  ToDoDetailsScreen(this.toDo, {Key key}) : super(key: key);
+  AlertDialogChannel _channel;
+
+  bool _deleting = false;
+
+  @override
+  void initState() {
+    if (widget.channelId != null) {
+      _channel = AlertDialogChannel(widget.channelId);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Color contextColor = StudentTheme.of(context).getCanvasContextColor(toDo.contextCode());
+    Color contextColor = StudentTheme.of(context).getCanvasContextColor(widget.toDo.contextCode());
     return Scaffold(
       key: _scaffoldKey,
       appBar: dynamicStyleAppBar(
@@ -42,7 +62,20 @@ class ToDoDetailsScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text(L10n(context).toDo),
           actions: <Widget>[
-            PopupMenuButton<int>(
+            if (_deleting) Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: 24.0,
+                  height: 24.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).scaffoldBackgroundColor),
+                    strokeWidth: 3.0,
+                  ),
+                ),
+              ),
+            ),
+            if (!_deleting) PopupMenuButton<int>(
               itemBuilder: (context) {
                 return [
                   PopupMenuItem(value: 0, child: Text(L10n(context).edit)),
@@ -65,14 +98,14 @@ class ToDoDetailsScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                toDo.plannable.title,
+                widget.toDo.plannable.title,
                 style: Theme.of(context).textTheme.display1,
               ),
-              if (toDo.contextName != null)
+              if (widget.toDo.contextName != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 4),
                   child: Text(
-                    toDo.contextName,
+                    widget.toDo.contextName,
                     style: Theme.of(context).textTheme.caption.copyWith(color: contextColor),
                   ),
                 ),
@@ -83,7 +116,7 @@ class ToDoDetailsScreen extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                toDo.plannable.toDoDate.l10nFormat(L10n(context).dateAtTime),
+                widget.toDo.plannable.toDoDate.l10nFormat(L10n(context).dateAtTime),
                 style: Theme.of(context).textTheme.subhead,
               ),
               Divider(height: 32),
@@ -92,7 +125,7 @@ class ToDoDetailsScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.overline,
               ),
               SizedBox(height: 8),
-              if (toDo.plannable.details == null || toDo.plannable.details.isEmpty)
+              if (widget.toDo.plannable.details == null || widget.toDo.plannable.details.isEmpty)
                 Container(
                   width: double.infinity,
                   height: 72,
@@ -108,7 +141,7 @@ class ToDoDetailsScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              if (toDo.plannable.details != null) Text(toDo.plannable.details),
+              if (widget.toDo.plannable.details != null) Text(widget.toDo.plannable.details),
             ],
           ),
         ),
@@ -117,7 +150,7 @@ class ToDoDetailsScreen extends StatelessWidget {
   }
 
   Future<void> _edit(BuildContext context) async {
-    var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(editToDo: toDo));
+    var updatedDates = await locator<QuickNav>().push(context, CreateUpdateToDoScreen(editToDo: widget.toDo));
     if (updatedDates != null) {
       // The planner API does not provide a way to got a single planner note with its surrounding PlannerItem
       // data (like context name), so rather than try cobble together updated information in this screen,
@@ -126,77 +159,31 @@ class ToDoDetailsScreen extends StatelessWidget {
     }
   }
 
-  void _delete(BuildContext context) {
-    bool deleting = false;
-    bool error = false;
-    showDialog(
-      barrierDismissible: false,
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, updateState) {
-          return AlertDialog(
-            title: Text(L10n(context).areYouSure),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(L10n(context).deleteToDoConfirmationMessage),
-                if (error)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 12),
-                    child: Text(
-                      L10n(context).errorDeletingToDo,
-                      style: Theme.of(context).textTheme.subtitle.copyWith(color: StudentColors.failure),
-                    ),
-                  ),
-              ],
-            ),
-            actions: <Widget>[
-              if (deleting)
-                FlatButton(
-                  onPressed: null,
-                  child: Container(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).buttonColor),
-                      strokeWidth: 2,
-                    ),
-                  ),
-                ),
-              if (!deleting)
-                FlatButton(
-                  child: Text(L10n(context).cancel.toUpperCase()),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              if (!deleting)
-                FlatButton(
-                  child: Text(L10n(context).delete.toUpperCase()),
-                  onPressed: () async {
-                    updateState(() {
-                      deleting = true;
-                      error = false;
-                    });
-                    try {
-                      await locator<PlannerApi>().deletePlannerNote(toDo.plannable.id);
-
-                      // Pop once to dismiss the dialog
-                      Navigator.pop(context);
-
-                      // Pop again to dismiss the details screen, returning the calendar date that must be updated
-                      Navigator.pop(context, [toDo.plannable.toDoDate]);
-                    } catch (e) {
-                      updateState(() {
-                        deleting = false;
-                        error = true;
-                      });
-                    }
-                  },
-                ),
-            ],
-          );
+  void _delete(BuildContext context) async {
+    bool deleteClicked = await _channel.showDialog(L10n(context).areYouSure, L10n(context).deleteToDoConfirmationMessage, L10n(context).delete, L10n(context).cancel);
+    if (deleteClicked) {
+      setState(() {
+        _deleting = true;
+      });
+      try {
+        await locator<PlannerApi>().deletePlannerNote(widget.toDo.plannable.id);
+        setState(() {
+          _deleting = false;
         });
-      },
-    );
+
+        Navigator.pop(context, [widget.toDo.plannable.toDoDate]);
+      } catch (e) {
+        setState(() {
+          _deleting = false;
+        });
+        _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(L10n(context).errorDeletingToDo)));
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _channel?.dispose();
+    super.dispose();
   }
 }
