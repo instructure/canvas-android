@@ -147,7 +147,7 @@ class CalendarScreenState extends State<CalendarScreen> {
           return CalendarDayPlanner(day, onItemSelected: (item) async {
             if (item.plannableType == 'planner_note') {
               // Display planner to-do details in flutter, refreshing changed dates if necessary
-              var updatedDates = await locator<QuickNav>().push(context, ToDoDetailsScreen(item, widget.channelId));
+              var updatedDates = await locator<QuickNav>().push(context, ToDoDetailsScreen(item, channelId: widget.channelId));
               _refreshDates(updatedDates);
             } else {
               _channel.nativeRouteToItem(item);

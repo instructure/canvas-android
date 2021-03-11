@@ -326,7 +326,7 @@ class _CreateUpdateToDoScreenState extends State<CreateUpdateToDoScreen> {
 
   @override
   void dispose() {
-    _channel.dispose();
+    _channel?.dispose();
     super.dispose();
   }
 }

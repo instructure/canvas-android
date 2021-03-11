@@ -13,6 +13,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_student_embed/l10n/app_localizations.dart';
 import 'package:flutter_student_embed/models/course.dart';
 import 'package:flutter_student_embed/models/plannable.dart';
@@ -154,9 +155,16 @@ void main() {
   });
 
   testWidgetsWithAccessibilityChecks('Displays unsaved changes dialog when creating', (tester) async {
+    final String channelId = "CreateOrUpdateChannel";
     DateTime date = DateTime(2000, 1, 1);
-    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(initialDate: date)));
+    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(initialDate: date, channelId: channelId)));
     await tester.pumpAndSettle();
+
+    MethodCall methodCall;
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      methodCall = call;
+      return false; // We return false from the platform dialog if the user clicks no or dismisses the dialog.
+    });
 
     // Change the date
     await tester.tap(find.text(l10n.date));
@@ -172,12 +180,17 @@ void main() {
     TestApp.navigatorKey.currentState.maybePop();
     await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.text(l10n.unsavedChangesDialogTitle), findsOneWidget);
-    expect(find.text(l10n.unsavedChangesDialogBody), findsOneWidget);
+    expect(methodCall.method, 'showDialog');
+    expect(methodCall.arguments, {
+      "title": l10n.unsavedChangesDialogTitle,
+      "message": l10n.unsavedChangesDialogBody,
+      "positiveButtonText": l10n.yes,
+      "negativeButtonText": l10n.no
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Displays unsaved changes dialog when updating', (tester) async {
+    final String channelId = "CreateOrUpdateChannel";
     String title = 'Test title';
     String description = 'Test description';
     DateTime date = DateTime(2000, 1, 1);
@@ -195,8 +208,14 @@ void main() {
       ..plannableDate = plannable.toDoDate
       ..plannable = plannable.toBuilder());
 
-    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(editToDo: item)));
+    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(editToDo: item, channelId: channelId)));
     await tester.pumpAndSettle();
+
+    MethodCall methodCall;
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      methodCall = call;
+      return false; // We return false from the platform dialog if the user clicks no or dismisses the dialog.
+    });
 
     // Change the date
     await tester.tap(find.text(l10n.date));
@@ -212,15 +231,24 @@ void main() {
     TestApp.navigatorKey.currentState.maybePop();
     await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsOneWidget);
-    expect(find.text(l10n.unsavedChangesDialogTitle), findsOneWidget);
-    expect(find.text(l10n.unsavedChangesDialogBody), findsOneWidget);
+    expect(methodCall.method, 'showDialog');
+    expect(methodCall.arguments, {
+      "title": l10n.unsavedChangesDialogTitle,
+      "message": l10n.unsavedChangesDialogBody,
+      "positiveButtonText": l10n.yes,
+      "negativeButtonText": l10n.no
+    });
   });
 
   testWidgetsWithAccessibilityChecks('Canceling unsaved changes dialog does not pop screen', (tester) async {
+    final String channelId = "CreateOrUpdateChannel";
     DateTime date = DateTime(2000, 1, 1);
-    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(initialDate: date)));
+    await tester.pumpWidget(TestApp(CreateUpdateToDoScreen(initialDate: date, channelId: channelId)));
     await tester.pumpAndSettle();
+
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      return false; // We return false from the platform dialog if the user clicks no or dismisses the dialog.
+    });
 
     // Add a title
     await tester.enterText(find.byKey(Key('title-input')), 'Test title');
@@ -228,27 +256,27 @@ void main() {
 
     // Try to go back
     TestApp.navigatorKey.currentState.maybePop();
-    await tester.pumpAndSettle();
-
-    // Tap the 'NO' button
-    await tester.tap(find.text(l10n.no.toUpperCase()));
     await tester.pumpAndSettle();
 
     // Change focus to the description input so the text selection handle (which has no semantic label) not longer shows
     await tester.tap(find.byKey(Key('description-input')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(AlertDialog), findsNothing);
     expect(find.byType(CreateUpdateToDoScreen), findsOneWidget);
   });
 
   testWidgetsWithAccessibilityChecks('Confirming unsaved changes dialog pops screen', (tester) async {
+    final String channelId = "CreateOrUpdateChannel";
     await tester.pumpWidget(TestApp(DummyWidget()));
     await tester.pumpAndSettle();
 
     BuildContext context = tester.state(find.byType(DummyWidget)).context;
-    QuickNav().push(context, CreateUpdateToDoScreen());
+    QuickNav().push(context, CreateUpdateToDoScreen(channelId: channelId));
     await tester.pumpAndSettle();
+
+    MethodChannel(channelId).setMockMethodCallHandler((MethodCall call) async {
+      return true; // We return true from the platform dialog if the user clicks yes on the confirmation dialog.
+    });
 
     // Add a title
     await tester.enterText(find.byKey(Key('title-input')), 'Test title');
@@ -256,10 +284,6 @@ void main() {
 
     // Try to go back
     TestApp.navigatorKey.currentState.maybePop();
-    await tester.pumpAndSettle();
-
-    // Tap the 'YES' button
-    await tester.tap(find.text(l10n.yes.toUpperCase()));
     await tester.pumpAndSettle();
 
     expect(find.byType(CreateUpdateToDoScreen), findsNothing);

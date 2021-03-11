@@ -31,7 +31,7 @@ class ToDoDetailsScreen extends StatefulWidget {
 
   final String channelId;
 
-  ToDoDetailsScreen(this.toDo, this.channelId, {Key key}) : super(key: key);
+  ToDoDetailsScreen(this.toDo, {this.channelId, Key key}) : super(key: key);
 
   @override
   ToDoDetailsScreenState createState() => ToDoDetailsScreenState();
