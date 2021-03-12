@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Pūrongo te raruraru</string>
     <string name="errorReportSubject">Kaupapa</string>
     <string name="errorReportDescription">Whakāhuatanga</string>
-    <string name="errorReportWriteSomething">Tuhia tētahi mea ...</string>
     <string name="errorReportSend">Tukua</string>
     <string name="errorReportThankyou">Ngā mihi  mo te whakamōhio tō take ki te Rōpū Āwhina.  Ka whiwhi koe i ngā tohu me ngā whakahou ma te īmēra.</string>
     <string name="errorReportSeverityText">Kia pehea e pa ana tenei ki a koe?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">TINO URUPARE NUI!!</string>
 
     <string name="errorReportEmailAddress">īmēra Wāhitau</string>
-    <string name="errorReportEnterEmail">Whakauru tō wāhitau īmēra ...</string>
     <string name="errorReportUnknown">Kaore e mōhiotia</string>
 
     <!-- Distance Strings -->

@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Rhoi gwybod am broblem</string>
     <string name="errorReportSubject">Pwnc</string>
     <string name="errorReportDescription">Disgrifiad</string>
-    <string name="errorReportWriteSomething">Ysgrifennu Rhywbeth...</string>
     <string name="errorReportSend">Anfon</string>
     <string name="errorReportThankyou">Diolch am roi gwybod i’n Tîm Cymorth am eich problem.  Byddwch yn cael dilysiad a diweddariadau trwy e-bost,</string>
     <string name="errorReportSeverityText">Sut mae hyn yn effeithio arnoch chi?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Alla i ddim gorffen fy ngwaith nes bydda i wedi cael ateb gennych chi.</string>
     <string name="errorSeverityExtremelyCritical">ARGYFWNG - DIFRIFOL IAWN!!</string>
     <string name="errorReportEmailAddress">Cyfeiriad E-bost</string>
-    <string name="errorReportEnterEmail">Rhowch eich cyfeiriad e-bost</string>
     <string name="errorReportUnknown">Dieithr</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; milltir (1.6 km)</string>

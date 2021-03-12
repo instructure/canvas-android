@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Rapportera ett problem</string>
     <string name="errorReportSubject">Ämne</string>
     <string name="errorReportDescription">Beskrivning</string>
-    <string name="errorReportWriteSomething">Skriv något ...</string>
     <string name="errorReportSend">Skicka</string>
     <string name="errorReportThankyou">Tack för att du har rapporterat ditt problem till vårt supportteam.  Du kommer att få en bekräftelse och uppdateringar via e-post.</string>
     <string name="errorReportSeverityText">Hur påverkar detta dig?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">EXTREMT KRITISK NÖDSITUATION!!</string>
 
     <string name="errorReportEmailAddress">E-postadress</string>
-    <string name="errorReportEnterEmail">Ange din e-postadress ...</string>
     <string name="errorReportUnknown">Okänd</string>
 
     <!-- Distance Strings -->

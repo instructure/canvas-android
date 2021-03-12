@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Rapòte yon Pwoblèm</string>
     <string name="errorReportSubject">Sijè</string>
     <string name="errorReportDescription">Deskripsyon</string>
-    <string name="errorReportWriteSomething">Ekri yon Bagay...</string>
     <string name="errorReportSend">Voye</string>
     <string name="errorReportThankyou">Mèsi paske w rapòte pwoblèm ou an bay Epik Sipò nou an.  W ap resevwa yon verifikasyon ak yon aktyalizasyon sou imèl ou.</string>
     <string name="errorReportSeverityText">Nan ki sans sa afekte w?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Mwen paka fè anyen toutotan mwen pa tande w ankò.</string>
     <string name="errorSeverityExtremelyCritical">IJANS KRITIK EKSTRÈM!!</string>
     <string name="errorReportEmailAddress">Adrès Imèl</string>
-    <string name="errorReportEnterEmail">Antre adrès imèl ou...</string>
     <string name="errorReportUnknown">Enkoni</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 mile (1.6 km)</string>
