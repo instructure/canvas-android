@@ -23,7 +23,7 @@
 
     <color name="rce_pickerWhite">#FFFFFF</color>
     <color name="rce_pickerBlack">#000000</color>
-    <color name="rce_pickerGray">#8b969e</color>
+    <color name="rce_pickerGray">#556572</color>
     <color name="rce_pickerRed">#ee0612</color>
     <color name="rce_errorRed">#FF0000</color>
     <color name="rce_pickerOrange">#fc5e13</color>

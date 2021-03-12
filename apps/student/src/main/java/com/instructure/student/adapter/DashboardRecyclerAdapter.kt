@@ -161,7 +161,7 @@ class DashboardRecyclerAdapter(
 
             // Get enrollment invites
             val invites = awaitApi<List<Enrollment>> {
-                EnrollmentManager.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), isRefresh, it)
+                EnrollmentManager.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), isRefresh, it)
             }
 
             // Map not null is needed because the dashboard api can return unpublished courses
@@ -205,10 +205,7 @@ class DashboardRecyclerAdapter(
             addOrUpdateAllItems(ItemType.ANNOUNCEMENT_HEADER, announcements)
 
             // Add course invites
-            val validInvites = invites.filter {
-                mCourseMap[it.courseId]?.let { course ->
-                    course.isValidTerm() && !course.accessRestrictedByDate && isEnrollmentBetweenCourseDatesOrNotRestricted(course) } ?: false
-            }
+            val validInvites = invites.filter { it.enrollmentState == EnrollmentAPI.STATE_INVITED && hasValidCourseForEnrollment(it) }
 
             addOrUpdateAllItems(ItemType.INVITATION_HEADER, validInvites)
 
@@ -222,13 +219,20 @@ class DashboardRecyclerAdapter(
         }
     }
 
-    private fun isEnrollmentBetweenCourseDatesOrNotRestricted(course: Course): Boolean {
-        val now = OffsetDateTime.now()
-        val startDate = OffsetDateTime.parse(course.startAt).withOffsetSameInstant(OffsetDateTime.now().offset)
-        val endDate = OffsetDateTime.parse(course.endAt).withOffsetSameInstant(OffsetDateTime.now().offset)
+    private fun hasValidCourseForEnrollment(enrollment: Enrollment): Boolean {
+        return mCourseMap[enrollment.courseId]?.let { course ->
+            course.isValidTerm() && !course.accessRestrictedByDate && isEnrollmentBeforeEndDateOrNotRestricted(course)
+        } ?: false
+    }
 
-        val isBetweenCourseDates = now.isAfter(startDate) && now.isBefore(endDate)
-        return !course.restrictEnrollmentsToCourseDate || isBetweenCourseDates
+    private fun isEnrollmentBeforeEndDateOrNotRestricted(course: Course): Boolean {
+        val isBeforeEndDate = course.endAt?.let {
+            val now = OffsetDateTime.now()
+            val endDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
+            now.isBefore(endDate)
+        } ?: true // Case when the course has no end date
+
+        return !course.restrictEnrollmentsToCourseDate || isBeforeEndDate
     }
 
     override fun itemLayoutResId(viewType: Int) = when (ItemType.values()[viewType]) {

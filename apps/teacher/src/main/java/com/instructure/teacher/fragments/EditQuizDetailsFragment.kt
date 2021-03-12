@@ -301,7 +301,6 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         if(mQuizType == null) {
             mQuizType = quizType
         }
-        updateOverridesForQuizType()
 
         setupPublishSwitch()
         setupAccessCodeSwitch()
@@ -315,20 +314,6 @@ class EditQuizDetailsFragment : BasePresenterFragment<
 
         with(presenter) {if (mEditDateGroups.isEmpty()) mEditDateGroups.addAll(mAssignment.groupedDueDates)}
         presenter.getStudentsGroupsAndSections()
-
-        // Theme add button and plus image
-        addOverrideText.setTextColor(ThemePrefs.buttonColor)
-        plus.setColorFilter(ThemePrefs.buttonColor)
-
-        addOverride.setOnClickListener {
-            presenter.mEditDateGroups.add(DueDateGroup())
-            setupOverrides()
-            scrollView.post {
-                scrollView.fullScroll(ScrollView.FOCUS_DOWN)
-            }
-            // This opens the assignees page to save the user a click.
-            overrideContainer.descendants<AssignmentOverrideView>().last().assignTo.performClick()
-        }
     }
 
     private fun setupDescription(quiz: Quiz) {
@@ -374,7 +359,10 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                 dueDateGroup.groupIds.forEach { assignees.add(groupsMapped[it]?.name ?: "") }
                 dueDateGroup.sectionIds.forEach { assignees.add(sectionsMapped[it]?.name ?: "") }
                 dueDateGroup.studentIds.forEach {
-                    assignees.add(studentsMapped[it]!!.let { user -> Pronouns.span(user.name, user.pronouns) })
+                    val student = studentsMapped[it]
+                    if (student != null) {
+                        assignees.add(student.let { user -> Pronouns.span(user.name, user.pronouns) })
+                    }
                 }
 
                 v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
@@ -462,6 +450,24 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         saveButton?.setVisible()
         savingProgressBar.setGone()
         toast(R.string.error_saving_quiz)
+    }
+
+    override fun setupAddOverridesButton() {
+        updateOverridesForQuizType()
+
+        // Theme add button and plus image
+        addOverrideText.setTextColor(ThemePrefs.buttonColor)
+        plus.setColorFilter(ThemePrefs.buttonColor)
+
+        addOverride.setOnClickListener {
+            presenter.mEditDateGroups.add(DueDateGroup())
+            setupOverrides()
+            scrollView.post {
+                scrollView.fullScroll(ScrollView.FOCUS_DOWN)
+            }
+            // This opens the assignees page to save the user a click.
+            overrideContainer.descendants<AssignmentOverrideView>().last().assignTo.performClick()
+        }
     }
 
     override val identity: Long? get() = if(mQuizId != 0L) mQuizId else mQuiz.id

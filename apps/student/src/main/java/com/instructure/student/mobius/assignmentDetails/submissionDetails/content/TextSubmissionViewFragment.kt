@@ -77,13 +77,13 @@ class TextSubmissionViewFragment : Fragment() {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebView.loadRawHtml(formatHtml(submissionText), submissionText)
+        textSubmissionWebView.loadRawHtml(formatHtml(submissionText))
     }
 
     private fun formatHtml(src: String): String {
         /* Pre-format using CanvasWebView's formatter, which will wrap the source string in an HTML body to
            set the viewport and apply basic CSS properties */
-        val formatted = textSubmissionWebView.formatHtml(src)
+        val formatted = textSubmissionWebView.formatHtml(src, getString(R.string.a11y_submissionText))
 
         /* If the source content begins with a paragraph tag, the WebView automatically applies some vertical padding.
            For other content, we need to apply the padding ourselves. */

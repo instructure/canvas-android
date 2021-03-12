@@ -206,24 +206,18 @@ data class Course(
      *
      * Useful for setting content to read-only, such as submissions
      */
-    fun isReadOnlyForCurrentDate(): Boolean {
+    fun isBetweenValidDateRange(): Boolean {
         val now = Date()
         if (accessRestrictedByDate) return false
 
         if (workflowState == "completed") return false
 
-        val isValidForCourse = isWithinDates(
-                startAt.toDate(),
-                endAt.toDate(),
-                now
-        )
-
-        return if (restrictEnrollmentsToCourseDate && !isValidForCourse) {
-            false
+        return if (restrictEnrollmentsToCourseDate) {
+            isWithinDates(startAt.toDate(), endAt.toDate(), now)
         } else {
             val isValidForTerm = isWithinDates(term?.startDate, term?.endDate, now)
 
-            if(isValidForTerm) {
+            if (isValidForTerm) {
                 // check the sections
                 if (sections.isEmpty()) {
                     true

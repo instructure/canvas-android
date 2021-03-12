@@ -316,7 +316,7 @@ class AssignmentDetailsPresenterTest : Assert() {
     fun `Uses gray color for non-submitted status`() {
         val model = baseModel.copy(assignmentResult = DataResult.Success(baseAssignment))
         val state = AssignmentDetailsPresenter.present(model, context) as AssignmentDetailsViewState.Loaded
-        assertEquals(0xFF8B969E.toInt(), state.submittedStateColor)
+        assertEquals(0xFF556572.toInt(), state.submittedStateColor)
     }
 
     @Test
