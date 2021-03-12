@@ -291,6 +291,7 @@ class FileListFragment : BaseSyncFragment<
 
     private fun animateFabs() = if (fabOpen) {
         addFab.startAnimation(fabRotateBackwards)
+        addFab.announceForAccessibility(getString(R.string.a11y_create_file_folder_gone))
         addFab.contentDescription = getString(R.string.createFileFolderFabContentDesc)
         addFolderFab.startAnimation(fabHide)
         addFolderFab.isClickable = false
@@ -304,6 +305,8 @@ class FileListFragment : BaseSyncFragment<
         fabOpen = false
     } else {
         addFab.startAnimation(fabRotateForward)
+        addFab.announceForAccessibility(getString(R.string.a11y_create_file_folder_visible))
+        addFab.contentDescription = getString(R.string.hideCreateFileFolderFabContentDesc)
         addFolderFab.apply {
             startAnimation(fabReveal)
             isClickable = true

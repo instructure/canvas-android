@@ -49,6 +49,26 @@ class AssignmentListInteractionTest : StudentTest() {
         assignmentListPage.assertHasAssignment(assignment)
     }
 
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun sortAssignmentsByTimeByDefault() {
+        val assignment = getToAssignmentsPage()[0]
+        assignmentListPage.assertHasAssignment(assignment)
+        assignmentListPage.assertSortByButtonShowsSortByTime()
+        assignmentListPage.assertFindsUndatedAssignmentLabel()
+    }
+
+    @Test
+    @TestMetaData(Priority.P1, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun sortAssignmentsByTypeWhenTypeIsSelectedInTheDialog() {
+        val assignment = getToAssignmentsPage()[0]
+
+        assignmentListPage.selectSortByType()
+
+        assignmentListPage.assertHasAssignment(assignment)
+        assignmentListPage.assertSortByButtonShowsSortByType()
+    }
+
     private fun getToAssignmentsPage(assignmentCount: Int = 1): List<Assignment> {
         val data = MockCanvas.init(
                 courseCount = 1,

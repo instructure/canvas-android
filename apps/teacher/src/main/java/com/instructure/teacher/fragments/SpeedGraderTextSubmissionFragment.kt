@@ -75,7 +75,7 @@ class SpeedGraderTextSubmissionFragment : Fragment(), SpeedGraderWebNavigator {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebView.loadHtml(mSubmissionText, mSubmissionText)
+        textSubmissionWebView.loadHtml(mSubmissionText, getString(R.string.a11y_submissionText))
     }
 
     override fun onStop() {

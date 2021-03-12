@@ -4,7 +4,9 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.dataseeding.model.ConversationApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.WaitForToolbarTitle
 
@@ -29,14 +31,31 @@ class InboxPage: BasePage() {
     }
 
     fun clickConversation(conversation: ConversationApiModel) {
-        waitForViewWithText(conversation.subject).click()
+        clickConversation(conversation.subject)
     }
 
     fun clickConversation(conversation: Conversation) {
-        waitForViewWithText(conversation.subject!!).click()
+        clickConversation(conversation.subject!!)
+    }
+
+    fun clickConversation(conversationSubject: String) {
+        waitForViewWithText(conversationSubject).click()
     }
 
     fun clickAddMessageFAB() {
         addMessageFAB.click()
+    }
+
+    fun assertInboxEmpty() {
+        onView(withId(R.id.emptyPandaView)).assertDisplayed()
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun filterInbox(filterFor: String) {
+        onView(withId(R.id.filterButton)).click()
+        waitForViewWithText(filterFor).click()
     }
 }

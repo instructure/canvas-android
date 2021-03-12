@@ -82,7 +82,7 @@ object ToDoManager {
 
         // Return combined list, sorted by date
         val defaultDate = Date(0)
-        return (todos + events).sortedBy{ it.assignment?.dueDate ?: defaultDate }
+        return (todos + events).sortedBy{ it.comparisonDate ?: defaultDate }
     }
 
 }

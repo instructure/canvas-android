@@ -102,6 +102,7 @@
     <string name="noOnlineSubmissions">No Online Submissions</string>
     <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="openTool">Open Tool</string>
+    <string name="a11y_submissionText">Submission text</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -128,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Attach files to your comment by tapping an option below</string>
     <string name="emptySubmissionCommentsSubtext">Have questions about your assignment?\nMessage your instructor.</string>
     <string name="submissionCommentErrorMessage">This message could not be sent. Tap to try again.</string>
+    <string name="mediaUpload">Media Upload</string>
     <string name="mediaUploadAudio">Media Upload - Audio</string>
     <string name="mediaUploadVideo">Media Upload - Video</string>
     <string name="commentSubmissionTypeText">Text Submission</string>
@@ -197,6 +199,17 @@
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sort by</string>
+    <string name="sortByDialogTimeOption">Time</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sort by Time</string>
+    <string name="sortByType">Sort by Type</string>
+    <string name="sortByDialogCancel">Cancel</string>
+    <string name="assignmentsListAllGradingPeriods">All</string>
+    <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
+    <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
+    <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
+    <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
@@ -256,6 +269,7 @@
     <string name="createFolder">Create Folder</string>
     <string name="createAFile">Create A File</string>
     <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
     <string name="folderCreationError">An error occurred during folder creation.</string>
     <string name="rename">Rename</string>
     <string name="renameFile">Rename file</string>
@@ -1127,4 +1141,6 @@
     <string name="a11y_criterion_content_description">Criterion rating %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">more information</string>
+    <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
+    <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
 </resources>

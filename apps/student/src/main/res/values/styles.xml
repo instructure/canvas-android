@@ -240,4 +240,9 @@
         <item name="android:tint">@color/textLightGray</item>
     </style>
 
+    <style name="AccentDialogTheme" parent="CanvasDialogTheme_Default">
+        <item name="colorAccent">@color/defaultActionColor</item>
+        <item name="android:colorAccent">@color/defaultActionColor</item>
+    </style>
+
 </resources>

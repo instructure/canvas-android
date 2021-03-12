@@ -1,5 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2020 - present Instructure, Inc.
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -14,10 +15,9 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<network-security-config>
-    <debug-overrides>
-        <trust-anchors>
-            <certificates src="user"/>
-        </trust-anchors>
-    </debug-overrides>
-</network-security-config>
+<resources>
+    <string-array name="assignmentsSortByOptions">
+        <item>@string/sortByDialogTimeOption</item>
+        <item>@string/sortByDialogTypeOption</item>
+    </string-array>
+</resources>
