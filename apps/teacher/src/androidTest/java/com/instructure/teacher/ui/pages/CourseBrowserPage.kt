@@ -63,6 +63,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openAnnouncementsTab() {
+        scrollDownToCourseBrowser()
         waitForViewWithText("Announcements").click()
     }
 
