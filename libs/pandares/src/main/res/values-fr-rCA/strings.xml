@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Échec de l’envoi</string>
     <string name="submissionStatusFailedSubtitle">Tapoter pour voir les détails</string>
     <string name="submissionAndRubric">Envoi et rubrique</string>
+    <string name="commentsAndRubric">Commentaires et rubrique</string>
     <string name="errorLoadingAssignment">Un problème est survenu lors du chargement de cette tâche. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="submitted">Envoyé</string>
     <string name="notSubmitted">Non soumis</string>
@@ -57,7 +58,7 @@
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
 
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
 
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
@@ -73,7 +74,7 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
 
     <string name="recordVideo">Enregistrer la vidéo</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Votre tâche est verrouillée par module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Votre tâche est verrouillée par une exigence de module</string>
     <string name="submissionDetailsAssignmentLocked">Tâche verrouillée</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Aucun envoi autorisé</string>
     <string name="webPreview">Aperçu de l\'URL saisie</string>
     <string name="websiteUrl">URL du site Web</string>
     <string name="noneContentMessage">Cette tâche ne permet pas d’envoi en ligne</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Aucun envoi en ligne</string>
     <string name="speedGraderExternalToolMessage">Cette tâche comporte des liens vers un outil externe pour les envois.</string>
     <string name="openTool">Ouvrir Outil</string>
+    <string name="a11y_submissionText">Texte de dépôt</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">de %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">de %s pts</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Pas de tâches dans ce groupe</string>
     <string name="excusedAssignment">Cette tâche est exemptée et ne sera pas prise en compte dans le calcul total</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Trier par</string>
+    <string name="sortByDialogTimeOption">Heure</string>
+    <string name="sortByDialogTypeOption">Saisir</string>
+    <string name="sortByTime">Trier par heure</string>
+    <string name="sortByType">Trier par type</string>
+    <string name="sortByDialogCancel">Annuler</string>
+    <string name="assignmentsListAllGradingPeriods">Tout</string>
+    <string name="a11y_sortByTimeButton">Trier les boutons des tâches, trier par heure</string>
+    <string name="a11y_sortByTypeButton">Trier les boutons des tâches, trier par type</string>
+    <string name="a11y_assignmentsSortedByTime">Tâches triées par heure</string>
+    <string name="a11y_assignmentsSortedByType">Tâches triées par type</string>
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
     <string name="save">Enregistrer</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Créer un dossier</string>
     <string name="createAFile">Créer un fichier</string>
     <string name="createFileFolderFabContentDesc">Afficher les boutons « Créer un fichier » et « Créer un dossier »</string>
+    <string name="hideCreateFileFolderFabContentDesc">Masquer les boutons « Créer un fichier » et « Créer un dossier »</string>
     <string name="folderCreationError">Une erreur est survenue pendant la création du dossier.</string>
     <string name="rename">Renommer</string>
     <string name="renameFile">Renommer le fichier</string>
@@ -895,7 +910,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1056,8 +1071,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Détails de la conférence</string>
     <string name="recordings">Enregistrements</string>
     <string name="conferenceInProgress">Conférences en cours</string>
+    <string name="a11y_criterion_content_description">Notes du critère %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">plus d\'informations</string>
+    <string name="a11y_create_file_folder_visible">Les boutons « Créer un fichier » et « Créer un dossier » sont visibles</string>
+    <string name="a11y_create_file_folder_gone">Les boutons « Créer un fichier » et « Créer un dossier » sont invisibles</string>
 </resources>

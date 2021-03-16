@@ -885,4 +885,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Dieses LTI-Tool konnte zu diesem Zeitpunkt nicht geladen werden.</string>
     <string name="downloading">Wird heruntergeladen ...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Kursplan erfolgreich aktualisiert.</string>
+    <string name="errorSavingSyllabus">Fehler beim Speichern des Kursplans. Versuchen Sie es erneut.</string>
+    <string name="editSyllabusTitle">Kursplan bearbeiten</string>
+    <string name="editSyllabusContent">Content</string>
+    <string name="editSyllabusDetails">Details</string>
+    <string name="editSyllabusShowCourseSummary">Zusammenfassung des Kurses anzeigen</string>
+    <string name="editSyllabusContentAccessibilityLabel">Inhalt des Kursplans</string>
+
+    <string name="no_grade">Unbenotet</string>
+    <string name="excuse">Entschuldigund</string>
+    <string name="speed_grader_overgraded_by">Überbenotet von %s</string>
 </resources>

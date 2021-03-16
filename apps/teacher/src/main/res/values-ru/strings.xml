@@ -913,4 +913,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">В данный момент загрузка этого LTI невозможна.</string>
     <string name="downloading">Выполняется скачивание&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Содержание курса успешно обновлено.</string>
+    <string name="errorSavingSyllabus">Произошла ошибка при попытке сохранения содержания курса. Повторите попытку.</string>
+    <string name="editSyllabusTitle">Редактировать программу</string>
+    <string name="editSyllabusContent">Содержимое</string>
+    <string name="editSyllabusDetails">Подробные сведения</string>
+    <string name="editSyllabusShowCourseSummary">Показать сводные данные по курсу</string>
+    <string name="editSyllabusContentAccessibilityLabel">Содержание курса</string>
+
+    <string name="no_grade">Без оценки</string>
+    <string name="excuse">Освободить</string>
+    <string name="speed_grader_overgraded_by">Переоценил %s</string>
 </resources>

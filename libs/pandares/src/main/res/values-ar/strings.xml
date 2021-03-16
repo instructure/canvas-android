@@ -49,6 +49,7 @@
     <string name="submissionStatusFailedTitle">فشل الإرسال</string>
     <string name="submissionStatusFailedSubtitle">اضغط لعرض التفاصيل</string>
     <string name="submissionAndRubric">الإرسال ومقياس التقييم</string>
+    <string name="commentsAndRubric">التعليقات ونماذج التقييم (الروبرك)</string>
     <string name="errorLoadingAssignment">حدثت مشكلة أثناء تحميل هذه المهمة. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
     <string name="submitted">تم الإرسال</string>
     <string name="notSubmitted">لم يتم الإرسال</string>
@@ -97,6 +98,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">مهمتك مؤمّنة بسبب \"%1$s\" الوحدة المنطقية</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">مهمتك مؤمّنة بسبب شرط الوحدة المنطقية</string>
     <string name="submissionDetailsAssignmentLocked">تم تأمين المهمة</string>
+    <string name="submissionDetailsNoSubmissionAllowed">لم يتم السماح بإرسال</string>
     <string name="webPreview">معاينة URL المدخل</string>
     <string name="websiteUrl">عنوان URL لموقع ويب</string>
     <string name="noneContentMessage">لا تسمح هذه المهمة بإرسالات عبر الإنترنت.</string>
@@ -104,6 +106,7 @@
     <string name="noOnlineSubmissions">لا توجد إرسالات عبر الإنترنت</string>
     <string name="speedGraderExternalToolMessage">ترتبط هذه المهمة بأداة خارجية للإرسالات.</string>
     <string name="openTool">فتح أداة</string>
+    <string name="a11y_submissionText">نص الإرسال</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">من إجمالي %s من النقاط</string>
     <string name="outOfPointsAbbreviatedFormatted">من إجمالي %s من النقاط</string>
@@ -193,6 +196,17 @@
     <string name="noAssignmentsInGroup">لا توجد مهام في هذه المجموعة</string>
     <string name="excusedAssignment">تم الإعفاء عن هذه المهمة ولن يتم اعتبارها في الحساب الإجمالي</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">الفزر حسب</string>
+    <string name="sortByDialogTimeOption">الوقت</string>
+    <string name="sortByDialogTypeOption">اكتب</string>
+    <string name="sortByTime">الفرز حسب الوقت</string>
+    <string name="sortByType">الفرز حسب النوع</string>
+    <string name="sortByDialogCancel">إلغاء</string>
+    <string name="assignmentsListAllGradingPeriods">الكل</string>
+    <string name="a11y_sortByTimeButton">فرز زر المهام، الفرز حسب الوقت</string>
+    <string name="a11y_sortByTypeButton">فرز زر المهام، الفرز حسب النوع</string>
+    <string name="a11y_assignmentsSortedByTime">المهام المفروزة حسب الوقت</string>
+    <string name="a11y_assignmentsSortedByType">المهام المفروزة حسب النوع</string>
     <!-- Assignment editing -->
     <string name="points">نقاط\u0020</string>
     <string name="save">حفظ</string>
@@ -256,6 +270,7 @@
     <string name="createFolder">إنشاء مجلد</string>
     <string name="createAFile">إنشاء ملف</string>
     <string name="createFileFolderFabContentDesc">إظهار زري إنشاء الملف وإنشاء المجلد</string>
+    <string name="hideCreateFileFolderFabContentDesc">إخفاء زري إنشاء الملف وإنشاء المجلد</string>
     <string name="folderCreationError">حدث خطأ أثناء إنشاء المجلد.</string>
     <string name="rename">إعادة تسمية</string>
     <string name="renameFile">إعادة تسمية الملف</string>
@@ -1155,4 +1170,9 @@
     <string name="conferenceDetails">تفاصيل المؤتمر</string>
     <string name="recordings">التسجيلات</string>
     <string name="conferenceInProgress">المؤتمر قيد التقدم</string>
+    <string name="a11y_criterion_content_description">تصنيف المعيار %s</string>
+    <string name="a11y_criterion_description_content_description">%s، %s</string>
+    <string name="a11y_criterion_button_click_description">معلومات إضافية</string>
+    <string name="a11y_create_file_folder_visible">أزرار إنشاء الملف والمجلد مرئية</string>
+    <string name="a11y_create_file_folder_gone">أزرار إنشاء الملف والمجلد غير مرئية</string>
 </resources>

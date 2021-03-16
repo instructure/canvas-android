@@ -391,7 +391,7 @@
     <string name="content_description_submission_donut_unsubmitted" formatted="false">Inte inskickade, %s av %s</string>
     <string name="display_grade_as">Visa omdöme som&#8230;</string>
     <string name="percentage">Procent</string>
-    <string name="complete_incomplete">Färdig/Ej fullständig</string>
+    <string name="complete_incomplete">Färdig/ofullständig</string>
     <string name="points">Poäng</string>
     <string name="gpa_scale">GPA-skala</string>
 
@@ -886,4 +886,16 @@
     <string name="gauge">Mätare</string>
     <string name="ltiLaunchFailure">Det här LTI-verktyget kunde inte laddas just nu.</string>
     <string name="downloading">Laddar ned&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Kursöversikten uppdaterades.</string>
+    <string name="errorSavingSyllabus">Ett fel inträffade när kursöversikten skulle sparas. Försök igen.</string>
+    <string name="editSyllabusTitle">Redigera kursöversikten</string>
+    <string name="editSyllabusContent">Innehåll</string>
+    <string name="editSyllabusDetails">Detaljer</string>
+    <string name="editSyllabusShowCourseSummary">Visa kurssammanfattning</string>
+    <string name="editSyllabusContentAccessibilityLabel">Kursöversiktens innehåll</string>
+
+    <string name="no_grade">Inget omdöme</string>
+    <string name="excuse">Ursäkta</string>
+    <string name="speed_grader_overgraded_by">Överbedömd med %s</string>
 </resources>

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Aflevering mislykkedes</string>
     <string name="submissionStatusFailedSubtitle">Tryk for at se detaljer</string>
     <string name="submissionAndRubric">Aflevering og rubrik</string>
+    <string name="commentsAndRubric">Kommentarer og rubrik</string>
     <string name="errorLoadingAssignment">Der opstod et problem med at indlæse denne opgave. Kontrollér forbindelsen, og prøv igen.</string>
     <string name="submitted">Afleveret</string>
     <string name="notSubmitted">Ikke indsendt</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Din opgave er låst efter modul \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Din opgave er låst af et modulkrav</string>
     <string name="submissionDetailsAssignmentLocked">Opgave låst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Ingen aflevering tilladt</string>
     <string name="webPreview">Forhåndsvisning af den indtastede URL</string>
     <string name="websiteUrl">Webside URL</string>
     <string name="noneContentMessage">Denne opgave tillader ikke online indsendelser</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Ingen online indsendelser</string>
     <string name="speedGraderExternalToolMessage">Denne opgave henviser til et eksternt værktøj til aflevering.</string>
     <string name="openTool">Åbn værktøj</string>
+    <string name="a11y_submissionText">Afleveringstekst</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Ud af %s point</string>
     <string name="outOfPointsAbbreviatedFormatted">Ud af %s point</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Ingen opgaver i denne gruppe</string>
     <string name="excusedAssignment">Opgaven blev udeladt og tages ikke i betragtning i den samlede beregning</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sorter efter</string>
+    <string name="sortByDialogTimeOption">Tidspunkt</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sorter efter tid</string>
+    <string name="sortByType">Sorter efter type</string>
+    <string name="sortByDialogCancel">Annullér</string>
+    <string name="assignmentsListAllGradingPeriods">Alle</string>
+    <string name="a11y_sortByTimeButton">Knappen Sorter opgaver, sorter efter tid</string>
+    <string name="a11y_sortByTypeButton">Knappen Sorter opgaver, sorter efter type</string>
+    <string name="a11y_assignmentsSortedByTime">Opgaver sorteret efter tid</string>
+    <string name="a11y_assignmentsSortedByType">Opgaver sorteret efter type</string>
     <!-- Assignment editing -->
     <string name="points">Point\u0020</string>
     <string name="save">Gem</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Opret mappe</string>
     <string name="createAFile">Opret en fil</string>
     <string name="createFileFolderFabContentDesc">Vis knapperne Opret fil og Opret mappe</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skjul Opret fil- og Opret mappe-knapper</string>
     <string name="folderCreationError">Der opstod en fejl under oprettelse af mapper.</string>
     <string name="rename">Omdøb</string>
     <string name="renameFile">Omdøb fil</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Konferencedetaljer</string>
     <string name="recordings">Optagelser</string>
     <string name="conferenceInProgress">Konference i gang</string>
+    <string name="a11y_criterion_content_description">Kriteriebedømmelse %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">yderligere oplysninger</string>
+    <string name="a11y_create_file_folder_visible">Knapper til oprettelse af fil og mappe synlige</string>
+    <string name="a11y_create_file_folder_gone">Knapper til oprettelse af fil og mappe usynlige</string>
 </resources>
