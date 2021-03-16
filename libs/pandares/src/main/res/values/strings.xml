@@ -76,6 +76,7 @@
     <string name="addFileFabContentDesc">Show Add File Options</string>
     <string name="recordAudio">Record Audio</string>
     <string name="recordVideo">Record Video</string>
+    <string name="a11y_textSubmissionEditor">Text Submission Editor</string>
 
     <!-- Student Submission -->
     <string name="submissionWrite">Write&#8230;</string>
@@ -219,6 +220,7 @@
     <!-- Discussions -->
     <string name="forbidden">Replies are only visible to those who have posted at least one reply.</string>
     <string name="fileCurrentlyLocked">This file is currently locked</string>
+    <string name="a11y_discussionReplyEditor">Discussion Reply Editor</string>
 
     <!-- Events -->
     <string name="Starts">Starts</string>

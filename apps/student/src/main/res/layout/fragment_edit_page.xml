@@ -60,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray"/>
+                android:textColor="@color/defaultTextGray"
+                android:focusable="true"/>
 
             <instructure.rceditor.RCETextEditorView
                 android:id="@+id/pageRCEView"
