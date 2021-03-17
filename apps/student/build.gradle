@@ -24,6 +24,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
 apply plugin: 'com.squareup.sqldelight'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def coverageEnabled = project.hasProperty('coverage')
 
@@ -186,6 +187,8 @@ android {
 
         // Fix for Robolectric 4.x
         resolutionStrategy.force "org.ow2.asm:asm:7.0"
+
+        resolutionStrategy.force Libs.KOTLIN_COROUTINES_CORE
     }
 
     /*
@@ -219,6 +222,10 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
+    }
+
+    buildFeatures {
+        dataBinding true
     }
 }
 
@@ -306,6 +313,17 @@ dependencies {
     /* Qr Code */
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.ZXING
+
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    kapt Libs.LIFECYCLE_COMPILER
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
+
     implementation "com.google.firebase:firebase-crashlytics-ndk:17.2.1"
 }
 

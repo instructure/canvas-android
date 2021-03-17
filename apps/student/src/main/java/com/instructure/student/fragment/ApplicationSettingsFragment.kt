@@ -36,8 +36,8 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.activity.NotificationPreferencesActivity
 import com.instructure.student.activity.SettingsActivity
-import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.dialog.LegalDialogStyled
+import com.instructure.student.mobius.settings.help.HelpDialogFragment
 import com.instructure.student.mobius.settings.pairobserver.ui.PairObserverFragment
 import com.instructure.student.util.Analytics
 import kotlinx.android.synthetic.main.dialog_about.*
@@ -82,7 +82,7 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
-        help.onClick { HelpDialogStyled.show(requireActivity()) }
+        help.onClick { HelpDialogFragment.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         pairObserver.setVisible()

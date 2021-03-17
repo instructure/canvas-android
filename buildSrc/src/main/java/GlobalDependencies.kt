@@ -41,6 +41,8 @@ object Versions {
     const val ANDROID_SVG = "1.3"
     const val MOBIUS = "1.2.1"
     const val SQLDELIGHT = "1.4.3"
+    const val HILT = "2.33-beta"
+    const val LIFECYCLE = "2.3.0"
 }
 
 object Libs {
@@ -99,6 +101,16 @@ object Libs {
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.1.0"
     const val ZXING = "com.google.zxing:core:3.3.0"
 
+    /* Dependency Inejction */
+    const val HILT = "com.google.dagger:hilt-android:${Versions.HILT}"
+    const val HILT_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
+
+    /* Android Architecture Components */
+    const val VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
+    const val LIVE_DATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
+    const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
+    const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
+
     /* Other */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
     const val EXOPLAYER = "com.google.android.exoplayer:exoplayer:${Versions.EXOPLAYER}"
@@ -115,6 +127,7 @@ object Plugins {
     const val BUILD_SCAN = "com.gradle:build-scan-plugin:${Versions.BUILD_SCAN}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val SQLDELIGHT = "com.squareup.sqldelight:gradle-plugin:${Versions.SQLDELIGHT}"
+    const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
 }
 
 object BuildScan {
