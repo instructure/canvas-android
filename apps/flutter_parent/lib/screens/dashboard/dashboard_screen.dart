@@ -443,7 +443,7 @@ class DashboardState extends State<DashboardScreen> {
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         // Header
         _navDrawerHeader(user),
-
+        Divider(),
         // Tiles (Inbox, Manage Students, Sign Out, etc)
         Expanded(
           child: _navDrawerItemsList(),
@@ -572,42 +572,44 @@ class DashboardState extends State<DashboardScreen> {
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 
-  _navDrawerHeader(User user) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 0, 12),
-            child: Avatar(user.avatarUrl, name: user.shortName, radius: 28),
-          ),
+  _navDrawerHeader(User user) => Row(
+    children: [
+      Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
+        child: Avatar(user.avatarUrl, name: user.shortName, radius: 20),
+      ),
+      Column(
+        children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: UserName.fromUser(user, style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+            child: UserName.fromUser(user, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               user?.primaryEmail ?? '',
               style: Theme.of(context).textTheme.caption,
+              overflow: TextOverflow.fade,
             ),
           ),
-          SizedBox(height: 36)
         ],
-      );
+      )
+    ],
+  );
 
   Widget _navDrawerItemsList() {
     var items = [
       _navDrawerInbox(),
       _navDrawerManageStudents(),
       _navDrawerSettings(),
+      Divider(),
       _navDrawerHelp(),
       _navDrawerSwitchUsers(),
       _navDrawerLogOut(),
-      null // to get trailing divider
     ];
-    return ListView.separated(
+    return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, index) => items[index],
-      separatorBuilder: (context, index) => const Divider(height: 0, indent: 16),
     );
   }
 
@@ -615,6 +617,7 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerInbox() => ListTile(
         title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
+        leading: SvgPicture.asset('assets/svg/ic_inbox.svg'),
         trailing: NumberBadge(
           listenable: _interactor.getInboxCountNotifier(),
           options: BadgeOptions(maxCount: null),
@@ -622,18 +625,27 @@ class DashboardState extends State<DashboardScreen> {
         ),
       );
 
-  _navDrawerManageStudents() =>
-      ListTile(title: Text(L10n(context).manageStudents), onTap: () => _navigateToManageStudents(context));
+  _navDrawerManageStudents() => ListTile(
+        title: Text(L10n(context).manageStudents),
+        onTap: () => _navigateToManageStudents(context),
+        leading: SvgPicture.asset('assets/svg/ic_manage_student.svg'),
+      );
 
-  _navDrawerSettings() => ListTile(title: Text(L10n(context).settings), onTap: () => _navigateToSettings(context));
+  _navDrawerSettings() => ListTile(
+        title: Text(L10n(context).settings),
+        onTap: () => _navigateToSettings(context),
+        leading: SvgPicture.asset('assets/svg/ic_settings.svg'),
+      );
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),
         onTap: () => _navigateToHelp(context),
+        leading: SvgPicture.asset('assets/svg/ic_help.svg'),
       );
 
   _navDrawerLogOut() => ListTile(
         title: Text(L10n(context).logOut),
+        leading: SvgPicture.asset('assets/svg/ic_logout.svg'),
         onTap: () {
           showDialog(
             context: context,
@@ -642,11 +654,13 @@ class DashboardState extends State<DashboardScreen> {
                 content: Text(L10n(context).logoutConfirmation),
                 actions: <Widget>[
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
+                    child: Text(
+                        MaterialLocalizations.of(context).cancelButtonLabel),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   FlatButton(
-                    child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                    child:
+                        Text(MaterialLocalizations.of(context).okButtonLabel),
                     onPressed: () => _performLogOut(context),
                   )
                 ],
@@ -658,6 +672,7 @@ class DashboardState extends State<DashboardScreen> {
 
   _navDrawerSwitchUsers() => ListTile(
         title: Text(L10n(context).switchUsers),
+        leading: SvgPicture.asset('assets/svg/ic_change_user.svg'),
         onTap: () => _performLogOut(context, switchingUsers: true),
       );
 
