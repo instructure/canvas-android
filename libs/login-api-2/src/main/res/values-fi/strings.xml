@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Raportoi ongelma</string>
     <string name="errorReportSubject">Aihe</string>
     <string name="errorReportDescription">Kuvaus</string>
-    <string name="errorReportWriteSomething">Kirjoita jotakin...</string>
     <string name="errorReportSend">Lähetä</string>
     <string name="errorReportThankyou">Kiitos ongelmasi raportoimisesta tukitiimille.  Saat vahvistuksen ja päivitykset sähköpostitse.</string>
     <string name="errorReportSeverityText">Kuinka tämä vaikuttaa sinuun?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">ERITTÄIN KIIREELLINEN HÄTÄTAPAUS!</string>
 
     <string name="errorReportEmailAddress">Sähköpostiosoite</string>
-    <string name="errorReportEnterEmail">Syötä sähköpostiosoitteesi</string>
     <string name="errorReportUnknown">Tuntematon</string>
 
     <!-- Distance Strings -->

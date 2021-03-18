@@ -93,7 +93,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/utils_description"
-                android:textColor="@color/defaultTextGray"/>
+                android:textColor="@color/defaultTextGray"
+                android:focusable="true"/>
 
             <instructure.rceditor.RCETextEditorView
                 android:id="@+id/announcementRCEView"

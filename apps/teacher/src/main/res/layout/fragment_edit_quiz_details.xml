@@ -98,7 +98,8 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/description"
-                android:textColor="@color/defaultTextGray" />
+                android:textColor="@color/defaultTextGray"
+                android:focusable="true"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
