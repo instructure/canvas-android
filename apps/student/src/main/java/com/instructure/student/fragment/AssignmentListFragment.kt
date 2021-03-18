@@ -74,7 +74,7 @@ class AssignmentListFragment : ParentFragment(), Bookmarkable {
         override fun assignmentLoadingFinished() {
             // If we only have one grading period we want to disable the spinner
             val termCount = termAdapter?.count ?: 0
-            termSpinner.isEnabled = termCount > 1
+            termSpinner?.isEnabled = termCount > 1
             termAdapter?.isLoading = false
             termAdapter?.notifyDataSetChanged()
         }
