@@ -572,27 +572,24 @@ class DashboardState extends State<DashboardScreen> {
     locator<QuickNav>().pushRouteAndClearStack(context, PandaRouter.login());
   }
 
-  _navDrawerHeader(User user) => Row(
+  _navDrawerHeader(User user) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 0, 16),
-        child: Avatar(user.avatarUrl, name: user.shortName, radius: 20),
+        padding: const EdgeInsets.fromLTRB(24, 16, 0, 8),
+        child: Avatar(user.avatarUrl, name: user.shortName, radius: 40),
       ),
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: UserName.fromUser(user, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              user?.primaryEmail ?? '',
-              style: Theme.of(context).textTheme.caption,
-              overflow: TextOverflow.fade,
-            ),
-          ),
-        ],
+      Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: UserName.fromUser(user, style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold)),
+      ),
+      Padding(
+        padding: const EdgeInsets.fromLTRB(24, 4, 24, 16),
+        child: Text(
+          user?.primaryEmail ?? '',
+          style: Theme.of(context).textTheme.caption,
+          overflow: TextOverflow.fade,
+        ),
       )
     ],
   );
@@ -617,7 +614,10 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerInbox() => ListTile(
         title: Text(L10n(context).inbox),
         onTap: () => _navigateToInbox(context),
-        leading: SvgPicture.asset('assets/svg/ic_inbox.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_inbox.svg', height: 24, width: 24),
+        ),
         trailing: NumberBadge(
           listenable: _interactor.getInboxCountNotifier(),
           options: BadgeOptions(maxCount: null),
@@ -628,24 +628,36 @@ class DashboardState extends State<DashboardScreen> {
   _navDrawerManageStudents() => ListTile(
         title: Text(L10n(context).manageStudents),
         onTap: () => _navigateToManageStudents(context),
-        leading: SvgPicture.asset('assets/svg/ic_manage_student.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_manage_student.svg', height: 24, width: 24),
+        ),
       );
 
   _navDrawerSettings() => ListTile(
         title: Text(L10n(context).settings),
         onTap: () => _navigateToSettings(context),
-        leading: SvgPicture.asset('assets/svg/ic_settings.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_settings.svg', height: 24, width: 24),
+        ),
       );
 
   _navDrawerHelp() => ListTile(
         title: Text(L10n(context).help),
         onTap: () => _navigateToHelp(context),
-        leading: SvgPicture.asset('assets/svg/ic_help.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_help.svg', height: 24, width: 24),
+        ),
       );
 
   _navDrawerLogOut() => ListTile(
         title: Text(L10n(context).logOut),
-        leading: SvgPicture.asset('assets/svg/ic_logout.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_logout.svg', height: 24, width: 24,),
+        ),
         onTap: () {
           showDialog(
             context: context,
@@ -672,12 +684,18 @@ class DashboardState extends State<DashboardScreen> {
 
   _navDrawerSwitchUsers() => ListTile(
         title: Text(L10n(context).switchUsers),
-        leading: SvgPicture.asset('assets/svg/ic_change_user.svg'),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: SvgPicture.asset('assets/svg/ic_change_user.svg', height: 24, width: 24),
+        ),
         onTap: () => _performLogOut(context, switchingUsers: true),
       );
 
   _navDrawerActAsUser() => ListTile(
-        leading: Icon(CanvasIcons.masquerade),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Icon(CanvasIcons.masquerade),
+        ),
         title: Text(L10n(context).actAsUser),
         onTap: () {
           Navigator.of(context).pop();
@@ -686,7 +704,10 @@ class DashboardState extends State<DashboardScreen> {
       );
 
   _navDrawerStopActingAsUser() => ListTile(
-        leading: Icon(CanvasIcons.masquerade),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: Icon(CanvasIcons.masquerade),
+        ),
         title: Text(L10n(context).stopActAsUser),
         onTap: () {
           Navigator.of(context).pop();
