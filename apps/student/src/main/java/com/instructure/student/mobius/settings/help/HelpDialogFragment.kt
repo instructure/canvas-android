@@ -19,12 +19,16 @@ package com.instructure.student.mobius.settings.help
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
 import com.instructure.student.R
+import com.instructure.student.databinding.HelpDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,16 +39,23 @@ class HelpDialogFragment : DialogFragment() {
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext()).setTitle(requireContext().getString(R.string.help))
-        val view = LayoutInflater.from(activity).inflate(R.layout.help_dialog, null)
 
-        builder.setView(view)
+        val binding = HelpDialogBinding.inflate(LayoutInflater.from(context))
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        builder.setView(binding.root)
 
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(true)
 
-//        loadHelpLinks(view)
+        viewModel.state.observe(this) { it: HelpDialogViewState? ->
+            Log.d("asdasd", "$it")
+        }
 
-        viewModel.doSomething()
+        viewModel.data.observe(this, Observer {
+            Log.d("asdasd", "$it")
+        })
 
         return dialog
     }
