@@ -23,9 +23,14 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
 import com.instructure.student.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {
+
+    private val viewModel: HelpDialogViewModel by viewModels()
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -38,6 +43,8 @@ class HelpDialogFragment : DialogFragment() {
         dialog.setCanceledOnTouchOutside(true)
 
 //        loadHelpLinks(view)
+
+        viewModel.doSomething()
 
         return dialog
     }

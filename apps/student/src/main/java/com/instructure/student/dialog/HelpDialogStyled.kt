@@ -100,7 +100,7 @@ class HelpDialogStyled : DialogFragment() {
         helpLinksJob = tryWeave {
             with(layoutView) { emptyView.setLoading() }
 
-            helpLinks = awaitApi<HelpLinks> { HelpLinksManager.getHelpLinks(it, true) }
+//            helpLinks = awaitApi<HelpLinks> { HelpLinksManager.getHelpLinks(it, true) }
 
             with(layoutView) {
                 if (helpLinks?.customHelpLinks?.isNotEmpty() == true) {

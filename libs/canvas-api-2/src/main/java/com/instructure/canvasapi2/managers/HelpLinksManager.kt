@@ -22,12 +22,12 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.HelpLinks
 
-object HelpLinksManager {
+class HelpLinksManager(private val helpLinksApi: HelpLinksAPI) {
 
     fun getHelpLinks(callback: StatusCallback<HelpLinks>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        HelpLinksAPI.getHelpLinks(adapter, params, callback)
+        helpLinksApi.getHelpLinks(adapter, params, callback)
     }
 
 }

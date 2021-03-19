@@ -25,7 +25,9 @@ import android.widget.Toast
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {

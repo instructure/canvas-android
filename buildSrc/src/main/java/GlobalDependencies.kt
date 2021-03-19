@@ -43,6 +43,7 @@ object Versions {
     const val SQLDELIGHT = "1.4.3"
     const val HILT = "2.33-beta"
     const val LIFECYCLE = "2.3.0"
+    const val FRAGMENT_KTX = "1.3.1"
 }
 
 object Libs {
@@ -58,7 +59,7 @@ object Libs {
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Support Libs */
-    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:${Versions.ANDROIDX}"
+    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.1.0"
     const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.0.2"
     const val ANDROIDX_BROWSER = "androidx.browser:browser:1.0.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:${Versions.ANDROIDX}"
@@ -110,6 +111,7 @@ object Libs {
     const val LIVE_DATA = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.LIFECYCLE}"
     const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
+    const val FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT_KTX}"
 
     /* Other */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
