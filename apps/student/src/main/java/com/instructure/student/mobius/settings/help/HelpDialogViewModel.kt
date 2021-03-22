@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.pandautils.utils.Event
 import com.instructure.student.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -44,6 +45,7 @@ class HelpDialogViewModel @Inject constructor(
 
     val state = MutableLiveData<HelpDialogViewState>()
     val data = MutableLiveData<HelpDialogViewData>()
+    val events = MutableLiveData<Event<HelpDialogAction>>()
 
     init {
         loadHelpLinks()
@@ -77,15 +79,39 @@ class HelpDialogViewModel @Inject constructor(
     private suspend fun createLinks(list: List<HelpLink>): List<HelpLinkViewData> {
 
         // Share love link is specific to Android - Add it to the list returned from the API
-        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), "#share_the_love")
+        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), "#share_the_love", HelpDialogAction.RateTheApp)
 
         return list
             // Only want links for students
             .filter { link ->
                 (link.availableTo.contains("student") || link.availableTo.contains("user"))
                     && (link.url != "#teacher_feedback" || awaitApi<List<Course>> { courseManager.getAllFavoriteCourses(false, it) }.filter { !it.isTeacher }.count() > 0) }
-            .map { HelpLinkViewData(it.text, it.subtext, it.url) }
+            .map { HelpLinkViewData(it.text, it.subtext, it.url, mapAction(it)) }
             .plus(rateLink)
+    }
+
+    private fun mapAction(link: HelpLink): HelpDialogAction {
+        return when {
+            // Internal routes
+            link.url[0] == '#' ->
+                when (link.url) {
+                    "#create_ticket" -> HelpDialogAction.ReportProblem
+                    "#teacher_feedback" -> HelpDialogAction.AskInstructor
+                    "#share_the_love" -> HelpDialogAction.RateTheApp
+                    else -> { HelpDialogAction.EmptyAction  }
+                }
+            // External URL, but we handle within the app
+            link.id.contains("submit_feature_idea") -> HelpDialogAction.SubmitFeatureIdea
+            link.url.startsWith("tel:")-> HelpDialogAction.Phone(link.url)
+            link.url.startsWith("mailto:") -> HelpDialogAction.SendMail(link.url)
+            link.url.contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url)
+            // External URL
+            else -> HelpDialogAction.OpenWebView(link.url, link.text)
+        }
+    }
+
+    fun onLinkClicked(action: HelpDialogAction) {
+        events.value = Event(action)
     }
 
     override fun onCleared() {

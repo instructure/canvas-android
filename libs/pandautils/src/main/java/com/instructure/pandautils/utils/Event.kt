@@ -14,14 +14,29 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.utils
 
-sealed class HelpDialogViewState {
-    object Loading : HelpDialogViewState()
-    object Success : HelpDialogViewState()
-    object Error : HelpDialogViewState()
+/**
+ * Used as a wrapper for data that is exposed via a LiveData that represents an event.
+ */
+open class Event<out T>(private val content: T) {
+
+    private var hasBeenHandled = false
+
+    /**
+     * Returns the content and prevents its use again.
+     */
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+
+    /**
+     * Returns the content, even if it's already been handled.
+     */
+    fun peekContent(): T = content
 }
-
-data class HelpDialogViewData(val helpLinks: List<HelpLinkViewData>)
-
-data class HelpLinkViewData(val title: String, val subtitle: String, val url: String, val action: HelpDialogAction)
