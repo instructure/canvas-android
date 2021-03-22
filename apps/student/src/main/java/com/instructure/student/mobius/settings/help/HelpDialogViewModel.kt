@@ -28,7 +28,8 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
-import com.instructure.pandautils.utils.Event
+import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,7 +44,7 @@ class HelpDialogViewModel @Inject constructor(
 
     private var helpLinksJob: Job? = null
 
-    val state = MutableLiveData<HelpDialogViewState>()
+    val state = MutableLiveData<ViewState>()
     val data = MutableLiveData<HelpDialogViewData>()
     val events = MutableLiveData<Event<HelpDialogAction>>()
 
@@ -53,10 +54,8 @@ class HelpDialogViewModel @Inject constructor(
 
     private fun loadHelpLinks() {
         helpLinksJob = tryWeave {
-//            with(layoutView) { emptyView.setLoading() }
-            state.postValue(HelpDialogViewState.Loading)
+            state.postValue(ViewState.Loading)
 
-            // TODO Can this be null if we have an error?
             val helpLinks = awaitApi<HelpLinks> { helpLinksManager.getHelpLinks(it, true) }
 
             val helpLinksViewData = if (helpLinks.customHelpLinks.isNotEmpty()) {
@@ -66,8 +65,8 @@ class HelpDialogViewModel @Inject constructor(
                 // Default links
                 createLinks(helpLinks.defaultHelpLinks)
             }
-//            emptyView.setGone()
-            state.postValue(HelpDialogViewState.Success)
+
+            state.postValue(ViewState.Success)
             data.postValue(HelpDialogViewData(helpLinksViewData))
 
         } catch {

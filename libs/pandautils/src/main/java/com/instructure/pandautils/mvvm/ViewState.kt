@@ -14,8 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.mvvm
 
-data class HelpDialogViewData(val helpLinks: List<HelpLinkViewData>)
-
-data class HelpLinkViewData(val title: String, val subtitle: String, val url: String, val action: HelpDialogAction)
+sealed class ViewState {
+    object Loading : ViewState()
+    object Success : ViewState()
+    class Error(val errorMessage: String) : ViewState()
+}

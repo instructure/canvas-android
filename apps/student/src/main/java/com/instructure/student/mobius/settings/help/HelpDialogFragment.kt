@@ -33,7 +33,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.utils.AppType
-import com.instructure.pandautils.utils.Event
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity

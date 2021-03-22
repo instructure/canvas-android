@@ -14,8 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.student.binding
 
-data class HelpDialogViewData(val helpLinks: List<HelpLinkViewData>)
+import androidx.databinding.BindingAdapter
+import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.setGone
+import com.instructure.student.view.EmptyView
 
-data class HelpLinkViewData(val title: String, val subtitle: String, val url: String, val action: HelpDialogAction)
+@BindingAdapter("emptyViewState")
+fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
+    when (state) {
+        is ViewState.Success -> emptyView.setGone()
+        is ViewState.Loading -> emptyView.setLoading()
+    }
+}

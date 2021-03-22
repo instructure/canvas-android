@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.utils
+package com.instructure.pandautils.mvvm
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
