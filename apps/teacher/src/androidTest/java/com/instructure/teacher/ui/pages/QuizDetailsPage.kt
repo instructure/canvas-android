@@ -109,6 +109,11 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
         gradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(1, 1))
     }
 
+    fun assertNeedsGrading() {
+        val resources = InstrumentationRegistry.getTargetContext()
+        ungradedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(1, 1))
+    }
+
     fun assertNotSubmitted() {
         val resources = InstrumentationRegistry.getTargetContext()
         notSubmittedDonut.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(1, 1))
@@ -125,5 +130,9 @@ class QuizDetailsPage : BasePage(pageResId = R.id.quizDetailsPage) {
 
     fun waitForRender() {
         waitForView(withId(R.id.quizDetailsPage))
+    }
+
+    fun refresh() {
+        waitForView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 }

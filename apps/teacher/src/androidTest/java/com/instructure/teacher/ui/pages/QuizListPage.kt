@@ -63,4 +63,8 @@ class QuizListPage : BasePage() {
     fun assertQuizCount(count: Int) {
         quizRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
     }
+
+    fun refresh() {
+        quizRecyclerView.swipeDown()
+    }
 }
