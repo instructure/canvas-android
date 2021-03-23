@@ -14,8 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.mvvm
 
-data class HelpDialogViewData(val helpLinks: List<HelpLinkSubViewModel>)
-
-data class HelpLinkViewData(val title: String, val subtitle: String, val url: String, val action: HelpDialogAction)
+interface SubViewModel {
+    val layoutId: Int
+}

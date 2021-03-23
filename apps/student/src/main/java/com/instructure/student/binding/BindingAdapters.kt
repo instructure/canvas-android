@@ -16,10 +16,25 @@
  */
 package com.instructure.student.binding
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import com.instructure.pandautils.mvvm.SubViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
+import com.instructure.student.BR
 import com.instructure.student.view.EmptyView
+
+@BindingAdapter("subViewModels")
+fun bindHelpLinks(container: ViewGroup, subViewModels: List<SubViewModel>?) {
+    subViewModels?.forEach {
+        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), it.layoutId, container, false)
+        binding.setVariable(BR.subViewModel, it)
+        container.addView(binding.root)
+    }
+}
 
 @BindingAdapter("emptyViewState")
 fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {

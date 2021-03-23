@@ -16,6 +16,14 @@
  */
 package com.instructure.student.mobius.settings.help
 
-data class HelpDialogViewData(val helpLinks: List<HelpLinkSubViewModel>)
+import com.instructure.pandautils.mvvm.SubViewModel
+import com.instructure.student.R
 
-data class HelpLinkViewData(val title: String, val subtitle: String, val url: String, val action: HelpDialogAction)
+class HelpLinkSubViewModel(val helpLinkViewData: HelpLinkViewData, private val helpDialogViewModel: HelpDialogViewModel) : SubViewModel {
+
+    override val layoutId: Int = R.layout.view_help_link
+
+    fun onClick() {
+        helpDialogViewModel.onLinkClicked(helpLinkViewData.action)
+    }
+}
