@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Falha no envio</string>
     <string name="submissionStatusFailedSubtitle">Toque para ver detalhes</string>
     <string name="submissionAndRubric">Submissão e Rubrica</string>
+    <string name="commentsAndRubric">Comentários &amp; Rubrica</string>
     <string name="errorLoadingAssignment">Ocorreu um problema ao carregar esta tarefa. É favor verificar sua conexão e tente novamente.</string>
     <string name="submitted">Submetido</string>
     <string name="notSubmitted">Não Entregue</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Sua tarefa está bloqueada por módulo \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Sua tarefa está bloqueada por um requisito de módulo</string>
     <string name="submissionDetailsAssignmentLocked">Tarefa bloqueada</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Não é permitida a submissão</string>
     <string name="webPreview">Visualização do URL inserido</string>
     <string name="websiteUrl">URL do Website</string>
     <string name="noneContentMessage">Esta tarefa não permite envios online</string>
@@ -1100,4 +1102,7 @@
     <string name="conferenceDetails">Detalhes da Conferência</string>
     <string name="recordings">Gravações</string>
     <string name="conferenceInProgress">Conferência em curso</string>
+    <string name="a11y_criterion_content_description">Critério de classificação %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">mais informações</string>
 </resources>

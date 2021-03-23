@@ -871,4 +871,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">今回 LTI ツールを読み込めませんでした。</string>
     <string name="downloading">読み込み中&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">シラバスが正常に更新されました。</string>
+    <string name="errorSavingSyllabus">シラバスを保存しようとしてエラーが発生しました。もう一度お試しください。</string>
+    <string name="editSyllabusTitle">シラバスを編集</string>
+    <string name="editSyllabusContent">コンテンツ</string>
+    <string name="editSyllabusDetails">詳細</string>
+    <string name="editSyllabusShowCourseSummary">コースサマリーを表示する</string>
+    <string name="editSyllabusContentAccessibilityLabel">シラバスの内容</string>
+
+    <string name="no_grade">成績なし</string>
+    <string name="excuse">免除</string>
+    <string name="speed_grader_overgraded_by">採点が %s 過剰</string>
 </resources>

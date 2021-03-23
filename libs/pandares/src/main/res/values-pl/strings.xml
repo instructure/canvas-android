@@ -48,6 +48,7 @@
     <string name="submissionStatusFailedTitle">Przesyłanie zadania nie powiodło się</string>
     <string name="submissionStatusFailedSubtitle">Stuknij, aby wyświetlić szczegóły</string>
     <string name="submissionAndRubric">Przesyłka i kryteria ocen</string>
+    <string name="commentsAndRubric">Komentarze i kryteria ocen</string>
     <string name="errorLoadingAssignment">Wystąpił problem z wczytaniem tego zadania. Sprawdź połączenie i spróbuj ponownie.</string>
     <string name="submitted">Przesłano</string>
     <string name="notSubmitted">Nie wysłano</string>
@@ -95,6 +96,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Twoje zadanie jest zablokowane przez moduł \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Twoje zadanie jest zablokowane przez wymóg modułu</string>
     <string name="submissionDetailsAssignmentLocked">Zablokowano zadanie</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Przesyłki nie są dozwolone</string>
     <string name="webPreview">Podgląd wprowadzonego adresu URL</string>
     <string name="websiteUrl">Adres URL witryny</string>
     <string name="noneContentMessage">To zadanie nie umożliwia przesyłania online</string>
@@ -103,6 +105,7 @@
 
     <string name="speedGraderExternalToolMessage">To zadanie odnosi się do zewnętrznego narzędzia do przesyłania.</string>
     <string name="openTool">Otwórz narzędzie</string>
+    <string name="a11y_submissionText">Tekst przesyłki</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Z %s pkt</string>
     <string name="outOfPointsAbbreviatedFormatted">Z %s pkt</string>
@@ -198,6 +201,17 @@
     <string name="excusedAssignment">To zadanie zostało usprawiedliwione i nie zostanie ujęte w ostatecznym rozliczeniu</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Sortuj wg</string>
+    <string name="sortByDialogTimeOption">Czas</string>
+    <string name="sortByDialogTypeOption">Typ</string>
+    <string name="sortByTime">Sortuj wg czasu</string>
+    <string name="sortByType">Sortuj wg typu</string>
+    <string name="sortByDialogCancel">Anuluj</string>
+    <string name="assignmentsListAllGradingPeriods">Wszystkie</string>
+    <string name="a11y_sortByTimeButton">Przycisk sortowania zadań, sortuj wg czasu</string>
+    <string name="a11y_sortByTypeButton">Przycisk sortowania zadań, sortuj wg typu</string>
+    <string name="a11y_assignmentsSortedByTime">Zadania posortowane wg czasu</string>
+    <string name="a11y_assignmentsSortedByType">Zadania posortowane wg typu</string>
     <!-- Assignment editing -->
     <string name="points">Punkty\u0020</string>
     <string name="save">Zapisz</string>
@@ -258,6 +272,7 @@
     <string name="createFolder">Utwórz folder</string>
     <string name="createAFile">Utwórz plik</string>
     <string name="createFileFolderFabContentDesc">Pokaż przyciski tworzenia plików i folderów</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ukryj przyciski tworzenia plików i folderów</string>
     <string name="folderCreationError">Wystąpił błąd podczas tworzenia folderu.</string>
     <string name="rename">Zmień nazwę</string>
     <string name="renameFile">Zmień nazwę pliku</string>
@@ -1142,4 +1157,9 @@
     <string name="conferenceDetails">Szczegóły konferencji</string>
     <string name="recordings">Nagrań</string>
     <string name="conferenceInProgress">Konferencja w toku</string>
+    <string name="a11y_criterion_content_description">Punktacja dla danego kryterium %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">więcej informacji</string>
+    <string name="a11y_create_file_folder_visible">Przyciski tworzenia plików i folderów są widoczne</string>
+    <string name="a11y_create_file_folder_gone">Ukryto przyciski tworzenia plików i folderów</string>
 </resources>

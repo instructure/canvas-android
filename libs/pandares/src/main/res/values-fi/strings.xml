@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Lähetys epäonnistui</string>
     <string name="submissionStatusFailedSubtitle">Napauta tarkastellaksesi tietoja</string>
     <string name="submissionAndRubric">Lähetys &amp; Rubriikki</string>
+    <string name="commentsAndRubric">Kommentit &amp; Rubriikki</string>
     <string name="errorLoadingAssignment">Tämän tehtävän lataamisessa ilmeni ongelma. Tarkasta yhteytesi ja yritä uudelleen.</string>
     <string name="submitted">Lähetetty</string>
     <string name="notSubmitted">Ei lähetetty</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Tehtäväsi lukittiin moduulilla \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Tehtäväsi lukittiin moduulin vaatimuksella </string>
     <string name="submissionDetailsAssignmentLocked">Tehtävä lukittu</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Lähetyksiä ei sallita</string>
     <string name="webPreview">Syötetyn URL-linkin esikatselu</string>
     <string name="websiteUrl">Verkkosivuston URL</string>
     <string name="noneContentMessage">Tämä tehtävä ei salli verkkolähetyksiä.</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Tämä tehtävä linkittää ulkoisen työkalun lähetyksiin.</string>
     <string name="openTool">Avaa työkalu</string>
+    <string name="a11y_submissionText">Lähetyksen testi</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s pisteestä</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s pistettä</string>
@@ -196,6 +199,17 @@
     <string name="excusedAssignment">Tämän tehtävän annetaan mennä eikä sitä oteta huomioon koko laskelmassa</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Lajitteluperuste</string>
+    <string name="sortByDialogTimeOption">Aika</string>
+    <string name="sortByDialogTypeOption">Tyyppi</string>
+    <string name="sortByTime">Lajittele ajan perusteella</string>
+    <string name="sortByType">Lajittele tyypin perusteella</string>
+    <string name="sortByDialogCancel">Peruuta</string>
+    <string name="assignmentsListAllGradingPeriods">Kaikki</string>
+    <string name="a11y_sortByTimeButton">Lajittele tehtävät -painike, lajittele ajan perusteella</string>
+    <string name="a11y_sortByTypeButton">Lajittele tehtävät -painike, lajittele tyypin perusteella</string>
+    <string name="a11y_assignmentsSortedByTime">Tehtävät lajiteltu ajan perusteella</string>
+    <string name="a11y_assignmentsSortedByType">Tehtävät lajiteltu tyypin perusteella</string>
     <!-- Assignment editing -->
     <string name="points">Pisteitä\u0020</string>
     <string name="save">Tallenna</string>
@@ -254,6 +268,7 @@
     <string name="createFolder">Kansion luonti</string>
     <string name="createAFile">Luo tiedosto</string>
     <string name="createFileFolderFabContentDesc">Näytä Luo tiedosto - ja Luo kansio -painikkeet</string>
+    <string name="hideCreateFileFolderFabContentDesc">Piilota Luo tiedosto - ja Luo kansio -painikkeet</string>
     <string name="folderCreationError">Kansion luonnin aikana tapahtui virhe.</string>
     <string name="rename">Nimeä uudelleen</string>
     <string name="renameFile">Tiedostojen nimeäminen uudelleen</string>
@@ -1114,4 +1129,9 @@
     <string name="conferenceDetails">Konferenssin tiedot</string>
     <string name="recordings">Nauhoitukset</string>
     <string name="conferenceInProgress">Kokous käynnissä</string>
+    <string name="a11y_criterion_content_description">Kriteerien luokitukset %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">lisätietoja</string>
+    <string name="a11y_create_file_folder_visible">Luo tiedosto ja kansio -painikkeet näkyvissä</string>
+    <string name="a11y_create_file_folder_gone">Luo tiedosto ja kansio -painikkeet eivät näkyvissä</string>
 </resources>

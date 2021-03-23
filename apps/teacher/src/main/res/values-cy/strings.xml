@@ -885,4 +885,16 @@
     <string name="gauge">Medrydd</string>
     <string name="ltiLaunchFailure">Doedd dim modd llwytho’r adnodd LTI hwn y tro hwn.</string>
     <string name="downloading">Wrthi’n llwytho i lawr...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Wedi llwyddo i ddiweddaru’r maes llafur.</string>
+    <string name="errorSavingSyllabus">Gwall wrth gadw’r maes llafur. Rhowch gynnig arall arni.</string>
+    <string name="editSyllabusTitle">Golygu Maes Llafur</string>
+    <string name="editSyllabusContent">Cynnwys</string>
+    <string name="editSyllabusDetails">Manylion</string>
+    <string name="editSyllabusShowCourseSummary">Dangos crynodeb cwrs</string>
+    <string name="editSyllabusContentAccessibilityLabel">Cynnwys maes llafur</string>
+
+    <string name="no_grade">Dim gradd</string>
+    <string name="excuse">Esgusodi</string>
+    <string name="speed_grader_overgraded_by">Wedi’i or-raddio gan %s</string>
 </resources>

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">I rahua te tuku o te tāpaetanga</string>
     <string name="submissionStatusFailedSubtitle">Pātō ki te tiro i ngā taipitopito</string>
     <string name="submissionAndRubric">Tāpaetanga &amp;Rubric</string>
+    <string name="commentsAndRubric">Ngā Kōrerorero &amp; Rubric</string>
     <string name="errorLoadingAssignment">He raruraru i te wā e tikiake ana i tēnei whakataunga Tēnā koa tirohia tō hononga ana ka tarai anō</string>
     <string name="submitted">Kua tukuna</string>
     <string name="notSubmitted">E Kore E Tukua</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Kua rakaina tō whakataunga e te kōwa \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Kua rakaina tō whakataunga  e te hiahiatanga o te kōwae</string>
     <string name="submissionDetailsAssignmentLocked">Whakataunga kua rakaina</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Kaore he tāpaetanga e whakaaetia</string>
     <string name="webPreview">Arokite o te URL kua whakaurutia</string>
     <string name="websiteUrl">paetukutuku URL</string>
     <string name="noneContentMessage">Kāore tēnei whakataunga e whakāe ngā tāpaetanga i runga i te ipurangi</string>
@@ -1100,4 +1102,7 @@
     <string name="conferenceDetails">Ngā taipitopito hui</string>
     <string name="recordings">Ngā ōrongongo</string>
     <string name="conferenceInProgress">Huihuinga I roto i te kaunuku</string>
+    <string name="a11y_criterion_content_description">Ngā whakatauranga paearu %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">ētahi atu mōhiohio</string>
 </resources>

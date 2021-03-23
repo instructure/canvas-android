@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Submission Failed</string>
     <string name="submissionStatusFailedSubtitle">Tap to view details</string>
     <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="commentsAndRubric">Comments &amp; Rubric</string>
     <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
     <string name="submitted">Submitted</string>
     <string name="notSubmitted">Not Submitted</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Your assignment is locked by module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Your assignment is locked by a module requirement</string>
     <string name="submissionDetailsAssignmentLocked">Assignment Locked</string>
+    <string name="submissionDetailsNoSubmissionAllowed">No Submission Allowed</string>
     <string name="webPreview">Preview of the entered URL</string>
     <string name="websiteUrl">Website URL</string>
     <string name="noneContentMessage">This assignment does not allow online submissions</string>
@@ -100,6 +102,7 @@
     <string name="noOnlineSubmissions">No Online Submissions</string>
     <string name="speedGraderExternalToolMessage">This assignment links to an external tool for submissions.</string>
     <string name="openTool">Open Tool</string>
+    <string name="a11y_submissionText">Submission text</string>
 
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Out of %s points</string>
@@ -195,6 +198,17 @@
     <string name="noAssignmentsInGroup">No Assignments in this group</string>
     <string name="excusedAssignment">This assignment is excused and will not be considered in the total calculation</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sort by</string>
+    <string name="sortByDialogTimeOption">Time</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Sort by Time</string>
+    <string name="sortByType">Sort by Type</string>
+    <string name="sortByDialogCancel">Cancel</string>
+    <string name="assignmentsListAllGradingPeriods">All</string>
+    <string name="a11y_sortByTimeButton">Sort assignments button, sort by time</string>
+    <string name="a11y_sortByTypeButton">Sort assignments button, sort by type</string>
+    <string name="a11y_assignmentsSortedByTime">Assignments sorted by time</string>
+    <string name="a11y_assignmentsSortedByType">Assignments sorted by type</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
@@ -254,6 +268,7 @@
     <string name="createFolder">Create Folder</string>
     <string name="createAFile">Create A File</string>
     <string name="createFileFolderFabContentDesc">Show Create File and Create Folder Buttons</string>
+    <string name="hideCreateFileFolderFabContentDesc">Hide Create File and Create Folder Buttons</string>
     <string name="folderCreationError">An error occurred during folder creation.</string>
     <string name="rename">Rename</string>
     <string name="renameFile">Rename file</string>
@@ -1121,4 +1136,10 @@
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
     <string name="conferenceInProgress">Conference in progress</string>
+
+    <string name="a11y_criterion_content_description">Criterion rating %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">more information</string>
+    <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
+    <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
 </resources>

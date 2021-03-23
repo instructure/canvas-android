@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Abgabe fehlgeschlagen</string>
     <string name="submissionStatusFailedSubtitle">Zum Anzeigen der Details antippen</string>
     <string name="submissionAndRubric">Abgabe und Bewertungsschema</string>
+    <string name="commentsAndRubric">Kommentare und Bewertungsschema</string>
     <string name="errorLoadingAssignment">Beim Laden dieser Aufgabe ist ein Problem aufgetreten. Bitte überprüfen Sie Ihre Verbindung, und versuchen Sie es erneut.</string>
     <string name="submitted">Abgegeben</string>
     <string name="notSubmitted">Nicht abgegeben</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Ihre Aufgabe wird durch das Modul \"%1$s\" gesperrt.</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Ihre Aufgabe wird aufgrund einer Modulanforderung gesperrt.</string>
     <string name="submissionDetailsAssignmentLocked">Aufgabe gesperrt</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Keine Abgabe erlaubt</string>
     <string name="webPreview">Vorschau der eingegebenen URL</string>
     <string name="websiteUrl">Website-URL</string>
     <string name="noneContentMessage">Für diese Aufgabe sind Online-Abgaben unzulässig.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Keine Online-Abgaben</string>
     <string name="speedGraderExternalToolMessage">Diese Aufgabe hat einen Link zu einem externen Tool für die Abgaben.</string>
     <string name="openTool">Tool öffnen</string>
+    <string name="a11y_submissionText">Abgabetext</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">von %s Punkten</string>
     <string name="outOfPointsAbbreviatedFormatted">von %s Pkten.</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Keine Aufgaben in dieser Gruppe</string>
     <string name="excusedAssignment">Diese Aufgabe ist entschuldigt und fließt nicht in die Gesamtpunktzahl ein.</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Sortieren nach</string>
+    <string name="sortByDialogTimeOption">Zeit</string>
+    <string name="sortByDialogTypeOption">Typ</string>
+    <string name="sortByTime">Nach Zeit sortieren</string>
+    <string name="sortByType">Nach Typ sortieren</string>
+    <string name="sortByDialogCancel">Abbrechen</string>
+    <string name="assignmentsListAllGradingPeriods">Alle</string>
+    <string name="a11y_sortByTimeButton">Schaltfläche „Aufgaben sortieren“, nach Zeit sortieren</string>
+    <string name="a11y_sortByTypeButton">Schaltfläche „Aufgaben sortieren“, nach Typ sortieren</string>
+    <string name="a11y_assignmentsSortedByTime">Aufgaben nach Zeit sortiert</string>
+    <string name="a11y_assignmentsSortedByType">Aufgaben nach Typ sortiert</string>
     <!-- Assignment editing -->
     <string name="points">Punkte\u0020</string>
     <string name="save">Speichern</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Ordner anlegen</string>
     <string name="createAFile">Eine Datei erstellen</string>
     <string name="createFileFolderFabContentDesc">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ anzeigen</string>
+    <string name="hideCreateFileFolderFabContentDesc">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ ausblenden</string>
     <string name="folderCreationError">Fehler beim Anlegen eines Ordners.</string>
     <string name="rename">Umbenennen</string>
     <string name="renameFile">Datei umbenennen</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Details der Konferenz</string>
     <string name="recordings">Aufzeichnungen</string>
     <string name="conferenceInProgress">Aktive Konferenz</string>
+    <string name="a11y_criterion_content_description">Criterion-Rating %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">weitere Informationen</string>
+    <string name="a11y_create_file_folder_visible">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ sichtbar</string>
+    <string name="a11y_create_file_folder_gone">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ unsichtbar</string>
 </resources>
