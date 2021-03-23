@@ -14,15 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.utils
 
-sealed class HelpDialogAction {
-    object ReportProblem : HelpDialogAction()
-    object AskInstructor : HelpDialogAction()
-    object RateTheApp : HelpDialogAction()
-    class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
-    class Phone(val url: String) : HelpDialogAction()
-    class SendMail(val url: String) : HelpDialogAction()
-    class OpenExternalBrowser(val url: String) : HelpDialogAction()
-    class OpenWebView(val url: String, val title: String) : HelpDialogAction()
+import android.content.Context
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import com.instructure.canvasapi2.utils.Logger
+
+class PackageInfoProvider(private val context: Context) {
+
+    fun getPackageInfo(): PackageInfo? {
+        return try {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            Logger.d(e.message)
+            null
+        }
+    }
 }

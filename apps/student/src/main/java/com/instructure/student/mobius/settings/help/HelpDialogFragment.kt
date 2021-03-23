@@ -46,18 +46,6 @@ import java.util.*
 @AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {
 
-    private val installDateString: String
-        get() {
-            return try {
-                val installed = requireContext().packageManager
-                    .getPackageInfo(requireContext().packageName, 0)
-                    .firstInstallTime
-                DateHelper.dayMonthYearFormat.format(Date(installed))
-            } catch (e: Exception) {
-                ""
-            }
-        }
-
     private val viewModel: HelpDialogViewModel by viewModels()
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
@@ -95,16 +83,14 @@ class HelpDialogFragment : DialogFragment() {
                 // Open the ask instructor dialog
                 AskInstructorDialogStyled().show(requireFragmentManager(), AskInstructorDialogStyled.TAG)
             }
-            is HelpDialogAction.RateTheApp -> {
-                Utils.goToAppStore(AppType.STUDENT, activity)
-            }
+            is HelpDialogAction.RateTheApp -> Utils.goToAppStore(AppType.STUDENT, activity)
             // External URL, but we handle within the app
             is HelpDialogAction.SubmitFeatureIdea -> {
                 // Before custom help links, we were handling request a feature ourselves and
                 // we decided to keep that functionality instead of loading up the URL
 
                 // Let the user open their favorite mail client
-                val intent = populateMailIntent(getString(R.string.featureSubject), getString(R.string.understandRequest), false)
+                val intent = populateMailIntent(action)
                 startActivity(Intent.createChooser(intent, getString(R.string.sendMail)))
             }
             is HelpDialogAction.Phone -> {
@@ -129,44 +115,14 @@ class HelpDialogFragment : DialogFragment() {
         }
     }
 
-    private fun populateMailIntent(subject: String, title: String, supportFlag: Boolean): Intent {
+    private fun populateMailIntent(action: HelpDialogAction.SubmitFeatureIdea): Intent {
         // Let the user open their favorite mail client
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "message/rfc822"
 
-        if (supportFlag) {
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.utils_supportEmailAddress)))
-        } else {
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.utils_mobileSupportEmailAddress)))
-        }
-
-        // Try to get the version number and version code
-        val pInfo: PackageInfo?
-        var versionName = ""
-        var versionCode = 0
-        try {
-            pInfo = requireContext().packageManager.getPackageInfo(requireContext().packageName, 0)
-            versionName = pInfo.versionName
-            versionCode = pInfo.versionCode
-        } catch (e: PackageManager.NameNotFoundException) {
-            LoggingUtility.logConsole(e.message)
-        }
-
-        intent.putExtra(Intent.EXTRA_SUBJECT, "[$subject] Issue with Canvas [Android] $versionName")
-
-        val user = ApiPrefs.user
-        // Populate the email body with information about the user
-        var emailBody = ""
-        emailBody += title + "\n"
-        emailBody += getString(R.string.help_userId) + " " + user!!.id + "\n"
-        emailBody += getString(R.string.help_email) + " " + user.email + "\n"
-        emailBody += getString(R.string.help_domain) + " " + ApiPrefs.domain + "\n"
-        emailBody += getString(R.string.help_versionNum) + " " + versionName + " " + versionCode + "\n"
-        emailBody += getString(R.string.help_locale) + " " + Locale.getDefault() + "\n"
-        emailBody += getString(R.string.installDate) + " " + installDateString + "\n"
-        emailBody += "----------------------------------------------\n"
-
-        intent.putExtra(Intent.EXTRA_TEXT, emailBody)
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(action.recipient))
+        intent.putExtra(Intent.EXTRA_SUBJECT, action.subject)
+        intent.putExtra(Intent.EXTRA_TEXT, action.emailBody)
 
         return intent
     }

@@ -24,23 +24,29 @@ import com.instructure.canvasapi2.managers.HelpLinksManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.HelpLinks
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.PackageInfoProvider
 import com.instructure.student.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class HelpDialogViewModel @Inject constructor(
     private val helpLinksManager: HelpLinksManager,
     private val courseManager: CourseManager,
-    @ApplicationContext private val context: Context) : ViewModel() {
+    @ApplicationContext private val context: Context,
+    private val apiPrefs: ApiPrefs,
+    private val packageInfoProvider: PackageInfoProvider) : ViewModel() {
 
     private var helpLinksJob: Job? = null
 
@@ -92,21 +98,48 @@ class HelpDialogViewModel @Inject constructor(
     private fun mapAction(link: HelpLink): HelpDialogAction {
         return when {
             // Internal routes
-            link.url[0] == '#' ->
-                when (link.url) {
-                    "#create_ticket" -> HelpDialogAction.ReportProblem
-                    "#teacher_feedback" -> HelpDialogAction.AskInstructor
-                    "#share_the_love" -> HelpDialogAction.RateTheApp
-                    else -> { HelpDialogAction.EmptyAction  }
-                }
+            link.url == "#create_ticket" -> HelpDialogAction.ReportProblem
+            link.url == "#teacher_feedback" -> HelpDialogAction.AskInstructor
+            link.url == "#share_the_love" -> HelpDialogAction.RateTheApp
             // External URL, but we handle within the app
-            link.id.contains("submit_feature_idea") -> HelpDialogAction.SubmitFeatureIdea
-            link.url.startsWith("tel:")-> HelpDialogAction.Phone(link.url)
+            link.id.contains("submit_feature_idea") -> createSubmitFeatureIdea()
+            link.url.startsWith("tel:") -> HelpDialogAction.Phone(link.url)
             link.url.startsWith("mailto:") -> HelpDialogAction.SendMail(link.url)
             link.url.contains("cases.canvaslms.com/liveagentchat") -> HelpDialogAction.OpenExternalBrowser(link.url)
             // External URL
             else -> HelpDialogAction.OpenWebView(link.url, link.text)
         }
+    }
+
+    private fun createSubmitFeatureIdea(): HelpDialogAction.SubmitFeatureIdea {
+        val recipient = context.getString(R.string.utils_mobileSupportEmailAddress)
+
+        // Try to get the version number and version code
+        val packageInfo = packageInfoProvider.getPackageInfo()
+        val versionName = packageInfo?.versionName
+        val versionCode = packageInfo?.versionCode
+
+        val subject = "[${context.getString(R.string.featureSubject)}] Issue with Canvas [Android] $versionName"
+
+        val installDateString = if (packageInfo != null) {
+            DateHelper.dayMonthYearFormat.format(Date(packageInfo.firstInstallTime))
+        } else {
+            ""
+        }
+
+        val user = apiPrefs.user
+        // Populate the email body with information about the user
+        var emailBody = ""
+        emailBody += context.getString(R.string.understandRequest) + "\n"
+        emailBody += context.getString(R.string.help_userId) + " " + user?.id + "\n"
+        emailBody += context.getString(R.string.help_email) + " " + user?.email + "\n"
+        emailBody += context.getString(R.string.help_domain) + " " + apiPrefs.domain + "\n"
+        emailBody += context.getString(R.string.help_versionNum) + " " + versionName + " " + versionCode + "\n"
+        emailBody += context.getString(R.string.help_locale) + " " + Locale.getDefault() + "\n"
+        emailBody += context.getString(R.string.installDate) + " " + installDateString + "\n"
+        emailBody += "----------------------------------------------\n"
+
+        return HelpDialogAction.SubmitFeatureIdea(recipient, subject, emailBody)
     }
 
     fun onLinkClicked(action: HelpDialogAction) {

@@ -14,15 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.di
 
-sealed class HelpDialogAction {
-    object ReportProblem : HelpDialogAction()
-    object AskInstructor : HelpDialogAction()
-    object RateTheApp : HelpDialogAction()
-    class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
-    class Phone(val url: String) : HelpDialogAction()
-    class SendMail(val url: String) : HelpDialogAction()
-    class OpenExternalBrowser(val url: String) : HelpDialogAction()
-    class OpenWebView(val url: String, val title: String) : HelpDialogAction()
+import android.content.Context
+import com.instructure.pandautils.utils.PackageInfoProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+
+@Module
+@InstallIn(SingletonComponent::class)
+class PlatformInteractionsModule {
+
+    @Provides
+    fun providePackageInfoProvider(@ApplicationContext context: Context): PackageInfoProvider {
+        return PackageInfoProvider(context)
+    }
 }
