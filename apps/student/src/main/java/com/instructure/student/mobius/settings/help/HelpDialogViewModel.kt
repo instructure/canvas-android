@@ -19,24 +19,20 @@ package com.instructure.student.mobius.settings.help
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.HelpLinksManager
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.HelpLink
-import com.instructure.canvasapi2.models.HelpLinks
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.PackageInfoProvider
 import com.instructure.student.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -48,8 +44,6 @@ class HelpDialogViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val packageInfoProvider: PackageInfoProvider) : ViewModel() {
 
-    private var helpLinksJob: Job? = null
-
     val state = MutableLiveData<ViewState>()
     val data = MutableLiveData<HelpDialogViewData>()
     val events = MutableLiveData<Event<HelpDialogAction>>()
@@ -59,24 +53,27 @@ class HelpDialogViewModel @Inject constructor(
     }
 
     private fun loadHelpLinks() {
-        helpLinksJob = tryWeave {
+        viewModelScope.launch {
             state.postValue(ViewState.Loading)
 
-            val helpLinks = awaitApi<HelpLinks> { helpLinksManager.getHelpLinks(it, true) }
+            try {
+                val helpLinks = helpLinksManager.getHelpLinksAsync(true).await()
+                    .dataOrThrow
 
-            val helpLinksViewData = if (helpLinks.customHelpLinks.isNotEmpty()) {
-                // We have custom links, let's use those
-                createLinks(helpLinks.customHelpLinks)
-            } else {
-                // Default links
-                createLinks(helpLinks.defaultHelpLinks)
+                val helpLinksViewData = if (helpLinks.customHelpLinks.isNotEmpty()) {
+                    // We have custom links, let's use those
+                    createLinks(helpLinks.customHelpLinks)
+                } else {
+                    // Default links
+                    createLinks(helpLinks.defaultHelpLinks)
+                }
+
+                data.postValue(HelpDialogViewData(helpLinksViewData))
+                state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                state.postValue(ViewState.Error(e.message ?: ""))
+                Logger.d("Failed to grab help links: ${e.printStackTrace()}")
             }
-
-            state.postValue(ViewState.Success)
-            data.postValue(HelpDialogViewData(helpLinksViewData))
-
-        } catch {
-            Logger.d("Failed to grab help links: ${it.printStackTrace()}")
         }
     }
 
@@ -84,13 +81,17 @@ class HelpDialogViewModel @Inject constructor(
     private suspend fun createLinks(list: List<HelpLink>): List<HelpLinkSubViewModel> {
 
         // Share love link is specific to Android - Add it to the list returned from the API
-        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), "#share_the_love", HelpDialogAction.RateTheApp)
+        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), "", HelpDialogAction.RateTheApp)
+
+        val favoriteCourses = courseManager.getAllFavoriteCoursesAsync(false).await()
+            .dataOrThrow
 
         return list
             // Only want links for students
             .filter { link ->
                 (link.availableTo.contains("student") || link.availableTo.contains("user"))
-                    && (link.url != "#teacher_feedback" || awaitApi<List<Course>> { courseManager.getAllFavoriteCourses(false, it) }.filter { !it.isTeacher }.count() > 0) }
+                    && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0)
+            }
             .map { HelpLinkSubViewModel(HelpLinkViewData(it.text, it.subtext, it.url, mapAction(it)), this) }
             .plus(HelpLinkSubViewModel(rateLink, this))
     }
@@ -100,7 +101,6 @@ class HelpDialogViewModel @Inject constructor(
             // Internal routes
             link.url == "#create_ticket" -> HelpDialogAction.ReportProblem
             link.url == "#teacher_feedback" -> HelpDialogAction.AskInstructor
-            link.url == "#share_the_love" -> HelpDialogAction.RateTheApp
             // External URL, but we handle within the app
             link.id.contains("submit_feature_idea") -> createSubmitFeatureIdea()
             link.url.startsWith("tel:") -> HelpDialogAction.Phone(link.url)
@@ -144,10 +144,5 @@ class HelpDialogViewModel @Inject constructor(
 
     fun onLinkClicked(action: HelpDialogAction) {
         events.value = Event(action)
-    }
-
-    override fun onCleared() {
-        helpLinksJob?.cancel()
-        super.onCleared()
     }
 }
