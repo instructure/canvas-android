@@ -17,11 +17,13 @@
 package com.instructure.student.mobius.settings.help
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.HelpLinksManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
@@ -44,9 +46,17 @@ class HelpDialogViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val packageInfoProvider: PackageInfoProvider) : ViewModel() {
 
-    val state = MutableLiveData<ViewState>()
-    val data = MutableLiveData<HelpDialogViewData>()
-    val events = MutableLiveData<Event<HelpDialogAction>>()
+    val state: LiveData<ViewState>
+        get() = _state
+    private val _state = MutableLiveData<ViewState>()
+
+    val data: LiveData<HelpDialogViewData>
+        get() = _data
+    private val _data = MutableLiveData<HelpDialogViewData>()
+
+    val events: LiveData<Event<HelpDialogAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<HelpDialogAction>>()
 
     init {
         loadHelpLinks()
@@ -54,7 +64,7 @@ class HelpDialogViewModel @Inject constructor(
 
     private fun loadHelpLinks() {
         viewModelScope.launch {
-            state.postValue(ViewState.Loading)
+            _state.postValue(ViewState.Loading)
 
             try {
                 val helpLinks = helpLinksManager.getHelpLinksAsync(true).await()
@@ -68,10 +78,10 @@ class HelpDialogViewModel @Inject constructor(
                     createLinks(helpLinks.defaultHelpLinks)
                 }
 
-                data.postValue(HelpDialogViewData(helpLinksViewData))
-                state.postValue(ViewState.Success)
+                _data.postValue(HelpDialogViewData(helpLinksViewData))
+                _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                state.postValue(ViewState.Error(e.message ?: ""))
+                _state.postValue(ViewState.Error(e.message ?: ""))
                 Logger.d("Failed to grab help links: ${e.printStackTrace()}")
             }
         }
@@ -88,12 +98,14 @@ class HelpDialogViewModel @Inject constructor(
 
         return list
             // Only want links for students
-            .filter { link ->
-                (link.availableTo.contains("student") || link.availableTo.contains("user"))
-                    && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0)
-            }
+            .filter { filterLinks(it, favoriteCourses) }
             .map { HelpLinkSubViewModel(HelpLinkViewData(it.text, it.subtext, it.url, mapAction(it)), this) }
             .plus(HelpLinkSubViewModel(rateLink, this))
+    }
+
+    private fun filterLinks(link: HelpLink, favoriteCourses: List<Course>): Boolean {
+        return ((link.availableTo.contains("student") || link.availableTo.contains("user"))
+            && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0))
     }
 
     private fun mapAction(link: HelpLink): HelpDialogAction {
@@ -143,6 +155,6 @@ class HelpDialogViewModel @Inject constructor(
     }
 
     fun onLinkClicked(action: HelpDialogAction) {
-        events.value = Event(action)
+        _events.value = Event(action)
     }
 }

@@ -133,7 +133,7 @@ class HelpDialogFragment : DialogFragment() {
     }
 
     companion object {
-        const val TAG = "helpDialog"
+        private const val TAG = "helpDialog"
 
         fun show(activity: FragmentActivity): HelpDialogFragment =
             HelpDialogFragment().apply {
