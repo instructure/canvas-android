@@ -61,6 +61,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
+import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
@@ -69,6 +70,7 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
+import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.events.*
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
@@ -91,7 +93,8 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
+        ErrorReportDialog.ErrorReportDialogResultListener {
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -118,6 +121,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             closeNavigationDrawer()
             delay(250)
             when (v.id) {
+                R.id.navigationDrawerItem_help -> {
+                    HelpDialogStyled.show(this@NavigationActivity)
+                }
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
@@ -383,6 +389,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerItem_help.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_startMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -982,6 +989,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             animation.playAnimation()
         }
+    }
+
+    override fun onTicketPost() {
+        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
+        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onTicketError() {
+        toast(R.string.errorOccurred)
     }
 
     companion object {

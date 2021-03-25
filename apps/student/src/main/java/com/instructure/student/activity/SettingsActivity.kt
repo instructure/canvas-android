@@ -26,7 +26,7 @@ import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 
-class SettingsActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener{
+class SettingsActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,15 +41,6 @@ class SettingsActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialo
         ft.add(R.id.fragmentContainer, fragment, fragment.javaClass.name)
         ft.addToBackStack(fragment.javaClass.name)
         ft.commitAllowingStateLoss()
-    }
-
-    override fun onTicketPost() {
-        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
-        Toast.makeText(this@SettingsActivity, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onTicketError() {
-        toast(R.string.errorOccurred)
     }
 
     companion object {

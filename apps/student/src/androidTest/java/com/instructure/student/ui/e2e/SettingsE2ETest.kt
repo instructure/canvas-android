@@ -54,8 +54,6 @@ class SettingsE2ETest : StudentTest() {
         legalPage.assertPageObjects()
         Espresso.pressBack() // Exit legal page
 
-        settingsPage.launchHelpPage()
-
         // May be brittle.  See comments in HelpPage.kt.
         helpPage.assertPageObjects()
     }
