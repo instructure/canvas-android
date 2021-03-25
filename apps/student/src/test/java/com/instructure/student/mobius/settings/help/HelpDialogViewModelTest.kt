@@ -37,16 +37,17 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import org.junit.Assert
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.util.concurrent.Executors
 
+@ExperimentalCoroutinesApi
 class HelpDialogViewModelTest {
 
     @get:Rule
@@ -63,11 +64,18 @@ class HelpDialogViewModelTest {
 
     private lateinit var viewModel: HelpDialogViewModel
 
-    @ExperimentalCoroutinesApi
+    private val testDispatcher = TestCoroutineDispatcher()
+
     @Before
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
