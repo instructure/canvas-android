@@ -14,8 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.mvvm
+package com.instructure.student.mobius.settings.help
 
-interface SubViewModel {
-    val layoutId: Int
+import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.student.R
+
+class HelpLinkItemViewModel(val helpLinkViewData: HelpLinkViewData, private val onClick: (HelpDialogAction) -> (Unit)) : ItemViewModel {
+
+    override val layoutId: Int = R.layout.view_help_link
+
+    fun onClick() {
+        onClick(helpLinkViewData.action)
+    }
 }

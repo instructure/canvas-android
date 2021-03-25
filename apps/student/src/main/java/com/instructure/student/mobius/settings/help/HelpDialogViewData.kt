@@ -16,13 +16,17 @@
  */
 package com.instructure.student.mobius.settings.help
 
+data class HelpDialogViewData(val helpLinks: List<HelpLinkItemViewModel>)
+
+data class HelpLinkViewData(val title: String, val subtitle: String, val action: HelpDialogAction)
+
 sealed class HelpDialogAction {
     object ReportProblem : HelpDialogAction()
     object AskInstructor : HelpDialogAction()
     object RateTheApp : HelpDialogAction()
-    class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
-    class Phone(val url: String) : HelpDialogAction()
-    class SendMail(val url: String) : HelpDialogAction()
-    class OpenExternalBrowser(val url: String) : HelpDialogAction()
-    class OpenWebView(val url: String, val title: String) : HelpDialogAction()
+    data class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
+    data class Phone(val url: String) : HelpDialogAction()
+    data class SendMail(val url: String) : HelpDialogAction()
+    data class OpenExternalBrowser(val url: String) : HelpDialogAction()
+    data class OpenWebView(val url: String, val title: String) : HelpDialogAction()
 }

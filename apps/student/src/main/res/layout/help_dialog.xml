@@ -44,7 +44,7 @@
                 android:paddingStart="24dp"
                 android:paddingTop="18dp"
                 android:paddingBottom="24dp"
-                app:subViewModels="@{viewModel.data.helpLinks}" />
+                app:itemViewModels="@{viewModel.data.helpLinks}" />
         </ScrollView>
 
         <com.instructure.student.view.EmptyView

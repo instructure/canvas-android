@@ -88,10 +88,10 @@ class HelpDialogViewModel @Inject constructor(
     }
 
     // Maps links to views and then adds them to the container
-    private suspend fun createLinks(list: List<HelpLink>): List<HelpLinkSubViewModel> {
+    private suspend fun createLinks(list: List<HelpLink>): List<HelpLinkItemViewModel> {
 
         // Share love link is specific to Android - Add it to the list returned from the API
-        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), "", HelpDialogAction.RateTheApp)
+        val rateLink = HelpLinkViewData(context.getString(R.string.shareYourLove), context.getString(R.string.shareYourLoveDetails), HelpDialogAction.RateTheApp)
 
         val favoriteCourses = courseManager.getAllFavoriteCoursesAsync(false).await()
             .dataOrThrow
@@ -99,8 +99,8 @@ class HelpDialogViewModel @Inject constructor(
         return list
             // Only want links for students
             .filter { filterLinks(it, favoriteCourses) }
-            .map { HelpLinkSubViewModel(HelpLinkViewData(it.text, it.subtext, it.url, mapAction(it)), this) }
-            .plus(HelpLinkSubViewModel(rateLink, this))
+            .map { HelpLinkItemViewModel(HelpLinkViewData(it.text, it.subtext, mapAction(it)), ::onLinkClicked) }
+            .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
 
     private fun filterLinks(link: HelpLink, favoriteCourses: List<Course>): Boolean {
@@ -154,7 +154,7 @@ class HelpDialogViewModel @Inject constructor(
         return HelpDialogAction.SubmitFeatureIdea(recipient, subject, emailBody)
     }
 
-    fun onLinkClicked(action: HelpDialogAction) {
+    private fun onLinkClicked(action: HelpDialogAction) {
         _events.value = Event(action)
     }
 }

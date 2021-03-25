@@ -20,8 +20,8 @@
 
     <data>
         <variable
-            name="subViewModel"
-            type="com.instructure.student.mobius.settings.help.HelpLinkSubViewModel" />
+            name="itemViewModel"
+            type="com.instructure.student.mobius.settings.help.HelpLinkItemViewModel" />
     </data>
 
     <LinearLayout
@@ -33,7 +33,7 @@
         android:orientation="vertical"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:onClick="@{() -> subViewModel.onClick()}">
+        android:onClick="@{() -> itemViewModel.onClick()}">
 
         <TextView
             android:id="@+id/title"
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/defaultTextDark"
-            android:text="@{subViewModel.helpLinkViewData.title}"
+            android:text="@{itemViewModel.helpLinkViewData.title}"
             tools:text="@string/reportProblem" />
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/defaultTextGray"
             android:textStyle="italic"
-            android:text="@{subViewModel.helpLinkViewData.subtitle}"
+            android:text="@{itemViewModel.helpLinkViewData.subtitle}"
             tools:text="@string/reportProblemDetails" />
     </LinearLayout>
 </layout>
