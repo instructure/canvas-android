@@ -599,16 +599,19 @@ class SubmissionContentView(
                         SlidingUpPanelLayout.PanelState.ANCHORED -> {
                             submissionVersionsButton?.isClickable = true
                             postPanelEvent(newState, 0.5f)
+                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                         }
                         SlidingUpPanelLayout.PanelState.EXPANDED -> {
                             submissionVersionsButton?.isClickable = false
                             postPanelEvent(newState, 1.0f)
+                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS
                         }
                         SlidingUpPanelLayout.PanelState.COLLAPSED -> {
                                 submissionVersionsButton?.isClickable = true
                             //fix for rotating when the panel is collapsed
                             pdfFragment?.notifyLayoutChanged()
                             postPanelEvent(newState, 0.0f)
+                            contentRoot.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
                         }
                     }
                 }

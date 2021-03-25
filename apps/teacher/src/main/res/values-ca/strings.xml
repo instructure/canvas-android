@@ -886,4 +886,16 @@
     <string name="gauge">Mesura</string>
     <string name="ltiLaunchFailure">En aquest moment, no s\'ha pogut carregar aquesta eina LTI (interoperabilitat d\'eines d\'aprenentatge).</string>
     <string name="downloading">S\'està baixant&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">S\'ha actualitzat correctament el temari.</string>
+    <string name="errorSavingSyllabus">S\'ha produït un error en provar de desar el temari. Torneu-ho a provar.</string>
+    <string name="editSyllabusTitle">Edita el temari</string>
+    <string name="editSyllabusContent">Contingut</string>
+    <string name="editSyllabusDetails">Detalls</string>
+    <string name="editSyllabusShowCourseSummary">Mostra el resum del curs</string>
+    <string name="editSyllabusContentAccessibilityLabel">Contingut del temari</string>
+
+    <string name="no_grade">Cap qualificació</string>
+    <string name="excuse">Excusa</string>
+    <string name="speed_grader_overgraded_by">Sobrequalificat per %s</string>
 </resources>

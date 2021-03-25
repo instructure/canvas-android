@@ -1081,7 +1081,7 @@
     "type": "text",
     "placeholders": {}
   },
-  "Incomplete": "Ej fullständig",
+  "Incomplete": "ofullständig",
   "@Incomplete": {
     "description": "Grading status for an assignment marked as incomplete",
     "type": "text",

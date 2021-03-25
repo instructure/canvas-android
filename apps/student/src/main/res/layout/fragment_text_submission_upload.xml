@@ -52,6 +52,8 @@
         android:id="@+id/rce"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:focusable="true"
+        android:contentDescription="@string/a11y_textSubmissionEditor"
         app:rce_editor_padding="12dp"/>
 
 </LinearLayout>

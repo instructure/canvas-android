@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Rapporter et problem</string>
     <string name="errorReportSubject">Emne</string>
     <string name="errorReportDescription">Beskrivelse</string>
-    <string name="errorReportWriteSomething">Skriv noget...</string>
     <string name="errorReportSend">Send</string>
     <string name="errorReportThankyou">Tak, fordi du rapporterede dit problem til vores supportteam.  Du modtager bekræftelse og opdateringer via e-mail.</string>
     <string name="errorReportSeverityText">Hvordan påvirker det dig?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Jeg kan ikke få tingene gjort, før jeg hører fra dig.</string>
     <string name="errorSeverityExtremelyCritical">EKSTREMT KRITISK NØDSTILFÆLDE!!</string>
     <string name="errorReportEmailAddress">E-mail-adresse</string>
-    <string name="errorReportEnterEmail">Indtast din e-mailadresse...</string>
     <string name="errorReportUnknown">Ukendt</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 mil (1,6 km)</string>

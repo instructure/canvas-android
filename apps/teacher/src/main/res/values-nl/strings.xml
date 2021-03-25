@@ -885,4 +885,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Deze LTI-tool kan op dit moment niet worden geladen.</string>
     <string name="downloading">Downloaden...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Syllabus succesvol bijgewerkt.</string>
+    <string name="errorSavingSyllabus">Er is een fout opgetreden bij het opslaan van de syllabus. Probeer het nog eens.</string>
+    <string name="editSyllabusTitle">Syllabus bewerken</string>
+    <string name="editSyllabusContent">Inhoud</string>
+    <string name="editSyllabusDetails">Details</string>
+    <string name="editSyllabusShowCourseSummary">Cursusoverzicht tonen</string>
+    <string name="editSyllabusContentAccessibilityLabel">Syllabusinhoud</string>
+
+    <string name="no_grade">Geen cijfer</string>
+    <string name="excuse">Vrijstellen</string>
+    <string name="speed_grader_overgraded_by">Te hoog beoordeeld door %s</string>
 </resources>

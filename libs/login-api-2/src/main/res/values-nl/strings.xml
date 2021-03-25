@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Een probleem melden</string>
     <string name="errorReportSubject">Vak</string>
     <string name="errorReportDescription">Beschrijving</string>
-    <string name="errorReportWriteSomething">Schrijf iets...</string>
     <string name="errorReportSend">Versturen</string>
     <string name="errorReportThankyou">Bedankt dat je dit probleem bij onze helpdesk hebt gemeld.  Je ontvangt een bevestiging en updates per e-mail.</string>
     <string name="errorReportSeverityText">Wat voor gevolgen heeft dit voor jou?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Er is een probleem, ik kan niets doen zonder antwoord van jullie.</string>
     <string name="errorSeverityExtremelyCritical">ER IS EEN PROBLEEM, GRAAG DRINGEND HULP!</string>
     <string name="errorReportEmailAddress">E-mailadres</string>
-    <string name="errorReportEnterEmail">Voer je e-mailadres in...</string>
     <string name="errorReportUnknown">Onbekend</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 mijl (1,6 km)</string>

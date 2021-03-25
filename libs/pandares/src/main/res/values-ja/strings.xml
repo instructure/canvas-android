@@ -45,6 +45,7 @@
     <string name="submissionStatusFailedTitle">提出に失敗しました</string>
     <string name="submissionStatusFailedSubtitle">タップして詳細を表示する</string>
     <string name="submissionAndRubric">提出 &amp; ルブリック</string>
+    <string name="commentsAndRubric">コメント &amp; ルブリック</string>
     <string name="errorLoadingAssignment">この課題の読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
     <string name="submitted">タスクの成績を送信</string>
     <string name="notSubmitted">未提出</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">あなたの課題はモジュールによりロックされます \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">あなたの課題はモジュール要件によりロックされます</string>
     <string name="submissionDetailsAssignmentLocked">課題ロック</string>
+    <string name="submissionDetailsNoSubmissionAllowed">提出が許可されていません</string>
     <string name="webPreview">入力した URL のプレビュー</string>
     <string name="websiteUrl">ウェブサイト URL</string>
     <string name="noneContentMessage">この課題はオンライン提出ができません</string>
@@ -100,6 +102,7 @@
     <string name="noOnlineSubmissions">オンライン提出がありません</string>
     <string name="speedGraderExternalToolMessage">この課題は、提出用の外部ツールにリンクします。</string>
     <string name="openTool">オープンツール</string>
+    <string name="a11y_submissionText">テキストを提出する</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">/%s 点</string>
     <string name="outOfPointsAbbreviatedFormatted">/%s 点</string>
@@ -189,6 +192,17 @@
     <string name="noAssignmentsInGroup">このグループには課題はありません</string>
     <string name="excusedAssignment">この課題は免除され、合計計算では考慮されません</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">並べ替え基準</string>
+    <string name="sortByDialogTimeOption">時間</string>
+    <string name="sortByDialogTypeOption">タイプ</string>
+    <string name="sortByTime">時間ごとに並び替える</string>
+    <string name="sortByType">タイプごとに並び替える</string>
+    <string name="sortByDialogCancel">キャンセル</string>
+    <string name="assignmentsListAllGradingPeriods">すべて</string>
+    <string name="a11y_sortByTimeButton">課題の並べ替えボタン、時間ごとに並べ替え</string>
+    <string name="a11y_sortByTypeButton">課題の並べ替えボタン、タイプごとに並べ替え</string>
+    <string name="a11y_assignmentsSortedByTime">時間ごとに並べ替えされた課題</string>
+    <string name="a11y_assignmentsSortedByType">タイプごとに並べ替えされた課題</string>
     <!-- Assignment editing -->
     <string name="points">ポイント\u0020</string>
     <string name="save">保存</string>
@@ -247,6 +261,7 @@
     <string name="createFolder">フォルダを作成する</string>
     <string name="createAFile">ファイルを作成する</string>
     <string name="createFileFolderFabContentDesc">ファイルの作成オタンとフォルダの作成ボタンを表示する</string>
+    <string name="hideCreateFileFolderFabContentDesc">ファイルの作成とフォルダの作成ボタンを非表示にする</string>
     <string name="folderCreationError">フォルダー作成中にエラーが起こりました。</string>
     <string name="rename">名前変更</string>
     <string name="renameFile">ファイルの名前をつけかえる</string>
@@ -1093,4 +1108,9 @@
     <string name="conferenceDetails">会議の詳細</string>
     <string name="recordings">録画</string>
     <string name="conferenceInProgress">会議進行中</string>
+    <string name="a11y_criterion_content_description">基準の評価 %s</string>
+    <string name="a11y_criterion_description_content_description">%s、%s</string>
+    <string name="a11y_criterion_button_click_description">詳細はこちら</string>
+    <string name="a11y_create_file_folder_visible">表示されるファイルとフォルダの作成ボタン</string>
+    <string name="a11y_create_file_folder_gone">非表示のファイルとフォルダの作成ボタン</string>
 </resources>

@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Soumisyon Echwe</string>
     <string name="submissionStatusFailedSubtitle">Tape pou afiche detay</string>
     <string name="submissionAndRubric">Soumisyon &amp; Ribrik</string>
+    <string name="commentsAndRubric">Kòmantè &amp; Ribrik</string>
     <string name="errorLoadingAssignment">Te gen yon pwobl pouchaje devwa sa a. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
     <string name="submitted">Soumèt</string>
     <string name="notSubmitted">Pa Soumèt</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Devwa w la bloke pa modil \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Devwa w la bloke pa yon egzijans modil </string>
     <string name="submissionDetailsAssignmentLocked">Sesyon Bloke</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Okenn Soumisyon pa Otorize</string>
     <string name="webPreview">Apèsi URL ki antre a</string>
     <string name="websiteUrl">URL sit Web</string>
     <string name="noneContentMessage">Devwa sa a pa otorize soumisyon an liy.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Pa Gen Soumisyon an Liy</string>
     <string name="speedGraderExternalToolMessage">Sesyon sa a relye a yon zouti ekstèn pou soumisyon.</string>
     <string name="openTool">Ouvri Zouti</string>
+    <string name="a11y_submissionText">Tèks soumisyon</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sou %s pwen</string>
     <string name="outOfPointsAbbreviatedFormatted">Sou %s pts</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Pa gen Sesyon nan gwoup sa a</string>
     <string name="excusedAssignment">Yo egzante sesyon sa a ni yo pa p konsidere li nan kalkil total la.</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Klase pa</string>
+    <string name="sortByDialogTimeOption">Tan</string>
+    <string name="sortByDialogTypeOption">Tip</string>
+    <string name="sortByTime">Triye pa Lè</string>
+    <string name="sortByType">Triye pa Tip</string>
+    <string name="sortByDialogCancel">Anile</string>
+    <string name="assignmentsListAllGradingPeriods">Tout</string>
+    <string name="a11y_sortByTimeButton">Bouton pou triye devwa yo, triye pa lè</string>
+    <string name="a11y_sortByTypeButton">Bouton pou triye devwa yo, triye pa tip</string>
+    <string name="a11y_assignmentsSortedByTime">Devwa triye pa lè</string>
+    <string name="a11y_assignmentsSortedByType">Devwa triye pa tip</string>
     <!-- Assignment editing -->
     <string name="points">Pwen\u0020</string>
     <string name="save">Anrejistre</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Kreye Dosye</string>
     <string name="createAFile">Kreye yon Fichye</string>
     <string name="createFileFolderFabContentDesc">Afiche Bouton Kreye Fichye epi Kreye Dosye</string>
+    <string name="hideCreateFileFolderFabContentDesc">Kache Bouton Kreye Fichye ak Kreye Dosye a</string>
     <string name="folderCreationError">Gen yon erè ki fèt pandan kreyasyon dosye a.</string>
     <string name="rename">Chanje non</string>
     <string name="renameFile">Chanje non fichye</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Detay Konferans</string>
     <string name="recordings">Anrejistreman</string>
     <string name="conferenceInProgress">Konferans ap fèt</string>
+    <string name="a11y_criterion_content_description">Evalyasyon kritè %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">plis enfòmasyon</string>
+    <string name="a11y_create_file_folder_visible">Bouton Kreye Fichye ak Dosye yo vizib</string>
+    <string name="a11y_create_file_folder_gone">Bouton Kreye Fichye ak Dosye yo envizib</string>
 </resources>

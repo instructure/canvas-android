@@ -28,6 +28,7 @@ import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.android.FlutterView
 import io.flutter.embedding.android.RenderMode
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import java.util.*
 
@@ -128,14 +129,17 @@ class CalendarScreenChannel {
 
     var onOpenDrawer: (() -> Unit)? = null
 
+    var onShowDialog: ((call: MethodCall, result: MethodChannel.Result) -> Unit)? = null
+
     init {
-        channel.setMethodCallHandler { call, _ ->
+        channel.setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
             when (call.method) {
                 "openDrawer" -> onOpenDrawer?.invoke()
                 "routeToItem" -> {
                     val item = Gson().fromJson(call.arguments as String, PlannerItem::class.java)
                     onRouteToItem?.invoke(item)
                 }
+                "showDialog" -> onShowDialog?.invoke(call, result)
             }
         }
     }

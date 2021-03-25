@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Échec de l’envoi</string>
     <string name="submissionStatusFailedSubtitle">Tapez sur pour afficher les détails</string>
     <string name="submissionAndRubric">Soumission &amp; Rubrique</string>
+    <string name="commentsAndRubric">Commentaires et rubrique</string>
     <string name="errorLoadingAssignment">Un problème est survenu lors du chargement de ce travail. Veuillez vérifier votre et réessayer.</string>
     <string name="submitted">Soumis</string>
     <string name="notSubmitted">Non soumis</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Votre travail est verrouillé par le module \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Votre travail est verrouillé par un prérequis de module</string>
     <string name="submissionDetailsAssignmentLocked">Devoir verrouillé</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Aucune soumission autorisée</string>
     <string name="webPreview">Aperçu de l’URL saisie</string>
     <string name="websiteUrl">URL du site web</string>
     <string name="noneContentMessage">Ce travail ne permet pas les envois en ligne.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Aucune soumission en ligne</string>
     <string name="speedGraderExternalToolMessage">Cette tâche renvoie à un outil externe pour les envois.</string>
     <string name="openTool">Ouvrir outil</string>
+    <string name="a11y_submissionText">Texte de la soumission</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Sur %s points</string>
     <string name="outOfPointsAbbreviatedFormatted">Sur %s pts</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Aucun devoir dans ce groupe</string>
     <string name="excusedAssignment">Ce devoir est excusé ; il ne sera pas compté dans le calcul total</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Ranger par</string>
+    <string name="sortByDialogTimeOption">Temps</string>
+    <string name="sortByDialogTypeOption">Type</string>
+    <string name="sortByTime">Trier par heure</string>
+    <string name="sortByType">Trier par type</string>
+    <string name="sortByDialogCancel">Annuler</string>
+    <string name="assignmentsListAllGradingPeriods">Tous</string>
+    <string name="a11y_sortByTimeButton">Bouton de tri des travaux, tri par heure</string>
+    <string name="a11y_sortByTypeButton">Bouton de tri des travaux, tri par type</string>
+    <string name="a11y_assignmentsSortedByTime">Travaux triés par heure</string>
+    <string name="a11y_assignmentsSortedByType">Travaux triés par type</string>
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
     <string name="save">Enregistrer</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Créer un dossier</string>
     <string name="createAFile">Créer un fichier</string>
     <string name="createFileFolderFabContentDesc">Afficher les boutons « Créer un fichier » et « Créer un dossier »</string>
+    <string name="hideCreateFileFolderFabContentDesc">Masquer les boutons Créer un fichier et Créer un dossier</string>
     <string name="folderCreationError">Une erreur est survenue durant la création du dossier.</string>
     <string name="rename">Renommer</string>
     <string name="renameFile">Renommer le fichier</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Détails de la conférence</string>
     <string name="recordings">Enregistrements</string>
     <string name="conferenceInProgress">Conférence en cours</string>
+    <string name="a11y_criterion_content_description">Notes du critère %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">Plus d\'informations</string>
+    <string name="a11y_create_file_folder_visible">Boutons de création de fichier et de répertoire visibles</string>
+    <string name="a11y_create_file_folder_gone">Boutons de création de fichier et de répertoire invisibles</string>
 </resources>

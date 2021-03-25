@@ -48,6 +48,7 @@
     <string name="submissionStatusFailedTitle">Ошибка отправки</string>
     <string name="submissionStatusFailedSubtitle">Нажмите для просмотра подробностей</string>
     <string name="submissionAndRubric">Предоставление и рубрика</string>
+    <string name="commentsAndRubric">Комментарии и рубрика</string>
     <string name="errorLoadingAssignment">Возникла проблема при загрузке данного задания. Проверьте подключение и попробуйте еще раз.</string>
     <string name="submitted">Отправлено</string>
     <string name="notSubmitted">Не отправлено</string>
@@ -95,6 +96,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Ваше задание заблокировано модулем \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Ваше задание заблокировано требованием модуля</string>
     <string name="submissionDetailsAssignmentLocked">Задание заблокировано</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Отправка не разрешена</string>
     <string name="webPreview">Предпросмотр введенного URL-адреса</string>
     <string name="websiteUrl">Адрес веб-сайта</string>
     <string name="noneContentMessage">Это задание не допускает отправку данных онлайн</string>
@@ -103,6 +105,7 @@
 
     <string name="speedGraderExternalToolMessage">Это задание содержит ссылку на внешний инструмент для отправки.</string>
     <string name="openTool">Открыть инструмент</string>
+    <string name="a11y_submissionText">Текст для отправки</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Из %s баллов</string>
     <string name="outOfPointsAbbreviatedFormatted">Из %s баллов</string>
@@ -198,6 +201,17 @@
     <string name="excusedAssignment">Данное задание не обязательно и не будет учитываться в общем подсчете</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Сортировать по</string>
+    <string name="sortByDialogTimeOption">Время</string>
+    <string name="sortByDialogTypeOption">Укажите</string>
+    <string name="sortByTime">Сортировать по времени</string>
+    <string name="sortByType">Сортировать по типу</string>
+    <string name="sortByDialogCancel">Отменить</string>
+    <string name="assignmentsListAllGradingPeriods">Все</string>
+    <string name="a11y_sortByTimeButton">Кнопка «Сортировать задания», сортировка по времени</string>
+    <string name="a11y_sortByTypeButton">Кнопка «Сортировать задания», сортировка по типу</string>
+    <string name="a11y_assignmentsSortedByTime">Задания, отсортированные по времени</string>
+    <string name="a11y_assignmentsSortedByType">Назначения, отсортированные по типу</string>
     <!-- Assignment editing -->
     <string name="points">Баллы\u0020</string>
     <string name="save">Сохранить</string>
@@ -258,6 +272,7 @@
     <string name="createFolder">Создать папку</string>
     <string name="createAFile">Создать файл</string>
     <string name="createFileFolderFabContentDesc">Показать кнопки создания файла и создания папки</string>
+    <string name="hideCreateFileFolderFabContentDesc">Скрыть кнопки «Создать файл» и «Создать папку»</string>
     <string name="folderCreationError">При создании папки произошла ошибка.</string>
     <string name="rename">Переименовать</string>
     <string name="renameFile">Переименовать файл</string>
@@ -1142,4 +1157,9 @@
     <string name="conferenceDetails">Данные веб-конференции</string>
     <string name="recordings">Записи</string>
     <string name="conferenceInProgress">Идет конференция</string>
+    <string name="a11y_criterion_content_description">Оценка критерия %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">дополнительная информация</string>
+    <string name="a11y_create_file_folder_visible">Кнопки Создать файл и папку отображаются</string>
+    <string name="a11y_create_file_folder_gone">Кнопки Создать файл и папку не отображаются</string>
 </resources>
