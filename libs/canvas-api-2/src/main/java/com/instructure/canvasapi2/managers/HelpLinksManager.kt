@@ -27,7 +27,7 @@ class HelpLinksManager(private val helpLinksApi: HelpLinksAPI) {
 
     fun getHelpLinksAsync(forceNetwork: Boolean) = apiAsync<HelpLinks> { getHelpLinks(it, forceNetwork) }
 
-    private fun getHelpLinks(callback: StatusCallback<HelpLinks>, forceNetwork: Boolean) {
+    fun getHelpLinks(callback: StatusCallback<HelpLinks>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         helpLinksApi.getHelpLinks(adapter, params, callback)
