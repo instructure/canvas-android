@@ -42,10 +42,10 @@
                 android:layout_height="wrap_content"
                 android:clipChildren="false"
                 android:clipToPadding="false"
-                android:paddingBottom="12dp"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="24dp">
+                android:paddingStart="20dp"
+                android:paddingTop="24dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="12dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/navigationDrawerProfileImage"
@@ -54,64 +54,57 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:importantForAccessibility="no"
-                    app:civ_circle_background_color="@color/avatarGray"/>
+                    app:civ_circle_background_color="@color/avatarGray" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/navigationDrawerInstitutionImage"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:layout_alignBottom="@+id/navigationDrawerProfileImage"
                     android:layout_alignEnd="@+id/navigationDrawerProfileImage"
-                    android:layout_marginBottom="-4dp"
+                    android:layout_alignBottom="@+id/navigationDrawerProfileImage"
                     android:layout_marginEnd="-12dp"
+                    android:layout_marginBottom="-4dp"
                     android:background="@drawable/navigation_drawer_institution_background"
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
-                    tools:srcCompat="@drawable/ic_canvas_logo_red"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/navigationDrawerSettings"
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginEnd="-8dp"
-                    android:layout_marginTop="-8dp"
-                    android:background="?android:selectableItemBackground"
-                    android:contentDescription="@string/settings"
-                    android:padding="8dp"
-                    app:srcCompat="@drawable/ic_settings"/>
+                    android:visibility="gone"
+                    tools:srcCompat="@drawable/ic_canvas_logo_red" />
 
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/navigationDrawerUserName"
-                style="@style/TextFont.Black"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:textColor="@color/defaultTextDark"
-                android:textSize="24sp"
-                tools:text="Allen Thomas"/>
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="Allen Thomas" />
 
             <TextView
                 android:id="@+id/navigationDrawerUserEmail"
                 style="@style/TextFont"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="24dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingEnd="16dp"
-                android:paddingStart="16dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:textColor="@color/defaultTextGray"
-                android:textSize="16sp"
-                tools:text="allen-thomas187@gmail.com"/>
+                tools:text="allen-thomas187@gmail.com" />
 
             <!--Navigation Items-->
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="24dp"
+                android:background="@color/dividerColor" />
 
 
             <LinearLayout
@@ -121,14 +114,14 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_files"/>
+                    app:srcCompat="@drawable/ic_files" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/files"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -141,14 +134,14 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_arc"/>
+                    app:srcCompat="@drawable/ic_navigation_arc" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/studio"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -161,16 +154,51 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_gauge"/>
+                    app:srcCompat="@drawable/ic_navigation_gauge" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/gauge"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerSettings"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_settings" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings"
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/dividerColor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:text="@string/options"
+                android:textAllCaps="true"
+                android:letterSpacing="0.14"
+                android:layout_marginBottom="16dp"/>
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_colorOverlay"
@@ -184,18 +212,43 @@
                     app:srcCompat="@drawable/ic_courses" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/colorOverlay"
                     android:labelFor="@id/navigationDrawerColorOverlaySwitch"
-                    android:textSize="16sp"/>
+                    android:text="@string/colorOverlay"
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/navigationDrawerColorOverlaySwitch"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/dividerColor" />
+
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_help"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_question_mark" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/help"
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -206,14 +259,14 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_user"/>
+                    app:srcCompat="@drawable/ic_user" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/changeUser"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -224,21 +277,21 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_navigation_logout"/>
+                    app:srcCompat="@drawable/ic_navigation_logout" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/logout"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"/>
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:id="@+id/navigationDrawerItem_startMasquerading"
@@ -249,14 +302,14 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_masquerade"/>
+                    app:srcCompat="@drawable/ic_masquerade" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/actAsUser"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -269,14 +322,14 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     style="@style/NavigationDrawerIcon"
-                    app:srcCompat="@drawable/ic_masquerade"/>
+                    app:srcCompat="@drawable/ic_masquerade" />
 
                 <TextView
-                    style="@style/TextFont.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/stopActAsUser"
-                    android:textSize="16sp"/>
+                    android:textColor="@color/navigationTextColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -285,11 +338,11 @@
                 style="@style/TextFont.Regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
                 android:textColor="@color/defaultTextGray"
-                tools:text="v. 1.2.3"/>
+                tools:text="v. 1.2.3" />
 
         </LinearLayout>
 
