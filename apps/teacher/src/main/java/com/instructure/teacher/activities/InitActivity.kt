@@ -63,6 +63,7 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.dialog.ColorPickerDialog
 import com.instructure.teacher.dialog.EditCourseNicknameDialog
+import com.instructure.teacher.dialog.HelpDialogStyled
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
@@ -246,6 +247,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                     )
                     RouteMatcher.route(this@InitActivity, Route(LtiLaunchFragment::class.java, canvasContext, route))
                 }
+                R.id.navigationDrawerItem_help -> HelpDialogStyled.show(this@InitActivity)
                 R.id.navigationDrawerItem_changeUser -> TeacherLogoutTask(LogoutTask.Type.SWITCH_USERS).execute()
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@InitActivity)
@@ -277,6 +279,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItem_changeUser.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_logout.setOnClickListener(navDrawerOnClick)
         navigationDrawerSettings.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItem_help.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_stopMasquerading.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_startMasquerading.setOnClickListener(navDrawerOnClick)
 
