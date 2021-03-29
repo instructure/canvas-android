@@ -269,9 +269,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     fun attachNavigationDrawer(toolbar: Toolbar) {
-        ColorUtils.colorIt(ThemePrefs.primaryColor, navigationDrawerInstitutionImage.background)
-        navigationDrawerInstitutionImage.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.ic_launcher_foreground)
-
         // Navigation items
         navigationDrawerItem_files.setOnClickListener(navDrawerOnClick)
         navigationDrawerItem_gauge.setOnClickListener(navDrawerOnClick)
