@@ -231,20 +231,6 @@ class NavigationDrawerInteractionTest : StudentTest() {
             // Press the "Submit Feature" button
             helpPage.submitFeature()
 
-//            // Depending on how many activities matched our email intent...
-//            if(matchedChooserActivities > 1) {
-//                // If multiple, just check that the chooser appeared.
-//                Intents.intended(chooserIntentMatcher)
-//            }
-//            else if(matchedChooserActivities == 1){
-//                // If single, check that our email intent was dispatched
-//                Intents.intended(emailIntentMatcher)
-//            }
-//            else {
-//                // If none, there is nothing much to do here
-//                Log.d("submitFeatureIdea","Not matched activities for SEND on device!")
-//            }
-
             // :-( Our production code creates a chooser every time, even if there is only one email app option...
             Intents.intended(chooserIntentMatcher)
         }
