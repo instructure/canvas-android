@@ -37,7 +37,7 @@ class QuizE2ETest: TeacherTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.P0, FeatureCategory.PEOPLE, TestCategory.E2E)
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.E2E)
     fun testQuizE2E() {
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
@@ -85,5 +85,56 @@ class QuizE2ETest: TeacherTest() {
         quizListPage.clickQuiz(quizPublished.quizList[0])
         quizDetailsPage.refresh()
         quizDetailsPage.assertNeedsGrading()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.P0, FeatureCategory.QUIZZES, TestCategory.E2E)
+    fun editQuizE2E() {
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+
+        tokenLogin(teacher)
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openQuizzesTab()
+        quizListPage.assertDisplaysNoQuizzesView()
+
+        val quizPublished = seedQuizzes(
+                courseId = course.id,
+                withDescription = true,
+                dueAt = 3.days.fromNow.iso8601,
+                teacherToken = teacher.token,
+                published = false
+        )
+
+        seedQuizQuestion(
+                courseId = course.id,
+                quizId = quizPublished.quizList[0].id,
+                teacherToken = teacher.token
+        )
+
+        publishQuiz(
+                courseId = course.id,
+                quizId = quizPublished.quizList[0].id,
+                teacherToken = teacher.token
+        )
+
+        quizListPage.refresh()
+        quizListPage.clickQuiz(quizPublished.quizList[0])
+        quizDetailsPage.assertNotSubmitted()
+        quizDetailsPage.assertQuizPublished()
+
+        quizDetailsPage.openEditPage()
+        editQuizDetailsPage.editQuizTitle("This is a new quiz")
+        quizDetailsPage.assertQuizNameChanged("This is a new quiz")
+
+        quizDetailsPage.openEditPage()
+        editQuizDetailsPage.switchPublish()
+        editQuizDetailsPage.saveQuiz()
+        quizDetailsPage.refresh()
+        quizDetailsPage.assertQuizUnpublished()
     }
 }
