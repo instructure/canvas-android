@@ -738,7 +738,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                 .setDefaultColor(ContextCompat.getColor(context, R.color.blueAnnotation))
                 .setDefaultThickness(2f)
-                .setForceDefaults(true)
                 .setZIndexEditingEnabled(false)
                 .build()
 
@@ -755,7 +754,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setDefaultFillColor(ContextCompat.getColor(context, R.color.transparent))
                 .setDefaultBorderStylePreset(BorderStylePreset.SOLID)
                 .setZIndexEditingEnabled(false)
-                .setForceDefaults(true)
                 .build()
         )
         pdfFragment?.annotationConfiguration?.put(
@@ -765,7 +763,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .disableProperty(AnnotationProperty.ANNOTATION_ALPHA)
                 .setDefaultColor(ContextCompat.getColor(context, R.color.yellowHighlightAnnotation))
                 .setZIndexEditingEnabled(false)
-                .setForceDefaults(true)
                 .build()
         )
         pdfFragment?.annotationConfiguration?.put(
@@ -774,7 +771,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setAvailableColors(context.resources.getIntArray(R.array.standardAnnotationColors).toMutableList())
                 .setSupportedProperties(EnumSet.of(AnnotationProperty.COLOR))
                 .setDefaultColor(ContextCompat.getColor(context, R.color.redAnnotation))
-                .setForceDefaults(true)
                 .setZIndexEditingEnabled(false)
                 .build()
         )
@@ -790,7 +786,6 @@ abstract class PdfSubmissionView(context: Context) : FrameLayout(context), Annot
                 .setHorizontalResizingEnabled(false)
                 .setVerticalResizingEnabled(false)
                 .setZIndexEditingEnabled(false)
-                .setForceDefaults(true)
                 .build()
         )
         pdfFragment?.annotationConfiguration?.put(
