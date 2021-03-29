@@ -253,5 +253,6 @@
     <color name="darker_blue">@color/defaultPrimaryDark</color>
 
     <color name="speed_grader_button_text_color">#008EE2</color>
+    <color name="nav_drawer_text_color">#2D3B45</color>
 
 </resources>
