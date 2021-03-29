@@ -871,4 +871,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">現時無法載入此 LTI 工具。</string>
     <string name="downloading">正在下載...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">已成功更新課程大綱。</string>
+    <string name="errorSavingSyllabus">嘗試儲存課程大綱時發生錯誤。請再試一次。</string>
+    <string name="editSyllabusTitle">編輯課程大綱</string>
+    <string name="editSyllabusContent">內容</string>
+    <string name="editSyllabusDetails">詳細資料</string>
+    <string name="editSyllabusShowCourseSummary">顯示課程摘要</string>
+    <string name="editSyllabusContentAccessibilityLabel">課程大綱內容</string>
+
+    <string name="no_grade">無評分</string>
+    <string name="excuse">豁免</string>
+    <string name="speed_grader_overgraded_by">已由%s重寫評分</string>
 </resources>

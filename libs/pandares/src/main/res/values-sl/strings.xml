@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Oddaja ni uspela.</string>
     <string name="submissionStatusFailedSubtitle">Tapnite za ogled podrobnosti</string>
     <string name="submissionAndRubric">Oddaja in ocenjevalni vodnik</string>
+    <string name="commentsAndRubric">Komentarji in ocenjevalni vodnik</string>
     <string name="errorLoadingAssignment">Prišlo je do težave z nalaganjem te naloge. Preverite svojo povezavo in poskusite znova.</string>
     <string name="submitted">Poslano</string>
     <string name="notSubmitted">Ni oddano.</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Vašo nalogo je zaklenil modul \"%1$s\".</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Vašo nalogo je zaklenjena zaradi zahtev modula.</string>
     <string name="submissionDetailsAssignmentLocked">Naloga je zaklenjena</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Oddaje niso dovoljene</string>
     <string name="webPreview">Predogled vnesenega naslova URL</string>
     <string name="websiteUrl">URL spletnega mesta</string>
     <string name="noneContentMessage">Pri tej nalogi spletne oddaje niso dovoljene.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Ni spletnih oddaj</string>
     <string name="speedGraderExternalToolMessage">Ta naloga je za oddaje povezana z zunanjim orodjem.</string>
     <string name="openTool">Odpri orodje</string>
+    <string name="a11y_submissionText">Besedilo oddaje</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Od %s točk</string>
     <string name="outOfPointsAbbreviatedFormatted">Od %s točk</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">V tej skupini ni nalog.</string>
     <string name="excusedAssignment">Ta naloga je opravičena in ne bo upoštevana v končnem izračunu.</string>
     <string name="excused">Opravičeno</string>
+    <string name="sortByDialogTitle">Razvrsti glede na</string>
+    <string name="sortByDialogTimeOption">Čas</string>
+    <string name="sortByDialogTypeOption">Vrsta</string>
+    <string name="sortByTime">Razvrsti po času</string>
+    <string name="sortByType">Razvrsti po vrsti</string>
+    <string name="sortByDialogCancel">Prekliči</string>
+    <string name="assignmentsListAllGradingPeriods">Vse</string>
+    <string name="a11y_sortByTimeButton">Gumb za razvrščanje nalog, razvrščanje po času</string>
+    <string name="a11y_sortByTypeButton">Gumb za razvrščanje nalog, razvrščanje po vrsti</string>
+    <string name="a11y_assignmentsSortedByTime">Naloge, razvrščene po času</string>
+    <string name="a11y_assignmentsSortedByType">Naloge, razvrščene po vrsti</string>
     <!-- Assignment editing -->
     <string name="points">Točke\u0020</string>
     <string name="save">Shrani</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Ustvari mapo</string>
     <string name="createAFile">Ustvari datoteko</string>
     <string name="createFileFolderFabContentDesc">Prikaži gumbe »Ustvari datoteko« in »Ustvari mapo«</string>
+    <string name="hideCreateFileFolderFabContentDesc">Skrij gumba »Ustvari datoteko« in »Ustvari mapo«</string>
     <string name="folderCreationError">Med ustvarjanjem mape je prišlo do napake.</string>
     <string name="rename">Preimenuj</string>
     <string name="renameFile">Preimenuj datoteko</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Podrobnosti o konferenci</string>
     <string name="recordings">Snemanja</string>
     <string name="conferenceInProgress">V teku je konferenca</string>
+    <string name="a11y_criterion_content_description">Ocena merila %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">več informacij</string>
+    <string name="a11y_create_file_folder_visible">Ustvari vidne gumbe datotek in map</string>
+    <string name="a11y_create_file_folder_gone">Ustvari nevidne gumbe datotek in map</string>
 </resources>

@@ -82,7 +82,6 @@ class ApplicationSettingsFragment : ParentFragment() {
         }
 
         legal.onClick { LegalDialogStyled().show(requireFragmentManager(), LegalDialogStyled.TAG) }
-        help.onClick { HelpDialogFragment.show(requireActivity()) }
         pinAndFingerprint.setGone() // TODO: Wire up once implemented
 
         pairObserver.setVisible()

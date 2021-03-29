@@ -21,7 +21,9 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.teacher.R
 
 class QuizListPage : BasePage() {
@@ -62,5 +64,9 @@ class QuizListPage : BasePage() {
 
     fun assertQuizCount(count: Int) {
         quizRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 }

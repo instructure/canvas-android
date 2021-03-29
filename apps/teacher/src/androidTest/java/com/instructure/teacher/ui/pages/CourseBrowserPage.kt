@@ -18,6 +18,7 @@ package com.instructure.teacher.ui.pages
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.BoundedMatcher
@@ -63,8 +64,7 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openAnnouncementsTab() {
-        scrollDownToCourseBrowser()
-        waitForViewWithText("Announcements").click()
+        scrollOpen("Announcements")
     }
 
     fun openPeopleTab() {
@@ -118,5 +118,14 @@ class CourseBrowserPage : BasePage() {
 
     fun refresh() {
         onView(allOf(withId(R.id.swipeRefreshLayout))).swipeDown()
+    }
+
+    private fun scrollOpen(textName: String) {
+        try {
+            waitForViewWithText(textName).click()
+        } catch (e: NoMatchingViewException) {
+            scrollDownToCourseBrowser()
+            waitForViewWithText(textName).click()
+        }
     }
 }

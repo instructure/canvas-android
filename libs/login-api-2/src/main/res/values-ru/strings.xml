@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Сообщить о проблеме</string>
     <string name="errorReportSubject">Тема</string>
     <string name="errorReportDescription">Описание</string>
-    <string name="errorReportWriteSomething">Напишите что-нибудь...</string>
     <string name="errorReportSend">Отправить</string>
     <string name="errorReportThankyou">Спасибо, что сообщили о своей проблеме в нашу службу поддержки.  Вы получите подтверждение и обновления по электронной почте.</string>
     <string name="errorReportSeverityText">Как это влияет на вас?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Я не смогу сделать все необходимое, пока вы не ответите мне.</string>
     <string name="errorSeverityExtremelyCritical">ЧРЕЗВЫЧАЙНО КРИТИЧЕСКАЯ СИТУАЦИЯ!!</string>
     <string name="errorReportEmailAddress">Адрес электронной почты</string>
-    <string name="errorReportEnterEmail">Введите ваш адрес электронной почты&#8230;</string>
     <string name="errorReportUnknown">Неизвестно</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 мили (1,6 км)</string>

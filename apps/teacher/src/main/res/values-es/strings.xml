@@ -886,4 +886,16 @@
     <string name="gauge">Indicador</string>
     <string name="ltiLaunchFailure">En este momento, no se pudo cargar esta herramienta LTI.</string>
     <string name="downloading">Descargando&#8230;</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Programa del curso actualizado correctamente.</string>
+    <string name="errorSavingSyllabus">Ocurrió un error al intentar guardar el programa del curso. Inténtelo de nuevo.</string>
+    <string name="editSyllabusTitle">Editar programa del curso</string>
+    <string name="editSyllabusContent">Contenido</string>
+    <string name="editSyllabusDetails">Detalles</string>
+    <string name="editSyllabusShowCourseSummary">Mostrar resumen del curso</string>
+    <string name="editSyllabusContentAccessibilityLabel">Contenido del programa del curso</string>
+
+    <string name="no_grade">Sin calificación</string>
+    <string name="excuse">Justificación</string>
+    <string name="speed_grader_overgraded_by">Sobrecalificado por %s</string>
 </resources>

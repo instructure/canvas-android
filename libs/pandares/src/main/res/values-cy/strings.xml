@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Cyflwyniad wedi methu</string>
     <string name="submissionStatusFailedSubtitle">Tapiwch i weld manylion</string>
     <string name="submissionAndRubric">Cyflwyniad a Chyfarwyddyd Sgorio</string>
+    <string name="commentsAndRubric">Sylwadau a Chyfarwyddyd Sgorio</string>
     <string name="errorLoadingAssignment">Problem wrth lwytho’r aseiniad hwn. Gwiriwch eich cysylltiad a rhoi cynnig arall arni.</string>
     <string name="submitted">Wedi Cyflwyno</string>
     <string name="notSubmitted">Heb Gyflwyno</string>
@@ -94,6 +95,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Cafodd eich aseiniad ei gloi gan fodiwl \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Mae eich aseiniad wedi\'i gloi gan ofynion y modiwl</string>
     <string name="submissionDetailsAssignmentLocked">Aseiniad wedi’i gloi</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Ni Chaniateir Cyflwyno</string>
     <string name="webPreview">Rhagolwg o’r URL a roddwyd</string>
     <string name="websiteUrl">URL Gwefan</string>
     <string name="noneContentMessage">Dydy’r aseiniad hwn ddim yn caniatáu cyflwyniadau ar-lein.</string>
@@ -101,6 +103,7 @@
     <string name="noOnlineSubmissions">Dim Cyflwyniadau Ar-lein</string>
     <string name="speedGraderExternalToolMessage">Mae’r aseiniad hwn yn cysylltu ag adnodd allanol ar gyfer cyflwyniadau.</string>
     <string name="openTool">Agor Adnodd</string>
+    <string name="a11y_submissionText">Testun cyflwyniad</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Allan o %s pwynt</string>
     <string name="outOfPointsAbbreviatedFormatted">Allan o %s pwynt</string>
@@ -190,6 +193,17 @@
     <string name="noAssignmentsInGroup">Dim Aseiniadau yn y grŵp hwn</string>
     <string name="excusedAssignment">Mae’r aseiniad hwn wedi’i esgusodi ac ni fydd yn cael ei ystyried yn y cyfanswm</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">Trefnu yn ôl</string>
+    <string name="sortByDialogTimeOption">Amser</string>
+    <string name="sortByDialogTypeOption">Math</string>
+    <string name="sortByTime">Trefnu yn ôl Amser</string>
+    <string name="sortByType">Trefnu yn ôl Math</string>
+    <string name="sortByDialogCancel">Canslo</string>
+    <string name="assignmentsListAllGradingPeriods">Y cyfan</string>
+    <string name="a11y_sortByTimeButton">Trefnu’r botwm aseiniadau, trefnu yn ôl amser</string>
+    <string name="a11y_sortByTypeButton">Trefnu’r botwm aseiniadau, trefnu yn ôl math</string>
+    <string name="a11y_assignmentsSortedByTime">Aseiniadau wedi’u trefnu yn ôl amser</string>
+    <string name="a11y_assignmentsSortedByType">Aseiniadau wedi’u trefnu yn ôl math</string>
     <!-- Assignment editing -->
     <string name="points">Pwynt\u0020</string>
     <string name="save">Cadw</string>
@@ -249,6 +263,7 @@
     <string name="createFolder">Creu Ffolder</string>
     <string name="createAFile">Creu Ffeil</string>
     <string name="createFileFolderFabContentDesc">Dangos Botymau Creu Ffeil a Creu Ffolder</string>
+    <string name="hideCreateFileFolderFabContentDesc">Cuddio Botymau Creu Ffeil a Creu Ffolder</string>
     <string name="folderCreationError">Gwall wrth greu ffolder.</string>
     <string name="rename">Ailenwi</string>
     <string name="renameFile">Ailenwi ffeil</string>
@@ -1100,4 +1115,9 @@
     <string name="conferenceDetails">Manylion Cynhadledd</string>
     <string name="recordings">Recordiad</string>
     <string name="conferenceInProgress">Cynhadledd ar waith</string>
+    <string name="a11y_criterion_content_description">Sgoriau maen prawf %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">rhagor o wybodaeth</string>
+    <string name="a11y_create_file_folder_visible">Botymau Creu Ffeil a Creu Ffolder yn weladwy</string>
+    <string name="a11y_create_file_folder_gone">Botymau Creu Ffeil a Creu Ffolder yn gudd</string>
 </resources>

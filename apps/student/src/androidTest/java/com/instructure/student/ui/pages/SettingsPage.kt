@@ -32,7 +32,6 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
     private val pairObserverLabel by OnViewWithId(R.id.pairObserver,autoAssert=false)
     private val aboutLabel by OnViewWithId(R.id.about)
     private val legalLabel by OnViewWithId(R.id.legal)
-    private val helpLabel by OnViewWithId(R.id.help)
     private val remoteConfigLabel by OnViewWithId(R.id.remoteConfigParams)
 
     fun launchAboutPage() {
@@ -41,10 +40,6 @@ class SettingsPage : BasePage(R.id.settingsFragment) {
 
     fun launchLegalPage() {
         legalLabel.scrollTo().click()
-    }
-
-    fun launchHelpPage() {
-        helpLabel.scrollTo().click()
     }
 
     fun launchRemoteConfigParams() {

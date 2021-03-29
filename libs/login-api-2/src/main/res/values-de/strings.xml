@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Ein Problem melden</string>
     <string name="errorReportSubject">Betreff</string>
     <string name="errorReportDescription">Beschreibung</string>
-    <string name="errorReportWriteSomething">Schreiben Sie etwas ...</string>
     <string name="errorReportSend">Senden</string>
     <string name="errorReportThankyou">Vielen Dank, dass Sie Ihr Problem unserem Support-Team gemeldet haben.  Sie werden per E-Mail über die Überprüfung und Aktualisierungen informiert.</string>
     <string name="errorReportSeverityText">Welche Auswirkung hat dies auf Sie?</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">Ohne eine Antwort kann ich meine Arbeit nicht fortsetzen.</string>
     <string name="errorSeverityExtremelyCritical">ÄUSSERST KRITISCHER NOTFALL!</string>
     <string name="errorReportEmailAddress">E-Mail-Adresse</string>
-    <string name="errorReportEnterEmail">Geben Sie Ihre E-Mail-Adresse ein.</string>
     <string name="errorReportUnknown">Unbekannt</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1,6 km (1 Meile)</string>

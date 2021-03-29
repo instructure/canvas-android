@@ -913,4 +913,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">Nie udało się wczytać narzędzia LTI.</string>
     <string name="downloading">Pobieranie...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Zaktualizowano program.</string>
+    <string name="errorSavingSyllabus">Podczas zapisywania programu wystąpił błąd. Spróbuj ponownie.</string>
+    <string name="editSyllabusTitle">Edytuj program</string>
+    <string name="editSyllabusContent">Zawartość</string>
+    <string name="editSyllabusDetails">Szczegóły</string>
+    <string name="editSyllabusShowCourseSummary">Pokaż podsumowanie kursu</string>
+    <string name="editSyllabusContentAccessibilityLabel">Zawartość programu</string>
+
+    <string name="no_grade">Brak oceny</string>
+    <string name="excuse">Usprawiedliwienie</string>
+    <string name="speed_grader_overgraded_by">Zawyżona ocena od %s</string>
 </resources>

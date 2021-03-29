@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Falha no envio</string>
     <string name="submissionStatusFailedSubtitle">Toque para visualizar os detalhes</string>
     <string name="submissionAndRubric">Envio e rubrica</string>
+    <string name="commentsAndRubric">Comentários e rubrica</string>
     <string name="errorLoadingAssignment">Houve um problema ao carregar esta tarefa. Verifique a sua conexão e tente novamente.</string>
     <string name="submitted">Enviado</string>
     <string name="notSubmitted">Não Enviado</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Sua tarefa está bloqueada pelo módulo \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Sua tarefa está bloqueada por um requisito do módulo</string>
     <string name="submissionDetailsAssignmentLocked">Tarefa bloqueada</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Nenhum envio permitido</string>
     <string name="webPreview">Pré-visualização da URL inserida</string>
     <string name="websiteUrl">URL do site</string>
     <string name="noneContentMessage">Esta tarefa não permite envios on-line</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Esta tarefa é vinculada a uma ferramenta interna para envios.</string>
     <string name="openTool">Abrir ferramenta</string>
+    <string name="a11y_submissionText">Texto de submissão</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">De %s pontos</string>
     <string name="outOfPointsAbbreviatedFormatted">De %s pts</string>
@@ -196,6 +199,17 @@
     <string name="excusedAssignment">Esta tarefa está dispensada e não fará parte do cálculo total</string>
     <string name="excused">EX</string>
 
+    <string name="sortByDialogTitle">Ordenar por</string>
+    <string name="sortByDialogTimeOption">Tempo</string>
+    <string name="sortByDialogTypeOption">Tipo</string>
+    <string name="sortByTime">Classificar por tempo</string>
+    <string name="sortByType">Classificar por tipo</string>
+    <string name="sortByDialogCancel">Cancelar</string>
+    <string name="assignmentsListAllGradingPeriods">Todos</string>
+    <string name="a11y_sortByTimeButton">Botão Classificar tarefas, classificar por tempo</string>
+    <string name="a11y_sortByTypeButton">Botão Classificar tarefas, classificar por tipo</string>
+    <string name="a11y_assignmentsSortedByTime">Tarefas classificadas por tempo</string>
+    <string name="a11y_assignmentsSortedByType">Tarefas classificadas por tipo</string>
     <!-- Assignment editing -->
     <string name="points">Pontos\u0020</string>
     <string name="save">Salvar</string>
@@ -254,6 +268,7 @@
     <string name="createFolder">Criar Pasta</string>
     <string name="createAFile">Criar um arquivo</string>
     <string name="createFileFolderFabContentDesc">Mostrar botões Criar arquivo e Criar pasta</string>
+    <string name="hideCreateFileFolderFabContentDesc">Ocultar botões Criar arquivo e Criar pasta</string>
     <string name="folderCreationError">Um erro ocorreu durante a criação da pasta.</string>
     <string name="rename">Renomear</string>
     <string name="renameFile">Renomear arquivo</string>
@@ -1114,4 +1129,9 @@
     <string name="conferenceDetails">Detalhes da conferência</string>
     <string name="recordings">Gravações</string>
     <string name="conferenceInProgress">Conferência em andamento</string>
+    <string name="a11y_criterion_content_description">Avaliação de critério %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">mais informações</string>
+    <string name="a11y_create_file_folder_visible">Botões Criar Arquivo e Pasta visíveis</string>
+    <string name="a11y_create_file_folder_gone">Botões Criar Arquivo e Pasta invisíveis</string>
 </resources>

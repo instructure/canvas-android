@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">報告問題</string>
     <string name="errorReportSubject">主題</string>
     <string name="errorReportDescription">說明</string>
-    <string name="errorReportWriteSomething">開始撰寫&#8230;&#8230;</string>
     <string name="errorReportSend">發送</string>
     <string name="errorReportThankyou">感謝您向我們的支援團隊報告您遇到的問題。您將透過電郵收到確認以及最新消息。</string>
     <string name="errorReportSeverityText">問題對您造成什麼影響？</string>
@@ -85,7 +84,6 @@
     <string name="errorSeverityCantGetThingsDone">我需要得到回覆，方能繼續工作。</string>
     <string name="errorSeverityExtremelyCritical">極其重要的緊急情況！！</string>
     <string name="errorReportEmailAddress">電郵地址</string>
-    <string name="errorReportEnterEmail">請輸入您的電郵地址&#8230;&#8230;</string>
     <string name="errorReportUnknown">未知</string>
     <!-- Distance Strings -->
     <string name="lessThanOne">&lt; 1 英里 (1.6 公里)</string>

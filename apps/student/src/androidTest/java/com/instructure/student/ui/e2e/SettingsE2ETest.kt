@@ -53,11 +53,6 @@ class SettingsE2ETest : StudentTest() {
 
         legalPage.assertPageObjects()
         Espresso.pressBack() // Exit legal page
-
-        settingsPage.launchHelpPage()
-
-        // May be brittle.  See comments in HelpPage.kt.
-        helpPage.assertPageObjects()
     }
 
     // The remote config settings page (only available on debug builds) used to do some

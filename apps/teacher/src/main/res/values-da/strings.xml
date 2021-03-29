@@ -885,4 +885,16 @@
     <string name="gauge">Gauge</string>
     <string name="ltiLaunchFailure">LTI-værktøjet kunne ikke indlæses på dette tidspunkt.</string>
     <string name="downloading">Downloader ...</string>
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">Læseplan blev opdateret.</string>
+    <string name="errorSavingSyllabus">Der opstod en fejl ved forsøg på at gemme læseplanen. Prøv igen.</string>
+    <string name="editSyllabusTitle">Rediger læseplanen</string>
+    <string name="editSyllabusContent">Indhold</string>
+    <string name="editSyllabusDetails">Nærmere oplysninger</string>
+    <string name="editSyllabusShowCourseSummary">Vis fagoversigt</string>
+    <string name="editSyllabusContentAccessibilityLabel">Læseplanens indhold</string>
+
+    <string name="no_grade">Ingen karakter</string>
+    <string name="excuse">Undskyld</string>
+    <string name="speed_grader_overgraded_by">Givet for høj karakter af %s</string>
 </resources>

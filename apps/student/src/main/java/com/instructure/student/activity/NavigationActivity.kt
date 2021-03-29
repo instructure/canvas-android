@@ -61,6 +61,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouteType
 import com.instructure.interactions.router.RouterParams
+import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
@@ -75,12 +76,14 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.settings.help.HelpDialogFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
@@ -89,9 +92,11 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
+        ErrorReportDialog.ErrorReportDialogResultListener {
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -118,6 +123,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             closeNavigationDrawer()
             delay(250)
             when (v.id) {
+                R.id.navigationDrawerItem_help -> {
+                    HelpDialogFragment.show(this@NavigationActivity)
+                }
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
@@ -383,6 +391,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerItem_help.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_startMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -982,6 +991,15 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             root.addView(animation, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             animation.playAnimation()
         }
+    }
+
+    override fun onTicketPost() {
+        // The message is a little longer than normal, so show it for LENGTH_LONG instead of LENGTH_SHORT
+        Toast.makeText(this, R.string.errorReportThankyou, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onTicketError() {
+        toast(R.string.errorOccurred)
     }
 
     companion object {

@@ -45,6 +45,7 @@
     <string name="submissionStatusFailedTitle">提交項目失敗</string>
     <string name="submissionStatusFailedSubtitle">點選以檢視詳情</string>
     <string name="submissionAndRubric">提交項目及評分標準</string>
+    <string name="commentsAndRubric">評論及評分標準</string>
     <string name="errorLoadingAssignment">載入此作業時出現問題。請檢查您的連接然後重試。</string>
     <string name="submitted">已提交</string>
     <string name="notSubmitted">未提交</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">您的作業由單元 \"%1$s\" 鎖定</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">您的作業由單元要求鎖定</string>
     <string name="submissionDetailsAssignmentLocked">作業已鎖定</string>
+    <string name="submissionDetailsNoSubmissionAllowed">不允許任何提交項目</string>
     <string name="webPreview">預覽輸入的 URL</string>
     <string name="websiteUrl">網站 URL</string>
     <string name="noneContentMessage">此作業不允許線上提交項目</string>
@@ -100,6 +102,7 @@
     <string name="noOnlineSubmissions">沒有線上提交項目</string>
     <string name="speedGraderExternalToolMessage">此作業已連結至外部工具以供提交。</string>
     <string name="openTool">開啟工具</string>
+    <string name="a11y_submissionText">提交項目文字</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">滿分為 %s 分</string>
     <string name="outOfPointsAbbreviatedFormatted">滿分為 %s 分</string>
@@ -189,6 +192,17 @@
     <string name="noAssignmentsInGroup">在本群組中沒有作業</string>
     <string name="excusedAssignment">該作業已被免除，不予計入總評分</string>
     <string name="excused">EX</string>
+    <string name="sortByDialogTitle">排序依據</string>
+    <string name="sortByDialogTimeOption">時間</string>
+    <string name="sortByDialogTypeOption">類型</string>
+    <string name="sortByTime">依時間排序</string>
+    <string name="sortByType">依類型排序</string>
+    <string name="sortByDialogCancel">取消</string>
+    <string name="assignmentsListAllGradingPeriods">全部</string>
+    <string name="a11y_sortByTimeButton">排列作業列表按鈕，依時間排序</string>
+    <string name="a11y_sortByTypeButton">排列作業列表按鈕，依類型排序</string>
+    <string name="a11y_assignmentsSortedByTime">依時間排序的作業列表</string>
+    <string name="a11y_assignmentsSortedByType">依類型排序的作業列表</string>
     <!-- Assignment editing -->
     <string name="points">分數\u0020</string>
     <string name="save">儲存</string>
@@ -247,6 +261,7 @@
     <string name="createFolder">創建資料夾</string>
     <string name="createAFile">創建檔案</string>
     <string name="createFileFolderFabContentDesc">顯示創建檔案與創建資料夾按鈕</string>
+    <string name="hideCreateFileFolderFabContentDesc">隱藏建立檔案與建立資料夾按鈕</string>
     <string name="folderCreationError">創建資料夾時發生錯誤。</string>
     <string name="rename">重命名</string>
     <string name="renameFile">重命名檔案</string>
@@ -1086,4 +1101,9 @@
     <string name="conferenceDetails">會議詳情</string>
     <string name="recordings">記錄</string>
     <string name="conferenceInProgress">會議進行中</string>
+    <string name="a11y_criterion_content_description">標準評級%s</string>
+    <string name="a11y_criterion_description_content_description">%s，%s</string>
+    <string name="a11y_criterion_button_click_description">更多資訊</string>
+    <string name="a11y_create_file_folder_visible">建立檔案與資料夾按鈕顯示</string>
+    <string name="a11y_create_file_folder_gone">建立檔案與資料夾按鈕隱藏</string>
 </resources>

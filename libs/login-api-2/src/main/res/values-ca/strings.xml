@@ -75,7 +75,6 @@
     <string name="errorReportAProblem">Informeu d\'un problema</string>
     <string name="errorReportSubject">Assumpte</string>
     <string name="errorReportDescription">Descripció</string>
-    <string name="errorReportWriteSomething">Escriviu el que vulgueu&#8230;</string>
     <string name="errorReportSend">Envia</string>
     <string name="errorReportThankyou">Gràcies per informar el nostre equip de Suport Tècnic del vostre problema.  Rebreu un missatge de verificació i actualitzacions per correu electrònic.</string>
     <string name="errorReportSeverityText">Com us afecta això?</string>
@@ -86,7 +85,6 @@
     <string name="errorSeverityExtremelyCritical">EMERGÈNCIA CRÍTICA EXTREMA</string>
 
     <string name="errorReportEmailAddress">Adreça electrònica</string>
-    <string name="errorReportEnterEmail">Introduïu la vostra adreça electrònica&#8230;</string>
     <string name="errorReportUnknown">Desconegut</string>
 
     <!-- Distance Strings -->

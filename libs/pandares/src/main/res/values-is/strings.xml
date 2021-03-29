@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Ekki tókst að skila</string>
     <string name="submissionStatusFailedSubtitle">Smelltu til að skoða upplýsingar</string>
     <string name="submissionAndRubric">Skil &amp; matsviðmið</string>
+    <string name="commentsAndRubric">Athugasemdir og matsviðmið</string>
     <string name="errorLoadingAssignment">Það kom upp vandamál við að hlaða inn þessu verkefni. Athugaðu tengingu þína og reyndu aftur.</string>
     <string name="submitted">Skilað</string>
     <string name="notSubmitted">Ekki lagt fram</string>
@@ -93,6 +94,7 @@
     <string name="submissionDetailsAssignmentLockedByModuleName">Verkefninu er læst af einingu \"%1$s\"</string>
     <string name="submissionDetailsAssignmentLockedByModulePrereqs">Verkefninu er læst af einingakröfu</string>
     <string name="submissionDetailsAssignmentLocked">Verkefni læst</string>
+    <string name="submissionDetailsNoSubmissionAllowed">Engin skil leyfð</string>
     <string name="webPreview">Forskoðun innslegnar vefslóðar</string>
     <string name="websiteUrl">Slóð vefsvæðis</string>
     <string name="noneContentMessage">Þetta verkefni leyfir ekki netskil</string>
@@ -101,6 +103,7 @@
 
     <string name="speedGraderExternalToolMessage">Þetta verkefni er með tengil á ytra verkfæri fyrir skil.</string>
     <string name="openTool">Opna verkfæri</string>
+    <string name="a11y_submissionText">Skilatexti</string>
     <!-- Grade Cell -->
     <string name="outOfPointsFormatted">Af %s stigum</string>
     <string name="outOfPointsAbbreviatedFormatted">Af %s st</string>
@@ -196,6 +199,17 @@
     <string name="excusedAssignment">Þetta verkefni er undanskilið og verður ekki með í heildarútreikningum</string>
     <string name="excused">Dæmi</string>
 
+    <string name="sortByDialogTitle">Raða eftir</string>
+    <string name="sortByDialogTimeOption">Tími</string>
+    <string name="sortByDialogTypeOption">Tegund</string>
+    <string name="sortByTime">Raða eftir tíma</string>
+    <string name="sortByType">Raða eftir gerð</string>
+    <string name="sortByDialogCancel">Hætta við</string>
+    <string name="assignmentsListAllGradingPeriods">Allt</string>
+    <string name="a11y_sortByTimeButton">Hnappur til að raða verkefnum, raða eftir tíma</string>
+    <string name="a11y_sortByTypeButton">Hnappur til að raða verkefnum, raða eftir gerð</string>
+    <string name="a11y_assignmentsSortedByTime">Verkefnum raðað eftir tíma</string>
+    <string name="a11y_assignmentsSortedByType">Verkefnum raðað eftir gerð</string>
     <!-- Assignment editing -->
     <string name="points">Punktar\u0020</string>
     <string name="save">Vista</string>
@@ -254,6 +268,7 @@
     <string name="createFolder">Stofna möppu</string>
     <string name="createAFile">Stofna skrá</string>
     <string name="createFileFolderFabContentDesc">Sýna stofna skrá og stofna möppu hnappana</string>
+    <string name="hideCreateFileFolderFabContentDesc">Fela hnappana Stofna skrá og Stofna möppu</string>
     <string name="folderCreationError">Villa kom upp við stofnun möppu.</string>
     <string name="rename">Endurnefna</string>
     <string name="renameFile">Endurnefna skrá</string>
@@ -1114,4 +1129,9 @@
     <string name="conferenceDetails">Upplýsingar um ráðstefnur</string>
     <string name="recordings">Upptökur</string>
     <string name="conferenceInProgress">Ráðstefna í gangi</string>
+    <string name="a11y_criterion_content_description">Viðmiðunarmat %s</string>
+    <string name="a11y_criterion_description_content_description">%s, %s</string>
+    <string name="a11y_criterion_button_click_description">frekari upplýsingar</string>
+    <string name="a11y_create_file_folder_visible">Hnapparnir Stofna skrá og Stofna möppu sýnilegir</string>
+    <string name="a11y_create_file_folder_gone">Hnapparnir Stofna skrá og Stofna möppu ósýnilegir</string>
 </resources>
