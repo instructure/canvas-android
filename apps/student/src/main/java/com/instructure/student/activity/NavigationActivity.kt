@@ -380,9 +380,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
-        ColorUtils.colorIt(ThemePrefs.primaryColor, navigationDrawerInstitutionImage.background)
-        navigationDrawerInstitutionImage.loadUri(Uri.parse(ThemePrefs.logoUrl), R.mipmap.ic_launcher_foreground)
-
         //Navigation items
         navigationDrawerItem_files.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
