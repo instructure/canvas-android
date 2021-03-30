@@ -42,10 +42,12 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import dagger.hilt.android.HiltAndroidApp
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.embedding.engine.dart.DartExecutor.DartEntrypoint
 
+@HiltAndroidApp
 class AppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
     // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG

@@ -30,6 +30,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.managers.HelpLinksManager
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.HelpLinks
@@ -51,6 +52,8 @@ import java.util.*
 
 
 class HelpDialogStyled : DialogFragment() {
+
+    private val helpLinksManager = HelpLinksManager(HelpLinksAPI)
 
     var helpLinksJob: Job? = null
     private var helpLinks: HelpLinks? = null
@@ -84,7 +87,7 @@ class HelpDialogStyled : DialogFragment() {
 
     private fun getHelpLinks(layoutView: View) {
         helpLinksJob = tryWeave {
-            helpLinks = awaitApi<HelpLinks> { HelpLinksManager.getHelpLinks(it, true) }
+            helpLinks = awaitApi<HelpLinks> { helpLinksManager.getHelpLinks(it, true) }
 
             with(layoutView) {
                 if (helpLinks?.customHelpLinks?.isNotEmpty() == true) {
