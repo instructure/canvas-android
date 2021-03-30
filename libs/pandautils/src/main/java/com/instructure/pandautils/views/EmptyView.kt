@@ -13,7 +13,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.instructure.student.view
+package com.instructure.pandautils.views
 
 import android.content.Context
 import android.content.res.Configuration
@@ -26,9 +26,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.instructure.pandarecycler.interfaces.EmptyInterface
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.student.R
 import kotlinx.android.synthetic.main.empty_view.view.*
 import kotlinx.android.synthetic.main.loading_lame.view.*
 

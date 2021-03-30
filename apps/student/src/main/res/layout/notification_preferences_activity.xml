@@ -41,7 +41,7 @@
         android:layout_below="@+id/toolbar"
         android:cacheColorHint="@android:color/transparent"/>
 
-    <com.instructure.student.view.EmptyView
+    <com.instructure.pandautils.views.EmptyView
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

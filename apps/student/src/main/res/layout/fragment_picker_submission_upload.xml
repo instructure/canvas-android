@@ -42,7 +42,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         tools:listitem="@layout/viewholder_file_upload"/>
 
-    <com.instructure.student.view.EmptyView
+    <com.instructure.pandautils.views.EmptyView
         android:id="@+id/pickerEmptyView"
         android:layout_width="0dp"
         android:layout_height="0dp"

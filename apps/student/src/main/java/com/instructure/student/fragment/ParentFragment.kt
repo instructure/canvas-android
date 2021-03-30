@@ -67,7 +67,7 @@ import com.instructure.student.util.FileUtils
 import com.instructure.student.util.LoggingUtility
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.onMainThread
-import com.instructure.student.view.EmptyView
+import com.instructure.pandautils.views.EmptyView
 import java.io.File
 import java.io.FileOutputStream
 

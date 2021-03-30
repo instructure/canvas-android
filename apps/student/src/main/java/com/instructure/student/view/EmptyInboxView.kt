@@ -14,8 +14,7 @@ import com.instructure.student.R
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import kotlinx.android.synthetic.main.empty_view.view.*
-import kotlinx.android.synthetic.main.loading_lame.view.*
+import kotlinx.android.synthetic.main.empty_inbox_view.view.*
 
 class EmptyInboxView @JvmOverloads constructor(
         context: Context,
@@ -46,7 +45,8 @@ class EmptyInboxView @JvmOverloads constructor(
 
     override fun setListEmpty() {
         if (isDisplayNoConnection) {
-            noConnection.text = noConnectionText
+            // TODO We can move this also to commons later, and than we can use the synthetic properties.
+            findViewById<TextView>(R.id.noConnection).text = noConnectionText
         } else {
             title.text = titleText
             message.text = messageText
@@ -87,7 +87,7 @@ class EmptyInboxView @JvmOverloads constructor(
 
     override fun setNoConnectionText(s: String) {
         noConnectionText = s
-        noConnection.text = noConnectionText
+        findViewById<TextView>(R.id.noConnection).text = noConnectionText
     }
 
     override fun getEmptyViewImage(): ImageView? = image
