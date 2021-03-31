@@ -25,18 +25,23 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.isGone
+import com.instructure.pandautils.utils.isVisible
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import kotlinx.android.synthetic.main.empty_view.view.*
 import kotlinx.android.synthetic.main.loading_lame.view.*
 
-class EmptyView @JvmOverloads constructor(
+open class EmptyView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
+
+    open val viewId: Int = R.layout.empty_view
 
     private var noConnectionText: String? = null
     private var titleText: String? = null
@@ -44,7 +49,7 @@ class EmptyView @JvmOverloads constructor(
     private var isDisplayNoConnection = false
 
     init {
-        View.inflate(context, R.layout.empty_view, this)
+        View.inflate(context, viewId, this)
     }
 
     override fun setLoading() {
@@ -70,6 +75,18 @@ class EmptyView @JvmOverloads constructor(
         message.setVisible()
         loading.setGone()
         image.setVisible(image.drawable != null)
+        // we don't have an image for the empty state we want the title to be centered instead.
+        if (image.isGone) {
+            centerTitle()
+        }
+    }
+
+    private fun centerTitle() {
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(emptyViewLayout)
+        constraintSet.connect(R.id.textViews, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP)
+        constraintSet.connect(R.id.textViews, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM)
+        constraintSet.applyTo(emptyViewLayout)
     }
 
     fun getTitle(): TextView {
