@@ -21,6 +21,7 @@ import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
@@ -44,3 +45,20 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
         is ViewState.Error -> emptyView.setGone() // Currently just set this to gone, we don't need an empty view in the dialog, but need to find a generic solution for this.
     }
 }
+
+@BindingAdapter("itemViewModels")
+fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
+    val adapter = getOrCreateAdapter(recyclerView)
+    adapter.updateItems(itemViewModels)
+}
+
+private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerViewAdapter {
+    return if (recyclerView.adapter != null && recyclerView.adapter is BindableRecyclerViewAdapter) {
+        recyclerView.adapter as BindableRecyclerViewAdapter
+    } else {
+        val bindableRecyclerAdapter = BindableRecyclerViewAdapter()
+        recyclerView.adapter = bindableRecyclerAdapter
+        bindableRecyclerAdapter
+    }
+}
+

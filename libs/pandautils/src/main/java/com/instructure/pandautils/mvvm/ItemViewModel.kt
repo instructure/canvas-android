@@ -16,6 +16,9 @@
  */
 package com.instructure.pandautils.mvvm
 
+import androidx.annotation.LayoutRes
+
 interface ItemViewModel {
-    val layoutId: Int
+    @get:LayoutRes val layoutId: Int
+    val viewType: Int
 }

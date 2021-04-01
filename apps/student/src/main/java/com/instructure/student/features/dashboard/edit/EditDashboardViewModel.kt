@@ -77,7 +77,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private fun handleAction(action: EditDashboardItemAction) {
         when (action) {
             is EditDashboardItemAction.OpenItem -> {
-
+                _events.postValue(Event(action))
             }
             is EditDashboardItemAction.FavoriteItem -> {
                 val item = action.model
