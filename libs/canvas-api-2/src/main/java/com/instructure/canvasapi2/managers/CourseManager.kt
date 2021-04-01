@@ -71,6 +71,8 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCourses(forceNetwork, it) }
+
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -176,6 +178,8 @@ object CourseManager {
 
         CourseAPI.addCourseToFavorites(courseId, adapter, callback, params)
     }
+
+    fun addCourseToFavoritesAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Favorite> { addCourseToFavorites(courseId, it, forceNetwork) }
 
     fun removeCourseFromFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)

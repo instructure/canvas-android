@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.weave.awaitApi
 import retrofit2.Response
 import java.io.IOException
 import java.util.*
@@ -56,6 +57,8 @@ object GroupManager {
         GroupAPI.getFirstPageGroups(adapter, depaginatedCallback, params)
     }
 
+    fun getAllGroupsAsync(forceNetwork: Boolean) = apiAsync<List<Group>> { getAllGroups(it, forceNetwork)  }
+
     fun getDetailedGroup(groupId: Long, callback: StatusCallback<Group>, forceNetwork: Boolean) {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val adapter = RestBuilder(callback)
@@ -67,6 +70,8 @@ object GroupManager {
         val adapter = RestBuilder(callback)
         GroupAPI.addGroupToFavorites(adapter, callback, params, groupId)
     }
+
+    fun addGroupToFavoritesAsync(groupId: Long) = apiAsync<Favorite> { addGroupToFavorites(groupId, it) }
 
     fun removeGroupFromFavorites(groupId: Long, callback: StatusCallback<Favorite>) {
         val params = RestParams()
