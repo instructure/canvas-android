@@ -70,19 +70,20 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
-import com.instructure.student.dialog.HelpDialogStyled
 import com.instructure.student.events.*
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.mobius.settings.help.HelpDialogFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_navigation.*
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
@@ -91,6 +92,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
+@AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
     FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
@@ -122,7 +124,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             delay(250)
             when (v.id) {
                 R.id.navigationDrawerItem_help -> {
-                    HelpDialogStyled.show(this@NavigationActivity)
+                    HelpDialogFragment.show(this@NavigationActivity)
                 }
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }

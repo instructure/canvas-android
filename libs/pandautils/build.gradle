@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -138,4 +139,7 @@ dependencies {
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
+
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }

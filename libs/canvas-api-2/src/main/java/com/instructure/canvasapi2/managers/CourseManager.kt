@@ -36,6 +36,8 @@ import kotlin.jvm.Throws
 
 object CourseManager {
 
+    fun getAllFavoriteCoursesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getAllFavoriteCourses(forceNetwork, it) }
+
     fun getAllFavoriteCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
