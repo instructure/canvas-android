@@ -50,6 +50,7 @@ import com.instructure.student.dialog.EditCourseNicknameDialog
 import com.instructure.student.events.CoreDataFinishedLoading
 import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowGradesToggledEvent
+import com.instructure.student.features.dashboard.edit.EditDashboardFragment
 import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.interfaces.CourseAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
@@ -234,7 +235,7 @@ class DashboardFragment : ParentFragment() {
             if (!APIHelper.hasNetworkConnection()) {
                 toast(R.string.notAvailableOffline)
             } else {
-                RouteMatcher.route(requireContext(), EditFavoritesFragment.makeRoute())
+                RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
             }
         }
     }
@@ -249,7 +250,7 @@ class DashboardFragment : ParentFragment() {
                 toast(R.string.notAvailableOffline)
                 return true
             }
-            RouteMatcher.route(requireContext(), EditFavoritesFragment.makeRoute())
+            RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
         }
         return super.onOptionsItemSelected(item)
     }
