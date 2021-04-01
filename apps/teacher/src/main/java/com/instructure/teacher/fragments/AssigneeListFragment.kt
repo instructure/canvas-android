@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssigneeListAdapter
 import com.instructure.teacher.factory.AssigneeListPresenterFactory
@@ -39,7 +40,6 @@ import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.presenters.AssigneeListPresenter
 import com.instructure.teacher.utils.*
-import com.instructure.teacher.view.EmptyPandaView
 import com.instructure.teacher.viewinterface.AssigneeListView
 import kotlinx.android.synthetic.main.fragment_assignee_list.*
 import java.util.ArrayList
@@ -60,7 +60,7 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
 
     private val assigneeRecyclerView by bind<RecyclerView>(R.id.recyclerView)
     private val swipeRefreshLayout by bind<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-    private val emptyPandaView by bind<EmptyPandaView>(R.id.emptyPandaView)
+    private val emptyPandaView by bind<EmptyView>(R.id.emptyPandaView)
     private val saveButton: TextView? get() = view?.findViewById(R.id.menuSave)
 
     override fun layoutResId() = R.layout.fragment_assignee_list

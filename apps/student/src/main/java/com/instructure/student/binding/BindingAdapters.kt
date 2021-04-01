@@ -24,8 +24,8 @@ import androidx.databinding.ViewDataBinding
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.student.BR
-import com.instructure.student.view.EmptyView
 
 @BindingAdapter("itemViewModels")
 fun bindHelpLinks(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {

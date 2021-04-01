@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.DueDatesAdapter
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
@@ -38,7 +39,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
-import com.instructure.teacher.view.EmptyPandaView
 import com.instructure.teacher.viewinterface.DueDatesView
 import kotlinx.android.synthetic.main.fragment_assignment_due_dates.*
 
@@ -49,7 +49,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
 
     private val dueDateRecyclerView by bind<RecyclerView>(R.id.recyclerView)
     val swipeRefreshLayout by bind<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-    val emptyPandaView by bind<EmptyPandaView>(R.id.emptyPandaView)
+    val emptyPandaView by bind<EmptyView>(R.id.emptyPandaView)
 
     override fun layoutResId() = R.layout.fragment_assignment_due_dates
     override val recyclerView get() = dueDateRecyclerView

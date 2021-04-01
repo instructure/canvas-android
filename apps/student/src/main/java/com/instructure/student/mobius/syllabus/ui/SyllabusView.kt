@@ -23,7 +23,6 @@ import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.fragment.CalendarEventFragment
@@ -31,7 +30,7 @@ import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFrag
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
-import com.instructure.student.view.EmptyView
+import com.instructure.pandautils.views.EmptyView
 import com.spotify.mobius.functions.Consumer
 import kotlinx.android.synthetic.main.fragment_syllabus.*
 import kotlinx.android.synthetic.main.fragment_syllabus_events.*
