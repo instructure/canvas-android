@@ -44,7 +44,8 @@ class HelpDialogViewModel @Inject constructor(
     private val courseManager: CourseManager,
     @ApplicationContext private val context: Context,
     private val apiPrefs: ApiPrefs,
-    private val packageInfoProvider: PackageInfoProvider) : ViewModel() {
+    private val packageInfoProvider: PackageInfoProvider,
+    private val helpLinkFilter: HelpLinkFilter) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -98,7 +99,7 @@ class HelpDialogViewModel @Inject constructor(
 
         return list
             // Only want links for students
-            .filter { filterLinks(it, favoriteCourses) }
+            .filter { helpLinkFilter.isLinkAllowed(it, favoriteCourses) }
             .map { HelpLinkItemViewModel(HelpLinkViewData(it.text, it.subtext, mapAction(it)), ::onLinkClicked) }
             .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
