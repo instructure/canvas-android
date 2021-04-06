@@ -22,8 +22,10 @@ import com.instructure.canvasapi2.models.Group
 data class EditDashboardViewData(val items: List<EditDashboardItemViewModel>)
 
 sealed class EditDashboardItemAction {
-    data class FavoriteItem(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
-    data class UnfavoriteItem(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
+    data class FavoriteCourse(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
+    data class FavoriteGroup(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
+    data class UnfavoriteCourse(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
+    data class UnfavoriteGroup(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
     data class OpenItem(val canvasContext: CanvasContext?) : EditDashboardItemAction()
     data class OpenCourse(val id: Long) : EditDashboardItemAction()
     data class OpenGroup(val id: Long) : EditDashboardItemAction()

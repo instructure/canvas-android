@@ -18,10 +18,9 @@ package com.instructure.student.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.pandautils.utils.isGroup
 import com.instructure.student.R
 
-class EditDashboardItemViewModel(val id: Long, val name: String?, var isFavorite: Boolean, val subtitle: String?, val termTitle: String?, val type: CanvasContext.Type, private val onClick: (EditDashboardItemAction) -> Unit) : ItemViewModel {
+class EditDashboardItemViewModel(val id: Long, val name: String?, var isFavorite: Boolean, val subtitle: String?, val termTitle: String?, val type: CanvasContext.Type, private val actionHandler: (EditDashboardItemAction) -> Unit) : ItemViewModel {
 
     override val layoutId: Int = R.layout.viewholder_edit_dashboard
 
@@ -30,18 +29,28 @@ class EditDashboardItemViewModel(val id: Long, val name: String?, var isFavorite
 
     fun onClick() {
         if (type == CanvasContext.Type.COURSE) {
-            onClick(EditDashboardItemAction.OpenCourse(id))
+            actionHandler(EditDashboardItemAction.OpenCourse(id))
         }
         if (type == CanvasContext.Type.GROUP) {
-            onClick(EditDashboardItemAction.OpenGroup(id))
+            actionHandler(EditDashboardItemAction.OpenGroup(id))
         }
     }
 
     fun onFavoriteClick() {
         if (isFavorite) {
-            onClick(EditDashboardItemAction.UnfavoriteItem(this))
+            if (type == CanvasContext.Type.GROUP) {
+                actionHandler(EditDashboardItemAction.UnfavoriteGroup(this))
+            }
+            if (type == CanvasContext.Type.COURSE) {
+                actionHandler(EditDashboardItemAction.UnfavoriteCourse(this))
+            }
         } else {
-            onClick(EditDashboardItemAction.FavoriteItem(this))
+            if (type == CanvasContext.Type.GROUP) {
+                actionHandler(EditDashboardItemAction.FavoriteGroup(this))
+            }
+            if (type == CanvasContext.Type.COURSE) {
+                actionHandler(EditDashboardItemAction.FavoriteCourse(this))
+            }
         }
     }
 }
