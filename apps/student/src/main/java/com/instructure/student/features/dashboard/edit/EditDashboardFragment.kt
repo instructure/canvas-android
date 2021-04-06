@@ -23,9 +23,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import com.instructure.interactions.router.Route
-import com.instructure.student.databinding.FragmentEdigDashboardBinding
+import com.instructure.student.databinding.FragmentEditDashboardBinding
+import com.instructure.student.fragment.CourseBrowserFragment
+import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
 
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
@@ -47,11 +51,25 @@ class EditDashboardFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding = FragmentEdigDashboardBinding.inflate(inflater, container, false)
+        val binding = FragmentEditDashboardBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
         return binding.root
+    }
+
+    private fun handleAction(action: EditDashboardItemAction) {
+        when (action) {
+            is EditDashboardItemAction.OpenItem -> {
+                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.model))
+            }
+        }
     }
 
 }

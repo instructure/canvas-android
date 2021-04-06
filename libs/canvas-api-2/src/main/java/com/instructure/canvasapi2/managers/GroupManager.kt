@@ -79,6 +79,8 @@ object GroupManager {
         GroupAPI.removeGroupFromFavorites(adapter, callback, params, groupId)
     }
 
+    fun removeGroupFromFavoritesAsync(groupId: Long) = apiAsync<Favorite> { removeGroupFromFavorites(groupId, it) }
+
     /**
      * So we are only going to fetch the first 200 groups. If you are reading this and are an instructor with more than 200 groups... sorry.
      * @param forceNetwork

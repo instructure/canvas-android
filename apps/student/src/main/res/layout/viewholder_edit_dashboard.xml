@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2021 - present Instructure, Inc.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, version 3 of the License.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itemViewModel"
+            type="com.instructure.student.features.dashboard.edit.EditDashboardItemViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{() -> itemViewModel.onClick()}"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/favoriteButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@{itemViewModel.favorite ? @string/courseFavorited : @string/courseNotFavorited}"
+            android:onClick="@{() -> itemViewModel.onFavoriteClick()}"
+            android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
+            android:tint="@color/canvasDefaultAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{itemViewModel.name}"
+            android:textColor="@color/defaultTextDark"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/favoriteButton"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Course name" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{itemViewModel.subtitle}"
+            android:textAllCaps="true"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="DEFAULT TERM | STUDENT" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

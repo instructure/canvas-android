@@ -28,6 +28,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
+import com.instructure.student.BR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -59,11 +60,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             try {
                 val courses = courseManager.getCoursesAsync(true).await().dataOrThrow
                 val coursesViewData = courses.map {
-                    EditDashboardItemViewModel(it.name, it.isFavorite, it, ::handleAction)
+                    EditDashboardItemViewModel(it.name, it.isFavorite, it.term?.name, it, ::handleAction)
                 }
                 val groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
                 val groupsViewData = groups.map {
-                    EditDashboardItemViewModel(it.name, it.isFavorite, it, ::handleAction)
+                    EditDashboardItemViewModel(it.name, it.isFavorite, it.description, it, ::handleAction)
                 }
                 _data.postValue(EditDashboardViewData(coursesViewData + groupsViewData))
                 _state.postValue(ViewState.Success)
@@ -80,21 +81,36 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 _events.postValue(Event(action))
             }
             is EditDashboardItemAction.FavoriteItem -> {
-                val item = action.model
+                val item = action.itemViewModel
                 viewModelScope.launch {
                     try {
-                        if (item.isCourse) {
-                            courseManager.addCourseToFavoritesAsync(item.id, true).await().dataOrThrow
+                        if (item.model.isCourse) {
+                            courseManager.addCourseToFavoritesAsync(item.model.id, true).await().dataOrThrow
                         }
 
-                        if (item.isGroup) {
-                            groupManager.addGroupToFavoritesAsync(item.id).await().dataOrThrow
+                        if (item.model.isGroup) {
+                            groupManager.addGroupToFavoritesAsync(item.model.id).await().dataOrThrow
                         }
                     } catch (e: Exception) {
 
                     }
                 }
+            }
+            is EditDashboardItemAction.UnfavoriteItem -> {
+                val item = action.itemViewModel
+                viewModelScope.launch {
+                    try {
+                        if (item.model.isCourse) {
+                            courseManager.removeCourseFromFavoritesAsync(item.model.id, true).await().dataOrThrow
+                        }
 
+                        if (item.model.isGroup) {
+                            groupManager.removeGroupFromFavoritesAsync(item.model.id).await().dataOrThrow
+                        }
+                    } catch (e: Exception) {
+
+                    }
+                }
             }
         }
     }

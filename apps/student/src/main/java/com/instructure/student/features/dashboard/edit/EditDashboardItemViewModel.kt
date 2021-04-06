@@ -18,17 +18,25 @@ package com.instructure.student.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.pandautils.utils.isGroup
+import com.instructure.student.R
 
-class EditDashboardItemViewModel(val name: String?, var isFavorite: Boolean, private val model: CanvasContext, private val onClick: (EditDashboardItemAction) -> Unit) : ItemViewModel {
+class EditDashboardItemViewModel(val name: String?, var isFavorite: Boolean, val subtitle: String?, val model: CanvasContext, private val onClick: (EditDashboardItemAction) -> Unit) : ItemViewModel {
+
+    override val layoutId: Int = R.layout.viewholder_edit_dashboard
+
+    override val viewType: Int
+        get() = if (model.isGroup) EditDashboardItemViewType.GROUP.viewType else EditDashboardItemViewType.COURSE.viewType
 
     fun onClick() {
         onClick(EditDashboardItemAction.OpenItem(model))
     }
 
     fun onFavoriteClick() {
-        onClick(EditDashboardItemAction.FavoriteItem(model))
+        if (isFavorite) {
+            onClick(EditDashboardItemAction.UnfavoriteItem(this))
+        } else {
+            onClick(EditDashboardItemAction.FavoriteItem(this))
+        }
     }
-
-    override val layoutId: Int
-        get() = TODO("Not yet implemented")
 }

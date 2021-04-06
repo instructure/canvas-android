@@ -188,6 +188,8 @@ object CourseManager {
         CourseAPI.removeCourseFromFavorites(courseId, adapter, callback, params)
     }
 
+    fun removeCourseFromFavoritesAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Favorite> { removeCourseFromFavorites(courseId, it, forceNetwork) }
+
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val queryParams = HashMap<String, String>()
         queryParams["course[name]"] = newCourseName
