@@ -21,7 +21,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.instructure.student.mobius.settings.help.HelpDialogViewModel" />
+            type="com.instructure.pandautils.features.help.HelpDialogViewModel" />
     </data>
 
     <FrameLayout

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.features.help
 
 data class HelpDialogViewData(val helpLinks: List<HelpLinkItemViewModel>)
 

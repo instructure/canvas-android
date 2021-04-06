@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.features.help
 
 import android.content.Context
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -29,9 +29,9 @@ import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.HelpLinks
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.PackageInfoProvider
-import com.instructure.student.R
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

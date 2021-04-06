@@ -23,6 +23,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../../gradle/coverage.gradle'
+apply plugin: 'dagger.hilt.android.plugin'
 
 def coverageEnabled = project.hasProperty('coverage')
 
@@ -129,6 +130,8 @@ android {
             force 'android.arch.lifecycle:runtime:1.0.3'
             // Fix for Robolectric 4.x
             force "org.ow2.asm:asm:7.0"
+
+            force Libs.KOTLIN_COROUTINES_CORE
         }
     }
 
@@ -177,6 +180,14 @@ android {
     compileOptions {
         sourceCompatibility 1.8
         targetCompatibility 1.8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildFeatures {
+        dataBinding true
     }
 }
 
@@ -262,9 +273,21 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_CORE
     implementation Libs.FIREBASE_MESSAGING
+    testImplementation Libs.ANDROIDX_CORE_TESTING
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
+
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    implementation Libs.FRAGMENT_KTX
+    kapt Libs.LIFECYCLE_COMPILER
+
+    /* DI */
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }
 
 apply plugin: 'com.google.gms.google-services'

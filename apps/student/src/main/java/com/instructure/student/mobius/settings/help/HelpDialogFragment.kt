@@ -19,8 +19,6 @@ package com.instructure.student.mobius.settings.help
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,19 +27,17 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.loginapi.login.dialog.ErrorReportDialog
+import com.instructure.pandautils.databinding.HelpDialogBinding
+import com.instructure.pandautils.features.help.HelpDialogAction
+import com.instructure.pandautils.features.help.HelpDialogViewModel
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.databinding.HelpDialogBinding
 import com.instructure.student.dialog.AskInstructorDialogStyled
-import com.instructure.student.util.LoggingUtility
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {

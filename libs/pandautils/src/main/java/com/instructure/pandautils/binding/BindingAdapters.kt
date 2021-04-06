@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.binding
+package com.instructure.pandautils.binding
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -25,13 +25,13 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.views.EmptyView
-import com.instructure.student.BR
+import com.instructure.pandautils.BR
 
 @BindingAdapter("itemViewModels")
-fun bindHelpLinks(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
-    itemViewModels?.forEach {
-        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), it.layoutId, container, false)
-        binding.setVariable(BR.itemViewModel, it)
+fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
+    itemViewModels?.forEach { item: ItemViewModel ->
+        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
+        binding.setVariable(BR.itemViewModel, item)
         container.addView(binding.root)
     }
 }

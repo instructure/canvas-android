@@ -68,6 +68,10 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+    buildFeatures {
+        dataBinding true
+    }
 }
 
 configurations {
@@ -101,6 +105,8 @@ dependencies {
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation Libs.ANDROIDX_CORE_TESTING
 
     /* Media handling */
     api("com.github.bumptech.glide:glide:$glideVersion") {
@@ -140,6 +146,14 @@ dependencies {
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
 
+    /* DI */
     implementation Libs.HILT
     kapt Libs.HILT_COMPILER
+
+    /* AAC */
+    implementation Libs.VIEW_MODEL
+    implementation Libs.LIVE_DATA
+    implementation Libs.VIEW_MODE_SAVED_STATE
+    implementation Libs.FRAGMENT_KTX
+    kapt Libs.LIFECYCLE_COMPILER
 }

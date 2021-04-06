@@ -14,10 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.features.help
 
+import com.instructure.pandautils.features.help.HelpDialogAction
+import com.instructure.pandautils.features.help.HelpLinkViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.R
+import com.instructure.pandautils.R
 
 class HelpLinkItemViewModel(val helpLinkViewData: HelpLinkViewData, private val onClick: (HelpDialogAction) -> (Unit)) : ItemViewModel {
 
