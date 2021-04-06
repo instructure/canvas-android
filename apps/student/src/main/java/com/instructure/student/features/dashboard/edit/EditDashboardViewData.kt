@@ -24,7 +24,10 @@ data class EditDashboardViewData(val items: List<EditDashboardItemViewModel>)
 sealed class EditDashboardItemAction {
     data class FavoriteItem(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
     data class UnfavoriteItem(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
-    data class OpenItem(val model: CanvasContext) : EditDashboardItemAction()
+    data class OpenItem(val canvasContext: CanvasContext?) : EditDashboardItemAction()
+    data class OpenCourse(val id: Long) : EditDashboardItemAction()
+    data class OpenGroup(val id: Long) : EditDashboardItemAction()
+    data class UpdateItem(val position: Int?): EditDashboardItemAction()
 }
 
 enum class EditDashboardItemViewType(val viewType: Int) {

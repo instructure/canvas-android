@@ -21,15 +21,20 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.utils.isGroup
 import com.instructure.student.R
 
-class EditDashboardItemViewModel(val name: String?, var isFavorite: Boolean, val subtitle: String?, val model: CanvasContext, private val onClick: (EditDashboardItemAction) -> Unit) : ItemViewModel {
+class EditDashboardItemViewModel(val id: Long, val name: String?, var isFavorite: Boolean, val subtitle: String?, val termTitle: String?, val type: CanvasContext.Type, private val onClick: (EditDashboardItemAction) -> Unit) : ItemViewModel {
 
     override val layoutId: Int = R.layout.viewholder_edit_dashboard
 
     override val viewType: Int
-        get() = if (model.isGroup) EditDashboardItemViewType.GROUP.viewType else EditDashboardItemViewType.COURSE.viewType
+        get() = if (type == CanvasContext.Type.GROUP) EditDashboardItemViewType.GROUP.viewType else EditDashboardItemViewType.COURSE.viewType
 
     fun onClick() {
-        onClick(EditDashboardItemAction.OpenItem(model))
+        if (type == CanvasContext.Type.COURSE) {
+            onClick(EditDashboardItemAction.OpenCourse(id))
+        }
+        if (type == CanvasContext.Type.GROUP) {
+            onClick(EditDashboardItemAction.OpenGroup(id))
+        }
     }
 
     fun onFavoriteClick() {

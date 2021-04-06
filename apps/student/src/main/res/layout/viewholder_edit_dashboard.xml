@@ -21,6 +21,8 @@
         <variable
             name="itemViewModel"
             type="com.instructure.student.features.dashboard.edit.EditDashboardItemViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -58,15 +60,31 @@
             android:id="@+id/subtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="@{itemViewModel.subtitle}"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="15sp"
+            android:visibility="@{itemViewModel.subtitle == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/favoriteButton"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="Interaction Design for Usability"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/termTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@{itemViewModel.termTitle}"
             android:textAllCaps="true"
             android:textColor="@color/defaultTextGray"
             android:textSize="12sp"
+            android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/title"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintStart_toEndOf="@id/favoriteButton"
+            app:layout_constraintTop_toBottomOf="@id/subtitle"
             tools:text="DEFAULT TERM | STUDENT" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

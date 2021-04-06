@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.instructure.interactions.router.Route
 import com.instructure.student.databinding.FragmentEditDashboardBinding
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -64,10 +65,23 @@ class EditDashboardFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        recyclerView.apply {
+            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        }
+    }
+
     private fun handleAction(action: EditDashboardItemAction) {
         when (action) {
             is EditDashboardItemAction.OpenItem -> {
-                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.model))
+                RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.canvasContext))
+            }
+            is EditDashboardItemAction.UpdateItem -> {
+                action.position?.let {
+                    recyclerView.adapter?.notifyItemChanged(it)
+                }
             }
         }
     }
