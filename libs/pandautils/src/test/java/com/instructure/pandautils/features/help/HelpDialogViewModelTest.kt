@@ -58,6 +58,7 @@ class HelpDialogViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val packageInfoProvider: PackageInfoProvider = mockk(relaxed = true)
+    private val helpLinkFilter: HelpLinkFilter = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -70,6 +71,8 @@ class HelpDialogViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
+
+        every { helpLinkFilter.isLinkAllowed(any(), any()) } returns true
     }
 
     @After
@@ -86,7 +89,7 @@ class HelpDialogViewModelTest {
         }
 
         // When
-        viewModel = HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider)
+        viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, Observer {})
 
         // Then
@@ -109,7 +112,7 @@ class HelpDialogViewModelTest {
         }
 
         // When
-        viewModel = HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider)
+        viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -136,7 +139,7 @@ class HelpDialogViewModelTest {
         }
 
         // When
-        viewModel = HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider)
+        viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -149,15 +152,16 @@ class HelpDialogViewModelTest {
     }
 
     @Test
-    fun `Don't include links that are only available for teachers`() {
+    fun `Don't include links that should be filtered out`() {
         // Given
-        val defaultLinks = listOf(
-            createHelpLink(listOf("student"), "Student link"),
-            createHelpLink(listOf("user"), "User link"),
-            createHelpLink(listOf("student", "teacher"), "Student and Teacher link"),
-            createHelpLink(listOf("teacher"), "Teacher link")
-        )
+        val validLink = createHelpLink(listOf("student"), "Student link")
+        val invalidLink = createHelpLink(listOf("teacher"), "Teacher link")
+
+        val defaultLinks = listOf(validLink, invalidLink)
         val helpLinks = HelpLinks(emptyList(), defaultLinks)
+
+        every { helpLinkFilter.isLinkAllowed(validLink, any()) } returns true
+        every { helpLinkFilter.isLinkAllowed(invalidLink, any()) } returns false
 
         every { helpLinksManager.getHelpLinksAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(helpLinks)
@@ -170,7 +174,7 @@ class HelpDialogViewModelTest {
         every { context.getString(R.string.shareYourLove) } returns "Share your love title"
 
         // When
-        viewModel = HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider)
+        viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -178,11 +182,9 @@ class HelpDialogViewModelTest {
         assertTrue(viewModel.state.value is ViewState.Success)
 
         val linksViewData = viewModel.data.value?.helpLinks ?: emptyList()
-        assertEquals(4, linksViewData.size) // We will have 4 links because we also add the store rating link manually
+        assertEquals(2, linksViewData.size) // We will have 2 links because we also add the store rating link manually
         assertEquals("Student link", linksViewData[0].helpLinkViewData.title)
-        assertEquals("User link", linksViewData[1].helpLinkViewData.title)
-        assertEquals("Student and Teacher link", linksViewData[2].helpLinkViewData.title)
-        assertEquals("Share your love title", linksViewData[3].helpLinkViewData.title)
+        assertEquals("Share your love title", linksViewData[1].helpLinkViewData.title)
     }
 
     @Test
@@ -208,7 +210,7 @@ class HelpDialogViewModelTest {
         every { context.getString(R.string.shareYourLove) } returns "Share your love title"
 
         // When
-        viewModel = HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider)
+        viewModel = createViewModel()
         viewModel.state.observe(lifecycleOwner, Observer {})
         viewModel.data.observe(lifecycleOwner, Observer {})
 
@@ -224,6 +226,9 @@ class HelpDialogViewModelTest {
         assertEquals(HelpLinkViewData("WebView", "", HelpDialogAction.OpenWebView("google.com", "WebView")), linksViewData[4].helpLinkViewData)
         assertEquals(HelpLinkViewData("Share your love title", "", HelpDialogAction.RateTheApp), linksViewData[5].helpLinkViewData)
     }
+
+    private fun createViewModel() =
+        HelpDialogViewModel(helpLinksManager, courseManager, context, apiPrefs, packageInfoProvider, helpLinkFilter)
 
     private fun createHelpLink(availableTo: List<String>, text: String, id: String = "", url: String = ""): HelpLink {
         return HelpLink(id, "", availableTo, url, text, "")
