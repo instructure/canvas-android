@@ -70,7 +70,7 @@ class HelpDialogFragment : DialogFragment() {
             is HelpDialogAction.ReportProblem -> {
                 // Report a problem
                 val dialog = ErrorReportDialog()
-                dialog.arguments = ErrorReportDialog.createBundle(getString(R.string.appUserTypeStudent))
+                dialog.arguments = ErrorReportDialog.createBundle(getString(R.string.appUserTypeTeacher))
                 dialog.show(requireActivity().supportFragmentManager, ErrorReportDialog.TAG)
             }
             is HelpDialogAction.RateTheApp -> Utils.goToAppStore(AppType.TEACHER, activity)
