@@ -179,7 +179,7 @@ object CourseManager {
         CourseAPI.addCourseToFavorites(courseId, adapter, callback, params)
     }
 
-    fun addCourseToFavoritesAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Favorite> { addCourseToFavorites(courseId, it, forceNetwork) }
+    fun addCourseToFavoritesAsync(courseId: Long) = apiAsync<Favorite> { addCourseToFavorites(courseId, it, true) }
 
     fun removeCourseFromFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
@@ -188,7 +188,7 @@ object CourseManager {
         CourseAPI.removeCourseFromFavorites(courseId, adapter, callback, params)
     }
 
-    fun removeCourseFromFavoritesAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<Favorite> { removeCourseFromFavorites(courseId, it, forceNetwork) }
+    fun removeCourseFromFavoritesAsync(courseId: Long) = apiAsync<Favorite> { removeCourseFromFavorites(courseId, it, true) }
 
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val queryParams = HashMap<String, String>()

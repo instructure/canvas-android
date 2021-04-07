@@ -18,8 +18,9 @@ package com.instructure.student.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class EditDashboardViewData(val items: List<EditDashboardItemViewModel>)
+data class EditDashboardViewData(val items: List<ItemViewModel>)
 
 sealed class EditDashboardItemAction {
     data class FavoriteCourse(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
@@ -33,6 +34,6 @@ sealed class EditDashboardItemAction {
 }
 
 enum class EditDashboardItemViewType(val viewType: Int) {
-    GROUP(0),
-    COURSE(1)
+    ITEM(0),
+    HEADER(1)
 }

@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
@@ -31,9 +30,6 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.isCourse
-import com.instructure.pandautils.utils.isGroup
-import com.instructure.student.BR
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
@@ -59,6 +55,9 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private var courseMap: Map<Long, Course>? = null
     private var groupMap: Map<Long, Group>? = null
 
+    private val favoriteCourseMap: MutableMap<Long, Course> = mutableMapOf()
+    private val favoriteGroupMap: MutableMap<Long, Group> = mutableMapOf()
+
     init {
         loadItems()
     }
@@ -70,18 +69,25 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             try {
                 val courses = courseManager.getCoursesAsync(true).await().dataOrThrow
                 val coursesViewData = courses.map {
+                    if (it.isFavorite) {
+                        favoriteCourseMap[it.id] = it
+                    }
                     EditDashboardItemViewModel(it.id, it.name, it.isFavorite, null, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", it.type, ::handleAction)
                 }
                 courseMap = courses.associateBy { it.id }
 
                 val groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
                 val groupsViewData = groups.map {
+                    if (it.isFavorite) {
+                        favoriteGroupMap[it.id] = it
+                    }
                     val course = courseMap?.get(it.courseId)
                     EditDashboardItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, it.type, ::handleAction)
                 }
                 groupMap = groups.associateBy { it.id }
+                val groupHeader = EditDashboardHeaderViewModel("All groups", favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
 
-                _data.postValue(EditDashboardViewData(coursesViewData + groupsViewData))
+                _data.postValue(EditDashboardViewData(coursesViewData + groupHeader + groupsViewData))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error(e.message ?: ""))
@@ -101,28 +107,28 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             }
 
             is EditDashboardItemAction.FavoriteCourse -> {
-                toggleCourse(action.itemViewModel, courseManager::addCourseToFavoritesAsync)
+                toggleFavorite(action.itemViewModel, courseManager::addCourseToFavoritesAsync)
             }
 
             is EditDashboardItemAction.FavoriteGroup -> {
-                toggleGroup(action.itemViewModel, groupManager::addGroupToFavoritesAsync)
+                toggleFavorite(action.itemViewModel, groupManager::addGroupToFavoritesAsync)
             }
 
             is EditDashboardItemAction.UnfavoriteCourse -> {
-                toggleCourse(action.itemViewModel, courseManager::removeCourseFromFavoritesAsync)
+                toggleFavorite(action.itemViewModel, courseManager::removeCourseFromFavoritesAsync)
             }
 
             is EditDashboardItemAction.UnfavoriteGroup -> {
-                toggleGroup(action.itemViewModel, groupManager::removeGroupFromFavoritesAsync)
+                toggleFavorite(action.itemViewModel, groupManager::removeGroupFromFavoritesAsync)
             }
         }
     }
 
-    private fun toggleCourse(item: EditDashboardItemViewModel, handler: (id: Long, forceNetwork: Boolean) -> Deferred<DataResult<Favorite>>) {
+    private fun toggleFavorite(item: EditDashboardItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
         val index = _data.value?.items?.indexOf(item)
         viewModelScope.launch {
             try {
-                handler.invoke(item.id, true).await().dataOrThrow
+                handler(item.id).await().dataOrThrow
                 item.isFavorite = !item.isFavorite
                 _events.postValue(Event(EditDashboardItemAction.UpdateItem(index)))
             } catch (e: Exception) {
@@ -131,17 +137,20 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private fun toggleGroup(item: EditDashboardItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
-        val index = _data.value?.items?.indexOf(item)
-        viewModelScope.launch {
-            try {
-                handler.invoke(item.id).await().dataOrThrow
-                item.isFavorite = !item.isFavorite
-                _events.postValue(Event(EditDashboardItemAction.UpdateItem(index)))
-            } catch (e: Exception) {
+    private fun selectAllGroups() {
 
-            }
-        }
+    }
+
+    private fun deselectAllGroups() {
+
+    }
+
+    private fun selectAllCourses() {
+
+    }
+
+    private fun deselectAllCourses() {
+
     }
 
 }

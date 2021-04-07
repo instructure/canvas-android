@@ -24,8 +24,7 @@ class EditDashboardItemViewModel(val id: Long, val name: String?, var isFavorite
 
     override val layoutId: Int = R.layout.viewholder_edit_dashboard
 
-    override val viewType: Int
-        get() = if (type == CanvasContext.Type.GROUP) EditDashboardItemViewType.GROUP.viewType else EditDashboardItemViewType.COURSE.viewType
+    override val viewType: Int = EditDashboardItemViewType.ITEM.viewType
 
     fun onClick() {
         if (type == CanvasContext.Type.COURSE) {
