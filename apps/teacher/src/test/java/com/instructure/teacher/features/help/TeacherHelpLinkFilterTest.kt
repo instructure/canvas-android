@@ -15,12 +15,12 @@
  *
  */
 
-package com.instructure.teacher.features.helpx
+package com.instructure.teacher.features.help
 
 import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.pandautils.features.help.HelpLinkFilter
-import com.instructure.teacher.features.help.TeacherHelpLinkFilter
-import org.junit.Assert.*
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TeacherHelpLinkFilterTest {
