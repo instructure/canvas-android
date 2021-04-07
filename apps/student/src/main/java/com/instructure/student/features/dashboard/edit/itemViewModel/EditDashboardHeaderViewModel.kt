@@ -14,10 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit
+package com.instructure.student.features.dashboard.edit.itemViewModel
 
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
+import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
 class EditDashboardHeaderViewModel(val title: String, val hasItemSelected: Boolean, val selectAllHandler: () -> Unit, val deselectAllHandler: () -> Unit) : ItemViewModel {
     override val layoutId: Int = R.layout.viewholder_edit_dashboard_header

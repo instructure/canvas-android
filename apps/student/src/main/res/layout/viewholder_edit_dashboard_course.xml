@@ -20,7 +20,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.EditDashboardItemViewModel" />
+            type="com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -57,21 +57,6 @@
             tools:text="Course name" />
 
         <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@{itemViewModel.subtitle}"
-            android:textColor="@color/defaultTextGray"
-            android:textSize="15sp"
-            android:visibility="@{itemViewModel.subtitle == null ? View.GONE : View.VISIBLE}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/favoriteButton"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="Interaction Design for Usability"
-            tools:visibility="gone" />
-
-        <TextView
             android:id="@+id/termTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +68,7 @@
             android:visibility="@{itemViewModel.termTitle == null ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/favoriteButton"
-            app:layout_constraintTop_toBottomOf="@id/subtitle"
+            app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="DEFAULT TERM | STUDENT" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

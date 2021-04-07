@@ -30,6 +30,9 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardHeaderViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.launch
@@ -72,7 +75,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     if (it.isFavorite) {
                         favoriteCourseMap[it.id] = it
                     }
-                    EditDashboardItemViewModel(it.id, it.name, it.isFavorite, null, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", it.type, ::handleAction)
+                    EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
                 }
                 courseMap = courses.associateBy { it.id }
 
@@ -82,7 +85,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                         favoriteGroupMap[it.id] = it
                     }
                     val course = courseMap?.get(it.courseId)
-                    EditDashboardItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, it.type, ::handleAction)
+                    EditDashboardGroupItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, ::handleAction)
                 }
                 groupMap = groups.associateBy { it.id }
                 val groupHeader = EditDashboardHeaderViewModel("All groups", favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
@@ -107,30 +110,41 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             }
 
             is EditDashboardItemAction.FavoriteCourse -> {
-                toggleFavorite(action.itemViewModel, courseManager::addCourseToFavoritesAsync)
+                toggleCourse(action.itemViewModel, courseManager::addCourseToFavoritesAsync)
             }
 
             is EditDashboardItemAction.FavoriteGroup -> {
-                toggleFavorite(action.itemViewModel, groupManager::addGroupToFavoritesAsync)
+                toggleGroup(action.itemViewModel, groupManager::addGroupToFavoritesAsync)
             }
 
             is EditDashboardItemAction.UnfavoriteCourse -> {
-                toggleFavorite(action.itemViewModel, courseManager::removeCourseFromFavoritesAsync)
+                toggleCourse(action.itemViewModel, courseManager::removeCourseFromFavoritesAsync)
             }
 
             is EditDashboardItemAction.UnfavoriteGroup -> {
-                toggleFavorite(action.itemViewModel, groupManager::removeGroupFromFavoritesAsync)
+                toggleGroup(action.itemViewModel, groupManager::removeGroupFromFavoritesAsync)
             }
         }
     }
 
-    private fun toggleFavorite(item: EditDashboardItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
-        val index = _data.value?.items?.indexOf(item)
+    private fun toggleCourse(item: EditDashboardCourseItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
         viewModelScope.launch {
             try {
                 handler(item.id).await().dataOrThrow
                 item.isFavorite = !item.isFavorite
-                _events.postValue(Event(EditDashboardItemAction.UpdateItem(index)))
+                item.notifyChange()
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    private fun toggleGroup(item: EditDashboardGroupItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
+        viewModelScope.launch {
+            try {
+                handler(item.id).await().dataOrThrow
+                item.isFavorite = !item.isFavorite
+                item.notifyChange()
             } catch (e: Exception) {
 
             }

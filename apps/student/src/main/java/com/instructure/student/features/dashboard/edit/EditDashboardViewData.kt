@@ -17,16 +17,17 @@
 package com.instructure.student.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
 
 data class EditDashboardViewData(val items: List<ItemViewModel>)
 
 sealed class EditDashboardItemAction {
-    data class FavoriteCourse(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
-    data class FavoriteGroup(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
-    data class UnfavoriteCourse(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
-    data class UnfavoriteGroup(val itemViewModel: EditDashboardItemViewModel) : EditDashboardItemAction()
+    data class FavoriteCourse(val itemViewModel: EditDashboardCourseItemViewModel) : EditDashboardItemAction()
+    data class FavoriteGroup(val itemViewModel: EditDashboardGroupItemViewModel) : EditDashboardItemAction()
+    data class UnfavoriteCourse(val itemViewModel: EditDashboardCourseItemViewModel) : EditDashboardItemAction()
+    data class UnfavoriteGroup(val itemViewModel: EditDashboardGroupItemViewModel) : EditDashboardItemAction()
     data class OpenItem(val canvasContext: CanvasContext?) : EditDashboardItemAction()
     data class OpenCourse(val id: Long) : EditDashboardItemAction()
     data class OpenGroup(val id: Long) : EditDashboardItemAction()
@@ -34,6 +35,7 @@ sealed class EditDashboardItemAction {
 }
 
 enum class EditDashboardItemViewType(val viewType: Int) {
-    ITEM(0),
-    HEADER(1)
+    COURSE(0),
+    GROUP(1),
+    HEADER(2)
 }
