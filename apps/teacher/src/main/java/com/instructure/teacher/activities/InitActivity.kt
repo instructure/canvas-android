@@ -51,6 +51,7 @@ import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.dialogs.RatingDialog
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
@@ -63,7 +64,6 @@ import com.instructure.teacher.dialog.EditCourseNicknameDialog
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.events.ToDoListUpdatedEvent
 import com.instructure.teacher.factory.InitActivityPresenterFactory
-import com.instructure.teacher.features.help.HelpDialogFragment
 import com.instructure.teacher.fragments.*
 import com.instructure.teacher.presenters.InitActivityPresenter
 import com.instructure.teacher.router.RouteMatcher

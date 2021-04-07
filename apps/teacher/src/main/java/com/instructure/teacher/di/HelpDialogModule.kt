@@ -16,11 +16,15 @@
  */
 package com.instructure.teacher.di
 
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
 import com.instructure.pandautils.features.help.HelpLinkFilter
+import com.instructure.teacher.features.help.TeacherHelpDialogFragmentBehavior
 import com.instructure.teacher.features.help.TeacherHelpLinkFilter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module
@@ -29,4 +33,14 @@ class HelpDialogModule {
 
     @Provides
     fun provideHelpLinkFilter(): HelpLinkFilter = TeacherHelpLinkFilter()
+}
+
+@Module
+@InstallIn(FragmentComponent::class)
+class HelpDialogFragmentModule {
+
+    @Provides
+    fun provideHelpDialogFragmentBehavior(activity: FragmentActivity): HelpDialogFragmentBehavior {
+        return TeacherHelpDialogFragmentBehavior(activity)
+    }
 }

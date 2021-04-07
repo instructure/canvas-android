@@ -65,6 +65,10 @@ android {
         exclude 'LICENSE.txt'
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     testOptions {
         unitTests.returnDefaultValues = true
     }
