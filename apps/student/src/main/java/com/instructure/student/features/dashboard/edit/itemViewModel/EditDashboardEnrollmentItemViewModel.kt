@@ -16,12 +16,13 @@
 
 package com.instructure.student.features.dashboard.edit.itemViewModel
 
+import androidx.annotation.StringRes
 import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.student.R
+import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
-class EditDashboardEnrollmentItemViewModel(val title: String) : ItemViewModel {
-    override val layoutId: Int
-        get() = TODO("Not yet implemented")
+class EditDashboardEnrollmentItemViewModel(@get:StringRes val title: Int) : ItemViewModel {
+    override val layoutId: Int = R.layout.viewholder_edit_dashboard_enrollment
 
-    override val viewType: Int
-        get() = super.viewType
+    override val viewType: Int = EditDashboardItemViewType.ENROLLMENT.viewType
 }

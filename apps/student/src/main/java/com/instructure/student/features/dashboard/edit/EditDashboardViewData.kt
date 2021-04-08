@@ -37,5 +37,6 @@ enum class EditDashboardItemViewType(val viewType: Int) {
     COURSE(0),
     GROUP(1),
     HEADER(2),
-    DESCRIPTION(3)
+    DESCRIPTION(3),
+    ENROLLMENT(4)
 }

@@ -30,10 +30,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardDescriptionItemViewModel
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardHeaderViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -99,6 +96,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 val items = mutableListOf<ItemViewModel>()
                 items.add(courseHeader)
                 items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_description))
+                items.add(EditDashboardEnrollmentItemViewModel(R.string.current_enrollments))
                 items.addAll(coursesViewData)
                 items.add(groupHeader)
                 items.addAll(groupsViewData)
