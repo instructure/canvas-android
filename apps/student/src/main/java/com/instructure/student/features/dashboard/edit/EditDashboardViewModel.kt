@@ -28,7 +28,9 @@ import com.instructure.canvasapi2.models.Favorite
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.awaitOrThrow
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
 import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
@@ -61,6 +63,9 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private val favoriteCourseMap: MutableMap<Long, Course> = mutableMapOf()
     private val favoriteGroupMap: MutableMap<Long, Group> = mutableMapOf()
 
+    private lateinit var groupHeader: EditDashboardHeaderViewModel
+    private lateinit var courseHeader: EditDashboardHeaderViewModel
+
     init {
         loadItems()
     }
@@ -78,6 +83,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
                 }
                 courseMap = courses.associateBy { it.id }
+                courseHeader = EditDashboardHeaderViewModel("All courses", favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
 
                 val groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
                 val groupsViewData = groups.map {
@@ -88,9 +94,15 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     EditDashboardGroupItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, ::handleAction)
                 }
                 groupMap = groups.associateBy { it.id }
-                val groupHeader = EditDashboardHeaderViewModel("All groups", favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
+                groupHeader = EditDashboardHeaderViewModel("All groups", favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
 
-                _data.postValue(EditDashboardViewData(coursesViewData + groupHeader + groupsViewData))
+                val items = mutableListOf<ItemViewModel>()
+                items.add(courseHeader)
+                items.addAll(coursesViewData)
+                items.add(groupHeader)
+                items.addAll(groupsViewData)
+
+                _data.postValue(EditDashboardViewData(items))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error(e.message ?: ""))
@@ -110,41 +122,94 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             }
 
             is EditDashboardItemAction.FavoriteCourse -> {
-                toggleCourse(action.itemViewModel, courseManager::addCourseToFavoritesAsync)
+                favoriteCourse(action.itemViewModel)
             }
 
             is EditDashboardItemAction.FavoriteGroup -> {
-                toggleGroup(action.itemViewModel, groupManager::addGroupToFavoritesAsync)
+                favoriteGroup(action.itemViewModel)
             }
 
             is EditDashboardItemAction.UnfavoriteCourse -> {
-                toggleCourse(action.itemViewModel, courseManager::removeCourseFromFavoritesAsync)
+                unfavoriteCourse(action.itemViewModel)
             }
 
             is EditDashboardItemAction.UnfavoriteGroup -> {
-                toggleGroup(action.itemViewModel, groupManager::removeGroupFromFavoritesAsync)
+                unfavoriteGroup(action.itemViewModel)
             }
         }
     }
 
-    private fun toggleCourse(item: EditDashboardCourseItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
+    private fun favoriteCourse(item: EditDashboardCourseItemViewModel) {
         viewModelScope.launch {
             try {
-                handler(item.id).await().dataOrThrow
-                item.isFavorite = !item.isFavorite
-                item.notifyChange()
+                courseManager.addCourseToFavoritesAsync(item.id).await().dataOrThrow
+                favoriteCourseMap[item.id] = courseMap?.get(item.id)
+                        ?: error("Course does not exist")
+                item.apply {
+                    isFavorite = true
+                    item.notifyChange()
+                }
+                courseHeader.apply {
+                    hasItemSelected = favoriteGroupMap.isNotEmpty()
+                    notifyChange()
+                }
             } catch (e: Exception) {
 
             }
         }
     }
 
-    private fun toggleGroup(item: EditDashboardGroupItemViewModel, handler: (id: Long) -> Deferred<DataResult<Favorite>>) {
+    private fun unfavoriteCourse(item: EditDashboardCourseItemViewModel) {
         viewModelScope.launch {
             try {
-                handler(item.id).await().dataOrThrow
-                item.isFavorite = !item.isFavorite
-                item.notifyChange()
+                courseManager.removeCourseFromFavoritesAsync(item.id).await().dataOrThrow
+                favoriteCourseMap.remove(item.id)
+                item.apply {
+                    isFavorite = false
+                    notifyChange()
+                }
+                courseHeader.apply {
+                    hasItemSelected = favoriteCourseMap.isNotEmpty()
+                    notifyChange()
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    private fun favoriteGroup(item: EditDashboardGroupItemViewModel) {
+        viewModelScope.launch {
+            try {
+                groupManager.addGroupToFavoritesAsync(item.id).await().dataOrThrow
+                favoriteGroupMap[item.id] = groupMap?.get(item.id) ?: error("Group does not exist")
+                item.apply {
+                    isFavorite = true
+                    item.notifyChange()
+                }
+                groupHeader.apply {
+                    hasItemSelected = favoriteGroupMap.isNotEmpty()
+                    notifyChange()
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    private fun unfavoriteGroup(item: EditDashboardGroupItemViewModel) {
+        viewModelScope.launch {
+            try {
+                groupManager.removeGroupFromFavoritesAsync(item.id).await().dataOrThrow
+                favoriteGroupMap.remove(item.id)
+                item.apply {
+                    isFavorite = false
+                    notifyChange()
+                }
+                groupHeader.apply {
+                    hasItemSelected = favoriteGroupMap.isNotEmpty()
+                    notifyChange()
+                }
             } catch (e: Exception) {
 
             }

@@ -16,11 +16,13 @@
 
 package com.instructure.student.features.dashboard.edit.itemViewModel
 
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
-class EditDashboardHeaderViewModel(val title: String, val hasItemSelected: Boolean, val selectAllHandler: () -> Unit, val deselectAllHandler: () -> Unit) : ItemViewModel {
+class EditDashboardHeaderViewModel(val title: String, @get:Bindable var hasItemSelected: Boolean, val selectAllHandler: () -> Unit, val deselectAllHandler: () -> Unit) : ItemViewModel, BaseObservable() {
     override val layoutId: Int = R.layout.viewholder_edit_dashboard_header
 
     override val viewType: Int = EditDashboardItemViewType.HEADER.viewType

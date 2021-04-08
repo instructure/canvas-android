@@ -1145,4 +1145,6 @@
     <string name="a11y_criterion_button_click_description">more information</string>
     <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
     <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
+    <string name="unselect_all">Unselect All</string>
+    <string name="select_all">Select All</string>
 </resources>
