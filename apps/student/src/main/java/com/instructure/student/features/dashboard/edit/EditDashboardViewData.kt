@@ -31,11 +31,11 @@ sealed class EditDashboardItemAction {
     data class OpenItem(val canvasContext: CanvasContext?) : EditDashboardItemAction()
     data class OpenCourse(val id: Long) : EditDashboardItemAction()
     data class OpenGroup(val id: Long) : EditDashboardItemAction()
-    data class UpdateItem(val position: Int?): EditDashboardItemAction()
 }
 
 enum class EditDashboardItemViewType(val viewType: Int) {
     COURSE(0),
     GROUP(1),
-    HEADER(2)
+    HEADER(2),
+    DESCRIPTION(3)
 }

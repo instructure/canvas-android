@@ -29,7 +29,9 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
+import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardDescriptionItemViewModel
 import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
 import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardHeaderViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,7 +83,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
                 }
                 courseMap = courses.associateBy { it.id }
-                courseHeader = EditDashboardHeaderViewModel("All courses", favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
+                courseHeader = EditDashboardHeaderViewModel(R.string.all_courses, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
 
                 val groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
                 groupsViewData = groups.map {
@@ -92,10 +94,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     EditDashboardGroupItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, ::handleAction)
                 }
                 groupMap = groups.associateBy { it.id }
-                groupHeader = EditDashboardHeaderViewModel("All groups", favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
+                groupHeader = EditDashboardHeaderViewModel(R.string.all_groups, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
 
                 val items = mutableListOf<ItemViewModel>()
                 items.add(courseHeader)
+                items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_description))
                 items.addAll(coursesViewData)
                 items.add(groupHeader)
                 items.addAll(groupsViewData)
@@ -148,7 +151,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     item.notifyChange()
                 }
                 courseHeader.apply {
-                    hasItemSelected = favoriteGroupMap.isNotEmpty()
+                    hasItemSelected = favoriteCourseMap.isNotEmpty()
                     notifyChange()
                 }
             } catch (e: Exception) {

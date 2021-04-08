@@ -78,11 +78,6 @@ class EditDashboardFragment : Fragment() {
             is EditDashboardItemAction.OpenItem -> {
                 RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.canvasContext))
             }
-            is EditDashboardItemAction.UpdateItem -> {
-                action.position?.let {
-                    recyclerView.adapter?.notifyItemChanged(it)
-                }
-            }
         }
     }
 

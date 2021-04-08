@@ -17,22 +17,12 @@
 package com.instructure.student.features.dashboard.edit.itemViewModel
 
 import androidx.annotation.StringRes
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
+import com.instructure.student.R
 
-class EditDashboardHeaderViewModel(@get:StringRes val title: Int, @get:Bindable var hasItemSelected: Boolean, val selectAllHandler: () -> Unit, val deselectAllHandler: () -> Unit) : ItemViewModel, BaseObservable() {
-    override val layoutId: Int = R.layout.viewholder_edit_dashboard_header
+class EditDashboardDescriptionItemViewModel(@get:StringRes val description: Int) : ItemViewModel {
+    override val layoutId: Int = R.layout.viewholder_edit_dashboard_description
 
-    override val viewType: Int = EditDashboardItemViewType.HEADER.viewType
-
-    fun onActionClick() {
-        if (hasItemSelected) {
-            deselectAllHandler()
-        } else {
-            selectAllHandler()
-        }
-    }
+    override val viewType: Int = EditDashboardItemViewType.DESCRIPTION.viewType
 }

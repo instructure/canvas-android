@@ -1147,4 +1147,7 @@
     <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
     <string name="unselect_all">Unselect All</string>
     <string name="select_all">Select All</string>
+    <string name="all_courses">All courses</string>
+    <string name="all_groups">All groups</string>
+    <string name="edit_dashboard_description">Select courses for Dashboard or navigate to course details.</string>
 </resources>
