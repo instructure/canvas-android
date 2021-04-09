@@ -21,16 +21,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditDashboardBinding
 import com.instructure.student.fragment.CourseBrowserFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
+import kotlinx.android.synthetic.main.fragment_edit_dashboard.toolbar
 
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
@@ -67,9 +72,18 @@ class EditDashboardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupToolbar()
 
         recyclerView.apply {
             addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
+        }
+    }
+
+    private fun setupToolbar() {
+        toolbar.setTitle(R.string.editDashboard)
+        toolbar.setupAsBackButton(this)
+        toolbar.addSearch {
+
         }
     }
 
