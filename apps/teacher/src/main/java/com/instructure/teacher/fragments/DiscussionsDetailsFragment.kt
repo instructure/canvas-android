@@ -23,6 +23,7 @@ import android.view.MenuItem
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.*
@@ -228,7 +229,7 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         }
     }
 
-    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic) {
+    override fun populateDiscussionTopic(discussionTopicHeader: DiscussionTopicHeader, discussionTopic: DiscussionTopic, topLevelReplyPosted: Boolean) {
         // Check if we have permissions and if we have any discussions to display.
 
         loadDiscussionJob = tryWeave {
@@ -262,7 +263,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
 
             delay(300)
             discussionsScrollView.post {
-                discussionsScrollView.scrollTo(0, presenter?.scrollPosition ?: 0)
+                if (topLevelReplyPosted) {
+                    discussionsScrollView.fullScroll(ScrollView.FOCUS_DOWN)
+                } else {
+                    discussionsScrollView.scrollTo(0, presenter?.scrollPosition)
+                }
                 discussionRepliesWebView.setVisible()
             }
         } catch { Logger.e("Error loading discussion " + it.message) }
