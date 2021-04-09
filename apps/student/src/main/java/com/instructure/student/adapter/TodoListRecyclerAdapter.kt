@@ -223,7 +223,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, ToDo, Recyc
             override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
                 val body = response.body() ?: return
                 val filteredCourses = body.filter {
-                    !it.accessRestrictedByDate && !it.isInvited()  && it.isNotDeleted() && (when (filterMode) {
+                    !it.accessRestrictedByDate && !it.isInvited() && (when (filterMode) {
                                 is FavoritedCourses -> it.isFavorite
                                 else -> true
                             })
