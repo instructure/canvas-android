@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.utils.hasValidSection
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -33,6 +35,7 @@ import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemViewModel.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,11 +60,14 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private val favoriteCourseMap: MutableMap<Long, Course> = mutableMapOf()
     private val favoriteGroupMap: MutableMap<Long, Group> = mutableMapOf()
 
-    private lateinit var coursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var groupsViewData: List<EditDashboardGroupItemViewModel>
 
     private lateinit var groupHeader: EditDashboardHeaderViewModel
     private lateinit var courseHeader: EditDashboardHeaderViewModel
+
+    private lateinit var currentCoursesViewData: List<EditDashboardCourseItemViewModel>
+    private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
+    private lateinit var futureCoursesViewData: List<EditDashboardCourseItemViewModel>
 
     init {
         loadItems()
@@ -73,12 +79,18 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
             try {
                 val courses = courseManager.getCoursesAsync(true).await().dataOrThrow
-                coursesViewData = courses.map {
+                val currentCourses = courses.filter { it.hasActiveEnrollment() && it.isBetweenValidDateRange() }
+                currentCoursesViewData = currentCourses.map {
                     if (it.isFavorite) {
                         favoriteCourseMap[it.id] = it
                     }
                     EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
                 }
+                val pastCourses = courses.filter { it.endDate?.before(Date()) ?: false }
+                pastCoursesViewData = pastCourses.map { EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction) }
+                val futureCourses = courses.filter { it.startDate?.after(Date()) ?: false }
+                futureCoursesViewData = futureCourses.map { EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction) }
+
                 courseMap = courses.associateBy { it.id }
                 courseHeader = EditDashboardHeaderViewModel(R.string.all_courses, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
 
@@ -97,7 +109,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 items.add(courseHeader)
                 items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_description))
                 items.add(EditDashboardEnrollmentItemViewModel(R.string.current_enrollments))
-                items.addAll(coursesViewData)
+                items.addAll(currentCoursesViewData)
+                items.add(EditDashboardEnrollmentItemViewModel(R.string.past_enrollments))
+                items.addAll(pastCoursesViewData)
+                items.add(EditDashboardEnrollmentItemViewModel(R.string.future_enrollments))
+                items.addAll(futureCoursesViewData)
                 items.add(groupHeader)
                 items.addAll(groupsViewData)
 
@@ -224,11 +240,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun selectAllCourses() {
-        coursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
+        currentCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
     }
 
     private fun deselectAllCourses() {
-        coursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
+        currentCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
     }
 
 }
