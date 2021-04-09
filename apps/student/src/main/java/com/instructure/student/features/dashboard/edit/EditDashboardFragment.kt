@@ -21,7 +21,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -35,7 +34,6 @@ import com.instructure.student.fragment.CourseBrowserFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
-import kotlinx.android.synthetic.main.fragment_edit_dashboard.toolbar
 
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
@@ -83,7 +81,7 @@ class EditDashboardFragment : Fragment() {
         toolbar.setTitle(R.string.editDashboard)
         toolbar.setupAsBackButton(this)
         toolbar.addSearch {
-
+            viewModel.queryItems(it)
         }
     }
 
