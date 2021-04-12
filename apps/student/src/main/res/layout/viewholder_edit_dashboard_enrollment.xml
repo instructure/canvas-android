@@ -24,13 +24,24 @@
             type="com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardEnrollmentItemViewModel" />
     </data>
 
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:text="@{itemViewModel.title}"
-        android:textColor="@color/defaultTextGray"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        tools:text="Current enrollments" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="@{itemViewModel.title}"
+            android:textColor="@color/defaultTextGray"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="Current enrollments" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/dividerColor" />
+    </RelativeLayout>
 </layout>
