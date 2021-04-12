@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.ScrollView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
@@ -60,6 +61,7 @@ import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
 import kotlinx.android.synthetic.main.fragment_discussions_details.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -529,7 +531,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         discussionRepliesWebView.loadDataWithBaseURL(CanvasWebView.getReferrer(true), html, "text/html", "UTF-8", null)
     }
 
-    private fun populateDiscussionData(forceRefresh: Boolean = false) {
+    private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) {
         discussionsLoadingJob = tryWeave {
             discussionProgressBar.setVisible()
             discussionRepliesWebView.loadHtml("", "")
@@ -583,7 +585,15 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                 }
 
                 loadDiscussionTopicViews(html)
-                discussionsScrollView.post { discussionsScrollView?.scrollTo(0, scrollPosition) }
+
+                delay(300)
+                discussionsScrollView.post {
+                    if (topLevelReplyPosted) {
+                        discussionsScrollView?.fullScroll(ScrollView.FOCUS_DOWN)
+                    } else {
+                        discussionsScrollView?.scrollTo(0, scrollPosition)
+                    }
+                }
             }
         } catch {
             Logger.e("Error loading discussion topic " + it.message)
@@ -739,7 +749,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onDiscussionReplyCreated(event: DiscussionEntryEvent) {
         event.once(discussionTopicHeader.id.toString()) {
-            populateDiscussionData(true)
+            populateDiscussionData(true, event.topLevelReplyPosted)
 
             discussionTopicHeader.incrementDiscussionSubentryCount() // Update subentry count
             discussionTopicHeader.lastReplyDate?.time = Date().time // Update last post time
