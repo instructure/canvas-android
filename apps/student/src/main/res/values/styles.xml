@@ -246,7 +246,6 @@
     </style>
 
     <style name="SearchTheme">
-        <item name="android:background">@color/canvasDefaultPrimary</item>
         <item name="android:colorControlActivated">@color/white</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>

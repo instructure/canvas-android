@@ -1152,4 +1152,8 @@
     <string name="current_enrollments">Current enrollments</string>
     <string name="past_enrollments">Past enrollments</string>
     <string name="future_enrollments">Future enrollments</string>
+    <string name="added_to_dashboard">Added to Dashboard</string>
+    <string name="removed_from_dashboard">Removed from Dashboard</string>
+    <string name="all_added_to_dashboard">All added to Dashboard</string>
+    <string name="all_removed_from_dashboard">All removed from Dashboard</string>
 </resources>

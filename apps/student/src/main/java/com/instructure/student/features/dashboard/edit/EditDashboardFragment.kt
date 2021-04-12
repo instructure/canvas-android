@@ -24,8 +24,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
@@ -68,8 +70,8 @@ class EditDashboardFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onResume() {
+        super.onResume()
         setupToolbar()
     }
 
@@ -79,12 +81,16 @@ class EditDashboardFragment : Fragment() {
         toolbar.addSearch {
             viewModel.queryItems(it)
         }
+        ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun handleAction(action: EditDashboardItemAction) {
         when (action) {
             is EditDashboardItemAction.OpenItem -> {
                 RouteMatcher.route(requireContext(), CourseBrowserFragment.makeRoute(action.canvasContext))
+            }
+            is EditDashboardItemAction.ShowSnackBar -> {
+                Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
             }
         }
     }

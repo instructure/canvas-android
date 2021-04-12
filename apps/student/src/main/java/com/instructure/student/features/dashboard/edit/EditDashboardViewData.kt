@@ -31,6 +31,7 @@ sealed class EditDashboardItemAction {
     data class OpenItem(val canvasContext: CanvasContext?) : EditDashboardItemAction()
     data class OpenCourse(val id: Long) : EditDashboardItemAction()
     data class OpenGroup(val id: Long) : EditDashboardItemAction()
+    data class ShowSnackBar(val res: Int) : EditDashboardItemAction()
 }
 
 enum class EditDashboardItemViewType(val viewType: Int) {

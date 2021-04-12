@@ -107,120 +107,154 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             }
 
             is EditDashboardItemAction.FavoriteCourse -> {
-                favoriteCourse(action.itemViewModel)
+                viewModelScope.launch {
+                    try {
+                        favoriteCourse(action.itemViewModel)
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
+                    } catch (e: Exception) {
+
+                    }
+                }
+
             }
 
             is EditDashboardItemAction.FavoriteGroup -> {
-                favoriteGroup(action.itemViewModel)
+                viewModelScope.launch {
+                    try {
+                        favoriteGroup(action.itemViewModel)
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
+                    } catch (e: Exception) {
+
+                    }
+                }
             }
 
             is EditDashboardItemAction.UnfavoriteCourse -> {
-                unfavoriteCourse(action.itemViewModel)
+                viewModelScope.launch {
+                    try {
+                        unfavoriteCourse(action.itemViewModel)
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
+                    } catch (e: Exception) {
+
+                    }
+                }
             }
 
             is EditDashboardItemAction.UnfavoriteGroup -> {
-                unfavoriteGroup(action.itemViewModel)
+                viewModelScope.launch {
+                    try {
+                        unfavoriteGroup(action.itemViewModel)
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
+                    } catch (e: Exception) {
+
+                    }
+                }
             }
         }
     }
 
-    private fun favoriteCourse(item: EditDashboardCourseItemViewModel) {
-        viewModelScope.launch {
-            try {
-                courseManager.addCourseToFavoritesAsync(item.id).await().dataOrThrow
-                favoriteCourseMap[item.id] = courseMap?.get(item.id)
-                        ?: error("Course does not exist")
-                courseMap?.get(item.id)?.isFavorite = true
-                item.apply {
-                    isFavorite = true
-                    item.notifyChange()
-                }
-                courseHeader.apply {
-                    hasItemSelected = favoriteCourseMap.isNotEmpty()
-                    notifyChange()
-                }
-            } catch (e: Exception) {
-
-            }
+    private suspend fun favoriteCourse(item: EditDashboardCourseItemViewModel) {
+        courseManager.addCourseToFavoritesAsync(item.id).await().dataOrThrow
+        favoriteCourseMap[item.id] = courseMap?.get(item.id)
+                ?: error("Course does not exist")
+        courseMap?.get(item.id)?.isFavorite = true
+        item.apply {
+            isFavorite = true
+            notifyChange()
+        }
+        courseHeader.apply {
+            hasItemSelected = favoriteCourseMap.isNotEmpty()
+            notifyChange()
         }
     }
 
-    private fun unfavoriteCourse(item: EditDashboardCourseItemViewModel) {
-        viewModelScope.launch {
-            try {
-                courseManager.removeCourseFromFavoritesAsync(item.id).await().dataOrThrow
-                favoriteCourseMap.remove(item.id)
-                courseMap?.get(item.id)?.isFavorite = false
-                item.apply {
-                    isFavorite = false
-                    notifyChange()
-                }
-                courseHeader.apply {
-                    hasItemSelected = favoriteCourseMap.isNotEmpty()
-                    notifyChange()
-                }
-            } catch (e: Exception) {
-
-            }
+    private suspend fun unfavoriteCourse(item: EditDashboardCourseItemViewModel) {
+        courseManager.removeCourseFromFavoritesAsync(item.id).await().dataOrThrow
+        favoriteCourseMap.remove(item.id)
+        courseMap?.get(item.id)?.isFavorite = false
+        item.apply {
+            isFavorite = false
+            notifyChange()
+        }
+        courseHeader.apply {
+            hasItemSelected = favoriteCourseMap.isNotEmpty()
+            notifyChange()
         }
     }
 
-    private fun favoriteGroup(item: EditDashboardGroupItemViewModel) {
-        viewModelScope.launch {
-            try {
-                groupManager.addGroupToFavoritesAsync(item.id).await().dataOrThrow
-                favoriteGroupMap[item.id] = groupMap?.get(item.id) ?: error("Group does not exist")
-                groupMap?.get(item.id)?.isFavorite = true
-                item.apply {
-                    isFavorite = true
-                    item.notifyChange()
-                }
-                groupHeader.apply {
-                    hasItemSelected = favoriteGroupMap.isNotEmpty()
-                    notifyChange()
-                }
-            } catch (e: Exception) {
-
-            }
+    private suspend fun favoriteGroup(item: EditDashboardGroupItemViewModel) {
+        groupManager.addGroupToFavoritesAsync(item.id).await().dataOrThrow
+        favoriteGroupMap[item.id] = groupMap?.get(item.id) ?: error("Group does not exist")
+        groupMap?.get(item.id)?.isFavorite = true
+        item.apply {
+            isFavorite = true
+            notifyChange()
+        }
+        groupHeader.apply {
+            hasItemSelected = favoriteGroupMap.isNotEmpty()
+            notifyChange()
         }
     }
 
-    private fun unfavoriteGroup(item: EditDashboardGroupItemViewModel) {
-        viewModelScope.launch {
-            try {
-                groupManager.removeGroupFromFavoritesAsync(item.id).await().dataOrThrow
-                favoriteGroupMap.remove(item.id)
-                groupMap?.get(item.id)?.isFavorite = false
-                item.apply {
-                    isFavorite = false
-                    notifyChange()
-                }
-                groupHeader.apply {
-                    hasItemSelected = favoriteGroupMap.isNotEmpty()
-                    notifyChange()
-                }
-            } catch (e: Exception) {
-
-            }
+    private suspend fun unfavoriteGroup(item: EditDashboardGroupItemViewModel) {
+        groupManager.removeGroupFromFavoritesAsync(item.id).await().dataOrThrow
+        favoriteGroupMap.remove(item.id)
+        groupMap?.get(item.id)?.isFavorite = false
+        item.apply {
+            isFavorite = false
+            notifyChange()
+        }
+        groupHeader.apply {
+            hasItemSelected = favoriteGroupMap.isNotEmpty()
+            notifyChange()
         }
     }
 
     private fun selectAllGroups() {
-        groupsViewData.forEach { if (!it.isFavorite) favoriteGroup(it) }
+        viewModelScope.launch {
+            try {
+                groupsViewData.forEach { if (!it.isFavorite) favoriteGroup(it) }
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
+            } catch (e: Exception) {
+
+            }
+        }
+
     }
 
     private fun deselectAllGroups() {
-        groupsViewData.forEach { if (it.isFavorite) unfavoriteGroup(it) }
+        viewModelScope.launch {
+            try {
+                groupsViewData.forEach { if (it.isFavorite) unfavoriteGroup(it) }
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     private fun selectAllCourses() {
-        currentCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
-        futureCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
+        viewModelScope.launch {
+            try {
+                currentCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
+                futureCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     private fun deselectAllCourses() {
-        currentCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
-        futureCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
+        viewModelScope.launch {
+            try {
+                currentCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
+                futureCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
+            } catch (e: Exception) {
+
+            }
+        }
     }
 
     private fun getCurrentCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
@@ -245,7 +279,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             if (it.isFavorite) {
                 favoriteCourseMap[it.id] = it
             }
-            EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction) }
+            EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
+        }
     }
 
     private fun getGroups(groups: List<Group>): List<EditDashboardGroupItemViewModel> {
