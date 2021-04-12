@@ -16,17 +16,14 @@
  */
 package com.instructure.student.mobius.settings.help
 
-data class HelpDialogViewData(val helpLinks: List<HelpLinkItemViewModel>)
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.HelpLink
+import com.instructure.pandautils.features.help.HelpLinkFilter
 
-data class HelpLinkViewData(val title: String, val subtitle: String, val action: HelpDialogAction)
+class StudentHelpLinkFilter : HelpLinkFilter {
 
-sealed class HelpDialogAction {
-    object ReportProblem : HelpDialogAction()
-    object AskInstructor : HelpDialogAction()
-    object RateTheApp : HelpDialogAction()
-    data class SubmitFeatureIdea(val recipient: String, val subject: String, val emailBody: String) : HelpDialogAction()
-    data class Phone(val url: String) : HelpDialogAction()
-    data class SendMail(val url: String) : HelpDialogAction()
-    data class OpenExternalBrowser(val url: String) : HelpDialogAction()
-    data class OpenWebView(val url: String, val title: String) : HelpDialogAction()
+    override fun isLinkAllowed(link: HelpLink, favoriteCourses: List<Course>): Boolean {
+        return ((link.availableTo.contains("student") || link.availableTo.contains("user"))
+            && (link.url != "#teacher_feedback" || favoriteCourses.filter { !it.isTeacher }.count() > 0))
+    }
 }

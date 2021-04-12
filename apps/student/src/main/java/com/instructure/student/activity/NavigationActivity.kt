@@ -24,7 +24,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.*
@@ -65,6 +64,7 @@ import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.MasqueradingDialog
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.dialogs.UploadFilesDialog
+import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.*
@@ -76,7 +76,6 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.student.mobius.settings.help.HelpDialogFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask

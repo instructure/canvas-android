@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.features.help
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -28,10 +28,10 @@ import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.PackageInfoProvider
-import com.instructure.student.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -44,7 +44,8 @@ class HelpDialogViewModel @Inject constructor(
     private val courseManager: CourseManager,
     @ApplicationContext private val context: Context,
     private val apiPrefs: ApiPrefs,
-    private val packageInfoProvider: PackageInfoProvider) : ViewModel() {
+    private val packageInfoProvider: PackageInfoProvider,
+    private val helpLinkFilter: HelpLinkFilter) : ViewModel() {
 
     val state: LiveData<ViewState>
         get() = _state
@@ -98,7 +99,7 @@ class HelpDialogViewModel @Inject constructor(
 
         return list
             // Only want links for students
-            .filter { filterLinks(it, favoriteCourses) }
+            .filter { helpLinkFilter.isLinkAllowed(it, favoriteCourses) }
             .map { HelpLinkItemViewModel(HelpLinkViewData(it.text, it.subtext, mapAction(it)), ::onLinkClicked) }
             .plus(HelpLinkItemViewModel(rateLink, ::onLinkClicked))
     }
