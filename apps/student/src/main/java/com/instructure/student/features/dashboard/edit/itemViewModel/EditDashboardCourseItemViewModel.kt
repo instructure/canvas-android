@@ -23,7 +23,7 @@ import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.EditDashboardItemAction
 import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
-class EditDashboardCourseItemViewModel(val id: Long, val name: String?, @get:Bindable var isFavorite: Boolean, val termTitle: String?, private val actionHandler: (EditDashboardItemAction) -> Unit) : ItemViewModel, BaseObservable() {
+class EditDashboardCourseItemViewModel(val id: Long, val name: String?, @get:Bindable var isFavorite: Boolean, val favoriteable: Boolean, val openable: Boolean, val termTitle: String?, private val actionHandler: (EditDashboardItemAction) -> Unit) : ItemViewModel, BaseObservable() {
 
     override val layoutId: Int = R.layout.viewholder_edit_dashboard_course
 
@@ -34,6 +34,11 @@ class EditDashboardCourseItemViewModel(val id: Long, val name: String?, @get:Bin
     }
 
     fun onFavoriteClick() {
+        if (!favoriteable) {
+            actionHandler(EditDashboardItemAction.ShowSnackBar(R.string.inactive_courses_cant_be_added_to_dashboard))
+            return
+        }
+
         if (isFavorite) {
             actionHandler(EditDashboardItemAction.UnfavoriteCourse(this))
         } else {

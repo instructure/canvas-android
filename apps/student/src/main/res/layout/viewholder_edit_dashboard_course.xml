@@ -41,10 +41,11 @@
                 android:id="@+id/favoriteButton"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:alpha="@{itemViewModel.favoriteable ? 1.0f : 0.5f}"
                 android:contentDescription="@{itemViewModel.favorite ? @string/courseFavorited : @string/courseNotFavorited}"
                 android:onClick="@{() -> itemViewModel.onFavoriteClick()}"
                 android:src="@{itemViewModel.favorite ? @drawable/ic_star_filled : @drawable/ic_star_outline}"
-                android:tint="@color/canvasDefaultAccent"
+                android:tint="@{itemViewModel.favoriteable ? @color/canvasDefaultAccent : @color/defaultTextDark}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -83,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{() -> itemViewModel.onClick()}"
                 android:src="@drawable/ic_open_arrow"
+                android:visibility="@{itemViewModel.openable ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

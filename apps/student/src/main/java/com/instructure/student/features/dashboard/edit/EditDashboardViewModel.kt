@@ -25,8 +25,7 @@ import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.hasActiveEnrollment
+import com.instructure.canvasapi2.utils.*
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -150,6 +149,10 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                     }
                 }
             }
+
+            is EditDashboardItemAction.ShowSnackBar -> {
+                _events.postValue(Event(action))
+            }
         }
     }
 
@@ -264,13 +267,31 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             if (it.isFavorite) {
                 favoriteCourseMap[it.id] = it
             }
-            EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
+            EditDashboardCourseItemViewModel(
+                    id = it.id,
+                    name = it.name,
+                    isFavorite = it.isFavorite,
+                    favoriteable = it.isValidTerm() && it.isNotDeleted() && it.isPublished(),
+                    openable = it.isNotDeleted() && it.isPublished(),
+                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+                    actionHandler = ::handleAction
+            )
         }
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         val pastCourses = courses.filter { it.endDate?.before(Date()) ?: false }
-        return pastCourses.map { EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction) }
+        return pastCourses.map {
+            EditDashboardCourseItemViewModel(
+                    id = it.id,
+                    name = it.name,
+                    isFavorite = it.isFavorite,
+                    favoriteable = false,
+                    openable = it.isNotDeleted() && it.isPublished(),
+                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+                    actionHandler = ::handleAction
+            )
+        }
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
@@ -279,7 +300,15 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             if (it.isFavorite) {
                 favoriteCourseMap[it.id] = it
             }
-            EditDashboardCourseItemViewModel(it.id, it.name, it.isFavorite, "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}", ::handleAction)
+            EditDashboardCourseItemViewModel(
+                    id = it.id,
+                    name = it.name,
+                    isFavorite = it.isFavorite,
+                    favoriteable = it.isValidTerm() && it.isNotDeleted() && it.isPublished(),
+                    openable = it.isNotDeleted() && it.isPublished(),
+                    termTitle = "${it.term?.name} | ${it.enrollments?.get(0)?.type?.apiTypeString}",
+                    actionHandler = ::handleAction
+            )
         }
     }
 

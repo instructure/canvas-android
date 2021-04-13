@@ -69,7 +69,7 @@ data class Course(
         @SerializedName("restrict_enrollments_to_course_dates")
         val restrictEnrollmentsToCourseDate: Boolean = false,
         @SerializedName("workflow_state")
-        val workflowState: String? = null
+        val workflowState: WorkflowState? = null
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 
@@ -210,7 +210,7 @@ data class Course(
         val now = Date()
         if (accessRestrictedByDate) return false
 
-        if (workflowState == "completed") return false
+        if (workflowState == WorkflowState.COMPLETED) return false
 
         return if (restrictEnrollmentsToCourseDate) {
             isWithinDates(startAt.toDate(), endAt.toDate(), now)
@@ -275,5 +275,13 @@ data class Course(
         @SerializedName("cc_by_sa") CC_ATTRIBUTION_SHARE_ALIKE("cc_by_sa", "CC Attribution Share Alike"),
         @SerializedName("cc_by") CC_ATTRIBUTION("cc_by", "CC Attribution"),
         @SerializedName("public_domain") PUBLIC_DOMAIN("public_domain", "Public Domain")
+    }
+
+    enum class WorkflowState(val apiString: String) {
+        @SerializedName("unpublished") UNPUBLISHED("unpublished"),
+        @SerializedName("available") AVAILABLE("available"),
+        @SerializedName("completed") COMPLETED("completed"),
+        @SerializedName("deleted") DELETED("deleted")
+
     }
 }
