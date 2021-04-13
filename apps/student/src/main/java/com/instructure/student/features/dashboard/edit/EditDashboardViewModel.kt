@@ -334,7 +334,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         if (currentCoursesViewData.isNotEmpty() || pastCoursesViewData.isNotEmpty() || futureCoursesViewData.isNotEmpty()) {
             courseHeader = EditDashboardHeaderViewModel(R.string.all_courses, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
             items.add(courseHeader)
-            items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_description))
+            items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_course_description))
         }
 
         if (currentCoursesViewData.isNotEmpty()) {
@@ -352,6 +352,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         if (groupsViewData.isNotEmpty()) {
             groupHeader = EditDashboardHeaderViewModel(R.string.all_groups, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
             items.add(groupHeader)
+            items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_group_description))
             items.addAll(groupsViewData)
         }
         _data.postValue(EditDashboardViewData(items))
