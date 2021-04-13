@@ -21,7 +21,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.teacher.R
 
 class AssignmentListPage : BasePage() {
@@ -53,7 +55,11 @@ class AssignmentListPage : BasePage() {
     }
 
     fun assertHasAssignment(assignment: Assignment) {
-        waitForViewWithText(assignment.name!!).assertDisplayed()
+        assertAssignmentName(assignment.name!!)
+    }
+
+    fun assertHasAssignment(assignment: AssignmentApiModel) {
+        assertAssignmentName(assignment.name)
     }
 
     fun assertHasGradingPeriods() {
@@ -70,5 +76,13 @@ class AssignmentListPage : BasePage() {
 
     fun assertAssignmentCount(count: Int) {
         assignmentRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    private fun assertAssignmentName(assignmentName: String) {
+        waitForViewWithText(assignmentName).assertDisplayed()
     }
 }
