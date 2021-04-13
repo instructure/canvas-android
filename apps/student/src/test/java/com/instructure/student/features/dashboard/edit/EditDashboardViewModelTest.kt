@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
@@ -168,9 +169,10 @@ class EditDashboardViewModelTest {
         assertTrue(viewModel.state.value is ViewState.Success)
 
         val data = viewModel.data.value?.items ?: emptyList()
-        assertEquals(2, data.size)
+        assertEquals(3, data.size)
         assertTrue(data[0] is EditDashboardHeaderViewModel)
-        assertTrue(data[1] is EditDashboardGroupItemViewModel)
+        assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
     }
 
     @Test
@@ -266,10 +268,10 @@ class EditDashboardViewModelTest {
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
-        assertEquals(2, data.size)
-        assertTrue(data[1] is EditDashboardGroupItemViewModel)
+        assertEquals(3, data.size)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
 
-        val itemViewModel = (data[1] as EditDashboardGroupItemViewModel)
+        val itemViewModel = (data[2] as EditDashboardGroupItemViewModel)
         itemViewModel.onFavoriteClick()
         assertTrue(itemViewModel.isFavorite)
     }
@@ -299,19 +301,182 @@ class EditDashboardViewModelTest {
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
-        assertEquals(2, data.size)
-        assertTrue(data[1] is EditDashboardGroupItemViewModel)
+        assertEquals(3, data.size)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
 
-        val itemViewModel = (data[1] as EditDashboardGroupItemViewModel)
+        val itemViewModel = (data[2] as EditDashboardGroupItemViewModel)
         itemViewModel.onFavoriteClick()
         assertFalse(itemViewModel.isFavorite)
     }
 
+    @Test
+    fun `Add all courses to favorites`() {
+        val courses = listOf(
+                createCourse(1L, "Current course"),
+                createCourse(2L, "Current course 2")
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val headerViewModel = (data[0] as EditDashboardHeaderViewModel)
+        assertFalse(headerViewModel.hasItemSelected)
+        headerViewModel.onActionClick()
+        assertTrue(headerViewModel.hasItemSelected)
+        data.forEach {
+            if (it is EditDashboardCourseItemViewModel) {
+                assertTrue(it.isFavorite)
+            }
+        }
+    }
+
+    @Test
+    fun `Remove all courses from favorites`() {
+        val courses = listOf(
+                createCourse(1L, "Current course", true),
+                createCourse(2L, "Current course 2", false)
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        every { courseManager.removeCourseFromFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val headerViewModel = (data[0] as EditDashboardHeaderViewModel)
+        assertTrue(headerViewModel.hasItemSelected)
+        headerViewModel.onActionClick()
+        assertFalse(headerViewModel.hasItemSelected)
+        data.forEach {
+            if (it is EditDashboardCourseItemViewModel) {
+                assertFalse(it.isFavorite)
+            }
+        }
+    }
+
+    @Test
+    fun `Add all groups to favorites`() {
+        //Given
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        val groups = listOf(
+                createGroup(1L, "Group"),
+                createGroup(2L, "Group 2")
+        )
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        every { groupManager.addGroupToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val headerViewModel = (data[0] as EditDashboardHeaderViewModel)
+        assertFalse(headerViewModel.hasItemSelected)
+        headerViewModel.onActionClick()
+        assertTrue(headerViewModel.hasItemSelected)
+        data.forEach {
+            if (it is EditDashboardGroupItemViewModel) {
+                assertTrue(it.isFavorite)
+            }
+        }
+    }
+
+    @Test
+    fun `Remove all groups from favorites`() {
+        //Given
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
+        val groups = listOf(
+                createGroup(1L, "Group", true),
+                createGroup(2L, "Group 2")
+        )
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        every { groupManager.removeGroupFromFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+
+        val headerViewModel = (data[0] as EditDashboardHeaderViewModel)
+        assertTrue(headerViewModel.hasItemSelected)
+        headerViewModel.onActionClick()
+        assertFalse(headerViewModel.hasItemSelected)
+        data.forEach {
+            if (it is EditDashboardGroupItemViewModel) {
+                assertFalse(it.isFavorite)
+            }
+        }
+    }
+
     private fun createCourse(id: Long, name: String, isFavorite: Boolean = false): Course {
-        val endDate = OffsetDateTime.now().withMonth(4).withDayOfMonth(2).withHour(14).withMinute(0)
         val startDate = OffsetDateTime.now()
+        val endDate = startDate.withDayOfMonth(startDate.dayOfMonth + 1)
+
         val enrollment = Enrollment(
                 type = Enrollment.EnrollmentType.Student,
+                enrollmentState = EnrollmentAPI.STATE_ACTIVE,
                 currentGradingPeriodId = 27,
                 multipleGradingPeriodsEnabled = true)
         val enrollments = arrayListOf(enrollment)
