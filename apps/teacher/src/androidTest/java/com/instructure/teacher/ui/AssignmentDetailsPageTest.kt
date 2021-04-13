@@ -128,7 +128,7 @@ class AssignmentDetailsPageTest : TeacherTest() {
                 submissionTypes = listOf(ONLINE_TEXT_ENTRY),
                 students = 1,
                 withSubmission = true)
-        assignmentDetailsPage.assertHasSubmitted()
+        assignmentDetailsPage.assertNeedsGrading()
     }
 
     @Test

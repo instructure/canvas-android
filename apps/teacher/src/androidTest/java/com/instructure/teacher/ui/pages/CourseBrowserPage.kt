@@ -20,9 +20,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
+import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.espresso.*
 import com.instructure.espresso.page.*
 import com.instructure.teacher.R
@@ -41,7 +44,7 @@ class CourseBrowserPage : BasePage() {
     private val courseSettingsMenuButton by OnViewWithId(R.id.menu_course_browser_settings)
 
     fun openAssignmentsTab() {
-        waitForViewWithText("Assignments").click()
+        scrollOpen("Assignments")
     }
 
     private fun scrollDownToCourseBrowser()
@@ -122,10 +125,10 @@ class CourseBrowserPage : BasePage() {
 
     private fun scrollOpen(textName: String) {
         try {
-            waitForViewWithText(textName).click()
+            waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
         } catch (e: NoMatchingViewException) {
             scrollDownToCourseBrowser()
-            waitForViewWithText(textName).click()
+            waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
         }
     }
 }

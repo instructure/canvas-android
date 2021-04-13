@@ -96,7 +96,7 @@ class SpeedGraderE2ETest : TeacherTest() {
         courseBrowserPage.openAssignmentsTab()
 
         assignmentListPage.clickAssignment(assignment[0])
-        assignmentDetailsPage.assertHasSubmitted(actual = 1, outOf = 3)
+        assignmentDetailsPage.assertNeedsGrading(actual = 1, outOf = 3)
         assignmentDetailsPage.assertNotSubmitted(actual = 1, outOf = 3)
         assignmentDetailsPage.openNotSubmittedSubmissions()
         assignmentSubmissionListPage.assertHasStudentSubmission(canvasUser = noSubStudent)

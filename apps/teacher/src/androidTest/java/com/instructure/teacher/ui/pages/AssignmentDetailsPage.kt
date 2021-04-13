@@ -19,21 +19,9 @@ package com.instructure.teacher.ui.pages
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.espresso.OnViewWithContentDescription
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasContentDescription
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertNotDisplayed
-import com.instructure.espresso.assertNotHasText
-import com.instructure.espresso.assertVisible
-import com.instructure.espresso.click
-import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.scrollTo
-import com.instructure.espresso.page.waitForView
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.espresso.*
+import com.instructure.espresso.page.*
 import com.instructure.teacher.R
 
 @Suppress("unused")
@@ -98,12 +86,11 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
     }
 
     fun assertAssignmentDetails(assignment: Assignment) {
-        assignmentNameTextView.assertHasText(assignment.name!!)
-        if (assignment.published) {
-            publishStatusTextView.assertHasText(R.string.published)
-        } else {
-            publishStatusTextView.assertHasText(R.string.not_published)
-        }
+        assertAssignmentDetails(assignment.name!!, assignment.published)
+    }
+
+    fun assertAssignmentDetails(assignment: AssignmentApiModel) {
+        assertAssignmentDetails(assignment.name, assignment.published)
     }
 
     fun assertAssignmentClosed() {
@@ -156,7 +143,7 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         pointsTextView.assertContainsText(newAssignmentPoints)
     }
 
-    fun assertHasSubmitted(actual: Int = 1, outOf: Int = 1) {
+    fun assertNeedsGrading(actual: Int = 1, outOf: Int = 1) {
         val resources = InstrumentationRegistry.getTargetContext()
         ungradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_needs_grading).format(actual, outOf))
     }
@@ -166,11 +153,33 @@ class AssignmentDetailsPage : BasePage(pageResId = R.id.assignmentDetailsPage) {
         notSubmittedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_unsubmitted).format(actual, outOf))
     }
 
+    fun assertHasGraded(actual: Int =1, outOf: Int = 1) {
+        val resources = InstrumentationRegistry.getTargetContext()
+        gradedDonutWrapper.assertHasContentDescription(resources.getString(R.string.content_description_submission_donut_graded).format(actual, outOf))
+    }
+
     fun scrollToSubmissionType() {
         scrollTo(R.id.submissionTypesTextView)
     }
 
     fun waitForRender() {
         waitForView(withId(R.id.assignmentDetailsPage))
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
+    }
+
+    fun assertPublishedStatus(published: Boolean) {
+        if (published) {
+            publishStatusTextView.assertHasText(R.string.published)
+        } else {
+            publishStatusTextView.assertHasText(R.string.not_published)
+        }
+    }
+
+    private fun assertAssignmentDetails(assignmentName: String, published: Boolean) {
+        assignmentNameTextView.assertHasText(assignmentName)
+        assertPublishedStatus(published)
     }
 }
