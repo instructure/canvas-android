@@ -83,6 +83,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 courseMap = courses.associateBy { it.id }
 
                 groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
+                groups = groups.filter { it.isActive(courseMap?.get(it.courseId)) }
                 groupMap = groups.associateBy { it.id }
 
                 createListItems(courses, groups)

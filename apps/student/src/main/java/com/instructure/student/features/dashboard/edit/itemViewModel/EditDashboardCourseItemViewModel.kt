@@ -30,6 +30,11 @@ class EditDashboardCourseItemViewModel(val id: Long, val name: String?, @get:Bin
     override val viewType: Int = EditDashboardItemViewType.COURSE.viewType
 
     fun onClick() {
+        if (!openable) {
+            actionHandler(EditDashboardItemAction.ShowSnackBar(R.string.unauthorized))
+            return
+        }
+
         actionHandler(EditDashboardItemAction.OpenCourse(id))
     }
 

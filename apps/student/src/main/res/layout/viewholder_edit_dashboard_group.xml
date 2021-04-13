@@ -35,7 +35,10 @@
             android:layout_height="wrap_content"
             android:background="?android:selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onClick()}"
-            android:padding="16dp">
+            android:paddingTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingBottom="16dp"
+            android:paddingEnd="0dp">
 
             <ImageView
                 android:id="@+id/favoriteButton"
