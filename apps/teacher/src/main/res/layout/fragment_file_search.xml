@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <com.instructure.teacher.view.EmptyPandaView
+        <com.instructure.pandautils.views.EmptyView
             android:id="@+id/emptyPandaView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

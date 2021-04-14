@@ -22,6 +22,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import android.widget.DatePicker
 import android.widget.TimePicker
+import androidx.test.espresso.Espresso
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.*
 import com.instructure.canvas.espresso.has
@@ -61,12 +62,14 @@ class EditAssignmentDetailsPage : BasePage() {
 
     fun editAssignmentName(newName: String) {
         assignmentNameEditText.replaceText(newName)
+        Espresso.closeSoftKeyboard()
         saveAssignment()
     }
 
     fun editAssignmentPoints(newPoints: Double) {
         val df = DecimalFormat("#")
         pointsPossibleEditText.replaceText(df.format(newPoints))
+        Espresso.closeSoftKeyboard()
         saveAssignment()
     }
 
@@ -77,6 +80,7 @@ class EditAssignmentDetailsPage : BasePage() {
     fun clickEditUnlockTime() = waitScrollClick(R.id.fromTime)
     fun clickEditLockDate() = waitScrollClick(R.id.toDate)
     fun clickEditLockTime() = waitScrollClick(R.id.toTime)
+    fun clickPublishSwitch() = waitScrollClick(R.id.publishSwitch)
 
     fun clickAddOverride() = onView(allOf(withId(R.id.addOverride), withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE))).scrollTo().click()
     fun removeFirstOverride() {

@@ -14,13 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.settings.help
+package com.instructure.pandautils.features.help
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -29,24 +27,23 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.HelpDialogBinding
+import com.instructure.pandautils.features.help.HelpDialogAction
+import com.instructure.pandautils.features.help.HelpDialogViewModel
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
-import com.instructure.student.R
-import com.instructure.student.activity.InternalWebViewActivity
-import com.instructure.student.databinding.HelpDialogBinding
-import com.instructure.student.dialog.AskInstructorDialogStyled
-import com.instructure.student.util.LoggingUtility
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HelpDialogFragment : DialogFragment() {
 
     private val viewModel: HelpDialogViewModel by viewModels()
+
+    @Inject
+    lateinit var helpDialogFragmentBehavior: HelpDialogFragmentBehavior
 
     @SuppressLint("InflateParams") // Suppress lint warning about null parent when inflating layout
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -72,18 +69,9 @@ class HelpDialogFragment : DialogFragment() {
 
     private fun handleAction(action: HelpDialogAction) {
         when (action) {
-            is HelpDialogAction.ReportProblem -> {
-                // Report a problem
-                val dialog = ErrorReportDialog()
-                dialog.arguments = ErrorReportDialog.createBundle(getString(R.string.appUserTypeStudent))
-                dialog.show(requireActivity().supportFragmentManager, ErrorReportDialog.TAG)
-            }
-            is HelpDialogAction.AskInstructor -> {
-                // Ask instructor a question
-                // Open the ask instructor dialog
-                AskInstructorDialogStyled().show(requireFragmentManager(), AskInstructorDialogStyled.TAG)
-            }
-            is HelpDialogAction.RateTheApp -> Utils.goToAppStore(AppType.STUDENT, activity)
+            is HelpDialogAction.ReportProblem -> helpDialogFragmentBehavior.reportProblem()
+            is HelpDialogAction.RateTheApp -> helpDialogFragmentBehavior.rateTheApp()
+            is HelpDialogAction.AskInstructor -> helpDialogFragmentBehavior.askInstructor()
             // External URL, but we handle within the app
             is HelpDialogAction.SubmitFeatureIdea -> {
                 // Before custom help links, we were handling request a feature ourselves and
@@ -110,8 +98,7 @@ class HelpDialogFragment : DialogFragment() {
                 startActivity(intent)
             }
             // External URL
-            is HelpDialogAction.OpenWebView ->
-                startActivity(InternalWebViewActivity.createIntent(activity, action.url, action.title, false))
+            is HelpDialogAction.OpenWebView -> helpDialogFragmentBehavior.openWebView(action.url, action.title)
         }
     }
 
@@ -133,7 +120,7 @@ class HelpDialogFragment : DialogFragment() {
     }
 
     companion object {
-        private const val TAG = "helpDialog"
+        const val TAG = "helpDialog"
 
         fun show(activity: FragmentActivity): HelpDialogFragment =
             HelpDialogFragment().apply {

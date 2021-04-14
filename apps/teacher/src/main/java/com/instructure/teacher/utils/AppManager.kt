@@ -35,7 +35,9 @@ import com.instructure.teacher.tasks.TeacherLogoutTask
 import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class AppManager : com.instructure.canvasapi2.AppManager() {
 
     override fun onCreate() {

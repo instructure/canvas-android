@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isNotDeleted
 import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.canvasapi2.utils.weave.awaitApis
 import com.instructure.canvasapi2.utils.weave.catch
@@ -95,7 +94,7 @@ class CanvasContextListDialog : AppCompatDialogFragment() {
                 { CourseManager.getCourses(forceNetwork, it) },
                 { GroupManager.getFavoriteGroups(it, forceNetwork) }
             )
-            val validCourses = courses.filter { it.isFavorite && it.isValidTerm() && it.hasActiveEnrollment() && it.isNotDeleted() }
+            val validCourses = courses.filter { it.isFavorite && it.isValidTerm() && it.hasActiveEnrollment() }
             val courseMap = validCourses.associateBy { it.id }
             val validGroups = groups.filter { it.courseId == 0L || courseMap[it.courseId] != null }
             updateCanvasContexts(validCourses, validGroups)

@@ -28,7 +28,6 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
-import com.instructure.teacher.dialog.HelpDialogStyled
 import com.instructure.teacher.dialog.LegalDialog
 import com.instructure.teacher.factory.ProfileSettingsFragmentPresenterFactory
 import com.instructure.teacher.presenters.ProfileSettingsFragmentPresenter

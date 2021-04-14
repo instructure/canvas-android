@@ -14,9 +14,11 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emptyViewLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,6 +37,13 @@
         app:layout_constraintGuide_percent="@dimen/image_bottom"/>
 
     <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/titleTop"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="@dimen/title_top"/>
+
+    <androidx.constraintlayout.widget.Guideline
         android:id="@+id/textLeft"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
@@ -48,51 +57,43 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="@dimen/text_right"/>
 
+
     <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clickable="false"
         android:importantForAccessibility="no"
-        android:scaleType="fitCenter"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@id/imageBottom"
-        app:layout_constraintEnd_toEndOf="@id/textRight"
-        app:layout_constraintStart_toStartOf="@id/textLeft"
-        app:layout_constraintTop_toBottomOf="@id/imageTop"
+        android:scaleType="fitCenter"
         tools:src="@drawable/ic_panda_inboxzero"
-        tools:visibility="visible"/>
-
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/titleBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:barrierAllowsGoneWidgets="false"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="image"/>
+        tools:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/textLeft"
+        app:layout_constraintEnd_toEndOf="@id/textRight"
+        app:layout_constraintTop_toBottomOf="@id/imageTop"
+        app:layout_constraintBottom_toBottomOf="@id/imageBottom"/>
 
     <LinearLayout
-        android:id="@+id/textViews"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:id="@+id/textViews"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/textRight"
+        app:layout_constraintTop_toBottomOf="@id/titleTop"
         app:layout_constraintStart_toEndOf="@id/textLeft"
-        app:layout_constraintTop_toBottomOf="@id/titleBarrier">
+        app:layout_constraintEnd_toStartOf="@id/textRight">
 
         <TextView
             android:id="@+id/title"
             style="@style/TextFont.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:gravity="center_horizontal"
             android:text="@string/nothingUnread"
             android:textSize="@dimen/title_text_size"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            android:layout_marginBottom="4dp"
+            android:gravity="center"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/message"
@@ -100,21 +101,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="@string/noAssignmentsSubtext"
             android:textColor="@color/defaultTextGray"
             android:textSize="@dimen/message_text_size"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            android:text="@string/noAssignmentsSubtext"
+            tools:visibility="visible" />
     </LinearLayout>
+
 
     <include
         android:id="@+id/loading"
-        layout="@layout/loading_lame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        layout="@layout/loading_lame"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

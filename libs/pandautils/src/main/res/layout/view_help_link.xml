@@ -21,7 +21,7 @@
     <data>
         <variable
             name="itemViewModel"
-            type="com.instructure.student.mobius.settings.help.HelpLinkItemViewModel" />
+            type="com.instructure.pandautils.features.help.HelpLinkItemViewModel" />
     </data>
 
     <LinearLayout
