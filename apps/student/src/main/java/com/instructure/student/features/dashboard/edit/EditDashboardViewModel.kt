@@ -117,7 +117,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                         favoriteCourse(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
                     } catch (e: Exception) {
-
+                        Logger.d("Failed to select course: ${e.printStackTrace()}")
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
 
@@ -129,7 +130,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                         favoriteGroup(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
                     } catch (e: Exception) {
-
+                        Logger.d("Failed to select group: ${e.printStackTrace()}")
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
             }
@@ -140,7 +142,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                         unfavoriteCourse(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
                     } catch (e: Exception) {
-
+                        Logger.d("Failed to deselect course: ${e.printStackTrace()}")
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
             }
@@ -151,7 +154,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                         unfavoriteGroup(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
                     } catch (e: Exception) {
-
+                        Logger.d("Failed to deselect group: ${e.printStackTrace()}")
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
             }
@@ -225,7 +229,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 groupsViewData.forEach { if (!it.isFavorite) favoriteGroup(it) }
                 _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
             } catch (e: Exception) {
-
+                Logger.d("Failed to select all groups: ${e.printStackTrace()}")
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
             }
         }
 
@@ -237,7 +242,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 groupsViewData.forEach { if (it.isFavorite) unfavoriteGroup(it) }
                 _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
             } catch (e: Exception) {
-
+                Logger.d("Failed to deselect all groups: ${e.printStackTrace()}")
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
             }
         }
     }
@@ -249,7 +255,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 futureCoursesViewData.forEach { if (!it.isFavorite && it.favoriteable) favoriteCourse(it) }
                 _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
             } catch (e: Exception) {
-
+                Logger.d("Failed to select all courses: ${e.printStackTrace()}")
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
             }
         }
     }
@@ -261,7 +268,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 futureCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
                 _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
             } catch (e: Exception) {
-
+                Logger.d("Failed to deselect all courses: ${e.printStackTrace()}")
+                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
             }
         }
     }
