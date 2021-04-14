@@ -87,11 +87,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 groupMap = groups.associateBy { it.id }
 
                 val items = createListItems(courses, groups)
+                _data.postValue(EditDashboardViewData(items))
                 if (items.isEmpty()) {
                     _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
                 } else {
                     _state.postValue(ViewState.Success)
-                    _data.postValue(EditDashboardViewData(items))
                 }
 
             } catch (e: Exception) {
@@ -378,13 +378,13 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         } else {
             val queriedCourses = courses.filter { it.name.contains(query, true) }
             val queriedGroups = groups.filter { it.name?.contains(query, true) ?: false || it.description?.contains(query, true) ?: false || courseMap?.get(it.courseId)?.name?.contains(query, true) ?: false }
-            val items = createListItems(queriedCourses, queriedGroups)
 
+            val items = createListItems(queriedCourses, queriedGroups)
+            _data.postValue(EditDashboardViewData(items))
             if (items.isEmpty()) {
                 _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
             } else {
                 _state.postValue(ViewState.Success)
-                _data.postValue(EditDashboardViewData(items))
             }
         }
     }

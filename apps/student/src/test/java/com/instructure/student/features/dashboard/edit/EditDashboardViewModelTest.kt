@@ -470,6 +470,105 @@ class EditDashboardViewModelTest {
         }
     }
 
+    @Test
+    fun `Query course`() {
+        val courses = listOf(
+                createCourse(1L, "Course", true),
+        )
+
+        val groups = listOf(
+                createGroup(2L, "Group", true),
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        viewModel.queryItems("course")
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(4, data.size)
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+        val courseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Course", courseItemViewModel.name)
+    }
+
+    @Test
+    fun `Query group`() {
+        val courses = listOf(
+                createCourse(1L, "Course", true),
+        )
+
+        val groups = listOf(
+                createGroup(2L, "Group", true),
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        viewModel.queryItems("group")
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(3, data.size)
+        assertTrue(data[2] is EditDashboardGroupItemViewModel)
+        val groupItemViewModel = data[2] as EditDashboardGroupItemViewModel
+        assertEquals("Group", groupItemViewModel.name)
+    }
+
+    @Test
+    fun `No match for query`() {
+        val courses = listOf(
+                createCourse(1L, "Course", true),
+        )
+
+        val groups = listOf(
+                createGroup(2L, "Group", true),
+        )
+
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        viewModel.queryItems("No match")
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Empty)
+        assertEquals(0, data.size)
+    }
+
     private fun createCourse(id: Long, name: String, isFavorite: Boolean = false): Course {
         val startDate = OffsetDateTime.now()
         val endDate = startDate.withDayOfMonth(startDate.dayOfMonth + 1)
