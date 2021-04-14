@@ -86,9 +86,14 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 groups = groups.filter { it.isActive(courseMap?.get(it.courseId)) }
                 groupMap = groups.associateBy { it.id }
 
-                createListItems(courses, groups)
+                val items = createListItems(courses, groups)
+                if (items.isEmpty()) {
+                    _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+                } else {
+                    _state.postValue(ViewState.Success)
+                    _data.postValue(EditDashboardViewData(items))
+                }
 
-                _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 _state.postValue(ViewState.Error(e.message ?: ""))
                 Logger.d("Failed to grab courses: ${e.printStackTrace()}")
@@ -324,7 +329,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private fun createListItems(courses: List<Course>, groups: List<Group>) {
+    private fun createListItems(courses: List<Course>, groups: List<Group>): List<ItemViewModel> {
         currentCoursesViewData = getCurrentCourses(courses)
         pastCoursesViewData = getPastCourses(courses)
         futureCoursesViewData = getFutureCourses(courses)
@@ -355,7 +360,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_group_description))
             items.addAll(groupsViewData)
         }
-        _data.postValue(EditDashboardViewData(items))
+
+        return items
     }
 
     fun queryItems(query: String) {
@@ -364,7 +370,14 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         } else {
             val queriedCourses = courses.filter { it.name.contains(query, true) }
             val queriedGroups = groups.filter { it.name?.contains(query, true) ?: false || it.description?.contains(query, true) ?: false || courseMap?.get(it.courseId)?.name?.contains(query, true) ?: false }
-            createListItems(queriedCourses, queriedGroups)
+            val items = createListItems(queriedCourses, queriedGroups)
+
+            if (items.isEmpty()) {
+                _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+            } else {
+                _state.postValue(ViewState.Success)
+                _data.postValue(EditDashboardViewData(items))
+            }
         }
     }
 

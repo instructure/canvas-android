@@ -26,6 +26,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.isGone
@@ -138,6 +139,10 @@ open class EmptyView @JvmOverloads constructor(
 
     override fun emptyViewImage(drawable: Drawable) {
         setEmptyViewImage(drawable)
+    }
+
+    fun setEmptyViewImage(dResId: Int) {
+        ContextCompat.getDrawable(context, dResId)?.let { setEmptyViewImage(it) }
     }
 
     fun setImageVisible(visible: Boolean) {

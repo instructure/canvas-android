@@ -1159,4 +1159,6 @@
     <string name="all_removed_from_dashboard">All removed from Dashboard</string>
     <string name="inactive_courses_cant_be_added_to_dashboard">Inactive courses could not be added to Dashboard.</string>
     <string name="edit_dashboard">Edit Dashboard</string>
+    <string name="edit_dashboard_empty_title">No courses here</string>
+    <string name="edit_dashboard_empty_message">You have to be enrolled in a course to add it to the Dashboard.</string>
 </resources>

@@ -42,6 +42,12 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
     when (state) {
         is ViewState.Success -> emptyView.setGone()
         is ViewState.Loading -> emptyView.setLoading()
+        is ViewState.Empty -> {
+            state.emptyTitle?.let { emptyView.setTitleText(it) }
+            state.emptyMessage?.let { emptyView.setMessageText(it) }
+            state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
+            emptyView.setListEmpty()
+        }
         is ViewState.Error -> emptyView.setGone() // Currently just set this to gone, we don't need an empty view in the dialog, but need to find a generic solution for this.
     }
 }

@@ -16,8 +16,12 @@
  */
 package com.instructure.pandautils.mvvm
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+
 sealed class ViewState {
     object Loading : ViewState()
     object Success : ViewState()
+    data class Empty(@StringRes val emptyTitle: Int? = null, @StringRes val emptyMessage: Int? = null, @DrawableRes val emptyImage: Int? = null) : ViewState()
     class Error(val errorMessage: String) : ViewState()
 }
