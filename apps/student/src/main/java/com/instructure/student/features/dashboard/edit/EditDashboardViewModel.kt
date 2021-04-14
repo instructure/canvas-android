@@ -240,8 +240,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private fun selectAllCourses() {
         viewModelScope.launch {
             try {
-                currentCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
-                futureCoursesViewData.forEach { if (!it.isFavorite) favoriteCourse(it) }
+                currentCoursesViewData.forEach { if (!it.isFavorite && it.favoriteable) favoriteCourse(it) }
+                futureCoursesViewData.forEach { if (!it.isFavorite && it.favoriteable) favoriteCourse(it) }
                 _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
             } catch (e: Exception) {
 

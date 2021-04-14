@@ -1158,4 +1158,5 @@
     <string name="all_added_to_dashboard">All added to Dashboard</string>
     <string name="all_removed_from_dashboard">All removed from Dashboard</string>
     <string name="inactive_courses_cant_be_added_to_dashboard">Inactive courses could not be added to Dashboard.</string>
+    <string name="edit_dashboard">Edit Dashboard</string>
 </resources>

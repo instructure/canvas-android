@@ -61,8 +61,6 @@ object RouteResolver {
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
             cls.isA<InboxFragment>() -> InboxFragment.newInstance(route)
             cls.isA<CourseBrowserFragment>() -> CourseBrowserFragment.newInstance(route)
-            cls.isA<AllCoursesFragment>() -> AllCoursesFragment.newInstance(route)
-            cls.isA<EditFavoritesFragment>() -> EditFavoritesFragment.newInstance(route)
             cls.isA<EditDashboardFragment>() -> EditDashboardFragment.newInstance(route)
             cls.isA<ModuleQuizDecider>() -> ModuleQuizDecider.newInstance(route)
             cls.isA<EditPageDetailsFragment>() -> EditPageDetailsFragment.newInstance(route)

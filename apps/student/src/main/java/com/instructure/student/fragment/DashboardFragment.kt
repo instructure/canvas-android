@@ -107,7 +107,7 @@ class DashboardFragment : ParentFragment() {
             }
 
             override fun onSeeAllCourses() {
-                RouteMatcher.route(requireContext(), AllCoursesFragment.makeRoute())
+                RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
             }
 
             override fun onRemoveAnnouncement(announcement: AccountNotification, position: Int) {
@@ -163,7 +163,6 @@ class DashboardFragment : ParentFragment() {
     }
 
     override fun applyTheme() {
-        setupToolbarMenu(toolbar, R.menu.menu_favorite)
         toolbar.title = title()
         navigation?.attachNavigationDrawer(this, toolbar)
         // Styling done in attachNavigationDrawer
@@ -238,21 +237,6 @@ class DashboardFragment : ParentFragment() {
                 RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
             }
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_favorite, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.selectFavorites) {
-            if (!APIHelper.hasNetworkConnection()) {
-                toast(R.string.notAvailableOffline)
-                return true
-            }
-            RouteMatcher.route(requireContext(), EditDashboardFragment.makeRoute())
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
