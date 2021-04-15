@@ -17,8 +17,20 @@
 package com.instructure.student.navigation
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.interactions.router.Route
+import com.instructure.student.fragment.ParentFragment
 
 interface NavigationBehavior {
 
+    /** 'Root' fragments that should include the bottom nav bar */
+    val bottomNavBarFragments: List<Class<out ParentFragment>>
+
+    val homeFragmentClass: Class<out ParentFragment>
+
     fun setupBottomNavBar(bottomNavBar: BottomNavigationView)
+
+    fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
+
+    fun createHomeFragment(route: Route): ParentFragment
 }

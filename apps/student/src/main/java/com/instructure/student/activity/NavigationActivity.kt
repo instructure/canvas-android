@@ -108,21 +108,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var colorOverlayJob: Job? = null
 
-    /** 'Root' fragments that should include the bottom nav bar */
-    private val bottomNavBarFragments = listOf(
-        DashboardFragment::class.java,
-        CalendarFragment::class.java,
-        ToDoListFragment::class.java,
-        NotificationListFragment::class.java,
-        InboxFragment::class.java
-    )
-
     override fun contentResId(): Int = R.layout.activity_navigation
 
     private val isDrawerOpen: Boolean
         get() = !(drawerLayout == null || navigationDrawer == null) && drawerLayout.isDrawerOpen(navigationDrawer)
 
-    private val mNavigationDrawerItemClickListener = View.OnClickListener { v ->
+    private val mNavigationDrawerItemClickListener = View.OnClickListener { v -> // TODO Nav drawer
         drawerItemSelectedJob = weave {
             closeNavigationDrawer()
             delay(250)
@@ -185,7 +176,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             /* Update nav bar visibility to show for specific 'root' fragments. Also show the nav bar when there is
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
-            val visible = it::class.java in bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
+            val visible = it::class.java in navigationBehavior.bottomNavBarFragments || supportFragmentManager.backStackEntryCount <= 1
             bottomBar.setVisible(visible)
             bottomBarDivider.setVisible(visible)
         }
@@ -282,9 +273,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun loadLandingPage(clearBackStack: Boolean) {
-        if (clearBackStack) clearBackStack(DashboardFragment::class.java)
-        val dashboardRoute = DashboardFragment.makeRoute(ApiPrefs.user)
-        addFragment(DashboardFragment.newInstance(dashboardRoute), dashboardRoute)
+        if (clearBackStack) clearBackStack(navigationBehavior.homeFragmentClass)
+        val homeRoute = navigationBehavior.createHomeFragmentRoute(ApiPrefs.user)
+        addFragment(navigationBehavior.createHomeFragment(homeRoute), homeRoute)
 
         if (intent.extras?.containsKey(AppShortcutManager.APP_SHORTCUT_PLACEMENT) == true) {
             // Launch to the app shortcut placement
@@ -387,7 +378,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         drawerLayout?.openDrawer(navigationDrawer)
     }
 
-    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
+    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions { // TODO For changing navigation drawer
         //Navigation items
         navigationDrawerItem_files.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -507,7 +498,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
-            R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
+            R.id.bottomNavigationCourses -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
             R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
             R.id.bottomNavigationToDo -> {
                 val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -538,7 +529,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         topFragment?.let {
             val currentFragmentClass = it::class.java
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> abortReselect = currentFragmentClass.isAssignableFrom(DashboardFragment::class.java)
+                R.id.bottomNavigationCourses -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
@@ -548,7 +539,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if(!abortReselect) {
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> handleRoute(Route(DashboardFragment::class.java, ApiPrefs.user))
+                R.id.bottomNavigationCourses -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
                 R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
                 R.id.bottomNavigationToDo -> {
                     val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -891,7 +882,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     //endregion
 
-    override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
+    override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) { // TODO Do we need this in K5?
         val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
 
@@ -919,7 +910,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         dialog?.show(supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
     }
 
-    override fun updateUnreadCount(unreadCount: String) {
+    override fun updateUnreadCount(unreadCount: String) { // TODO Bottom bar We need to change the index here
         // get the view
         val bottomBarNavView = bottomBar?.getChildAt(0)
         // get the inbox item

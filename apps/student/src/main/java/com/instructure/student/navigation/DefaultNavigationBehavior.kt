@@ -17,10 +17,33 @@
 package com.instructure.student.navigation
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.interactions.router.Route
 import com.instructure.student.R
+import com.instructure.student.fragment.*
 
-class DefaultNavigationBehavior : NavigationBehavior {
+class DefaultNavigationBehavior() : NavigationBehavior {
+
+    override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
+        DashboardFragment::class.java,
+        CalendarFragment::class.java,
+        ToDoListFragment::class.java,
+        NotificationListFragment::class.java,
+        InboxFragment::class.java
+    )
+
+    override val homeFragmentClass: Class<out ParentFragment> = DashboardFragment::class.java
+
     override fun setupBottomNavBar(bottomNavBar: BottomNavigationView) {
         bottomNavBar.inflateMenu(R.menu.bottom_bar_menu)
+    }
+
+    override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
+        return DashboardFragment.makeRoute(ApiPrefs.user)
+    }
+
+    override fun createHomeFragment(route: Route): ParentFragment {
+        return DashboardFragment.newInstance(route)
     }
 }
