@@ -1145,4 +1145,7 @@
     <string name="a11y_criterion_button_click_description">more information</string>
     <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
     <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
+
+    <!-- K5 Strings -->
+    <string name="bottomBarMyCanvas">My Canvas</string>
 </resources>

@@ -20,15 +20,19 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.view.CanvasLoadingView
 import com.instructure.pandautils.utils.Utils
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 abstract class BaseLoginInitActivity : AppCompatActivity() {
 
@@ -83,9 +87,7 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                 startActivity(beginLoginFlowIntent())
             } else {
                 // Start App
-                val intent = launchApplicationMainActivityIntent()
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
+                startApp()
             }
 
             // We only want to finish here on debug builds, our login bypass for UI testing depends
@@ -101,13 +103,28 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
                         startActivity(beginLoginFlowIntent())
                     } else {
                         //Start App
-                        val intent = launchApplicationMainActivityIntent()
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
+                        startApp()
                     }
                     finish()
                 }
             }, 1750) // This delay allows the animation to finish.
+        }
+    }
+
+    private fun startApp() {
+        val intent = launchApplicationMainActivityIntent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        GlobalScope.launch {
+            try {
+                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+
+                val featureFlags = featureFlagResult.dataOrThrow
+                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
+                startActivity(intent)
+            } catch (e: Exception) {
+                startActivity(intent)
+            }
         }
     }
 

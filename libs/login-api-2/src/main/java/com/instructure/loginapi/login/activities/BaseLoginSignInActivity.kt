@@ -36,6 +36,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
 import com.instructure.canvasapi2.managers.UserManager.getSelf
 import com.instructure.canvasapi2.models.AccountDomain
@@ -70,6 +71,8 @@ import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import kotlinx.android.synthetic.main.activity_sign_in.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -493,8 +496,20 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     protected fun handleLaunchApplicationMainActivityIntent() {
         val intent = launchApplicationMainActivityIntent()
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        startActivity(intent)
-        finish()
+
+        GlobalScope.launch {
+            try {
+                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+
+                val featureFlags = featureFlagResult.dataOrThrow
+                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
+                startActivity(intent)
+                finish()
+            } catch (e: Exception) {
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     //region Snicker Doodles

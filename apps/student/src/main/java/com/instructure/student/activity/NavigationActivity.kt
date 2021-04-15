@@ -76,6 +76,7 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -90,12 +91,16 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
     FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(),
         ErrorReportDialog.ErrorReportDialogResultListener {
+
+    @Inject
+    lateinit var navigationBehavior: NavigationBehavior
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -206,6 +211,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
         }
+
+        navigationBehavior.setupBottomNavBar(bottomBar)
 
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 

@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.*
 import com.instructure.loginapi.login.R
@@ -55,6 +56,8 @@ import com.instructure.loginapi.login.util.Const.URL_CANVAS_NETWORK
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.activity_login_landing_page.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 
 abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
@@ -176,10 +179,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
 
                         ApiPrefs.token = user.token
 
-                        val intent = launchApplicationMainActivityIntent()
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
-                        finish()
+                        startApp()
                     }
 
                     override fun onRemovePreviousUserClick(user: SignedInUser, position: Int) {
@@ -206,6 +206,25 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
             changesLayout.visibility = if (previousUsers.size > 0) View.GONE else View.VISIBLE
         }
 
+    }
+
+    private fun startApp() {
+        val intent = launchApplicationMainActivityIntent()
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+        GlobalScope.launch {
+            try {
+                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+
+                val featureFlags = featureFlagResult.dataOrThrow
+                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
+                startActivity(intent)
+                finish()
+            } catch (e: Exception) {
+                startActivity(intent)
+                finish()
+            }
+        }
     }
 
     private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) {
