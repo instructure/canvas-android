@@ -1,12 +1,13 @@
 package com.instructure.teacher.ui.pages
 
 import androidx.test.espresso.action.ViewActions
-import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.espresso.*
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.teacher.R
 
 class DiscussionsListPage : BasePage() {
@@ -25,6 +26,10 @@ class DiscussionsListPage : BasePage() {
         waitForViewWithText(discussion.title).assertDisplayed()
     }
 
+    fun assertNoDiscussion() {
+        onView(withId(R.id.emptyPandaView)).assertDisplayed()
+    }
+
     fun assertHasDiscussion(discussion: DiscussionTopicHeader) {
         waitForViewWithText(discussion.title!!).assertDisplayed()
     }
@@ -39,5 +44,9 @@ class DiscussionsListPage : BasePage() {
 
     fun assertDiscussionCount(count: Int) {
         discussionsRecyclerView.waitForCheck(RecyclerViewItemCountAssertion(count))
+    }
+
+    fun refresh() {
+        onView(withId(R.id.swipeRefreshLayout)).swipeDown()
     }
 }
