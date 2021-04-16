@@ -35,7 +35,6 @@ import com.instructure.teacher.holders.CourseBrowserViewHolder
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
-import java.lang.RuntimeException
 
 class CourseBrowserPage : BasePage() {
 
@@ -45,22 +44,23 @@ class CourseBrowserPage : BasePage() {
     private val courseTitle by OnViewWithId(R.id.courseBrowserTitle)
     private val courseSubtitle by OnViewWithId(R.id.courseBrowserSubtitle)
     private val courseSettingsMenuButton by OnViewWithId(R.id.menu_course_browser_settings)
+    private val magicNumberForScroll = 10
 
     fun openAssignmentsTab() {
-        scrollOpen("Assignments")
+        scrollOpen("Assignments", scrollPosition = magicNumberForScroll)
     }
 
-    private fun scrollDownToCourseBrowser(position: Int = 10)
+    private fun scrollDownToCourseBrowser(scrollPosition: Int)
     {
         /* The course browser RecyclerView is inside a CoordinatorLayout and is therefore only partially
            visible, causing some clicks to fail. We need to perform a swipe up first to make it fully visible. */
         Espresso.onView(ViewMatchers.withId(android.R.id.content)).perform(ViewActions.swipeUp())
         Espresso.onView(ViewMatchers.withId(R.id.courseBrowserRecyclerView))
-                .perform(scrollToPosition<CourseBrowserViewHolder>(position))
+                .perform(scrollToPosition<CourseBrowserViewHolder>(scrollPosition))
 
     }
     fun openQuizzesTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText(R.string.tab_quizzes).click()
     }
 
@@ -69,11 +69,11 @@ class CourseBrowserPage : BasePage() {
     }
 
     fun openAnnouncementsTab() {
-        scrollOpen("Announcements")
+        scrollOpen("Announcements", scrollPosition = magicNumberForScroll)
     }
 
     fun openPeopleTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("People").click()
     }
 
@@ -100,19 +100,19 @@ class CourseBrowserPage : BasePage() {
             }
 
     fun openPagesTab() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText(R.string.tab_pages).click()
     }
 
     fun openSyllabus() {
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("Syllabus").click()
     }
 
     fun openModulesTab() {
         //modules sits at the end of the list, so on smaller resolutions it may be necessary to scroll down twitce
-        scrollDownToCourseBrowser()
-        scrollDownToCourseBrowser()
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
+        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
         waitForViewWithText("Modules").click()
     }
 
@@ -125,7 +125,7 @@ class CourseBrowserPage : BasePage() {
         onView(allOf(withId(R.id.swipeRefreshLayout))).swipeDown()
     }
 
-    private fun scrollOpen(textName: String, scrollPosition: Int = 10) {
+    private fun scrollOpen(textName: String, scrollPosition: Int) {
         try {
             waitForViewWithText(textName).perform(withCustomConstraints(click(), isDisplayingAtLeast(50)))
         } catch (e: Exception) {
