@@ -114,10 +114,12 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             is EditDashboardItemAction.FavoriteCourse -> {
                 viewModelScope.launch {
                     try {
-                        favoriteCourse(action.itemViewModel)
+                        addCourseToFavorites(action.itemViewModel)
+                        courseManager.addCourseToFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
                     } catch (e: Exception) {
                         Logger.d("Failed to select course: ${e.printStackTrace()}")
+                        removeCourseFromFavorites(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
@@ -127,10 +129,12 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             is EditDashboardItemAction.FavoriteGroup -> {
                 viewModelScope.launch {
                     try {
-                        favoriteGroup(action.itemViewModel)
+                        addGroupToFavorites(action.itemViewModel)
+                        groupManager.addGroupToFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
                     } catch (e: Exception) {
                         Logger.d("Failed to select group: ${e.printStackTrace()}")
+                        removeGroupFromFavorites(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
@@ -139,10 +143,12 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             is EditDashboardItemAction.UnfavoriteCourse -> {
                 viewModelScope.launch {
                     try {
-                        unfavoriteCourse(action.itemViewModel)
+                        removeCourseFromFavorites(action.itemViewModel)
+                        courseManager.removeCourseFromFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
                     } catch (e: Exception) {
                         Logger.d("Failed to deselect course: ${e.printStackTrace()}")
+                        addCourseToFavorites(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
@@ -151,10 +157,12 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             is EditDashboardItemAction.UnfavoriteGroup -> {
                 viewModelScope.launch {
                     try {
-                        unfavoriteGroup(action.itemViewModel)
+                        removeGroupFromFavorites(action.itemViewModel)
+                        groupManager.removeGroupFromFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
                     } catch (e: Exception) {
                         Logger.d("Failed to deselect group: ${e.printStackTrace()}")
+                        addGroupToFavorites(action.itemViewModel)
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
                     }
                 }
@@ -166,8 +174,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private suspend fun favoriteCourse(item: EditDashboardCourseItemViewModel) {
-        courseManager.addCourseToFavoritesAsync(item.id).await().dataOrThrow
+    private fun addCourseToFavorites(item: EditDashboardCourseItemViewModel) {
         favoriteCourseMap[item.id] = courseMap?.get(item.id)
                 ?: error("Course does not exist")
         courseMap?.get(item.id)?.isFavorite = true
@@ -181,8 +188,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private suspend fun unfavoriteCourse(item: EditDashboardCourseItemViewModel) {
-        courseManager.removeCourseFromFavoritesAsync(item.id).await().dataOrThrow
+    private fun removeCourseFromFavorites(item: EditDashboardCourseItemViewModel) {
         favoriteCourseMap.remove(item.id)
         courseMap?.get(item.id)?.isFavorite = false
         item.apply {
@@ -195,8 +201,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private suspend fun favoriteGroup(item: EditDashboardGroupItemViewModel) {
-        groupManager.addGroupToFavoritesAsync(item.id).await().dataOrThrow
+    private fun addGroupToFavorites(item: EditDashboardGroupItemViewModel) {
         favoriteGroupMap[item.id] = groupMap?.get(item.id) ?: error("Group does not exist")
         groupMap?.get(item.id)?.isFavorite = true
         item.apply {
@@ -209,8 +214,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private suspend fun unfavoriteGroup(item: EditDashboardGroupItemViewModel) {
-        groupManager.removeGroupFromFavoritesAsync(item.id).await().dataOrThrow
+    private fun removeGroupFromFavorites(item: EditDashboardGroupItemViewModel) {
         favoriteGroupMap.remove(item.id)
         groupMap?.get(item.id)?.isFavorite = false
         item.apply {
@@ -224,52 +228,85 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun selectAllGroups() {
-        viewModelScope.launch {
-            try {
-                groupsViewData.forEach { if (!it.isFavorite) favoriteGroup(it) }
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
-            } catch (e: Exception) {
-                Logger.d("Failed to select all groups: ${e.printStackTrace()}")
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+        val groupsToFavorite = groupsViewData.filter { !it.isFavorite }
+        var counter = 0
+        groupsToFavorite.forEach {
+            viewModelScope.launch {
+                try {
+                    addGroupToFavorites(it)
+                    groupManager.addGroupToFavoritesAsync(it.id).await().dataOrThrow
+                    counter++
+                    if (counter == groupsToFavorite.size) {
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
+                    }
+                } catch (e: Exception) {
+                    Logger.d("Failed to select all groups: ${e.printStackTrace()}")
+                    removeGroupFromFavorites(it)
+                    _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+                }
             }
         }
-
     }
 
     private fun deselectAllGroups() {
-        viewModelScope.launch {
-            try {
-                groupsViewData.forEach { if (it.isFavorite) unfavoriteGroup(it) }
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
-            } catch (e: Exception) {
-                Logger.d("Failed to deselect all groups: ${e.printStackTrace()}")
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+        val groupsToUnfavorite = groupsViewData.filter { it.isFavorite }
+        var counter = 0
+        groupsToUnfavorite.forEach {
+            viewModelScope.launch {
+                try {
+                    removeGroupFromFavorites(it)
+                    groupManager.removeGroupFromFavoritesAsync(it.id).await().dataOrThrow
+                    counter++
+                    if (counter == groupsToUnfavorite.size) {
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
+                    }
+                } catch (e: Exception) {
+                    Logger.d("Failed to select all courses: ${e.printStackTrace()}")
+                    addGroupToFavorites(it)
+                    _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+                }
             }
         }
     }
 
     private fun selectAllCourses() {
-        viewModelScope.launch {
-            try {
-                currentCoursesViewData.forEach { if (!it.isFavorite && it.favoriteable) favoriteCourse(it) }
-                futureCoursesViewData.forEach { if (!it.isFavorite && it.favoriteable) favoriteCourse(it) }
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
-            } catch (e: Exception) {
-                Logger.d("Failed to select all courses: ${e.printStackTrace()}")
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+        val coursesToFavorite = (currentCoursesViewData + futureCoursesViewData).filter { !it.isFavorite && it.favoriteable }
+        var counter = 0
+        coursesToFavorite.forEach {
+            viewModelScope.launch {
+                try {
+                    addCourseToFavorites(it)
+                    courseManager.addCourseToFavoritesAsync(it.id).await().dataOrThrow
+                    counter++
+                    if (counter == coursesToFavorite.size) {
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_added_to_dashboard)))
+                    }
+                } catch (e: Exception) {
+                    Logger.d("Failed to select all courses: ${e.printStackTrace()}")
+                    removeCourseFromFavorites(it)
+                    _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+                }
             }
         }
     }
 
     private fun deselectAllCourses() {
-        viewModelScope.launch {
-            try {
-                currentCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
-                futureCoursesViewData.forEach { if (it.isFavorite) unfavoriteCourse(it) }
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
-            } catch (e: Exception) {
-                Logger.d("Failed to deselect all courses: ${e.printStackTrace()}")
-                _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+        val coursesToUnfavorite = (currentCoursesViewData + futureCoursesViewData).filter { it.isFavorite }
+        var counter = 0
+        coursesToUnfavorite.forEach {
+            viewModelScope.launch {
+                try {
+                    removeCourseFromFavorites(it)
+                    courseManager.removeCourseFromFavoritesAsync(it.id).await().dataOrThrow
+                    counter++
+                    if (counter == coursesToUnfavorite.size) {
+                        _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.all_removed_from_dashboard)))
+                    }
+                } catch (e: Exception) {
+                    Logger.d("Failed to select all courses: ${e.printStackTrace()}")
+                    addCourseToFavorites(it)
+                    _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.errorOccurred)))
+                }
             }
         }
     }
@@ -373,20 +410,20 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     fun queryItems(query: String) {
-        if (query.isBlank()) {
+        val items = if (query.isBlank()) {
             createListItems(courses, groups)
         } else {
             val queriedCourses = courses.filter { it.name.contains(query, true) }
             val queriedGroups = groups.filter { it.name?.contains(query, true) ?: false || it.description?.contains(query, true) ?: false || courseMap?.get(it.courseId)?.name?.contains(query, true) ?: false }
 
-            val items = createListItems(queriedCourses, queriedGroups)
-            _data.postValue(EditDashboardViewData(items))
-            if (items.isEmpty()) {
-                _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
-            } else {
-                _state.postValue(ViewState.Success)
-            }
+            createListItems(queriedCourses, queriedGroups)
         }
+        if (items.isEmpty()) {
+            _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))
+        } else {
+            _state.postValue(ViewState.Success)
+        }
+        _data.postValue(EditDashboardViewData(items))
     }
 
 }
