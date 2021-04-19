@@ -1149,4 +1149,5 @@
     <!-- K5 Strings -->
     <string name="bottomBarMyCanvas">My Canvas</string>
     <string name="toolbarTitleMyCanvas">My Canvas</string>
+    <string name="navDrawerAccount">Account</string>
 </resources>

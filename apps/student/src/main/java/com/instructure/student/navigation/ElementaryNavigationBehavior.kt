@@ -36,6 +36,12 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val homeFragmentClass: Class<out ParentFragment> = MyCanvasFragment::class.java
 
+    override val visibleNavigationMenuItems: Set<NavigationMenuItem> = emptySet()
+
+    override val visibleOptionsMenuItems: Set<OptionsMenuItem> = emptySet()
+
+    override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.ACCOUNT, AccountMenuItem.HELP, AccountMenuItem.LOGOUT)
+
     override fun setupBottomNavBar(bottomNavBar: BottomNavigationView) {
         bottomNavBar.inflateMenu(R.menu.bottom_bar_menu_elementary)
     }

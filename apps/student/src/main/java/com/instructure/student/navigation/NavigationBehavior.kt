@@ -28,9 +28,27 @@ interface NavigationBehavior {
 
     val homeFragmentClass: Class<out ParentFragment>
 
+    val visibleNavigationMenuItems: Set<NavigationMenuItem>
+
+    val visibleOptionsMenuItems: Set<OptionsMenuItem>
+
+    val visibleAccountMenuItems: Set<AccountMenuItem>
+
     fun setupBottomNavBar(bottomNavBar: BottomNavigationView)
 
     fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
 
     fun createHomeFragment(route: Route): ParentFragment
+}
+
+enum class NavigationMenuItem {
+    FILES, BOOKMARKS, SETTINGS
+}
+
+enum class OptionsMenuItem {
+    SHOW_GRADES, COLOR_OVERLAY
+}
+
+enum class AccountMenuItem {
+    ACCOUNT, HELP, CHANGE_USER, LOGOUT
 }

@@ -76,7 +76,10 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
+import com.instructure.student.navigation.AccountMenuItem
 import com.instructure.student.navigation.NavigationBehavior
+import com.instructure.student.navigation.NavigationMenuItem
+import com.instructure.student.navigation.OptionsMenuItem
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -162,7 +165,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_stopMasquerading -> {
                     MasqueradeHelper.stopMasquerading(startActivityClass)
                 }
-                R.id.navigationDrawerSettings -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
+                R.id.navigationDrawerSettings, R.id.navigationDrawerAccount -> startActivity(Intent(applicationContext, SettingsActivity::class.java))
             }
         }
     }
@@ -214,6 +217,25 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         AppShortcutManager.make(this)
+
+        setupNavDrawerItems()
+    }
+
+    private fun setupNavDrawerItems() {
+        navigationDrawerItem_files.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.FILES))
+        navigationDrawerItem_bookmarks.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS))
+        navigationDrawerSettings.setVisible(navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.SETTINGS))
+        navigationMenuItemsDivider.setVisible(navigationBehavior.visibleNavigationMenuItems.isNotEmpty())
+
+        optionsMenuTitle.setVisible(navigationBehavior.visibleOptionsMenuItems.isNotEmpty())
+        navigationDrawerItem_showGrades.setVisible(navigationBehavior.visibleOptionsMenuItems.contains(OptionsMenuItem.SHOW_GRADES))
+        navigationDrawerItem_colorOverlay.setVisible(navigationBehavior.visibleOptionsMenuItems.contains(OptionsMenuItem.COLOR_OVERLAY))
+        optionsMenuItemsDivider.setVisible(navigationBehavior.visibleOptionsMenuItems.isNotEmpty())
+
+        navigationDrawerAccount.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.ACCOUNT))
+        navigationDrawerItem_help.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.HELP))
+        navigationDrawerItem_changeUser.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.CHANGE_USER))
+        navigationDrawerItem_logout.setVisible(navigationBehavior.visibleAccountMenuItems.contains(AccountMenuItem.LOGOUT))
     }
 
     override fun initialCoreDataLoadingComplete() {
@@ -384,6 +406,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_studio.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_bookmarks.setOnClickListener(mNavigationDrawerItemClickListener)
+        navigationDrawerAccount.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_changeUser.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_help.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_logout.setOnClickListener(mNavigationDrawerItemClickListener)

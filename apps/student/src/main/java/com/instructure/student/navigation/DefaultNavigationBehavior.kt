@@ -35,6 +35,12 @@ class DefaultNavigationBehavior() : NavigationBehavior {
 
     override val homeFragmentClass: Class<out ParentFragment> = DashboardFragment::class.java
 
+    override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.BOOKMARKS, NavigationMenuItem.SETTINGS)
+
+    override val visibleOptionsMenuItems: Set<OptionsMenuItem> = setOf(OptionsMenuItem.SHOW_GRADES, OptionsMenuItem.COLOR_OVERLAY)
+
+    override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
+
     override fun setupBottomNavBar(bottomNavBar: BottomNavigationView) {
         bottomNavBar.inflateMenu(R.menu.bottom_bar_menu)
     }
