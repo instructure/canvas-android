@@ -20,19 +20,19 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import com.instructure.canvasapi2.managers.FeaturesManager
+import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.utils.ApiPrefs.getValidToken
 import com.instructure.canvasapi2.utils.ApiPrefs.userAgent
 import com.instructure.loginapi.login.BuildConfig
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.view.CanvasLoadingView
+import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 abstract class BaseLoginInitActivity : AppCompatActivity() {
 
@@ -62,6 +62,8 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
     protected abstract fun userAgent(): String
 
     protected abstract val isTesting: Boolean
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,20 +114,16 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
     }
 
     private fun startApp() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-        GlobalScope.launch {
-            try {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-
-                val featureFlags = featureFlagResult.dataOrThrow
-                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
-                startActivity(intent)
-            } catch (e: Exception) {
+        viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
+            event?.getContentIfNotHandled()?.let { result: Boolean ->
+                val intent = launchApplicationMainActivityIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("canvas_for_elementary", result)
                 startActivity(intent)
             }
-        }
+        })
+
+        viewModel.checkCanvasForElementaryFeature()
     }
 
     private fun applyTheme() {

@@ -32,8 +32,9 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Utils
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class LoginActivity : BaseLoginInitActivity() {
 
     override fun launchApplicationMainActivityIntent(): Intent {

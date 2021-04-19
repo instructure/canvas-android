@@ -20,6 +20,8 @@ import java.security.MessageDigest
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -114,6 +116,10 @@ dependencies {
 
     implementation(Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.ZXING
+
+    implementation Libs.FRAGMENT_KTX
+    implementation Libs.HILT
+    kapt Libs.HILT_COMPILER
 }
 
 task copySnickerDoodles(type: Copy) {

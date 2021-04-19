@@ -29,14 +29,15 @@ import android.view.LayoutInflater
 import android.webkit.*
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.OAuthManager.getToken
 import com.instructure.canvasapi2.managers.UserManager.getSelf
 import com.instructure.canvasapi2.models.AccountDomain
@@ -66,13 +67,13 @@ import com.instructure.loginapi.login.util.Const.MASQUERADE_FLOW
 import com.instructure.loginapi.login.util.Const.MOBILE_VERIFY_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.PreviousUsersUtils.add
+import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.setStatusBarLight
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import kotlinx.android.synthetic.main.activity_sign_in.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import java.util.*
@@ -101,6 +102,8 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
 
     private val accountDomain: AccountDomain by lazy { intent.getParcelableExtra<AccountDomain>(ACCOUNT_DOMAIN) }
     private val progressBarHandler = Handler()
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -494,22 +497,17 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
      * It is expected that the class overriding will launch an intent.
      */
     protected fun handleLaunchApplicationMainActivityIntent() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-        GlobalScope.launch {
-            try {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-
-                val featureFlags = featureFlagResult.dataOrThrow
-                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
-                startActivity(intent)
-                finish()
-            } catch (e: Exception) {
+        viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
+            event?.getContentIfNotHandled()?.let { result: Boolean ->
+                val intent = launchApplicationMainActivityIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("canvas_for_elementary", result)
                 startActivity(intent)
                 finish()
             }
-        }
+        })
+
+        viewModel.checkCanvasForElementaryFeature()
     }
 
     //region Snicker Doodles

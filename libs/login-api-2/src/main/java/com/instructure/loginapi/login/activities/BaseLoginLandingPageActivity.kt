@@ -25,6 +25,7 @@ import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.ColorInt
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -33,13 +34,16 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.instructure.canvasapi2.apis.ErrorReportAPI
-import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.ErrorReportPreFill
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.APIHelper
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
@@ -54,10 +58,10 @@ import com.instructure.loginapi.login.util.Const.NORMAL_FLOW
 import com.instructure.loginapi.login.util.Const.SNICKER_DOODLES
 import com.instructure.loginapi.login.util.Const.URL_CANVAS_NETWORK
 import com.instructure.loginapi.login.util.PreviousUsersUtils
+import com.instructure.loginapi.login.viewmodel.LoginViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.*
 import kotlinx.android.synthetic.main.activity_login_landing_page.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDialog.ErrorReportDialogResultListener {
@@ -87,6 +91,8 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     protected open fun loginWithQRCodeEnabled(): Boolean = false
 
     protected abstract fun loginWithQRIntent(): Intent?
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -209,22 +215,17 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
     }
 
     private fun startApp() {
-        val intent = launchApplicationMainActivityIntent()
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-        GlobalScope.launch {
-            try {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-
-                val featureFlags = featureFlagResult.dataOrThrow
-                intent.putExtra("canvas_for_elementary", featureFlags.canvasForElementary)
-                startActivity(intent)
-                finish()
-            } catch (e: Exception) {
+        viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
+            event?.getContentIfNotHandled()?.let { result: Boolean ->
+                val intent = launchApplicationMainActivityIntent()
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("canvas_for_elementary", result)
                 startActivity(intent)
                 finish()
             }
-        }
+        })
+
+        viewModel.checkCanvasForElementaryFeature()
     }
 
     private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) {
