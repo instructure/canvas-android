@@ -77,7 +77,13 @@ class AssignmentDetailsView(
         toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         toolbar.title = context.getString(R.string.assignmentDetails)
         toolbar.subtitle = canvasContext.name
-        toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
+
+        val navigation = context as? Navigation
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+        if (bookmarkFeatureAllowed) {
+            toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
+        }
+
         submissionStatusFailedSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionStatusUploadingSubtitle.setTextColor(ThemePrefs.buttonColor)
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)

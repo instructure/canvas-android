@@ -933,6 +933,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         dialog?.show(supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
     }
 
+    override fun canBookmark(): Boolean = navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS)
+
     override fun updateUnreadCount(unreadCount: String) { // TODO Bottom bar We need to change the index here
         // get the view
         val bottomBarNavView = bottomBar?.getChildAt(0)
