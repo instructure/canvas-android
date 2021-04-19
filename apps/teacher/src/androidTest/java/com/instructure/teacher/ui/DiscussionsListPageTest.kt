@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.ui
 
-import android.os.SystemClock.sleep
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
