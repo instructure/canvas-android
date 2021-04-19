@@ -68,13 +68,13 @@ class DashboardInteractionTest : StudentTest() {
 
         dashboardPage.editFavorites()
         editDashboardPage.assertCourseDisplayed(nonFavorite)
-//        editDashboardPage.assertCourseNotFavorited(nonFavorite)
-//        editDashboardPage.favoriteCourse(nonFavorite)
-//        editDashboardPage.assertCourseFavorited(nonFavorite)
+        editDashboardPage.assertCourseNotFavorited(nonFavorite)
+        editDashboardPage.favoriteCourse(nonFavorite)
+        editDashboardPage.assertCourseFavorited(nonFavorite)
 
-//        Espresso.pressBack()
+        Espresso.pressBack()
 
-//        dashboardPage.assertDisplaysCourse(nonFavorite)
+        dashboardPage.assertDisplaysCourse(nonFavorite)
     }
 
     @Test
@@ -90,12 +90,12 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.editFavorites()
         editDashboardPage.assertCourseDisplayed(favorite)
         editDashboardPage.assertCourseFavorited(favorite)
-//        editDashboardPage.toggleCourse(favorite)
-//        editDashboardPage.assertCourseNotFavorited(favorite)
+        editDashboardPage.unfavoriteCourse(favorite)
+        editDashboardPage.assertCourseNotFavorited(favorite)
 
-//        Espresso.pressBack()
+        Espresso.pressBack()
 
-//        dashboardPage.assertCourseNotShown(favorite)
+        dashboardPage.assertCourseNotShown(favorite)
 
 
     }

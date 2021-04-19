@@ -30,16 +30,23 @@ import com.instructure.espresso.swipeRight
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.espresso.DataBindingIdlingResourceRule
 import com.instructure.student.ui.pages.*
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.junit.Before
+import org.junit.Rule
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
 
     override val activityRule: InstructureActivityTestRule<out Activity> =
         StudentActivityTestRule(LoginActivity::class.java)
+
+    @Rule
+    @JvmField
+    val dataBindingIdlingResourceRule = DataBindingIdlingResourceRule(activityRule)
+
     lateinit var originalActivity : Activity
 
     // Sometimes activityRule.activity can get nulled out over time, probably as we

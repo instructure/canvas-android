@@ -43,8 +43,8 @@
 
             <ImageView
                 android:id="@+id/favoriteButton"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:padding="4dp"
                 android:alpha="@{itemViewModel.favoriteable ? 1.0f : 0.5f}"
                 android:contentDescription="@{itemViewModel.favorite ? @string/a11y_content_description_remove_from_dashboard : @string/a11y_content_description_add_to_dashboard}"

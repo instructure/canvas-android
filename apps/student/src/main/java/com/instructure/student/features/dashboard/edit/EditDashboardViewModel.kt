@@ -314,6 +314,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private fun getCurrentCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         favoriteCourseMap.clear()
         val currentCourses = courses.filter { it.hasActiveEnrollment() && it.isBetweenValidDateRange() }
+        favoriteCourseMap.putAll(currentCourses.filter { it.isFavorite }.associateBy { it.id })
         return currentCourses.map {
             if (it.isFavorite) {
                 favoriteCourseMap[it.id] = it
@@ -347,10 +348,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
         val futureCourses = courses.filter { it.startDate?.after(Date()) ?: false }
+        favoriteCourseMap.putAll(futureCourses.filter { it.isFavorite }.associateBy { it.id })
         return futureCourses.map {
-            if (it.isFavorite) {
-                favoriteCourseMap[it.id] = it
-            }
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
@@ -365,6 +364,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
     private fun getGroups(groups: List<Group>): List<EditDashboardGroupItemViewModel> {
         favoriteGroupMap.clear()
+        favoriteGroupMap.putAll(groups.filter { it.isFavorite }.associateBy { it.id })
         return groups.map {
             if (it.isFavorite) {
                 favoriteGroupMap[it.id] = it

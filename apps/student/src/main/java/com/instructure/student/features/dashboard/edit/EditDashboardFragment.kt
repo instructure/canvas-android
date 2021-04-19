@@ -18,6 +18,7 @@
 package com.instructure.student.features.dashboard.edit
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,12 +26,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditDashboardBinding
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -75,6 +74,14 @@ class EditDashboardFragment : Fragment() {
             viewModel.queryItems(it)
         }
         ViewStyler.themeToolbar(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        val intent = Intent(Const.COURSE_THING_CHANGED)
+        intent.putExtras(Bundle().apply { putBoolean(Const.COURSE_FAVORITES, true) })
+        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
     }
 
     private fun handleAction(action: EditDashboardItemAction) {
