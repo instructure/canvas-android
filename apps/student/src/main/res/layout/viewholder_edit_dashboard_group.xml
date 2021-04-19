@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel" />
+            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -98,8 +98,8 @@
                 android:id="@+id/openButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> itemViewModel.onClick()}"
                 android:src="@drawable/ic_open_arrow"
+                android:importantForAccessibility="no"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

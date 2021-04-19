@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardHeaderViewModel" />
+            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel" />
     </data>
 
     <RelativeLayout

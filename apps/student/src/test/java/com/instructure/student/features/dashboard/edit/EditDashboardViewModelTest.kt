@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.student.features.dashboard.edit.itemViewModel.*
+import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

@@ -14,15 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit.itemViewModel
+package com.instructure.student.features.dashboard.edit.itemviewmodels
 
 import androidx.annotation.StringRes
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
+import com.instructure.student.R
 
-class EditDashboardEnrollmentItemViewModel(@get:StringRes val title: Int) : ItemViewModel {
-    override val layoutId: Int = R.layout.viewholder_edit_dashboard_enrollment
+class EditDashboardDescriptionItemViewModel(@get:StringRes val description: Int) : ItemViewModel {
+    override val layoutId: Int = R.layout.viewholder_edit_dashboard_description
 
-    override val viewType: Int = EditDashboardItemViewType.ENROLLMENT.viewType
+    override val viewType: Int = EditDashboardItemViewType.DESCRIPTION.viewType
 }

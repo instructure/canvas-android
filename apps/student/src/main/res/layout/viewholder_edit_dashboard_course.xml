@@ -21,7 +21,7 @@
 
         <variable
             name="itemViewModel"
-            type="com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel" />
+            type="com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel" />
 
         <import type="android.view.View" />
     </data>

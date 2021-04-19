@@ -40,19 +40,6 @@ import kotlinx.android.synthetic.main.fragment_edit_dashboard.*
 @AndroidEntryPoint
 class EditDashboardFragment : Fragment() {
 
-    companion object {
-
-        fun makeRoute() = Route(EditDashboardFragment::class.java, null)
-
-        fun validRoute(route: Route) = route.primaryClass == EditDashboardFragment::class.java
-
-        fun newInstance(route: Route): EditDashboardFragment? {
-            if (!validRoute(route)) return null
-            return EditDashboardFragment()
-        }
-
-    }
-
     private val viewModel: EditDashboardViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -93,6 +80,19 @@ class EditDashboardFragment : Fragment() {
                 Snackbar.make(requireView(), action.res, Snackbar.LENGTH_LONG).show()
             }
         }
+    }
+
+    companion object {
+
+        fun makeRoute() = Route(EditDashboardFragment::class.java, null)
+
+        fun validRoute(route: Route) = route.primaryClass == EditDashboardFragment::class.java
+
+        fun newInstance(route: Route): EditDashboardFragment? {
+            if (!validRoute(route)) return null
+            return EditDashboardFragment()
+        }
+
     }
 
 }

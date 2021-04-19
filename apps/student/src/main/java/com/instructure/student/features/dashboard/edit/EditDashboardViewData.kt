@@ -18,8 +18,8 @@ package com.instructure.student.features.dashboard.edit
 
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardCourseItemViewModel
-import com.instructure.student.features.dashboard.edit.itemViewModel.EditDashboardGroupItemViewModel
+import com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardCourseItemViewModel
+import com.instructure.student.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
 
 data class EditDashboardViewData(val items: List<ItemViewModel>)
 

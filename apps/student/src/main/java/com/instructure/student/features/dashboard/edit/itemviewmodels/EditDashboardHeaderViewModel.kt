@@ -14,29 +14,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.edit.itemViewModel
+package com.instructure.student.features.dashboard.edit.itemviewmodels
 
+import androidx.annotation.StringRes
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
 import com.instructure.pandautils.mvvm.ItemViewModel
-import com.instructure.student.features.dashboard.edit.EditDashboardItemAction
 import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.EditDashboardItemViewType
 
-class EditDashboardGroupItemViewModel(val id: Long, val name: String?, @get:Bindable var isFavorite: Boolean, val subtitle: String?, val termTitle: String?, private val actionHandler: (EditDashboardItemAction) -> Unit) : ItemViewModel, BaseObservable() {
-    override val layoutId: Int = R.layout.viewholder_edit_dashboard_group
+class EditDashboardHeaderViewModel(
+        @get:StringRes val title: Int,
+        @get:Bindable var hasItemSelected: Boolean,
+        val selectAllHandler: () -> Unit,
+        val deselectAllHandler: () -> Unit
+) : ItemViewModel, BaseObservable() {
+    override val layoutId: Int = R.layout.viewholder_edit_dashboard_header
 
-    override val viewType: Int = EditDashboardItemViewType.GROUP.viewType
+    override val viewType: Int = EditDashboardItemViewType.HEADER.viewType
 
-    fun onClick() {
-        actionHandler(EditDashboardItemAction.OpenGroup(id))
-    }
-
-    fun onFavoriteClick() {
-        if (isFavorite) {
-            actionHandler(EditDashboardItemAction.UnfavoriteGroup(this))
+    fun onActionClick() {
+        if (hasItemSelected) {
+            deselectAllHandler()
         } else {
-            actionHandler(EditDashboardItemAction.FavoriteGroup(this))
+            selectAllHandler()
         }
     }
 }

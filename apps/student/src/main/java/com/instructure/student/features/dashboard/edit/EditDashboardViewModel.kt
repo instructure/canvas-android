@@ -30,7 +30,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
-import com.instructure.student.features.dashboard.edit.itemViewModel.*
+import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
