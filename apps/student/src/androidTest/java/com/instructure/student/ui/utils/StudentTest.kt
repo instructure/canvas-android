@@ -55,7 +55,6 @@ abstract class StudentTest : CanvasTest() {
     /**
      * Required for auto complete of page objects within tests
      */
-    val allCoursesPage = AllCoursesPage()
     val annotationCommentListPage = AnnotationCommentListPage()
     val assignmentDetailsPage = AssignmentDetailsPage()
     val assignmentListPage = AssignmentListPage()
@@ -68,7 +67,7 @@ abstract class StudentTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val discussionDetailsPage = DiscussionDetailsPage()
     val discussionListPage = DiscussionListPage()
-    val editFavoritesPage = EditFavoritesPage()
+    val editDashboardPage = EditDashboardPage()
     val fileListPage = FileListPage()
     val fileUploadPage = FileUploadPage()
     val helpPage = HelpPage()

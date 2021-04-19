@@ -74,7 +74,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         loadItems()
     }
 
-    private fun loadItems() {
+    fun loadItems() {
         viewModelScope.launch {
             _state.postValue(ViewState.Loading)
 

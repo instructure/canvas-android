@@ -54,9 +54,12 @@
                 android:id="@+id/selectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/a11y_content_description_add_to_dashboard"
+                android:background="?android:selectableItemBackground"
                 android:gravity="center"
                 android:onClick="@{() -> itemViewModel.onActionClick()}"
                 android:orientation="horizontal"
+                android:padding="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">

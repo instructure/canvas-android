@@ -22,6 +22,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
@@ -56,6 +57,11 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
 fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
     val adapter = getOrCreateAdapter(recyclerView)
     adapter.updateItems(itemViewModels)
+}
+
+@BindingAdapter("refreshState")
+fun bindRefreshState(swipeRefreshLayout: SwipeRefreshLayout, state: ViewState?) {
+    swipeRefreshLayout.isRefreshing = state == ViewState.Loading
 }
 
 private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerViewAdapter {

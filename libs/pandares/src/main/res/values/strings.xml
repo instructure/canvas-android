@@ -1161,4 +1161,6 @@
     <string name="edit_dashboard">Edit Dashboard</string>
     <string name="edit_dashboard_empty_title">No courses here</string>
     <string name="edit_dashboard_empty_message">You have to be enrolled in a course to add it to the Dashboard.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Remove from dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
 </resources>

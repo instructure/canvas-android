@@ -67,14 +67,14 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertCourseNotShown(nonFavorite)
 
         dashboardPage.editFavorites()
-        editFavoritesPage.assertCourseDisplayed(nonFavorite)
-        editFavoritesPage.assertCourseNotFavorited(nonFavorite)
-        editFavoritesPage.toggleCourse(nonFavorite)
-        editFavoritesPage.assertCourseFavorited(nonFavorite)
+        editDashboardPage.assertCourseDisplayed(nonFavorite)
+//        editDashboardPage.assertCourseNotFavorited(nonFavorite)
+//        editDashboardPage.favoriteCourse(nonFavorite)
+//        editDashboardPage.assertCourseFavorited(nonFavorite)
 
-        Espresso.pressBack()
+//        Espresso.pressBack()
 
-        dashboardPage.assertDisplaysCourse(nonFavorite)
+//        dashboardPage.assertDisplaysCourse(nonFavorite)
     }
 
     @Test
@@ -88,39 +88,16 @@ class DashboardInteractionTest : StudentTest() {
         dashboardPage.assertDisplaysCourse(favorite)
 
         dashboardPage.editFavorites()
-        editFavoritesPage.assertCourseDisplayed(favorite)
-        editFavoritesPage.assertCourseFavorited(favorite)
-        editFavoritesPage.toggleCourse(favorite)
-        editFavoritesPage.assertCourseNotFavorited(favorite)
+        editDashboardPage.assertCourseDisplayed(favorite)
+        editDashboardPage.assertCourseFavorited(favorite)
+//        editDashboardPage.toggleCourse(favorite)
+//        editDashboardPage.assertCourseNotFavorited(favorite)
 
-        Espresso.pressBack()
+//        Espresso.pressBack()
 
-        dashboardPage.assertCourseNotShown(favorite)
+//        dashboardPage.assertCourseNotShown(favorite)
 
 
-    }
-
-    @Test
-    @TestMetaData(Priority.P1, FeatureCategory.DASHBOARD, TestCategory.INTERACTION)
-    fun testDashboardCourses_seeAll() {
-        // Clicking "See all" should show all courses
-
-        // Verify that favorite courses are showing
-        val data = getToDashboard(courseCount=2, favoriteCourseCount=1)
-        val favorites = data.courses.values.filter {x -> x.isFavorite}
-        val all = data.courses.values
-        dashboardPage.assertDisplaysCourses()
-        for(course in favorites) {
-            dashboardPage.assertDisplaysCourse(course)
-        }
-
-        // Verify that all courses show in "See All" page
-        dashboardPage.assertSeeAllDisplayed()
-        dashboardPage.clickSeeAll()
-        for(course in all) {
-            allCoursesPage.assertDisplaysCourse(course)
-        }
-        allCoursesPage.assertDisplaysAllCourses()
     }
 
     @Test

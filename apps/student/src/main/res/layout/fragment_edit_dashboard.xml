@@ -22,9 +22,12 @@
         <variable
             name="viewModel"
             type="com.instructure.student.features.dashboard.edit.EditDashboardViewModel" />
+
+        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/editDashboardPage"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -43,22 +46,30 @@
                 app:theme="@style/SearchTheme" />
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:itemViewModels="@{viewModel.data.items}"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appbar" />
+            app:layout_constraintTop_toBottomOf="@id/appbar"
+            app:onRefreshListener="@{() -> viewModel.loadItems()}"
+            app:refreshState="@{viewModel.state}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:itemViewModels="@{viewModel.data.items}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.instructure.pandautils.views.EmptyView
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:emptyViewState="@{viewModel.state}" />
+            app:emptyViewState="@{viewModel.state}"
+            app:loadingEnabled="false" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
