@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.student.R
 import com.instructure.student.features.dashboard.edit.itemviewmodels.*
 import io.mockk.coEvery
 import io.mockk.every
@@ -48,6 +49,7 @@ import org.junit.Test
 import org.threeten.bp.DateTimeUtils
 import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
+import java.util.*
 
 @ExperimentalCoroutinesApi
 class EditDashboardViewModelTest {
@@ -569,9 +571,73 @@ class EditDashboardViewModelTest {
         assertEquals(0, data.size)
     }
 
-    private fun createCourse(id: Long, name: String, isFavorite: Boolean = false): Course {
-        val startDate = OffsetDateTime.now()
-        val endDate = startDate.withDayOfMonth(startDate.dayOfMonth + 1)
+    @Test
+    fun `Correct headers for all items`() {
+        val pastCourse = createCourse(1L, "Past course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year - 1))
+        val futureCourse = createCourse(2L, "Future course", false, OffsetDateTime.now().withYear(OffsetDateTime.now().year + 1))
+        val currentCourse = createCourse(3L, "Current course", false)
+        val courses = listOf(pastCourse, futureCourse, currentCourse)
+
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val groups = listOf(
+                createGroup(4L, "Group", true),
+        )
+
+        every { groupManager.getAllGroupsAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(groups)
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager)
+        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleOwner, Observer {})
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        //Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(11, data.size)
+        assertTrue(data[0] is EditDashboardHeaderViewModel)
+        assertTrue(data[1] is EditDashboardDescriptionItemViewModel)
+
+        assertTrue(data[2] is EditDashboardEnrollmentItemViewModel)
+        val currentHeader = data[2] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.current_enrollments, currentHeader.title)
+
+        assertTrue(data[3] is EditDashboardCourseItemViewModel)
+        val currentCourseItemViewModel = data[3] as EditDashboardCourseItemViewModel
+        assertEquals("Current course", currentCourseItemViewModel.name)
+
+        assertTrue(data[4] is EditDashboardEnrollmentItemViewModel)
+        val pastHeader = data[4] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.past_enrollments, pastHeader.title)
+
+        assertTrue(data[5] is EditDashboardCourseItemViewModel)
+        val pastCourseItemViewModel = data[5] as EditDashboardCourseItemViewModel
+        assertEquals("Past course", pastCourseItemViewModel.name)
+
+        assertTrue(data[6] is EditDashboardEnrollmentItemViewModel)
+        val futureHeader = data[6] as EditDashboardEnrollmentItemViewModel
+        assertEquals(R.string.future_enrollments, futureHeader.title)
+
+        assertTrue(data[7] is EditDashboardCourseItemViewModel)
+        val futureCourseItemViewModel = data[7] as EditDashboardCourseItemViewModel
+        assertEquals("Future course", futureCourseItemViewModel.name)
+
+        assertTrue(data[8] is EditDashboardHeaderViewModel)
+        assertTrue(data[9] is EditDashboardDescriptionItemViewModel)
+
+        assertTrue(data[10] is EditDashboardGroupItemViewModel)
+        val groupItemViewModel = data[10] as EditDashboardGroupItemViewModel
+        assertEquals("Group", groupItemViewModel.name)
+    }
+
+    private fun createCourse(id: Long, name: String, isFavorite: Boolean = false, startOffsetDate: OffsetDateTime? = null, endOffsetDate: OffsetDateTime? = null): Course {
+        val startDate = startOffsetDate ?: OffsetDateTime.now()
+        val endDate = endOffsetDate ?: startDate.withDayOfMonth(startDate.dayOfMonth + 1)
 
         val enrollment = Enrollment(
                 type = Enrollment.EnrollmentType.Student,
@@ -584,7 +650,8 @@ class EditDashboardViewModelTest {
                 endAt = DateTimeUtils.toDate(endDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 startAt = DateTimeUtils.toDate(startDate.atZoneSimilarLocal(ZoneId.systemDefault()).toInstant()).toApiString(),
                 isFavorite = isFavorite,
-                enrollments = enrollments)
+                enrollments = enrollments,
+                restrictEnrollmentsToCourseDate = true)
     }
 
     private fun createGroup(id: Long, name: String, isFavorite: Boolean = false, courseId: Long = 0): Group {
