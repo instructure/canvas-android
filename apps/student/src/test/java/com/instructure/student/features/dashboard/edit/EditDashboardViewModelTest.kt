@@ -80,7 +80,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Show error state if fetching courses fails`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
 
@@ -102,7 +102,7 @@ class EditDashboardViewModelTest {
     fun `Show error state if fetching groups fails`() {
         //Given
         val courses = listOf(Course(id = 1L, name = "Course"))
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -123,7 +123,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current Course"))
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -150,7 +150,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Correct headers for groups`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -180,7 +180,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course"))
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -214,7 +214,7 @@ class EditDashboardViewModelTest {
         //Given
         val courses = listOf(createCourse(1L, "Current course", true))
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -246,7 +246,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add group to favorites`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -279,7 +279,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove group from favorites`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -316,7 +316,7 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2")
         )
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -356,7 +356,7 @@ class EditDashboardViewModelTest {
                 createCourse(2L, "Current course 2", false)
         )
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -393,7 +393,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Add all groups to favorites`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -433,7 +433,7 @@ class EditDashboardViewModelTest {
     @Test
     fun `Remove all groups from favorites`() {
         //Given
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(emptyList())
         }
 
@@ -480,7 +480,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -514,7 +514,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 
@@ -548,7 +548,7 @@ class EditDashboardViewModelTest {
                 createGroup(2L, "Group", true),
         )
 
-        every { courseManager.getCoursesAsync(any()) } returns mockk {
+        every { courseManager.getCoursesWithConcludedAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(courses)
         }
 

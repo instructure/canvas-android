@@ -79,7 +79,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             _state.postValue(ViewState.Loading)
 
             try {
-                courses = courseManager.getCoursesAsync(true).await().dataOrThrow
+                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow
                 courseMap = courses.associateBy { it.id }
 
                 groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow

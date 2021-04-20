@@ -32,14 +32,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
-            android:paddingTop="24dp"
+            android:paddingTop="12dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="12dp">
+            android:paddingBottom="4dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
+                android:layout_marginBottom="12dp"
                 android:text="@{itemViewModel.title}"
                 android:textColor="@color/defaultTextDark"
                 android:textSize="20sp"
@@ -47,17 +48,16 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/selectButton"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 tools:text="All courses" />
 
             <LinearLayout
                 android:id="@+id/selectButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:contentDescription="@string/a11y_content_description_add_to_dashboard"
                 android:background="?android:selectableItemBackground"
+                android:contentDescription="@string/a11y_content_description_add_to_dashboard"
                 android:gravity="center"
+                android:minHeight="48dp"
                 android:onClick="@{() -> itemViewModel.onActionClick()}"
                 android:orientation="horizontal"
                 android:padding="4dp"
