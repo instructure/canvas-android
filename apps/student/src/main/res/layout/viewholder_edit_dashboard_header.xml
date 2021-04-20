@@ -25,6 +25,7 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -55,8 +56,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?android:selectableItemBackground"
-                android:contentDescription="@string/a11y_content_description_add_to_dashboard"
+                android:contentDescription="@{itemViewModel.hasItemSelected ? @string/a11y_content_description_remove_all_from_dashboard :  @string/a11y_content_description_add_all_to_dashboard}"
                 android:gravity="center"
+                android:importantForAccessibility="yes"
                 android:minHeight="48dp"
                 android:onClick="@{() -> itemViewModel.onActionClick()}"
                 android:orientation="horizontal"

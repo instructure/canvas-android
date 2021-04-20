@@ -27,6 +27,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.*
@@ -77,5 +78,19 @@ class EditDashboardPage : BasePage(R.id.editDashboardPage) {
                 withContentDescription(containsString(course.name)),
                 hasDescendant(childMatcher))
         onView(itemMatcher).assertDisplayed()
+    }
+
+    fun selectAllCourses() {
+        val childMatcher = withContentDescription("Add all to dashboard")
+        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+
+        onView(withParent(itemMatcher) + childMatcher).click()
+    }
+
+    fun unselectAllCourses() {
+        val childMatcher = withContentDescription("Remove all from dashboard")
+        val itemMatcher = allOf(hasDescendant(withText("All courses")), hasDescendant(childMatcher))
+
+        onView(withParent(itemMatcher) + childMatcher).click()
     }
 }
