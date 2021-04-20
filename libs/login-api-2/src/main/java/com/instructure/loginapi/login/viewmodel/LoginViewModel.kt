@@ -21,6 +21,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.mvvm.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    private val remoteConfigUtils: RemoteConfigUtils,
     private val featuresManager: FeaturesManager
 ) : ViewModel() {
 
@@ -41,6 +44,15 @@ class LoginViewModel @Inject constructor(
     private val _canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
     fun checkCanvasForElementaryFeature() {
+        val k5designEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
+        if (k5designEnabled) {
+            checkFeatureFlag()
+        } else {
+            _canvasForElementaryResult.postValue(Event(false))
+        }
+    }
+
+    private fun checkFeatureFlag() {
         viewModelScope.launch {
             try {
                 val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
