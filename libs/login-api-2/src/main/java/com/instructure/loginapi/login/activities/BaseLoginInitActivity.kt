@@ -113,7 +113,10 @@ abstract class BaseLoginInitActivity : AppCompatActivity() {
         }
     }
 
-    private fun startApp() {
+    /**
+     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
+     */
+    protected open fun startApp() {
         viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
             event?.getContentIfNotHandled()?.let { result: Boolean ->
                 val intent = launchApplicationMainActivityIntent()

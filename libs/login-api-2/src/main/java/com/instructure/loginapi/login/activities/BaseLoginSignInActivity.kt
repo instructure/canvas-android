@@ -493,10 +493,9 @@ abstract class BaseLoginSignInActivity : AppCompatActivity(), OnAuthenticationSe
     }
 
     /**
-     * Override and do not call super if you need additional logic before launching the main activity intent.
-     * It is expected that the class overriding will launch an intent.
+     * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
-    protected fun handleLaunchApplicationMainActivityIntent() {
+    protected open fun handleLaunchApplicationMainActivityIntent() {
         viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
             event?.getContentIfNotHandled()?.let { result: Boolean ->
                 val intent = launchApplicationMainActivityIntent()
