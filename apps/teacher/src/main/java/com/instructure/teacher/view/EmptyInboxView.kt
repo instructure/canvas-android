@@ -7,9 +7,8 @@ import com.instructure.teacher.R
 
 class EmptyInboxView @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : EmptyView(context, attrs, defStyleAttr) {
+    attrs: AttributeSet? = null
+) : EmptyView(context, attrs) {
 
     override val viewId: Int
         get() = R.layout.empty_inbox_view
