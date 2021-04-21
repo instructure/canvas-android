@@ -50,7 +50,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun signInActivityIntent(snickerDoodle: SnickerDoodle): Intent = SignInActivity.createIntent(this, AccountDomain(snickerDoodle.domain))
 
-    override fun startApp() {
+    override fun startApp(canvasForElementaryOfflineFallback: Boolean) {
         val intent = launchApplicationMainActivityIntent()
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

@@ -43,6 +43,8 @@ class LoginViewModel @Inject constructor(
         get() = _canvasForElementaryResult
     private val _canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
+    var canvasForElementaryOfflineFallback: Boolean = false
+
     fun checkCanvasForElementaryFeature() {
         val k5designEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
         if (k5designEnabled) {
@@ -61,7 +63,7 @@ class LoginViewModel @Inject constructor(
                 val canvasForElementary = featureFlags.canvasForElementary
                 _canvasForElementaryResult.postValue(Event(canvasForElementary))
             } catch (e: Exception) {
-                _canvasForElementaryResult.postValue(Event(false))
+                _canvasForElementaryResult.postValue(Event(canvasForElementaryOfflineFallback))
             }
         }
     }

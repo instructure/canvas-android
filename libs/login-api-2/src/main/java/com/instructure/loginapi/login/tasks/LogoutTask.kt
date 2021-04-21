@@ -24,10 +24,9 @@ import android.net.Uri
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.models.PushNotification
@@ -121,7 +120,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
         if (ApiPrefs.getValidToken().isNotEmpty()) OAuthManager.deleteToken()
     }
 
-    private fun updateUser() {
+    private suspend fun updateUser() {
         // Update SignedInUser to preserve changes to name, locale, etc
         val currentUser = ApiPrefs.user
         val signedInUser = PreviousUsersUtils.getSignedInUser(
@@ -130,6 +129,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
             currentUser?.id ?: 0
         )
         if (currentUser != null && signedInUser != null) {
+            signedInUser.canvasForElementary = getCanvasForElementaryFlag()
             signedInUser.user = currentUser
             signedInUser.clientId = ApiPrefs.clientId
             signedInUser.clientSecret = ApiPrefs.clientSecret
@@ -137,5 +137,19 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
         }
     }
 
+    private suspend fun getCanvasForElementaryFlag(): Boolean {
+        try {
+            val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
+            return if (k5enabled) {
+                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+                val featureFlags = featureFlagResult.dataOrThrow
+                featureFlags.canvasForElementary
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            return false
+        }
+    }
 
 }
