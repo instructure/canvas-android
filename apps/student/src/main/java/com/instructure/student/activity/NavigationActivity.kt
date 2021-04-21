@@ -1022,29 +1022,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     companion object {
-        fun createIntent(context: Context): Intent {
-            return Intent(context, NavigationActivity::class.java)
-        }
-
         fun createIntent(context: Context, route: Route): Intent {
             return Intent(context, NavigationActivity::class.java).apply { putExtra(Route.ROUTE, route) }
         }
 
-        fun createIntent(context: Context, extras: Bundle): Intent {
-            val intent = Intent(context, NavigationActivity::class.java)
-            intent.putExtra(Const.EXTRAS, extras)
-            return intent
-        }
-
-        fun createIntent(context: Context, message: String, messageType: Int): Intent {
-            val intent = createIntent(context)
-            intent.putExtra(Const.MESSAGE, message)
-            intent.putExtra(Const.MESSAGE_TYPE, messageType)
-            return intent
-        }
-
-        fun createIntent(context: Context, masqueradingUserId: Long): Intent = createIntent(context).apply {
-            putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
+        fun createIntent(context: Context, masqueradingUserId: Long): Intent {
+            return Intent(context, NavigationActivity::class.java).apply {
+                putExtra(Const.QR_CODE_MASQUERADE_ID, masqueradingUserId)
+            }
         }
 
         val startActivityClass: Class<out Activity>

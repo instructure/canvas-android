@@ -27,6 +27,7 @@ import android.view.View
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.catch
@@ -97,6 +98,7 @@ class InterwebsToApplication : AppCompatActivity() {
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
 
+                    val canvasForElementary = getCanvasForElementaryFlag()
 
                     // Add delay for animation and launch Navigation Activity
                     delay(700)
@@ -113,6 +115,7 @@ class InterwebsToApplication : AppCompatActivity() {
                     }
 
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    intent.putExtra("canvas_for_elementary", canvasForElementary)
                     startActivity(intent)
                     finish()
                     return@tryWeave
@@ -145,9 +148,11 @@ class InterwebsToApplication : AppCompatActivity() {
             }
 
             if (signedIn && !domain.contains(host)) {
+                val canvasForElementary = getCanvasForElementaryFlag()
                 delay(700)
                 val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
                 intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
+                intent.putExtra("canvas_for_elementary", canvasForElementary)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
@@ -160,6 +165,21 @@ class InterwebsToApplication : AppCompatActivity() {
 
         } catch {
             finish()
+        }
+    }
+
+    private suspend fun getCanvasForElementaryFlag(): Boolean {
+        try {
+            val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
+            return if (k5enabled) {
+                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+                val featureFlags = featureFlagResult.dataOrThrow
+                featureFlags.canvasForElementary
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            return false
         }
     }
 
