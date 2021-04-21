@@ -79,7 +79,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             _state.postValue(ViewState.Loading)
 
             try {
-                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow
+                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow.filter { it.isNotDeleted() && !it.isInvited() }
                 courseMap = courses.associateBy { it.id }
 
                 groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
@@ -332,7 +332,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getPastCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val pastCourses = courses.filter { it.endDate?.before(Date()) ?: false }
+        val pastCourses = courses.filter { it.term?.endDate?.before(Date()) ?: false || it.endDate?.before(Date()) ?: false || it.isCompleted() }
         return pastCourses.map {
             EditDashboardCourseItemViewModel(
                     id = it.id,
@@ -347,7 +347,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun getFutureCourses(courses: List<Course>): List<EditDashboardCourseItemViewModel> {
-        val futureCourses = courses.filter { it.startDate?.after(Date()) ?: false }
+        val futureCourses = courses.filter { it.term?.startDate?.after(Date()) ?: false || it.startDate?.after(Date()) ?: false || it.isCreationPending()}
         favoriteCourseMap.putAll(futureCourses.filter { it.isFavorite }.associateBy { it.id })
         return futureCourses.map {
             EditDashboardCourseItemViewModel(
@@ -374,7 +374,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         }
     }
 
-    private fun createListItems(courses: List<Course>, groups: List<Group>): List<ItemViewModel> {
+    private fun createListItems(courses: List<Course>, groups: List<Group>, isFiltered: Boolean = false): List<ItemViewModel> {
         currentCoursesViewData = getCurrentCourses(courses)
         pastCoursesViewData = getPastCourses(courses)
         futureCoursesViewData = getFutureCourses(courses)
@@ -382,7 +382,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
 
         val items = mutableListOf<ItemViewModel>()
         if (currentCoursesViewData.isNotEmpty() || pastCoursesViewData.isNotEmpty() || futureCoursesViewData.isNotEmpty()) {
-            courseHeader = EditDashboardHeaderViewModel(R.string.all_courses, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
+            val courseHeaderTitle = if (isFiltered) R.string.courses else R.string.all_courses
+            courseHeader = EditDashboardHeaderViewModel(courseHeaderTitle, favoriteCourseMap.isNotEmpty(), ::selectAllCourses, ::deselectAllCourses)
             items.add(courseHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_course_description))
         }
@@ -400,7 +401,8 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             items.addAll(futureCoursesViewData)
         }
         if (groupsViewData.isNotEmpty()) {
-            groupHeader = EditDashboardHeaderViewModel(R.string.all_groups, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
+            val groupHeaderTitle = if (isFiltered) R.string.groups else R.string.all_groups
+            groupHeader = EditDashboardHeaderViewModel(groupHeaderTitle, favoriteGroupMap.isNotEmpty(), ::selectAllGroups, ::deselectAllGroups)
             items.add(groupHeader)
             items.add(EditDashboardDescriptionItemViewModel(R.string.edit_dashboard_group_description))
             items.addAll(groupsViewData)
@@ -416,7 +418,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             val queriedCourses = courses.filter { it.name.contains(query, true) }
             val queriedGroups = groups.filter { it.name?.contains(query, true) ?: false || it.description?.contains(query, true) ?: false || courseMap?.get(it.courseId)?.name?.contains(query, true) ?: false }
 
-            createListItems(queriedCourses, queriedGroups)
+            createListItems(queriedCourses, queriedGroups, true)
         }
         if (items.isEmpty()) {
             _state.postValue(ViewState.Empty(R.string.edit_dashboard_empty_title, R.string.edit_dashboard_empty_message, R.drawable.ic_panda_nocourses))

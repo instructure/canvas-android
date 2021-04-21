@@ -1150,9 +1150,9 @@
     <string name="all_groups">All groups</string>
     <string name="edit_dashboard_course_description">Select courses for Dashboard or navigate to course details.</string>
     <string name="edit_dashboard_group_description">Select groups for Dashboard or navigate to course details.</string>
-    <string name="current_enrollments">Current enrolments</string>
-    <string name="past_enrollments">Past enrolments</string>
-    <string name="future_enrollments">Future enrolments</string>
+    <string name="current_enrollments">Current enrollments</string>
+    <string name="past_enrollments">Past enrollments</string>
+    <string name="future_enrollments">Future enrollments</string>
     <string name="added_to_dashboard">Added to Dashboard</string>
     <string name="removed_from_dashboard">Removed from Dashboard</string>
     <string name="all_added_to_dashboard">All added to Dashboard</string>
