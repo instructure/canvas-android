@@ -105,6 +105,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     @Inject
     lateinit var navigationBehavior: NavigationBehavior
 
+    @Inject
+    lateinit var appShortcutManager: AppShortcutManager
+
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
     private var drawerItemSelectedJob: Job? = null
@@ -216,7 +219,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
-        AppShortcutManager.make(this)
+        appShortcutManager.make(this)
 
         setupNavDrawerItems()
     }

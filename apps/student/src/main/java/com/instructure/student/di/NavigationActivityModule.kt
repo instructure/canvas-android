@@ -20,6 +20,9 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.DefaultNavigationBehavior
 import com.instructure.student.navigation.ElementaryNavigationBehavior
+import com.instructure.student.util.AppShortcutManager
+import com.instructure.student.util.DefaultAppShortcutManager
+import com.instructure.student.util.ElementaryAppShortcutManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +48,15 @@ class NavigationActivityModule {
             ElementaryNavigationBehavior()
         } else {
             DefaultNavigationBehavior()
+        }
+    }
+
+    @Provides
+    fun provideAppShortcutManager(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean): AppShortcutManager {
+        return if (canvasForElementary) {
+            ElementaryAppShortcutManager()
+        } else {
+            DefaultAppShortcutManager()
         }
     }
 }
