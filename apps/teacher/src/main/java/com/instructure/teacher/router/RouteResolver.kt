@@ -91,7 +91,7 @@ object RouteResolver {
         } else if (QuizListFragment::class.java.isAssignableFrom(cls)) {
             fragment = QuizListFragment.newInstance(canvasContext!!)
         } else if (ModuleListFragment::class.java.isAssignableFrom(cls)) {
-            fragment = ModuleListFragment.newInstance(route.arguments)
+            fragment = getModuleListFragment(canvasContext, route)
         } else if (QuizDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getQuizDetailsFragment(canvasContext, route)
         } else if (RCEFragment::class.java.isAssignableFrom(cls)) {
@@ -202,6 +202,12 @@ object RouteResolver {
             val args = AssignmentDetailsFragment.makeBundle(assignmentId)
             AssignmentDetailsFragment.newInstance((canvasContext as Course?)!!, args)
         }
+    }
+
+    private fun getModuleListFragment(canvasContext: CanvasContext?, route: Route): ModuleListFragment {
+        val moduleId = java.lang.Long.parseLong(route.paramsHash[RouterParams.MODULE_ID]!!)
+        val args = ModuleListFragment.makeBundle(canvasContext as Course, moduleId)
+        return ModuleListFragment.newInstance(args)
     }
 
     private fun getQuizDetailsFragment(canvasContext: CanvasContext?, route: Route): Fragment {
