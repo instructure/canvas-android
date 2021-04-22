@@ -36,16 +36,23 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.LoggingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.loading_canvas_view.*
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class InterwebsToApplication : AppCompatActivity() {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var loadingJob: Job? = null
 
@@ -87,7 +94,7 @@ class InterwebsToApplication : AppCompatActivity() {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
-                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data).execute()
+                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data, canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag()).execute()
                         finish()
                         return@tryWeave
                     }
@@ -98,7 +105,7 @@ class InterwebsToApplication : AppCompatActivity() {
 
                     val tokenResponse = performSSOLogin(data, this@InterwebsToApplication)
 
-                    val canvasForElementary = getCanvasForElementaryFlag()
+                    val canvasForElementary = featureFlagProvider.getCanvasForElementaryFlag()
 
                     // Add delay for animation and launch Navigation Activity
                     delay(700)
@@ -148,7 +155,7 @@ class InterwebsToApplication : AppCompatActivity() {
             }
 
             if (signedIn && !domain.contains(host)) {
-                val canvasForElementary = getCanvasForElementaryFlag()
+                val canvasForElementary = featureFlagProvider.getCanvasForElementaryFlag()
                 delay(700)
                 val intent = Intent(this@InterwebsToApplication, NavigationActivity.startActivityClass)
                 intent.putExtra(Const.MESSAGE, getString(R.string.differentDomainFromLink))
@@ -165,21 +172,6 @@ class InterwebsToApplication : AppCompatActivity() {
 
         } catch {
             finish()
-        }
-    }
-
-    private suspend fun getCanvasForElementaryFlag(): Boolean {
-        try {
-            val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
-            return if (k5enabled) {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-                val featureFlags = featureFlagResult.dataOrThrow
-                featureFlags.canvasForElementary
-            } else {
-                false
-            }
-        } catch (e: Exception) {
-            return false
         }
     }
 

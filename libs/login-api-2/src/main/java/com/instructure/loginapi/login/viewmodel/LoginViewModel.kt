@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.mvvm.Event
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,37 +35,16 @@ import javax.inject.Inject
  * If we would have all the logic in MVVM we could have 3 separate ViewModels for both 3 Activities.
  */
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val remoteConfigUtils: RemoteConfigUtils,
-    private val featuresManager: FeaturesManager
-) : ViewModel() {
+class LoginViewModel @Inject constructor(private val featureFlagProvider: FeatureFlagProvider) : ViewModel() {
 
     val canvasForElementaryResult: LiveData<Event<Boolean>>
         get() = _canvasForElementaryResult
     private val _canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
-    var canvasForElementaryOfflineFallback: Boolean = false
-
-    fun checkCanvasForElementaryFeature() {
-        val k5designEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
-        if (k5designEnabled) {
-            checkFeatureFlag()
-        } else {
-            _canvasForElementaryResult.postValue(Event(false))
-        }
-    }
-
-    private fun checkFeatureFlag() {
+    fun checkCanvasForElementaryFeature(errorFallback: Boolean) {
         viewModelScope.launch {
-            try {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-
-                val featureFlags = featureFlagResult.dataOrThrow
-                val canvasForElementary = featureFlags.canvasForElementary
-                _canvasForElementaryResult.postValue(Event(canvasForElementary))
-            } catch (e: Exception) {
-                _canvasForElementaryResult.postValue(Event(canvasForElementaryOfflineFallback))
-            }
+            val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag(errorFallback)
+            _canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
         }
     }
 }

@@ -14,11 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models
+package com.instructure.pandautils.di
 
-import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-data class FeatureFlags(
-    @SerializedName("canvas_for_elementary")
-    val canvasForElementary: Boolean = false
-)
+@Module
+@InstallIn(SingletonComponent::class)
+class FeatureFlagModule {
+
+    @Provides
+    fun provideFeatureFlagProvider(featuresManager: FeaturesManager, remoteConfigUtils: RemoteConfigUtils): FeatureFlagProvider {
+        return FeatureFlagProvider(featuresManager, remoteConfigUtils)
+    }
+}

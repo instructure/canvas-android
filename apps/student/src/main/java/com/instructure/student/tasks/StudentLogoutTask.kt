@@ -27,7 +27,7 @@ import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
 
-class StudentLogoutTask(type: Type, uri: Uri? = null) : LogoutTask(type, uri) {
+class StudentLogoutTask(type: Type, uri: Uri? = null, canvasForElementaryFeatureFlag: Boolean = false) : LogoutTask(type, uri, canvasForElementaryFeatureFlag) {
 
     override fun onCleanup() {
         FlutterComm.reset()

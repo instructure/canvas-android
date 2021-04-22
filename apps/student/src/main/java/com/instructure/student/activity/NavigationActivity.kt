@@ -119,7 +119,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private val isDrawerOpen: Boolean
         get() = !(drawerLayout == null || navigationDrawer == null) && drawerLayout.isDrawerOpen(navigationDrawer)
 
-    private val mNavigationDrawerItemClickListener = View.OnClickListener { v -> // TODO Nav drawer
+    private val mNavigationDrawerItemClickListener = View.OnClickListener { v ->
         drawerItemSelectedJob = weave {
             closeNavigationDrawer()
             delay(250)
@@ -403,7 +403,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         drawerLayout?.openDrawer(navigationDrawer)
     }
 
-    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions { // TODO For changing navigation drawer
+    override fun <F> attachNavigationDrawer(fragment: F, toolbar: Toolbar) where F : Fragment, F : FragmentInteractions {
         //Navigation items
         navigationDrawerItem_files.setOnClickListener(mNavigationDrawerItemClickListener)
         navigationDrawerItem_gauge.setOnClickListener(mNavigationDrawerItemClickListener)
@@ -908,7 +908,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     //endregion
 
-    override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) { // TODO Do we need this in K5?
+    override fun gotLaunchDefinitions(launchDefinitions: List<LaunchDefinition>?) {
         val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition._GAUGE_DOMAIN }
 

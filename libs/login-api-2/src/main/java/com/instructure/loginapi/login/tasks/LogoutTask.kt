@@ -35,7 +35,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import java.io.File
 
-abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
+abstract class LogoutTask(val type: Type, val uri: Uri? = null, val canvasForElementaryFeatureFlag: Boolean = false) {
 
     enum class Type {
         SWITCH_USERS,
@@ -129,27 +129,11 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null) {
             currentUser?.id ?: 0
         )
         if (currentUser != null && signedInUser != null) {
-            signedInUser.canvasForElementary = getCanvasForElementaryFlag()
+            signedInUser.canvasForElementary = canvasForElementaryFeatureFlag
             signedInUser.user = currentUser
             signedInUser.clientId = ApiPrefs.clientId
             signedInUser.clientSecret = ApiPrefs.clientSecret
             PreviousUsersUtils.add(ContextKeeper.appContext, signedInUser)
         }
     }
-
-    private suspend fun getCanvasForElementaryFlag(): Boolean {
-        try {
-            val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
-            return if (k5enabled) {
-                val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
-                val featureFlags = featureFlagResult.dataOrThrow
-                featureFlags.canvasForElementary
-            } else {
-                false
-            }
-        } catch (e: Exception) {
-            return false
-        }
-    }
-
 }
