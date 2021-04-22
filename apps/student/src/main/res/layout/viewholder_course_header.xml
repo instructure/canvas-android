@@ -27,13 +27,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@id/seeAllTextView"
+        app:layout_constraintBaseline_toBaselineOf="@id/editDashboardTextView"
         android:text="@string/courses"
         android:textColor="@color/defaultTextDark"
         android:textSize="24sp"/>
 
     <TextView
-        android:id="@+id/seeAllTextView"
+        android:id="@+id/editDashboardTextView"
         style="@style/TextFont.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -44,6 +44,6 @@
         android:background="?android:selectableItemBackground"
         android:paddingBottom="2dp"
         android:paddingTop="16dp"
-        android:text="@string/seeAll"/>
+        android:text="@string/edit_dashboard"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

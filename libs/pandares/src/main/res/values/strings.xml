@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -1145,4 +1144,25 @@
     <string name="a11y_criterion_button_click_description">more information</string>
     <string name="a11y_create_file_folder_visible">Create File and Folder buttons visible</string>
     <string name="a11y_create_file_folder_gone">Create File and Folder buttons invisible</string>
+    <string name="unselect_all">Unselect All</string>
+    <string name="select_all">Select All</string>
+    <string name="all_courses">All courses</string>
+    <string name="all_groups">All groups</string>
+    <string name="edit_dashboard_course_description">Select courses for Dashboard or navigate to course details.</string>
+    <string name="edit_dashboard_group_description">Select groups for Dashboard or navigate to course details.</string>
+    <string name="current_enrollments">Current enrollments</string>
+    <string name="past_enrollments">Past enrollments</string>
+    <string name="future_enrollments">Future enrollments</string>
+    <string name="added_to_dashboard">Added to Dashboard</string>
+    <string name="removed_from_dashboard">Removed from Dashboard</string>
+    <string name="all_added_to_dashboard">All added to Dashboard</string>
+    <string name="all_removed_from_dashboard">All removed from Dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inactive courses could not be added to Dashboard.</string>
+    <string name="edit_dashboard">Edit Dashboard</string>
+    <string name="edit_dashboard_empty_title">No courses here</string>
+    <string name="edit_dashboard_empty_message">You have to be enrolled in a course to add it to the Dashboard.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Remove from dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
 </resources>

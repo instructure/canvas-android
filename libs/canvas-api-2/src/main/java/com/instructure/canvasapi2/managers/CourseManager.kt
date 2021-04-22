@@ -68,6 +68,27 @@ object CourseManager {
         CourseAPI.getFirstPageCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesWithConcluded(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
+        if (ApiPrefs.isStudentView) {
+            getCoursesTeacher(forceNetwork, callback)
+            return
+        }
+
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val depaginatedCallback = object : ExhaustiveListCallback<Course>(callback) {
+            override fun getNextPage(callback: StatusCallback<List<Course>>, nextUrl: String, isCached: Boolean) {
+                CourseAPI.getNextPageCourses(forceNetwork, nextUrl, adapter, callback)
+            }
+        }
+
+        adapter.statusCallback = depaginatedCallback
+        CourseAPI.getFirstPageCoursesWithConcluded(adapter, depaginatedCallback, params)
+    }
+
+    fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
+
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -174,12 +195,16 @@ object CourseManager {
         CourseAPI.addCourseToFavorites(courseId, adapter, callback, params)
     }
 
+    fun addCourseToFavoritesAsync(courseId: Long) = apiAsync<Favorite> { addCourseToFavorites(courseId, it, true) }
+
     fun removeCourseFromFavorites(courseId: Long, callback: StatusCallback<Favorite>, forceNetwork: Boolean) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         CourseAPI.removeCourseFromFavorites(courseId, adapter, callback, params)
     }
+
+    fun removeCourseFromFavoritesAsync(courseId: Long) = apiAsync<Favorite> { removeCourseFromFavorites(courseId, it, true) }
 
     fun editCourseName(courseId: Long, newCourseName: String, callback: StatusCallback<Course>, forceNetwork: Boolean) {
         val queryParams = HashMap<String, String>()
