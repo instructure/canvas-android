@@ -39,7 +39,8 @@ import kotlinx.android.synthetic.main.loading_lame.view.*
 open class EmptyView @JvmOverloads constructor(
         context: Context,
         attrs: AttributeSet? = null,
-) : FrameLayout(context, attrs), EmptyInterface {
+        defStyleAttr: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr), EmptyInterface {
 
     open val viewId: Int = R.layout.empty_view
 
@@ -48,32 +49,16 @@ open class EmptyView @JvmOverloads constructor(
     private var messageText: String? = null
     private var isDisplayNoConnection = false
 
-    private var isLoadingEnabled: Boolean
-
     init {
         View.inflate(context, viewId, this)
-
-        context.theme.obtainStyledAttributes(
-                attrs,
-                R.styleable.EmptyView,
-                0, 0).apply {
-
-            try {
-                isLoadingEnabled = getBoolean(R.styleable.EmptyView_loadingEnabled, true)
-            } finally {
-                recycle()
-            }
-        }
     }
 
     override fun setLoading() {
-        if (isLoadingEnabled) {
-            title.setGone()
-            message.setGone()
-            image.setGone()
-            loading.announceForAccessibility(context.getString(R.string.loading))
-            loading.setVisible()
-        }
+        title.setGone()
+        message.setGone()
+        image.setGone()
+        loading.announceForAccessibility(context.getString(R.string.loading))
+        loading.setVisible()
     }
 
     override fun setDisplayNoConnection(isNoConnection: Boolean) {
@@ -173,8 +158,8 @@ open class EmptyView @JvmOverloads constructor(
                 title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                 message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
             } else {
-                title.setTextSize(TypedValue.COMPLEX_UNIT_SP,12f)
-                message.setTextSize(TypedValue.COMPLEX_UNIT_SP,8f)
+                title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
             }
         } else if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)

@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.models.Course
@@ -70,16 +71,18 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     private lateinit var pastCoursesViewData: List<EditDashboardCourseItemViewModel>
     private lateinit var futureCoursesViewData: List<EditDashboardCourseItemViewModel>
 
+    var hasChanges = false
+
     init {
+        _state.postValue(ViewState.Loading)
         loadItems()
     }
 
     fun loadItems() {
         viewModelScope.launch {
-            _state.postValue(ViewState.Loading)
-
             try {
-                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow.filter { it.isNotDeleted() && !it.isInvited() }
+                courses = courseManager.getCoursesWithConcludedAsync(true).await().dataOrThrow
+                courses = courses.filter { it.isNotDeleted() && !it.isInvited() && !it.isEnrollmentDeleted() }
                 courseMap = courses.associateBy { it.id }
 
                 groups = groupManager.getAllGroupsAsync(true).await().dataOrThrow
@@ -175,6 +178,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun addCourseToFavorites(item: EditDashboardCourseItemViewModel) {
+        hasChanges = true
         favoriteCourseMap[item.id] = courseMap?.get(item.id)
                 ?: error("Course does not exist")
         courseMap?.get(item.id)?.isFavorite = true
@@ -189,6 +193,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun removeCourseFromFavorites(item: EditDashboardCourseItemViewModel) {
+        hasChanges = true
         favoriteCourseMap.remove(item.id)
         courseMap?.get(item.id)?.isFavorite = false
         item.apply {
@@ -202,6 +207,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun addGroupToFavorites(item: EditDashboardGroupItemViewModel) {
+        hasChanges = true
         favoriteGroupMap[item.id] = groupMap?.get(item.id) ?: error("Group does not exist")
         groupMap?.get(item.id)?.isFavorite = true
         item.apply {
@@ -215,6 +221,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
     }
 
     private fun removeGroupFromFavorites(item: EditDashboardGroupItemViewModel) {
+        hasChanges = true
         favoriteGroupMap.remove(item.id)
         groupMap?.get(item.id)?.isFavorite = false
         item.apply {
@@ -316,9 +323,6 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         val currentCourses = courses.filter { it.hasActiveEnrollment() && it.isBetweenValidDateRange() }
         favoriteCourseMap.putAll(currentCourses.filter { it.isFavorite }.associateBy { it.id })
         return currentCourses.map {
-            if (it.isFavorite) {
-                favoriteCourseMap[it.id] = it
-            }
             EditDashboardCourseItemViewModel(
                     id = it.id,
                     name = it.name,
@@ -366,9 +370,6 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
         favoriteGroupMap.clear()
         favoriteGroupMap.putAll(groups.filter { it.isFavorite }.associateBy { it.id })
         return groups.map {
-            if (it.isFavorite) {
-                favoriteGroupMap[it.id] = it
-            }
             val course = courseMap?.get(it.courseId)
             EditDashboardGroupItemViewModel(it.id, it.name, it.isFavorite, course?.name, course?.term?.name, ::handleAction)
         }
@@ -426,6 +427,11 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
             _state.postValue(ViewState.Success)
         }
         _data.postValue(EditDashboardViewData(items))
+    }
+
+    fun refresh() {
+        _state.postValue(ViewState.Refresh)
+        loadItems()
     }
 
 }

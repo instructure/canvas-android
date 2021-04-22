@@ -79,9 +79,11 @@ class EditDashboardFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
-        val intent = Intent(Const.COURSE_THING_CHANGED)
-        intent.putExtras(Bundle().apply { putBoolean(Const.COURSE_FAVORITES, true) })
-        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+        if (viewModel.hasChanges) {
+            val intent = Intent(Const.COURSE_THING_CHANGED)
+            intent.putExtras(Bundle().apply { putBoolean(Const.COURSE_FAVORITES, true) })
+            LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+        }
     }
 
     private fun handleAction(action: EditDashboardItemAction) {

@@ -32,6 +32,7 @@ object EnrollmentAPI {
     const val STATE_ACTIVE = "active"
     const val STATE_INVITED = "invited"
     const val STATE_COMPLETED = "completed"
+    const val STATE_DELETED = "deleted"
     const val STATE_CREATION_PENDING = "creation_pending"
     const val STATE_CURRENT_AND_FUTURE = "current_and_future"
 

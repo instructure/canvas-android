@@ -51,6 +51,7 @@ fun Course.hasValidSection(): Boolean = sections.any { it.endDate?.after(Date())
 fun Course.hasActiveEnrollment(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE } ?: false
 fun Course.isInvited(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_INVITED } ?: false
 fun Course.isCompleted(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_COMPLETED } ?: false
+fun Course.isEnrollmentDeleted(): Boolean = enrollments?.all { it.enrollmentState == EnrollmentAPI.STATE_DELETED } ?: false
 fun Course.isCreationPending(): Boolean = enrollments?.any { it.enrollmentState == EnrollmentAPI.STATE_CREATION_PENDING } ?: false
 fun Course.isNotDeleted(): Boolean = workflowState != Course.WorkflowState.DELETED
 fun Course.isPublished(): Boolean = workflowState != Course.WorkflowState.UNPUBLISHED

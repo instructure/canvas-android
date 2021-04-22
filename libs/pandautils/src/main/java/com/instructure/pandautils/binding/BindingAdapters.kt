@@ -43,6 +43,7 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
     when (state) {
         is ViewState.Success -> emptyView.setGone()
         is ViewState.Loading -> emptyView.setLoading()
+        is ViewState.Refresh -> emptyView.setGone()
         is ViewState.Empty -> {
             state.emptyTitle?.let { emptyView.setTitleText(it) }
             state.emptyMessage?.let { emptyView.setMessageText(it) }
@@ -61,7 +62,7 @@ fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemView
 
 @BindingAdapter("refreshState")
 fun bindRefreshState(swipeRefreshLayout: SwipeRefreshLayout, state: ViewState?) {
-    swipeRefreshLayout.isRefreshing = state == ViewState.Loading
+    swipeRefreshLayout.isRefreshing = state == ViewState.Refresh
 }
 
 private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerViewAdapter {

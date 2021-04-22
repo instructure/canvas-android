@@ -22,8 +22,6 @@
         <variable
             name="viewModel"
             type="com.instructure.student.features.dashboard.edit.EditDashboardViewModel" />
-
-        <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +51,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar"
-            app:onRefreshListener="@{() -> viewModel.loadItems()}"
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
             app:refreshState="@{viewModel.state}">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -69,7 +67,6 @@
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:emptyViewState="@{viewModel.state}"
-            app:loadingEnabled="false" />
+            app:emptyViewState="@{viewModel.state}" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

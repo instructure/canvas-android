@@ -50,8 +50,4 @@
         <attr name="checkMark" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="EmptyView">
-        <attr name="loadingEnabled" format="boolean" />
-    </declare-styleable>
-
 </resources>
