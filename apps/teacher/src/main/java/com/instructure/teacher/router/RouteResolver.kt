@@ -205,9 +205,13 @@ object RouteResolver {
     }
 
     private fun getModuleListFragment(canvasContext: CanvasContext?, route: Route): ModuleListFragment {
-        val moduleId = java.lang.Long.parseLong(route.paramsHash[RouterParams.MODULE_ID]!!)
-        val args = ModuleListFragment.makeBundle(canvasContext as Course, moduleId)
-        return ModuleListFragment.newInstance(args)
+        return if (route.arguments.containsKey(Const.COURSE)) {
+            ModuleListFragment.newInstance(route.arguments)
+        } else {
+            val moduleId = route.paramsHash[RouterParams.MODULE_ID]?.let { java.lang.Long.parseLong(it) }
+            val args = ModuleListFragment.makeBundle(canvasContext as Course, moduleId)
+            ModuleListFragment.newInstance(args)
+        }
     }
 
     private fun getQuizDetailsFragment(canvasContext: CanvasContext?, route: Route): Fragment {
