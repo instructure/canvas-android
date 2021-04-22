@@ -308,6 +308,7 @@ dependencies {
     implementation Libs.FIREBASE_MESSAGING
     implementation Libs.ANDROIDX_PALETTE
     implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_CORE_KTX
 
     /* Job Scheduler */
     implementation Libs.FIREBASE_JOB_DISPATCHER
