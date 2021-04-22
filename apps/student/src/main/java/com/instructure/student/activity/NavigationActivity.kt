@@ -938,11 +938,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun canBookmark(): Boolean = navigationBehavior.visibleNavigationMenuItems.contains(NavigationMenuItem.BOOKMARKS)
 
-    override fun updateUnreadCount(unreadCount: String) { // TODO Bottom bar We need to change the index here
+    override fun updateUnreadCount(unreadCount: String) {
         // get the view
         val bottomBarNavView = bottomBar?.getChildAt(0)
         // get the inbox item
-        val view = (bottomBarNavView as BottomNavigationMenuView).getChildAt(4)
+        val view = (bottomBarNavView as BottomNavigationMenuView).getChildAt(navigationBehavior.inboxMenuIndex)
 
         // create the badge, set the text and color it
         val unreadCountValue = unreadCount.toInt()

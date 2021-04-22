@@ -41,6 +41,8 @@ class DefaultNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
 
+    override val inboxMenuIndex: Int = 4
+
     override fun setupBottomNavBar(bottomNavBar: BottomNavigationView) {
         bottomNavBar.inflateMenu(R.menu.bottom_bar_menu)
     }
