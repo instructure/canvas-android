@@ -79,7 +79,7 @@ class AssignmentDetailsView(
         toolbar.subtitle = canvasContext.name
 
         val navigation = context as? Navigation
-        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: false
+        val bookmarkFeatureAllowed = navigation?.canBookmark() ?: true // We allow bookmarking by default if it's not explicitly disabled
         if (bookmarkFeatureAllowed) {
             toolbar.setMenu(R.menu.bookmark_menu) { consumer?.accept(AssignmentDetailsEvent.AddBookmarkClicked) }
         }
