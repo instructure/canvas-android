@@ -120,7 +120,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null, val canvasForEle
         if (ApiPrefs.getValidToken().isNotEmpty()) OAuthManager.deleteToken()
     }
 
-    private suspend fun updateUser() {
+    private fun updateUser() {
         // Update SignedInUser to preserve changes to name, locale, etc
         val currentUser = ApiPrefs.user
         val signedInUser = PreviousUsersUtils.getSignedInUser(
