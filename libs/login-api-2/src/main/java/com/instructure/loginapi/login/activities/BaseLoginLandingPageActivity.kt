@@ -218,7 +218,7 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
      * This should be private once we have the same functionality for the teacher app, but currently we don't want to check the feature flag in teacher.
      */
     protected open fun startApp(canvasForElementaryOfflineFallback: Boolean) {
-        viewModel.canvasForElementaryResult.observe(this, Observer { event: Event<Boolean>? ->
+        viewModel.checkCanvasForElementaryFeature(canvasForElementaryOfflineFallback).observe(this, Observer { event: Event<Boolean>? ->
             event?.getContentIfNotHandled()?.let { result: Boolean ->
                 val intent = launchApplicationMainActivityIntent()
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -227,8 +227,6 @@ abstract class BaseLoginLandingPageActivity : AppCompatActivity(), ErrorReportDi
                 finish()
             }
         })
-
-        viewModel.checkCanvasForElementaryFeature(canvasForElementaryOfflineFallback)
     }
 
     private fun resizePreviousUsersRecyclerView(previousUsers: ArrayList<SignedInUser>) {

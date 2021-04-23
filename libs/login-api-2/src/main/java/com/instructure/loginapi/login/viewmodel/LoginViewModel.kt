@@ -20,9 +20,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,14 +34,14 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val featureFlagProvider: FeatureFlagProvider) : ViewModel() {
 
-    val canvasForElementaryResult: LiveData<Event<Boolean>>
-        get() = _canvasForElementaryResult
-    private val _canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
+    private val canvasForElementaryResult = MutableLiveData<Event<Boolean>>()
 
-    fun checkCanvasForElementaryFeature(errorFallback: Boolean = false) {
+    fun checkCanvasForElementaryFeature(errorFallback: Boolean = false): LiveData<Event<Boolean>> {
         viewModelScope.launch {
             val canvasForElementaryFlag = featureFlagProvider.getCanvasForElementaryFlag(errorFallback)
-            _canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
+            canvasForElementaryResult.postValue(Event(canvasForElementaryFlag))
         }
+
+        return canvasForElementaryResult
     }
 }

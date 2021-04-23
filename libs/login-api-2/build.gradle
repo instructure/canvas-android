@@ -100,6 +100,9 @@ dependencies {
     /* Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC
+    testImplementation Libs.ANDROIDX_CORE_TESTING
+    testImplementation Libs.MOCKK
+    testImplementation Libs.KOTLIN_COROUTINES_TEST
 
     /* AndroidTest Dependencies */
     androidTestImplementation Libs.JUNIT

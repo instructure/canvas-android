@@ -524,7 +524,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private val bottomBarItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item: MenuItem ->
         when (item.itemId) {
-            R.id.bottomNavigationCourses -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
+            R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
             R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
             R.id.bottomNavigationToDo -> {
                 val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -555,7 +555,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         topFragment?.let {
             val currentFragmentClass = it::class.java
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
+                R.id.bottomNavigationHome -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(CalendarFragment::class.java)
                 R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
@@ -565,7 +565,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         if(!abortReselect) {
             when (item.itemId) {
-                R.id.bottomNavigationCourses -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
+                R.id.bottomNavigationHome -> handleRoute(Route(navigationBehavior.homeFragmentClass, ApiPrefs.user))
                 R.id.bottomNavigationCalendar -> handleRoute(CalendarFragment.makeRoute())
                 R.id.bottomNavigationToDo -> {
                     val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
@@ -631,7 +631,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
             //Notifications
             is NotificationListFragment-> {
-                setBottomBarItemSelected(if(fragment.isCourseOrGroup()) R.id.bottomNavigationCourses
+                setBottomBarItemSelected(if(fragment.isCourseOrGroup()) R.id.bottomNavigationHome
                 else R.id.bottomNavigationNotifications)
             }
             //Inbox
@@ -640,7 +640,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             is InboxComposeMessageFragment,
             is InboxRecipientsFragment -> setBottomBarItemSelected(R.id.bottomNavigationInbox)
             //courses
-            else -> setBottomBarItemSelected(R.id.bottomNavigationCourses)
+            else -> setBottomBarItemSelected(R.id.bottomNavigationHome)
         }
     }
 
