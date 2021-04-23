@@ -26,6 +26,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import com.instructure.pandarecycler.interfaces.EmptyInterface
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.isGone
@@ -140,6 +141,10 @@ open class EmptyView @JvmOverloads constructor(
         setEmptyViewImage(drawable)
     }
 
+    fun setEmptyViewImage(dResId: Int) {
+        ContextCompat.getDrawable(context, dResId)?.let { setEmptyViewImage(it) }
+    }
+
     fun setImageVisible(visible: Boolean) {
         when (visible) {
             true -> image.setVisible()
@@ -153,8 +158,8 @@ open class EmptyView @JvmOverloads constructor(
                 title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
                 message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
             } else {
-                title.setTextSize(TypedValue.COMPLEX_UNIT_SP,12f)
-                message.setTextSize(TypedValue.COMPLEX_UNIT_SP,8f)
+                title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12f)
+                message.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8f)
             }
         } else if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
             title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)

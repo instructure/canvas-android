@@ -29,7 +29,7 @@ import java.time.OffsetDateTime
 
 class CourseTest {
 
-    val baseCourse = Course(accessRestrictedByDate = false, workflowState = "available")
+    val baseCourse = Course(accessRestrictedByDate = false, workflowState = Course.WorkflowState.AVAILABLE)
 
     @Before
     fun setup() {
@@ -482,7 +482,7 @@ class CourseTest {
 
     @Test
     fun courseIsBetweenValidDateRange_workFlowStateCompleted() {
-        val course = Course(workflowState = "completed")
+        val course = Course(workflowState = Course.WorkflowState.COMPLETED)
 
         assertFalse(course.isBetweenValidDateRange())
     }

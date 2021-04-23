@@ -29,6 +29,8 @@ object Versions {
     const val ANDROIDX = "1.0.0"
     const val FIREBASE_JOB_DISPATCHER = "0.8.6"
     const val FIREBASE_CONFIG = "18.0.0"
+    const val PLAY_CORE = "1.10.0"
+    const val PLAY_CORE_KTX = "1.8.1"
 
     /* Others */
     const val APOLLO = "2.4.1"
@@ -84,7 +86,8 @@ object Libs {
     const val FIREBASE_CORE = "com.google.firebase:firebase-core:17.2.0"
     const val FIREBASE_JOB_DISPATCHER = "com.firebase:firebase-jobdispatcher:${Versions.FIREBASE_JOB_DISPATCHER}"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config:${Versions.FIREBASE_CONFIG}"
-    const val PLAY_CORE = "com.google.android.play:core:1.6.3"
+    const val PLAY_CORE = "com.google.android.play:core:${Versions.PLAY_CORE}"
+    const val PLAY_CORE_KTX = "com.google.android.play:core-ktx:${Versions.PLAY_CORE_KTX}"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"

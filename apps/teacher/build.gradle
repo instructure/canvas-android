@@ -272,6 +272,7 @@ dependencies {
     implementation Libs.ANDROIDX_FRAGMENT
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_CORE
+    implementation Libs.PLAY_CORE_KTX
     implementation Libs.FIREBASE_MESSAGING
     testImplementation Libs.ANDROIDX_CORE_TESTING
 

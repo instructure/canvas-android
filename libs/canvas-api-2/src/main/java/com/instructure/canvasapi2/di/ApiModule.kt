@@ -2,6 +2,7 @@ package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.HelpLinksManager
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -24,6 +25,11 @@ object ApiModule {
     @Provides
     fun provideCourseManager(): CourseManager {
         return CourseManager
+    }
+
+    @Provides
+    fun provideGroupManager(): GroupManager {
+        return GroupManager
     }
 
     @Provides

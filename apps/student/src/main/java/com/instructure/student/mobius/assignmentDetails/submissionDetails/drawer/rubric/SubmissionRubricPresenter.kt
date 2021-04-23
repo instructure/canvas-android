@@ -71,7 +71,7 @@ object SubmissionRubricPresenter : Presenter<SubmissionRubricModel, SubmissionRu
          * to ensure the new rating appears in the correct position.
          */
         if (assessment != null) {
-            if (assessment.ratingId == null) {
+            if (assessment.ratingId == null || assessment.ratingId == "null") {
                 assessment = assessment.copy(ratingId = customRatingId)
                 ratings = ratings.plus(
                     RubricCriterionRating(

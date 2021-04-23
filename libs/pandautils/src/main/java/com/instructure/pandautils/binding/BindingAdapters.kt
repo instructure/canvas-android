@@ -21,6 +21,8 @@ import android.view.ViewGroup
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
@@ -41,6 +43,35 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
     when (state) {
         is ViewState.Success -> emptyView.setGone()
         is ViewState.Loading -> emptyView.setLoading()
+        is ViewState.Refresh -> emptyView.setGone()
+        is ViewState.Empty -> {
+            state.emptyTitle?.let { emptyView.setTitleText(it) }
+            state.emptyMessage?.let { emptyView.setMessageText(it) }
+            state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
+            emptyView.setListEmpty()
+        }
         is ViewState.Error -> emptyView.setGone() // Currently just set this to gone, we don't need an empty view in the dialog, but need to find a generic solution for this.
     }
 }
+
+@BindingAdapter("itemViewModels")
+fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
+    val adapter = getOrCreateAdapter(recyclerView)
+    adapter.updateItems(itemViewModels)
+}
+
+@BindingAdapter("refreshState")
+fun bindRefreshState(swipeRefreshLayout: SwipeRefreshLayout, state: ViewState?) {
+    swipeRefreshLayout.isRefreshing = state == ViewState.Refresh
+}
+
+private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerViewAdapter {
+    return if (recyclerView.adapter != null && recyclerView.adapter is BindableRecyclerViewAdapter) {
+        recyclerView.adapter as BindableRecyclerViewAdapter
+    } else {
+        val bindableRecyclerAdapter = BindableRecyclerViewAdapter()
+        recyclerView.adapter = bindableRecyclerAdapter
+        bindableRecyclerAdapter
+    }
+}
+
