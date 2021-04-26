@@ -20,7 +20,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/bottomNavigationCourses"
+        android:id="@+id/bottomNavigationHome"
         android:enabled="true"
         android:icon="@drawable/bottom_nav_dashboard"
         android:title="@string/dashboard"

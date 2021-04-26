@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object FeaturesManager {
@@ -35,4 +36,13 @@ object FeaturesManager {
         courseId: Long,
         forceNetwork: Boolean
     ) = apiAsync<List<String>> { getEnabledFeaturesForCourse(courseId, forceNetwork, it) }
+
+    fun getFeatureFlagsAsync() = apiAsync<FeatureFlags> { getFeatureFlags(it) }
+
+    private fun getFeatureFlags(callback: StatusCallback<FeatureFlags>) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams()
+
+        FeaturesAPI.getFeatureFlags(adapter, callback, params)
+    }
 }

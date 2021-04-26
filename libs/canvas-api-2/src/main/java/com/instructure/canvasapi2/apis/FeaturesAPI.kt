@@ -21,6 +21,7 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.FeatureFlags
 import com.instructure.canvasapi2.utils.APIHelper
 
 import retrofit2.Call
@@ -32,6 +33,9 @@ object FeaturesAPI {
     internal interface FeaturesInterface {
         @GET("courses/{courseId}/features/enabled")
         fun getEnabledFeaturesForCourse(@Path("courseId") contextId: Long): Call<List<String>>
+
+        @GET("features/environment")
+        fun getFeatureFlags(): Call<FeatureFlags>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {
@@ -40,5 +44,9 @@ object FeaturesAPI {
         }
 
         callback.addCall(adapter.build(FeaturesInterface::class.java, params).getEnabledFeaturesForCourse(courseId)).enqueue(callback)
+    }
+
+    fun getFeatureFlags(adapter: RestBuilder, callback: StatusCallback<FeatureFlags>, params: RestParams) {
+        callback.addCall(adapter.build(FeaturesInterface::class.java, params).getFeatureFlags()).enqueue(callback)
     }
 }

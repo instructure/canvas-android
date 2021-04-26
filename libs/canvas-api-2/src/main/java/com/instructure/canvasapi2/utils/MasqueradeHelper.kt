@@ -19,13 +19,18 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import android.webkit.CookieManager
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.User
 import com.jakewharton.processphoenix.ProcessPhoenix
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 import java.io.File
@@ -127,10 +132,29 @@ object MasqueradeHelper {
         val startupIntent = Intent(ContextKeeper.appContext, startingClass)
         startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
 
-        // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
-        Handler().postDelayed({
-            ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent)
-        }, 500)
+        GlobalScope.launch {
+            try {
+                val canvasForElementaryFlag = getCanvasForElementaryFlag()
+                startupIntent.putExtra("canvas_for_elementary", canvasForElementaryFlag)
+            } catch (e: Exception) {
+                // No-op
+            } finally {
+                // Delays process rebirth long enough for all the shared preferences to be saved and caches to be cleared.
+                delay(500)
+                ProcessPhoenix.triggerRebirth(ContextKeeper.appContext, startupIntent)
+            }
+        }
+    }
+
+    private suspend fun getCanvasForElementaryFlag(): Boolean {
+        val k5enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.K5_DESIGN)
+        return if (k5enabled) {
+            val featureFlagResult = FeaturesManager.getFeatureFlagsAsync().await()
+            val featureFlags = featureFlagResult.dataOrThrow
+            featureFlags.canvasForElementary
+        } else {
+            false
+        }
     }
 
     /** Appends the masquerade ID to the provided URL (if currently masquerading) */

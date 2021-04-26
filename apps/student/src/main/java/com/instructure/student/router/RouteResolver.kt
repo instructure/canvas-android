@@ -18,6 +18,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListFragment
+import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusFragment
 
 object RouteResolver {
@@ -57,6 +58,7 @@ object RouteResolver {
 
         return when {
             cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
+            cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
             cls.isA<InboxFragment>() -> InboxFragment.newInstance(route)
