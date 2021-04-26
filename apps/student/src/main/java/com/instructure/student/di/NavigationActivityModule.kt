@@ -22,7 +22,6 @@ import com.instructure.student.navigation.DefaultNavigationBehavior
 import com.instructure.student.navigation.ElementaryNavigationBehavior
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.DefaultAppShortcutManager
-import com.instructure.student.util.ElementaryAppShortcutManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -52,11 +51,7 @@ class NavigationActivityModule {
     }
 
     @Provides
-    fun provideAppShortcutManager(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean): AppShortcutManager {
-        return if (canvasForElementary) {
-            ElementaryAppShortcutManager()
-        } else {
-            DefaultAppShortcutManager()
-        }
+    fun provideAppShortcutManager(): AppShortcutManager {
+        return DefaultAppShortcutManager()
     }
 }

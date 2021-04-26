@@ -209,8 +209,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
         }
 
-        navigationBehavior.setupBottomNavBar(bottomBar)
-
         supportFragmentManager.addOnBackStackChangedListener(onBackStackChangedListener)
 
         if (savedInstanceState == null) {
@@ -942,7 +940,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         // get the view
         val bottomBarNavView = bottomBar?.getChildAt(0)
         // get the inbox item
-        val view = (bottomBarNavView as BottomNavigationMenuView).getChildAt(navigationBehavior.inboxMenuIndex)
+        val view = (bottomBarNavView as BottomNavigationMenuView).getChildAt(4)
 
         // create the badge, set the text and color it
         val unreadCountValue = unreadCount.toInt()

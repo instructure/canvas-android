@@ -24,13 +24,12 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
-import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_course_grid.*
 
-class MyCanvasFragment : ParentFragment() {
+class ElementaryDashboardFragment : ParentFragment() {
 
-    override fun title(): String = if (isAdded) getString(R.string.toolbarTitleMyCanvas) else ""
+    override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
     override fun applyTheme() {
         toolbar.title = title()
@@ -42,10 +41,10 @@ class MyCanvasFragment : ParentFragment() {
 
     companion object {
         fun newInstance(route: Route) =
-            MyCanvasFragment().apply {
+            ElementaryDashboardFragment().apply {
                 arguments = route.canvasContext?.makeBundle(route.arguments) ?: route.arguments
             }
 
-        fun makeRoute(canvasContext: CanvasContext?) = Route(MyCanvasFragment::class.java, canvasContext)
+        fun makeRoute(canvasContext: CanvasContext?) = Route(ElementaryDashboardFragment::class.java, canvasContext)
     }
 }

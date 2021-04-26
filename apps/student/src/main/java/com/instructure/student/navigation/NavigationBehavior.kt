@@ -34,10 +34,6 @@ interface NavigationBehavior {
 
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
-    val inboxMenuIndex: Int
-
-    fun setupBottomNavBar(bottomNavBar: BottomNavigationView)
-
     fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
 
     fun createHomeFragment(route: Route): ParentFragment

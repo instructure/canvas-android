@@ -16,25 +16,23 @@
  */
 package com.instructure.student.navigation
 
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.student.R
-import com.instructure.student.fragment.CalendarFragment
-import com.instructure.student.fragment.InboxFragment
-import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.mobius.elementary.MyCanvasFragment
+import com.instructure.student.fragment.*
+import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 
 class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out ParentFragment>> = listOf(
-        MyCanvasFragment::class.java,
+        ElementaryDashboardFragment::class.java,
         CalendarFragment::class.java,
+        ToDoListFragment::class.java,
+        NotificationListFragment::class.java,
         InboxFragment::class.java
     )
 
-    override val homeFragmentClass: Class<out ParentFragment> = MyCanvasFragment::class.java
+    override val homeFragmentClass: Class<out ParentFragment> = ElementaryDashboardFragment::class.java
 
     override val visibleNavigationMenuItems: Set<NavigationMenuItem> = emptySet()
 
@@ -42,17 +40,11 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.ACCOUNT, AccountMenuItem.HELP, AccountMenuItem.LOGOUT)
 
-    override val inboxMenuIndex: Int = 2
-
-    override fun setupBottomNavBar(bottomNavBar: BottomNavigationView) {
-        bottomNavBar.inflateMenu(R.menu.bottom_bar_menu_elementary)
-    }
-
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return MyCanvasFragment.makeRoute(ApiPrefs.user)
+        return ElementaryDashboardFragment.makeRoute(ApiPrefs.user)
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {
-        return MyCanvasFragment.newInstance(route)
+        return ElementaryDashboardFragment.newInstance(route)
     }
 }
