@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C)  - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="18dp"
+    android:height="19dp"
+    android:viewportWidth="18"
+    android:viewportHeight="19">
+  <path
+      android:pathData="M13.3427,8.5339C13.4766,8.4318 13.5325,8.2524 13.4811,8.0871C13.4301,7.9222 13.2842,7.8111 13.1185,7.8111H10.2493L9.3628,4.9547C9.3115,4.7898 9.1656,4.6787 8.9998,4.6787C8.8341,4.6787 8.6886,4.7898 8.6372,4.9547L7.7507,7.8111H4.8812C4.7158,7.8111 4.5699,7.9222 4.5189,8.0871C4.4676,8.2524 4.5231,8.4318 4.6573,8.5335L6.9786,10.2993L6.0917,13.1558C6.0407,13.3211 6.0966,13.5005 6.2308,13.6025C6.2976,13.6532 6.3759,13.6787 6.4543,13.6787C6.5335,13.6787 6.6118,13.6532 6.6789,13.6018L8.9998,11.8367L11.3207,13.6018C11.4546,13.7038 11.635,13.7046 11.7692,13.6025C11.9035,13.5005 11.9594,13.3211 11.9084,13.1558L11.0211,10.2993L13.3427,8.5339ZM12.2967,8.4468L10.4607,9.8432C10.3405,9.9347 10.2906,10.0961 10.3362,10.2452L11.0375,12.504L9.2021,11.1077C9.081,11.0158 8.919,11.0158 8.7985,11.1077L6.9628,12.504L7.6642,10.2445C7.7097,10.0961 7.6598,9.9347 7.5393,9.8432L5.7033,8.4468H7.9723C8.1218,8.4468 8.2531,8.3468 8.299,8.1988L9,5.9396L9.7013,8.1981C9.7472,8.3468 9.8782,8.4468 10.0277,8.4468H12.2967Z"
+      android:strokeAlpha="0.5"
+      android:fillColor="#2D3B45"
+      android:fillType="evenOdd"
+      android:fillAlpha="0.5"/>
+  <path
+      android:pathData="M1.2856,9.4999C1.2856,5.2462 4.7462,1.7856 8.9999,1.7856C13.2537,1.7856 16.7142,5.2462 16.7142,9.4999C16.7142,13.7537 13.2537,17.2142 8.9999,17.2142C4.7462,17.2142 1.2856,13.7537 1.2856,9.4999ZM2.2822,9.5C2.2822,13.2047 5.2955,16.2179 9.0002,16.2179C12.7049,16.2179 15.7181,13.2047 15.7181,9.5C15.7181,5.7952 12.7049,2.782 9.0002,2.782C5.2955,2.782 2.2822,5.7952 2.2822,9.5Z"
+      android:fillColor="#2D3B45"
+      android:fillType="evenOdd"/>
+</vector>

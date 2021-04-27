@@ -1168,4 +1168,8 @@
 
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Account</string>
+    <string name="dashboardTabHomeroom">Homeroom</string>
+    <string name="dashboardTabSchedule">Schedule</string>
+    <string name="dashboardTabGrades">Grades</string>
+    <string name="dashboardTabResources">Resources</string>
 </resources>

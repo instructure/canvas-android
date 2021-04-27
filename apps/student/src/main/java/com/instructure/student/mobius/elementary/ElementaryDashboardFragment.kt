@@ -37,7 +37,7 @@ class ElementaryDashboardFragment : ParentFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        layoutInflater.inflate(R.layout.fragment_my_canvas, container, false)
+        layoutInflater.inflate(R.layout.fragment_elementary_dashboard, container, false)
 
     companion object {
         fun newInstance(route: Route) =
