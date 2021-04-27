@@ -20,14 +20,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
 import kotlinx.android.synthetic.main.fragment_course_grid.*
+import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
+import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
 class ElementaryDashboardFragment : ParentFragment() {
+
+    private val canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     override fun title(): String = if (isAdded) getString(R.string.dashboard) else ""
 
@@ -38,6 +45,23 @@ class ElementaryDashboardFragment : ParentFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         layoutInflater.inflate(R.layout.fragment_elementary_dashboard, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dashboardPager.adapter = ElementaryDashboardPagerAdapter(canvasContext, childFragmentManager)
+        dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                tab?.let {
+                    dashboardPager.setCurrentItem(it.position)
+                }
+            }
+
+        })
+    }
 
     companion object {
         fun newInstance(route: Route) =
