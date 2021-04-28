@@ -14,18 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.elementary.schedule
+package com.instructure.pandautils.features.elementary.schedule
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.student.R
-import com.instructure.student.mobius.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.R
 
 class ScheduleFragment : Fragment() {
 
@@ -38,10 +34,8 @@ class ScheduleFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(canvasContext: CanvasContext): ScheduleFragment {
-            return ScheduleFragment().apply {
-                arguments = canvasContext.makeBundle(Bundle())
-            }
+        fun newInstance(): ScheduleFragment {
+            return ScheduleFragment()
         }
     }
 }

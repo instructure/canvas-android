@@ -14,17 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.elementary
+package com.instructure.pandautils.features.elementary
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.student.mobius.elementary.grades.GradesFragment
-import com.instructure.student.mobius.elementary.homeroom.HomeroomFragment
-import com.instructure.student.mobius.elementary.resources.ResourcesFragment
-import com.instructure.student.mobius.elementary.schedule.ScheduleFragment
+import com.instructure.pandautils.features.elementary.grades.GradesFragment
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomFragment
+import com.instructure.pandautils.features.elementary.resources.ResourcesFragment
+import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import java.lang.UnsupportedOperationException
 
 private const val PAGES_COUNT = 4
@@ -41,10 +40,10 @@ class ElementaryDashboardPagerAdapter(
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            HOMEROOM_TAB_POSITION -> HomeroomFragment.newInstance(canvasContext)
-            SCHEDULE_TAB_POSITION -> ScheduleFragment.newInstance(canvasContext)
-            GRADES_TAB_POSITION -> GradesFragment.newInstance(canvasContext)
-            RESOURCES_TAB_POSITION -> ResourcesFragment.newInstance(canvasContext)
+            HOMEROOM_TAB_POSITION -> HomeroomFragment.newInstance()
+            SCHEDULE_TAB_POSITION -> ScheduleFragment.newInstance()
+            GRADES_TAB_POSITION -> GradesFragment.newInstance()
+            RESOURCES_TAB_POSITION -> ResourcesFragment.newInstance()
             else -> throw UnsupportedOperationException()
         }
     }

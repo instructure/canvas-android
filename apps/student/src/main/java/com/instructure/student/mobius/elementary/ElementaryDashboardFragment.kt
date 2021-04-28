@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.elementary.ElementaryDashboardPagerAdapter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.isTablet

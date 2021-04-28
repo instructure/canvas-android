@@ -14,23 +14,30 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.mobius.elementary.grades
+package com.instructure.pandautils.features.elementary.homeroom
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.utils.makeBundle
-import com.instructure.student.R
-import com.instructure.student.mobius.elementary.homeroom.HomeroomFragment
+import androidx.fragment.app.viewModels
+import com.instructure.pandautils.R
+import com.instructure.pandautils.databinding.FragmentHomeroomBinding
+import com.instructure.pandautils.utils.bind
+import dagger.hilt.android.AndroidEntryPoint
 
-class GradesFragment : Fragment() {
+@AndroidEntryPoint
+class HomeroomFragment : Fragment() {
+
+    private val viewModel: HomeRoomViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return layoutInflater.inflate(R.layout.fragment_grades, container, false)
+        val binding = FragmentHomeroomBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,10 +45,8 @@ class GradesFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(canvasContext: CanvasContext): GradesFragment {
-            return GradesFragment().apply {
-                arguments = canvasContext.makeBundle(Bundle())
-            }
+        fun newInstance(): HomeroomFragment {
+            return HomeroomFragment()
         }
     }
 }
