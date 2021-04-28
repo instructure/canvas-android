@@ -25,10 +25,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
 import com.instructure.student.fragment.ParentFragment
-import kotlinx.android.synthetic.main.fragment_course_grid.*
 import kotlinx.android.synthetic.main.fragment_course_grid.toolbar
 import kotlinx.android.synthetic.main.fragment_elementary_dashboard.*
 
@@ -56,7 +56,7 @@ class ElementaryDashboardFragment : ParentFragment() {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab?.let {
-                    dashboardPager.setCurrentItem(it.position)
+                    dashboardPager.setCurrentItem(it.position, !isTablet)
                 }
             }
 
