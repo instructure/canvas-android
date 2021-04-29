@@ -29,10 +29,6 @@ class GradesFragment : Fragment() {
         return layoutInflater.inflate(R.layout.fragment_grades, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     companion object {
         fun newInstance(): GradesFragment {
             return GradesFragment()

@@ -38,10 +38,6 @@ class HomeroomFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     companion object {
         fun newInstance(): HomeroomFragment {
             return HomeroomFragment()

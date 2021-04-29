@@ -29,10 +29,6 @@ class ResourcesFragment : Fragment() {
         return layoutInflater.inflate(R.layout.fragment_resources, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     companion object {
         fun newInstance(): ResourcesFragment {
             return ResourcesFragment()

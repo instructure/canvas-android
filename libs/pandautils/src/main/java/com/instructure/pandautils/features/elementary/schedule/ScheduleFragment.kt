@@ -29,10 +29,6 @@ class ScheduleFragment : Fragment() {
         return layoutInflater.inflate(R.layout.fragment_schedule, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     companion object {
         fun newInstance(): ScheduleFragment {
             return ScheduleFragment()
