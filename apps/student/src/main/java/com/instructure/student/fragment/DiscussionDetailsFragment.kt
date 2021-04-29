@@ -128,12 +128,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         super.onResume()
         discussionTopicHeaderWebView.onResume()
         discussionRepliesWebView.onResume()
-        if (isAccessibilityEnabled() && discussionTopicHeader.htmlUrl != null) {
-            alternateViewButton.visibility = View.VISIBLE
-            alternateViewButton.setOnClickListener {
-                RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
-            }
-        }
+        addAccessibilityButton()
 
         /* TODO - Comms - 868
         EventBus.getDefault().getStickyEvent(DiscussionTopicHeaderDeletedEvent::class.java)?.once(javaClass.simpleName + ".onResume()") {
@@ -568,6 +563,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             determinePermissions()
 
             loadDiscussionTopicHeaderViews(discussionTopicHeader)
+            addAccessibilityButton()
 
             if (forceRefresh || discussionTopic == null) {
                 // forceRefresh is true, fetch the discussion topic
@@ -748,6 +744,15 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         dueDate?.let {
             dueDateLayout.setVisible()
             dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), it, atSeparator)
+        }
+    }
+
+    private fun addAccessibilityButton() {
+        if (isAccessibilityEnabled() && discussionTopicHeader.htmlUrl != null) {
+            alternateViewButton.visibility = View.VISIBLE
+            alternateViewButton.setOnClickListener {
+                RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
+            }
         }
     }
 
