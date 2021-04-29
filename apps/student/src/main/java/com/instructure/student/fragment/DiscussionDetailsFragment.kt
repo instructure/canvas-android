@@ -17,11 +17,13 @@
 package com.instructure.student.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -126,6 +128,12 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         super.onResume()
         discussionTopicHeaderWebView.onResume()
         discussionRepliesWebView.onResume()
+        if (isAccessibilityEnabled() && discussionTopicHeader.htmlUrl != null) {
+            alternateViewButton.visibility = View.VISIBLE
+            alternateViewButton.setOnClickListener {
+                RouteMatcher.route(requireActivity(), InternalWebviewFragment.makeRoute(canvasContext, discussionTopicHeader.htmlUrl!!, authenticate = true, shouldRouteInternally = false, allowRoutingTheSameUrlInternally = false, isUnsupportedFeature = false, allowUnsupportedRouting = false))
+            }
+        }
 
         /* TODO - Comms - 868
         EventBus.getDefault().getStickyEvent(DiscussionTopicHeaderDeletedEvent::class.java)?.once(javaClass.simpleName + ".onResume()") {
@@ -197,9 +205,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         // Show lock message if file is locked
         if (remoteFile.lockedForUser) {
             if (remoteFile.lockExplanation.isValid()) {
-                Snackbar.make(view!!, remoteFile.lockExplanation!!, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), remoteFile.lockExplanation!!, Snackbar.LENGTH_SHORT).show()
             } else {
-                Snackbar.make(view!!, R.string.fileCurrentlyLocked, Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(requireView(), R.string.fileCurrentlyLocked, Snackbar.LENGTH_SHORT).show()
             }
         }
 
@@ -741,6 +749,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             dueDateLayout.setVisible()
             dueDateTextView.text = DateHelper.getMonthDayAtTime(requireContext(), it, atSeparator)
         }
+    }
+
+    private fun isAccessibilityEnabled(): Boolean {
+        val am: AccessibilityManager? = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
+        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
     }
     //endregion Functionality
 
