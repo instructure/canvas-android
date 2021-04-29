@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:tabContentStart="8dp"
+        app:tabContentStart="16dp"
         app:tabIconTint="@color/tab_layout_icon_tint"
         app:tabIndicator="@drawable/tab_bar_indicator"
         app:tabIndicatorColor="@color/blueAnnotation"

@@ -22,15 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
-import com.instructure.pandautils.utils.bind
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {
 
-    private val viewModel: HomeRoomViewModel by viewModels()
+    private val viewModel: HomeroomViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentHomeroomBinding.inflate(inflater, container, false)

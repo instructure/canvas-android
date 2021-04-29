@@ -1173,4 +1173,5 @@
     <string name="dashboardTabGrades">Grades</string>
     <string name="dashboardTabResources">Resources</string>
     <string name="homeroomWelcomeMessage">Welcome, %1$s!</string>
+    <string name="homeroomMySubjects">My Subjects</string>
 </resources>

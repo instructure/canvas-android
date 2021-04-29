@@ -14,12 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom
+package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
 
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>)
+class AnnouncementViewModel(val data: AnnouncementViewData) : ItemViewModel {
 
-data class AnnouncementViewData(val title: String, val htmlContent: String)
-
-data class CourseCardViewData(val courseName: String)
+    override val layoutId: Int = R.layout.item_announcement
+}
