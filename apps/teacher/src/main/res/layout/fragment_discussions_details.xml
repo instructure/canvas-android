@@ -36,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="?android:selectableItemBackground"
-        android:contentDescription="@string/a11y_open_a_more_accessible_alternate_view"
         android:gravity="center"
         android:importantForAccessibility="yes"
         android:minWidth="48dp"
