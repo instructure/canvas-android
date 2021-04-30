@@ -1168,4 +1168,5 @@
 
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Account</string>
+    <string name="open_alternate_view">Open a more accessible alternative view</string>
 </resources>

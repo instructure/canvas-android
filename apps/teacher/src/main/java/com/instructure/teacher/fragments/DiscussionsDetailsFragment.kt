@@ -16,10 +16,13 @@
 package com.instructure.teacher.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.view.accessibility.AccessibilityManager
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -440,6 +443,14 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         super.onResume()
         setupToolbar()
 
+        if (isAccessibilityEnabled() && mDiscussionTopicHeader.htmlUrl != null) {
+            alternateViewButton.visibility = View.VISIBLE
+            alternateViewButton.setOnClickListener {
+                val bundle = InternalWebViewFragment.makeBundle(mDiscussionTopicHeader.htmlUrl!!, mDiscussionTopicHeader.title!!, shouldAuthenticate = true)
+                RouteMatcher.route(requireActivity(), Route(null, InternalWebViewFragment::class.java, canvasContext, bundle))
+            }
+        }
+
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
             presenter.getSubmissionData(true)
@@ -681,6 +692,11 @@ class DiscussionsDetailsFragment : BasePresenterFragment<
         } else {
             NoInternetConnectionDialog.show(requireFragmentManager())
         }
+    }
+
+    private fun isAccessibilityEnabled(): Boolean {
+        val am: AccessibilityManager? = requireContext().getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
+        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
     }
 
     override fun updateDiscussionAsDeleted(discussionEntry: DiscussionEntry) {
