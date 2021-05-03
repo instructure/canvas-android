@@ -1,10 +1,7 @@
 package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.HelpLinksAPI
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.GroupManager
-import com.instructure.canvasapi2.managers.FeaturesManager
-import com.instructure.canvasapi2.managers.HelpLinksManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import dagger.Module
@@ -38,8 +35,13 @@ object ApiModule {
     }
 
     @Provides
-    fun featuresManage(): FeaturesManager {
+    fun provideFeaturesManager(): FeaturesManager {
         return FeaturesManager
+    }
+
+    @Provides
+    fun provideAnnouncementManager(): AnnouncementManager {
+        return AnnouncementManager
     }
 
     @Provides

@@ -18,7 +18,7 @@ package com.instructure.pandautils.features.elementary.homeroom
 
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>)
+data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>, val isEmpty: Boolean)
 
 data class AnnouncementViewData(val title: String, val htmlContent: String)
 

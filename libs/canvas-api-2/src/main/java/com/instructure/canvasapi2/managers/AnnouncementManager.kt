@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object AnnouncementManager {
 
@@ -48,4 +49,17 @@ object AnnouncementManager {
         AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, depaginatedCallback, params)
     }
 
+    fun getFirstPageAnnouncementsAsync(canvasContext: CanvasContext, forceNetwork: Boolean)
+        = apiAsync<List<DiscussionTopicHeader>> { getFirstPageAnnouncements(canvasContext, forceNetwork, it) }
+
+    private fun getFirstPageAnnouncements(
+        canvasContext: CanvasContext,
+        forceNetwork: Boolean,
+        callback: StatusCallback<List<DiscussionTopicHeader>>
+    ) {
+        val adapter = RestBuilder(callback)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, callback, params)
+    }
 }

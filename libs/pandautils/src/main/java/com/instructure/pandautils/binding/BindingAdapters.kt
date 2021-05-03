@@ -33,6 +33,7 @@ import com.instructure.pandautils.views.CanvasWebView
 
 @BindingAdapter("itemViewModels")
 fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
+    container.removeAllViews()
     itemViewModels?.forEach { item: ItemViewModel ->
         val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
         binding.setVariable(BR.itemViewModel, item)
@@ -52,7 +53,7 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
             emptyView.setListEmpty()
         }
-        is ViewState.Error -> emptyView.setGone() // Currently just set this to gone, we don't need an empty view in the dialog, but need to find a generic solution for this.
+        is ViewState.Error -> emptyView.setGone()
     }
 }
 
