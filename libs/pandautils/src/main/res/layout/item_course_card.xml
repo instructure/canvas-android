@@ -14,21 +14,27 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   ~
   -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        tools:targetApi="lollipop"
-        android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/defaultPrimary"
-        android:elevation="6dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ToolBarPopupStyle"
-        app:theme="@style/ToolBarStyle" />
+    <data>
+        <variable
+            name="itemViewModel"
+            type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel" />
+    </data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.cardview.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
+            android:text="@{itemViewModel.data.courseName}"
+            tools:text="Math" />
+
+    </androidx.cardview.widget.CardView>
+</layout>

@@ -18,6 +18,7 @@ package com.instructure.pandautils.binding
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -28,6 +29,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.pandautils.BR
+import com.instructure.pandautils.views.CanvasWebView
 
 @BindingAdapter("itemViewModels")
 fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
@@ -73,5 +75,10 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
         recyclerView.adapter = bindableRecyclerAdapter
         bindableRecyclerAdapter
     }
+}
+
+@BindingAdapter(value = ["htmlContent", "htmlTitle"], requireAll = false)
+fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?) {
+    webView.loadHtml(html ?: "", title ?: "")
 }
 

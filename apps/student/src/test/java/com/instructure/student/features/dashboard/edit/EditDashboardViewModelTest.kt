@@ -637,7 +637,7 @@ class EditDashboardViewModelTest {
 
     private fun createCourse(id: Long, name: String, isFavorite: Boolean = false, startOffsetDate: OffsetDateTime? = null, endOffsetDate: OffsetDateTime? = null): Course {
         val startDate = startOffsetDate ?: OffsetDateTime.now()
-        val endDate = endOffsetDate ?: startDate.withDayOfMonth(startDate.dayOfMonth + 1)
+        val endDate = endOffsetDate ?: startDate.plusDays(1)
 
         val enrollment = Enrollment(
                 type = Enrollment.EnrollmentType.Student,
