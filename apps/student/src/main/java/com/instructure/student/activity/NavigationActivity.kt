@@ -67,6 +67,8 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.typeface.TypefaceBehavior
+import com.instructure.pandautils.typeface.TypefaceUtil
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -107,6 +109,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var appShortcutManager: AppShortcutManager
+
+    @Inject
+    lateinit var typefaceBehavior: TypefaceBehavior
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -204,6 +209,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        TypefaceUtil.overrideFont(applicationContext, typefaceBehavior.typefaceMap)
+        setContentView(contentResId())
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
