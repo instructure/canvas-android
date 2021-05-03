@@ -28,7 +28,9 @@ object TypefaceUtil {
             val staticField: Field = Typeface::class.java
                     .getDeclaredField("sSystemFontMap")
             staticField.isAccessible = true
-            staticField.set(null, fontMap)
+            val systemMap: MutableMap<String, Typeface> = staticField.get(null) as MutableMap<String, Typeface>
+            systemMap.putAll(fontMap)
+            staticField.set(null, systemMap)
         } catch (e: Exception) {
             e.printStackTrace()
         }
