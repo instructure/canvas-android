@@ -163,14 +163,14 @@ class AssignmentDetailsView(
             noDescriptionContainer.setVisible(visibilities.noDescriptionLabel)
             descriptionWebView.setVisible(visibilities.description)
             allowedAttemptsContainer.setVisible(visibilities.allowedAttempts)
-            submitButton.isEnabled = visibilities.submitButtonEnabled
+            submitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.submitButton
             if (visibilities.submitButtonEnabled) {
                 submitButton.alpha = 1f
             } else {
                 submitButton.alpha = 0.2f
             }
             submitButton.setVisible(visibilities.submitButton)
-            accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled
+            accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.accessibilitySubmitButton
             if (visibilities.submitButtonEnabled) {
                 accessibilitySubmitButton.alpha = 1f
             } else {
