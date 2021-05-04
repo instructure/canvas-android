@@ -30,13 +30,26 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/courseName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/defaultTextGray"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="13sp"
+            android:text="@{itemViewModel.data.courseName}"
+            tools:text="123098 — Homeroom FALL 2020 — Ms. Johnson" />
+
+        <TextView
             android:id="@+id/title"
-            style="@style/TextFont.Regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/defaultTextDark"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp"
+            android:textStyle="bold"
+            android:textSize="24sp"
             android:text="@{itemViewModel.data.title}"
             tools:text="Announcement Title" />
 
@@ -45,9 +58,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:layout_marginTop="4dp"
             android:layout_marginStart="8dp"
-            android:paddingEnd="8dp"
+            android:layout_marginEnd="8dp"
             app:htmlContent="@{itemViewModel.data.htmlContent}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/defaultActionColor"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textSize="17sp"
+            android:text="@string/viewPreviousAnnouncements"
+            android:background="?attr/selectableItemBackground"
+            android:minHeight="48dp"
+            android:minWidth="48dp"
+            android:gravity="center"
+            android:onClick="@{() -> itemViewModel.viewPreviousAnnouncementsClicked()}"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="24dp"
+            android:background="@color/dividerColor" />
     </LinearLayout>
 </layout>

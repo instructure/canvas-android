@@ -23,4 +23,8 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 class AnnouncementViewModel(val data: AnnouncementViewData) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_announcement
+
+    fun viewPreviousAnnouncementsClicked() {
+
+    }
 }

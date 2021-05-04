@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -73,9 +74,8 @@ class HomeroomViewModel @Inject constructor(
             val announcementsData = homeroomCourses
                 .map { announcementManager.getFirstPageAnnouncementsAsync(it, forceNetwork) }
                 .awaitAll()
-                .map { announcementData: DataResult<List<DiscussionTopicHeader>> -> announcementData.dataOrThrow.first() }
 
-            val announcementViewModels = createAnnouncements(announcementsData)
+            val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
             val courseCards = createDummyCourses()
             val isEmpty = announcementViewModels.isEmpty() && courseCards.isEmpty()
 
@@ -84,9 +84,18 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private fun createAnnouncements(announcements: List<DiscussionTopicHeader>): List<AnnouncementViewModel> {
-        return announcements
-            .map { AnnouncementViewModel(AnnouncementViewData(it.title ?: "", it.message ?: "")) }
+    private fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
+        return homeroomCourses
+            .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
+            .filterNotNull()
+    }
+
+    private fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
+        return if (announcement != null) {
+            AnnouncementViewModel(AnnouncementViewData(course.name, announcement.title ?: "", announcement.message ?: ""))
+        } else {
+            null
+        }
     }
 
     // TODO Courses will be implemented in a separate ticket
