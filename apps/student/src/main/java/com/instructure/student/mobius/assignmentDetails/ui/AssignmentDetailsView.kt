@@ -169,6 +169,7 @@ class AssignmentDetailsView(
             } else {
                 submitButton.alpha = 0.2f
             }
+            accessibilitySubmitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.accessibilitySubmitButton
             if (visibilities.submitButtonEnabled) {
@@ -176,6 +177,7 @@ class AssignmentDetailsView(
             } else {
                 accessibilitySubmitButton.alpha = 0.2f
             }
+            accessibilitySubmitButton.importantForAccessibility = if (visibilities.accessibilitySubmitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             accessibilitySubmitButton.setVisible(visibilities.accessibilitySubmitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
