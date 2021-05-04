@@ -89,6 +89,8 @@ class AssignmentDetailsView(
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
+        accessibilitySubmitButton.setBackgroundColor(ThemePrefs.buttonColor)
+        accessibilitySubmitButton.setTextColor(ThemePrefs.buttonTextColor)
     }
 
     override fun applyTheme() {
@@ -101,12 +103,19 @@ class AssignmentDetailsView(
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
-            logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
-            output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
+            onSubmitClick(output)
+        }
+        accessibilitySubmitButton.onClick {
+            onSubmitClick(output)
         }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
         swipeRefreshLayout.setOnRefreshListener { output.accept(AssignmentDetailsEvent.PullToRefresh) }
         setupDescriptionView()
+    }
+
+    private fun onSubmitClick(output: Consumer<AssignmentDetailsEvent>) {
+        logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+        output.accept(AssignmentDetailsEvent.SubmitAssignmentClicked)
     }
 
     private fun setupDescriptionView() {
@@ -161,6 +170,13 @@ class AssignmentDetailsView(
                 submitButton.alpha = 0.2f
             }
             submitButton.setVisible(visibilities.submitButton)
+            accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled
+            if (visibilities.submitButtonEnabled) {
+                accessibilitySubmitButton.alpha = 1f
+            } else {
+                accessibilitySubmitButton.alpha = 0.2f
+            }
+            accessibilitySubmitButton.setVisible(visibilities.accessibilitySubmitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
@@ -192,6 +208,7 @@ class AssignmentDetailsView(
         usedAttemptsText.text = state.usedAttempts.toString()
         gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
+        accessibilitySubmitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
             loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{

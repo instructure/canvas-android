@@ -65,6 +65,7 @@ data class AssignmentDetailsVisibilities (
     var noDescriptionLabel: Boolean = false,
     var description: Boolean = false,
     var submitButton: Boolean = false,
+    var accessibilitySubmitButton: Boolean = false,
     var submitButtonEnabled: Boolean = false, // Set to true for unlimited attempts or below the attempt count
     var allowedAttempts: Boolean = false,
     var submissionUploadStatus: Boolean = false,
