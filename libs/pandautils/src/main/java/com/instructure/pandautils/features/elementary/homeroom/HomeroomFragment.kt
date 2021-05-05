@@ -29,6 +29,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
+import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.children
@@ -75,8 +76,9 @@ class HomeroomFragment : Fragment() {
     }
 
     private fun handleAction(action: HomeroomAction) {
-        if (action is HomeroomAction.OpenAnnouncements) {
-            homeroomRouter.openAnnouncements(action.canvasContext)
+        when (action) {
+            is HomeroomAction.OpenAnnouncements -> homeroomRouter.openAnnouncements(action.canvasContext)
+            is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
         }
     }
 

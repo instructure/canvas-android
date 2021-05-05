@@ -14,21 +14,25 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
+package com.instructure.pandautils.di
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
-import com.instructure.pandautils.mvvm.ItemViewModel
+import android.content.Context
+import com.instructure.pandautils.utils.HtmlContentFormatter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 
-class AnnouncementViewModel(
-    val data: AnnouncementViewData,
-    val onPreviousAnnouncementsClicked: () -> Unit,
-    private val onLtiButtonPressed: (url: String, announcementMessage: String) -> Unit
-) : ItemViewModel {
+/**
+ * Module that provides all the application scope dependencies, that are not related to other module.
+ */
+@Module
+@InstallIn(SingletonComponent::class)
+class ApplicationModule {
 
-    override val layoutId: Int = R.layout.item_announcement
-
-    fun onLtiButtonPressed(url: String) {
-        onLtiButtonPressed(url, data.htmlContent)
+    @Provides
+    fun provideHtmlCreator(@ApplicationContext context: Context): HtmlContentFormatter {
+        return HtmlContentFormatter(context)
     }
 }

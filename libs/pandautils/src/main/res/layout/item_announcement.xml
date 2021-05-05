@@ -60,7 +60,9 @@
             android:minHeight="48dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            app:htmlContent="@{itemViewModel.data.htmlContent}" />
+            app:htmlContent="@{itemViewModel.data.htmlContent}"
+            app:htmlTitle="@{itemViewModel.data.title}"
+            app:onLtiButtonPressed="@{(url) -> itemViewModel.onLtiButtonPressed(url)}"/>
 
         <TextView
             android:layout_width="wrap_content"

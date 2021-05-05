@@ -23,20 +23,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,7 +48,8 @@ class HomeroomViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     @ApplicationContext private val context: Context,
     private val courseManager: CourseManager,
-    private val announcementManager: AnnouncementManager
+    private val announcementManager: AnnouncementManager,
+    private val htmlContentFormatter: HtmlContentFormatter
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -89,20 +94,47 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
+    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
         return homeroomCourses
             .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
             .filterNotNull()
     }
 
-    private fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
+    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
         return if (announcement != null) {
+            val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(announcement.message
+                ?: "")
             AnnouncementViewModel(
-                AnnouncementViewData(course.name, announcement.title ?: "", announcement.message ?: ""),
-                { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) }
+                AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),
+                { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) },
+                ::ltiButtonPressed
             )
         } else {
             null
+        }
+    }
+
+    private fun ltiButtonPressed(html: String, announcementMessage: String) {
+        viewModelScope.launch {
+            try {
+                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(announcementMessage)
+                matcher.find()
+                val url = matcher.group(1)
+
+                if (url == null) {
+                    _events.postValue(Event(HomeroomAction.LtiButtonPressed(html)))
+                    return@launch
+                }
+
+                // Get an authenticated session so the user doesn't have to log in
+                val authenticatedSessionURL = OAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
+                val newUrl = DiscussionUtils.getNewHTML(html, authenticatedSessionURL)
+
+                _events.postValue(Event(HomeroomAction.LtiButtonPressed(newUrl)))
+            } catch (e: Exception) {
+                // Couldn't get the authenticated session, try to load it without it
+                _events.postValue(Event(HomeroomAction.LtiButtonPressed(html)))
+            }
         }
     }
 
