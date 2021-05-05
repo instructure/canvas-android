@@ -68,7 +68,6 @@ import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.typeface.TypefaceBehavior
-import com.instructure.pandautils.typeface.TypefaceUtil
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -209,8 +208,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        TypefaceUtil.overrideFont(applicationContext, typefaceBehavior.typefaceMap)
-        setContentView(contentResId())
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
@@ -521,6 +518,11 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
         toast(R.string.fileQuotaExceeded)
+    }
+
+    override fun overrideFont() {
+        super.overrideFont()
+        typefaceBehavior.overrideFont(applicationContext)
     }
 
     //endregion

@@ -20,7 +20,7 @@ import com.instructure.pandautils.typeface.MEDIUM_FONT_KEY
 import com.instructure.pandautils.typeface.REGULAR_FONT_KEY
 import com.instructure.pandautils.typeface.TypefaceBehavior
 
-class DefaultTypefaceBehavior : TypefaceBehavior {
+class DefaultTypefaceBehavior : TypefaceBehavior() {
     override val typefaceMap: Map<String, String>
         get() = mapOf(
                 REGULAR_FONT_KEY to "fonts/roboto_regular.ttf",

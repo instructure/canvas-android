@@ -16,9 +16,30 @@
 
 package com.instructure.pandautils.typeface
 
+import android.content.Context
+import android.graphics.Typeface
+import java.lang.reflect.Field
+
 const val REGULAR_FONT_KEY = "sans-serif"
 const val MEDIUM_FONT_KEY = "sans-serif-medium"
-interface TypefaceBehavior {
 
-    val typefaceMap: Map<String, String>
+abstract class TypefaceBehavior {
+
+    abstract val typefaceMap: Map<String, String>
+
+    fun overrideFont(context: Context) {
+        try {
+            val fontMap = typefaceMap.mapValues { Typeface.createFromAsset(context.assets, it.value) }
+            val staticField: Field = Typeface::class.java
+                    .getDeclaredField("sSystemFontMap")
+            staticField.isAccessible = true
+            val systemMap: MutableMap<String, Typeface> = staticField.get(null) as MutableMap<String, Typeface>
+            val updatedSystemMap = mutableMapOf<String, Typeface>()
+            updatedSystemMap.putAll(systemMap)
+            updatedSystemMap.putAll(fontMap)
+            staticField.set(null, updatedSystemMap)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 }
