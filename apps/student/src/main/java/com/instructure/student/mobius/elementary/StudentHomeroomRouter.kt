@@ -17,8 +17,10 @@
 package com.instructure.student.mobius.elementary
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.router.RouteMatcher
 
 class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRouter {
@@ -33,5 +35,10 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
 
     override fun openMedia(url: String) {
         RouteMatcher.openMedia(activity, url)
+    }
+
+    override fun openAnnouncements(canvasContext: CanvasContext) {
+        val route = AnnouncementListFragment.makeRoute(canvasContext)
+        RouteMatcher.route(activity, route)
     }
 }

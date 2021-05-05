@@ -74,7 +74,7 @@
             android:minHeight="48dp"
             android:minWidth="48dp"
             android:gravity="center"
-            android:onClick="@{() -> itemViewModel.viewPreviousAnnouncementsClicked()}"/>
+            android:onClick="@{() -> itemViewModel.onPreviousAnnouncementsClicked.invoke()}"/>
 
         <View
             android:layout_width="match_parent"

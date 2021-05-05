@@ -20,11 +20,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class AnnouncementViewModel(val data: AnnouncementViewData) : ItemViewModel {
+class AnnouncementViewModel(val data: AnnouncementViewData, val onPreviousAnnouncementsClicked: () -> Unit) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_announcement
-
-    fun viewPreviousAnnouncementsClicked() {
-
-    }
 }

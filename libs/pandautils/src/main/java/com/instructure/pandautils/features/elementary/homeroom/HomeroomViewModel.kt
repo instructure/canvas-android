@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,6 +54,10 @@ class HomeroomViewModel @Inject constructor(
     val data: LiveData<HomeroomViewData>
         get() = _data
     private val _data = MutableLiveData<HomeroomViewData>(HomeroomViewData("", emptyList(), emptyList(), true))
+
+    val events: LiveData<Event<HomeroomAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<HomeroomAction>>()
 
     init {
         loadInitialData()
@@ -92,7 +97,10 @@ class HomeroomViewModel @Inject constructor(
 
     private fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
         return if (announcement != null) {
-            AnnouncementViewModel(AnnouncementViewData(course.name, announcement.title ?: "", announcement.message ?: ""))
+            AnnouncementViewModel(
+                AnnouncementViewData(course.name, announcement.title ?: "", announcement.message ?: ""),
+                { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) }
+            )
         } else {
             null
         }

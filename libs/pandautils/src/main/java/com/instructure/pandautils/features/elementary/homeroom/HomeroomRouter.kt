@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import com.instructure.canvasapi2.models.CanvasContext
+
 interface HomeroomRouter {
 
     fun canRouteInternally(url: String): Boolean
@@ -23,4 +25,6 @@ interface HomeroomRouter {
     fun routeInternally(url: String)
 
     fun openMedia(url: String)
+
+    fun openAnnouncements(canvasContext: CanvasContext)
 }

@@ -29,6 +29,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.views.CanvasWebView
@@ -56,6 +57,12 @@ class HomeroomFragment : Fragment() {
             }
         })
 
+        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
         return binding.root
     }
 
@@ -64,6 +71,12 @@ class HomeroomFragment : Fragment() {
             Handler().postDelayed({
                 setupWebViews()
             }, 400)
+        }
+    }
+
+    private fun handleAction(action: HomeroomAction) {
+        if (action is HomeroomAction.OpenAnnouncements) {
+            homeroomRouter.openAnnouncements(action.canvasContext)
         }
     }
 

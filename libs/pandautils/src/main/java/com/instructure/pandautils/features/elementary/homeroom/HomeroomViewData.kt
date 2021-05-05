@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>, val isEmpty: Boolean)
@@ -23,3 +24,7 @@ data class HomeroomViewData(val greetingMessage: String, val announcements: List
 data class AnnouncementViewData(val courseName: String, val title: String, val htmlContent: String)
 
 data class CourseCardViewData(val courseName: String)
+
+sealed class HomeroomAction {
+    data class OpenAnnouncements(val canvasContext: CanvasContext) : HomeroomAction()
+}
