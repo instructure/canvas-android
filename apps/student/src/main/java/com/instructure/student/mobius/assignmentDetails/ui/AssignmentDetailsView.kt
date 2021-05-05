@@ -169,7 +169,7 @@ class AssignmentDetailsView(
             } else {
                 submitButton.alpha = 0.2f
             }
-            accessibilitySubmitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
+            submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
             accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.accessibilitySubmitButton
             if (visibilities.submitButtonEnabled) {

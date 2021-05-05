@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2019 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,8 +14,8 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/assignmentDetailsPage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -37,18 +36,19 @@
             tools:subtitle="Biology 101"
             tools:subtitleTextColor="@color/white"
             tools:title="Ecosystem Health and Human Well-Being"
-            tools:titleTextColor="@color/white"/>
+            tools:titleTextColor="@color/white" />
 
         <Button
             android:id="@+id/accessibilitySubmitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground"
             android:background="@color/canvasDefaultAccent"
+            android:foreground="?attr/selectableItemBackground"
+            android:importantForAccessibility="no"
             android:text="@string/submitAssignment"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
@@ -87,14 +87,14 @@
                             android:layout_height="32dp"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_warning"
-                            android:tint="@color/defaultTextGray"/>
+                            android:tint="@color/defaultTextGray" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:gravity="center"
-                            android:text="@string/errorLoadingAssignment"/>
+                            android:text="@string/errorLoadingAssignment" />
 
                     </LinearLayout>
 
@@ -112,9 +112,9 @@
                             style="@style/TextFont.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="20sp"
                             android:accessibilityHeading="true"
-                            tools:text="Ecosystem Health and Human Well-Being"/>
+                            android:textSize="20sp"
+                            tools:text="Ecosystem Health and Human Well-Being" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -129,7 +129,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/defaultTextGray"
-                                tools:text="30 pts"/>
+                                tools:text="30 pts" />
 
                             <ImageView
                                 android:id="@+id/submissionStatusIcon"
@@ -138,7 +138,7 @@
                                 android:layout_marginStart="12dp"
                                 android:importantForAccessibility="no"
                                 tools:src="@drawable/ic_complete_solid"
-                                tools:tint="@color/alertGreen"/>
+                                tools:tint="@color/alertGreen" />
 
                             <TextView
                                 android:id="@+id/submissionStatus"
@@ -147,7 +147,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
                                 tools:text="Submitted"
-                                tools:textColor="#00ac18"/>
+                                tools:textColor="#00ac18" />
 
                         </LinearLayout>
 
@@ -167,12 +167,12 @@
                             android:id="@+id/submissionStatusUploading"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp"
-                            android:background="?attr/selectableItemBackground"
                             android:visibility="gone"
                             tools:visibility="visible">
 
@@ -183,7 +183,7 @@
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingTitle"
                                 android:textColor="@color/defaultTextDark"
-                                android:textSize="20sp"/>
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:id="@+id/submissionStatusUploadingSubtitle"
@@ -193,7 +193,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusUploadingSubtitle"
-                                android:textColor="@color/canvasDefaultAccent"/>
+                                android:textColor="@color/canvasDefaultAccent" />
 
                         </LinearLayout>
 
@@ -201,12 +201,12 @@
                             android:id="@+id/submissionStatusFailed"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="?attr/selectableItemBackground"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="16dp"
-                            android:background="?attr/selectableItemBackground"
                             android:visibility="gone">
 
                             <TextView
@@ -216,7 +216,7 @@
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedTitle"
                                 android:textColor="@color/defaultTextDark"
-                                android:textSize="20sp"/>
+                                android:textSize="20sp" />
 
                             <TextView
                                 android:id="@+id/submissionStatusFailedSubtitle"
@@ -226,7 +226,7 @@
                                 android:layout_marginTop="6dp"
                                 android:gravity="center"
                                 android:text="@string/submissionStatusFailedSubtitle"
-                                android:textColor="@color/canvasDefaultAccent"/>
+                                android:textColor="@color/canvasDefaultAccent" />
 
                         </LinearLayout>
 
@@ -238,8 +238,8 @@
                         android:id="@+id/dueDateContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:accessibilityHeading="true"
+                        android:orientation="vertical"
                         android:padding="16dp">
 
                         <TextView
@@ -248,7 +248,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/dueLabel"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <TextView
                             android:id="@+id/dueDateTextView"
@@ -257,7 +257,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:tint="@color/defaultTextGray"
-                            tools:text="April 1 at 11:59 PM"/>
+                            tools:text="April 1 at 11:59 PM" />
 
                     </LinearLayout>
 
@@ -267,8 +267,8 @@
                         android:id="@+id/submissionTypesContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:accessibilityHeading="true"
+                        android:orientation="vertical"
                         android:padding="16dp">
 
                         <TextView
@@ -277,7 +277,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/submission_types"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <TextView
                             android:id="@+id/submissionTypesTextView"
@@ -287,7 +287,7 @@
                             android:layout_marginTop="8dp"
                             android:lineSpacingExtra="4dp"
                             android:textSize="16sp"
-                            tools:text="File upload, Website URL"/>
+                            tools:text="File upload, Website URL" />
 
                     </LinearLayout>
 
@@ -297,8 +297,8 @@
                         android:id="@+id/fileTypesContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:accessibilityHeading="true"
+                        android:orientation="vertical"
                         android:padding="16dp">
 
                         <TextView
@@ -307,7 +307,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/allowedFileTypes"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <TextView
                             android:id="@+id/fileTypesTextView"
@@ -317,7 +317,7 @@
                             android:layout_marginTop="8dp"
                             android:lineSpacingExtra="4dp"
                             android:textSize="16sp"
-                            tools:text="png, pdf, xls, SVG"/>
+                            tools:text="png, pdf, xls, SVG" />
 
                     </LinearLayout>
 
@@ -400,9 +400,9 @@
                         android:id="@+id/gradeContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
                         android:background="?attr/selectableItemBackground"
                         android:orientation="vertical"
-                        android:accessibilityHeading="true"
                         android:padding="16dp">
 
                         <TextView
@@ -411,13 +411,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/grade"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <com.instructure.student.mobius.assignmentDetails.ui.gradeCell.GradeCellView
                             android:id="@+id/gradeCell"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"/>
+                            android:layout_marginTop="8dp" />
 
                     </LinearLayout>
 
@@ -436,7 +436,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:text="@string/locked"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <TextView
                             android:id="@+id/lockMessageTextView"
@@ -445,7 +445,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:tint="@color/defaultTextGray"
-                            tools:text="April 1 at 11:59 PM"/>
+                            tools:text="April 1 at 11:59 PM" />
 
                     </LinearLayout>
 
@@ -500,7 +500,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_panda_locked"/>
+                            android:src="@drawable/ic_panda_locked" />
 
                     </LinearLayout>
 
@@ -510,10 +510,10 @@
                         android:id="@+id/quizDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:accessibilityHeading="true"
                         android:orientation="vertical"
                         android:padding="16dp"
-                        android:accessibilityHeading="true"
+                        android:visibility="gone"
                         tools:visibility="visible">
 
 
@@ -526,23 +526,23 @@
                             <TextView
                                 android:id="@+id/questionCountLabel"
                                 style="@style/TextFont.Regular"
-                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@string/quizQuestionLabel"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
-                                android:text="@string/quizQuestionLabel"/>
+                                android:textStyle="bold"
+                                android:tint="@color/defaultTextGray" />
 
                             <TextView
                                 android:id="@+id/questionCountText"
                                 style="@style/TextFont.Regular"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
                                 android:textSize="16sp"
                                 android:tint="@color/defaultTextGray"
-                                tools:text="5"/>
+                                tools:text="5" />
 
                         </LinearLayout>
 
@@ -555,23 +555,23 @@
                             <TextView
                                 android:id="@+id/timeLimitLabel"
                                 style="@style/TextFont.Regular"
-                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@string/timeLimitLabel"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
-                                android:text="@string/timeLimitLabel"/>
+                                android:textStyle="bold"
+                                android:tint="@color/defaultTextGray" />
 
                             <TextView
                                 android:id="@+id/timeLimitText"
                                 style="@style/TextFont.Regular"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
                                 android:textSize="16sp"
                                 android:tint="@color/defaultTextGray"
-                                tools:text="None"/>
+                                tools:text="None" />
 
                         </LinearLayout>
 
@@ -583,23 +583,23 @@
 
                             <TextView
                                 style="@style/TextFont.Regular"
-                                android:textStyle="bold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@string/allowedAttemptsLabel"
                                 android:textSize="16sp"
-                                android:tint="@color/defaultTextGray"
-                                android:text="@string/allowedAttemptsLabel"/>
+                                android:textStyle="bold"
+                                android:tint="@color/defaultTextGray" />
 
                             <TextView
                                 android:id="@+id/allowedQuizAttemptsText"
                                 style="@style/TextFont.Regular"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
                                 android:textSize="16sp"
                                 android:tint="@color/defaultTextGray"
-                                tools:text="Unlimited"/>
+                                tools:text="Unlimited" />
 
                         </LinearLayout>
 
@@ -624,7 +624,7 @@
                             android:layout_marginEnd="16dp"
                             android:labelFor="@+id/noDescriptionContainer"
                             android:text="@string/description"
-                            android:textColor="@color/defaultTextGray"/>
+                            android:textColor="@color/defaultTextGray" />
 
                         <TextView
                             android:id="@+id/noDescriptionContainer"
@@ -639,7 +639,7 @@
                             android:text="@string/noAssignmentDescriptionStudent"
                             android:textColor="@color/defaultTextDark"
                             android:visibility="gone"
-                            tools:visibility="visible"/>
+                            tools:visibility="visible" />
 
                         <!-- Discussion Topic Header -->
 
@@ -650,8 +650,8 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="16dp"
-                            android:visibility="gone"
                             android:orientation="horizontal"
+                            android:visibility="gone"
                             tools:visibility="visible">
 
                             <de.hdodenhof.circleimageview.CircleImageView
@@ -710,10 +710,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
-                            android:minHeight="48dp"
-                            android:scrollbars="none"
                             android:focusable="false"
-                            android:focusableInTouchMode="false"/>
+                            android:focusableInTouchMode="false"
+                            android:minHeight="48dp"
+                            android:scrollbars="none" />
 
                     </LinearLayout>
 
@@ -727,20 +727,20 @@
             android:id="@+id/submitButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground"
             android:background="@color/canvasDefaultAccent"
+            android:foreground="?attr/selectableItemBackground"
             android:text="@string/submitAssignment"
             android:textAllCaps="false"
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
 
     </LinearLayout>
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"
-        android:visibility="gone"
-        android:elevation="12dp"
-        android:layout_gravity="bottom"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:elevation="12dp"
+        android:visibility="gone" />
 
 </FrameLayout>
