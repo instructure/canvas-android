@@ -72,7 +72,7 @@ class HomeroomViewModel @Inject constructor(
             val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
             val announcementsData = homeroomCourses
-                .map { announcementManager.getFirstPageAnnouncementsAsync(it, forceNetwork) }
+                .map { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(it, forceNetwork) }
                 .awaitAll()
 
             val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)

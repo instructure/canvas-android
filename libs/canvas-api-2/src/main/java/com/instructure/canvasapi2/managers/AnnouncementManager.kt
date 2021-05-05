@@ -49,10 +49,10 @@ object AnnouncementManager {
         AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, depaginatedCallback, params)
     }
 
-    fun getFirstPageAnnouncementsAsync(canvasContext: CanvasContext, forceNetwork: Boolean)
-        = apiAsync<List<DiscussionTopicHeader>> { getFirstPageAnnouncements(canvasContext, forceNetwork, it) }
+    fun getAnnouncementsFromLastTwoWeeksAsync(canvasContext: CanvasContext, forceNetwork: Boolean)
+        = apiAsync<List<DiscussionTopicHeader>> { getAnnouncementsFromLastTwoWeeks(canvasContext, forceNetwork, it) }
 
-    private fun getFirstPageAnnouncements(
+    private fun getAnnouncementsFromLastTwoWeeks(
         canvasContext: CanvasContext,
         forceNetwork: Boolean,
         callback: StatusCallback<List<DiscussionTopicHeader>>
@@ -60,6 +60,6 @@ object AnnouncementManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
-        AnnouncementAPI.getFirstPageAnnouncements(canvasContext, adapter, callback, params)
+        AnnouncementAPI.getAnnouncementsFromLastTwoWeeks(canvasContext, adapter, callback, params)
     }
 }
