@@ -30,12 +30,17 @@ import com.instructure.canvasapi2.utils.*
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import java.io.File
 
-abstract class LogoutTask(val type: Type, val uri: Uri? = null, val canvasForElementaryFeatureFlag: Boolean = false) {
+abstract class LogoutTask(
+    val type: Type,
+    val uri: Uri? = null,
+    val canvasForElementaryFeatureFlag: Boolean = false,
+    private val typefaceBehavior: TypefaceBehavior? = null) {
 
     enum class Type {
         SWITCH_USERS,
@@ -65,6 +70,7 @@ abstract class LogoutTask(val type: Type, val uri: Uri? = null, val canvasForEle
     private fun handleLogoutTask(registrationId: String?) {
         weave {
             inBackground {
+                typefaceBehavior?.resetFonts()
                 // Clear push notifications
                 if (registrationId != null) {
                     // Synchronously delete channel, has to be done before we clear the user as it makes an API call

@@ -17,9 +17,9 @@
 package com.instructure.student.di
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.navigation.DefaultNavigationBehavior
 import com.instructure.student.navigation.ElementaryNavigationBehavior
+import com.instructure.student.navigation.NavigationBehavior
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.DefaultAppShortcutManager
 import dagger.Module

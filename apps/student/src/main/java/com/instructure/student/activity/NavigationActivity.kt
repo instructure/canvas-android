@@ -67,6 +67,7 @@ import com.instructure.pandautils.dialogs.UploadFilesDialog
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.*
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
@@ -76,10 +77,7 @@ import com.instructure.student.fragment.*
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.mobius.assignmentDetails.ui.AssignmentDetailsFragment
-import com.instructure.student.navigation.AccountMenuItem
-import com.instructure.student.navigation.NavigationBehavior
-import com.instructure.student.navigation.NavigationMenuItem
-import com.instructure.student.navigation.OptionsMenuItem
+import com.instructure.student.navigation.*
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
@@ -107,6 +105,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var appShortcutManager: AppShortcutManager
+
+    @Inject
+    lateinit var typefaceBehavior: TypefaceBehavior
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -150,13 +151,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                             }, route)
                 }
                 R.id.navigationDrawerItem_changeUser -> {
-                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS).execute()
+                    StudentLogoutTask(if (ApiPrefs.isStudentView) LogoutTask.Type.LOGOUT else LogoutTask.Type.SWITCH_USERS, typefaceBehavior = typefaceBehavior).execute()
                 }
                 R.id.navigationDrawerItem_logout -> {
                     AlertDialog.Builder(this@NavigationActivity)
                             .setTitle(R.string.logout_warning)
                             .setPositiveButton(android.R.string.yes) { _, _ ->
-                                StudentLogoutTask(LogoutTask.Type.LOGOUT).execute()
+                                StudentLogoutTask(LogoutTask.Type.LOGOUT, typefaceBehavior = typefaceBehavior).execute()
                             }
                             .setNegativeButton(android.R.string.no, null)
                             .create()
@@ -514,6 +515,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
         toast(R.string.fileQuotaExceeded)
+    }
+
+    override fun overrideFont() {
+        super.overrideFont()
+        if (navigationBehavior.shouldOverrideFont) {
+            typefaceBehavior.overrideFont()
+        }
     }
 
     //endregion
