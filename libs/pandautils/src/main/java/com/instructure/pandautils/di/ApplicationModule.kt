@@ -13,17 +13,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.instructure.pandautils.di
 
-package com.instructure.student.typeface
-
-import com.instructure.pandautils.typeface.MEDIUM_FONT_KEY
-import com.instructure.pandautils.typeface.REGULAR_FONT_KEY
+import android.content.Context
 import com.instructure.pandautils.typeface.TypefaceBehavior
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class DefaultTypefaceBehavior : TypefaceBehavior() {
-    override val typefaceMap: Map<String, String>
-        get() = mapOf(
-                REGULAR_FONT_KEY to "fonts/roboto_regular.ttf",
-                MEDIUM_FONT_KEY to "fonts/roboto_medium.ttf"
-        )
+@Module
+@InstallIn(SingletonComponent::class)
+class ApplicationModule {
+
+    @Singleton
+    @Provides
+    fun providesTypefaceBehavior(@ApplicationContext context: Context): TypefaceBehavior {
+        return TypefaceBehavior(context)
+    }
+
 }

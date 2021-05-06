@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.Utils.generateUserAgent
@@ -53,6 +54,9 @@ class InterwebsToApplication : AppCompatActivity() {
 
     @Inject
     lateinit var featureFlagProvider: FeatureFlagProvider
+
+    @Inject
+    lateinit var typefaceBehavior: TypefaceBehavior
 
     private var loadingJob: Job? = null
 
@@ -94,7 +98,7 @@ class InterwebsToApplication : AppCompatActivity() {
                 // This is an App Link from a QR code, let's try to login the user and launch navigationActivity
                 try {
                     if(signedIn) { // If the user is already signed in, use the QR Switch
-                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data, canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag()).execute()
+                        StudentLogoutTask(type = LogoutTask.Type.QR_CODE_SWITCH, uri = data, canvasForElementaryFeatureFlag = featureFlagProvider.getCanvasForElementaryFlag(), typefaceBehavior = typefaceBehavior).execute()
                         finish()
                         return@tryWeave
                     }

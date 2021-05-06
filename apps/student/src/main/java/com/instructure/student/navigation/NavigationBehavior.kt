@@ -16,7 +16,6 @@
  */
 package com.instructure.student.navigation
 
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.student.fragment.ParentFragment
@@ -33,6 +32,8 @@ interface NavigationBehavior {
     val visibleOptionsMenuItems: Set<OptionsMenuItem>
 
     val visibleAccountMenuItems: Set<AccountMenuItem>
+
+    val shouldOverrideFont: Boolean
 
     fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route
 
