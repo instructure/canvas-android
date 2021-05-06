@@ -1175,6 +1175,7 @@
     <string name="homeroomWelcomeMessage">Welcome, %1$s!</string>
     <string name="homeroomMySubjects">My Subjects</string>
     <string name="viewPreviousAnnouncements">View Previous Announcements</string>
+    <string name="homeroomError">Failed to load Homeroom</string>
     
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 </resources>

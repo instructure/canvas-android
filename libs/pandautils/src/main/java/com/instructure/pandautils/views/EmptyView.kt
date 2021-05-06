@@ -152,6 +152,17 @@ open class EmptyView @JvmOverloads constructor(
         }
     }
 
+    fun setError(errorMessage: String) {
+        title.setVisible()
+        image.setGone()
+        loading.setGone()
+        centerTitle()
+        titleText = errorMessage
+        messageText = ""
+
+        title.text = titleText
+    }
+
     fun changeTextSize(isCalendar: Boolean = false) {
         if (isCalendar) {
             if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {

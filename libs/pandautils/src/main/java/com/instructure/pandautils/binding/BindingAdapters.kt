@@ -28,6 +28,7 @@ import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
@@ -54,7 +55,16 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
             emptyView.setListEmpty()
         }
-        is ViewState.Error -> emptyView.setGone()
+        is ViewState.Error -> handleErrorState(emptyView, state)
+    }
+}
+
+private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
+    if (error.errorMessage.isNullOrEmpty()) {
+        emptyView.setGone()
+    } else {
+        emptyView.setVisible()
+        emptyView.setError(error.errorMessage)
     }
 }
 

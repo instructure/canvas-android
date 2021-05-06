@@ -17,6 +17,7 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module
 import dagger.Provides
@@ -33,6 +34,6 @@ class ApplicationModule {
 
     @Provides
     fun provideHtmlCreator(@ApplicationContext context: Context): HtmlContentFormatter {
-        return HtmlContentFormatter(context)
+        return HtmlContentFormatter(context, FirebaseCrashlytics.getInstance())
     }
 }

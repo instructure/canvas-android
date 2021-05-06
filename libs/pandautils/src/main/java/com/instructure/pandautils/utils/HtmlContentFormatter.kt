@@ -17,6 +17,7 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -30,56 +31,64 @@ import java.util.regex.Pattern
  * Class that handles different kind of html content modifications, in case we have Iframes,
  * because the Android WebView can't handle it well. Implementation is based on the [WebWiewExtensions.kt]
  */
-class HtmlContentFormatter(private val context: Context) {
+class HtmlContentFormatter(
+    private val context: Context,
+    private val crashlytics: FirebaseCrashlytics
+) {
 
     suspend fun formatHtmlWithIframes(html: String): String {
-        if (html.contains("<iframe")) {
-            var newHTML: String = html
+        try {
+            if (html.contains("<iframe")) {
+                var newHTML: String = html
 
-            // First we need to find LTIs by looking for iframes
-            val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
+                // First we need to find LTIs by looking for iframes
+                val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
-            while (iframeMatcher.find()) {
-                val iframe = iframeMatcher.group(0)
-                // We found an iframe, we need to do a few things...
-                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
-                // First we find the src
-                if (matcher.find()) {
-                    // Snag that src
-                    val srcUrl = matcher.group(1)
+                while (iframeMatcher.find()) {
+                    val iframe = iframeMatcher.group(0)
+                    // We found an iframe, we need to do a few things...
+                    val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(iframe)
+                    // First we find the src
+                    if (matcher.find()) {
+                        // Snag that src
+                        val srcUrl = matcher.group(1)
 
-                    if (srcUrl.contains("external_tools")) {
-                        // Handle the LTI case
-                        val newIframe = externalToolIframe(srcUrl, iframe, context)
-                        newHTML = newHTML.replace(iframe, newIframe)
-                    } else if (srcUrl.contains("media_objects_iframe")) {
-                        // Handle the new RCE iframe case
-                        val dataMediaIdMatcher = Pattern.compile("data-media-id=\"([^\"]+)\"").matcher(iframe)
-                        if (dataMediaIdMatcher.find()) {
-                            val dataMediaId = dataMediaIdMatcher.group(1)
+                        if (srcUrl.contains("external_tools")) {
+                            // Handle the LTI case
+                            val newIframe = externalToolIframe(srcUrl, iframe, context)
+                            newHTML = newHTML.replace(iframe, newIframe)
+                        } else if (srcUrl.contains("media_objects_iframe")) {
+                            // Handle the new RCE iframe case
+                            val dataMediaIdMatcher = Pattern.compile("data-media-id=\"([^\"]+)\"").matcher(iframe)
+                            if (dataMediaIdMatcher.find()) {
+                                val dataMediaId = dataMediaIdMatcher.group(1)
 
-                            val newIframe = newRceVideoElement(dataMediaId);
+                                val newIframe = newRceVideoElement(dataMediaId);
+                                newHTML = newHTML.replace(iframe, newIframe)
+                            }
+                        } else if (iframe.contains("id=\"cnvs_content\"")) {
+                            // Handle the cnvs_content special case for some schools
+                            val authenticatedUrl = authenticateLTIUrl(srcUrl)
+                            val newIframe = iframe.replace(srcUrl, authenticatedUrl)
+
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
-                    } else if (iframe.contains("id=\"cnvs_content\"")) {
-                        // Handle the cnvs_content special case for some schools
-                        val authenticatedUrl = authenticateLTIUrl(srcUrl)
-                        val newIframe = iframe.replace(srcUrl, authenticatedUrl)
-
-                        newHTML = newHTML.replace(iframe, newIframe)
                     }
                 }
+
+                val document = DiscussionHtmlTemplates.getTopicHeader(context)
+                val isTablet = context.resources.getBoolean(R.bool.isDeviceTablet)
+
+                newHTML = document.replace("__HEADER_CONTENT__", newHTML)
+                newHTML = newHTML.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
+                newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
+
+                return CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML)
+            } else {
+                return html
             }
-
-            val document = DiscussionHtmlTemplates.getTopicHeader(context)
-            val isTablet = context.resources.getBoolean(R.bool.isDeviceTablet)
-
-            newHTML = document.replace("__HEADER_CONTENT__", newHTML)
-            newHTML = newHTML.replace("__LTI_BUTTON_WIDTH__", if (isTablet) "320px" else "100%")
-            newHTML = newHTML.replace("__LTI_BUTTON_MARGIN__", if (isTablet) "0px" else "auto")
-
-            return CanvasWebView.applyWorkAroundForDoubleSlashesAsUrlSource(newHTML)
-        } else {
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
             return html
         }
     }

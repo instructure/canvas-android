@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
@@ -77,20 +78,24 @@ class HomeroomViewModel @Inject constructor(
         val greetingString = context.getString(R.string.homeroomWelcomeMessage, apiPrefs.user?.shortName)
 
         viewModelScope.launch {
-            val courses = courseManager.getCoursesAsync(forceNetwork).await()
+            try {
+                val courses = courseManager.getCoursesAsync(forceNetwork).await()
 
-            val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
+                val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
-            val announcementsData = homeroomCourses
-                .map { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(it, forceNetwork) }
-                .awaitAll()
+                val announcementsData = homeroomCourses
+                    .map { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(it, forceNetwork) }
+                    .awaitAll()
 
-            val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
-            val courseCards = createDummyCourses()
-            val isEmpty = announcementViewModels.isEmpty() && courseCards.isEmpty()
+                val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
+                val courseCards = createDummyCourses()
+                val isEmpty = announcementViewModels.isEmpty() && courseCards.isEmpty()
 
-            _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards, isEmpty))
-            _state.postValue(ViewState.Success)
+                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards, isEmpty))
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error(context.getString(R.string.homeroomError)))
+            }
         }
     }
 
