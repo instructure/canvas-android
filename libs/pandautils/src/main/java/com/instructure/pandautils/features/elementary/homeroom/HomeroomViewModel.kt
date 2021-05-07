@@ -28,9 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.R
-import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
 import com.instructure.pandautils.mvvm.Event
