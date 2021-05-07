@@ -50,7 +50,8 @@ class HomeroomViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val courseManager: CourseManager,
     private val announcementManager: AnnouncementManager,
-    private val htmlContentFormatter: HtmlContentFormatter
+    private val htmlContentFormatter: HtmlContentFormatter,
+    private val oAuthManager: OAuthManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -94,7 +95,7 @@ class HomeroomViewModel @Inject constructor(
                 _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards, isEmpty))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                if (_data.value == null && _data.value?.isEmpty == true) {
+                if (_data.value == null || _data.value?.isEmpty == true) {
                     _state.postValue(ViewState.Error(context.getString(R.string.homeroomError)))
                 } else {
                     _state.postValue(ViewState.Error())
@@ -137,8 +138,8 @@ class HomeroomViewModel @Inject constructor(
                 }
 
                 // Get an authenticated session so the user doesn't have to log in
-                val authenticatedSessionURL = OAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
-                val newUrl = DiscussionUtils.getNewHTML(html, authenticatedSessionURL)
+                val authenticatedSessionURL = oAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
+                val newUrl = htmlContentFormatter.createAuthenticatedLtiUrl(html, authenticatedSessionURL)
 
                 _events.postValue(Event(HomeroomAction.LtiButtonPressed(newUrl)))
             } catch (e: Exception) {

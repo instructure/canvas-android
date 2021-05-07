@@ -45,6 +45,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideOAuthManager(): OAuthManager {
+        return OAuthManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI

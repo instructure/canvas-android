@@ -125,4 +125,21 @@ class HtmlContentFormatter(
         </video>
     """.trimIndent()
     }
+
+    fun createAuthenticatedLtiUrl(html: String, authenticatedSessionUrl: String?): String {
+        if (authenticatedSessionUrl == null) return html
+        // Now we need to swap out part of the old url for this new authenticated url
+        val matcher = Pattern.compile("src=\"([^;]+)").matcher(html)
+        var newHTML: String = html
+        if (matcher.find()) {
+            // We only want to change the urls that are part of an external tool, not everything (like avatars)
+            for (index in 0..matcher.groupCount()) {
+                val newUrl = matcher.group(index)
+                if (newUrl.contains("external_tools")) {
+                    newHTML = html.replace(newUrl, authenticatedSessionUrl)
+                }
+            }
+        }
+        return newHTML
+    }
 }
