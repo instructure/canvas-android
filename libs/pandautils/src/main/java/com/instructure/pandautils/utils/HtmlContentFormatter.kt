@@ -33,7 +33,8 @@ import java.util.regex.Pattern
  */
 class HtmlContentFormatter(
     private val context: Context,
-    private val crashlytics: FirebaseCrashlytics
+    private val crashlytics: FirebaseCrashlytics,
+    private val oAuthManager: OAuthManager
 ) {
 
     suspend fun formatHtmlWithIframes(html: String): String {
@@ -111,7 +112,7 @@ class HtmlContentFormatter(
     }
 
     private suspend fun authenticateLTIUrl(ltiUrl: String): String {
-        return awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
+        return awaitApi<AuthenticatedSession> { oAuthManager.getAuthenticatedSession(ltiUrl, it) }.sessionUrl
     }
 
     private fun newRceVideoElement(dataMediaId: String): String {

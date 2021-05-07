@@ -18,6 +18,7 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ import dagger.hilt.components.SingletonComponent
 class ApplicationModule {
 
     @Provides
-    fun provideHtmlContentFormatter(@ApplicationContext context: Context): HtmlContentFormatter {
-        return HtmlContentFormatter(context, FirebaseCrashlytics.getInstance())
+    fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager): HtmlContentFormatter {
+        return HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), oAuthManager)
     }
 }
