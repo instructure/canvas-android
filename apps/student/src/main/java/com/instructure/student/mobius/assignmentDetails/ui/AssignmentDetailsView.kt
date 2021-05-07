@@ -28,6 +28,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.*
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -61,9 +62,10 @@ import kotlinx.coroutines.Job
 import java.net.URLDecoder
 
 class AssignmentDetailsView(
-    val canvasContext: CanvasContext,
-    inflater: LayoutInflater,
-    parent: ViewGroup
+        val canvasContext: CanvasContext,
+        isAccessiblityEnabled: Boolean = false,
+        inflater: LayoutInflater,
+        parent: ViewGroup
 ) :
     MobiusView<AssignmentDetailsViewState, AssignmentDetailsEvent>(
         R.layout.fragment_assignment_details,
@@ -89,8 +91,16 @@ class AssignmentDetailsView(
         submissionAndRubricLabel.setTextColor(ThemePrefs.buttonColor)
         submitButton.setBackgroundColor(ThemePrefs.buttonColor)
         submitButton.setTextColor(ThemePrefs.buttonTextColor)
-        accessibilitySubmitButton.setBackgroundColor(ThemePrefs.buttonColor)
-        accessibilitySubmitButton.setTextColor(ThemePrefs.buttonTextColor)
+
+        if (isAccessiblityEnabled) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintParent)
+            constraintSet.clear(submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.clear(swipeRefreshLayout.id, ConstraintSet.TOP)
+            constraintSet.connect(submitButton.id, ConstraintSet.TOP, toolbar.id, ConstraintSet.BOTTOM)
+            constraintSet.connect(swipeRefreshLayout.id, ConstraintSet.TOP, submitButton.id, ConstraintSet.BOTTOM)
+            constraintSet.applyTo(constraintParent)
+        }
     }
 
     override fun applyTheme() {
@@ -103,9 +113,6 @@ class AssignmentDetailsView(
         submissionRubricButton.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         gradeContainer.onClick { output.accept(AssignmentDetailsEvent.ViewSubmissionClicked) }
         submitButton.onClick {
-            onSubmitClick(output)
-        }
-        accessibilitySubmitButton.onClick {
             onSubmitClick(output)
         }
         attachmentIcon.onClick { output.accept(AssignmentDetailsEvent.DiscussionAttachmentClicked) }
@@ -171,14 +178,6 @@ class AssignmentDetailsView(
             }
             submitButton.importantForAccessibility = if (visibilities.submitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
             submitButton.setVisible(visibilities.submitButton)
-            accessibilitySubmitButton.isEnabled = visibilities.submitButtonEnabled && visibilities.accessibilitySubmitButton
-            if (visibilities.submitButtonEnabled) {
-                accessibilitySubmitButton.alpha = 1f
-            } else {
-                accessibilitySubmitButton.alpha = 0.2f
-            }
-            accessibilitySubmitButton.importantForAccessibility = if (visibilities.accessibilitySubmitButton) View.IMPORTANT_FOR_ACCESSIBILITY_YES else View.IMPORTANT_FOR_ACCESSIBILITY_NO
-            accessibilitySubmitButton.setVisible(visibilities.accessibilitySubmitButton)
             submissionUploadStatusContainer.setVisible(visibilities.submissionUploadStatusInProgress || visibilities.submissionUploadStatusFailed)
             submissionStatusUploading.setVisible(visibilities.submissionUploadStatusInProgress)
             submissionStatusFailed.setVisible(visibilities.submissionUploadStatusFailed)
@@ -210,7 +209,6 @@ class AssignmentDetailsView(
         usedAttemptsText.text = state.usedAttempts.toString()
         gradeCell.setState(state.gradeState)
         submitButton.text = state.submitButtonText
-        accessibilitySubmitButton.text = state.submitButtonText
         if (state.visibilities.description) {
             descriptionLabel.text = state.descriptionLabel
             loadHtmlJob = descriptionWebView.loadHtmlWithIframes(context, false, state.description, ::loadDescriptionHtml,{

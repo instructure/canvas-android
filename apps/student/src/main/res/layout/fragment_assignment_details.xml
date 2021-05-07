@@ -21,7 +21,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -31,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="6dp"
+            app:layout_constraintTop_toTopOf="parent"
             tools:background="#00bcd5"
             tools:navigationIcon="@drawable/ic_back_arrow"
             tools:subtitle="Biology 101"
@@ -38,23 +40,12 @@
             tools:title="Ecosystem Health and Human Well-Being"
             tools:titleTextColor="@color/white" />
 
-        <Button
-            android:id="@+id/accessibilitySubmitButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/canvasDefaultAccent"
-            android:foreground="?attr/selectableItemBackground"
-            android:importantForAccessibility="no"
-            android:text="@string/submitAssignment"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:visibility="gone" />
-
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <ScrollView
                 android:layout_width="match_parent"
@@ -731,9 +722,10 @@
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/submitAssignment"
             android:textAllCaps="false"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.instructure.pandautils.views.FloatingRecordingView
         android:id="@+id/floatingRecordingView"

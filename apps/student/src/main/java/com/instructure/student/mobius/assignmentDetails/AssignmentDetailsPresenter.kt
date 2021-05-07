@@ -193,11 +193,6 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
             }
         }
 
-        if (isAccessibilityEnabled(context)) {
-            visibilities.accessibilitySubmitButton = visibilities.submitButton
-            visibilities.submitButton = false
-        }
-
         // Configure stickied submit button
         val submitButtonText = getSubmitButtonText(context, isExternalToolSubmission, assignment.isSubmitted, assignment.turnInType, visibilities.submitButtonEnabled)
 
@@ -360,12 +355,6 @@ object AssignmentDetailsPresenter : Presenter<AssignmentDetailsModel, Assignment
                     else -> R.string.submitAssignment
                 }
         )
-    }
-
-
-    private fun isAccessibilityEnabled(context: Context): Boolean {
-        val am: AccessibilityManager? = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?
-        return am?.isEnabled ?: false && am?.isTouchExplorationEnabled ?: false
     }
 
 }
