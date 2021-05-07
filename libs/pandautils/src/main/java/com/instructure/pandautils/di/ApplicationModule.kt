@@ -33,7 +33,7 @@ import dagger.hilt.components.SingletonComponent
 class ApplicationModule {
 
     @Provides
-    fun provideHtmlCreator(@ApplicationContext context: Context): HtmlContentFormatter {
+    fun provideHtmlContentFormatter(@ApplicationContext context: Context): HtmlContentFormatter {
         return HtmlContentFormatter(context, FirebaseCrashlytics.getInstance())
     }
 }

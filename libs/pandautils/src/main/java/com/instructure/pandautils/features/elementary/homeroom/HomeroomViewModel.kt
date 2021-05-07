@@ -71,7 +71,7 @@ class HomeroomViewModel @Inject constructor(
 
     private fun loadInitialData() {
         _state.postValue(ViewState.Loading)
-        loadData(true) // TODO change back to false when finished
+        loadData(false)
     }
 
     private fun loadData(forceNetwork: Boolean) {
@@ -94,7 +94,12 @@ class HomeroomViewModel @Inject constructor(
                 _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards, isEmpty))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error(context.getString(R.string.homeroomError)))
+                if (_data.value == null && _data.value?.isEmpty == true) {
+                    _state.postValue(ViewState.Error(context.getString(R.string.homeroomError)))
+                } else {
+                    _state.postValue(ViewState.Error())
+                    _events.postValue(Event(HomeroomAction.ShowRefreshError))
+                }
             }
         }
     }

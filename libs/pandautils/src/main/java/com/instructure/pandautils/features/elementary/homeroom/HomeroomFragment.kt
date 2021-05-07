@@ -28,11 +28,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.instructure.pandautils.BuildConfig
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_homeroom.*
@@ -69,9 +71,7 @@ class HomeroomFragment : Fragment() {
 
     private fun handleState(viewState: ViewState) {
         if (viewState == ViewState.Success) {
-            Handler().postDelayed({
-                setupWebViews()
-            }, 400)
+            Handler().postDelayed({ setupWebViews() }, 400)
         }
     }
 
@@ -79,6 +79,7 @@ class HomeroomFragment : Fragment() {
         when (action) {
             is HomeroomAction.OpenAnnouncements -> homeroomRouter.openAnnouncements(action.canvasContext)
             is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
+            HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
         }
     }
 
