@@ -40,6 +40,9 @@ class ElementaryNavigationBehavior() : NavigationBehavior {
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.ACCOUNT, AccountMenuItem.HELP, AccountMenuItem.LOGOUT)
 
+    override val shouldOverrideFont: Boolean
+        get() = true
+
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
         return ElementaryDashboardFragment.makeRoute(ApiPrefs.user)
     }

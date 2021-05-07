@@ -16,11 +16,9 @@
  */
 package com.instructure.student.navigation
 
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
-import com.instructure.student.R
 import com.instructure.student.fragment.*
 
 class DefaultNavigationBehavior() : NavigationBehavior {
@@ -40,6 +38,9 @@ class DefaultNavigationBehavior() : NavigationBehavior {
     override val visibleOptionsMenuItems: Set<OptionsMenuItem> = setOf(OptionsMenuItem.SHOW_GRADES, OptionsMenuItem.COLOR_OVERLAY)
 
     override val visibleAccountMenuItems: Set<AccountMenuItem> = setOf(AccountMenuItem.HELP, AccountMenuItem.CHANGE_USER, AccountMenuItem.LOGOUT)
+
+    override val shouldOverrideFont: Boolean
+        get() = false
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
         return DashboardFragment.makeRoute(ApiPrefs.user)

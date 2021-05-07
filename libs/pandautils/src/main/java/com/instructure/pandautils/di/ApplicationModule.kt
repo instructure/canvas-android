@@ -19,12 +19,14 @@ package com.instructure.pandautils.di
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
  * Module that provides all the application scope dependencies, that are not related to other module.
@@ -32,6 +34,12 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class ApplicationModule {
+
+    @Singleton
+    @Provides
+    fun providesTypefaceBehavior(@ApplicationContext context: Context): TypefaceBehavior {
+        return TypefaceBehavior(context)
+    }
 
     @Provides
     fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager): HtmlContentFormatter {
