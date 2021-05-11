@@ -14,21 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
+package com.instructure.student.di
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
-import com.instructure.pandautils.mvvm.ItemViewModel
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.student.mobius.elementary.StudentHomeroomRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
-class AnnouncementViewModel(
-    val data: AnnouncementViewData,
-    val onPreviousAnnouncementsClicked: () -> Unit,
-    private val onLtiButtonPressed: (url: String, announcementMessage: String) -> Unit
-) : ItemViewModel {
+@Module
+@InstallIn(FragmentComponent::class)
+class HomeroomModule {
 
-    override val layoutId: Int = R.layout.item_announcement
-
-    fun onLtiButtonPressed(url: String) {
-        onLtiButtonPressed(url, data.htmlContent)
+    @Provides
+    fun provideHomeroomRouter(activity: FragmentActivity): HomeroomRouter {
+        return StudentHomeroomRouter(activity)
     }
 }

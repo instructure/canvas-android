@@ -18,26 +18,30 @@ package com.instructure.pandautils.binding
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.webkit.WebView
+import android.webkit.JavascriptInterface
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.views.EmptyView
-import com.instructure.pandautils.BR
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.EmptyView
+import java.net.URLDecoder
 
-@BindingAdapter("itemViewModels")
-fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
+@BindingAdapter(value = ["itemViewModels", "onItemsAdded"], requireAll = false)
+fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?, onItemsAdded: Runnable?) {
+    container.removeAllViews()
     itemViewModels?.forEach { item: ItemViewModel ->
         val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
         binding.setVariable(BR.itemViewModel, item)
         container.addView(binding.root)
     }
+    onItemsAdded?.run()
 }
 
 @BindingAdapter("emptyViewState")
@@ -52,11 +56,20 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
             state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
             emptyView.setListEmpty()
         }
-        is ViewState.Error -> emptyView.setGone() // Currently just set this to gone, we don't need an empty view in the dialog, but need to find a generic solution for this.
+        is ViewState.Error -> handleErrorState(emptyView, state)
     }
 }
 
-@BindingAdapter("itemViewModels")
+private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
+    if (error.errorMessage.isNullOrEmpty()) {
+        emptyView.setGone()
+    } else {
+        emptyView.setVisible()
+        emptyView.setError(error.errorMessage)
+    }
+}
+
+@BindingAdapter("recyclerViewItemViewModels")
 fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
     val adapter = getOrCreateAdapter(recyclerView)
     adapter.updateItems(itemViewModels)
@@ -77,8 +90,24 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
     }
 }
 
-@BindingAdapter(value = ["htmlContent", "htmlTitle"], requireAll = false)
-fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?) {
+@BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed"], requireAll = false)
+fun bindHtmlContent(webView: CanvasWebView, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
     webView.loadHtml(html ?: "", title ?: "")
+    if (onLtiButtonPressed != null) {
+        webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), "accessor")
+    }
+}
+
+interface OnLtiButtonPressed {
+    fun onLtiButtonPressed(url: String)
+}
+
+private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
+
+    @JavascriptInterface
+    fun onLtiToolButtonPressed(id: String) {
+        val ltiUrl = URLDecoder.decode(id, "UTF-8")
+        onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+    }
 }
 

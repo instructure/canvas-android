@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.OAuthTokenResponse
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.weave.apiAsync
 
 object OAuthManager {
 
@@ -45,6 +46,8 @@ object OAuthManager {
         val params = RestParams(isForceReadFromNetwork = true)
         return OAuthAPI.refreshAccessToken(adapter, params)
     }
+
+    fun getAuthenticatedSessionAsync(targetUrl: String) = apiAsync<AuthenticatedSession> { getAuthenticatedSession(targetUrl, it) }
 
     fun getAuthenticatedSession(targetUrl: String, callback: StatusCallback<AuthenticatedSession>) {
         val adapter = RestBuilder(callback)

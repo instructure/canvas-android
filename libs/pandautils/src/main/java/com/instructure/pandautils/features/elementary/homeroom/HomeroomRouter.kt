@@ -14,21 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.elementary.homeroom.itemviewmodels
+package com.instructure.pandautils.features.elementary.homeroom
 
-import com.instructure.pandautils.R
-import com.instructure.pandautils.features.elementary.homeroom.AnnouncementViewData
-import com.instructure.pandautils.mvvm.ItemViewModel
+import com.instructure.canvasapi2.models.CanvasContext
 
-class AnnouncementViewModel(
-    val data: AnnouncementViewData,
-    val onPreviousAnnouncementsClicked: () -> Unit,
-    private val onLtiButtonPressed: (url: String, announcementMessage: String) -> Unit
-) : ItemViewModel {
+interface HomeroomRouter {
 
-    override val layoutId: Int = R.layout.item_announcement
+    fun canRouteInternally(url: String): Boolean
 
-    fun onLtiButtonPressed(url: String) {
-        onLtiButtonPressed(url, data.htmlContent)
-    }
+    fun routeInternally(url: String)
+
+    fun openMedia(url: String)
+
+    fun openAnnouncements(canvasContext: CanvasContext)
 }

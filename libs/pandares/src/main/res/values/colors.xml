@@ -255,4 +255,6 @@
     <color name="speed_grader_button_text_color">#008EE2</color>
     <color name="nav_drawer_text_color">#2D3B45</color>
 
+    <color name="k5AnnouncementSeparatorColor">#C6C6C8</color>
+
 </resources>

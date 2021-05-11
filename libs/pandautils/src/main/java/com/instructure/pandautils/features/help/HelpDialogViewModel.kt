@@ -82,7 +82,7 @@ class HelpDialogViewModel @Inject constructor(
                 _data.postValue(HelpDialogViewData(helpLinksViewData))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error(e.message ?: ""))
+                _state.postValue(ViewState.Error())
                 Logger.d("Failed to grab help links: ${e.printStackTrace()}")
             }
         }

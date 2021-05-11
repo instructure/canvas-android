@@ -16,17 +16,32 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.instructure.pandautils.BuildConfig
+import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
+import com.instructure.pandautils.discussions.DiscussionUtils
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.fragment_homeroom.*
+import kotlinx.android.synthetic.main.item_announcement.view.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeroomFragment : Fragment() {
+
+    @Inject
+    lateinit var homeroomRouter: HomeroomRouter
 
     private val viewModel: HomeroomViewModel by viewModels()
 
@@ -35,7 +50,54 @@ class HomeroomFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        viewModel.events.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                handleAction(it)
+            }
+        })
+
         return binding.root
+    }
+
+    private fun handleAction(action: HomeroomAction) {
+        when (action) {
+            is HomeroomAction.OpenAnnouncements -> homeroomRouter.openAnnouncements(action.canvasContext)
+            is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
+            HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
+            HomeroomAction.AnnouncementViewsReady -> setupWebViews()
+        }
+    }
+
+    private fun setupWebViews() {
+        announcementsContainer.children.forEach {
+            val webView = it.announcementWebView
+            if (webView != null) {
+                setupWebView(webView)
+            }
+        }
+    }
+
+    private fun setupWebView(announcementWebView: CanvasWebView) {
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG)
+        announcementWebView.setBackgroundColor(Color.WHITE)
+        announcementWebView.settings.allowFileAccess = true
+        announcementWebView.settings.loadWithOverviewMode = true
+        announcementWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+            override fun routeInternallyCallback(url: String) {
+                homeroomRouter.routeInternally(url)
+            }
+
+            override fun canRouteInternallyDelegate(url: String): Boolean = homeroomRouter.canRouteInternally(url)
+
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                homeroomRouter.openMedia(url)
+            }
+
+            override fun onPageStartedCallback(webView: WebView, url: String) = Unit
+            override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
+        }
+
+        announcementWebView.addVideoClient(requireActivity())
     }
 
     companion object {

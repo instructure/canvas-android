@@ -16,10 +16,20 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>)
+data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>) {
+    fun isEmpty() = announcements.isEmpty() && courseCards.isEmpty()
+}
 
-data class AnnouncementViewData(val title: String, val htmlContent: String)
+data class AnnouncementViewData(val courseName: String, val title: String, val htmlContent: String)
 
 data class CourseCardViewData(val courseName: String)
+
+sealed class HomeroomAction {
+    data class OpenAnnouncements(val canvasContext: CanvasContext) : HomeroomAction()
+    data class LtiButtonPressed(val url: String) : HomeroomAction()
+    object ShowRefreshError : HomeroomAction()
+    object AnnouncementViewsReady : HomeroomAction()
+}

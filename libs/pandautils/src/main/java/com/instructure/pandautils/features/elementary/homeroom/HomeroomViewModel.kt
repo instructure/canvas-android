@@ -16,24 +16,39 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
-import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.AnnouncementManager
+import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
+import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeroomViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
-    @ApplicationContext private val context: Context
+    private val resources: Resources,
+    private val courseManager: CourseManager,
+    private val announcementManager: AnnouncementManager,
+    private val htmlContentFormatter: HtmlContentFormatter,
+    private val oAuthManager: OAuthManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -42,55 +57,105 @@ class HomeroomViewModel @Inject constructor(
 
     val data: LiveData<HomeroomViewData>
         get() = _data
-    private val _data = MutableLiveData<HomeroomViewData>()
+    private val _data = MutableLiveData<HomeroomViewData>(HomeroomViewData("", emptyList(), emptyList()))
+
+    val events: LiveData<Event<HomeroomAction>>
+        get() = _events
+    private val _events = MutableLiveData<Event<HomeroomAction>>()
 
     init {
-        loadData()
+        loadInitialData()
     }
 
-    private fun loadData() {
-        // TODO Load announcements and courses will be implemented in a separate ticket, currently we just use dummy data.
+    private fun loadInitialData() {
         _state.postValue(ViewState.Loading)
-
-        val greetingString = context.getString(R.string.homeroomWelcomeMessage, apiPrefs.user?.shortName)
-
-        val announcements = createAnnouncements()
-        _data.postValue(HomeroomViewData(greetingString, announcements, createDummyCourses()))
-        _state.postValue(ViewState.Success)
+        loadData(false)
     }
 
+    private fun loadData(forceNetwork: Boolean) {
+        val greetingString = resources.getString(R.string.homeroomWelcomeMessage, apiPrefs.user?.shortName)
+
+        viewModelScope.launch {
+            try {
+                val courses = courseManager.getCoursesAsync(forceNetwork).await()
+
+                val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
+
+                val announcementsData = homeroomCourses
+                    .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
+                    .awaitAll()
+
+                val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
+                val courseCards = createDummyCourses()
+
+                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards))
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                if (_data.value == null || _data.value?.isEmpty() == true) {
+                    _state.postValue(ViewState.Error(resources.getString(R.string.homeroomError)))
+                } else {
+                    _state.postValue(ViewState.Error())
+                    _events.postValue(Event(HomeroomAction.ShowRefreshError))
+                }
+            }
+        }
+    }
+
+    private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
+        return homeroomCourses
+            .mapIndexed { index, course -> createAnnouncementViewModel(course, announcementsData[index].dataOrNull?.firstOrNull()) }
+            .filterNotNull()
+    }
+
+    private suspend fun createAnnouncementViewModel(course: Course, announcement: DiscussionTopicHeader?): AnnouncementViewModel? {
+        return if (announcement != null) {
+            val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(announcement.message
+                ?: "")
+            AnnouncementViewModel(
+                AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),
+                { _events.postValue(Event(HomeroomAction.OpenAnnouncements(course))) },
+                ::ltiButtonPressed
+            )
+        } else {
+            null
+        }
+    }
+
+    private fun ltiButtonPressed(html: String, announcementMessage: String) {
+        viewModelScope.launch {
+            try {
+                val matcher = Pattern.compile("src=\"([^\"]+)\"").matcher(announcementMessage)
+                matcher.find()
+                val url = matcher.group(1)
+
+                if (url == null) {
+                    _events.postValue(Event(HomeroomAction.LtiButtonPressed(html)))
+                    return@launch
+                }
+
+                // Get an authenticated session so the user doesn't have to log in
+                val authenticatedSessionURL = oAuthManager.getAuthenticatedSessionAsync(url).await().dataOrThrow.sessionUrl
+                val newUrl = htmlContentFormatter.createAuthenticatedLtiUrl(html, authenticatedSessionURL)
+
+                _events.postValue(Event(HomeroomAction.LtiButtonPressed(newUrl)))
+            } catch (e: Exception) {
+                // Couldn't get the authenticated session, try to load it without it
+                _events.postValue(Event(HomeroomAction.LtiButtonPressed(html)))
+            }
+        }
+    }
+
+    // TODO Courses will be implemented in a separate ticket
     private fun createDummyCourses(): List<ItemViewModel> {
         return (1..10).map { CourseCardViewModel(CourseCardViewData("Course: $it")) }
     }
 
-    private fun createAnnouncements(): List<AnnouncementViewModel> {
-        return listOf(AnnouncementViewModel(AnnouncementViewData("Announcement 1", createDummyHtml())),
-            AnnouncementViewModel(AnnouncementViewData("Announcement 2", createDummyHtml())))
-    }
-
-    private fun createDummyHtml(): String {
-        return """
-            <h1>Ex ea difficultate illae fallaciloquae, ut ait Accius, malitiae natae sunt.</h1>
-
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. <a href="http://loripsum.net/" target="_blank">Non potes, nisi retexueris illa.</a> Non enim, si malum est dolor, carere eo malo satis est ad bene vivendum. <b>Nunc omni virtuti vitium contrario nomine opponitur.</b> Pollicetur certe. Duo Reges: constructio interrete. Roges enim Aristonem, bonane ei videantur haec: vacuitas doloris, divitiae, valitudo; Deinde dolorem quem maximum? Memini vero, inquam; </p>
-
-<blockquote cite="http://loripsum.net">
-	Nos beatam vitam non depulsione mali, sed adeptione boni iudicemus, nec eam cessando, sive gaudentem, ut Aristippus, sive non dolentem, ut hic, sed agendo aliquid considerandove quaeramus.
-</blockquote>
-
-
-<ul>
-	<li>Primum cur ista res digna odio est, nisi quod est turpis?</li>
-	<li>Ut in geometria, prima si dederis, danda sunt omnia.</li>
-	<li>Tum Torquatus: Prorsus, inquit, assentior;</li>
-	<li>Et si turpitudinem fugimus in statu et motu corporis, quid est cur pulchritudinem non sequamur?</li>
-</ul>
-        """.trimIndent()
-    }
-
-    // Currently we do nothing here, api calls will be implemented in an other ticket.
     fun refresh() {
         _state.postValue(ViewState.Refresh)
-        _state.postValue(ViewState.Success)
+        loadData(true)
+    }
+
+    fun onAnnouncementViewsReady() {
+        _events.postValue(Event(HomeroomAction.AnnouncementViewsReady))
     }
 }

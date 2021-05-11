@@ -49,6 +49,8 @@ object CourseManager {
         CourseAPI.getFirstPageFavoriteCourses(adapter, depaginatedCallback, params)
     }
 
+    fun getCoursesAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCourses(forceNetwork, it) }
+
     fun getCourses(forceNetwork: Boolean, callback: StatusCallback<List<Course>>) {
         if (ApiPrefs.isStudentView) {
             getCoursesTeacher(forceNetwork, callback)

@@ -98,7 +98,7 @@ class EditDashboardViewModel @Inject constructor(private val courseManager: Cour
                 }
 
             } catch (e: Exception) {
-                _state.postValue(ViewState.Error(e.message ?: ""))
+                _state.postValue(ViewState.Error())
                 Logger.d("Failed to grab courses: ${e.printStackTrace()}")
             }
         }

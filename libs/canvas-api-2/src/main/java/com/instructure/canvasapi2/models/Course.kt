@@ -69,7 +69,9 @@ data class Course(
         @SerializedName("restrict_enrollments_to_course_dates")
         val restrictEnrollmentsToCourseDate: Boolean = false,
         @SerializedName("workflow_state")
-        val workflowState: WorkflowState? = null
+        val workflowState: WorkflowState? = null,
+        @SerializedName("homeroom_course")
+        val homeroomCourse: Boolean = false
 ) : CanvasContext(), Comparable<CanvasContext> {
     override val type: Type get() = Type.COURSE
 

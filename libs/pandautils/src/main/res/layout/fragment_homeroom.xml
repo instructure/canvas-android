@@ -24,72 +24,82 @@
             name="viewModel"
             type="com.instructure.pandautils.features.elementary.homeroom.HomeroomViewModel" />
 
+        <import type="android.view.View" />
+
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:onRefreshListener="@{() -> viewModel.refresh()}"
-        app:refreshState="@{viewModel.state}">
+        android:layout_height="match_parent" >
 
-        <ScrollView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbars="none">
+            app:onRefreshListener="@{() -> viewModel.refresh()}"
+            app:refreshState="@{viewModel.state}">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingTop="16dp">
-
-                <TextView
-                    android:id="@+id/welcomeText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@{viewModel.data.greetingMessage}"
-                    android:layout_marginStart="16dp"
-                    android:textColor="@color/defaultTextDark"
-                    android:textSize="34sp"
-                    android:textStyle="bold"
-                    tools:text="Welcome, Student" />
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/announcementsContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    app:itemViewModels="@{viewModel.data.announcements}" />
+                    android:paddingTop="16dp"
+                    android:visibility="@{viewModel.data.empty ? View.GONE : View.VISIBLE}">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginBottom="24dp"
-                    android:background="@color/dividerColor" />
+                    <TextView
+                        android:id="@+id/welcomeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewModel.data.greetingMessage}"
+                        android:layout_marginStart="16dp"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="34sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"
+                        tools:text="Welcome, Student" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/homeroomMySubjects"
-                    android:textColor="@color/defaultTextDark"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    <LinearLayout
+                        android:id="@+id/announcementsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:itemViewModels="@{viewModel.data.announcements}"
+                        app:onItemsAdded="@{() -> viewModel.onAnnouncementViewsReady()}"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/coursesRecyclerView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    app:itemViewModels="@{viewModel.data.courseCards}"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="2"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/homeroomMySubjects"
+                        android:textColor="@color/defaultTextDark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-            </LinearLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/coursesRecyclerView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        app:recyclerViewItemViewModels="@{viewModel.data.courseCards}"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="2"/>
 
-        </ScrollView>
+                </LinearLayout>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.instructure.pandautils.views.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:emptyViewState="@{viewModel.state}" />
+    </FrameLayout>
 
 </layout>

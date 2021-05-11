@@ -24,5 +24,5 @@ sealed class ViewState {
     object Success : ViewState()
     object Refresh : ViewState()
     data class Empty(@StringRes val emptyTitle: Int? = null, @StringRes val emptyMessage: Int? = null, @DrawableRes val emptyImage: Int? = null) : ViewState()
-    class Error(val errorMessage: String) : ViewState()
+    data class Error(val errorMessage: String = "") : ViewState()
 }
