@@ -17,6 +17,7 @@
 package com.instructure.pandautils.di
 
 import android.content.Context
+import android.content.res.Resources
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
@@ -42,7 +43,17 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager): HtmlContentFormatter {
-        return HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), oAuthManager)
+    fun provideCrashlytics(): FirebaseCrashlytics {
+        return FirebaseCrashlytics.getInstance()
+    }
+
+    @Provides
+    fun provideResources(@ApplicationContext context: Context): Resources {
+        return context.resources
+    }
+
+    @Provides
+    fun provideHtmlContentFormatter(@ApplicationContext context: Context, oAuthManager: OAuthManager, firebaseCrashlytics: FirebaseCrashlytics): HtmlContentFormatter {
+        return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager)
     }
 }

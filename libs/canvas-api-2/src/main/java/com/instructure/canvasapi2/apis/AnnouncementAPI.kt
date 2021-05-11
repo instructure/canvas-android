@@ -38,8 +38,11 @@ object AnnouncementAPI {
         @GET
         fun getNextPageAnnouncementsList(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
 
+        /**
+         * This API call returns the latest announcements. The current implementation is the latest 14 days.
+         */
         @GET("announcements?include[]=sections")
-        fun getAnnouncementsFromLastTwoWeeks(@Query("context_codes[]") courseCode: String): Call<List<DiscussionTopicHeader>>
+        fun getAnnouncements(@Query("context_codes[]") courseCode: String): Call<List<DiscussionTopicHeader>>
     }
 
     fun getFirstPageAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
@@ -51,7 +54,7 @@ object AnnouncementAPI {
         callback.addCall(adapter.build(AnnouncementInterface::class.java, params).getNextPageAnnouncementsList(nextUrl)).enqueue(callback)
     }
 
-    fun getAnnouncementsFromLastTwoWeeks(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
-        callback.addCall(adapter.build(AnnouncementInterface::class.java, params).getAnnouncementsFromLastTwoWeeks(canvasContext.contextId)).enqueue(callback)
+    fun getAnnouncements(canvasContext: CanvasContext, adapter: RestBuilder, callback: StatusCallback<List<DiscussionTopicHeader>>, params: RestParams) {
+        callback.addCall(adapter.build(AnnouncementInterface::class.java, params).getAnnouncements(canvasContext.contextId)).enqueue(callback)
     }
 }

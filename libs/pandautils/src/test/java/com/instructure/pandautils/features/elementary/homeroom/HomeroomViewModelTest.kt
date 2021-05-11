@@ -16,7 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
-import android.content.Context
+import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -60,7 +60,7 @@ class HomeroomViewModelTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val context: Context = mockk(relaxed = true)
+    private val resources: Resources = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val announcementManager: AnnouncementManager = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
@@ -84,7 +84,7 @@ class HomeroomViewModelTest {
     @Test
     fun `Show error state if fetching courses fails`() {
         // Given
-        every { context.getString(R.string.homeroomError) } returns "Error"
+        every { resources.getString(R.string.homeroomError) } returns "Error"
         every { courseManager.getCoursesAsync(any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
@@ -113,7 +113,7 @@ class HomeroomViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) } returns announcementsDeferred
+        every { announcementManager.getAnnouncementsAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
 
         // When
@@ -122,7 +122,7 @@ class HomeroomViewModelTest {
 
         // Then
         // Verify that we only get the announcements for the homeroom course.
-        verifyAll { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) }
+        verifyAll { announcementManager.getAnnouncementsAsync(courses[0], any()) }
 
         assertEquals(ViewState.Success, viewModel.state.value)
 
@@ -147,10 +147,10 @@ class HomeroomViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred1: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) } returns announcementsDeferred1
+        every { announcementManager.getAnnouncementsAsync(courses[0], any()) } returns announcementsDeferred1
 
         val announcementsDeferred2: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[1], any()) } returns announcementsDeferred2
+        every { announcementManager.getAnnouncementsAsync(courses[1], any()) } returns announcementsDeferred2
 
         coEvery { listOf(announcementsDeferred1, announcementsDeferred2).awaitAll() } returns listOf(DataResult.Success(announcements), DataResult.Success(emptyList()))
 
@@ -160,8 +160,8 @@ class HomeroomViewModelTest {
 
         // Then
         verifyAll {
-            announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any());
-            announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[1], any())
+            announcementManager.getAnnouncementsAsync(courses[0], any());
+            announcementManager.getAnnouncementsAsync(courses[1], any())
         }
 
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -185,7 +185,7 @@ class HomeroomViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) } returns announcementsDeferred
+        every { announcementManager.getAnnouncementsAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
 
         // When
@@ -212,7 +212,7 @@ class HomeroomViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) } returns announcementsDeferred
+        every { announcementManager.getAnnouncementsAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
 
         // When
@@ -239,7 +239,7 @@ class HomeroomViewModelTest {
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
         val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
-        every { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(courses[0], any()) } returns announcementsDeferred
+        every { announcementManager.getAnnouncementsAsync(courses[0], any()) } returns announcementsDeferred
         coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(announcements))
 
         // When
@@ -253,5 +253,5 @@ class HomeroomViewModelTest {
         assertEquals(HomeroomAction.LtiButtonPressed("LTI"), viewModel.events.value!!.getContentIfNotHandled()!!)
     }
 
-    private fun createViewModel() = HomeroomViewModel(apiPrefs, context, courseManager, announcementManager, htmlContentFormatter, oauthManager)
+    private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager)
 }

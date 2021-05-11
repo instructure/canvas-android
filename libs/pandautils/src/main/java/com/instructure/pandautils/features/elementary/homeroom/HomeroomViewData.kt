@@ -19,7 +19,9 @@ package com.instructure.pandautils.features.elementary.homeroom
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>, val isEmpty: Boolean)
+data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>) {
+    fun isEmpty() = announcements.isEmpty() && courseCards.isEmpty()
+}
 
 data class AnnouncementViewData(val courseName: String, val title: String, val htmlContent: String)
 

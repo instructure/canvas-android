@@ -16,7 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
-import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -36,7 +36,6 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
@@ -45,7 +44,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeroomViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
-    @ApplicationContext private val context: Context,
+    private val resources: Resources,
     private val courseManager: CourseManager,
     private val announcementManager: AnnouncementManager,
     private val htmlContentFormatter: HtmlContentFormatter,
@@ -58,7 +57,7 @@ class HomeroomViewModel @Inject constructor(
 
     val data: LiveData<HomeroomViewData>
         get() = _data
-    private val _data = MutableLiveData<HomeroomViewData>(HomeroomViewData("", emptyList(), emptyList(), true))
+    private val _data = MutableLiveData<HomeroomViewData>(HomeroomViewData("", emptyList(), emptyList()))
 
     val events: LiveData<Event<HomeroomAction>>
         get() = _events
@@ -74,7 +73,7 @@ class HomeroomViewModel @Inject constructor(
     }
 
     private fun loadData(forceNetwork: Boolean) {
-        val greetingString = context.getString(R.string.homeroomWelcomeMessage, apiPrefs.user?.shortName)
+        val greetingString = resources.getString(R.string.homeroomWelcomeMessage, apiPrefs.user?.shortName)
 
         viewModelScope.launch {
             try {
@@ -83,18 +82,17 @@ class HomeroomViewModel @Inject constructor(
                 val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
                 val announcementsData = homeroomCourses
-                    .map { announcementManager.getAnnouncementsFromLastTwoWeeksAsync(it, forceNetwork) }
+                    .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
                     .awaitAll()
 
                 val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
                 val courseCards = createDummyCourses()
-                val isEmpty = announcementViewModels.isEmpty() && courseCards.isEmpty()
 
-                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards, isEmpty))
+                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
-                if (_data.value == null || _data.value?.isEmpty == true) {
-                    _state.postValue(ViewState.Error(context.getString(R.string.homeroomError)))
+                if (_data.value == null || _data.value?.isEmpty() == true) {
+                    _state.postValue(ViewState.Error(resources.getString(R.string.homeroomError)))
                 } else {
                     _state.postValue(ViewState.Error())
                     _events.postValue(Event(HomeroomAction.ShowRefreshError))
