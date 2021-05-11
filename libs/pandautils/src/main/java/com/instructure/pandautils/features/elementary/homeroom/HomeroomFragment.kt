@@ -18,8 +18,6 @@ package com.instructure.pandautils.features.elementary.homeroom
 
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +29,6 @@ import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
-import com.instructure.pandautils.mvvm.Event
-import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
@@ -54,12 +50,6 @@ class HomeroomFragment : Fragment() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.state.observe(viewLifecycleOwner, Observer { state ->
-            state?.let {
-                handleState(it)
-            }
-        })
-
         viewModel.events.observe(viewLifecycleOwner, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
@@ -69,17 +59,12 @@ class HomeroomFragment : Fragment() {
         return binding.root
     }
 
-    private fun handleState(viewState: ViewState) {
-        if (viewState == ViewState.Success) {
-            Handler().postDelayed({ setupWebViews() }, 400)
-        }
-    }
-
     private fun handleAction(action: HomeroomAction) {
         when (action) {
             is HomeroomAction.OpenAnnouncements -> homeroomRouter.openAnnouncements(action.canvasContext)
             is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
             HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
+            HomeroomAction.AnnouncementViewsReady -> setupWebViews()
         }
     }
 

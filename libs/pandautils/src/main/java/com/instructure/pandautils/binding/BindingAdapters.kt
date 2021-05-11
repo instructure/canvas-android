@@ -33,14 +33,15 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.EmptyView
 import java.net.URLDecoder
 
-@BindingAdapter("itemViewModels")
-fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?) {
+@BindingAdapter(value = ["itemViewModels", "onItemsAdded"], requireAll = false)
+fun bindItemViewModels(container: ViewGroup, itemViewModels: List<ItemViewModel>?, onItemsAdded: Runnable?) {
     container.removeAllViews()
     itemViewModels?.forEach { item: ItemViewModel ->
         val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(container.context), item.layoutId, container, false)
         binding.setVariable(BR.itemViewModel, item)
         container.addView(binding.root)
     }
+    onItemsAdded?.run()
 }
 
 @BindingAdapter("emptyViewState")
@@ -68,7 +69,7 @@ private fun handleErrorState(emptyView: EmptyView, error: ViewState.Error) {
     }
 }
 
-@BindingAdapter("itemViewModels")
+@BindingAdapter("recyclerViewItemViewModels")
 fun bindItemViewModels(recyclerView: RecyclerView, itemViewModels: List<ItemViewModel>?) {
     val adapter = getOrCreateAdapter(recyclerView)
     adapter.updateItems(itemViewModels)

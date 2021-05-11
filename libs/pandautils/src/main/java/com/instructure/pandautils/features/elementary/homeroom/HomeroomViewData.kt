@@ -31,4 +31,5 @@ sealed class HomeroomAction {
     data class OpenAnnouncements(val canvasContext: CanvasContext) : HomeroomAction()
     data class LtiButtonPressed(val url: String) : HomeroomAction()
     object ShowRefreshError : HomeroomAction()
+    object AnnouncementViewsReady : HomeroomAction()
 }

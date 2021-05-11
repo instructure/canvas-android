@@ -154,4 +154,8 @@ class HomeroomViewModel @Inject constructor(
         _state.postValue(ViewState.Refresh)
         loadData(true)
     }
+
+    fun onAnnouncementViewsReady() {
+        _events.postValue(Event(HomeroomAction.AnnouncementViewsReady))
+    }
 }

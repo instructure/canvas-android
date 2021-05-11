@@ -253,5 +253,16 @@ class HomeroomViewModelTest {
         assertEquals(HomeroomAction.LtiButtonPressed("LTI"), viewModel.events.value!!.getContentIfNotHandled()!!)
     }
 
+    @Test
+    fun `OnAnnouncementViewsReady should send event`() {
+        // When
+        viewModel = createViewModel()
+        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.onAnnouncementViewsReady()
+
+        // Then
+        assertEquals(HomeroomAction.AnnouncementViewsReady, viewModel.events.value!!.getContentIfNotHandled()!!)
+    }
+
     private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager)
 }
