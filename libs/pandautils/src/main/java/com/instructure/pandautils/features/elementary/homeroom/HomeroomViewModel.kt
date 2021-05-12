@@ -35,6 +35,7 @@ import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -78,7 +79,12 @@ class HomeroomViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
+                val dashboardCards = courseManager.getDashboardCoursesAsync(forceNetwork).await()
 
+                val coursesMap = courses.dataOrThrow
+                    .filter { !it.homeroomCourse }
+                    .associateBy { it.id }
+                val dashboardCourses = dashboardCards.dataOrThrow.mapNotNull { coursesMap[it.id] }
                 val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
                 val announcementsData = homeroomCourses
@@ -86,9 +92,9 @@ class HomeroomViewModel @Inject constructor(
                     .awaitAll()
 
                 val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
-                val courseCards = createDummyCourses()
+                val courseViewModels = createCourseCards(dashboardCourses)
 
-                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseCards))
+                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseViewModels))
                 _state.postValue(ViewState.Success)
             } catch (e: Exception) {
                 if (_data.value == null || _data.value?.isEmpty() == true) {
@@ -99,6 +105,18 @@ class HomeroomViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun createCourseCards(dashboardCourses: List<Course>): List<CourseCardViewModel> {
+        return dashboardCourses
+            .map {
+                CourseCardViewModel(CourseCardViewData(
+                    it.name,
+                    "Nothing due today",
+                    "Remember! Addition quiz this Month",
+                    it.color,
+                    it.imageUrl ?: ""))
+            }
     }
 
     private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
@@ -143,11 +161,6 @@ class HomeroomViewModel @Inject constructor(
                 _events.postValue(Event(HomeroomAction.LtiButtonPressed(html)))
             }
         }
-    }
-
-    // TODO Courses will be implemented in a separate ticket
-    private fun createDummyCourses(): List<ItemViewModel> {
-        return (1..10).map { CourseCardViewModel(CourseCardViewData("Course: $it")) }
     }
 
     fun refresh() {

@@ -91,6 +91,8 @@ object CourseManager {
 
     fun getCoursesWithConcludedAsync(forceNetwork: Boolean) = apiAsync<List<Course>> { getCoursesWithConcluded(forceNetwork, it) }
 
+    fun getDashboardCoursesAsync(forceNetwork: Boolean) = apiAsync<List<DashboardCard>> { getDashboardCourses(forceNetwork, it) }
+
     fun getDashboardCourses(forceNetwork: Boolean, callback: StatusCallback<List<DashboardCard>>) {
         val adapter = RestBuilder(callback)
         val params = RestParams(isForceReadFromNetwork = forceNetwork)

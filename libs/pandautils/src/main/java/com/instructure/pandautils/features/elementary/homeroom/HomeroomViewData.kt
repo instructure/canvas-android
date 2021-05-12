@@ -25,7 +25,12 @@ data class HomeroomViewData(val greetingMessage: String, val announcements: List
 
 data class AnnouncementViewData(val courseName: String, val title: String, val htmlContent: String)
 
-data class CourseCardViewData(val courseName: String)
+data class CourseCardViewData(
+    val courseName: String,
+    val assignmentsDueText: String,
+    val announcementText: String,
+    val courseColor: Int,
+    val imageUrl: String)
 
 sealed class HomeroomAction {
     data class OpenAnnouncements(val canvasContext: CanvasContext) : HomeroomAction()

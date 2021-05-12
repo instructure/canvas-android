@@ -19,6 +19,7 @@ package com.instructure.pandautils.binding
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -27,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
@@ -108,6 +110,13 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
     fun onLtiToolButtonPressed(id: String) {
         val ltiUrl = URLDecoder.decode(id, "UTF-8")
         onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+    }
+}
+
+@BindingAdapter(value = ["imageUrl", "overlayColor"], requireAll = true)
+fun bindImageWithOverlay(imageView: ImageView, imageUrl: String?, overlayColor: Int?) {
+    if (overlayColor != null) {
+        imageView.setCourseImage(imageUrl, overlayColor, true)
     }
 }
 

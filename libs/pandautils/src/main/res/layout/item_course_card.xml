@@ -24,17 +24,130 @@
             type="com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel" />
     </data>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="100dp"
-        android:layout_height="100dp">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="160dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="20sp"
-            android:text="@{itemViewModel.data.courseName}"
-            tools:text="Math" />
+            app:cardCornerRadius="3dp"
+            app:cardPreventCornerOverlap="false"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="0dp"
+            tools:layout_width="156dp">
 
-    </androidx.cardview.widget.CardView>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/courseImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:importantForAccessibility="no"
+                    android:background="@{itemViewModel.data.courseColor}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:imageUrl="@{itemViewModel.data.imageUrl}"
+                    app:overlayColor="@{itemViewModel.data.courseColor}"
+                    tools:background="@color/canvasDefaultAccent"/>
+
+                <TextView
+                    android:id="@+id/courseNameText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textSize="15sp"
+                    android:text="@{itemViewModel.data.courseName}"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:textColor="@{itemViewModel.data.courseColor}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/courseImage"
+                    tools:text="Math" />
+
+                <View
+                    android:id="@+id/courseNameDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@{itemViewModel.data.courseColor}"
+                    app:layout_constraintTop_toBottomOf="@id/courseNameText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:background="@color/canvasDefaultAccent"/>
+
+                <ImageView
+                    android:id="@+id/todoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_homeroom_todo"
+                    android:tint="@{itemViewModel.data.courseColor}"
+                    app:layout_constraintTop_toBottomOf="@id/courseNameDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:tint="@color/canvasDefaultAccent"/>
+
+                <TextView
+                    android:id="@+id/todoText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{itemViewModel.data.assignmentsDueText}"
+                    android:textSize="13sp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/courseNameDivider"
+                    app:layout_constraintStart_toEndOf="@id/todoIcon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Nothing due today"/>
+
+                <View
+                    android:id="@+id/todoTextDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@color/dividerColor"
+                    app:layout_constraintTop_toBottomOf="@id/todoText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/announcementIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/ic_homeroom_announcement"
+                    android:tint="@{itemViewModel.data.courseColor}"
+                    app:layout_constraintTop_toBottomOf="@id/todoTextDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:tint="@color/canvasDefaultAccent"/>
+
+                <TextView
+                    android:id="@+id/announcementText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{itemViewModel.data.announcementText}"
+                    android:textSize="13sp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="8dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    app:layout_constraintTop_toBottomOf="@id/todoTextDivider"
+                    app:layout_constraintStart_toEndOf="@id/announcementIcon"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:text="Remember! Addition quiz this Month"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
 </layout>
