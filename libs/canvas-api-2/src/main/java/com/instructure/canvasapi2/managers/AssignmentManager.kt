@@ -208,6 +208,8 @@ object AssignmentManager {
         getAllSubmissionsForAssignment(courseId, assignmentId, forceNetwork, it)
     }
 
+    fun getAllAssignmentsAsync(courseId: Long, forceNetwork: Boolean) = apiAsync<List<Assignment>> { getAllAssignments(courseId, forceNetwork, it) }
+
     fun getAllAssignments(courseId: Long, forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
         val adapter = RestBuilder(callback)
         val depaginatedCallback = object : ExhaustiveListCallback<Assignment>(callback) {

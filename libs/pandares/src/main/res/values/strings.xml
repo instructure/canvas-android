@@ -1177,6 +1177,9 @@
     <string name="viewPreviousAnnouncements">View Previous Announcements</string>
     <string name="homeroomError">Failed to load Homeroom</string>
     <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
+    <string name="nothingDueToday">Nothing Due Today</string>
+    <string name="dueToday">%1$s due today</string>
+    <string name="missing">%1$s missing</string>
     
     <string name="open_alternate_view">Open a more accessible alternative view</string>
 </resources>

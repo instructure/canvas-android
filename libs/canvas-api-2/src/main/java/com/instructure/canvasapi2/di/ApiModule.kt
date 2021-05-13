@@ -50,6 +50,11 @@ object ApiModule {
     }
 
     @Provides
+    fun provideAssignmentManager(): AssignmentManager {
+        return AssignmentManager
+    }
+
+    @Provides
     @Singleton
     fun provideHelpLinksApi(): HelpLinksAPI {
         return HelpLinksAPI

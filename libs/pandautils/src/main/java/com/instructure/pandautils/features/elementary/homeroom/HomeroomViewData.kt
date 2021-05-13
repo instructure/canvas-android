@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import android.text.SpannableString
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.mvvm.ItemViewModel
 
@@ -27,7 +28,7 @@ data class AnnouncementViewData(val courseName: String, val title: String, val h
 
 data class CourseCardViewData(
     val courseName: String,
-    val assignmentsDueText: String,
+    val assignmentsDueText: SpannableString,
     val announcementText: String,
     val courseColor: Int,
     val imageUrl: String)
