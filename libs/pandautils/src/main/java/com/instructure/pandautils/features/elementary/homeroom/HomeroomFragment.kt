@@ -65,6 +65,9 @@ class HomeroomFragment : Fragment() {
             is HomeroomAction.LtiButtonPressed -> DiscussionUtils.launchIntent(requireContext(), action.url)
             HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
             HomeroomAction.AnnouncementViewsReady -> setupWebViews()
+            is HomeroomAction.OpenCourse -> homeroomRouter.openCourse(action.course)
+            is HomeroomAction.OpenAssignments -> homeroomRouter.openAssignments(action.course)
+            is HomeroomAction.OpenAnnouncementDetails -> homeroomRouter.openAnnouncementDetails(action.course, action.announcement)
         }
     }
 

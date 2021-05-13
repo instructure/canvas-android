@@ -18,6 +18,8 @@ package com.instructure.pandautils.features.elementary.homeroom
 
 import android.text.SpannableString
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.mvvm.ItemViewModel
 
 data class HomeroomViewData(val greetingMessage: String, val announcements: List<ItemViewModel>, val courseCards: List<ItemViewModel>) {
@@ -38,4 +40,7 @@ sealed class HomeroomAction {
     data class LtiButtonPressed(val url: String) : HomeroomAction()
     object ShowRefreshError : HomeroomAction()
     object AnnouncementViewsReady : HomeroomAction()
+    data class OpenAnnouncementDetails(val course: Course, val announcement: DiscussionTopicHeader) : HomeroomAction()
+    data class OpenCourse(val course: Course) : HomeroomAction()
+    data class OpenAssignments(val course: Course) : HomeroomAction()
 }

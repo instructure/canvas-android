@@ -20,7 +20,12 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.CourseCardViewData
 import com.instructure.pandautils.mvvm.ItemViewModel
 
-class CourseCardViewModel(val data: CourseCardViewData) : ItemViewModel {
+class CourseCardViewModel(
+    val data: CourseCardViewData,
+    val onCardClick: () -> Unit,
+    val onDueTextClick: () -> Unit,
+    val onAnnouncementClick: () -> Unit
+) : ItemViewModel {
 
     override val layoutId: Int = R.layout.item_course_card
 }

@@ -17,6 +17,8 @@
 package com.instructure.pandautils.features.elementary.homeroom
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 
 interface HomeroomRouter {
 
@@ -27,4 +29,10 @@ interface HomeroomRouter {
     fun openMedia(url: String)
 
     fun openAnnouncements(canvasContext: CanvasContext)
+
+    fun openCourse(course: Course)
+
+    fun openAssignments(course: Course)
+
+    fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader)
 }

@@ -119,7 +119,7 @@ class HomeroomViewModel @Inject constructor(
         val announcements = dashboardCourses
             .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
             .awaitAll()
-            .map { it.dataOrNull?.firstOrNull()?.title }
+            .map { it.dataOrNull?.firstOrNull() }
 
         val assignmentsDueText = dashboardCourses
             .map { assignmentManager.getAllAssignmentsAsync(it.id, forceNetwork) }
@@ -128,12 +128,19 @@ class HomeroomViewModel @Inject constructor(
 
         return dashboardCourses
             .mapIndexed { index, course ->
-                CourseCardViewModel(CourseCardViewData(
+                val viewData = CourseCardViewData(
                     course.name,
                     assignmentsDueText[index],
-                    announcements[index] ?: "",
+                    announcements[index]?.title ?: "",
                     course.color,
-                    course.imageUrl ?: ""))
+                    course.imageUrl ?: "")
+
+                CourseCardViewModel(
+                    viewData,
+                    { _events.postValue(Event(HomeroomAction.OpenCourse(course))) },
+                    { _events.postValue(Event(HomeroomAction.OpenAssignments(course))) },
+                    { openAnnouncementDetails(course, announcements[index]) }
+                )
             }
     }
 
@@ -178,6 +185,12 @@ class HomeroomViewModel @Inject constructor(
             val dueDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
             dueDate.toLocalDate().equals(LocalDate.now())
         } ?: false
+    }
+
+    private fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader?) {
+        if (announcement != null) {
+            _events.postValue(Event(HomeroomAction.OpenAnnouncementDetails(course, announcement)))
+        }
     }
 
     private suspend fun createAnnouncements(homeroomCourses: List<Course>, announcementsData: List<DataResult<List<DiscussionTopicHeader>>>): List<AnnouncementViewModel> {
