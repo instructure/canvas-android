@@ -38,6 +38,7 @@ import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.An
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -56,7 +57,8 @@ class HomeroomViewModel @Inject constructor(
     private val announcementManager: AnnouncementManager,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val oAuthManager: OAuthManager,
-    private val assignmentManager: AssignmentManager
+    private val assignmentManager: AssignmentManager,
+    private val colorApiHelper: ColorApiHelper
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -85,6 +87,12 @@ class HomeroomViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
+                if (forceNetwork) {
+                    val colorsSynced = colorApiHelper.awaitSync()
+                    if (colorsSynced) {
+                        _events.postValue(Event(HomeroomAction.UpdateColors))
+                    }
+                }
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 val dashboardCards = courseManager.getDashboardCoursesAsync(forceNetwork).await()
 

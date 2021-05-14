@@ -35,4 +35,6 @@ interface HomeroomRouter {
     fun openAssignments(course: Course)
 
     fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader)
+
+    fun updateColors()
 }

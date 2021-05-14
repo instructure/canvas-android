@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.student.flutterChannels.FlutterComm
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentListFragment
 import com.instructure.student.fragment.CourseBrowserFragment
@@ -57,5 +58,9 @@ class StudentHomeroomRouter(private val activity: FragmentActivity) : HomeroomRo
 
     override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) {
         RouteMatcher.route(activity, DiscussionDetailsFragment.makeRoute(course, announcement))
+    }
+
+    override fun updateColors() {
+        FlutterComm.sendUpdatedTheme()
     }
 }

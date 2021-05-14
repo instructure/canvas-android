@@ -17,6 +17,8 @@
 package com.instructure.teacher.features.elementary
 
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 
 class TeacherHomeroomRouter : HomeroomRouter {
@@ -27,4 +29,12 @@ class TeacherHomeroomRouter : HomeroomRouter {
     override fun openMedia(url: String) = Unit
 
     override fun openAnnouncements(canvasContext: CanvasContext) = Unit
+
+    override fun openCourse(course: Course) = Unit
+
+    override fun openAssignments(course: Course) = Unit
+
+    override fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader) = Unit
+
+    override fun updateColors() = Unit
 }
