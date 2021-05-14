@@ -16,15 +16,18 @@
  */
 package com.instructure.pandautils.features.elementary.homeroom
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
@@ -32,6 +35,7 @@ import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.views.SpacesItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_homeroom.*
 import kotlinx.android.synthetic.main.item_announcement.view.*
@@ -57,6 +61,44 @@ class HomeroomFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val spacing = resources.getDimension(R.dimen.homeroomCardSpacing)
+        val decoration = SpacesItemDecoration(spacing.toInt())
+        coursesRecyclerView.addItemDecoration(decoration)
+        setUpRecyclerViewSpan()
+    }
+
+    private fun setUpRecyclerViewSpan() {
+
+        view?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+
+                val spacing = resources.getDimension(R.dimen.homeroomCardSpacing)
+                val cardRequiredSpace = resources.getDimension(R.dimen.homeroomCardMinRequiredSpace)
+                val width = view?.width ?: 0
+
+                val calculatedSpan = (width - spacing * 4) / cardRequiredSpace
+
+                val span = when {
+                    calculatedSpan < 3 -> 2
+                    calculatedSpan >= 4 -> 4
+                    else -> 3
+                }
+
+                (coursesRecyclerView.layoutManager as GridLayoutManager).spanCount = span
+            }
+
+        })
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        setUpRecyclerViewSpan()
     }
 
     private fun handleAction(action: HomeroomAction) {

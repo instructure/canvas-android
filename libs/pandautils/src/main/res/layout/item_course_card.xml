@@ -28,7 +28,7 @@
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
-            android:layout_width="160dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> itemViewModel.onCardClick.invoke()}"
@@ -38,9 +38,10 @@
             app:contentPadding="0dp"
             tools:layout_width="156dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/courseImage"
@@ -48,8 +49,6 @@
                     android:layout_height="80dp"
                     android:importantForAccessibility="no"
                     android:background="@{itemViewModel.data.courseColor}"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:imageUrl="@{itemViewModel.data.imageUrl}"
                     app:overlayColor="@{itemViewModel.data.courseColor}"
                     tools:background="@color/canvasDefaultAccent"/>
@@ -65,9 +64,6 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:textColor="@{itemViewModel.data.courseColor}"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/courseImage"
                     tools:text="Math" />
 
                 <View
@@ -78,9 +74,6 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@{itemViewModel.data.courseColor}"
-                    app:layout_constraintTop_toBottomOf="@id/courseNameText"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     tools:background="@color/canvasDefaultAccent" />
 
                 <LinearLayout
@@ -91,9 +84,7 @@
                     android:minHeight="48dp"
                     android:paddingBottom="10dp"
                     android:onClick="@{() -> itemViewModel.onDueTextClick.invoke()}"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/courseNameDivider"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/todoIcon"
@@ -127,10 +118,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@color/dividerColor"
-                    android:visibility="@{itemViewModel.data.announcementText.empty ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/todoLayout" />
+                    android:visibility="@{itemViewModel.data.announcementText.empty ? View.GONE : View.VISIBLE}" />
 
                 <LinearLayout
                     android:id="@+id/announcementLayout"
@@ -140,9 +128,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:onClick="@{() -> itemViewModel.onAnnouncementClick.invoke()}"
                     android:visibility="@{itemViewModel.data.announcementText.empty ? View.GONE : View.VISIBLE}"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/todoTextDivider"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:id="@+id/announcementIcon"
@@ -172,7 +158,7 @@
 
                 </LinearLayout>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 </layout>

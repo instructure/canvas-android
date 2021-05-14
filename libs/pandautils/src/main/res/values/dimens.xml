@@ -47,4 +47,6 @@
     <dimen name="file_upload_panda_top">56dp</dimen>
     <dimen name="file_upload_panda_bottom">24dp</dimen>
 
+    <dimen name="homeroomCardSpacing">8dp</dimen>
+    <dimen name="homeroomCardMinRequiredSpace">180dp</dimen>
 </resources>
