@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.*
 import java.util.*
 import java.util.regex.Pattern
 
+private const val WORKFLOW_STATE_DELETED = "deleted"
+
 fun Assignment.SubmissionType.prettyPrint(context: Context): String
         = Assignment.submissionTypeToPrettyPrintString(this, context) ?: ""
 
