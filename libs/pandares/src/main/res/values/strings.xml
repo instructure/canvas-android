@@ -1179,4 +1179,8 @@
     <string name="homeroomRefreshFail">Failed to refresh Homeroom</string>
     
     <string name="open_alternate_view">Open a more accessible alternative view</string>
+
+    <string name="a11y_content_description_message_recipients">Recipients</string>
+    <string name="a11y_content_description_inbox_subject">Subject</string>
+    <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
 </resources>
