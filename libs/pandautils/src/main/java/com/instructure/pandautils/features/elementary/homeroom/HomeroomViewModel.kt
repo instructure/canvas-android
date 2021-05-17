@@ -73,6 +73,8 @@ class HomeroomViewModel @Inject constructor(
         get() = _events
     private val _events = MutableLiveData<Event<HomeroomAction>>()
 
+    private var dashboardCourses: List<Course> = emptyList()
+
     init {
         loadInitialData()
     }
@@ -100,7 +102,7 @@ class HomeroomViewModel @Inject constructor(
                     .filter { !it.homeroomCourse }
                     .associateBy { it.id }
 
-                val dashboardCourses = dashboardCards.dataOrThrow.mapNotNull { coursesMap[it.id] }
+                dashboardCourses = dashboardCards.dataOrThrow.mapNotNull { coursesMap[it.id] }
                 val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
 
                 val announcementsData = homeroomCourses
@@ -123,14 +125,14 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean): List<CourseCardViewModel> {
+    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updatedCourseId: Long = 0): List<CourseCardViewModel> {
         val announcements = dashboardCourses
             .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
             .awaitAll()
             .map { it.dataOrNull?.firstOrNull() }
 
         val assignmentsDueText = dashboardCourses
-            .map { assignmentManager.getAllAssignmentsAsync(it.id, forceNetwork) }
+            .map { assignmentManager.getAllAssignmentsAsync(it.id, forceNetwork || it.id == updatedCourseId) }
             .awaitAll()
             .map { createDueTextFromAssignmentList(it.dataOrNull) }
 
@@ -155,12 +157,14 @@ class HomeroomViewModel @Inject constructor(
     private fun createDueTextFromAssignmentList(assignments: List<Assignment>?): SpannableString {
         var missing = 0
         var dueToday = 0
-        assignments?.forEach {
-            when {
-                isAssignmentMissing(it) -> missing++
-                isAssignmentDueToday(it) -> dueToday++
+        assignments
+            ?.filter { !it.isSubmitted }
+            ?.forEach {
+                when {
+                    isAssignmentMissing(it) -> missing++
+                    isAssignmentDueToday(it) -> dueToday++
+                }
             }
-        }
 
         val dueTodayString = if (dueToday == 0) {
             resources.getString(R.string.nothingDueToday)
@@ -252,5 +256,26 @@ class HomeroomViewModel @Inject constructor(
 
     fun onAnnouncementViewsReady() {
         _events.postValue(Event(HomeroomAction.AnnouncementViewsReady))
+    }
+
+    fun refreshAssignmentsStatus(courseId: Long) {
+        _state.postValue(ViewState.Refresh)
+
+        viewModelScope.launch {
+            try {
+                val courseViewModels = createCourseCards(dashboardCourses, false, updatedCourseId = courseId)
+                val viewData = _data.value
+
+                _data.postValue(HomeroomViewData(
+                    viewData?.greetingMessage ?: "",
+                    viewData?.announcements ?: emptyList(),
+                    courseViewModels))
+
+                _state.postValue(ViewState.Success)
+            } catch (e: Exception) {
+                _state.postValue(ViewState.Error())
+                _events.postValue(Event(HomeroomAction.ShowRefreshError))
+            }
+        }
     }
 }

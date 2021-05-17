@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.BuildConfig
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.FragmentHomeroomBinding
@@ -48,6 +49,8 @@ class HomeroomFragment : Fragment() {
     lateinit var homeroomRouter: HomeroomRouter
 
     private val viewModel: HomeroomViewModel by viewModels()
+
+    private var courseToUpdateId = -1L
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentHomeroomBinding.inflate(inflater, container, false)
@@ -108,7 +111,7 @@ class HomeroomFragment : Fragment() {
             HomeroomAction.ShowRefreshError -> toast(R.string.homeroomRefreshFail)
             HomeroomAction.AnnouncementViewsReady -> setupWebViews()
             is HomeroomAction.OpenCourse -> homeroomRouter.openCourse(action.course)
-            is HomeroomAction.OpenAssignments -> homeroomRouter.openAssignments(action.course)
+            is HomeroomAction.OpenAssignments -> openAssignments(action.course)
             is HomeroomAction.OpenAnnouncementDetails -> homeroomRouter.openAnnouncementDetails(action.course, action.announcement)
             HomeroomAction.UpdateColors -> homeroomRouter.updateColors()
         }
@@ -144,6 +147,18 @@ class HomeroomFragment : Fragment() {
         }
 
         announcementWebView.addVideoClient(requireActivity())
+    }
+
+    private fun openAssignments(course: Course) {
+        courseToUpdateId = course.id
+        homeroomRouter.openAssignments(course)
+    }
+
+    fun refreshAssignmentStatus() {
+        if (courseToUpdateId != -1L) {
+            viewModel.refreshAssignmentsStatus(courseToUpdateId)
+            courseToUpdateId = -1L
+        }
     }
 
     companion object {
