@@ -202,7 +202,6 @@
                 android:background="@color/transparent"
                 android:gravity="top"
                 android:hint="@string/message"
-                android:contentDescription="@string/a11y_content_description_inbox_message"
                 android:inputType="textCapSentences|textMultiLine|textImeMultiLine"
                 android:minLines="2"
                 android:padding="16dp"

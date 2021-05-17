@@ -1182,6 +1182,5 @@
 
     <string name="a11y_content_description_message_recipients">Recipients</string>
     <string name="a11y_content_description_inbox_subject">Subject</string>
-    <string name="a11y_content_description_inbox_message">Message</string>
     <string name="a11y_content_description_inbox_course_spinner">Select a course, %s</string>
 </resources>
