@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Optage audio</string>
     <string name="recordVideo">Optag video</string>
 
+    <string name="a11y_textSubmissionEditor">Redigeringsværktøj til aflevering af tekst</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Skriv&#8230;</string>
     <string name="textSubmissionFailureMessage">Der gik noget galt ved upload af afleveringen. Aflever igen.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Vedhæft filer til din kommentar ved at trykke på en mulighed nedenfor</string>
     <string name="emptySubmissionCommentsSubtext">Har du spørgsmål om din opgave?\nSend en besked til din instruktør.</string>
     <string name="submissionCommentErrorMessage">Denne besked kunne ikke sendes. Tryk for at prøve igen.</string>
+    <string name="mediaUpload">Medie upload</string>
     <string name="mediaUploadAudio">Medieoverførsel - lyd</string>
     <string name="mediaUploadVideo">Medieoverførsel - video</string>
     <string name="commentSubmissionTypeText">Tekst indsendelse</string>
@@ -219,6 +220,7 @@
     <string name="forbidden">Svar er kun synlige for dem, der har lagt mindst ét svar ud.</string>
 
     <string name="fileCurrentlyLocked">Filen er låst på nuværende tidspunkt</string>
+    <string name="a11y_discussionReplyEditor">Redigeringsværktøj til diskussionssvar</string>
     <!-- Events -->
     <string name="Starts">Starter</string>
     <string name="Ends">Slutter</string>
@@ -1134,4 +1136,25 @@
     <string name="a11y_criterion_button_click_description">yderligere oplysninger</string>
     <string name="a11y_create_file_folder_visible">Knapper til oprettelse af fil og mappe synlige</string>
     <string name="a11y_create_file_folder_gone">Knapper til oprettelse af fil og mappe usynlige</string>
+    <string name="unselect_all">Fravælg alle</string>
+    <string name="select_all">Vælg alle</string>
+    <string name="all_courses">Alle fag</string>
+    <string name="all_groups">Alle grupper</string>
+    <string name="edit_dashboard_course_description">Vælg fag til oversigten, eller naviger til fagoplysninger.</string>
+    <string name="edit_dashboard_group_description">Vælg grupper til oversigten, eller naviger til fagoplysninger.</string>
+    <string name="current_enrollments">Aktuelle tilmeldinger</string>
+    <string name="past_enrollments">Tidligere tilmeldinger</string>
+    <string name="future_enrollments">Fremtidige tilmeldinger</string>
+    <string name="added_to_dashboard">Tilføjet til oversigten</string>
+    <string name="removed_from_dashboard">Fjernet fra oversigten</string>
+    <string name="all_added_to_dashboard">Alle tilføjet til oversigten</string>
+    <string name="all_removed_from_dashboard">Alle fjernet fra oversigten</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inaktive fag kunne ikke tilføjes til oversigten.</string>
+    <string name="edit_dashboard">Rediger oversigt</string>
+    <string name="edit_dashboard_empty_title">Ingen fag her</string>
+    <string name="edit_dashboard_empty_message">Du skal være tilmeldt et fag for at føje det til oversigten.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Fjern fra oversigten</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Fjern alt fra oversigten</string>
+    <string name="a11y_content_description_add_to_dashboard">Tilføj til oversigten</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Føj alle til oversigten</string>
 </resources>

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Enregistra àudio</string>
     <string name="recordVideo">Enregistra vídeo</string>
 
+    <string name="a11y_textSubmissionEditor">Editor d’entrega de text</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Escriu&#8230;</string>
     <string name="textSubmissionFailureMessage">Alguna cosa no ha anat bé en penjar l\'entrega. Torneu a enviar-la.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Toqueu una de les opcions següents per adjuntar fitxers al comentari.</string>
     <string name="emptySubmissionCommentsSubtext">Teniu alguna pregunta sobre la tasca?\nEnvieu un missatge a l\'instructor.</string>
     <string name="submissionCommentErrorMessage">No s\'ha pogut enviar aquest missatge. Toqueu per tornar a provar-ho.</string>
+    <string name="mediaUpload">Càrrega multimèdia</string>
     <string name="mediaUploadAudio">Càrrega de contingut multimèdia: àudio</string>
     <string name="mediaUploadVideo">Càrrega de contingut multimèdia: vídeo</string>
     <string name="commentSubmissionTypeText">Entrega de text</string>
@@ -220,6 +221,7 @@
 
     <string name="fileCurrentlyLocked">Aquest fitxer està bloquejat actualment</string>
 
+    <string name="a11y_discussionReplyEditor">Editor de resposta al debat</string>
     <!-- Events -->
     <string name="Starts">Comença</string>
     <string name="Ends">Acaba</string>
@@ -1135,4 +1137,25 @@
     <string name="a11y_criterion_button_click_description">més informació</string>
     <string name="a11y_create_file_folder_visible">Botons Crea un fitxer i Crea una carpeta visibles</string>
     <string name="a11y_create_file_folder_gone">Botons Crea un fitxer i Crea una carpeta no visibles</string>
+    <string name="unselect_all">Deselecciona-ho tot</string>
+    <string name="select_all">Selecciona-ho tot</string>
+    <string name="all_courses">Tots els cursos</string>
+    <string name="all_groups">Tots els grups</string>
+    <string name="edit_dashboard_course_description">Seleccioneu cursos per al tauler de control o navegueu als detalls del curs.</string>
+    <string name="edit_dashboard_group_description">Seleccioneu grups per al tauler de control o navegueu als detalls del curs.</string>
+    <string name="current_enrollments">Inscripcions actuals</string>
+    <string name="past_enrollments">Inscripcions anteriors</string>
+    <string name="future_enrollments">Inscripcions futures</string>
+    <string name="added_to_dashboard">Afegit al tauler de control</string>
+    <string name="removed_from_dashboard">Suprimit del tauler de control</string>
+    <string name="all_added_to_dashboard">S’ha afegit tot al tauler de control</string>
+    <string name="all_removed_from_dashboard">S’ha suprimit tot del tauler de control</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">No s\'han pogut afegir els cursos inactius al tauler de control.</string>
+    <string name="edit_dashboard">Edita el tauler de control</string>
+    <string name="edit_dashboard_empty_title">No hi ha cap curs aquí</string>
+    <string name="edit_dashboard_empty_message">Heu d’estar inscrit a un curs per afegir-lo al tauler de control.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Suprimeix del tauler de control</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Suprimeix-ho tot del tauler de control</string>
+    <string name="a11y_content_description_add_to_dashboard">Afegeix al tauler de control</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Afegeix-ho tot al tauler de control</string>
 </resources>

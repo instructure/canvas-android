@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Registra audio</string>
     <string name="recordVideo">Registra video</string>
 
+    <string name="a11y_textSubmissionEditor">Editor Consegna testo</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Scrivi&#8230;</string>
     <string name="textSubmissionFailureMessage">Si è verificato un errore durante il caricamento della consegna. Invia di nuovo.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Allega i file al tuo commento toccando un’opzione sotto</string>
     <string name="emptySubmissionCommentsSubtext">Hai delle domande sul tuo compito?\nManda un messaggio al tuo istruttore.</string>
     <string name="submissionCommentErrorMessage">Impossibile inviare questo messaggio. Tocca per riprovare.</string>
+    <string name="mediaUpload">Caricamento file multimediali</string>
     <string name="mediaUploadAudio">Caricamento file multimediale - Audio</string>
     <string name="mediaUploadVideo">Caricamento file multimediale - Video</string>
     <string name="commentSubmissionTypeText">Consegna testo</string>
@@ -219,6 +220,7 @@
     <string name="forbidden">Le risposte sono visibili solo a chi ha pubblicato almeno una risposta.</string>
     <string name="fileCurrentlyLocked">Questo file è attualmente bloccato</string>
 
+    <string name="a11y_discussionReplyEditor">Editor risposta discussione</string>
     <!-- Events -->
     <string name="Starts">Inizia</string>
     <string name="Ends">Termina</string>
@@ -1134,4 +1136,25 @@
     <string name="a11y_criterion_button_click_description">maggiori informazioni</string>
     <string name="a11y_create_file_folder_visible">Crea pulsanti File e Cartella visibili</string>
     <string name="a11y_create_file_folder_gone">Crea pulsanti File e Cartella non visibili</string>
+    <string name="unselect_all">Deseleziona tutto</string>
+    <string name="select_all">Seleziona tutto</string>
+    <string name="all_courses">Tutti i corsi</string>
+    <string name="all_groups">Tutti i gruppi</string>
+    <string name="edit_dashboard_course_description">Seleziona i corsi per la dashboard o accedi ai dettagli del corso.</string>
+    <string name="edit_dashboard_group_description">Seleziona i gruppi per la dashboard o accedi ai dettagli del corso.</string>
+    <string name="current_enrollments">Iscrizioni attuali</string>
+    <string name="past_enrollments">Iscrizioni passate</string>
+    <string name="future_enrollments">Iscrizioni future</string>
+    <string name="added_to_dashboard">Aggiunto alla dashboard</string>
+    <string name="removed_from_dashboard">Rimosso dalla dashboard</string>
+    <string name="all_added_to_dashboard">Tutti aggiunti alla dashboard</string>
+    <string name="all_removed_from_dashboard">Tutti rimossi dalla dashboard</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Impossibile aggiungere corsi inattivi alla dashboard.</string>
+    <string name="edit_dashboard">Modifica dashboard</string>
+    <string name="edit_dashboard_empty_title">Nessun corso qui</string>
+    <string name="edit_dashboard_empty_message">Devi essere iscritto a un corso per poterlo aggiungere alla dashboard</string>
+    <string name="a11y_content_description_remove_from_dashboard">Rimuovi dalla dashboard</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Rimuovi tutto dalla dashboard</string>
+    <string name="a11y_content_description_add_to_dashboard">Aggiungi alla dashboard</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Aggiungi tutto alla dashboard</string>
 </resources>

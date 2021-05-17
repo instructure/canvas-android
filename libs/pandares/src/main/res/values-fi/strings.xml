@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Nauhoita ääni</string>
     <string name="recordVideo">Nauhoita video</string>
 
+    <string name="a11y_textSubmissionEditor">Tekstin lähetyksen editori</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Kirjoita&#8230;</string>
     <string name="textSubmissionFailureMessage">Jotakin meni pieleen lähetyksen päivityksessä. Lähetä uudelleen.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Liitä tiedostoja kommenttiisi napauttamalla alla olevaa vaihtoehtoa</string>
     <string name="emptySubmissionCommentsSubtext">Onko sinulla kysyttävää tehtävästäsi?\nLähetä viesti ohjaajallesi.</string>
     <string name="submissionCommentErrorMessage">Tämän viestin lähettäminen epäonnistui. Yritä uudelleen napauttamalla.</string>
+    <string name="mediaUpload">Mediatiedoston lataus</string>
     <string name="mediaUploadAudio">Median lataus - ääni</string>
     <string name="mediaUploadVideo">Median lataus - video</string>
     <string name="commentSubmissionTypeText">Tekstin lähetys</string>
@@ -219,6 +220,7 @@
     <string name="forbidden">Vastaukset ovat näkyvissä vai niille, jotka ovat lähettäneet vähintään yhden vastauksen.</string>
 
     <string name="fileCurrentlyLocked">Tämä tiedosto on parhaillaan lukittu</string>
+    <string name="a11y_discussionReplyEditor">Keskustelun lähetyksen editori</string>
     <!-- Events -->
     <string name="Starts">Alkaa</string>
     <string name="Ends">Päättyy</string>
@@ -1134,4 +1136,25 @@
     <string name="a11y_criterion_button_click_description">lisätietoja</string>
     <string name="a11y_create_file_folder_visible">Luo tiedosto ja kansio -painikkeet näkyvissä</string>
     <string name="a11y_create_file_folder_gone">Luo tiedosto ja kansio -painikkeet eivät näkyvissä</string>
+    <string name="unselect_all">Poista kaikki valinnat</string>
+    <string name="select_all">Valitse kaikki</string>
+    <string name="all_courses">Kaikki kurssit</string>
+    <string name="all_groups">Kaikki ryhmät</string>
+    <string name="edit_dashboard_course_description">Valitse kurssit koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="edit_dashboard_group_description">Valitse ryhmät koontinäyttöön tai siirry kurssin tietoihin.</string>
+    <string name="current_enrollments">Tämänhetkiset ilmoittautumiset</string>
+    <string name="past_enrollments">Aiemmat ilmoittautumiset</string>
+    <string name="future_enrollments">Tulevat ilmoittautumiset</string>
+    <string name="added_to_dashboard">Lisätty koontinäyttöön</string>
+    <string name="removed_from_dashboard">Poistettu koontinäytöstä</string>
+    <string name="all_added_to_dashboard">Kaikki lisätty koontinäyttöön</string>
+    <string name="all_removed_from_dashboard">Kaikki poistettu koontinäytöstä</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Passiivisten kurssien lisäys koontinäyttöön ei onnistunut.</string>
+    <string name="edit_dashboard">Muokkaa koontinäyttöä</string>
+    <string name="edit_dashboard_empty_title">Ei kursseja täällä</string>
+    <string name="edit_dashboard_empty_message">Sinun täytyy olla ilmoittautunut kurssille, jotta voisit lisätä sen koontinäyttöön.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Poista koontinäytöstä</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Poista widget koontinäytöstä</string>
+    <string name="a11y_content_description_add_to_dashboard">Lisää koontinäytölle</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Lisää kaikki koontinäyttöön</string>
 </resources>
