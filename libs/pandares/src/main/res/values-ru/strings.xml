@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,6 +78,7 @@
     <string name="recordAudio">Записать аудио</string>
     <string name="recordVideo">Записать видео</string>
 
+    <string name="a11y_textSubmissionEditor">Редактор текстовой отправки</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Запись&#8230;</string>
     <string name="textSubmissionFailureMessage">Произошла ошибка при загрузке предоставляемых данных. Отправьте еще раз.</string>
@@ -131,6 +131,7 @@
     <string name="chooseFileForCommentSubtext">Прикрепите файлы к своему комментарию, щелкнув по расположенной ниже кнопке</string>
     <string name="emptySubmissionCommentsSubtext">Возникли вопросы по поводу вашего задания?\nОтправить сообщение своему преподавателю.</string>
     <string name="submissionCommentErrorMessage">Данное сообщение нельзя отправить. Щелкните, чтобы повторить попытку.</string>
+    <string name="mediaUpload">Загрузка медиа</string>
     <string name="mediaUploadAudio">Отправка мультимедиа - аудио</string>
     <string name="mediaUploadVideo">Отправка мультимедиа - видео</string>
     <string name="commentSubmissionTypeText">Текстовая отправка</string>
@@ -221,6 +222,7 @@
     <string name="forbidden">Ответы видны только тем, кто опубликовал не менее одного ответа.</string>
 
     <string name="fileCurrentlyLocked">Файл в настоящее время заблокирован</string>
+    <string name="a11y_discussionReplyEditor">Редактор ответов в обсуждении</string>
     <!-- Events -->
     <string name="Starts">Начинается</string>
     <string name="Ends">Заканчивается</string>
@@ -1162,4 +1164,25 @@
     <string name="a11y_criterion_button_click_description">дополнительная информация</string>
     <string name="a11y_create_file_folder_visible">Кнопки Создать файл и папку отображаются</string>
     <string name="a11y_create_file_folder_gone">Кнопки Создать файл и папку не отображаются</string>
+    <string name="unselect_all">Отменить выбор всех</string>
+    <string name="select_all">Выбрать все</string>
+    <string name="all_courses">Все курсы</string>
+    <string name="all_groups">Все группы</string>
+    <string name="edit_dashboard_course_description">Выберите курсы для информационной панели или перейдите к информации о курсе.</string>
+    <string name="edit_dashboard_group_description">Выберите группы для информационной панели или перейдите к информации о курсе.</string>
+    <string name="current_enrollments">Текущие регистрации</string>
+    <string name="past_enrollments">Прошлые регистрации</string>
+    <string name="future_enrollments">Будущие регистрации</string>
+    <string name="added_to_dashboard">Добавлено на информационную панель</string>
+    <string name="removed_from_dashboard">Удалено с информационной панели</string>
+    <string name="all_added_to_dashboard">Все добавлены на информационную панель</string>
+    <string name="all_removed_from_dashboard">Все удалены с информационной панели</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Неактивные курсы не могут быть добавлены на информационную панель.</string>
+    <string name="edit_dashboard">Редактировать информационную панель</string>
+    <string name="edit_dashboard_empty_title">Здесь нет курсов</string>
+    <string name="edit_dashboard_empty_message">Чтобы добавить курс на информационную панель, необходимо зарегистрироваться в курсе.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Удалить с информационной панели</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Удалить все информационной панели</string>
+    <string name="a11y_content_description_add_to_dashboard">Добавить на информационную панель</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Добавить все на информационную панель</string>
 </resources>

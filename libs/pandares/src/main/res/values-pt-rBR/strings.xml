@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,6 +76,7 @@
     <string name="recordAudio">Gravar Áudio</string>
     <string name="recordVideo">Gravar Vídeo</string>
 
+    <string name="a11y_textSubmissionEditor">Editor de envio de texto</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Gravar&#8230;</string>
     <string name="textSubmissionFailureMessage">Algo deu errado com o carregamento do envio. Envie novamente.</string>
@@ -129,6 +129,7 @@
     <string name="chooseFileForCommentSubtext">Anexe arquivos ao seu comentário ao tocar em uma opção abaixo</string>
     <string name="emptySubmissionCommentsSubtext">Tem perguntas sobre a sua tarefa?\nEnvie uma mensagem ao seu instrutor.</string>
     <string name="submissionCommentErrorMessage">Não foi possível enviar esta mensagem. Toque para tentar novamente.</string>
+    <string name="mediaUpload">Upload de Mídia</string>
     <string name="mediaUploadAudio">Carregamento de mídia - Áudio</string>
     <string name="mediaUploadVideo">Carregamento de mídia - Vídeo</string>
     <string name="commentSubmissionTypeText">Envio de Texto</string>
@@ -219,6 +220,7 @@
     <string name="forbidden">As respostas são visíveis apenas àqueles que postaram pelo menos uma resposta.</string>
 
     <string name="fileCurrentlyLocked">Este arquivo está travado no momento</string>
+    <string name="a11y_discussionReplyEditor">Editor de resposta da discussão</string>
     <!-- Events -->
     <string name="Starts">Começa</string>
     <string name="Ends">Termina</string>
@@ -1134,4 +1136,25 @@
     <string name="a11y_criterion_button_click_description">mais informações</string>
     <string name="a11y_create_file_folder_visible">Botões Criar Arquivo e Pasta visíveis</string>
     <string name="a11y_create_file_folder_gone">Botões Criar Arquivo e Pasta invisíveis</string>
+    <string name="unselect_all">Desmarcar tudo</string>
+    <string name="select_all">Selecionar tudo</string>
+    <string name="all_courses">Todos os cursos</string>
+    <string name="all_groups">Todos os grupos</string>
+    <string name="edit_dashboard_course_description">Selecione cursos para Painel ou navegue até os detalhes do curso.</string>
+    <string name="edit_dashboard_group_description">Selecione grupos para Painel ou navegue até os detalhes do curso.</string>
+    <string name="current_enrollments">Matrículas atuais</string>
+    <string name="past_enrollments">Matrículas passadas</string>
+    <string name="future_enrollments">Matrículas futuras</string>
+    <string name="added_to_dashboard">Adicionar ao painel</string>
+    <string name="removed_from_dashboard">Removido do painel</string>
+    <string name="all_added_to_dashboard">Todos adicionados ao painel</string>
+    <string name="all_removed_from_dashboard">Todos removidos do painel</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Cursos inativos não puderam ser adicionados ao painel.</string>
+    <string name="edit_dashboard">Editar painel</string>
+    <string name="edit_dashboard_empty_title">Nenhum curso aqui</string>
+    <string name="edit_dashboard_empty_message">Você tem que ser inscrito em um curso para adicioná-lo ao Painel.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Remover do painel</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Remover todos do painel</string>
+    <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Adicionar todos ao painel</string>
 </resources>

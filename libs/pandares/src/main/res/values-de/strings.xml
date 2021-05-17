@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -79,6 +78,7 @@
 
     <string name="recordVideo">Video aufnehmen</string>
 
+    <string name="a11y_textSubmissionEditor">Abgabetext-Editor</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Schreiben&#8230;</string>
     <string name="textSubmissionFailureMessage">Beim Hochladen der Abgabe ist etwas schiefgegangen. Erneut abgeben.</string>
@@ -127,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Hängen Sie Dateien an Ihren Kommentar an, indem Sie unten auf eine der Optionen tippen.</string>
     <string name="emptySubmissionCommentsSubtext">Haben Sie Fragen zu Ihrer Aufgabe?\nBeachrichtigen Sie Ihren Kursleiter.</string>
     <string name="submissionCommentErrorMessage">Diese Nachricht konnte nicht gesendet werden. Tippen Sie darauf, um es erneut zu versuchen.</string>
+    <string name="mediaUpload">Media-Upload</string>
     <string name="mediaUploadAudio">Medien-Upload – Audio</string>
     <string name="mediaUploadVideo">Medien-Upload – Video</string>
     <string name="commentSubmissionTypeText">Textabgabe</string>
@@ -212,6 +213,7 @@
     <string name="forbidden">Die Antworten sind nur für Benutzer sichtbar, die mindestens eine Antwort gepostet haben.</string>
 
     <string name="fileCurrentlyLocked">Diese Datei ist derzeit gesperrt</string>
+    <string name="a11y_discussionReplyEditor">Diskussionsantworten-Editor</string>
     <!-- Events -->
     <string name="Starts">Beginnt</string>
     <string name="Ends">Endet</string>
@@ -1120,4 +1122,25 @@
     <string name="a11y_criterion_button_click_description">weitere Informationen</string>
     <string name="a11y_create_file_folder_visible">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ sichtbar</string>
     <string name="a11y_create_file_folder_gone">Schaltflächen „Datei erstellen“ und „Ordner anlegen“ unsichtbar</string>
+    <string name="unselect_all">Auswahl für alle aufheben</string>
+    <string name="select_all">Alle auswählen</string>
+    <string name="all_courses">Alle Kurse</string>
+    <string name="all_groups">Alle Gruppen</string>
+    <string name="edit_dashboard_course_description">Wählen Sie Kurse für das Dashboard oder gehen Sie zu den Kursdetails.</string>
+    <string name="edit_dashboard_group_description">Wählen Sie Gruppen für das Dashboard oder gehen Sie zu den Kursdetails.</string>
+    <string name="current_enrollments">Aktuelle Anmeldungen</string>
+    <string name="past_enrollments">Frühere Anmeldungen</string>
+    <string name="future_enrollments">Zukünftige Anmeldungen</string>
+    <string name="added_to_dashboard">Zum Dashboard hinzugefügt</string>
+    <string name="removed_from_dashboard">Vom Dashboard entfernt</string>
+    <string name="all_added_to_dashboard">Alle zum Dashboard hinzugefügt</string>
+    <string name="all_removed_from_dashboard">Alle vom Dashboard entfernt</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Inaktive Kurse konnten nicht zum Dashboard hinzugefügt werden.</string>
+    <string name="edit_dashboard">Dashboard bearbeiten</string>
+    <string name="edit_dashboard_empty_title">Keine Kurse hier</string>
+    <string name="edit_dashboard_empty_message">Sie müssen bei einem Kurs eingeschrieben sein, um ihn zum Dashboard hinzuzufügen.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Vom Dashboard entfernen</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Alle vom Dashboard entfernen</string>
+    <string name="a11y_content_description_add_to_dashboard">Zum Dashboard hinzufügen</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Alle zum Dashboard hinzufügen</string>
 </resources>

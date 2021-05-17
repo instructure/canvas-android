@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
+﻿<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2018 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
@@ -58,7 +57,7 @@
     <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
 
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
-    <string name="launchExternalTool">Lancer l\'outil externe</string>
+    <string name="launchExternalTool">Lancer l&apos;outil externe</string>
 
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
@@ -74,11 +73,12 @@
     <string name="submissionUrlClearTextError">Aucun aperçu disponible pour les URL utilisant http://</string>
     <string name="submissionUrlNotAUrlError">Veuillez saisir une URL valide</string>
     <string name="enterAUrlHereForYourSubmission">Saisissez un URL ici pour votre envoi</string>
-    <string name="addFileFabContentDesc">Afficher les options d\'ajout de fichier</string>
+    <string name="addFileFabContentDesc">Afficher les options d&apos;ajout de fichier</string>
     <string name="recordAudio">Enregistrer le son</string>
 
     <string name="recordVideo">Enregistrer la vidéo</string>
 
+    <string name="a11y_textSubmissionEditor">Éditeur d’envoi de texte</string>
     <!-- Student Submission -->
     <string name="submissionWrite">Écrire&#8230;</string>
     <string name="textSubmissionFailureMessage">Un problème est survenu lors du téléversement de l’envoi. Envoyer de nouveau.</string>
@@ -127,6 +127,7 @@
     <string name="chooseFileForCommentSubtext">Joindre les fichiers à votre commentaire en tapotant sur l\'une des options ci-dessous</string>
     <string name="emptySubmissionCommentsSubtext">Avez-vous des questions au sujet de votre tâche?\nEnvoyez un message à votre instructeur.</string>
     <string name="submissionCommentErrorMessage">Impossible de transmettre ce message. Tapotez pour essayer de nouveau.</string>
+    <string name="mediaUpload">Téléversement de média</string>
     <string name="mediaUploadAudio">Téléversement de fichiers multimédia - Audio</string>
     <string name="mediaUploadVideo">Téléversement de fichiers multimédia - Vidéo</string>
     <string name="commentSubmissionTypeText">Envoi de texte</string>
@@ -212,6 +213,7 @@
     <string name="forbidden">Les réponses ne sont visibles que pour ceux qui ont publié au moins une réponse.</string>
 
     <string name="fileCurrentlyLocked">Ce fichier est présentement verrouillé</string>
+    <string name="a11y_discussionReplyEditor">Éditeur des réponses de discussion</string>
     <!-- Events -->
     <string name="Starts">Commence</string>
     <string name="Ends">Se termine</string>
@@ -910,7 +912,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Cette tâche n&apos;autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1071,8 +1073,8 @@
     <string name="closeRecordingView">Fermer la vue d’enregistrement</string>
     <string name="deleteRecording">Supprimer l’enregistrement</string>
     <string name="videoCommentReplay">Rejouer le commentaire vidéo</string>
-    <string name="errorShowingVideoReplay">Une erreur s\'est produite lors de la tentative de lecture.</string>
-    <string name="errorSubmittingMediaComment">Une erreur s\'est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
+    <string name="errorShowingVideoReplay">Une erreur s&apos;est produite lors de la tentative de lecture.</string>
+    <string name="errorSubmittingMediaComment">Une erreur s&apos;est produite lors de la tentative d’envoi de votre commentaire multimédia.</string>
 
     <string name="addVideoComment">Ajouter un commentaire vidéo</string>
     <string name="addAudioComment">Ajouter un commentaire audio</string>
@@ -1120,4 +1122,25 @@
     <string name="a11y_criterion_button_click_description">plus d\'informations</string>
     <string name="a11y_create_file_folder_visible">Les boutons « Créer un fichier » et « Créer un dossier » sont visibles</string>
     <string name="a11y_create_file_folder_gone">Les boutons « Créer un fichier » et « Créer un dossier » sont invisibles</string>
+    <string name="unselect_all">Tout déselectionner</string>
+    <string name="select_all">Sélectionner tout</string>
+    <string name="all_courses">Toutes les formations</string>
+    <string name="all_groups">Tous les groupes</string>
+    <string name="edit_dashboard_course_description">Sélectionner les cours pour le tableau de bord ou accédez aux détails du cours.</string>
+    <string name="edit_dashboard_group_description">Sélectionner des groupes pour le tableau de bord ou accédez aux détails du cours.</string>
+    <string name="current_enrollments">Inscriptions actuelles</string>
+    <string name="past_enrollments">Inscriptions antérieures</string>
+    <string name="future_enrollments">Inscriptions futures</string>
+    <string name="added_to_dashboard">Ajouté au tableau de bord</string>
+    <string name="removed_from_dashboard">Retiré du tableau de bord</string>
+    <string name="all_added_to_dashboard">Tous ajoutés au tableau de bord</string>
+    <string name="all_removed_from_dashboard">Tous retirés du tableau de bord</string>
+    <string name="inactive_courses_cant_be_added_to_dashboard">Les cours inactifs n’ont pas pu être ajoutés au tableau de bord.</string>
+    <string name="edit_dashboard">Modifier le tableau de bord</string>
+    <string name="edit_dashboard_empty_title">Aucun cours ici</string>
+    <string name="edit_dashboard_empty_message">Vous devez être inscrit dans un cours pour l\'ajouter au tableau de bord.</string>
+    <string name="a11y_content_description_remove_from_dashboard">Retirer du tableau de bord</string>
+    <string name="a11y_content_description_remove_all_from_dashboard">Tout retirer du tableau de bord</string>
+    <string name="a11y_content_description_add_to_dashboard">Ajouter au tableau de bord</string>
+    <string name="a11y_content_description_add_all_to_dashboard">Tout ajouter au tableau de bord</string>
 </resources>
