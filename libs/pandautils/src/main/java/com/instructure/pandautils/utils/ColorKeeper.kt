@@ -85,6 +85,12 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         cachedColors += contextId to color
     }
 
+    /** Associates a new color with a contextId **/
+    @JvmStatic fun addToCache(contextId: String, colorCode: String) {
+        val color = parseColor(colorCode)
+        cachedColors += contextId to color
+    }
+
     /**
      * Generates a colored drawable
      * @param context An Android Context

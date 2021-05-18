@@ -23,15 +23,21 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.managers.AnnouncementManager
+import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
+import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import io.mockk.*
 import kotlinx.coroutines.Deferred
@@ -65,6 +71,8 @@ class HomeroomViewModelTest {
     private val announcementManager: AnnouncementManager = mockk(relaxed = true)
     private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
+    private val assignmentManager: AssignmentManager = mockk(relaxed = true)
+    private val colorKeeper: ColorKeeper = mockk(relaxed = true)
 
     private lateinit var viewModel: HomeroomViewModel
 
@@ -73,6 +81,11 @@ class HomeroomViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returnsArgument 0
+
+        ContextKeeper.appContext = mockk(relaxed = true)
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
     }
 
     @After
@@ -264,5 +277,47 @@ class HomeroomViewModelTest {
         assertEquals(HomeroomAction.AnnouncementViewsReady, viewModel.events.value!!.getContentIfNotHandled()!!)
     }
 
-    private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager)
+    @Test
+    fun `Create course cards from dashboard courses that are not homeroom`() {
+        // Given
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", homeroomCourse = true, courseColor = "#FFFFFF"),
+            Course(id = 2, name = "Course 2", homeroomCourse = false, imageUrl = "www.imageurl.com", courseColor = "#FFFFFF"),
+            Course(id = 3, name = "Course 3 not on dashboard", homeroomCourse = false, courseColor = "#FFFFFF")
+        )
+        every { courseManager.getCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(courses)
+        }
+
+        val dashboardCards = listOf(DashboardCard(id = 2))
+        every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(dashboardCards)
+        }
+
+        mockkStatic("kotlinx.coroutines.AwaitKt")
+
+        val announcementsDeferred: Deferred<DataResult<List<DiscussionTopicHeader>>> = mockk()
+        every { announcementManager.getAnnouncementsAsync(any(), any()) } returns announcementsDeferred
+        coEvery { listOf(announcementsDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()))
+
+        val assignmentsDeferred: Deferred<DataResult<List<Assignment>>> = mockk()
+        every { assignmentManager.getAllAssignmentsAsync(any(), any()) } returns assignmentsDeferred
+        coEvery { listOf(assignmentsDeferred).awaitAll() } returns listOf(DataResult.Success(emptyList()))
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, Observer {})
+
+        // Then
+        assertEquals(ViewState.Success, viewModel.state.value)
+
+        assertEquals(1, viewModel.data.value!!.courseCards.size)
+
+        val courseViewData = (viewModel.data.value!!.courseCards[0] as CourseCardViewModel).data
+        assertEquals("Course 2", courseViewData.courseName)
+        assertEquals("", courseViewData.announcementText)
+        assertEquals("www.imageurl.com", courseViewData.imageUrl)
+    }
+
+    private fun createViewModel() = HomeroomViewModel(apiPrefs, resources, courseManager, announcementManager, htmlContentFormatter, oauthManager, assignmentManager, colorKeeper)
 }

@@ -32,7 +32,7 @@ data class CourseCardViewData(
     val courseName: String,
     val assignmentsDueText: SpannableString,
     val announcementText: String,
-    val courseColor: Int,
+    val courseColor: String,
     val imageUrl: String)
 
 sealed class HomeroomAction {

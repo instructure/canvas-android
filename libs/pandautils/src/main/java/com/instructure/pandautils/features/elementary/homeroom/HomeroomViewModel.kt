@@ -39,6 +39,7 @@ import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.Co
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -49,6 +50,8 @@ import org.threeten.bp.OffsetDateTime
 import java.util.regex.Pattern
 import javax.inject.Inject
 
+private const val K5_DEFAULT_COLOR = "#394B58"
+
 @HiltViewModel
 class HomeroomViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
@@ -58,7 +61,7 @@ class HomeroomViewModel @Inject constructor(
     private val htmlContentFormatter: HtmlContentFormatter,
     private val oAuthManager: OAuthManager,
     private val assignmentManager: AssignmentManager,
-    private val colorApiHelper: ColorApiHelper
+    private val colorKeeper: ColorKeeper
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -89,12 +92,6 @@ class HomeroomViewModel @Inject constructor(
 
         viewModelScope.launch {
             try {
-                if (forceNetwork) {
-                    val colorsSynced = colorApiHelper.awaitSync()
-                    if (colorsSynced) {
-                        _events.postValue(Event(HomeroomAction.UpdateColors))
-                    }
-                }
                 val courses = courseManager.getCoursesAsync(forceNetwork).await()
                 val dashboardCards = courseManager.getDashboardCoursesAsync(forceNetwork).await()
 
@@ -104,6 +101,10 @@ class HomeroomViewModel @Inject constructor(
 
                 dashboardCourses = dashboardCards.dataOrThrow.mapNotNull { coursesMap[it.id] }
                 val homeroomCourses = courses.dataOrThrow.filter { it.homeroomCourse }
+
+                courses.dataOrThrow.forEach {
+                    colorKeeper.addToCache(it.contextId, getCourseColor(it))
+                }
 
                 val announcementsData = homeroomCourses
                     .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
@@ -142,7 +143,7 @@ class HomeroomViewModel @Inject constructor(
                     course.name,
                     assignmentsDueText[index],
                     announcements[index]?.title ?: "",
-                    course.color,
+                    getCourseColor(course),
                     course.imageUrl ?: "")
 
                 CourseCardViewModel(
@@ -152,6 +153,14 @@ class HomeroomViewModel @Inject constructor(
                     { openAnnouncementDetails(course, announcements[index]) }
                 )
             }
+    }
+
+    private fun getCourseColor(course: Course): String {
+        return if (!course.courseColor.isNullOrEmpty()) {
+            course.courseColor!!
+        } else {
+            K5_DEFAULT_COLOR
+        }
     }
 
     private fun createDueTextFromAssignmentList(assignments: List<Assignment>?): SpannableString {

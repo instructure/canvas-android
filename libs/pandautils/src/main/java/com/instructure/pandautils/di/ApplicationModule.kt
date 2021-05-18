@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.Module
 import dagger.Provides
@@ -59,7 +60,8 @@ class ApplicationModule {
     }
 
     @Provides
-    fun provideColorApiHelper(): ColorApiHelper {
-        return ColorApiHelper
+    @Singleton
+    fun provideColorKeeper(): ColorKeeper {
+        return ColorKeeper
     }
 }
