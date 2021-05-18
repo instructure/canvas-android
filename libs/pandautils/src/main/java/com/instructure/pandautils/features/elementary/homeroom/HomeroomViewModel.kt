@@ -38,10 +38,8 @@ import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.An
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
-import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
@@ -107,7 +105,7 @@ class HomeroomViewModel @Inject constructor(
                 }
 
                 val announcementsData = homeroomCourses
-                    .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
+                    .map { announcementManager.getLatestAnnouncementAsync(it, forceNetwork) }
                     .awaitAll()
 
                 val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
@@ -128,7 +126,7 @@ class HomeroomViewModel @Inject constructor(
 
     private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updatedCourseId: Long = 0): List<CourseCardViewModel> {
         val announcements = dashboardCourses
-            .map { announcementManager.getAnnouncementsAsync(it, forceNetwork) }
+            .map { announcementManager.getLatestAnnouncementAsync(it, forceNetwork) }
             .awaitAll()
             .map { it.dataOrNull?.firstOrNull() }
 
