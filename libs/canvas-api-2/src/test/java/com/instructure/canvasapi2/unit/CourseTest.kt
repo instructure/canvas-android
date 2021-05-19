@@ -550,19 +550,19 @@ class CourseTest {
 
     @Test
     fun `Course is not deleted when workflow state is available`() {
-        val course = baseCourse.copy(workflowState = "available")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.AVAILABLE)
         assertTrue(course.isNotDeleted())
     }
 
     @Test
     fun `Course is not deleted when workflow state is completed`() {
-        val course = baseCourse.copy(workflowState = "completed")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.COMPLETED)
         assertTrue(course.isNotDeleted())
     }
 
     @Test
     fun `Course is deleted when workflow state is deleted`() {
-        val course = baseCourse.copy(workflowState = "deleted")
+        val course = baseCourse.copy(workflowState = Course.WorkflowState.DELETED)
         assertFalse(course.isNotDeleted())
     }
 }
