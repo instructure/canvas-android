@@ -95,6 +95,12 @@ object UserAPI {
         @POST("users/self/observer_pairing_codes")
         fun generatePairingCode(): Call<PairingCode>
         //endregion
+
+        @GET("users/self/missing_submissions")
+        fun getMissingSubmissions(): Call<List<Assignment>>
+
+        @GET
+        fun getNextPageMissingSubmissions(@Url nextUrl: String): Call<List<Assignment>>
     }
 
     fun getColors(adapter: RestBuilder, callback: StatusCallback<CanvasColor>, params: RestParams) {
@@ -228,4 +234,14 @@ object UserAPI {
         callback.addCall(adapter.build(UsersInterface::class.java, params).generatePairingCode()).enqueue(callback)
     }
     //endregion
+
+    fun getMissingSubmissions(forceNetwork: Boolean, adapter: RestBuilder, callback: StatusCallback<List<Assignment>>) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getMissingSubmissions()).enqueue(callback)
+    }
+
+    fun getNextPageMissingSubmissions(nextUrl: String, adapter: RestBuilder, forceNetwork: Boolean, callback: StatusCallback<List<Assignment>>) {
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        callback.addCall(adapter.build(UsersInterface::class.java, params).getNextPageMissingSubmissions(nextUrl)).enqueue(callback)
+    }
 }

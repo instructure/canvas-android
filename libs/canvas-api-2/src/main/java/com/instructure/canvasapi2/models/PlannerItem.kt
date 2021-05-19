@@ -44,7 +44,10 @@ data class PlannerItem (
     val plannableDate: Date,
 
     @SerializedName("html_url")
-    val htmlUrl: String?
+    val htmlUrl: String?,
+
+    @SerializedName("submissions")
+    val submissions: Submissions?
 ) {
 
     val canvasContext: CanvasContext

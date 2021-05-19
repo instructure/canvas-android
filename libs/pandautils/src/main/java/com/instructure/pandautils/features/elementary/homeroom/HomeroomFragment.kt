@@ -50,7 +50,7 @@ class HomeroomFragment : Fragment() {
 
     private val viewModel: HomeroomViewModel by viewModels()
 
-    private var courseToUpdateId = -1L
+    private var updateAssignments = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = FragmentHomeroomBinding.inflate(inflater, container, false)
@@ -150,14 +150,14 @@ class HomeroomFragment : Fragment() {
     }
 
     private fun openAssignments(course: Course) {
-        courseToUpdateId = course.id
+        updateAssignments = true
         homeroomRouter.openAssignments(course)
     }
 
     fun refreshAssignmentStatus() {
-        if (courseToUpdateId != -1L) {
-            viewModel.refreshAssignmentsStatus(courseToUpdateId)
-            courseToUpdateId = -1L
+        if (updateAssignments) {
+            viewModel.refreshAssignmentsStatus()
+            updateAssignments = false
         }
     }
 

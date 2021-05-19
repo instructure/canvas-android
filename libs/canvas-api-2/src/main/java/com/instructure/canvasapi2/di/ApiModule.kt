@@ -1,6 +1,7 @@
 package com.instructure.canvasapi2.di
 
 import com.instructure.canvasapi2.apis.HelpLinksAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -50,8 +51,13 @@ object ApiModule {
     }
 
     @Provides
-    fun provideAssignmentManager(): AssignmentManager {
-        return AssignmentManager
+    fun providePlannerManager(plannerApi: PlannerAPI): PlannerManager {
+        return PlannerManager(plannerApi)
+    }
+
+    @Provides
+    fun provideUserManager(): UserManager {
+        return UserManager
     }
 
     @Provides
@@ -64,5 +70,11 @@ object ApiModule {
     @Singleton
     fun provideApiPrefs(): ApiPrefs {
         return ApiPrefs
+    }
+
+    @Provides
+    @Singleton
+    fun providePlannerApi(): PlannerAPI {
+        return PlannerAPI
     }
 }

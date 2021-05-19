@@ -24,15 +24,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.AnnouncementManager
-import com.instructure.canvasapi2.managers.AssignmentManager
-import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.managers.*
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.AnnouncementViewModel
 import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.CourseCardViewModel
@@ -44,11 +43,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
-import org.threeten.bp.OffsetDateTime
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 private const val K5_DEFAULT_COLOR = "#394B58"
+private const val PLANNABLE_TYPE_ASSIGNMENT = "assignment"
 
 @HiltViewModel
 class HomeroomViewModel @Inject constructor(
@@ -58,8 +57,9 @@ class HomeroomViewModel @Inject constructor(
     private val announcementManager: AnnouncementManager,
     private val htmlContentFormatter: HtmlContentFormatter,
     private val oAuthManager: OAuthManager,
-    private val assignmentManager: AssignmentManager,
-    private val colorKeeper: ColorKeeper
+    private val colorKeeper: ColorKeeper,
+    private val plannerManager: PlannerManager,
+    private val userManager: UserManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -124,22 +124,30 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updatedCourseId: Long = 0): List<CourseCardViewModel> {
+    private suspend fun createCourseCards(dashboardCourses: List<Course>, forceNetwork: Boolean, updateAssignments: Boolean = false): List<CourseCardViewModel> {
         val announcements = dashboardCourses
             .map { announcementManager.getLatestAnnouncementAsync(it, forceNetwork) }
             .awaitAll()
             .map { it.dataOrNull?.firstOrNull() }
 
-        val assignmentsDueText = dashboardCourses
-            .map { assignmentManager.getAllAssignmentsAsync(it.id, forceNetwork || it.id == updatedCourseId) }
-            .awaitAll()
-            .map { createDueTextFromAssignmentList(it.dataOrNull) }
+        val now = LocalDate.now()
+        val tomorrow = now.plusDays(1).toApiString()
+
+        val forceNetworkAssignments = forceNetwork || updateAssignments
+
+        val plannerItems = plannerManager.getPlannerItemsAsync(forceNetworkAssignments, now.toApiString(), tomorrow).await().dataOrNull
+        val missingSubmissions = userManager.getAllMissingSubmissionsAsync(forceNetworkAssignments).await().dataOrNull
+
+        val assignmentsDueStrings = createDueTexts(dashboardCourses,
+            plannerItems ?: emptyList(),
+            missingSubmissions ?: emptyList())
 
         return dashboardCourses
             .mapIndexed { index, course ->
                 val viewData = CourseCardViewData(
                     course.name,
-                    assignmentsDueText[index],
+                    assignmentsDueStrings[course.id]
+                        ?: SpannableString(resources.getString(R.string.nothingDueToday)),
                     announcements[index]?.title ?: "",
                     getCourseColor(course),
                     course.imageUrl ?: "")
@@ -153,26 +161,37 @@ class HomeroomViewModel @Inject constructor(
             }
     }
 
-    private fun getCourseColor(course: Course): String {
-        return if (!course.courseColor.isNullOrEmpty()) {
-            course.courseColor!!
-        } else {
-            K5_DEFAULT_COLOR
-        }
-    }
+    private fun createDueTexts(courses: List<Course>, plannerItems: List<PlannerItem>, missingAssignments: List<Assignment>): Map<Long, SpannableString> {
+        val dueTodayCountByCourses = courses
+            .associate { Pair(it.id, 0) }
+            .toMutableMap()
 
-    private fun createDueTextFromAssignmentList(assignments: List<Assignment>?): SpannableString {
-        var missing = 0
-        var dueToday = 0
-        assignments
-            ?.filter { !it.isSubmitted }
-            ?.forEach {
-                when {
-                    isAssignmentMissing(it) -> missing++
-                    isAssignmentDueToday(it) -> dueToday++
-                }
+        plannerItems
+            .filter { isNotSubmittedAssignment(it) }
+            .forEach { item ->
+                dueTodayCountByCourses.computeIfPresent(item.courseId!!) { _, value -> value + 1 }
             }
 
+        val missingCountByCourses = courses
+            .associate { Pair(it.id, 0) }
+            .toMutableMap()
+
+        missingAssignments
+            .forEach { item ->
+                missingCountByCourses.computeIfPresent(item.courseId) { _, value -> value + 1 }
+            }
+
+        return courses
+            .associate {
+                Pair(it.id, createDueTextForCourse(dueTodayCountByCourses[it.id]
+                    ?: 0, missingCountByCourses[it.id] ?: 0))
+            }
+    }
+
+    private fun isNotSubmittedAssignment(it: PlannerItem) =
+        it.courseId != null && it.submissions?.submitted == false && it.plannableType == PLANNABLE_TYPE_ASSIGNMENT && it.submissions?.missing == false
+
+    private fun createDueTextForCourse(dueToday: Int, missing: Int): SpannableString {
         val dueTodayString = if (dueToday == 0) {
             resources.getString(R.string.nothingDueToday)
         } else {
@@ -191,19 +210,12 @@ class HomeroomViewModel @Inject constructor(
         }
     }
 
-    private fun isAssignmentMissing(assignment: Assignment): Boolean {
-        return assignment.dueAt?.let {
-            val now = OffsetDateTime.now()
-            val dueDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
-            now.isAfter(dueDate)
-        } ?: false
-    }
-
-    private fun isAssignmentDueToday(assignment: Assignment): Boolean {
-        return assignment.dueAt?.let {
-            val dueDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
-            dueDate.toLocalDate().equals(LocalDate.now())
-        } ?: false
+    private fun getCourseColor(course: Course): String {
+        return if (!course.courseColor.isNullOrEmpty()) {
+            course.courseColor!!
+        } else {
+            K5_DEFAULT_COLOR
+        }
     }
 
     private fun openAnnouncementDetails(course: Course, announcement: DiscussionTopicHeader?) {
@@ -265,12 +277,12 @@ class HomeroomViewModel @Inject constructor(
         _events.postValue(Event(HomeroomAction.AnnouncementViewsReady))
     }
 
-    fun refreshAssignmentsStatus(courseId: Long) {
+    fun refreshAssignmentsStatus() {
         _state.postValue(ViewState.Refresh)
 
         viewModelScope.launch {
             try {
-                val courseViewModels = createCourseCards(dashboardCourses, false, updatedCourseId = courseId)
+                val courseViewModels = createCourseCards(dashboardCourses, false, updateAssignments = true)
                 val viewData = _data.value
 
                 _data.postValue(HomeroomViewData(
