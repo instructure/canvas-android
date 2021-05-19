@@ -96,7 +96,7 @@ object UserAPI {
         fun generatePairingCode(): Call<PairingCode>
         //endregion
 
-        @GET("users/self/missing_submissions")
+        @GET("users/self/missing_submissions?include[]=planner_overrides")
         fun getMissingSubmissions(): Call<List<Assignment>>
 
         @GET

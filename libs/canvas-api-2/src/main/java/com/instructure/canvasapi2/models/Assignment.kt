@@ -101,6 +101,8 @@ data class Assignment(
         val allowedAttempts: Long = -1, // API gives -1 for unlimited submissions
         @SerializedName("external_tool_tag_attributes")
         val externalToolAttributes: ExternalToolAttributes? = null,
+        @SerializedName("planner_override")
+        val plannerOverride: PlannerOverride? = null,
         var isStudioEnabled: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate

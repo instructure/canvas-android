@@ -187,6 +187,7 @@ class HomeroomViewModel @Inject constructor(
             .toMutableMap()
 
         missingAssignments
+            .filter { it.plannerOverride?.dismissed != true }
             .forEach { item ->
                 missingCountByCourses.computeIfPresent(item.courseId) { _, value -> value + 1 }
             }
