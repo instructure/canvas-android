@@ -109,10 +109,20 @@ class HomeroomViewModel @Inject constructor(
                     .awaitAll()
 
                 val announcementViewModels = createAnnouncements(homeroomCourses, announcementsData)
-                val courseViewModels = createCourseCards(dashboardCourses, forceNetwork)
+                val courseViewModels = if (dashboardCourses.isNotEmpty()) {
+                    createCourseCards(dashboardCourses, forceNetwork)
+                } else {
+                    emptyList()
+                }
 
-                _data.postValue(HomeroomViewData(greetingString, announcementViewModels, courseViewModels))
-                _state.postValue(ViewState.Success)
+                val viewData = HomeroomViewData(greetingString, announcementViewModels, courseViewModels)
+                _data.postValue(viewData)
+
+                if (viewData.isEmpty()) {
+                    _state.postValue(ViewState.Empty(R.string.homeroomEmptyTitle, R.string.homeroomEmptyMessage, R.drawable.ic_panda_super))
+                } else {
+                    _state.postValue(ViewState.Success)
+                }
             } catch (e: Exception) {
                 if (_data.value == null || _data.value?.isEmpty() == true) {
                     _state.postValue(ViewState.Error(resources.getString(R.string.homeroomError)))

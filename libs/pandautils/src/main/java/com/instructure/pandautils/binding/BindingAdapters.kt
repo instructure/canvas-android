@@ -53,6 +53,7 @@ fun bindEmptyViewState(emptyView: EmptyView, state: ViewState?) {
         is ViewState.Loading -> emptyView.setLoading()
         is ViewState.Refresh -> emptyView.setGone()
         is ViewState.Empty -> {
+            emptyView.setVisible()
             state.emptyTitle?.let { emptyView.setTitleText(it) }
             state.emptyMessage?.let { emptyView.setMessageText(it) }
             state.emptyImage?.let { emptyView.setEmptyViewImage(it) }
